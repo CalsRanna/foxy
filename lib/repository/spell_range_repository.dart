@@ -62,21 +62,10 @@ class SpellRangeRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getSpellRangeLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<SpellRangeEntity>> getSpellRanges() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => SpellRangeEntity.fromJson(e.toMap())).toList();
   }
-
-  Future<void> saveSpellRangeLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(QueryBuilder builder, SpellRangeFilter? filter) {
     if (filter == null) return builder;

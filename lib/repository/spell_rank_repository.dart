@@ -6,20 +6,23 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_rank_repository.g.dart';
 
-@FoxyRepository(SpellRankEntity)
+@FoxyRepository(SpellRankEntity, parentKey: ['firstSpellId'])
 class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
   static const _table = 'spell_ranks';
 
-  Future<void> copySpellRank(SpellRankKey key) async {
+  @override
+  Future<SpellRankKey> copySpellRank(SpellRankKey key) async {
     throw UnsupportedError('法术等级记录不能自动复制，请新增记录并选择有效法术。');
   }
 
-  Future<int> countSpellRanks(int spellId) async {
-    final firstSpellId = await _getFirstSpellId(spellId);
-    if (firstSpellId == null) return 0;
-    return laconic.table(_table).where('first_spell_id', firstSpellId).count();
+  @override
+  Future<int> countSpellRanks(int firstSpellId) async {
+    final resolved = await _getFirstSpellId(firstSpellId);
+    if (resolved == null) return 0;
+    return laconic.table(_table).where('first_spell_id', resolved).count();
   }
 
+  @override
   Future<SpellRankEntity> createSpellRank(int firstSpellId) async {
     return SpellRankEntity(
       firstSpellId: firstSpellId,
@@ -31,12 +34,13 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
     );
   }
 
+  @override
   Future<List<BriefSpellRankEntity>> getBriefSpellRanks(
-    int spellId, {
+    int firstSpellId, {
     int page = 1,
   }) async {
-    final firstSpellId = await _getFirstSpellId(spellId);
-    if (firstSpellId == null) return [];
+    final resolved = await _getFirstSpellId(firstSpellId);
+    if (resolved == null) return [];
 
     final results = await laconic
         .table('$_table AS sr')

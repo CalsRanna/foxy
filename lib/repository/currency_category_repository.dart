@@ -66,17 +66,6 @@ class CurrencyCategoryRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getCurrencyCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveCurrencyCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CurrencyCategoryFilter? filter,

@@ -24,7 +24,7 @@ final class AchievementFilter {
   }
 }
 
-mixin _AchievementRepositoryMixin on RepositoryMixin {
+mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> copyAchievement(int key) async {
     final source = await getAchievement(key);
     if (source == null) {
@@ -91,6 +91,17 @@ mixin _AchievementRepositoryMixin on RepositoryMixin {
     final results = await builder.get();
     return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
   }
+
+  Future<List<DbcLocaleFieldValue>> getAchievementLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveAchievementLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeAchievement(AchievementEntity achievement) async {
     if (achievement.id <= 0) {

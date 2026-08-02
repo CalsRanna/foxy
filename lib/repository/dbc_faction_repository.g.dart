@@ -24,7 +24,7 @@ final class DbcFactionFilter {
   }
 }
 
-mixin _DbcFactionRepositoryMixin on RepositoryMixin {
+mixin _DbcFactionRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyDbcFaction(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -44,6 +44,17 @@ mixin _DbcFactionRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return DbcFactionEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getDbcFactionLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveDbcFactionLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeDbcFaction(DbcFactionEntity dbcFaction) async {
     if (dbcFaction.id <= 0) {

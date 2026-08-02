@@ -3,6 +3,42 @@
 part of 'creature_template_resistance_repository.dart';
 
 mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
+  Future<CreatureTemplateResistanceKey> copyCreatureTemplateResistance(
+    CreatureTemplateResistanceKey key,
+  ) async {
+    final source = await getCreatureTemplateResistance(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureTemplateResistance(source.creatureID);
+    final copied = source.copyWith(
+      creatureID: blank.creatureID,
+      school: blank.school,
+    );
+    await storeCreatureTemplateResistance(copied);
+    return CreatureTemplateResistanceKey.fromEntity(copied);
+  }
+
+  Future<int> countCreatureTemplateResistances(int creatureID) async {
+    return laconic
+        .table('creature_template_resistance')
+        .where('`CreatureID`', creatureID)
+        .count();
+  }
+
+  Future<CreatureTemplateResistanceEntity> createCreatureTemplateResistance(
+    int creatureID,
+  ) async {
+    return CreatureTemplateResistanceEntity(
+      creatureID: creatureID,
+      school: await nextMaxPlusOne(
+        'creature_template_resistance',
+        '`School`',
+        where: {'CreatureID': creatureID},
+      ),
+    );
+  }
+
   Future<void> destroyCreatureTemplateResistance(
     CreatureTemplateResistanceKey key,
   ) async {
@@ -25,6 +61,24 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateResistanceEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefCreatureTemplateResistanceEntity>>
+  getBriefCreatureTemplateResistances(int creatureID, {int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('creature_template_resistance').select([
+      '`CreatureID`',
+      '`School`',
+      '`Resistance`',
+      '`VerifiedBuild`',
+    ]);
+    builder = builder.where('`CreatureID`', creatureID);
+    builder = builder.orderBy('`CreatureID`').orderBy('`School`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCreatureTemplateResistanceEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeCreatureTemplateResistance(

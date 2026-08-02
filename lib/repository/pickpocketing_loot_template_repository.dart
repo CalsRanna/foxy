@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'pickpocketing_loot_template_repository.g.dart';
 
-@FoxyRepository(PickpocketingLootTemplateEntity)
+@FoxyRepository(PickpocketingLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class PickpocketingLootTemplateRepository
@@ -14,13 +14,17 @@ class PickpocketingLootTemplateRepository
   static const _table = 'pickpocketing_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(PickpocketingLootTemplateKey key) async {
+  @override
+  Future<PickpocketingLootTemplateKey> copyPickpocketingLootTemplate(
+    PickpocketingLootTemplateKey key,
+  ) async {
     final source = await getPickpocketingLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storePickpocketingLootTemplate(copied);
+    return PickpocketingLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({
@@ -49,11 +53,15 @@ class PickpocketingLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countPickpocketingLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<PickpocketingLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<PickpocketingLootTemplateEntity> createPickpocketingLootTemplate(
+    int entry,
+  ) async {
     return PickpocketingLootTemplateEntity(entry: entry);
   }
 
@@ -94,10 +102,9 @@ class PickpocketingLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefPickpocketingLootTemplateEntity>> getBriefLootTemplates(
-    int entry, {
-    int page = 1,
-  }) async {
+  @override
+  Future<List<BriefPickpocketingLootTemplateEntity>>
+  getBriefPickpocketingLootTemplates(int entry, {int page = 1}) async {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
       ..._briefFields('lt'),

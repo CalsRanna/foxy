@@ -53,23 +53,12 @@ class SpellFocusObjectRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getSpellFocusObjectLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<SpellFocusObjectEntity>> getSpellFocusObjects() async {
     final rows = await laconic.table(_table).get();
     return rows
         .map((row) => SpellFocusObjectEntity.fromJson(row.toMap()))
         .toList();
   }
-
-  Future<void> saveSpellFocusObjectLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,

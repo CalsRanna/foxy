@@ -6,11 +6,12 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_linked_spell_repository.g.dart';
 
-@FoxyRepository(SpellLinkedSpellEntity)
+@FoxyRepository(SpellLinkedSpellEntity, parentKey: ['spellTrigger'])
 class SpellLinkedSpellRepository
     with RepositoryMixin, _SpellLinkedSpellRepositoryMixin {
   static const _table = 'spell_linked_spell';
 
+  @override
   Future<SpellLinkedSpellKey> copySpellLinkedSpell(
     SpellLinkedSpellKey key,
   ) async {
@@ -37,16 +38,19 @@ class SpellLinkedSpellRepository
     return SpellLinkedSpellKey.fromEntity(copied);
   }
 
+  @override
   Future<int> countSpellLinkedSpells(int spellTrigger) {
     return _whereParent(laconic.table(_table), spellTrigger).count();
   }
 
+  @override
   Future<SpellLinkedSpellEntity> createSpellLinkedSpell(
     int spellTrigger,
   ) async {
     return SpellLinkedSpellEntity(spellTrigger: spellTrigger);
   }
 
+  @override
   Future<List<BriefSpellLinkedSpellEntity>> getBriefSpellLinkedSpells(
     int spellTrigger, {
     int page = 1,

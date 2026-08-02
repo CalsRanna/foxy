@@ -142,3 +142,11 @@ dart run build_runner build --delete-conflicting-outputs  # 重新生成并审�
 - **`getNextMenuId` / `getNextItemId` 等公开辅助**保留手写,不与生成成员冲突
 - **生成 `_applyFilter` 只覆盖"filter 名可映射"的字段**:不可映射的仓库要么加 `column` 要么保留手写 override 整个 `_applyFilter`——迁移时逐个决定,宁留 override 不强行生成
 - **子表仓库(无 list VM)本期完全不生成查询层**,避免父键形态未定义时误生成
+
+## 下一期实施结果摘要(2026-08-01)
+
+- **子表父键查询层(Phase B)**:`@FoxyRepository` 增加 `parentKey:`(字段名列表,5 个 player_create_info 仓库用双父键);声明后生成父键形态 `count*`/`getBrief*`/`create*`/`copy*`(create 预分配非父 key 字段,where 带父键)。31 个子表仓库迁移;9 个 loot 仓库方法名规范化(`getBriefLootTemplates` → `getBriefCreatureLootTemplates` 等)并同步更新 8 个 collection editor 调用点。语义差异(带 join 的 getBrief、loot 不预分配 Item、skill 的位掩码过滤)保留手写 `@override`。
+- **Detail VM 骨架(Phase C1)**:`@FoxyDetailViewModel` 增加可选 `repository:`;声明后生成信号/initSignals/persist/dispose/_logActivity 钩子。18 个标注 detail VM 迁移(7 个不规则 VM 保持手写);gossip_menu 的 NPC 文本预占、smart_script 的监听器、creature_template/gossip_menu 的 persist 校验保留为 `@override`。
+- **Collection editor 骨架(Phase C2)**:新注解 `@FoxyCollectionEditorViewModel(entity:, repository:)`(复用 FormEmitter 的 controller 样板),生成全套编辑器骨架(信号/token/copy/create/destroy/edit/paginate/persist/setParentKey/_refresh)。26 个单父键 editor 迁移;6 个保持手写(5 个 player_create_info 双父键用复合父类型 + item_enchantment_template 自定义父类型 + page_text_locale 手写查询层 + gossip_menu_option 用 use case 的 persist 为 @override)。
+- **locale helper 生成(Phase E)**:仓库混入 `DbcLocaleRepositoryMixin` 且声明 `dbcLocaleTableName` 时,生成 mixin `on` 子句扩宽为 `RepositoryMixin, DbcLocaleRepositoryMixin` 并生成 `get*Locales`/`save*Locales` 委托。21 个生成仓库迁移;3 个纯手写仓库(item_bag_family/item_limit_category/totem_category)保留手写。
+- 验证:`dart test test/infrastructure/codegen` 43 个、`flutter analyze` 无告警、`flutter test` 375 个全绿。

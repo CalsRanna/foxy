@@ -57,21 +57,10 @@ class CharTitleRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getCharTitleLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<CharTitleEntity>> getCharTitles() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => CharTitleEntity.fromJson(e.toMap())).toList();
   }
-
-  Future<void> saveCharTitleLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(QueryBuilder builder, CharTitleFilter? filter) {
     if (filter == null) return builder;

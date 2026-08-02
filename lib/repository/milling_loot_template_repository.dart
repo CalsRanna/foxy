@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'milling_loot_template_repository.g.dart';
 
-@FoxyRepository(MillingLootTemplateEntity)
+@FoxyRepository(MillingLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class MillingLootTemplateRepository
@@ -14,13 +14,17 @@ class MillingLootTemplateRepository
   static const _table = 'milling_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(MillingLootTemplateKey key) async {
+  @override
+  Future<MillingLootTemplateKey> copyMillingLootTemplate(
+    MillingLootTemplateKey key,
+  ) async {
     final source = await getMillingLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeMillingLootTemplate(copied);
+    return MillingLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({MillingLootTemplateFilter? filter}) async {
@@ -47,11 +51,13 @@ class MillingLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countMillingLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<MillingLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<MillingLootTemplateEntity> createMillingLootTemplate(int entry) async {
     return MillingLootTemplateEntity(entry: entry);
   }
 
@@ -92,7 +98,8 @@ class MillingLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefMillingLootTemplateEntity>> getBriefLootTemplates(
+  @override
+  Future<List<BriefMillingLootTemplateEntity>> getBriefMillingLootTemplates(
     int entry, {
     int page = 1,
   }) async {

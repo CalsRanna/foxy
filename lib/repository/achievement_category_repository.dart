@@ -45,11 +45,6 @@ class AchievementCategoryRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getAchievementCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<BriefAchievementCategoryEntity>> getBriefAchievementCategories({
     int page = 1,
     AchievementCategoryFilter? filter,
@@ -66,12 +61,6 @@ class AchievementCategoryRepository
         .map((row) => BriefAchievementCategoryEntity.fromJson(row.toMap()))
         .toList();
   }
-
-  Future<void> saveAchievementCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,

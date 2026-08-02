@@ -6,15 +6,19 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_item_repository.g.dart';
 
-@FoxyRepository(PlayerCreateInfoItemEntity)
+@FoxyRepository(PlayerCreateInfoItemEntity, parentKey: ['race', 'class_'])
 class PlayerCreateInfoItemRepository
     with RepositoryMixin, _PlayerCreateInfoItemRepositoryMixin {
   static const _table = 'playercreateinfo_item';
 
-  Future<void> copyPlayerCreateInfoItem(PlayerCreateInfoItemKey key) async {
+  @override
+  Future<PlayerCreateInfoItemKey> copyPlayerCreateInfoItem(
+    PlayerCreateInfoItemKey key,
+  ) async {
     throw UnsupportedError('物品 ID 是复合主键的一部分，请新增并选择有效物品。');
   }
 
+  @override
   Future<int> countPlayerCreateInfoItems(int race, int class_) {
     return laconic
         .table(_table)
@@ -23,11 +27,13 @@ class PlayerCreateInfoItemRepository
         .count();
   }
 
+  @override
   Future<PlayerCreateInfoItemEntity> createPlayerCreateInfoItem(
     int race,
     int class_,
   ) async => PlayerCreateInfoItemEntity(race: race, class_: class_);
 
+  @override
   Future<List<BriefPlayerCreateInfoItemEntity>> getBriefPlayerCreateInfoItems(
     int race,
     int class_, {

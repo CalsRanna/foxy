@@ -6,10 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_group_repository.g.dart';
 
-@FoxyRepository(SpellGroupEntity)
+@FoxyRepository(SpellGroupEntity, parentKey: ['spellId'])
 class SpellGroupRepository with RepositoryMixin, _SpellGroupRepositoryMixin {
   static const _table = 'spell_group';
 
+  @override
   Future<SpellGroupKey> copySpellGroup(SpellGroupKey key) async {
     final source = await getSpellGroup(key);
     if (source == null) {
@@ -20,10 +21,12 @@ class SpellGroupRepository with RepositoryMixin, _SpellGroupRepositoryMixin {
     return SpellGroupKey.fromEntity(copied);
   }
 
+  @override
   Future<int> countSpellGroups(int spellId) {
     return laconic.table(_table).where('spell_id', spellId).count();
   }
 
+  @override
   Future<SpellGroupEntity> createSpellGroup(int spellId) async {
     return SpellGroupEntity(
       id: await nextMaxPlusOne(_table, 'id'),
@@ -31,6 +34,7 @@ class SpellGroupRepository with RepositoryMixin, _SpellGroupRepositoryMixin {
     );
   }
 
+  @override
   Future<List<BriefSpellGroupEntity>> getBriefSpellGroups(
     int spellId, {
     int page = 1,

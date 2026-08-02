@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_loot_template_repository.g.dart';
 
-@FoxyRepository(ItemLootTemplateEntity)
+@FoxyRepository(ItemLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class ItemLootTemplateRepository
@@ -14,13 +14,17 @@ class ItemLootTemplateRepository
   static const _table = 'item_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(ItemLootTemplateKey key) async {
+  @override
+  Future<ItemLootTemplateKey> copyItemLootTemplate(
+    ItemLootTemplateKey key,
+  ) async {
     final source = await getItemLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeItemLootTemplate(copied);
+    return ItemLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({ItemLootTemplateFilter? filter}) async {
@@ -47,11 +51,13 @@ class ItemLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countItemLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<ItemLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<ItemLootTemplateEntity> createItemLootTemplate(int entry) async {
     return ItemLootTemplateEntity(entry: entry);
   }
 
@@ -92,7 +98,8 @@ class ItemLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefItemLootTemplateEntity>> getBriefLootTemplates(
+  @override
+  Future<List<BriefItemLootTemplateEntity>> getBriefItemLootTemplates(
     int entry, {
     int page = 1,
   }) async {

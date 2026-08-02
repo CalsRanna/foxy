@@ -24,7 +24,7 @@ final class ItemSetFilter {
   }
 }
 
-mixin _ItemSetRepositoryMixin on RepositoryMixin {
+mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> copyItemSet(int key) async {
     final source = await getItemSet(key);
     if (source == null) {
@@ -87,6 +87,17 @@ mixin _ItemSetRepositoryMixin on RepositoryMixin {
     final results = await builder.get();
     return results.map((e) => ItemSetEntity.fromJson(e.toMap())).toList();
   }
+
+  Future<List<DbcLocaleFieldValue>> getItemSetLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveItemSetLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeItemSet(ItemSetEntity itemSet) async {
     if (itemSet.id <= 0) {

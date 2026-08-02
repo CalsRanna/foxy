@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'disenchant_loot_template_repository.g.dart';
 
-@FoxyRepository(DisenchantLootTemplateEntity)
+@FoxyRepository(DisenchantLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class DisenchantLootTemplateRepository
@@ -14,13 +14,17 @@ class DisenchantLootTemplateRepository
   static const _table = 'disenchant_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(DisenchantLootTemplateKey key) async {
+  @override
+  Future<DisenchantLootTemplateKey> copyDisenchantLootTemplate(
+    DisenchantLootTemplateKey key,
+  ) async {
     final source = await getDisenchantLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeDisenchantLootTemplate(copied);
+    return DisenchantLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({
@@ -49,11 +53,15 @@ class DisenchantLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countDisenchantLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<DisenchantLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<DisenchantLootTemplateEntity> createDisenchantLootTemplate(
+    int entry,
+  ) async {
     return DisenchantLootTemplateEntity(entry: entry);
   }
 
@@ -94,10 +102,9 @@ class DisenchantLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefDisenchantLootTemplateEntity>> getBriefLootTemplates(
-    int entry, {
-    int page = 1,
-  }) async {
+  @override
+  Future<List<BriefDisenchantLootTemplateEntity>>
+  getBriefDisenchantLootTemplates(int entry, {int page = 1}) async {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
       ..._briefFields('lt'),

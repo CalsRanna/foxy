@@ -6,19 +6,22 @@ import 'package:laconic/laconic.dart';
 
 part 'npc_trainer_repository.g.dart';
 
-@FoxyRepository(NpcTrainerEntity)
+@FoxyRepository(NpcTrainerEntity, parentKey: ['trainerId'])
 class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
   static const _table = 'trainer_spell';
   static const primaryKeyColumns = {'TrainerId', 'SpellId'};
 
+  @override
   Future<int> countNpcTrainers(int trainerId) {
     return laconic.table(_table).where('TrainerId', trainerId).count();
   }
 
+  @override
   Future<NpcTrainerEntity> createNpcTrainer(int trainerId) async {
     return NpcTrainerEntity(trainerId: trainerId);
   }
 
+  @override
   Future<List<BriefNpcTrainerEntity>> getBriefNpcTrainers(
     int trainerId, {
     int page = 1,

@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'prospecting_loot_template_repository.g.dart';
 
-@FoxyRepository(ProspectingLootTemplateEntity)
+@FoxyRepository(ProspectingLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class ProspectingLootTemplateRepository
@@ -14,13 +14,17 @@ class ProspectingLootTemplateRepository
   static const _table = 'prospecting_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(ProspectingLootTemplateKey key) async {
+  @override
+  Future<ProspectingLootTemplateKey> copyProspectingLootTemplate(
+    ProspectingLootTemplateKey key,
+  ) async {
     final source = await getProspectingLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeProspectingLootTemplate(copied);
+    return ProspectingLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({
@@ -49,11 +53,15 @@ class ProspectingLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countProspectingLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<ProspectingLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<ProspectingLootTemplateEntity> createProspectingLootTemplate(
+    int entry,
+  ) async {
     return ProspectingLootTemplateEntity(entry: entry);
   }
 
@@ -94,10 +102,9 @@ class ProspectingLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefProspectingLootTemplateEntity>> getBriefLootTemplates(
-    int entry, {
-    int page = 1,
-  }) async {
+  @override
+  Future<List<BriefProspectingLootTemplateEntity>>
+  getBriefProspectingLootTemplates(int entry, {int page = 1}) async {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
       ..._briefFields('lt'),

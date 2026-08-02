@@ -3,6 +3,41 @@
 part of 'npc_vendor_repository.dart';
 
 mixin _NpcVendorRepositoryMixin on RepositoryMixin {
+  Future<NpcVendorKey> copyNpcVendor(NpcVendorKey key) async {
+    final source = await getNpcVendor(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createNpcVendor(source.entry);
+    final copied = source.copyWith(
+      entry: blank.entry,
+      item: blank.item,
+      extendedCost: blank.extendedCost,
+    );
+    await storeNpcVendor(copied);
+    return NpcVendorKey.fromEntity(copied);
+  }
+
+  Future<int> countNpcVendors(int entry) async {
+    return laconic.table('npc_vendor').where('`entry`', entry).count();
+  }
+
+  Future<NpcVendorEntity> createNpcVendor(int entry) async {
+    return NpcVendorEntity(
+      entry: entry,
+      item: await nextMaxPlusOne(
+        'npc_vendor',
+        '`item`',
+        where: {'entry': entry},
+      ),
+      extendedCost: await nextMaxPlusOne(
+        'npc_vendor',
+        '`ExtendedCost`',
+        where: {'entry': entry},
+      ),
+    );
+  }
+
   Future<void> destroyNpcVendor(NpcVendorKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -21,6 +56,31 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return NpcVendorEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefNpcVendorEntity>> getBriefNpcVendors(
+    int entry, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('npc_vendor').select([
+      '`entry`',
+      '`slot`',
+      '`item`',
+      '`maxcount`',
+      '`incrtime`',
+      '`ExtendedCost`',
+    ]);
+    builder = builder.where('`entry`', entry);
+    builder = builder
+        .orderBy('`entry`')
+        .orderBy('`item`')
+        .orderBy('`ExtendedCost`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefNpcVendorEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeNpcVendor(NpcVendorEntity npcVendor) async {

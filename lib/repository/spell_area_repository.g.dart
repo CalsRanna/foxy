@@ -3,6 +3,59 @@
 part of 'spell_area_repository.dart';
 
 mixin _SpellAreaRepositoryMixin on RepositoryMixin {
+  Future<SpellAreaKey> copySpellArea(SpellAreaKey key) async {
+    final source = await getSpellArea(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createSpellArea(source.spell);
+    final copied = source.copyWith(
+      spell: blank.spell,
+      area: blank.area,
+      questStart: blank.questStart,
+      auraSpell: blank.auraSpell,
+      racemask: blank.racemask,
+      gender: blank.gender,
+    );
+    await storeSpellArea(copied);
+    return SpellAreaKey.fromEntity(copied);
+  }
+
+  Future<int> countSpellAreas(int spell) async {
+    return laconic.table('spell_area').where('`spell`', spell).count();
+  }
+
+  Future<SpellAreaEntity> createSpellArea(int spell) async {
+    return SpellAreaEntity(
+      spell: spell,
+      area: await nextMaxPlusOne(
+        'spell_area',
+        '`area`',
+        where: {'spell': spell},
+      ),
+      questStart: await nextMaxPlusOne(
+        'spell_area',
+        '`quest_start`',
+        where: {'spell': spell},
+      ),
+      auraSpell: await nextMaxPlusOne(
+        'spell_area',
+        '`aura_spell`',
+        where: {'spell': spell},
+      ),
+      racemask: await nextMaxPlusOne(
+        'spell_area',
+        '`racemask`',
+        where: {'spell': spell},
+      ),
+      gender: await nextMaxPlusOne(
+        'spell_area',
+        '`gender`',
+        where: {'spell': spell},
+      ),
+    );
+  }
+
   Future<void> destroySpellArea(SpellAreaKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -21,6 +74,37 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return SpellAreaEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefSpellAreaEntity>> getBriefSpellAreas(
+    int spell, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('spell_area').select([
+      '`spell`',
+      '`area`',
+      '`quest_start`',
+      '`quest_end`',
+      '`aura_spell`',
+      '`racemask`',
+      '`gender`',
+      '`quest_start_status`',
+      '`quest_end_status`',
+    ]);
+    builder = builder.where('`spell`', spell);
+    builder = builder
+        .orderBy('`spell`')
+        .orderBy('`area`')
+        .orderBy('`quest_start`')
+        .orderBy('`aura_spell`')
+        .orderBy('`racemask`')
+        .orderBy('`gender`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefSpellAreaEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeSpellArea(SpellAreaEntity spellArea) async {

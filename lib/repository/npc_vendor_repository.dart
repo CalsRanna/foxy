@@ -6,15 +6,17 @@ import 'package:laconic/laconic.dart';
 
 part 'npc_vendor_repository.g.dart';
 
-@FoxyRepository(NpcVendorEntity)
+@FoxyRepository(NpcVendorEntity, parentKey: ['entry'])
 class NpcVendorRepository with RepositoryMixin, _NpcVendorRepositoryMixin {
   static const _table = 'npc_vendor';
   static const primaryKeyColumns = {'entry', 'item', 'ExtendedCost'};
 
+  @override
   Future<int> countNpcVendors(int entry) {
     return laconic.table(_table).where('entry', entry).count();
   }
 
+  @override
   Future<NpcVendorEntity> createNpcVendor(int entry) async {
     final nextSlot = await nextMaxPlusOne(
       _table,
@@ -25,6 +27,7 @@ class NpcVendorRepository with RepositoryMixin, _NpcVendorRepositoryMixin {
     return NpcVendorEntity(entry: entry, slot: nextSlot);
   }
 
+  @override
   Future<List<BriefNpcVendorEntity>> getBriefNpcVendors(
     int entry, {
     int page = 1,

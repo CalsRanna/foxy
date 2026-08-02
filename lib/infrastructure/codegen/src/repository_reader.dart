@@ -111,15 +111,23 @@ final class RepositoryReader {
     final entityParameterName =
         '${baseName[0].toLowerCase()}${baseName.substring(1)}';
 
-    // 查询层(create/copy/getBrief/count/getXxxs/_applyFilter)只为有
-    // 列表页的仓库生成:子表仓库的查询层带父键形态,本期不定义(见
-    // CODEGEN_PLAN.md「明确排除」),避免误生成后无人消费的查询方法。
-    final queryLayerEnabled = await buildStep.canRead(
+    // 查询层(create/copy/getBrief/count/_applyFilter)为两类仓库生成:
+    // 有列表页的主表仓库,以及声明 parentKey 的子表仓库(父详情页 Tab)。
+    final listViewModelPresent = await buildStep.canRead(
       AssetId(
         buildStep.inputId.package,
         'lib/view_model/${toSnakeCase(baseName)}_list_view_model.dart',
       ),
     );
+    final declaredParentKeys = <String>[];
+    final parentKeyReader = annotation.peek('parentKey');
+    if (parentKeyReader != null && !parentKeyReader.isNull) {
+      for (final value in parentKeyReader.listValue) {
+        declaredParentKeys.add(value.toStringValue()!);
+      }
+    }
+    final queryLayerEnabled =
+        listViewModelPresent || declaredParentKeys.isNotEmpty;
 
     final keyFields = <RepositoryKeyFieldModel>[];
     final briefProjectionColumns = <String>[];
@@ -164,6 +172,25 @@ final class RepositoryReader {
         '在至少一个 @FoxyFullField 上设置 key: true。',
       );
     }
+    final parentKeyFields = <RepositoryKeyFieldModel>[];
+    for (final declared in declaredParentKeys) {
+      RepositoryKeyFieldModel? matched;
+      for (final field in keyFields) {
+        if (field.dartName == declared) {
+          matched = field;
+          break;
+        }
+      }
+      if (matched == null) {
+        _fail(
+          '$repositoryClassName 的 parentKey: \'$declared\' '
+              '不是 $entityClassName 的 key 字段。',
+          element,
+          'parentKey 必须是实体上 @FoxyFullField(key: true) 的字段名。',
+        );
+      }
+      parentKeyFields.add(matched);
+    }
     if (queryLayerEnabled) {
       final briefAnnotations = _briefEntityChecker
           .annotationsOf(entityElement)
@@ -189,7 +216,9 @@ final class RepositoryReader {
       element,
       baseName,
       fieldColumnByName,
-      queryLayerEnabled,
+      // 子表仓库(声明 parentKey)不生成 _applyFilter,筛选字段允许
+      // 无法推断列名(Filter 类仍生成,仅作查询输入对象)。
+      listViewModelPresent,
     );
 
     final source = await buildStep.readAsString(buildStep.inputId);
@@ -213,6 +242,11 @@ final class RepositoryReader {
         '在 Repository imports 后声明生成 part。',
       );
     }
+    // locale helper 委托需要 DbcLocaleRepositoryMixin 的
+    // loadDbcLocaleField/storeDbcLocaleField 与 dbcLocaleTableName。
+    final localeHelpersEnabled =
+        RegExp(r'\bDbcLocaleRepositoryMixin\b').hasMatch(source) &&
+        RegExp(r'\bdbcLocaleTableName\b').hasMatch(source);
     final mixinName = '_${repositoryClassName}Mixin';
     if (!RegExp(
       'class\\s+$repositoryClassName\\s+with\\s+[^\\{;]*\\b$mixinName\\b',
@@ -229,8 +263,11 @@ final class RepositoryReader {
       entityParameterName: entityParameterName,
       filterFields: List.unmodifiable(filterFields),
       keyFields: List.unmodifiable(keyFields),
+      listViewModelPresent: listViewModelPresent,
+      localeHelpersEnabled: localeHelpersEnabled,
       mixinName: mixinName,
       briefProjectionColumns: List.unmodifiable(briefProjectionColumns),
+      parentKeyFields: List.unmodifiable(parentKeyFields),
       queryLayerEnabled: queryLayerEnabled,
       repositoryClassName: repositoryClassName,
       table: table,
@@ -257,7 +294,7 @@ final class RepositoryReader {
     ClassElement element,
     String baseName,
     Map<String, String> fieldColumnByName,
-    bool queryLayerEnabled,
+    bool requireColumnInference,
   ) {
     final filterClassName = '${baseName}Filter';
     final fields = <RepositoryFilterFieldModel>[];
@@ -277,7 +314,7 @@ final class RepositoryReader {
       }
       final inferred = fieldColumnByName[field.name];
       if (inferred == null) {
-        if (queryLayerEnabled) {
+        if (requireColumnInference) {
           _fail(
             '$filterClassName.${field.name} 无法推断物理列：'
                 'Entity 没有同名 ${field.name} 字段。',
@@ -286,7 +323,7 @@ final class RepositoryReader {
                 "'${field.name}') 显式声明 column: '物理列名'。",
           );
         }
-        // 子表仓库本期不生成查询层，不消费列名，允许未声明。
+        // 子表仓库不生成 _applyFilter，不消费列名，允许未声明。
         fields.add(field);
         continue;
       }

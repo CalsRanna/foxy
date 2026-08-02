@@ -3,6 +3,34 @@
 part of 'spell_loot_template_repository.dart';
 
 mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<SpellLootTemplateKey> copySpellLootTemplate(
+    SpellLootTemplateKey key,
+  ) async {
+    final source = await getSpellLootTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createSpellLootTemplate(source.entry);
+    final copied = source.copyWith(entry: blank.entry, item: blank.item);
+    await storeSpellLootTemplate(copied);
+    return SpellLootTemplateKey.fromEntity(copied);
+  }
+
+  Future<int> countSpellLootTemplates(int entry) async {
+    return laconic.table('spell_loot_template').where('`Entry`', entry).count();
+  }
+
+  Future<SpellLootTemplateEntity> createSpellLootTemplate(int entry) async {
+    return SpellLootTemplateEntity(
+      entry: entry,
+      item: await nextMaxPlusOne(
+        'spell_loot_template',
+        '`Item`',
+        where: {'Entry': entry},
+      ),
+    );
+  }
+
   Future<void> destroySpellLootTemplate(SpellLootTemplateKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +51,32 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return SpellLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefSpellLootTemplateEntity>> getBriefSpellLootTemplates(
+    int entry, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('spell_loot_template').select([
+      '`Entry`',
+      '`Item`',
+      '`Reference`',
+      '`Chance`',
+      '`QuestRequired`',
+      '`LootMode`',
+      '`GroupId`',
+      '`MinCount`',
+      '`MaxCount`',
+      '`Comment`',
+    ]);
+    builder = builder.where('`Entry`', entry);
+    builder = builder.orderBy('`Entry`').orderBy('`Item`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefSpellLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeSpellLootTemplate(

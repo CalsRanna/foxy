@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_template_resistance_repository.g.dart';
 
-@FoxyRepository(CreatureTemplateResistanceEntity)
+@FoxyRepository(CreatureTemplateResistanceEntity, parentKey: ['creatureID'])
 class CreatureTemplateResistanceRepository
     with RepositoryMixin, _CreatureTemplateResistanceRepositoryMixin {
   static const _table = 'creature_template_resistance';
@@ -14,10 +14,11 @@ class CreatureTemplateResistanceRepository
   static const minSchool = 1;
   static const primaryKeyColumns = {'CreatureID', 'School'};
 
+  @override
   Future<CreatureTemplateResistanceKey> copyCreatureTemplateResistance(
-    CreatureTemplateResistanceKey sourceKey,
+    CreatureTemplateResistanceKey key,
   ) async {
-    final source = await getCreatureTemplateResistance(sourceKey);
+    final source = await getCreatureTemplateResistance(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
@@ -27,10 +28,12 @@ class CreatureTemplateResistanceRepository
     return CreatureTemplateResistanceKey.fromEntity(candidate);
   }
 
+  @override
   Future<int> countCreatureTemplateResistances(int creatureID) {
     return laconic.table(_table).where('CreatureID', creatureID).count();
   }
 
+  @override
   Future<CreatureTemplateResistanceEntity> createCreatureTemplateResistance(
     int creatureID,
   ) async {
@@ -40,6 +43,7 @@ class CreatureTemplateResistanceRepository
     );
   }
 
+  @override
   Future<List<BriefCreatureTemplateResistanceEntity>>
   getBriefCreatureTemplateResistances(int creatureID, {int page = 1}) async {
     final results = await laconic

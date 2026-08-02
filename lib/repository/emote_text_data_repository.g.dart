@@ -24,7 +24,8 @@ final class EmoteTextDataFilter {
   }
 }
 
-mixin _EmoteTextDataRepositoryMixin on RepositoryMixin {
+mixin _EmoteTextDataRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyEmoteTextData(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -44,6 +45,17 @@ mixin _EmoteTextDataRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return EmoteTextDataEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getEmoteTextDataLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveEmoteTextDataLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeEmoteTextData(EmoteTextDataEntity emoteTextData) async {
     if (emoteTextData.id <= 0) {

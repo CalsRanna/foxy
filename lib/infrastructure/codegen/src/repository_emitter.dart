@@ -7,11 +7,12 @@ final class RepositoryEmitter {
   const RepositoryEmitter();
 
   /// 成员顺序遵循 "Sort Members" 规则:公开方法按名(copy → count →
-  /// create → destroy → getBrief → get → getXxxs → store → update),
-  /// 私有方法按名(_applyFilter → _before* → _whereKey)。
+  /// create → destroy → getBrief → get → getXxxs → getXxxLocales →
+  /// saveXxxLocales → store → update),私有方法按名
+  /// (_applyFilter → _before* → _whereKey)。
   String emit(RepositoryGenerationModel model) {
     final buffer = StringBuffer()
-      ..writeln('mixin ${model.mixinName} on RepositoryMixin {');
+      ..writeln('mixin ${model.mixinName} on ${_onClause(model)} {');
     if (model.queryLayerEnabled) {
       _emitCopy(buffer, model);
       _emitCount(buffer, model);
@@ -21,17 +22,53 @@ final class RepositoryEmitter {
     _emitGet(buffer, model);
     if (model.queryLayerEnabled) {
       _emitGetBrief(buffer, model);
+    }
+    // 全量列表只为主表仓库生成(子表无 DBC export 等全量消费方)。
+    if (model.listViewModelPresent) {
       _emitGetAll(buffer, model);
+    }
+    if (model.localeHelpersEnabled) {
+      _emitGetLocales(buffer, model);
+      _emitSaveLocales(buffer, model);
     }
     _emitStore(buffer, model);
     _emitUpdate(buffer, model);
-    if (model.queryLayerEnabled) {
+    if (model.listViewModelPresent) {
       _emitApplyFilter(buffer, model);
     }
     _emitWriteHooks(buffer, model);
     _emitWhereKey(buffer, model);
     buffer.writeln('}');
     return buffer.toString();
+  }
+
+  /// locale helper 委托调用 DbcLocaleRepositoryMixin 的
+  /// loadDbcLocaleField/storeDbcLocaleField,生成 mixin 的 on 子句
+  /// 必须扩宽到该 mixin(仓库类本身已混入)。
+  String _onClause(RepositoryGenerationModel model) =>
+      model.localeHelpersEnabled
+      ? 'RepositoryMixin, DbcLocaleRepositoryMixin'
+      : 'RepositoryMixin';
+
+  void _emitGetLocales(StringBuffer buffer, RepositoryGenerationModel model) {
+    buffer
+      ..writeln(
+        '  Future<List<DbcLocaleFieldValue>> get${model.baseName}Locales('
+        'int id, DbcLocaleFieldDefinition field) =>',
+      )
+      ..writeln('      loadDbcLocaleField(id, field);')
+      ..writeln();
+  }
+
+  void _emitSaveLocales(StringBuffer buffer, RepositoryGenerationModel model) {
+    buffer
+      ..writeln(
+        '  Future<void> save${model.baseName}Locales('
+        'int id, DbcLocaleFieldDefinition field, '
+        'List<DbcLocaleFieldValue> locales) =>',
+      )
+      ..writeln('      storeDbcLocaleField(id, field, locales);')
+      ..writeln();
   }
 
   /// 物理列名一律用反引号包裹后写成 Dart 字符串字面量。
@@ -73,6 +110,7 @@ final class RepositoryEmitter {
   }
 
   void _emitCopy(StringBuffer buffer, RepositoryGenerationModel model) {
+    final parents = model.parentKeyFields;
     buffer
       ..writeln(
         '  Future<${model.keyType}> copy${model.baseName}'
@@ -82,7 +120,10 @@ final class RepositoryEmitter {
       ..writeln('    if (source == null) {')
       ..writeln("      throw StateError('原记录不存在，可能已被其他操作修改或删除');")
       ..writeln('    }')
-      ..writeln('    final blank = await create${model.baseName}();')
+      ..writeln(
+        '    final blank = await create${model.baseName}('
+        '${parents.isEmpty ? '' : parents.map((p) => 'source.${p.dartName}').join(', ')});',
+      )
       ..writeln('    final copied = source.copyWith(');
     for (final field in model.keyFields) {
       buffer.writeln('      ${field.dartName}: blank.${field.dartName},');
@@ -98,13 +139,28 @@ final class RepositoryEmitter {
   }
 
   void _emitCount(StringBuffer buffer, RepositoryGenerationModel model) {
+    final parents = model.parentKeyFields;
+    if (parents.isEmpty) {
+      buffer
+        ..writeln(
+          '  Future<int> count${pluralize(model.baseName)}'
+          '({${model.filterClassName}? filter}) async {',
+        )
+        ..writeln(
+          '    return _applyFilter(laconic.table(${_table(model)}), filter)'
+          '.count();',
+        )
+        ..writeln('  }')
+        ..writeln();
+      return;
+    }
     buffer
       ..writeln(
         '  Future<int> count${pluralize(model.baseName)}'
-        '({${model.filterClassName}? filter}) async {',
+        '(${_parentParams(parents)}) async {',
       )
       ..writeln(
-        '    return _applyFilter(laconic.table(${_table(model)}), filter)'
+        '    return laconic.table(${_table(model)})${_parentWheres(parents)}'
         '.count();',
       )
       ..writeln('  }')
@@ -112,14 +168,39 @@ final class RepositoryEmitter {
   }
 
   void _emitCreate(StringBuffer buffer, RepositoryGenerationModel model) {
+    final parents = model.parentKeyFields;
+    if (parents.isEmpty) {
+      buffer.writeln(
+        '  Future<${model.entityClassName}> create${model.baseName}() async {',
+      );
+      buffer.writeln('    return ${model.entityClassName}(');
+      for (final field in model.keyFields) {
+        buffer.writeln(
+          '      ${field.dartName}: await nextMaxPlusOne('
+          '${_table(model)}, ${_column(field.columnName)}),',
+        );
+      }
+      buffer
+        ..writeln('    );')
+        ..writeln('  }')
+        ..writeln();
+      return;
+    }
+    final parentNames = parents.map((p) => p.dartName).toList();
     buffer.writeln(
-      '  Future<${model.entityClassName}> create${model.baseName}() async {',
+      '  Future<${model.entityClassName}> create${model.baseName}'
+      '(${_parentParams(parents)}) async {',
     );
     buffer.writeln('    return ${model.entityClassName}(');
+    for (final parent in parents) {
+      buffer.writeln('      ${parent.dartName}: ${parent.dartName},');
+    }
     for (final field in model.keyFields) {
+      if (parentNames.contains(field.dartName)) continue;
       buffer.writeln(
         '      ${field.dartName}: await nextMaxPlusOne('
-        '${_table(model)}, ${_column(field.columnName)}),',
+        '${_table(model)}, ${_column(field.columnName)}, '
+        'where: {${_parentWhereMap(parents)}}),',
       );
     }
     buffer
@@ -183,13 +264,43 @@ final class RepositoryEmitter {
   }
 
   void _emitGetBrief(StringBuffer buffer, RepositoryGenerationModel model) {
+    final parents = model.parentKeyFields;
+    if (parents.isEmpty) {
+      buffer
+        ..writeln(
+          '  Future<List<${model.briefEntityClassName}>> '
+          'getBrief${pluralize(model.baseName)}({',
+        )
+        ..writeln('    int page = 1,')
+        ..writeln('    ${model.filterClassName}? filter,')
+        ..writeln('  }) async {')
+        ..writeln('    var offset = (page - 1) * kPageSize;')
+        ..writeln('    var builder = laconic.table(${_table(model)}).select([');
+      for (final column in model.briefProjectionColumns) {
+        buffer.writeln('      ${_column(column)},');
+      }
+      buffer
+        ..writeln('    ]);')
+        ..writeln('    builder = _applyFilter(builder, filter);')
+        ..writeln('    builder = builder${_orderByClause(model)};')
+        ..writeln('    builder = builder.limit(kPageSize).offset(offset);')
+        ..writeln('    final results = await builder.get();')
+        ..writeln('    return results')
+        ..writeln(
+          '        .map((e) => ${model.briefEntityClassName}.fromJson(e.toMap()))'
+          '.toList();',
+        )
+        ..writeln('  }')
+        ..writeln();
+      return;
+    }
     buffer
       ..writeln(
         '  Future<List<${model.briefEntityClassName}>> '
-        'getBrief${pluralize(model.baseName)}({',
+        'getBrief${pluralize(model.baseName)}('
+        '${_parentParams(parents)}, {',
       )
       ..writeln('    int page = 1,')
-      ..writeln('    ${model.filterClassName}? filter,')
       ..writeln('  }) async {')
       ..writeln('    var offset = (page - 1) * kPageSize;')
       ..writeln('    var builder = laconic.table(${_table(model)}).select([');
@@ -198,7 +309,7 @@ final class RepositoryEmitter {
     }
     buffer
       ..writeln('    ]);')
-      ..writeln('    builder = _applyFilter(builder, filter);')
+      ..writeln('    builder = builder${_parentWheres(parents)};')
       ..writeln('    builder = builder${_orderByClause(model)};')
       ..writeln('    builder = builder.limit(kPageSize).offset(offset);')
       ..writeln('    final results = await builder.get();')
@@ -309,6 +420,19 @@ final class RepositoryEmitter {
       )
       ..writeln();
   }
+
+  /// 父键参数列表:`int race, int class_`(空列表返回空串)。
+  String _parentParams(List<RepositoryKeyFieldModel> parents) =>
+      parents.map((p) => '${p.dartType} ${p.dartName}').join(', ');
+
+  /// 父键 where 链:`where('`race`', race).where('`class`', class_)`。
+  String _parentWheres(List<RepositoryKeyFieldModel> parents) => parents
+      .map((p) => '.where(${_column(p.columnName)}, ${p.dartName})')
+      .join();
+
+  /// 父键 where 映射字面量:`'`race`': race, '`class`': class_`。
+  String _parentWhereMap(List<RepositoryKeyFieldModel> parents) =>
+      parents.map((p) => "'${p.columnName}': ${p.dartName}").join(', ');
 
   /// `.orderBy('`ID`')` 或复合 key 的链式 `.orderBy(...).orderBy(...)`。
   String _orderByClause(RepositoryGenerationModel model) {

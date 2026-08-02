@@ -70,21 +70,10 @@ class MapInfoRepository
     return results.map((e) => BriefMapInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getMapInfoLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<MapInfoEntity>> getMapInfos() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
   }
-
-  Future<void> saveMapInfoLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilter? filter) {
     if (filter == null) return builder;

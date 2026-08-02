@@ -34,18 +34,18 @@ dependencies:
   custom_lint_builder: ^0.8.1
   analyzer: ^8.1.1
 
+  build: any
+  source_gen: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   auto_route_generator: ^10.2.5
-  build: ^3.1.0
   build_runner: ^2.4.9
   build_test: ^3.3.2
   custom_lint: ^0.8.1
   flutter_lints: ^6.0.0
   icons_launcher: ^3.1.0
-  source_gen: ^3.1.0
   test: ^1.30.0
 
 flutter:

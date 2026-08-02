@@ -3,6 +3,18 @@
 part of 'item_set_detail_view_model.dart';
 
 mixin _ItemSetDetailViewModelMixin on FieldControllerMixin {
+  final _repository = GetIt.instance.get<ItemSetRepository>();
+
+  final entity = signal<ItemSetEntity?>(null);
+
+  final persistedKey = signal<int?>(null);
+
+  final loading = signal(false);
+
+  final submitting = signal(false);
+
+  final errorMessage = signal<String?>(null);
+
   late final idController = registerController(IntFieldController());
   late final nameLangEnUSController = registerController(
     StringFieldController(),
@@ -90,6 +102,63 @@ mixin _ItemSetDetailViewModelMixin on FieldControllerMixin {
   late final requiredSkillRankController = registerController(
     IntFieldController(),
   );
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      if (key == null) {
+        final blank = await _repository.createItemSet();
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
+        return;
+      }
+      final result = await _repository.getItemSet(key);
+      if (result == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final candidate = _collectCandidate();
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeItemSet(candidate);
+      } else {
+        await _repository.updateItemSet(originalKey, candidate);
+      }
+      persistedKey.value = candidate.id;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
 
   void _afterApplyCandidate(ItemSetEntity itemSet) {}
 
@@ -207,4 +276,6 @@ mixin _ItemSetDetailViewModelMixin on FieldControllerMixin {
       requiredSkillRank: requiredSkillRankController.collect(),
     );
   }
+
+  void _logActivity(ActivityActionType action, ItemSetEntity itemSet) {}
 }

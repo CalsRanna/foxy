@@ -23,7 +23,6 @@ import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 
 void main() {
-
   test('creature_template 枚举选项与 AzerothCore 服务端取值集一致', () {
     expect(kUnitClassOptions.keys.toSet(), {1, 2, 4, 8});
     expect(kRankOptions.keys.toSet(), {0, 1, 2, 3, 4, 5});
@@ -210,7 +209,7 @@ void main() {
 
   test('掉落新增项不为 Item 外键自动造号', () async {
     final repository = CreatureLootTemplateRepository();
-    final loot = await repository.createLootTemplate(123);
+    final loot = await repository.createCreatureLootTemplate(123);
     expect(loot.entry, 123);
     expect(loot.item, 0);
   });

@@ -55,23 +55,12 @@ class ItemPurchaseGroupRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getItemPurchaseGroupLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<ItemPurchaseGroupEntity>> getItemPurchaseGroups() async {
     final rows = await laconic.table(_table).get();
     return rows
         .map((row) => ItemPurchaseGroupEntity.fromJson(row.toMap()))
         .toList();
   }
-
-  Future<void> saveItemPurchaseGroupLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,

@@ -64,17 +64,6 @@ class ItemRandomSuffixRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getItemRandomSuffixLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveItemRandomSuffixLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemRandomSuffixFilter? filter,

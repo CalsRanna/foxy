@@ -27,7 +27,8 @@ final class ItemRandomPropertiesFilter {
   }
 }
 
-mixin _ItemRandomPropertiesRepositoryMixin on RepositoryMixin {
+mixin _ItemRandomPropertiesRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyItemRandomProperties(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -47,6 +48,17 @@ mixin _ItemRandomPropertiesRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return ItemRandomPropertiesEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getItemRandomPropertiesLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveItemRandomPropertiesLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeItemRandomProperties(
     ItemRandomPropertiesEntity itemRandomProperties,

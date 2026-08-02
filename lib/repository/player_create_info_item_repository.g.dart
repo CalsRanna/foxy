@@ -3,6 +3,46 @@
 part of 'player_create_info_item_repository.dart';
 
 mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
+  Future<PlayerCreateInfoItemKey> copyPlayerCreateInfoItem(
+    PlayerCreateInfoItemKey key,
+  ) async {
+    final source = await getPlayerCreateInfoItem(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createPlayerCreateInfoItem(source.race, source.class_);
+    final copied = source.copyWith(
+      race: blank.race,
+      class_: blank.class_,
+      itemId: blank.itemId,
+    );
+    await storePlayerCreateInfoItem(copied);
+    return PlayerCreateInfoItemKey.fromEntity(copied);
+  }
+
+  Future<int> countPlayerCreateInfoItems(int race, int class_) async {
+    return laconic
+        .table('playercreateinfo_item')
+        .where('`race`', race)
+        .where('`class`', class_)
+        .count();
+  }
+
+  Future<PlayerCreateInfoItemEntity> createPlayerCreateInfoItem(
+    int race,
+    int class_,
+  ) async {
+    return PlayerCreateInfoItemEntity(
+      race: race,
+      class_: class_,
+      itemId: await nextMaxPlusOne(
+        'playercreateinfo_item',
+        '`itemid`',
+        where: {'race': race, 'class': class_},
+      ),
+    );
+  }
+
   Future<void> destroyPlayerCreateInfoItem(PlayerCreateInfoItemKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +63,28 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoItemEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefPlayerCreateInfoItemEntity>> getBriefPlayerCreateInfoItems(
+    int race,
+    int class_, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('playercreateinfo_item').select([
+      '`race`',
+      '`class`',
+      '`itemid`',
+      '`amount`',
+      '`Note`',
+    ]);
+    builder = builder.where('`race`', race).where('`class`', class_);
+    builder = builder.orderBy('`race`').orderBy('`class`').orderBy('`itemid`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefPlayerCreateInfoItemEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storePlayerCreateInfoItem(

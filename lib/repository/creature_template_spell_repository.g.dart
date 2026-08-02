@@ -3,6 +3,42 @@
 part of 'creature_template_spell_repository.dart';
 
 mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
+  Future<CreatureTemplateSpellKey> copyCreatureTemplateSpell(
+    CreatureTemplateSpellKey key,
+  ) async {
+    final source = await getCreatureTemplateSpell(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureTemplateSpell(source.creatureID);
+    final copied = source.copyWith(
+      creatureID: blank.creatureID,
+      index: blank.index,
+    );
+    await storeCreatureTemplateSpell(copied);
+    return CreatureTemplateSpellKey.fromEntity(copied);
+  }
+
+  Future<int> countCreatureTemplateSpells(int creatureID) async {
+    return laconic
+        .table('creature_template_spell')
+        .where('`CreatureID`', creatureID)
+        .count();
+  }
+
+  Future<CreatureTemplateSpellEntity> createCreatureTemplateSpell(
+    int creatureID,
+  ) async {
+    return CreatureTemplateSpellEntity(
+      creatureID: creatureID,
+      index: await nextMaxPlusOne(
+        'creature_template_spell',
+        '`Index`',
+        where: {'CreatureID': creatureID},
+      ),
+    );
+  }
+
   Future<void> destroyCreatureTemplateSpell(
     CreatureTemplateSpellKey key,
   ) async {
@@ -25,6 +61,26 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateSpellEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefCreatureTemplateSpellEntity>> getBriefCreatureTemplateSpells(
+    int creatureID, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('creature_template_spell').select([
+      '`CreatureID`',
+      '`Index`',
+      '`Spell`',
+      '`VerifiedBuild`',
+    ]);
+    builder = builder.where('`CreatureID`', creatureID);
+    builder = builder.orderBy('`CreatureID`').orderBy('`Index`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCreatureTemplateSpellEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeCreatureTemplateSpell(

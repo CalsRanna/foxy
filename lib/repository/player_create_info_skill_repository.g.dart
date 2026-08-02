@@ -3,6 +3,49 @@
 part of 'player_create_info_skill_repository.dart';
 
 mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
+  Future<PlayerCreateInfoSkillKey> copyPlayerCreateInfoSkill(
+    PlayerCreateInfoSkillKey key,
+  ) async {
+    final source = await getPlayerCreateInfoSkill(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createPlayerCreateInfoSkill(
+      source.raceMask,
+      source.classMask,
+    );
+    final copied = source.copyWith(
+      raceMask: blank.raceMask,
+      classMask: blank.classMask,
+      skill: blank.skill,
+    );
+    await storePlayerCreateInfoSkill(copied);
+    return PlayerCreateInfoSkillKey.fromEntity(copied);
+  }
+
+  Future<int> countPlayerCreateInfoSkills(int raceMask, int classMask) async {
+    return laconic
+        .table('playercreateinfo_skills')
+        .where('`raceMask`', raceMask)
+        .where('`classMask`', classMask)
+        .count();
+  }
+
+  Future<PlayerCreateInfoSkillEntity> createPlayerCreateInfoSkill(
+    int raceMask,
+    int classMask,
+  ) async {
+    return PlayerCreateInfoSkillEntity(
+      raceMask: raceMask,
+      classMask: classMask,
+      skill: await nextMaxPlusOne(
+        'playercreateinfo_skills',
+        '`skill`',
+        where: {'raceMask': raceMask, 'classMask': classMask},
+      ),
+    );
+  }
+
   Future<void> destroyPlayerCreateInfoSkill(
     PlayerCreateInfoSkillKey key,
   ) async {
@@ -25,6 +68,33 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoSkillEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefPlayerCreateInfoSkillEntity>> getBriefPlayerCreateInfoSkills(
+    int raceMask,
+    int classMask, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('playercreateinfo_skills').select([
+      '`raceMask`',
+      '`classMask`',
+      '`skill`',
+      '`rank`',
+      '`comment`',
+    ]);
+    builder = builder
+        .where('`raceMask`', raceMask)
+        .where('`classMask`', classMask);
+    builder = builder
+        .orderBy('`raceMask`')
+        .orderBy('`classMask`')
+        .orderBy('`skill`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefPlayerCreateInfoSkillEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storePlayerCreateInfoSkill(

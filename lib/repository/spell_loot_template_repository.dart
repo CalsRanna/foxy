@@ -6,24 +6,30 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_loot_template_repository.g.dart';
 
-@FoxyRepository(SpellLootTemplateEntity)
+@FoxyRepository(SpellLootTemplateEntity, parentKey: ['entry'])
 class SpellLootTemplateRepository
     with RepositoryMixin, _SpellLootTemplateRepositoryMixin {
   static const _table = 'spell_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copySpellLootTemplate(SpellLootTemplateKey key) async {
+  @override
+  Future<SpellLootTemplateKey> copySpellLootTemplate(
+    SpellLootTemplateKey key,
+  ) async {
     throw UnsupportedError('法术掉落记录不能自动复制，请新增记录并选择有效物品或引用模板。');
   }
 
+  @override
   Future<int> countSpellLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
+  @override
   Future<SpellLootTemplateEntity> createSpellLootTemplate(int entry) async {
     return SpellLootTemplateEntity(entry: entry);
   }
 
+  @override
   Future<List<BriefSpellLootTemplateEntity>> getBriefSpellLootTemplates(
     int entry, {
     int page = 1,

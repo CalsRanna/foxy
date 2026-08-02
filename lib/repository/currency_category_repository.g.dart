@@ -24,7 +24,8 @@ final class CurrencyCategoryFilter {
   }
 }
 
-mixin _CurrencyCategoryRepositoryMixin on RepositoryMixin {
+mixin _CurrencyCategoryRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyCurrencyCategory(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -44,6 +45,17 @@ mixin _CurrencyCategoryRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return CurrencyCategoryEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getCurrencyCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveCurrencyCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeCurrencyCategory(
     CurrencyCategoryEntity currencyCategory,

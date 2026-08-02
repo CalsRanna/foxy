@@ -6,24 +6,27 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_quest_starter_repository.g.dart';
 
-@FoxyRepository(GameObjectQuestStarterEntity)
+@FoxyRepository(GameObjectQuestStarterEntity, parentKey: ['quest'])
 class GameObjectQuestStarterRepository
     with RepositoryMixin, _GameObjectQuestStarterRepositoryMixin {
   static const _table = 'gameobject_queststarter';
   static const primaryKeyColumns = {'id', 'quest'};
 
-  Future<int> countGameObjectQuestStarters(int questId) {
-    return laconic.table(_table).where('quest', questId).count();
+  @override
+  Future<int> countGameObjectQuestStarters(int quest) {
+    return laconic.table(_table).where('quest', quest).count();
   }
 
+  @override
   Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
-    int questId,
+    int quest,
   ) async {
-    return GameObjectQuestStarterEntity(quest: questId);
+    return GameObjectQuestStarterEntity(quest: quest);
   }
 
+  @override
   Future<List<BriefGameObjectQuestStarterEntity>>
-  getBriefGameObjectQuestStarters(int questId, {int page = 1}) async {
+  getBriefGameObjectQuestStarters(int quest, {int page = 1}) async {
     final fields = <String>[
       'gos.id',
       'gos.quest',
@@ -43,7 +46,7 @@ class GameObjectQuestStarterRepository
             join.on('got.entry', 'gotl.entry').where('gotl.locale', 'zhCN'),
       );
     }
-    builder = builder.where('gos.quest', questId);
+    builder = builder.where('gos.quest', quest);
     builder = builder.orderBy('gos.id');
     builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     final results = await builder.get();

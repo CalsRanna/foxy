@@ -66,17 +66,6 @@ class ItemRandomPropertiesRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getItemRandomPropertiesLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveItemRandomPropertiesLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemRandomPropertiesFilter? filter,

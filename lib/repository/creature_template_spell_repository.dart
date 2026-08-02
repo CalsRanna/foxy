@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_template_spell_repository.g.dart';
 
-@FoxyRepository(CreatureTemplateSpellEntity)
+@FoxyRepository(CreatureTemplateSpellEntity, parentKey: ['creatureID'])
 class CreatureTemplateSpellRepository
     with RepositoryMixin, _CreatureTemplateSpellRepositoryMixin {
   static const _table = 'creature_template_spell';
@@ -14,10 +14,11 @@ class CreatureTemplateSpellRepository
   static const minIndex = 0;
   static const primaryKeyColumns = {'CreatureID', 'Index'};
 
+  @override
   Future<CreatureTemplateSpellKey> copyCreatureTemplateSpell(
-    CreatureTemplateSpellKey sourceKey,
+    CreatureTemplateSpellKey key,
   ) async {
-    final source = await getCreatureTemplateSpell(sourceKey);
+    final source = await getCreatureTemplateSpell(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
@@ -27,10 +28,12 @@ class CreatureTemplateSpellRepository
     return CreatureTemplateSpellKey.fromEntity(candidate);
   }
 
+  @override
   Future<int> countCreatureTemplateSpells(int creatureID) {
     return laconic.table(_table).where('CreatureID', creatureID).count();
   }
 
+  @override
   Future<CreatureTemplateSpellEntity> createCreatureTemplateSpell(
     int creatureID,
   ) async {
@@ -40,6 +43,7 @@ class CreatureTemplateSpellRepository
     );
   }
 
+  @override
   Future<List<BriefCreatureTemplateSpellEntity>> getBriefCreatureTemplateSpells(
     int creatureID, {
     int page = 1,

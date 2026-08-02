@@ -28,6 +28,39 @@ final class SkinningLootTemplateFilter {
 }
 
 mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<SkinningLootTemplateKey> copySkinningLootTemplate(
+    SkinningLootTemplateKey key,
+  ) async {
+    final source = await getSkinningLootTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createSkinningLootTemplate(source.entry);
+    final copied = source.copyWith(entry: blank.entry, item: blank.item);
+    await storeSkinningLootTemplate(copied);
+    return SkinningLootTemplateKey.fromEntity(copied);
+  }
+
+  Future<int> countSkinningLootTemplates(int entry) async {
+    return laconic
+        .table('skinning_loot_template')
+        .where('`Entry`', entry)
+        .count();
+  }
+
+  Future<SkinningLootTemplateEntity> createSkinningLootTemplate(
+    int entry,
+  ) async {
+    return SkinningLootTemplateEntity(
+      entry: entry,
+      item: await nextMaxPlusOne(
+        'skinning_loot_template',
+        '`Item`',
+        where: {'Entry': entry},
+      ),
+    );
+  }
+
   Future<void> destroySkinningLootTemplate(SkinningLootTemplateKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -48,6 +81,30 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return SkinningLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefSkinningLootTemplateEntity>> getBriefSkinningLootTemplates(
+    int entry, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('skinning_loot_template').select([
+      '`Entry`',
+      '`Item`',
+      '`Reference`',
+      '`Chance`',
+      '`QuestRequired`',
+      '`GroupId`',
+      '`MinCount`',
+      '`MaxCount`',
+    ]);
+    builder = builder.where('`Entry`', entry);
+    builder = builder.orderBy('`Entry`').orderBy('`Item`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefSkinningLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeSkinningLootTemplate(

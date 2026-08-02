@@ -76,22 +76,11 @@ class SpellRepository
     return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getSpellLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   @override
   Future<List<SpellEntity>> getSpells() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
   }
-
-  Future<void> saveSpellLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, SpellFilter? filter) {

@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'skinning_loot_template_repository.g.dart';
 
-@FoxyRepository(SkinningLootTemplateEntity)
+@FoxyRepository(SkinningLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class SkinningLootTemplateRepository
@@ -14,13 +14,17 @@ class SkinningLootTemplateRepository
   static const _table = 'skinning_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(SkinningLootTemplateKey key) async {
+  @override
+  Future<SkinningLootTemplateKey> copySkinningLootTemplate(
+    SkinningLootTemplateKey key,
+  ) async {
     final source = await getSkinningLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeSkinningLootTemplate(copied);
+    return SkinningLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({
@@ -49,11 +53,15 @@ class SkinningLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countSkinningLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<SkinningLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<SkinningLootTemplateEntity> createSkinningLootTemplate(
+    int entry,
+  ) async {
     return SkinningLootTemplateEntity(entry: entry);
   }
 
@@ -94,7 +102,8 @@ class SkinningLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefSkinningLootTemplateEntity>> getBriefLootTemplates(
+  @override
+  Future<List<BriefSkinningLootTemplateEntity>> getBriefSkinningLootTemplates(
     int entry, {
     int page = 1,
   }) async {

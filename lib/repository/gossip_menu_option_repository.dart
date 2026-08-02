@@ -6,17 +6,18 @@ import 'package:laconic/laconic.dart';
 
 part 'gossip_menu_option_repository.g.dart';
 
-@FoxyRepository(GossipMenuOptionEntity)
+@FoxyRepository(GossipMenuOptionEntity, parentKey: ['menuId'])
 class GossipMenuOptionRepository
     with RepositoryMixin, _GossipMenuOptionRepositoryMixin {
   static const _table = 'gossip_menu_option';
   static const _localeTable = 'gossip_menu_option_locale';
   static const primaryKeyColumns = {'MenuID', 'OptionID'};
 
+  @override
   Future<GossipMenuOptionKey> copyGossipMenuOption(
-    GossipMenuOptionKey sourceKey,
+    GossipMenuOptionKey key,
   ) async {
-    final original = await getGossipMenuOption(sourceKey);
+    final original = await getGossipMenuOption(key);
     if (original == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
@@ -26,15 +27,18 @@ class GossipMenuOptionRepository
     return GossipMenuOptionKey.fromEntity(candidate);
   }
 
+  @override
   Future<int> countGossipMenuOptions(int menuId) {
     return laconic.table(_table).where('MenuID', menuId).count();
   }
 
+  @override
   Future<GossipMenuOptionEntity> createGossipMenuOption(int menuId) async {
     final nextOptionId = await _getNextOptionId(menuId);
     return GossipMenuOptionEntity(menuId: menuId, optionId: nextOptionId);
   }
 
+  @override
   Future<List<BriefGossipMenuOptionEntity>> getBriefGossipMenuOptions(
     int menuId, {
     int page = 1,

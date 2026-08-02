@@ -48,7 +48,8 @@ final class AchievementCriteriaFilter {
   }
 }
 
-mixin _AchievementCriteriaRepositoryMixin on RepositoryMixin {
+mixin _AchievementCriteriaRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyAchievementCriteria(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -68,6 +69,17 @@ mixin _AchievementCriteriaRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return AchievementCriteriaEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getAchievementCriteriaLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveAchievementCriteriaLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeAchievementCriteria(
     AchievementCriteriaEntity achievementCriteria,

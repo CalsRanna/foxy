@@ -3,6 +3,52 @@
 part of 'player_create_info_spell_custom_repository.dart';
 
 mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
+  Future<PlayerCreateInfoSpellCustomKey> copyPlayerCreateInfoSpellCustom(
+    PlayerCreateInfoSpellCustomKey key,
+  ) async {
+    final source = await getPlayerCreateInfoSpellCustom(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createPlayerCreateInfoSpellCustom(
+      source.raceMask,
+      source.classMask,
+    );
+    final copied = source.copyWith(
+      raceMask: blank.raceMask,
+      classMask: blank.classMask,
+      spell: blank.spell,
+    );
+    await storePlayerCreateInfoSpellCustom(copied);
+    return PlayerCreateInfoSpellCustomKey.fromEntity(copied);
+  }
+
+  Future<int> countPlayerCreateInfoSpellCustoms(
+    int raceMask,
+    int classMask,
+  ) async {
+    return laconic
+        .table('playercreateinfo_spell_custom')
+        .where('`racemask`', raceMask)
+        .where('`classmask`', classMask)
+        .count();
+  }
+
+  Future<PlayerCreateInfoSpellCustomEntity> createPlayerCreateInfoSpellCustom(
+    int raceMask,
+    int classMask,
+  ) async {
+    return PlayerCreateInfoSpellCustomEntity(
+      raceMask: raceMask,
+      classMask: classMask,
+      spell: await nextMaxPlusOne(
+        'playercreateinfo_spell_custom',
+        '`Spell`',
+        where: {'racemask': raceMask, 'classmask': classMask},
+      ),
+    );
+  }
+
   Future<void> destroyPlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomKey key,
   ) async {
@@ -25,6 +71,33 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoSpellCustomEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefPlayerCreateInfoSpellCustomEntity>>
+  getBriefPlayerCreateInfoSpellCustoms(
+    int raceMask,
+    int classMask, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('playercreateinfo_spell_custom').select([
+      '`racemask`',
+      '`classmask`',
+      '`Spell`',
+      '`Note`',
+    ]);
+    builder = builder
+        .where('`racemask`', raceMask)
+        .where('`classmask`', classMask);
+    builder = builder
+        .orderBy('`racemask`')
+        .orderBy('`classmask`')
+        .orderBy('`Spell`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefPlayerCreateInfoSpellCustomEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storePlayerCreateInfoSpellCustom(

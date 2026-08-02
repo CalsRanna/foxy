@@ -7,6 +7,17 @@ final class RepositoryGenerationModel {
   final List<RepositoryKeyFieldModel> keyFields;
   final String mixinName;
   final List<String> briefProjectionColumns;
+
+  /// 是否存在 `lib/view_model/<base>_list_view_model.dart`(主表列表页)。
+  /// 全量列表 `getXxxs` 与 `_applyFilter` 只为主表仓库生成。
+  final bool listViewModelPresent;
+
+  /// 是否生成 `get*Locales`/`save*Locales` 委托(仓库混入
+  /// `DbcLocaleRepositoryMixin` 并声明 `dbcLocaleTableName`)。
+  final bool localeHelpersEnabled;
+
+  /// 父键字段列表(声明 `parentKey:` 的子表仓库);空 = 主表形态。
+  final List<RepositoryKeyFieldModel> parentKeyFields;
   final bool queryLayerEnabled;
   final String repositoryClassName;
   final String table;
@@ -16,8 +27,11 @@ final class RepositoryGenerationModel {
     required this.entityParameterName,
     required this.filterFields,
     required this.keyFields,
+    required this.listViewModelPresent,
+    required this.localeHelpersEnabled,
     required this.mixinName,
     required this.briefProjectionColumns,
+    required this.parentKeyFields,
     required this.queryLayerEnabled,
     required this.repositoryClassName,
     required this.table,

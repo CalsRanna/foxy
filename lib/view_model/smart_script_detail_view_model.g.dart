@@ -3,6 +3,18 @@
 part of 'smart_script_detail_view_model.dart';
 
 mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
+  final _repository = GetIt.instance.get<SmartScriptRepository>();
+
+  final entity = signal<SmartScriptEntity?>(null);
+
+  final persistedKey = signal<SmartScriptKey?>(null);
+
+  final loading = signal(false);
+
+  final submitting = signal(false);
+
+  final errorMessage = signal<String?>(null);
+
   late final entryOrGuidController = registerController(IntFieldController());
   late final sourceTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -77,6 +89,63 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
   late final targetOController = registerController(DoubleFieldController());
   late final commentController = registerController(StringFieldController());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({SmartScriptKey? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      if (key == null) {
+        final blank = await _repository.createSmartScript();
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
+        return;
+      }
+      final result = await _repository.getSmartScript(key);
+      if (result == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final candidate = _collectCandidate();
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeSmartScript(candidate);
+      } else {
+        await _repository.updateSmartScript(originalKey, candidate);
+      }
+      persistedKey.value = SmartScriptKey.fromEntity(candidate);
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
   void _afterApplyCandidate(SmartScriptEntity smartScript) {}
 
   void _applyCandidate(SmartScriptEntity smartScript) {
@@ -149,4 +218,6 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
       comment: commentController.collect(),
     );
   }
+
+  void _logActivity(ActivityActionType action, SmartScriptEntity smartScript) {}
 }

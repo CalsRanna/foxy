@@ -27,7 +27,8 @@ final class MailTemplateFilter {
   }
 }
 
-mixin _MailTemplateRepositoryMixin on RepositoryMixin {
+mixin _MailTemplateRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyMailTemplate(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -47,6 +48,17 @@ mixin _MailTemplateRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return MailTemplateEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getMailTemplateLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveMailTemplateLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeMailTemplate(MailTemplateEntity mailTemplate) async {
     if (mailTemplate.id <= 0) {

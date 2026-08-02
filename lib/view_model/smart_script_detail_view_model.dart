@@ -11,18 +11,33 @@ import 'package:signals/signals.dart';
 
 part 'smart_script_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: SmartScriptEntity, selects: {'sourceType': 0, 'eventType': 0, 'actionType': 0, 'targetType': 0}, flags: {'eventPhaseMask', 'eventFlags'}, groups: {'eventParam1', 'eventParam2', 'eventParam3', 'eventParam4', 'eventParam5', 'eventParam6', 'actionParam1', 'actionParam2', 'actionParam3', 'actionParam4', 'actionParam5', 'actionParam6', 'targetParam1', 'targetParam2', 'targetParam3', 'targetParam4'})
+@FoxyDetailViewModel(
+  entity: SmartScriptEntity,
+  selects: {'sourceType': 0, 'eventType': 0, 'actionType': 0, 'targetType': 0},
+  flags: {'eventPhaseMask', 'eventFlags'},
+  groups: {
+    'eventParam1',
+    'eventParam2',
+    'eventParam3',
+    'eventParam4',
+    'eventParam5',
+    'eventParam6',
+    'actionParam1',
+    'actionParam2',
+    'actionParam3',
+    'actionParam4',
+    'actionParam5',
+    'actionParam6',
+    'targetParam1',
+    'targetParam2',
+    'targetParam3',
+    'targetParam4',
+  },
+  repository: SmartScriptRepository,
+)
 class SmartScriptDetailViewModel
-    with
-        FieldControllerMixin, _SmartScriptDetailViewModelMixin {
-  final _repository = GetIt.instance.get<SmartScriptRepository>();
+    with FieldControllerMixin, _SmartScriptDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
-
-  final entity = signal<SmartScriptEntity?>(null);
-  final persistedKey = signal<SmartScriptKey?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
 
   /// 当前选中的四个判别类型，驱动各自参数组的编辑规格
   final selectedSourceType = signal(0);
@@ -30,6 +45,7 @@ class SmartScriptDetailViewModel
   final selectedActionType = signal(0);
   final selectedTargetType = signal(0);
 
+  @override
   void dispose() {
     sourceTypeController.removeListener(_onSourceTypeChange);
     eventTypeController.removeListener(_onEventTypeChange);
@@ -38,6 +54,7 @@ class SmartScriptDetailViewModel
     disposeControllers();
   }
 
+  @override
   Future<void> initSignals({SmartScriptKey? key}) async {
     loading.value = true;
     errorMessage.value = null;
@@ -69,46 +86,20 @@ class SmartScriptDetailViewModel
     }
   }
 
-  Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        await _repository.storeSmartScript(candidate);
-      } else {
-        await _repository.updateSmartScript(originalKey, candidate);
-      }
-      final newKey = SmartScriptKey.fromEntity(candidate);
-      persistedKey.value = newKey;
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
   @override
   void _afterApplyCandidate(SmartScriptEntity smartScript) {
     // 显式刷新一次编辑规格，不依赖类型 controller 监听的回调顺序。
     _refreshParamEditors();
   }
 
-  void _logActivity(ActivityActionType action, SmartScriptEntity t) {
+  @override
+  void _logActivity(ActivityActionType action, SmartScriptEntity smartScript) {
     final log = ActivityLogEntity(
       module: 'smart_script',
       actionType: action,
       entityName:
-          'SmartScript ${t.entryOrGuid}/${t.sourceType}/${t.id}/${t.link}'
-          '${t.comment.isEmpty ? '' : ' - ${t.comment}'}',
+          'SmartScript ${smartScript.entryOrGuid}/${smartScript.sourceType}/${smartScript.id}/${smartScript.link}'
+          '${smartScript.comment.isEmpty ? '' : ' - ${smartScript.comment}'}',
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);

@@ -6,24 +6,27 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_quest_ender_repository.g.dart';
 
-@FoxyRepository(GameObjectQuestEnderEntity)
+@FoxyRepository(GameObjectQuestEnderEntity, parentKey: ['quest'])
 class GameObjectQuestEnderRepository
     with RepositoryMixin, _GameObjectQuestEnderRepositoryMixin {
   static const _table = 'gameobject_questender';
   static const primaryKeyColumns = {'id', 'quest'};
 
-  Future<int> countGameObjectQuestEnders(int questId) {
-    return laconic.table(_table).where('quest', questId).count();
+  @override
+  Future<int> countGameObjectQuestEnders(int quest) {
+    return laconic.table(_table).where('quest', quest).count();
   }
 
+  @override
   Future<GameObjectQuestEnderEntity> createGameObjectQuestEnder(
-    int questId,
+    int quest,
   ) async {
-    return GameObjectQuestEnderEntity(quest: questId);
+    return GameObjectQuestEnderEntity(quest: quest);
   }
 
+  @override
   Future<List<BriefGameObjectQuestEnderEntity>> getBriefGameObjectQuestEnders(
-    int questId, {
+    int quest, {
     int page = 1,
   }) async {
     final fields = <String>[
@@ -45,7 +48,7 @@ class GameObjectQuestEnderRepository
             join.on('got.entry', 'gotl.entry').where('gotl.locale', 'zhCN'),
       );
     }
-    builder = builder.where('goe.quest', questId);
+    builder = builder.where('goe.quest', quest);
     builder = builder.orderBy('goe.id');
     builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     final results = await builder.get();

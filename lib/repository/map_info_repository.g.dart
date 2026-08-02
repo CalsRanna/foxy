@@ -24,7 +24,7 @@ final class MapInfoFilter {
   }
 }
 
-mixin _MapInfoRepositoryMixin on RepositoryMixin {
+mixin _MapInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyMapInfo(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -44,6 +44,17 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return MapInfoEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getMapInfoLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveMapInfoLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeMapInfo(MapInfoEntity mapInfo) async {
     if (mapInfo.id <= 0) {

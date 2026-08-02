@@ -3,6 +3,18 @@
 part of 'quest_faction_reward_detail_view_model.dart';
 
 mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
+  final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
+
+  final entity = signal<QuestFactionRewardEntity?>(null);
+
+  final persistedKey = signal<int?>(null);
+
+  final loading = signal(false);
+
+  final submitting = signal(false);
+
+  final errorMessage = signal<String?>(null);
+
   late final idController = registerController(IntFieldController());
   late final difficulty0Controller = registerController(IntFieldController());
   late final difficulty1Controller = registerController(IntFieldController());
@@ -14,6 +26,63 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
   late final difficulty7Controller = registerController(IntFieldController());
   late final difficulty8Controller = registerController(IntFieldController());
   late final difficulty9Controller = registerController(IntFieldController());
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      if (key == null) {
+        final blank = await _repository.createQuestFactionReward();
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
+        return;
+      }
+      final result = await _repository.getQuestFactionReward(key);
+      if (result == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final candidate = _collectCandidate();
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeQuestFactionReward(candidate);
+      } else {
+        await _repository.updateQuestFactionReward(originalKey, candidate);
+      }
+      persistedKey.value = candidate.id;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
 
   void _afterApplyCandidate(QuestFactionRewardEntity questFactionReward) {}
 
@@ -47,4 +116,9 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
       difficulty9: difficulty9Controller.collect(),
     );
   }
+
+  void _logActivity(
+    ActivityActionType action,
+    QuestFactionRewardEntity questFactionReward,
+  ) {}
 }

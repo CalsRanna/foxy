@@ -6,16 +6,17 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_equip_template_repository.g.dart';
 
-@FoxyRepository(CreatureEquipTemplateEntity)
+@FoxyRepository(CreatureEquipTemplateEntity, parentKey: ['creatureID'])
 class CreatureEquipTemplateRepository
     with RepositoryMixin, _CreatureEquipTemplateRepositoryMixin {
   static const _table = 'creature_equip_template';
   static const primaryKeyColumns = {'CreatureID', 'ID'};
 
+  @override
   Future<CreatureEquipTemplateKey> copyCreatureEquipTemplate(
-    CreatureEquipTemplateKey sourceKey,
+    CreatureEquipTemplateKey key,
   ) async {
-    final source = await getCreatureEquipTemplate(sourceKey);
+    final source = await getCreatureEquipTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
@@ -25,10 +26,12 @@ class CreatureEquipTemplateRepository
     return CreatureEquipTemplateKey.fromEntity(candidate);
   }
 
+  @override
   Future<int> countCreatureEquipTemplates(int creatureID) {
     return laconic.table(_table).where('CreatureID', creatureID).count();
   }
 
+  @override
   Future<CreatureEquipTemplateEntity> createCreatureEquipTemplate(
     int creatureID,
   ) async {
@@ -38,6 +41,7 @@ class CreatureEquipTemplateRepository
     );
   }
 
+  @override
   Future<List<BriefCreatureEquipTemplateEntity>> getBriefCreatureEquipTemplates(
     int creatureID, {
     int page = 1,

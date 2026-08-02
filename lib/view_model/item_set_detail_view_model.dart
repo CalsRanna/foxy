@@ -11,18 +11,11 @@ import 'package:signals/signals.dart';
 
 part 'item_set_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: ItemSetEntity)
+@FoxyDetailViewModel(entity: ItemSetEntity, repository: ItemSetRepository)
 class ItemSetDetailViewModel
-    with
-        FieldControllerMixin, _ItemSetDetailViewModelMixin {
-  final _repository = GetIt.instance.get<ItemSetRepository>();
+    with FieldControllerMixin, _ItemSetDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  final entity = signal<ItemSetEntity?>(null);
-  final persistedKey = signal<int?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
   final nameLangFlags = signal<int>(0);
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
@@ -45,71 +38,16 @@ class ItemSetDetailViewModel
     entity.value = _collectCandidate();
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
   /// 从所有 Controller 收集数据构建 ItemSetEntity
 
-  Future<void> initSignals({int? key}) async {
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      if (key == null) {
-        final blank = await _repository.createItemSet();
-        entity.value = blank;
-        _applyCandidate(blank);
-        persistedKey.value = null;
-        return;
-      }
-      final result = await _repository.getItemSet(key);
-      if (result == null) {
-        throw StateError('原套装不存在，可能已被其他操作修改或删除');
-      }
-      entity.value = result;
-      _applyCandidate(result);
-      persistedKey.value = key;
-    } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
-      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
-  }
-
   /// 退出页面
-  Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        await _repository.storeItemSet(candidate);
-      } else {
-        await _repository.updateItemSet(originalKey, candidate);
-      }
-      persistedKey.value = candidate.id;
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
 
-  void _logActivity(ActivityActionType action, ItemSetEntity t) {
+  @override
+  void _logActivity(ActivityActionType action, ItemSetEntity itemSet) {
     final log = ActivityLogEntity(
       module: 'item_set',
       actionType: action,
-      entityName: 'ItemSet ${t.id}',
+      entityName: 'ItemSet ${itemSet.id}',
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);

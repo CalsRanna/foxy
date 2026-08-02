@@ -58,23 +58,12 @@ class EmoteTextDataRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getEmoteTextDataLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<EmoteTextDataEntity>> getEmoteTextDatas() async {
     final rows = await laconic.table(_table).get();
     return rows
         .map((row) => EmoteTextDataEntity.fromJson(row.toMap()))
         .toList();
   }
-
-  Future<void> saveEmoteTextDataLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextDataFilter? filter) {
     if (filter == null) return builder;

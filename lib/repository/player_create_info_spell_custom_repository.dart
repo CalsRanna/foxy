@@ -7,20 +7,25 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_spell_custom_repository.g.dart';
 
-@FoxyRepository(PlayerCreateInfoSpellCustomEntity)
+@FoxyRepository(
+  PlayerCreateInfoSpellCustomEntity,
+  parentKey: ['raceMask', 'classMask'],
+)
 class PlayerCreateInfoSpellCustomRepository
     with RepositoryMixin, _PlayerCreateInfoSpellCustomRepositoryMixin {
   static const _table = 'playercreateinfo_spell_custom';
 
-  Future<void> copyPlayerCreateInfoSpellCustom(
+  @override
+  Future<PlayerCreateInfoSpellCustomKey> copyPlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomKey key,
   ) async {
     throw UnsupportedError('法术 ID 是复合主键的一部分，请新增并选择有效法术。');
   }
 
-  Future<int> countPlayerCreateInfoSpellCustoms(int race, int playerClass) {
-    final raceBit = playerCreateRaceBit(race);
-    final classBit = playerCreateClassBit(playerClass);
+  @override
+  Future<int> countPlayerCreateInfoSpellCustoms(int raceMask, int classMask) {
+    final raceBit = playerCreateRaceBit(raceMask);
+    final classBit = playerCreateClassBit(classMask);
     return laconic
         .table(_table)
         .whereRaw('(racemask = 0 OR (racemask & ?) <> 0)', [raceBit])
@@ -28,22 +33,24 @@ class PlayerCreateInfoSpellCustomRepository
         .count();
   }
 
+  @override
   Future<PlayerCreateInfoSpellCustomEntity> createPlayerCreateInfoSpellCustom(
-    int race,
-    int playerClass,
+    int raceMask,
+    int classMask,
   ) async => PlayerCreateInfoSpellCustomEntity(
-    raceMask: playerCreateRaceBit(race),
-    classMask: playerCreateClassBit(playerClass),
+    raceMask: playerCreateRaceBit(raceMask),
+    classMask: playerCreateClassBit(classMask),
   );
 
+  @override
   Future<List<BriefPlayerCreateInfoSpellCustomEntity>>
   getBriefPlayerCreateInfoSpellCustoms(
-    int race,
-    int playerClass, {
+    int raceMask,
+    int classMask, {
     int page = 1,
   }) async {
-    final raceBit = playerCreateRaceBit(race);
-    final classBit = playerCreateClassBit(playerClass);
+    final raceBit = playerCreateRaceBit(raceMask);
+    final classBit = playerCreateClassBit(classMask);
     final results = await laconic
         .table(_table)
         .select(['racemask', 'classmask', 'Spell', 'Note'])

@@ -3,6 +3,39 @@
 part of 'game_object_quest_starter_repository.dart';
 
 mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
+  Future<GameObjectQuestStarterKey> copyGameObjectQuestStarter(
+    GameObjectQuestStarterKey key,
+  ) async {
+    final source = await getGameObjectQuestStarter(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createGameObjectQuestStarter(source.quest);
+    final copied = source.copyWith(id: blank.id, quest: blank.quest);
+    await storeGameObjectQuestStarter(copied);
+    return GameObjectQuestStarterKey.fromEntity(copied);
+  }
+
+  Future<int> countGameObjectQuestStarters(int quest) async {
+    return laconic
+        .table('gameobject_queststarter')
+        .where('`quest`', quest)
+        .count();
+  }
+
+  Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
+    int quest,
+  ) async {
+    return GameObjectQuestStarterEntity(
+      quest: quest,
+      id: await nextMaxPlusOne(
+        'gameobject_queststarter',
+        '`id`',
+        where: {'quest': quest},
+      ),
+    );
+  }
+
   Future<void> destroyGameObjectQuestStarter(
     GameObjectQuestStarterKey key,
   ) async {
@@ -25,6 +58,22 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectQuestStarterEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefGameObjectQuestStarterEntity>>
+  getBriefGameObjectQuestStarters(int quest, {int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('gameobject_queststarter').select([
+      '`id`',
+      '`quest`',
+    ]);
+    builder = builder.where('`quest`', quest);
+    builder = builder.orderBy('`id`').orderBy('`quest`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGameObjectQuestStarterEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeGameObjectQuestStarter(

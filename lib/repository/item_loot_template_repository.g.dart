@@ -28,6 +28,34 @@ final class ItemLootTemplateFilter {
 }
 
 mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<ItemLootTemplateKey> copyItemLootTemplate(
+    ItemLootTemplateKey key,
+  ) async {
+    final source = await getItemLootTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createItemLootTemplate(source.entry);
+    final copied = source.copyWith(entry: blank.entry, item: blank.item);
+    await storeItemLootTemplate(copied);
+    return ItemLootTemplateKey.fromEntity(copied);
+  }
+
+  Future<int> countItemLootTemplates(int entry) async {
+    return laconic.table('item_loot_template').where('`Entry`', entry).count();
+  }
+
+  Future<ItemLootTemplateEntity> createItemLootTemplate(int entry) async {
+    return ItemLootTemplateEntity(
+      entry: entry,
+      item: await nextMaxPlusOne(
+        'item_loot_template',
+        '`Item`',
+        where: {'Entry': entry},
+      ),
+    );
+  }
+
   Future<void> destroyItemLootTemplate(ItemLootTemplateKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -48,6 +76,30 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return ItemLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefItemLootTemplateEntity>> getBriefItemLootTemplates(
+    int entry, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('item_loot_template').select([
+      '`Entry`',
+      '`Item`',
+      '`Reference`',
+      '`Chance`',
+      '`QuestRequired`',
+      '`GroupId`',
+      '`MinCount`',
+      '`MaxCount`',
+    ]);
+    builder = builder.where('`Entry`', entry);
+    builder = builder.orderBy('`Entry`').orderBy('`Item`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefItemLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeItemLootTemplate(

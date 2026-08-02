@@ -3,6 +3,7 @@
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'src/collection_editor_generator.dart';
 import 'src/entity_generator.dart';
 import 'src/form_generator.dart';
 import 'src/list_generator.dart';
@@ -27,10 +28,12 @@ Builder foxyRepositoryBuilder(BuilderOptions options) {
   );
 }
 
-// 生成器按名排序(FoxyListViewModelGenerator < FoxyViewModelGenerator)。
+// 生成器按名排序(FoxyCollectionEditorViewModelGenerator <
+// FoxyListViewModelGenerator < FoxyViewModelGenerator)。
 Builder foxyViewModelBuilder(BuilderOptions options) {
   return SharedPartBuilder(
     [
+      const FoxyCollectionEditorViewModelGenerator(),
       const FoxyListViewModelGenerator(),
       const FoxyViewModelGenerator(),
     ],

@@ -24,7 +24,8 @@ final class ItemRandomSuffixFilter {
   }
 }
 
-mixin _ItemRandomSuffixRepositoryMixin on RepositoryMixin {
+mixin _ItemRandomSuffixRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyItemRandomSuffix(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -44,6 +45,17 @@ mixin _ItemRandomSuffixRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return ItemRandomSuffixEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getItemRandomSuffixLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveItemRandomSuffixLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeItemRandomSuffix(
     ItemRandomSuffixEntity itemRandomSuffix,

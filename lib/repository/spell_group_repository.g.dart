@@ -3,6 +3,32 @@
 part of 'spell_group_repository.dart';
 
 mixin _SpellGroupRepositoryMixin on RepositoryMixin {
+  Future<SpellGroupKey> copySpellGroup(SpellGroupKey key) async {
+    final source = await getSpellGroup(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createSpellGroup(source.spellId);
+    final copied = source.copyWith(id: blank.id, spellId: blank.spellId);
+    await storeSpellGroup(copied);
+    return SpellGroupKey.fromEntity(copied);
+  }
+
+  Future<int> countSpellGroups(int spellId) async {
+    return laconic.table('spell_group').where('`spell_id`', spellId).count();
+  }
+
+  Future<SpellGroupEntity> createSpellGroup(int spellId) async {
+    return SpellGroupEntity(
+      spellId: spellId,
+      id: await nextMaxPlusOne(
+        'spell_group',
+        '`id`',
+        where: {'spell_id': spellId},
+      ),
+    );
+  }
+
   Future<void> destroySpellGroup(SpellGroupKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -21,6 +47,21 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return SpellGroupEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefSpellGroupEntity>> getBriefSpellGroups(
+    int spellId, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('spell_group').select(['`id`', '`spell_id`']);
+    builder = builder.where('`spell_id`', spellId);
+    builder = builder.orderBy('`id`').orderBy('`spell_id`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefSpellGroupEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeSpellGroup(SpellGroupEntity spellGroup) async {

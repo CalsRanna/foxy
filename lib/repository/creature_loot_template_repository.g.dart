@@ -28,6 +28,54 @@ final class CreatureLootTemplateFilter {
 }
 
 mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<CreatureLootTemplateKey> copyCreatureLootTemplate(
+    CreatureLootTemplateKey key,
+  ) async {
+    final source = await getCreatureLootTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureLootTemplate(source.entry);
+    final copied = source.copyWith(
+      entry: blank.entry,
+      item: blank.item,
+      reference: blank.reference,
+      groupId: blank.groupId,
+    );
+    await storeCreatureLootTemplate(copied);
+    return CreatureLootTemplateKey.fromEntity(copied);
+  }
+
+  Future<int> countCreatureLootTemplates(int entry) async {
+    return laconic
+        .table('creature_loot_template')
+        .where('`Entry`', entry)
+        .count();
+  }
+
+  Future<CreatureLootTemplateEntity> createCreatureLootTemplate(
+    int entry,
+  ) async {
+    return CreatureLootTemplateEntity(
+      entry: entry,
+      item: await nextMaxPlusOne(
+        'creature_loot_template',
+        '`Item`',
+        where: {'Entry': entry},
+      ),
+      reference: await nextMaxPlusOne(
+        'creature_loot_template',
+        '`Reference`',
+        where: {'Entry': entry},
+      ),
+      groupId: await nextMaxPlusOne(
+        'creature_loot_template',
+        '`GroupId`',
+        where: {'Entry': entry},
+      ),
+    );
+  }
+
   Future<void> destroyCreatureLootTemplate(CreatureLootTemplateKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -48,6 +96,34 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefCreatureLootTemplateEntity>> getBriefCreatureLootTemplates(
+    int entry, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('creature_loot_template').select([
+      '`Entry`',
+      '`Item`',
+      '`Reference`',
+      '`Chance`',
+      '`QuestRequired`',
+      '`GroupId`',
+      '`MinCount`',
+      '`MaxCount`',
+    ]);
+    builder = builder.where('`Entry`', entry);
+    builder = builder
+        .orderBy('`Entry`')
+        .orderBy('`Item`')
+        .orderBy('`Reference`')
+        .orderBy('`GroupId`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCreatureLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeCreatureLootTemplate(

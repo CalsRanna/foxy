@@ -34,17 +34,6 @@ class QuestSortRepository
     return QuestSortEntity(id: await _getNextId());
   }
 
-  Future<List<DbcLocaleFieldValue>> getQuestSortLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveQuestSortLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, QuestSortFilter? filter) {
     if (filter == null) return builder;

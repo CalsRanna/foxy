@@ -40,11 +40,6 @@ class AreaTableRepository
     );
   }
 
-  Future<List<DbcLocaleFieldValue>> getAreaTableLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<bool> isAreaBitAvailable(int areaBit, {int? excludingKey}) async {
     var builder = laconic.table(_table).where('AreaBit', areaBit);
     if (excludingKey != null) {
@@ -53,12 +48,6 @@ class AreaTableRepository
     final count = await builder.count();
     return count == 0;
   }
-
-  Future<void> saveAreaTableLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, AreaTableFilter? filter) {

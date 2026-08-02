@@ -37,17 +37,6 @@ class AchievementRepository
     return AchievementEntity(id: await _getNextId());
   }
 
-  Future<List<DbcLocaleFieldValue>> getAchievementLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveAchievementLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
     if (filter == null) return builder;

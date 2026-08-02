@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_loot_template_repository.g.dart';
 
-@FoxyRepository(GameObjectLootTemplateEntity)
+@FoxyRepository(GameObjectLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class GameObjectLootTemplateRepository
@@ -14,13 +14,17 @@ class GameObjectLootTemplateRepository
   static const _table = 'gameobject_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(GameObjectLootTemplateKey key) async {
+  @override
+  Future<GameObjectLootTemplateKey> copyGameObjectLootTemplate(
+    GameObjectLootTemplateKey key,
+  ) async {
     final source = await getGameObjectLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeGameObjectLootTemplate(copied);
+    return GameObjectLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({
@@ -49,11 +53,15 @@ class GameObjectLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countGameObjectLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<GameObjectLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<GameObjectLootTemplateEntity> createGameObjectLootTemplate(
+    int entry,
+  ) async {
     return GameObjectLootTemplateEntity(entry: entry);
   }
 
@@ -94,10 +102,9 @@ class GameObjectLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefGameObjectLootTemplateEntity>> getBriefLootTemplates(
-    int entry, {
-    int page = 1,
-  }) async {
+  @override
+  Future<List<BriefGameObjectLootTemplateEntity>>
+  getBriefGameObjectLootTemplates(int entry, {int page = 1}) async {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
       ..._briefFields('lt'),

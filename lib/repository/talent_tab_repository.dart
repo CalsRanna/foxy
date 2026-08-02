@@ -58,21 +58,10 @@ class TalentTabRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getTalentTabLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<TalentTabEntity>> getTalentTabs() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => TalentTabEntity.fromJson(row.toMap())).toList();
   }
-
-  Future<void> saveTalentTabLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(QueryBuilder builder, TalentTabFilter? filter) {
     if (filter == null) return builder;

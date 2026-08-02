@@ -6,22 +6,25 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_quest_ender_repository.g.dart';
 
-@FoxyRepository(CreatureQuestEnderEntity)
+@FoxyRepository(CreatureQuestEnderEntity, parentKey: ['quest'])
 class CreatureQuestEnderRepository
     with RepositoryMixin, _CreatureQuestEnderRepositoryMixin {
   static const _table = 'creature_questender';
   static const primaryKeyColumns = {'id', 'quest'};
 
-  Future<int> countCreatureQuestEnders(int questId) {
-    return laconic.table(_table).where('quest', questId).count();
+  @override
+  Future<int> countCreatureQuestEnders(int quest) {
+    return laconic.table(_table).where('quest', quest).count();
   }
 
-  Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
-    return CreatureQuestEnderEntity(quest: questId);
+  @override
+  Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int quest) async {
+    return CreatureQuestEnderEntity(quest: quest);
   }
 
+  @override
   Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
-    int questId, {
+    int quest, {
     int page = 1,
   }) async {
     final fields = <String>[
@@ -42,7 +45,7 @@ class CreatureQuestEnderRepository
         (join) => join.on('cqe.id', 'ctl.entry').where('ctl.locale', 'zhCN'),
       );
     }
-    builder = builder.where('cqe.quest', questId);
+    builder = builder.where('cqe.quest', quest);
     builder = builder.orderBy('cqe.id');
     builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     final results = await builder.get();

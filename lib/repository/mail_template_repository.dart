@@ -62,21 +62,10 @@ class MailTemplateRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getMailTemplateLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<MailTemplateEntity>> getMailTemplates() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => MailTemplateEntity.fromJson(row.toMap())).toList();
   }
-
-  Future<void> saveMailTemplateLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(QueryBuilder builder, MailTemplateFilter? filter) {
     if (filter == null) return builder;

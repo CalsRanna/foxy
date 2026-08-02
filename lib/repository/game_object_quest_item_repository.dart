@@ -6,16 +6,17 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_quest_item_repository.g.dart';
 
-@FoxyRepository(GameObjectQuestItemEntity)
+@FoxyRepository(GameObjectQuestItemEntity, parentKey: ['gameObjectEntry'])
 class GameObjectQuestItemRepository
     with RepositoryMixin, _GameObjectQuestItemRepositoryMixin {
   static const _table = 'gameobject_questitem';
   static const primaryKeyColumns = {'GameObjectEntry', 'Idx'};
 
+  @override
   Future<GameObjectQuestItemKey> copyGameObjectQuestItem(
-    GameObjectQuestItemKey sourceKey,
+    GameObjectQuestItemKey key,
   ) async {
-    final source = await getGameObjectQuestItem(sourceKey);
+    final source = await getGameObjectQuestItem(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
@@ -25,6 +26,7 @@ class GameObjectQuestItemRepository
     return GameObjectQuestItemKey.fromEntity(candidate);
   }
 
+  @override
   Future<int> countGameObjectQuestItems(int gameObjectEntry) {
     return laconic
         .table(_table)
@@ -32,6 +34,7 @@ class GameObjectQuestItemRepository
         .count();
   }
 
+  @override
   Future<GameObjectQuestItemEntity> createGameObjectQuestItem(
     int gameObjectEntry,
   ) async {
@@ -41,6 +44,7 @@ class GameObjectQuestItemRepository
     );
   }
 
+  @override
   Future<List<BriefGameObjectQuestItemEntity>> getBriefGameObjectQuestItems(
     int gameObjectEntry, {
     int page = 1,

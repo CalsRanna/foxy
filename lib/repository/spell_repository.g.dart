@@ -24,7 +24,7 @@ final class SpellFilter {
   }
 }
 
-mixin _SpellRepositoryMixin on RepositoryMixin {
+mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> copySpell(int key) async {
     final source = await getSpell(key);
     if (source == null) {
@@ -82,6 +82,17 @@ mixin _SpellRepositoryMixin on RepositoryMixin {
     final results = await builder.get();
     return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
   }
+
+  Future<List<DbcLocaleFieldValue>> getSpellLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveSpellLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeSpell(SpellEntity spell) async {
     if (spell.id <= 0) {

@@ -247,7 +247,7 @@ void main() {
           Laconic(_RecordingDriver(), listen: queries.add),
         );
 
-        await repository.getBriefLootTemplates(10, page: 2);
+        await _getBriefLootTemplates(repository, spec.table, 10, page: 2);
 
         final query = queries.single;
         expect(query.sql, contains(spec.table), reason: spec.table);
@@ -369,6 +369,48 @@ dynamic _candidateFor(String table, {bool updated = false}) {
   };
 }
 
+Future<dynamic> _getBriefLootTemplates(
+  dynamic repository,
+  String table,
+  int entry, {
+  int page = 1,
+}) {
+  return switch (table) {
+    'creature_loot_template' =>
+      (repository as CreatureLootTemplateRepository)
+          .getBriefCreatureLootTemplates(entry, page: page),
+    'pickpocketing_loot_template' =>
+      (repository as PickpocketingLootTemplateRepository)
+          .getBriefPickpocketingLootTemplates(entry, page: page),
+    'skinning_loot_template' =>
+      (repository as SkinningLootTemplateRepository)
+          .getBriefSkinningLootTemplates(entry, page: page),
+    'item_loot_template' =>
+      (repository as ItemLootTemplateRepository).getBriefItemLootTemplates(
+        entry,
+        page: page,
+      ),
+    'disenchant_loot_template' =>
+      (repository as DisenchantLootTemplateRepository)
+          .getBriefDisenchantLootTemplates(entry, page: page),
+    'prospecting_loot_template' =>
+      (repository as ProspectingLootTemplateRepository)
+          .getBriefProspectingLootTemplates(entry, page: page),
+    'milling_loot_template' =>
+      (repository as MillingLootTemplateRepository)
+          .getBriefMillingLootTemplates(entry, page: page),
+    'reference_loot_template' =>
+      (repository as ReferenceLootTemplateRepository).getBriefLootTemplates(
+        entry,
+        page: page,
+      ),
+    'gameobject_loot_template' =>
+      (repository as GameObjectLootTemplateRepository)
+          .getBriefGameObjectLootTemplates(entry, page: page),
+    _ => throw ArgumentError.value(table, 'table'),
+  };
+}
+
 Future<dynamic> _copyLootTemplate(
   dynamic repository,
   String table,
@@ -376,31 +418,28 @@ Future<dynamic> _copyLootTemplate(
 ) {
   return switch (table) {
     'creature_loot_template' =>
-      (repository as CreatureLootTemplateRepository).copyLootTemplate(
+      (repository as CreatureLootTemplateRepository).copyCreatureLootTemplate(
         key as CreatureLootTemplateKey,
       ),
     'pickpocketing_loot_template' =>
-      (repository as PickpocketingLootTemplateRepository).copyLootTemplate(
-        key as PickpocketingLootTemplateKey,
-      ),
+      (repository as PickpocketingLootTemplateRepository)
+          .copyPickpocketingLootTemplate(key as PickpocketingLootTemplateKey),
     'skinning_loot_template' =>
-      (repository as SkinningLootTemplateRepository).copyLootTemplate(
+      (repository as SkinningLootTemplateRepository).copySkinningLootTemplate(
         key as SkinningLootTemplateKey,
       ),
     'item_loot_template' =>
-      (repository as ItemLootTemplateRepository).copyLootTemplate(
+      (repository as ItemLootTemplateRepository).copyItemLootTemplate(
         key as ItemLootTemplateKey,
       ),
     'disenchant_loot_template' =>
-      (repository as DisenchantLootTemplateRepository).copyLootTemplate(
-        key as DisenchantLootTemplateKey,
-      ),
+      (repository as DisenchantLootTemplateRepository)
+          .copyDisenchantLootTemplate(key as DisenchantLootTemplateKey),
     'prospecting_loot_template' =>
-      (repository as ProspectingLootTemplateRepository).copyLootTemplate(
-        key as ProspectingLootTemplateKey,
-      ),
+      (repository as ProspectingLootTemplateRepository)
+          .copyProspectingLootTemplate(key as ProspectingLootTemplateKey),
     'milling_loot_template' =>
-      (repository as MillingLootTemplateRepository).copyLootTemplate(
+      (repository as MillingLootTemplateRepository).copyMillingLootTemplate(
         key as MillingLootTemplateKey,
       ),
     'reference_loot_template' =>
@@ -408,9 +447,8 @@ Future<dynamic> _copyLootTemplate(
         key as ReferenceLootTemplateKey,
       ),
     'gameobject_loot_template' =>
-      (repository as GameObjectLootTemplateRepository).copyLootTemplate(
-        key as GameObjectLootTemplateKey,
-      ),
+      (repository as GameObjectLootTemplateRepository)
+          .copyGameObjectLootTemplate(key as GameObjectLootTemplateKey),
     _ => throw ArgumentError.value(table, 'table'),
   };
 }

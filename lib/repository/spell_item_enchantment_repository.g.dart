@@ -27,7 +27,8 @@ final class SpellItemEnchantmentFilter {
   }
 }
 
-mixin _SpellItemEnchantmentRepositoryMixin on RepositoryMixin {
+mixin _SpellItemEnchantmentRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> copySpellItemEnchantment(int key) async {
     final source = await getSpellItemEnchantment(key);
     if (source == null) {
@@ -105,6 +106,17 @@ mixin _SpellItemEnchantmentRepositoryMixin on RepositoryMixin {
         .map((e) => SpellItemEnchantmentEntity.fromJson(e.toMap()))
         .toList();
   }
+
+  Future<List<DbcLocaleFieldValue>> getSpellItemEnchantmentLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveSpellItemEnchantmentLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeSpellItemEnchantment(
     SpellItemEnchantmentEntity spellItemEnchantment,

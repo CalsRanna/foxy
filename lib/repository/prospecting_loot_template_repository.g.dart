@@ -28,6 +28,39 @@ final class ProspectingLootTemplateFilter {
 }
 
 mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<ProspectingLootTemplateKey> copyProspectingLootTemplate(
+    ProspectingLootTemplateKey key,
+  ) async {
+    final source = await getProspectingLootTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createProspectingLootTemplate(source.entry);
+    final copied = source.copyWith(entry: blank.entry, item: blank.item);
+    await storeProspectingLootTemplate(copied);
+    return ProspectingLootTemplateKey.fromEntity(copied);
+  }
+
+  Future<int> countProspectingLootTemplates(int entry) async {
+    return laconic
+        .table('prospecting_loot_template')
+        .where('`Entry`', entry)
+        .count();
+  }
+
+  Future<ProspectingLootTemplateEntity> createProspectingLootTemplate(
+    int entry,
+  ) async {
+    return ProspectingLootTemplateEntity(
+      entry: entry,
+      item: await nextMaxPlusOne(
+        'prospecting_loot_template',
+        '`Item`',
+        where: {'Entry': entry},
+      ),
+    );
+  }
+
   Future<void> destroyProspectingLootTemplate(
     ProspectingLootTemplateKey key,
   ) async {
@@ -50,6 +83,28 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return ProspectingLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefProspectingLootTemplateEntity>>
+  getBriefProspectingLootTemplates(int entry, {int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('prospecting_loot_template').select([
+      '`Entry`',
+      '`Item`',
+      '`Reference`',
+      '`Chance`',
+      '`QuestRequired`',
+      '`GroupId`',
+      '`MinCount`',
+      '`MaxCount`',
+    ]);
+    builder = builder.where('`Entry`', entry);
+    builder = builder.orderBy('`Entry`').orderBy('`Item`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefProspectingLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeProspectingLootTemplate(

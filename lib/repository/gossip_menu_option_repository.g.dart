@@ -3,6 +3,40 @@
 part of 'gossip_menu_option_repository.dart';
 
 mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
+  Future<GossipMenuOptionKey> copyGossipMenuOption(
+    GossipMenuOptionKey key,
+  ) async {
+    final source = await getGossipMenuOption(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createGossipMenuOption(source.menuId);
+    final copied = source.copyWith(
+      menuId: blank.menuId,
+      optionId: blank.optionId,
+    );
+    await storeGossipMenuOption(copied);
+    return GossipMenuOptionKey.fromEntity(copied);
+  }
+
+  Future<int> countGossipMenuOptions(int menuId) async {
+    return laconic
+        .table('gossip_menu_option')
+        .where('`MenuID`', menuId)
+        .count();
+  }
+
+  Future<GossipMenuOptionEntity> createGossipMenuOption(int menuId) async {
+    return GossipMenuOptionEntity(
+      menuId: menuId,
+      optionId: await nextMaxPlusOne(
+        'gossip_menu_option',
+        '`OptionID`',
+        where: {'MenuID': menuId},
+      ),
+    );
+  }
+
   Future<void> destroyGossipMenuOption(GossipMenuOptionKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +57,29 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return GossipMenuOptionEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefGossipMenuOptionEntity>> getBriefGossipMenuOptions(
+    int menuId, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('gossip_menu_option').select([
+      '`MenuID`',
+      '`OptionID`',
+      '`OptionIcon`',
+      '`OptionText`',
+      '`OptionType`',
+      '`OptionNpcFlag`',
+      '`ActionMenuID`',
+    ]);
+    builder = builder.where('`MenuID`', menuId);
+    builder = builder.orderBy('`MenuID`').orderBy('`OptionID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGossipMenuOptionEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeGossipMenuOption(

@@ -37,17 +37,6 @@ class SpellItemEnchantmentRepository
     return SpellItemEnchantmentEntity(id: await _getNextId());
   }
 
-  Future<List<DbcLocaleFieldValue>> getSpellItemEnchantmentLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveSpellItemEnchantmentLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
   @override
   QueryBuilder _applyFilter(
     QueryBuilder builder,

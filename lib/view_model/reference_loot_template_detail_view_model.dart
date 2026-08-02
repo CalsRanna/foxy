@@ -2,6 +2,7 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -9,50 +10,26 @@ import 'package:signals/signals.dart';
 
 part 'reference_loot_template_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: ReferenceLootTemplateEntity)
+@FoxyDetailViewModel(
+  entity: ReferenceLootTemplateEntity,
+  repository: ReferenceLootTemplateRepository,
+)
 class ReferenceLootTemplateDetailViewModel
-    with
-        FieldControllerMixin, _ReferenceLootTemplateDetailViewModelMixin {
-  final _repository = GetIt.instance.get<ReferenceLootTemplateRepository>();
+    with FieldControllerMixin, _ReferenceLootTemplateDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  final entity = signal<ReferenceLootTemplateEntity?>(null);
-
-  final persistedKey = signal<ReferenceLootTemplateKey?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
   final hasReference = signal(false);
   ReferenceLootTemplateDetailViewModel() {
     referenceController.addListener(_syncReferenceState);
   }
 
+  @override
   void dispose() {
     referenceController.removeListener(_syncReferenceState);
     disposeControllers();
   }
 
-  Future<void> initSignals({ReferenceLootTemplateKey? key}) async {
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = key == null
-          ? await _repository.createLootTemplate(0)
-          : await _repository.getReferenceLootTemplate(key);
-      if (candidate == null) {
-        throw StateError('原关联掉落不存在，可能已被其他操作修改或删除');
-      }
-      persistedKey.value = key;
-      entity.value = candidate;
-      _applyCandidate(candidate);
-    } catch (error) {
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
-  }
-
+  @override
   Future<void> persist() async {
     if (submitting.value) throw StateError('正在保存，请稍候');
     final candidate = _collectCandidate();
@@ -79,17 +56,18 @@ class ReferenceLootTemplateDetailViewModel
     }
   }
 
+  @override
   void _logActivity(
     ActivityActionType action,
-    ReferenceLootTemplateEntity candidate,
+    ReferenceLootTemplateEntity referenceLootTemplate,
   ) {
     _activityLogService.recordBestEffort(
       ActivityLogEntity(
         module: 'reference_loot_template',
         actionType: action,
         entityName:
-            'ReferenceLoot ${candidate.entry}/${candidate.item}/'
-            '${candidate.reference}/${candidate.groupId}',
+            'ReferenceLoot ${referenceLootTemplate.entry}/${referenceLootTemplate.item}/'
+            '${referenceLootTemplate.reference}/${referenceLootTemplate.groupId}',
         createdAt: DateTime.now(),
       ),
     );

@@ -24,7 +24,7 @@ final class QuestSortFilter {
   }
 }
 
-mixin _QuestSortRepositoryMixin on RepositoryMixin {
+mixin _QuestSortRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> copyQuestSort(int key) async {
     final source = await getQuestSort(key);
     if (source == null) {
@@ -89,6 +89,17 @@ mixin _QuestSortRepositoryMixin on RepositoryMixin {
     final results = await builder.get();
     return results.map((e) => QuestSortEntity.fromJson(e.toMap())).toList();
   }
+
+  Future<List<DbcLocaleFieldValue>> getQuestSortLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveQuestSortLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeQuestSort(QuestSortEntity questSort) async {
     if (questSort.id <= 0) {

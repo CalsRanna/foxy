@@ -6,16 +6,17 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_quest_item_repository.g.dart';
 
-@FoxyRepository(CreatureQuestItemEntity)
+@FoxyRepository(CreatureQuestItemEntity, parentKey: ['creatureEntry'])
 class CreatureQuestItemRepository
     with RepositoryMixin, _CreatureQuestItemRepositoryMixin {
   static const _table = 'creature_questitem';
   static const primaryKeyColumns = {'CreatureEntry', 'Idx'};
 
+  @override
   Future<CreatureQuestItemKey> copyCreatureQuestItem(
-    CreatureQuestItemKey sourceKey,
+    CreatureQuestItemKey key,
   ) async {
-    final source = await getCreatureQuestItem(sourceKey);
+    final source = await getCreatureQuestItem(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
@@ -25,10 +26,12 @@ class CreatureQuestItemRepository
     return CreatureQuestItemKey.fromEntity(candidate);
   }
 
+  @override
   Future<int> countCreatureQuestItems(int creatureEntry) {
     return laconic.table(_table).where('CreatureEntry', creatureEntry).count();
   }
 
+  @override
   Future<CreatureQuestItemEntity> createCreatureQuestItem(
     int creatureEntry,
   ) async {
@@ -38,6 +41,7 @@ class CreatureQuestItemRepository
     );
   }
 
+  @override
   Future<List<BriefCreatureQuestItemEntity>> getBriefCreatureQuestItems(
     int creatureEntry, {
     int page = 1,

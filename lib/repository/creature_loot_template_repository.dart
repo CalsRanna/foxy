@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_loot_template_repository.g.dart';
 
-@FoxyRepository(CreatureLootTemplateEntity)
+@FoxyRepository(CreatureLootTemplateEntity, parentKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class CreatureLootTemplateRepository
@@ -14,13 +14,17 @@ class CreatureLootTemplateRepository
   static const _table = 'creature_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item', 'Reference', 'GroupId'};
 
-  Future<void> copyLootTemplate(CreatureLootTemplateKey key) async {
+  @override
+  Future<CreatureLootTemplateKey> copyCreatureLootTemplate(
+    CreatureLootTemplateKey key,
+  ) async {
     final source = await getCreatureLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeCreatureLootTemplate(copied);
+    return CreatureLootTemplateKey.fromEntity(copied);
   }
 
   Future<int> countLootTemplateRows({
@@ -49,11 +53,15 @@ class CreatureLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplatesForEntry(int entry) {
+  @override
+  Future<int> countCreatureLootTemplates(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<CreatureLootTemplateEntity> createLootTemplate(int entry) async {
+  @override
+  Future<CreatureLootTemplateEntity> createCreatureLootTemplate(
+    int entry,
+  ) async {
     return CreatureLootTemplateEntity(entry: entry);
   }
 
@@ -94,7 +102,8 @@ class CreatureLootTemplateRepository
         .toList();
   }
 
-  Future<List<BriefCreatureLootTemplateEntity>> getBriefLootTemplates(
+  @override
+  Future<List<BriefCreatureLootTemplateEntity>> getBriefCreatureLootTemplates(
     int entry, {
     int page = 1,
   }) async {

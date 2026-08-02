@@ -7,18 +7,25 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_skill_repository.g.dart';
 
-@FoxyRepository(PlayerCreateInfoSkillEntity)
+@FoxyRepository(
+  PlayerCreateInfoSkillEntity,
+  parentKey: ['raceMask', 'classMask'],
+)
 class PlayerCreateInfoSkillRepository
     with RepositoryMixin, _PlayerCreateInfoSkillRepositoryMixin {
   static const _table = 'playercreateinfo_skills';
 
-  Future<void> copyPlayerCreateInfoSkill(PlayerCreateInfoSkillKey key) async {
+  @override
+  Future<PlayerCreateInfoSkillKey> copyPlayerCreateInfoSkill(
+    PlayerCreateInfoSkillKey key,
+  ) async {
     throw UnsupportedError('技能 ID 是复合主键的一部分，请新增记录。');
   }
 
-  Future<int> countPlayerCreateInfoSkills(int race, int playerClass) {
-    final raceBit = playerCreateRaceBit(race);
-    final classBit = playerCreateClassBit(playerClass);
+  @override
+  Future<int> countPlayerCreateInfoSkills(int raceMask, int classMask) {
+    final raceBit = playerCreateRaceBit(raceMask);
+    final classBit = playerCreateClassBit(classMask);
     return laconic
         .table(_table)
         .whereRaw('(`raceMask` = 0 OR (`raceMask` & ?) <> 0)', [raceBit])
@@ -26,21 +33,23 @@ class PlayerCreateInfoSkillRepository
         .count();
   }
 
+  @override
   Future<PlayerCreateInfoSkillEntity> createPlayerCreateInfoSkill(
-    int race,
-    int playerClass,
+    int raceMask,
+    int classMask,
   ) async => PlayerCreateInfoSkillEntity(
-    raceMask: playerCreateRaceBit(race),
-    classMask: playerCreateClassBit(playerClass),
+    raceMask: playerCreateRaceBit(raceMask),
+    classMask: playerCreateClassBit(classMask),
   );
 
+  @override
   Future<List<BriefPlayerCreateInfoSkillEntity>> getBriefPlayerCreateInfoSkills(
-    int race,
-    int playerClass, {
+    int raceMask,
+    int classMask, {
     int page = 1,
   }) async {
-    final raceBit = playerCreateRaceBit(race);
-    final classBit = playerCreateClassBit(playerClass);
+    final raceBit = playerCreateRaceBit(raceMask);
+    final classBit = playerCreateClassBit(classMask);
     final rows = await laconic
         .table(_table)
         .select(['raceMask', 'classMask', 'skill', 'rank', 'comment'])

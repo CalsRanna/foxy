@@ -3,6 +3,39 @@
 part of 'creature_quest_starter_repository.dart';
 
 mixin _CreatureQuestStarterRepositoryMixin on RepositoryMixin {
+  Future<CreatureQuestStarterKey> copyCreatureQuestStarter(
+    CreatureQuestStarterKey key,
+  ) async {
+    final source = await getCreatureQuestStarter(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureQuestStarter(source.quest);
+    final copied = source.copyWith(id: blank.id, quest: blank.quest);
+    await storeCreatureQuestStarter(copied);
+    return CreatureQuestStarterKey.fromEntity(copied);
+  }
+
+  Future<int> countCreatureQuestStarters(int quest) async {
+    return laconic
+        .table('creature_queststarter')
+        .where('`quest`', quest)
+        .count();
+  }
+
+  Future<CreatureQuestStarterEntity> createCreatureQuestStarter(
+    int quest,
+  ) async {
+    return CreatureQuestStarterEntity(
+      quest: quest,
+      id: await nextMaxPlusOne(
+        'creature_queststarter',
+        '`id`',
+        where: {'quest': quest},
+      ),
+    );
+  }
+
   Future<void> destroyCreatureQuestStarter(CreatureQuestStarterKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +56,24 @@ mixin _CreatureQuestStarterRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureQuestStarterEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefCreatureQuestStarterEntity>> getBriefCreatureQuestStarters(
+    int quest, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('creature_queststarter').select([
+      '`id`',
+      '`quest`',
+    ]);
+    builder = builder.where('`quest`', quest);
+    builder = builder.orderBy('`id`').orderBy('`quest`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCreatureQuestStarterEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeCreatureQuestStarter(

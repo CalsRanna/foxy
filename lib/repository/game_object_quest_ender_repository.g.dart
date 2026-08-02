@@ -3,6 +3,39 @@
 part of 'game_object_quest_ender_repository.dart';
 
 mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
+  Future<GameObjectQuestEnderKey> copyGameObjectQuestEnder(
+    GameObjectQuestEnderKey key,
+  ) async {
+    final source = await getGameObjectQuestEnder(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createGameObjectQuestEnder(source.quest);
+    final copied = source.copyWith(id: blank.id, quest: blank.quest);
+    await storeGameObjectQuestEnder(copied);
+    return GameObjectQuestEnderKey.fromEntity(copied);
+  }
+
+  Future<int> countGameObjectQuestEnders(int quest) async {
+    return laconic
+        .table('gameobject_questender')
+        .where('`quest`', quest)
+        .count();
+  }
+
+  Future<GameObjectQuestEnderEntity> createGameObjectQuestEnder(
+    int quest,
+  ) async {
+    return GameObjectQuestEnderEntity(
+      quest: quest,
+      id: await nextMaxPlusOne(
+        'gameobject_questender',
+        '`id`',
+        where: {'quest': quest},
+      ),
+    );
+  }
+
   Future<void> destroyGameObjectQuestEnder(GameObjectQuestEnderKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +56,24 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectQuestEnderEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefGameObjectQuestEnderEntity>> getBriefGameObjectQuestEnders(
+    int quest, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('gameobject_questender').select([
+      '`id`',
+      '`quest`',
+    ]);
+    builder = builder.where('`quest`', quest);
+    builder = builder.orderBy('`id`').orderBy('`quest`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGameObjectQuestEnderEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeGameObjectQuestEnder(

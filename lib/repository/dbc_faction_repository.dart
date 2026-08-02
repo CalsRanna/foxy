@@ -54,21 +54,10 @@ class DbcFactionRepository
         .toList();
   }
 
-  Future<List<DbcLocaleFieldValue>> getDbcFactionLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<DbcFactionEntity>> getDbcFactions() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
   }
-
-  Future<void> saveDbcFactionLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(QueryBuilder builder, DbcFactionFilter? filter) {
     if (filter == null) return builder;

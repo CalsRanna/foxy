@@ -3,6 +3,34 @@
 part of 'creature_quest_ender_repository.dart';
 
 mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
+  Future<CreatureQuestEnderKey> copyCreatureQuestEnder(
+    CreatureQuestEnderKey key,
+  ) async {
+    final source = await getCreatureQuestEnder(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureQuestEnder(source.quest);
+    final copied = source.copyWith(id: blank.id, quest: blank.quest);
+    await storeCreatureQuestEnder(copied);
+    return CreatureQuestEnderKey.fromEntity(copied);
+  }
+
+  Future<int> countCreatureQuestEnders(int quest) async {
+    return laconic.table('creature_questender').where('`quest`', quest).count();
+  }
+
+  Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int quest) async {
+    return CreatureQuestEnderEntity(
+      quest: quest,
+      id: await nextMaxPlusOne(
+        'creature_questender',
+        '`id`',
+        where: {'quest': quest},
+      ),
+    );
+  }
+
   Future<void> destroyCreatureQuestEnder(CreatureQuestEnderKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +51,24 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureQuestEnderEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
+    int quest, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('creature_questender').select([
+      '`id`',
+      '`quest`',
+    ]);
+    builder = builder.where('`quest`', quest);
+    builder = builder.orderBy('`id`').orderBy('`quest`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCreatureQuestEnderEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeCreatureQuestEnder(

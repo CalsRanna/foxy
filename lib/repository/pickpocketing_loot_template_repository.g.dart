@@ -28,6 +28,39 @@ final class PickpocketingLootTemplateFilter {
 }
 
 mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<PickpocketingLootTemplateKey> copyPickpocketingLootTemplate(
+    PickpocketingLootTemplateKey key,
+  ) async {
+    final source = await getPickpocketingLootTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createPickpocketingLootTemplate(source.entry);
+    final copied = source.copyWith(entry: blank.entry, item: blank.item);
+    await storePickpocketingLootTemplate(copied);
+    return PickpocketingLootTemplateKey.fromEntity(copied);
+  }
+
+  Future<int> countPickpocketingLootTemplates(int entry) async {
+    return laconic
+        .table('pickpocketing_loot_template')
+        .where('`Entry`', entry)
+        .count();
+  }
+
+  Future<PickpocketingLootTemplateEntity> createPickpocketingLootTemplate(
+    int entry,
+  ) async {
+    return PickpocketingLootTemplateEntity(
+      entry: entry,
+      item: await nextMaxPlusOne(
+        'pickpocketing_loot_template',
+        '`Item`',
+        where: {'Entry': entry},
+      ),
+    );
+  }
+
   Future<void> destroyPickpocketingLootTemplate(
     PickpocketingLootTemplateKey key,
   ) async {
@@ -50,6 +83,28 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return PickpocketingLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefPickpocketingLootTemplateEntity>>
+  getBriefPickpocketingLootTemplates(int entry, {int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('pickpocketing_loot_template').select([
+      '`Entry`',
+      '`Item`',
+      '`Reference`',
+      '`Chance`',
+      '`QuestRequired`',
+      '`GroupId`',
+      '`MinCount`',
+      '`MaxCount`',
+    ]);
+    builder = builder.where('`Entry`', entry);
+    builder = builder.orderBy('`Entry`').orderBy('`Item`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefPickpocketingLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storePickpocketingLootTemplate(

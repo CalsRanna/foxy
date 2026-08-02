@@ -12,6 +12,9 @@ import 'naming.dart';
 const _fullEntityChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullEntity',
 );
+const _fullFieldChecker = TypeChecker.fromUrl(
+  'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullField',
+);
 
 /// 默认推断支持的字段类型(非 nullable)。
 ///
@@ -65,11 +68,7 @@ final class FormReader {
     final entityElement = entityType.element;
     final entityClassName = entityElement.name;
     if (entityClassName == null || !entityClassName.endsWith('Entity')) {
-      _fail(
-        '$className 绑定的类型必须以 Entity 结尾。',
-        element,
-        '传入具体的 Full Entity 类型。',
-      );
+      _fail('$className 绑定的类型必须以 Entity 结尾。', element, '传入具体的 Full Entity 类型。');
     }
     final entityAnnotations = _fullEntityChecker
         .annotationsOf(entityElement)
@@ -114,7 +113,13 @@ final class FormReader {
       }
       constructorFieldNames.add(parameter.name!);
     }
-    for (final name in {...selects.keys, ...flags, ...groups, ...nullable, ...exclude}) {
+    for (final name in {
+      ...selects.keys,
+      ...flags,
+      ...groups,
+      ...nullable,
+      ...exclude,
+    }) {
       if (!constructorFieldNames.contains(name)) {
         _fail(
           '$entityClassName 没有名为 $name 的字段。',
@@ -131,7 +136,19 @@ final class FormReader {
       }
       final name = parameter.name!;
       if (exclude.contains(name)) continue;
-      fields.add(_readField(className, entityClassName, name, parameter, selects, flags, groups, nullable, element));
+      fields.add(
+        _readField(
+          className,
+          entityClassName,
+          name,
+          parameter,
+          selects,
+          flags,
+          groups,
+          nullable,
+          element,
+        ),
+      );
     }
 
     final mixinName = '_${className}Mixin';
@@ -158,10 +175,7 @@ final class FormReader {
       'class\\s+$className\\s+with\\s+([^\\{;]*)',
     ).firstMatch(source)?.group(1);
     if (withList != null) {
-      final parts = withList
-          .split(',')
-          .map((part) => part.trim())
-          .toList();
+      final parts = withList.split(',').map((part) => part.trim()).toList();
       final controllerIndex = parts.indexOf('FieldControllerMixin');
       final mixinIndex = parts.indexOf(mixinName);
       if (controllerIndex < 0) {
@@ -180,12 +194,77 @@ final class FormReader {
       }
     }
 
+    String repositoryClassName = '';
+    String keyType = '';
+    String? singleKeyFieldName;
+    final repositoryReader = annotation.peek('repository');
+    if (repositoryReader != null && !repositoryReader.isNull) {
+      final repositoryType = repositoryReader.typeValue;
+      if (repositoryType is! InterfaceType) {
+        _fail(
+          '$className 的 @FoxyDetailViewModel repository 参数不是 Repository class。',
+          element,
+          '传入具体的 Repository 类型。',
+        );
+      }
+      repositoryClassName = repositoryType.element.name!;
+      if (!repositoryClassName.endsWith('Repository')) {
+        _fail(
+          '$className 绑定的 Repository 必须以 Repository 结尾。',
+          element,
+          '传入具体的 Repository 类型。',
+        );
+      }
+      final keyFieldInfo = _readEntityKeyField(entityElement, element);
+      keyType = keyFieldInfo.$1;
+      singleKeyFieldName = keyFieldInfo.$2;
+    }
+
     return FormGenerationModel(
       className: className,
       entityClassName: entityClassName,
       mixinName: mixinName,
       fields: List.unmodifiable(fields),
+      skeletonEnabled: repositoryClassName.isNotEmpty,
+      repositoryClassName: repositoryClassName,
+      keyType: keyType,
+      singleKeyFieldName: singleKeyFieldName,
     );
+  }
+
+  /// 从 entity 的 `@FoxyFullField(key: true)` 推断 Key:
+  /// 单 key 返回 (字段类型, 字段名),复合 key 返回 (`XxxKey`, null)。
+  (String, String?) _readEntityKeyField(
+    InterfaceElement entityElement,
+    Element element,
+  ) {
+    final keyFields = <(String, String)>[];
+    for (final field in entityElement.fields.where(
+      (field) => !field.isStatic && !field.isSynthetic,
+    )) {
+      final annotations = _fullFieldChecker.annotationsOf(field).toList();
+      if (annotations.length != 1) continue;
+      if (!(ConstantReader(annotations.single).peek('key')?.boolValue ??
+          false)) {
+        continue;
+      }
+      keyFields.add((field.type.getDisplayString(), field.name!));
+    }
+    if (keyFields.isEmpty) {
+      _fail(
+        '${entityElement.name} 没有可用于详情加载的物理 Key。',
+        element,
+        '在至少一个 @FoxyFullField 上设置 key: true。',
+      );
+    }
+    if (keyFields.length == 1) {
+      return (keyFields.single.$1, keyFields.single.$2);
+    }
+    final baseName = entityElement.name!.substring(
+      0,
+      entityElement.name!.length - 'Entity'.length,
+    );
+    return ('${baseName}Key', null);
   }
 
   Never _fail(String message, Element element, String correction) {
@@ -251,7 +330,7 @@ final class FormReader {
       if (!supported) {
         _fail(
           '$entityClassName.$name 标注为 selects 但类型是 $type'
-          '($selectFallback)。',
+              '($selectFallback)。',
           element,
           'selects 的 fallback 类型必须与字段类型一致(int/String)。',
         );
@@ -297,7 +376,7 @@ final class FormReader {
     final map = reader.mapValue;
     return {
       for (final entry in map.entries)
-        entry.key!.toStringValue()! : _readSelectValue(entry.value!),
+        entry.key!.toStringValue()!: _readSelectValue(entry.value!),
     };
   }
 
@@ -312,9 +391,7 @@ final class FormReader {
   Set<String> _readStringSet(ConstantReader annotation, String name) {
     final reader = annotation.read(name);
     if (reader.isNull) return const {};
-    return {
-      for (final value in reader.setValue) value.toStringValue()!,
-    };
+    return {for (final value in reader.setValue) value.toStringValue()!};
   }
 
   void _validateDistinctExceptions(
@@ -341,7 +418,7 @@ final class FormReader {
         if (overlap.isNotEmpty) {
           _fail(
             '$entityClassName 的字段 ${overlap.join(', ')} 同时出现在 '
-            '${entry.key} 和 ${other.key}。',
+                '${entry.key} 和 ${other.key}。',
             element,
             '一个字段只能属于一个例外集合。',
           );

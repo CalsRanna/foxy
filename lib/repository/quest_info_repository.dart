@@ -34,17 +34,6 @@ class QuestInfoRepository
     return QuestInfoEntity(id: await _getNextId());
   }
 
-  Future<List<DbcLocaleFieldValue>> getQuestInfoLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveQuestInfoLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, QuestInfoFilter? filter) {
     if (filter == null) return builder;

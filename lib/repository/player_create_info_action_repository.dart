@@ -6,15 +6,19 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_action_repository.g.dart';
 
-@FoxyRepository(PlayerCreateInfoActionEntity)
+@FoxyRepository(PlayerCreateInfoActionEntity, parentKey: ['race', 'class_'])
 class PlayerCreateInfoActionRepository
     with RepositoryMixin, _PlayerCreateInfoActionRepositoryMixin {
   static const _table = 'playercreateinfo_action';
 
-  Future<void> copyPlayerCreateInfoAction(PlayerCreateInfoActionKey key) async {
+  @override
+  Future<PlayerCreateInfoActionKey> copyPlayerCreateInfoAction(
+    PlayerCreateInfoActionKey key,
+  ) async {
     throw UnsupportedError('动作按钮编号必须在 0..143 内明确选择，请新增记录。');
   }
 
+  @override
   Future<int> countPlayerCreateInfoActions(int race, int class_) {
     return laconic
         .table(_table)
@@ -23,11 +27,13 @@ class PlayerCreateInfoActionRepository
         .count();
   }
 
+  @override
   Future<PlayerCreateInfoActionEntity> createPlayerCreateInfoAction(
     int race,
     int class_,
   ) async => PlayerCreateInfoActionEntity(race: race, class_: class_);
 
+  @override
   Future<List<BriefPlayerCreateInfoActionEntity>>
   getBriefPlayerCreateInfoActions(int race, int class_, {int page = 1}) async {
     final results = await laconic

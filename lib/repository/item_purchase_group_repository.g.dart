@@ -24,7 +24,8 @@ final class ItemPurchaseGroupFilter {
   }
 }
 
-mixin _ItemPurchaseGroupRepositoryMixin on RepositoryMixin {
+mixin _ItemPurchaseGroupRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyItemPurchaseGroup(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -44,6 +45,17 @@ mixin _ItemPurchaseGroupRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return ItemPurchaseGroupEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getItemPurchaseGroupLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveItemPurchaseGroupLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeItemPurchaseGroup(
     ItemPurchaseGroupEntity itemPurchaseGroup,

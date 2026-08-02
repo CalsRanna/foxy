@@ -3,6 +3,42 @@
 part of 'game_object_quest_item_repository.dart';
 
 mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
+  Future<GameObjectQuestItemKey> copyGameObjectQuestItem(
+    GameObjectQuestItemKey key,
+  ) async {
+    final source = await getGameObjectQuestItem(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createGameObjectQuestItem(source.gameObjectEntry);
+    final copied = source.copyWith(
+      gameObjectEntry: blank.gameObjectEntry,
+      idx: blank.idx,
+    );
+    await storeGameObjectQuestItem(copied);
+    return GameObjectQuestItemKey.fromEntity(copied);
+  }
+
+  Future<int> countGameObjectQuestItems(int gameObjectEntry) async {
+    return laconic
+        .table('gameobject_questitem')
+        .where('`GameObjectEntry`', gameObjectEntry)
+        .count();
+  }
+
+  Future<GameObjectQuestItemEntity> createGameObjectQuestItem(
+    int gameObjectEntry,
+  ) async {
+    return GameObjectQuestItemEntity(
+      gameObjectEntry: gameObjectEntry,
+      idx: await nextMaxPlusOne(
+        'gameobject_questitem',
+        '`Idx`',
+        where: {'GameObjectEntry': gameObjectEntry},
+      ),
+    );
+  }
+
   Future<void> destroyGameObjectQuestItem(GameObjectQuestItemKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +59,26 @@ mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectQuestItemEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefGameObjectQuestItemEntity>> getBriefGameObjectQuestItems(
+    int gameObjectEntry, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('gameobject_questitem').select([
+      '`GameObjectEntry`',
+      '`Idx`',
+      '`ItemId`',
+      '`VerifiedBuild`',
+    ]);
+    builder = builder.where('`GameObjectEntry`', gameObjectEntry);
+    builder = builder.orderBy('`GameObjectEntry`').orderBy('`Idx`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGameObjectQuestItemEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeGameObjectQuestItem(

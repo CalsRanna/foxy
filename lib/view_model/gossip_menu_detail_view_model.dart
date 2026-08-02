@@ -12,25 +12,16 @@ import 'package:signals/signals.dart';
 
 part 'gossip_menu_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: GossipMenuEntity)
-class GossipMenuDetailViewModel with FieldControllerMixin, _GossipMenuDetailViewModelMixin {
-  final _repository = GetIt.instance.get<GossipMenuRepository>();
+@FoxyDetailViewModel(entity: GossipMenuEntity, repository: GossipMenuRepository)
+class GossipMenuDetailViewModel
+    with FieldControllerMixin, _GossipMenuDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
   final _npcTextRepository = GetIt.instance.get<NpcTextRepository>();
   final _createUseCase = GetIt.instance.get<CreateGossipMenuUseCase>();
 
-  final entity = signal<GossipMenuEntity?>(null);
-  final persistedKey = signal<GossipMenuKey?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
-
   int? _reservedTextId;
 
-  void dispose() {
-    disposeControllers();
-  }
-
+  @override
   Future<void> initSignals({GossipMenuKey? key}) async {
     loading.value = true;
     errorMessage.value = null;
@@ -62,6 +53,7 @@ class GossipMenuDetailViewModel with FieldControllerMixin, _GossipMenuDetailView
     }
   }
 
+  @override
   Future<void> persist() async {
     if (submitting.value) throw StateError('正在保存，请稍候');
     submitting.value = true;
@@ -97,11 +89,12 @@ class GossipMenuDetailViewModel with FieldControllerMixin, _GossipMenuDetailView
     }
   }
 
-  void _logActivity(ActivityActionType action, GossipMenuEntity t) {
+  @override
+  void _logActivity(ActivityActionType action, GossipMenuEntity gossipMenu) {
     final log = ActivityLogEntity(
       module: 'gossip_menu',
       actionType: action,
-      entityName: 'GossipMenu ${t.menuId}/${t.textId}',
+      entityName: 'GossipMenu ${gossipMenu.menuId}/${gossipMenu.textId}',
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);

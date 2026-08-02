@@ -24,7 +24,7 @@ final class QuestInfoFilter {
   }
 }
 
-mixin _QuestInfoRepositoryMixin on RepositoryMixin {
+mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> copyQuestInfo(int key) async {
     final source = await getQuestInfo(key);
     if (source == null) {
@@ -89,6 +89,17 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin {
     final results = await builder.get();
     return results.map((e) => QuestInfoEntity.fromJson(e.toMap())).toList();
   }
+
+  Future<List<DbcLocaleFieldValue>> getQuestInfoLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveQuestInfoLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeQuestInfo(QuestInfoEntity questInfo) async {
     if (questInfo.id <= 0) {

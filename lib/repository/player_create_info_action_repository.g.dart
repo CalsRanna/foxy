@@ -3,6 +3,49 @@
 part of 'player_create_info_action_repository.dart';
 
 mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
+  Future<PlayerCreateInfoActionKey> copyPlayerCreateInfoAction(
+    PlayerCreateInfoActionKey key,
+  ) async {
+    final source = await getPlayerCreateInfoAction(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createPlayerCreateInfoAction(
+      source.race,
+      source.class_,
+    );
+    final copied = source.copyWith(
+      race: blank.race,
+      class_: blank.class_,
+      button: blank.button,
+    );
+    await storePlayerCreateInfoAction(copied);
+    return PlayerCreateInfoActionKey.fromEntity(copied);
+  }
+
+  Future<int> countPlayerCreateInfoActions(int race, int class_) async {
+    return laconic
+        .table('playercreateinfo_action')
+        .where('`race`', race)
+        .where('`class`', class_)
+        .count();
+  }
+
+  Future<PlayerCreateInfoActionEntity> createPlayerCreateInfoAction(
+    int race,
+    int class_,
+  ) async {
+    return PlayerCreateInfoActionEntity(
+      race: race,
+      class_: class_,
+      button: await nextMaxPlusOne(
+        'playercreateinfo_action',
+        '`button`',
+        where: {'race': race, 'class': class_},
+      ),
+    );
+  }
+
   Future<void> destroyPlayerCreateInfoAction(
     PlayerCreateInfoActionKey key,
   ) async {
@@ -25,6 +68,25 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoActionEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefPlayerCreateInfoActionEntity>>
+  getBriefPlayerCreateInfoActions(int race, int class_, {int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('playercreateinfo_action').select([
+      '`race`',
+      '`class`',
+      '`button`',
+      '`action`',
+      '`type`',
+    ]);
+    builder = builder.where('`race`', race).where('`class`', class_);
+    builder = builder.orderBy('`race`').orderBy('`class`').orderBy('`button`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefPlayerCreateInfoActionEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storePlayerCreateInfoAction(

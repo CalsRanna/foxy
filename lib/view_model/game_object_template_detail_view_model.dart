@@ -11,27 +11,51 @@ import 'package:signals/signals.dart';
 
 part 'game_object_template_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: GameObjectTemplateEntity, groups: {'data0', 'data1', 'data10', 'data11', 'data12', 'data13', 'data14', 'data15', 'data16', 'data17', 'data18', 'data19', 'data2', 'data20', 'data21', 'data22', 'data23', 'data3', 'data4', 'data5', 'data6', 'data7', 'data8', 'data9'}, selects: {'type': 0})
+@FoxyDetailViewModel(
+  entity: GameObjectTemplateEntity,
+  groups: {
+    'data0',
+    'data1',
+    'data10',
+    'data11',
+    'data12',
+    'data13',
+    'data14',
+    'data15',
+    'data16',
+    'data17',
+    'data18',
+    'data19',
+    'data2',
+    'data20',
+    'data21',
+    'data22',
+    'data23',
+    'data3',
+    'data4',
+    'data5',
+    'data6',
+    'data7',
+    'data8',
+    'data9',
+  },
+  selects: {'type': 0},
+  repository: GameObjectTemplateRepository,
+)
 class GameObjectTemplateDetailViewModel
-    with
-        FieldControllerMixin, _GameObjectTemplateDetailViewModelMixin {
-  final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
+    with FieldControllerMixin, _GameObjectTemplateDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
-
-  final entity = signal<GameObjectTemplateEntity?>(null);
-  final persistedKey = signal<int?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
 
   /// 当前选中的 GameObject 类型，驱动 Data0..Data23 的编辑规格
   final selectedType = signal(0);
 
+  @override
   void dispose() {
     typeController.removeListener(_onTypeChanged);
     disposeControllers();
   }
 
+  @override
   Future<void> initSignals({int? key}) async {
     loading.value = true;
     errorMessage.value = null;
@@ -60,37 +84,15 @@ class GameObjectTemplateDetailViewModel
     }
   }
 
-  Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        await _repository.storeGameObjectTemplate(candidate);
-      } else {
-        await _repository.updateGameObjectTemplate(originalKey, candidate);
-      }
-      persistedKey.value = candidate.entry;
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  void _logActivity(ActivityActionType action, GameObjectTemplateEntity t) {
+  @override
+  void _logActivity(
+    ActivityActionType action,
+    GameObjectTemplateEntity gameObjectTemplate,
+  ) {
     final log = ActivityLogEntity(
       module: 'gameobject_template',
       actionType: action,
-      entityName: t.name,
+      entityName: gameObjectTemplate.name,
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);

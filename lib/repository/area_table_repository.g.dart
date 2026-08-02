@@ -24,7 +24,7 @@ final class AreaTableFilter {
   }
 }
 
-mixin _AreaTableRepositoryMixin on RepositoryMixin {
+mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> copyAreaTable(int key) async {
     final source = await getAreaTable(key);
     if (source == null) {
@@ -93,6 +93,17 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin {
     final results = await builder.get();
     return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
   }
+
+  Future<List<DbcLocaleFieldValue>> getAreaTableLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveAreaTableLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<void> storeAreaTable(AreaTableEntity areaTable) async {
     if (areaTable.id <= 0) {

@@ -3,6 +3,48 @@
 part of 'spell_linked_spell_repository.dart';
 
 mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
+  Future<SpellLinkedSpellKey> copySpellLinkedSpell(
+    SpellLinkedSpellKey key,
+  ) async {
+    final source = await getSpellLinkedSpell(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createSpellLinkedSpell(source.spellTrigger);
+    final copied = source.copyWith(
+      spellTrigger: blank.spellTrigger,
+      spellEffect: blank.spellEffect,
+      type: blank.type,
+    );
+    await storeSpellLinkedSpell(copied);
+    return SpellLinkedSpellKey.fromEntity(copied);
+  }
+
+  Future<int> countSpellLinkedSpells(int spellTrigger) async {
+    return laconic
+        .table('spell_linked_spell')
+        .where('`spell_trigger`', spellTrigger)
+        .count();
+  }
+
+  Future<SpellLinkedSpellEntity> createSpellLinkedSpell(
+    int spellTrigger,
+  ) async {
+    return SpellLinkedSpellEntity(
+      spellTrigger: spellTrigger,
+      spellEffect: await nextMaxPlusOne(
+        'spell_linked_spell',
+        '`spell_effect`',
+        where: {'spell_trigger': spellTrigger},
+      ),
+      type: await nextMaxPlusOne(
+        'spell_linked_spell',
+        '`type`',
+        where: {'spell_trigger': spellTrigger},
+      ),
+    );
+  }
+
   Future<void> destroySpellLinkedSpell(SpellLinkedSpellKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -23,6 +65,29 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return SpellLinkedSpellEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefSpellLinkedSpellEntity>> getBriefSpellLinkedSpells(
+    int spellTrigger, {
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('spell_linked_spell').select([
+      '`spell_trigger`',
+      '`spell_effect`',
+      '`type`',
+      '`comment`',
+    ]);
+    builder = builder.where('`spell_trigger`', spellTrigger);
+    builder = builder
+        .orderBy('`spell_trigger`')
+        .orderBy('`spell_effect`')
+        .orderBy('`type`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefSpellLinkedSpellEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeSpellLinkedSpell(

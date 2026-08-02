@@ -40,11 +40,6 @@ class AchievementCriteriaRepository
     return AchievementCriteriaEntity(id: await _getNextId());
   }
 
-  Future<List<DbcLocaleFieldValue>> getAchievementCriteriaLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<List<AchievementCriteriaEntity>> getAllAchievementCriteria() async {
     final rows = await laconic.table(_table).orderBy('ID').get();
     return rows
@@ -67,12 +62,6 @@ class AchievementCriteriaRepository
         .map((row) => BriefAchievementCriteriaEntity.fromJson(row.toMap()))
         .toList();
   }
-
-  Future<void> saveAchievementCriteriaLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
