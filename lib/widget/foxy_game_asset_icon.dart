@@ -45,7 +45,7 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
     }
     return Icon(
       LucideIcons.image,
-      size: widget.size * 0.6,
+      size: widget.size,
       color: Theme.of(context).disabledColor,
     );
   }

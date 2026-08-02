@@ -887,7 +887,7 @@ class FoxyEntityPickerDelegates {
         columns: [
           FoxyEntityPickerColumn(
             header: '配置 ID',
-            width: 100,
+            width: 120,
             text: (BriefCreatureImmunityEntity t) => t.id.toString(),
           ),
           FoxyEntityPickerColumn(
@@ -902,7 +902,7 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: 'AoE / 链式',
-            width: 100,
+            width: 120,
             text: (BriefCreatureImmunityEntity t) =>
                 '${t.immuneAoE} / ${t.immuneChain}',
           ),
@@ -1040,12 +1040,12 @@ class FoxyEntityPickerDelegates {
         columns: [
           FoxyEntityPickerColumn(
             header: '模板 ID',
-            width: 100,
+            width: 120,
             text: (BriefDbcFactionTemplateEntity t) => t.id.toString(),
           ),
           FoxyEntityPickerColumn(
             header: '阵营 ID',
-            width: 100,
+            width: 120,
             text: (BriefDbcFactionTemplateEntity t) => t.faction.toString(),
           ),
           FoxyEntityPickerColumn(
@@ -1054,7 +1054,7 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '组 / 友好 / 敌对',
-            width: 150,
+            width: 120,
             text: (BriefDbcFactionTemplateEntity t) =>
                 '${t.factionGroup} / ${t.friendGroup} / ${t.enemyGroup}',
           ),
@@ -1762,7 +1762,7 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '数量',
-            width: 100,
+            width: 120,
             text: (BriefItemLimitCategoryEntity row) => row.quantity.toString(),
           ),
         ],
@@ -1792,7 +1792,7 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称记录 ID',
-        width: 160,
+        width: 120,
         text: (BriefHolidayEntity row) => row.holidayNameId.toString(),
       ),
       FoxyEntityPickerColumn(
