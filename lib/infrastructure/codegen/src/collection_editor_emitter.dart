@@ -62,9 +62,9 @@ final class CollectionEditorEmitter {
         "    if (submitting.value) throw BusyException('operation already in progress');",
       )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln(
-        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
-      )
+      ..writeln('    if (parent == null) {')
+      ..writeln("      throw ParentNotLoadedException('parent record not loaded');")
+      ..writeln('    }')
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
@@ -92,9 +92,9 @@ final class CollectionEditorEmitter {
         "    if (submitting.value) throw BusyException('operation already in progress');",
       )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln(
-        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
-      )
+      ..writeln('    if (parent == null) {')
+      ..writeln("      throw ParentNotLoadedException('parent record not loaded');")
+      ..writeln('    }')
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
@@ -123,9 +123,9 @@ final class CollectionEditorEmitter {
         "    if (submitting.value) throw BusyException('operation already in progress');",
       )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln(
-        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
-      )
+      ..writeln('    if (parent == null) {')
+      ..writeln("      throw ParentNotLoadedException('parent record not loaded');")
+      ..writeln('    }')
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
@@ -155,9 +155,9 @@ final class CollectionEditorEmitter {
         "    if (submitting.value) throw BusyException('operation already in progress');",
       )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln(
-        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
-      )
+      ..writeln('    if (parent == null) {')
+      ..writeln("      throw ParentNotLoadedException('parent record not loaded');")
+      ..writeln('    }')
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    editingKey.value = key;')
       ..writeln('    selectedKey.value = key;')
@@ -204,9 +204,9 @@ final class CollectionEditorEmitter {
         "    if (submitting.value) throw BusyException('operation already in progress');",
       )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln(
-        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
-      )
+      ..writeln('    if (parent == null) {')
+      ..writeln("      throw ParentNotLoadedException('parent record not loaded');")
+      ..writeln('    }')
       ..writeln('    final candidate = _collectCandidate();')
       ..writeln('    final originalKey = editingKey.value;')
       ..writeln('    final token = ++_interactionToken;')

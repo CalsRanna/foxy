@@ -61,8 +61,9 @@ mixin _CreatureTemplateResistanceCollectionEditorViewModelMixin
   Future<void> copy(CreatureTemplateResistanceKey key) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -84,8 +85,9 @@ mixin _CreatureTemplateResistanceCollectionEditorViewModelMixin
   Future<void> create() async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
@@ -108,8 +110,9 @@ mixin _CreatureTemplateResistanceCollectionEditorViewModelMixin
   Future<void> destroy(CreatureTemplateResistanceKey key) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -133,8 +136,9 @@ mixin _CreatureTemplateResistanceCollectionEditorViewModelMixin
   Future<void> edit(CreatureTemplateResistanceKey key) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     editingKey.value = key;
     selectedKey.value = key;
@@ -170,8 +174,9 @@ mixin _CreatureTemplateResistanceCollectionEditorViewModelMixin
   Future<void> persist() async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
     final token = ++_interactionToken;

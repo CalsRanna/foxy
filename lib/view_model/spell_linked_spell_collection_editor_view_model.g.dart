@@ -55,8 +55,9 @@ mixin _SpellLinkedSpellCollectionEditorViewModelMixin on FieldControllerMixin {
   Future<void> copy(SpellLinkedSpellKey key) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -78,8 +79,9 @@ mixin _SpellLinkedSpellCollectionEditorViewModelMixin on FieldControllerMixin {
   Future<void> create() async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
@@ -100,8 +102,9 @@ mixin _SpellLinkedSpellCollectionEditorViewModelMixin on FieldControllerMixin {
   Future<void> destroy(SpellLinkedSpellKey key) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -125,8 +128,9 @@ mixin _SpellLinkedSpellCollectionEditorViewModelMixin on FieldControllerMixin {
   Future<void> edit(SpellLinkedSpellKey key) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     editingKey.value = key;
     selectedKey.value = key;
@@ -162,8 +166,9 @@ mixin _SpellLinkedSpellCollectionEditorViewModelMixin on FieldControllerMixin {
   Future<void> persist() async {
     if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null)
+    if (parent == null) {
       throw ParentNotLoadedException('parent record not loaded');
+    }
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
