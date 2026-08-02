@@ -90,7 +90,9 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     submitting.value = true;
     errorMessage.value = null;
     try {

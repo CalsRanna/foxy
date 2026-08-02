@@ -29,7 +29,9 @@ mixin _ConditionListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
   int _refreshToken = 0;
 
   Future<void> copy(ConditionKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -45,7 +47,9 @@ mixin _ConditionListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
   }
 
   Future<void> destroy(ConditionKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     submitting.value = true;
     errorMessage.value = null;
     try {

@@ -26,7 +26,9 @@ mixin _ReferenceLootTemplateListViewModelMixin
   int _refreshToken = 0;
 
   Future<void> copy(ReferenceLootTemplateKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -42,7 +44,9 @@ mixin _ReferenceLootTemplateListViewModelMixin
   }
 
   Future<void> destroy(ReferenceLootTemplateKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     submitting.value = true;
     errorMessage.value = null;
     try {

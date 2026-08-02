@@ -114,9 +114,9 @@ final class FormEmitter {
         : '${model.baseName}Key.fromEntity(candidate)';
     buffer
       ..writeln('  Future<void> persist() async {')
-      ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
-      )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')

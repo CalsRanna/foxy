@@ -17,9 +17,9 @@ final class ListEmitter {
     buffer
       ..writeln()
       ..writeln('  Future<void> destroy(${model.keyParameter}) async {')
-      ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
-      )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
@@ -146,9 +146,9 @@ final class ListEmitter {
   void _emitCopy(StringBuffer buffer, ListGenerationModel model) {
     buffer
       ..writeln('  Future<void> copy(${model.keyParameter}) async {')
-      ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
-      )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')

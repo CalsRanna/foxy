@@ -28,7 +28,9 @@ mixin _CreatureTemplateListViewModelMixin
   int _refreshToken = 0;
 
   Future<void> copy(int key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -44,7 +46,9 @@ mixin _CreatureTemplateListViewModelMixin
   }
 
   Future<void> destroy(int key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     submitting.value = true;
     errorMessage.value = null;
     try {
