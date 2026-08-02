@@ -14,6 +14,7 @@ import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -171,6 +172,51 @@ void main() {
     expect(importVm.status.value, WorkflowStatus.succeeded);
     expect(iconVm.result.value?.extracted, 2);
     expect(find.text('进入应用'), findsOneWidget);
+  });
+
+  testWidgets('导入与提取全部完成后，「进入应用」可关闭向导对话框', (tester) async {
+    // 与真实场景一致：向导以对话框路由弹出，外层 PopScope(canPop: false)
+    // 拦截遮罩/Esc 关闭。回归用例：按钮必须走 pop() 而非 maybePop()，
+    // 否则会被 PopScope 拦截，点击后向导关不掉。
+    configData['client_dir'] = clientRoot.path;
+    configData['dbc_path'] = dbcDir.path;
+
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+        ShadApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => Center(
+                child: ShadButton(
+                  onPressed: () => showFoxyDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => SetupWizardDialog(
+                      setupVm: setupVm,
+                      importVm: importVm,
+                      iconVm: iconVm,
+                    ),
+                  ),
+                  child: const Text('打开向导'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('打开向导'));
+      await tester.pump();
+      await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
+    });
+    await tester.pump();
+
+    expect(find.text('进入应用'), findsOneWidget);
+
+    await tester.tap(find.text('进入应用'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SetupWizardDialog), findsNothing);
+    expect(find.text('进入应用'), findsNothing);
   });
 
   testWidgets('目录已配置且 DBC 已导入时跳过步骤 1/2，直达步骤 3 并自动提取', (tester) async {

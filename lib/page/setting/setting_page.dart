@@ -196,7 +196,7 @@ class _SettingPageState extends State<SettingPage> {
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
-                children: [Icon(LucideIcons.download, size: 15), Text('提取图标')],
+                children: [Icon(LucideIcons.download, size: 15), Text('提取')],
               ),
             ),
           ),

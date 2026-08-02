@@ -132,8 +132,10 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     if (importRunning || iconRunning) return const [];
     if (_importCompleted && iconStatus == WorkflowStatus.succeeded) {
       return [
+        // 本按钮是向导的唯一合法出口：不能走 maybePop，
+        // 否则会被外层 PopScope(canPop: false) 拦截而毫无反应。
         ShadButton(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () => Navigator.of(context).pop(),
           child: const Text('进入应用'),
         ),
       ];
