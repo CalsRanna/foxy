@@ -143,7 +143,7 @@ void main() {
     expect(find.text('区域名称'), findsOneWidget);
 
     for (final locale in DbcLocale.values) {
-      expect(find.text(locale.displayCode), findsOneWidget);
+      expect(find.text(locale.code), findsOneWidget);
     }
   });
 
@@ -171,28 +171,6 @@ void main() {
     await tester.tap(find.byIcon(LucideIcons.globe), warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(find.byType(DbcLocaleFieldEditor), findsNothing);
-  });
-
-  testWidgets('长文本字段使用多行输入', (tester) async {
-    final field = DbcLocaleFields.spellDescription;
-    expect(field.multiline, isTrue);
-
-    await tester.pumpWidget(
-      _wrap(
-        DbcLocaleFieldEditor(
-          title: '法术描述本地化',
-          entry: 1,
-          field: field,
-          initialValues: DbcLocaleFieldCodec.empty(),
-          onSave: (values) async {},
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    final inputs = tester.widgetList<ShadInput>(find.byType(ShadInput));
-    expect(inputs, isNotEmpty);
-    expect(inputs.every((input) => (input.maxLines ?? 1) > 1), isTrue);
   });
 
   testWidgets('保存 zhCN 后 onSaved 同步回调', (tester) async {

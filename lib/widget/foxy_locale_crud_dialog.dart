@@ -98,10 +98,8 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
     final theme = ShadTheme.of(context);
     return ShadDialog(
       title: Text(widget.title),
-      description: Text('编号: ${widget.entry}'),
       scrollable: false,
       titlePinned: true,
-      descriptionPinned: true,
       constraints: foxyDialogConstraints(context),
       actions: [
         ShadButton.outline(onPressed: _addRow, child: const Text('添加')),
@@ -173,6 +171,7 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
         border: Border(bottom: BorderSide(color: theme.colorScheme.border)),
       ),
       child: Row(
+        spacing: 16,
         children: [
           for (var label in widget.fieldLabels)
             Expanded(child: Text(label, style: theme.textTheme.muted)),

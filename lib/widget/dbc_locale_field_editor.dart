@@ -79,10 +79,8 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
     final theme = ShadTheme.of(context);
     return ShadDialog(
       title: Text(widget.title),
-      description: Text('编号: ${widget.entry}'),
       scrollable: false,
       titlePinned: true,
-      descriptionPinned: true,
       constraints: foxyDialogConstraints(context),
       actions: [
         ShadButton.outline(
@@ -133,6 +131,7 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         border: Border(bottom: BorderSide(color: theme.colorScheme.border)),
       ),
       child: Row(
+        spacing: 16,
         children: [
           SizedBox(
             width: 120,
@@ -147,7 +146,6 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
   }
 
   Widget _buildTable(ShadThemeData theme) {
-    final multiline = widget.field.multiline;
     return ListView.builder(
       shrinkWrap: true,
       itemCount: DbcLocale.values.length,
@@ -156,24 +154,20 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Row(
-            crossAxisAlignment: multiline
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.center,
             spacing: 16,
             children: [
-              SizedBox(
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
                 width: 120,
-                child: Padding(
-                  padding: EdgeInsets.only(top: multiline ? 8 : 0),
-                  child: Text(locale.displayCode, style: theme.textTheme.small),
-                ),
+                child: Text(locale.code),
               ),
               Expanded(
-                child: ShadInput(
-                  controller: _controllers[index],
-                  maxLines: multiline ? 4 : 1,
-                  minLines: multiline ? 2 : 1,
-                  placeholder: Text(locale.label),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: ShadInput(
+                    controller: _controllers[index],
+                    placeholder: Text(locale.label),
+                  ),
                 ),
               ),
             ],

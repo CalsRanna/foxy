@@ -71,9 +71,6 @@ class DbcLocale {
     required this.label,
   });
 
-  /// 弹窗第一列展示：`0 · enUS`。
-  String get displayCode => '$index · $code';
-
   @override
   String toString() => 'DbcLocale($index, $code)';
 }
@@ -88,9 +85,6 @@ class DbcLocaleFieldDefinition {
 
   /// 业务显示名称，用作弹窗第二列表头。
   final String label;
-
-  /// 是否使用多行输入（描述类字段）。
-  final bool multiline;
 
   /// 创建并校验字段定义：确保 Schema 中存在全部 16 个字符串语言列。
   factory DbcLocaleFieldDefinition({
@@ -122,7 +116,6 @@ class DbcLocaleFieldDefinition {
       tableName: tableName,
       columnPrefix: columnPrefix,
       label: label,
-      multiline: multiline,
     );
   }
 
@@ -130,7 +123,6 @@ class DbcLocaleFieldDefinition {
     required this.tableName,
     required this.columnPrefix,
     required this.label,
-    required this.multiline,
   });
 
   /// 16 个语言列的物理列名（不含 Flags）。
