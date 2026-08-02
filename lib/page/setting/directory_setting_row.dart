@@ -164,86 +164,73 @@ class DirectorySettingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = ShadTheme.of(context);
     return Watch((_) {
       final path = target.pathOf(vm);
       final configured = target.configuredOf(vm);
       final missing = path != null && !configured;
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              target.icon,
-              size: 18,
-              color: colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    target.title,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  target.title,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  target.description,
+                  style: theme.textTheme.muted.copyWith(fontSize: 13),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  path ?? '尚未配置',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: missing
+                        ? theme.colorScheme.destructive
+                        : configured
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.mutedForeground,
+                    fontWeight: configured ? FontWeight.w500 : null,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (missing) ...[
                   const SizedBox(height: 4),
                   Text(
-                    target.description,
+                    '目录不存在，请重新设置。',
                     style: TextStyle(
-                      fontSize: 13,
-                      color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      fontSize: 12,
+                      color: theme.colorScheme.destructive,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    path ?? '未配置',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: missing
-                          ? colorScheme.error
-                          : configured
-                          ? colorScheme.primary
-                          : colorScheme.onSurface.withValues(alpha: 0.5),
-                      fontWeight: configured ? FontWeight.w500 : null,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (missing) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      '目录不存在，请重新设置。',
-                      style: TextStyle(fontSize: 12, color: colorScheme.error),
-                    ),
-                  ],
                 ],
-              ),
+              ],
             ),
-            const SizedBox(width: 16),
-            ShadButton.outline(
-              size: ShadButtonSize.sm,
-              onPressed: () => showFoxyDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (dialogContext) =>
-                    DirectoryPathConfigDialog(vm: vm, target: target),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [
-                  Icon(LucideIcons.pencil, size: 15),
-                  Text('修改'),
-                ],
-              ),
+          ),
+          const SizedBox(width: 16),
+          ShadButton.outline(
+            size: ShadButtonSize.sm,
+            onPressed: () => showFoxyDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (dialogContext) =>
+                  DirectoryPathConfigDialog(vm: vm, target: target),
             ),
-          ],
-        ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 6,
+              children: [
+                Icon(LucideIcons.pencil, size: 15),
+                Text('修改'),
+              ],
+            ),
+          ),
+        ],
       );
     });
   }

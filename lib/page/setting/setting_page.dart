@@ -21,6 +21,39 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
+/// 设置分组：上分割线 + 标题 + 下分割线 + 条目列表。
+class _SettingSection extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const _SettingSection({required this.title, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    final divider = Divider(
+      height: 1,
+      color: theme.colorScheme.border.withValues(alpha: 0.6),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        divider,
+        const SizedBox(height: 16),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 16),
+        divider,
+        const SizedBox(height: 16),
+        ...children,
+      ],
+    );
+  }
+}
+
+/// 设置页的单行条目：标题 + 描述 + 右侧操作，无边框。
 class _SettingItem extends StatelessWidget {
   final String title;
   final String description;
@@ -34,39 +67,26 @@ class _SettingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
+    final theme = ShadTheme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: theme.textTheme.muted.copyWith(fontSize: 13),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          trailing,
-        ],
-      ),
+        ),
+        const SizedBox(width: 16),
+        trailing,
+      ],
     );
   }
 }
@@ -83,7 +103,7 @@ class _SettingPageState extends State<SettingPage> {
       padding: const EdgeInsets.all(16),
       children: [
         const Padding(
-          padding: EdgeInsets.only(bottom: 24),
+          padding: EdgeInsets.only(bottom: 16),
           child: FoxyHeader('设置'),
         ),
         Align(
@@ -91,51 +111,26 @@ class _SettingPageState extends State<SettingPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 720),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  '目录设置',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '应用运行所需的两个目录，分别用于图标提取与 DBC 数据导入。',
-                  style: _mutedDescription(context),
-                ),
-                const SizedBox(height: 16),
-                DirectorySettingRow(
-                  vm: setupViewModel,
-                  target: DirectoryConfigTarget.clientDir,
-                ),
-                const SizedBox(height: 12),
-                DirectorySettingRow(
-                  vm: setupViewModel,
-                  target: DirectoryConfigTarget.dbcPath,
+                _SettingSection(
+                  title: '目录设置',
+                  children: [
+                    DirectorySettingRow(
+                      vm: setupViewModel,
+                      target: DirectoryConfigTarget.clientDir,
+                    ),
+                    const SizedBox(height: 16),
+                    DirectorySettingRow(
+                      vm: setupViewModel,
+                      target: DirectoryConfigTarget.dbcPath,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'DBC 数据管理',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '从服务端 DBC 目录导入 .dbc 到数据库，或将库内 DBC 表导出为文件。',
-                  style: _mutedDescription(context),
-                ),
-                const SizedBox(height: 16),
-                _buildDbcActions(),
+                _buildDbcSection(),
                 const SizedBox(height: 24),
-                const Text(
-                  '游戏图标',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '从客户端 MPQ 归档提取游戏图标到本地缓存，应用不内置图标。',
-                  style: _mutedDescription(context),
-                ),
-                const SizedBox(height: 16),
-                _buildIconActions(),
+                _buildIconSection(),
               ],
             ),
           ),
@@ -144,22 +139,11 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  @override
-  void dispose() {
-    exportViewModel.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setupViewModel.prepare();
-  }
-
-  Widget _buildDbcActions() {
+  Widget _buildDbcSection() {
     return Watch((_) {
       final busy = importViewModel.isRunning || exportViewModel.isRunning;
-      return Column(
+      return _SettingSection(
+        title: 'DBC 数据管理',
         children: [
           _SettingItem(
             title: '导入 DBC 文件',
@@ -176,7 +160,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           _SettingItem(
             title: '导出 DBC 文件',
             description: '将数据库中的 DBC 表导出为 .dbc 文件，可搜索并勾选需要导出的表。',
@@ -195,10 +179,11 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  Widget _buildIconActions() {
+  Widget _buildIconSection() {
     return Watch((_) {
       final busy = iconViewModel.isRunning;
-      return Column(
+      return _SettingSection(
+        title: '游戏图标',
         children: [
           _SettingItem(
             title: '提取游戏图标',
@@ -220,14 +205,16 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  TextStyle _mutedDescription(BuildContext context) {
-    return Theme.of(
-      context,
-    ).textTheme.bodySmall?.copyWith(
-      color: Theme.of(
-        context,
-      ).colorScheme.onSurface.withValues(alpha: 0.65),
-    ) ?? const TextStyle(fontSize: 13);
+  @override
+  void dispose() {
+    exportViewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupViewModel.prepare();
   }
 
   void _showExportDialog() {
