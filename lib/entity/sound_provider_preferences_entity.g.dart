@@ -17,9 +17,17 @@ final class BriefSoundProviderPreferencesEntity {
     Map<String, dynamic> json,
   ) {
     return BriefSoundProviderPreferencesEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       description: json['Description']?.toString() ?? '',
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -232,27 +240,58 @@ mixin _SoundProviderPreferencesEntityMixin {
 
   static SoundProviderPreferencesEntity fromJson(Map<String, dynamic> json) {
     return SoundProviderPreferencesEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       description: json['Description']?.toString() ?? '',
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      eaxEnvironmentSelection:
-          (json['EAXEnvironmentSelection'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      eaxEnvironmentSelection: json['EAXEnvironmentSelection'] == true
+          ? 1
+          : json['EAXEnvironmentSelection'] == false
+          ? 0
+          : (json['EAXEnvironmentSelection'] as num?)?.toInt() ?? 0,
       eaxDecayTime: (json['EAXDecayTime'] as num?)?.toDouble() ?? 0.0,
       eax2EnvironmentSize:
           (json['EAX2EnvironmentSize'] as num?)?.toDouble() ?? 0.0,
       eax2EnvironmentDiffusion:
           (json['EAX2EnvironmentDiffusion'] as num?)?.toDouble() ?? 0.0,
-      eax2Room: (json['EAX2Room'] as num?)?.toInt() ?? 0,
-      eax2RoomHf: (json['EAX2RoomHF'] as num?)?.toInt() ?? 0,
+      eax2Room: json['EAX2Room'] == true
+          ? 1
+          : json['EAX2Room'] == false
+          ? 0
+          : (json['EAX2Room'] as num?)?.toInt() ?? 0,
+      eax2RoomHf: json['EAX2RoomHF'] == true
+          ? 1
+          : json['EAX2RoomHF'] == false
+          ? 0
+          : (json['EAX2RoomHF'] as num?)?.toInt() ?? 0,
       eax2DecayHfRatio: (json['EAX2DecayHFRatio'] as num?)?.toDouble() ?? 0.0,
-      eax2Reflections: (json['EAX2Reflections'] as num?)?.toInt() ?? 0,
+      eax2Reflections: json['EAX2Reflections'] == true
+          ? 1
+          : json['EAX2Reflections'] == false
+          ? 0
+          : (json['EAX2Reflections'] as num?)?.toInt() ?? 0,
       eax2ReflectionsDelay:
           (json['EAX2ReflectionsDelay'] as num?)?.toDouble() ?? 0.0,
-      eax2Reverb: (json['EAX2Reverb'] as num?)?.toInt() ?? 0,
+      eax2Reverb: json['EAX2Reverb'] == true
+          ? 1
+          : json['EAX2Reverb'] == false
+          ? 0
+          : (json['EAX2Reverb'] as num?)?.toInt() ?? 0,
       eax2ReverbDelay: (json['EAX2ReverbDelay'] as num?)?.toDouble() ?? 0.0,
       eax2RoomRolloff: (json['EAX2RoomRolloff'] as num?)?.toDouble() ?? 0.0,
       eax2AirAbsorption: (json['EAX2AirAbsorption'] as num?)?.toDouble() ?? 0.0,
-      eax3RoomLf: (json['EAX3RoomLF'] as num?)?.toInt() ?? 0,
+      eax3RoomLf: json['EAX3RoomLF'] == true
+          ? 1
+          : json['EAX3RoomLF'] == false
+          ? 0
+          : (json['EAX3RoomLF'] as num?)?.toInt() ?? 0,
       eax3DecayLfRatio: (json['EAX3DecayLFRatio'] as num?)?.toDouble() ?? 0.0,
       eax3EchoTime: (json['EAX3EchoTime'] as num?)?.toDouble() ?? 0.0,
       eax3EchoDepth: (json['EAX3EchoDepth'] as num?)?.toDouble() ?? 0.0,

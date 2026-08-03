@@ -17,10 +17,26 @@ final class BriefTaxiPathEntity {
 
   factory BriefTaxiPathEntity.fromJson(Map<String, dynamic> json) {
     return BriefTaxiPathEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      fromTaxiNode: (json['FromTaxiNode'] as num?)?.toInt() ?? 0,
-      toTaxiNode: (json['ToTaxiNode'] as num?)?.toInt() ?? 0,
-      cost: (json['Cost'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      fromTaxiNode: json['FromTaxiNode'] == true
+          ? 1
+          : json['FromTaxiNode'] == false
+          ? 0
+          : (json['FromTaxiNode'] as num?)?.toInt() ?? 0,
+      toTaxiNode: json['ToTaxiNode'] == true
+          ? 1
+          : json['ToTaxiNode'] == false
+          ? 0
+          : (json['ToTaxiNode'] as num?)?.toInt() ?? 0,
+      cost: json['Cost'] == true
+          ? 1
+          : json['Cost'] == false
+          ? 0
+          : (json['Cost'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -113,10 +129,26 @@ mixin _TaxiPathEntityMixin {
 
   static TaxiPathEntity fromJson(Map<String, dynamic> json) {
     return TaxiPathEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      fromTaxiNode: (json['FromTaxiNode'] as num?)?.toInt() ?? 0,
-      toTaxiNode: (json['ToTaxiNode'] as num?)?.toInt() ?? 0,
-      cost: (json['Cost'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      fromTaxiNode: json['FromTaxiNode'] == true
+          ? 1
+          : json['FromTaxiNode'] == false
+          ? 0
+          : (json['FromTaxiNode'] as num?)?.toInt() ?? 0,
+      toTaxiNode: json['ToTaxiNode'] == true
+          ? 1
+          : json['ToTaxiNode'] == false
+          ? 0
+          : (json['ToTaxiNode'] as num?)?.toInt() ?? 0,
+      cost: json['Cost'] == true
+          ? 1
+          : json['Cost'] == false
+          ? 0
+          : (json['Cost'] as num?)?.toInt() ?? 0,
     );
   }
 }

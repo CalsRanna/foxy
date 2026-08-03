@@ -6,6 +6,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/player_create_info_list_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
@@ -120,6 +121,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       builder: (context, constraints) {
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
+          loading: viewModel.loading.value,
           builder: (context, vicinity) {
             final info = infos[vicinity.row];
             return switch (vicinity.column) {
@@ -183,6 +185,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       child: Column(
         spacing: 16,
         children: [
+          Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)),
           toolbar,
           Expanded(child: layoutBuilder),
         ],

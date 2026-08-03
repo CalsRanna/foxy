@@ -17,9 +17,21 @@ final class BriefMapInfoEntity {
 
   factory BriefMapInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefMapInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      instanceType: (json['InstanceType'] as num?)?.toInt() ?? 0,
-      pvp: (json['PVP'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      instanceType: json['InstanceType'] == true
+          ? 1
+          : json['InstanceType'] == false
+          ? 0
+          : (json['InstanceType'] as num?)?.toInt() ?? 0,
+      pvp: json['PVP'] == true
+          ? 1
+          : json['PVP'] == false
+          ? 0
+          : (json['PVP'] as num?)?.toInt() ?? 0,
       mapNameLangZhCN: json['MapName_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -519,11 +531,27 @@ mixin _MapInfoEntityMixin {
 
   static MapInfoEntity fromJson(Map<String, dynamic> json) {
     return MapInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       directory: json['Directory']?.toString() ?? '',
-      instanceType: (json['InstanceType'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      pvp: (json['PVP'] as num?)?.toInt() ?? 0,
+      instanceType: json['InstanceType'] == true
+          ? 1
+          : json['InstanceType'] == false
+          ? 0
+          : (json['InstanceType'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      pvp: json['PVP'] == true
+          ? 1
+          : json['PVP'] == false
+          ? 0
+          : (json['PVP'] as num?)?.toInt() ?? 0,
       mapNameLangEnUS: json['MapName_lang_enUS']?.toString() ?? '',
       mapNameLangKoKR: json['MapName_lang_koKR']?.toString() ?? '',
       mapNameLangFrFR: json['MapName_lang_frFR']?.toString() ?? '',
@@ -540,8 +568,16 @@ mixin _MapInfoEntityMixin {
       mapNameLangUnk1: json['MapName_lang_unk1']?.toString() ?? '',
       mapNameLangUnk2: json['MapName_lang_unk2']?.toString() ?? '',
       mapNameLangUnk3: json['MapName_lang_unk3']?.toString() ?? '',
-      mapNameLangFlags: (json['MapName_lang_Flags'] as num?)?.toInt() ?? 0,
-      areaTableId: (json['AreaTableID'] as num?)?.toInt() ?? 0,
+      mapNameLangFlags: json['MapName_lang_Flags'] == true
+          ? 1
+          : json['MapName_lang_Flags'] == false
+          ? 0
+          : (json['MapName_lang_Flags'] as num?)?.toInt() ?? 0,
+      areaTableId: json['AreaTableID'] == true
+          ? 1
+          : json['AreaTableID'] == false
+          ? 0
+          : (json['AreaTableID'] as num?)?.toInt() ?? 0,
       mapDescription0LangEnUS:
           json['MapDescription0_lang_enUS']?.toString() ?? '',
       mapDescription0LangKoKR:
@@ -574,8 +610,11 @@ mixin _MapInfoEntityMixin {
           json['MapDescription0_lang_unk2']?.toString() ?? '',
       mapDescription0LangUnk3:
           json['MapDescription0_lang_unk3']?.toString() ?? '',
-      mapDescription0LangFlags:
-          (json['MapDescription0_lang_Flags'] as num?)?.toInt() ?? 0,
+      mapDescription0LangFlags: json['MapDescription0_lang_Flags'] == true
+          ? 1
+          : json['MapDescription0_lang_Flags'] == false
+          ? 0
+          : (json['MapDescription0_lang_Flags'] as num?)?.toInt() ?? 0,
       mapDescription1LangEnUS:
           json['MapDescription1_lang_enUS']?.toString() ?? '',
       mapDescription1LangKoKR:
@@ -608,17 +647,44 @@ mixin _MapInfoEntityMixin {
           json['MapDescription1_lang_unk2']?.toString() ?? '',
       mapDescription1LangUnk3:
           json['MapDescription1_lang_unk3']?.toString() ?? '',
-      mapDescription1LangFlags:
-          (json['MapDescription1_lang_Flags'] as num?)?.toInt() ?? 0,
-      loadingScreenId: (json['LoadingScreenID'] as num?)?.toInt() ?? 0,
+      mapDescription1LangFlags: json['MapDescription1_lang_Flags'] == true
+          ? 1
+          : json['MapDescription1_lang_Flags'] == false
+          ? 0
+          : (json['MapDescription1_lang_Flags'] as num?)?.toInt() ?? 0,
+      loadingScreenId: json['LoadingScreenID'] == true
+          ? 1
+          : json['LoadingScreenID'] == false
+          ? 0
+          : (json['LoadingScreenID'] as num?)?.toInt() ?? 0,
       minimapIconScale: (json['MinimapIconScale'] as num?)?.toDouble() ?? 0.0,
-      corpseMapId: (json['CorpseMapID'] as num?)?.toInt() ?? 0,
+      corpseMapId: json['CorpseMapID'] == true
+          ? 1
+          : json['CorpseMapID'] == false
+          ? 0
+          : (json['CorpseMapID'] as num?)?.toInt() ?? 0,
       corpse0: (json['Corpse0'] as num?)?.toDouble() ?? 0.0,
       corpse1: (json['Corpse1'] as num?)?.toDouble() ?? 0.0,
-      timeOfDayOverride: (json['TimeOfDayOverride'] as num?)?.toInt() ?? 0,
-      expansionId: (json['ExpansionID'] as num?)?.toInt() ?? 0,
-      raidOffset: (json['RaidOffset'] as num?)?.toInt() ?? 0,
-      maxPlayers: (json['MaxPlayers'] as num?)?.toInt() ?? 0,
+      timeOfDayOverride: json['TimeOfDayOverride'] == true
+          ? 1
+          : json['TimeOfDayOverride'] == false
+          ? 0
+          : (json['TimeOfDayOverride'] as num?)?.toInt() ?? 0,
+      expansionId: json['ExpansionID'] == true
+          ? 1
+          : json['ExpansionID'] == false
+          ? 0
+          : (json['ExpansionID'] as num?)?.toInt() ?? 0,
+      raidOffset: json['RaidOffset'] == true
+          ? 1
+          : json['RaidOffset'] == false
+          ? 0
+          : (json['RaidOffset'] as num?)?.toInt() ?? 0,
+      maxPlayers: json['MaxPlayers'] == true
+          ? 1
+          : json['MaxPlayers'] == false
+          ? 0
+          : (json['MaxPlayers'] as num?)?.toInt() ?? 0,
     );
   }
 }

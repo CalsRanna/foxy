@@ -17,7 +17,11 @@ final class BriefQuestRequestItemsLocaleEntity {
     Map<String, dynamic> json,
   ) {
     return BriefQuestRequestItemsLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       completionText: json['CompletionText']?.toString() ?? '',
     );
@@ -144,10 +148,18 @@ mixin _QuestRequestItemsLocaleEntityMixin {
 
   static QuestRequestItemsLocaleEntity fromJson(Map<String, dynamic> json) {
     return QuestRequestItemsLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       completionText: json['CompletionText']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

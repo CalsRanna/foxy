@@ -221,12 +221,18 @@ class _CreatureTemplateResistanceViewState
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(viewModel.selectedKey.value!),
+                  onPressed: () {
+                    viewModel.selectedKey.value = items[row].key;
+                    _copy(viewModel.selectedKey.value!);
+                  },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
+                  onPressed: () {
+                    viewModel.selectedKey.value = items[row].key;
+                    _destroy(viewModel.selectedKey.value!);
+                  },
                   child: Text('删除'),
                 ),
               ],

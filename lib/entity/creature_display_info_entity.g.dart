@@ -21,12 +21,28 @@ final class BriefCreatureDisplayInfoEntity {
 
   factory BriefCreatureDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureDisplayInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      modelId: (json['ModelID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      modelId: json['ModelID'] == true
+          ? 1
+          : json['ModelID'] == false
+          ? 0
+          : (json['ModelID'] as num?)?.toInt() ?? 0,
       creatureModelScale:
           (json['CreatureModelScale'] as num?)?.toDouble() ?? 1.0,
-      sizeClass: (json['SizeClass'] as num?)?.toInt() ?? 0,
-      bloodID: (json['BloodID'] as num?)?.toInt() ?? 0,
+      sizeClass: json['SizeClass'] == true
+          ? 1
+          : json['SizeClass'] == false
+          ? 0
+          : (json['SizeClass'] as num?)?.toInt() ?? 0,
+      bloodID: json['BloodID'] == true
+          ? 1
+          : json['BloodID'] == false
+          ? 0
+          : (json['BloodID'] as num?)?.toInt() ?? 0,
       modelName: json['modelName']?.toString() ?? '',
     );
   }
@@ -205,25 +221,67 @@ mixin _CreatureDisplayInfoEntityMixin {
 
   static CreatureDisplayInfoEntity fromJson(Map<String, dynamic> json) {
     return CreatureDisplayInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      modelId: (json['ModelID'] as num?)?.toInt() ?? 0,
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
-      extendedDisplayInfoId:
-          (json['ExtendedDisplayInfoID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      modelId: json['ModelID'] == true
+          ? 1
+          : json['ModelID'] == false
+          ? 0
+          : (json['ModelID'] as num?)?.toInt() ?? 0,
+      soundId: json['SoundID'] == true
+          ? 1
+          : json['SoundID'] == false
+          ? 0
+          : (json['SoundID'] as num?)?.toInt() ?? 0,
+      extendedDisplayInfoId: json['ExtendedDisplayInfoID'] == true
+          ? 1
+          : json['ExtendedDisplayInfoID'] == false
+          ? 0
+          : (json['ExtendedDisplayInfoID'] as num?)?.toInt() ?? 0,
       creatureModelScale:
           (json['CreatureModelScale'] as num?)?.toDouble() ?? 1.0,
-      creatureModelAlpha: (json['CreatureModelAlpha'] as num?)?.toInt() ?? 0,
+      creatureModelAlpha: json['CreatureModelAlpha'] == true
+          ? 1
+          : json['CreatureModelAlpha'] == false
+          ? 0
+          : (json['CreatureModelAlpha'] as num?)?.toInt() ?? 0,
       textureVariation0: json['TextureVariation0']?.toString() ?? '',
       textureVariation1: json['TextureVariation1']?.toString() ?? '',
       textureVariation2: json['TextureVariation2']?.toString() ?? '',
       portraitTextureName: json['PortraitTextureName']?.toString() ?? '',
-      sizeClass: (json['SizeClass'] as num?)?.toInt() ?? 0,
-      bloodID: (json['BloodID'] as num?)?.toInt() ?? 0,
-      npcSoundID: (json['NPCSoundID'] as num?)?.toInt() ?? 0,
-      particleColorID: (json['ParticleColorID'] as num?)?.toInt() ?? 0,
-      creatureGeosetData: (json['CreatureGeosetData'] as num?)?.toInt() ?? 0,
-      objectEffectPackageID:
-          (json['ObjectEffectPackageID'] as num?)?.toInt() ?? 0,
+      sizeClass: json['SizeClass'] == true
+          ? 1
+          : json['SizeClass'] == false
+          ? 0
+          : (json['SizeClass'] as num?)?.toInt() ?? 0,
+      bloodID: json['BloodID'] == true
+          ? 1
+          : json['BloodID'] == false
+          ? 0
+          : (json['BloodID'] as num?)?.toInt() ?? 0,
+      npcSoundID: json['NPCSoundID'] == true
+          ? 1
+          : json['NPCSoundID'] == false
+          ? 0
+          : (json['NPCSoundID'] as num?)?.toInt() ?? 0,
+      particleColorID: json['ParticleColorID'] == true
+          ? 1
+          : json['ParticleColorID'] == false
+          ? 0
+          : (json['ParticleColorID'] as num?)?.toInt() ?? 0,
+      creatureGeosetData: json['CreatureGeosetData'] == true
+          ? 1
+          : json['CreatureGeosetData'] == false
+          ? 0
+          : (json['CreatureGeosetData'] as num?)?.toInt() ?? 0,
+      objectEffectPackageID: json['ObjectEffectPackageID'] == true
+          ? 1
+          : json['ObjectEffectPackageID'] == false
+          ? 0
+          : (json['ObjectEffectPackageID'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -10,7 +10,11 @@ final class BriefSpellIconEntity {
 
   factory BriefSpellIconEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellIconEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       textureFilename: json['TextureFilename']?.toString() ?? '',
     );
   }
@@ -78,7 +82,11 @@ mixin _SpellIconEntityMixin {
 
   static SpellIconEntity fromJson(Map<String, dynamic> json) {
     return SpellIconEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       textureFilename: json['TextureFilename']?.toString() ?? '',
     );
   }

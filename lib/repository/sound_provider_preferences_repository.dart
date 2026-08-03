@@ -62,7 +62,7 @@ class SoundProviderPreferencesRepository
     SoundProviderPreferencesFilter? filter,
   ) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     if (filter.description.isNotEmpty) {
       builder = builder.where(
         'Description',

@@ -10,7 +10,11 @@ final class BriefItemPurchaseGroupEntity {
 
   factory BriefItemPurchaseGroupEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemPurchaseGroupEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -232,15 +236,51 @@ mixin _ItemPurchaseGroupEntityMixin {
 
   static ItemPurchaseGroupEntity fromJson(Map<String, dynamic> json) {
     return ItemPurchaseGroupEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      itemID0: (json['ItemID0'] as num?)?.toInt() ?? 0,
-      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      itemID4: (json['ItemID4'] as num?)?.toInt() ?? 0,
-      itemID5: (json['ItemID5'] as num?)?.toInt() ?? 0,
-      itemID6: (json['ItemID6'] as num?)?.toInt() ?? 0,
-      itemID7: (json['ItemID7'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      itemID0: json['ItemID0'] == true
+          ? 1
+          : json['ItemID0'] == false
+          ? 0
+          : (json['ItemID0'] as num?)?.toInt() ?? 0,
+      itemID1: json['ItemID1'] == true
+          ? 1
+          : json['ItemID1'] == false
+          ? 0
+          : (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemID2: json['ItemID2'] == true
+          ? 1
+          : json['ItemID2'] == false
+          ? 0
+          : (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemID3: json['ItemID3'] == true
+          ? 1
+          : json['ItemID3'] == false
+          ? 0
+          : (json['ItemID3'] as num?)?.toInt() ?? 0,
+      itemID4: json['ItemID4'] == true
+          ? 1
+          : json['ItemID4'] == false
+          ? 0
+          : (json['ItemID4'] as num?)?.toInt() ?? 0,
+      itemID5: json['ItemID5'] == true
+          ? 1
+          : json['ItemID5'] == false
+          ? 0
+          : (json['ItemID5'] as num?)?.toInt() ?? 0,
+      itemID6: json['ItemID6'] == true
+          ? 1
+          : json['ItemID6'] == false
+          ? 0
+          : (json['ItemID6'] as num?)?.toInt() ?? 0,
+      itemID7: json['ItemID7'] == true
+          ? 1
+          : json['ItemID7'] == false
+          ? 0
+          : (json['ItemID7'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -257,7 +297,11 @@ mixin _ItemPurchaseGroupEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

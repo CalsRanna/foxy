@@ -17,10 +17,26 @@ final class BriefSpellDurationEntity {
 
   factory BriefSpellDurationEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellDurationEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      duration: (json['Duration'] as num?)?.toInt() ?? 0,
-      durationPerLevel: (json['DurationPerLevel'] as num?)?.toInt() ?? 0,
-      maxDuration: (json['MaxDuration'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      duration: json['Duration'] == true
+          ? 1
+          : json['Duration'] == false
+          ? 0
+          : (json['Duration'] as num?)?.toInt() ?? 0,
+      durationPerLevel: json['DurationPerLevel'] == true
+          ? 1
+          : json['DurationPerLevel'] == false
+          ? 0
+          : (json['DurationPerLevel'] as num?)?.toInt() ?? 0,
+      maxDuration: json['MaxDuration'] == true
+          ? 1
+          : json['MaxDuration'] == false
+          ? 0
+          : (json['MaxDuration'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -114,10 +130,26 @@ mixin _SpellDurationEntityMixin {
 
   static SpellDurationEntity fromJson(Map<String, dynamic> json) {
     return SpellDurationEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      duration: (json['Duration'] as num?)?.toInt() ?? 0,
-      durationPerLevel: (json['DurationPerLevel'] as num?)?.toInt() ?? 0,
-      maxDuration: (json['MaxDuration'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      duration: json['Duration'] == true
+          ? 1
+          : json['Duration'] == false
+          ? 0
+          : (json['Duration'] as num?)?.toInt() ?? 0,
+      durationPerLevel: json['DurationPerLevel'] == true
+          ? 1
+          : json['DurationPerLevel'] == false
+          ? 0
+          : (json['DurationPerLevel'] as num?)?.toInt() ?? 0,
+      maxDuration: json['MaxDuration'] == true
+          ? 1
+          : json['MaxDuration'] == false
+          ? 0
+          : (json['MaxDuration'] as num?)?.toInt() ?? 0,
     );
   }
 }

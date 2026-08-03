@@ -29,15 +29,43 @@ final class BriefItemTemplateEntity {
 
   factory BriefItemTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemTemplateEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
-      quality: (json['Quality'] as num?)?.toInt() ?? 0,
-      subclass: (json['subclass'] as num?)?.toInt() ?? 0,
-      inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
-      itemLevel: (json['ItemLevel'] as num?)?.toInt() ?? 0,
-      requiredLevel: (json['RequiredLevel'] as num?)?.toInt() ?? 0,
+      quality: json['Quality'] == true
+          ? 1
+          : json['Quality'] == false
+          ? 0
+          : (json['Quality'] as num?)?.toInt() ?? 0,
+      subclass: json['subclass'] == true
+          ? 1
+          : json['subclass'] == false
+          ? 0
+          : (json['subclass'] as num?)?.toInt() ?? 0,
+      inventoryType: json['InventoryType'] == true
+          ? 1
+          : json['InventoryType'] == false
+          ? 0
+          : (json['InventoryType'] as num?)?.toInt() ?? 0,
+      itemLevel: json['ItemLevel'] == true
+          ? 1
+          : json['ItemLevel'] == false
+          ? 0
+          : (json['ItemLevel'] as num?)?.toInt() ?? 0,
+      requiredLevel: json['RequiredLevel'] == true
+          ? 1
+          : json['RequiredLevel'] == false
+          ? 0
+          : (json['RequiredLevel'] as num?)?.toInt() ?? 0,
       localeName: json['localeName']?.toString() ?? '',
-      classId: (json['classId'] as num?)?.toInt() ?? 0,
+      classId: json['classId'] == true
+          ? 1
+          : json['classId'] == false
+          ? 0
+          : (json['classId'] as num?)?.toInt() ?? 0,
       inventoryIcon: json['inventoryIcon']?.toString() ?? '',
     );
   }
@@ -968,155 +996,641 @@ mixin _ItemTemplateEntityMixin {
 
   static ItemTemplateEntity fromJson(Map<String, dynamic> json) {
     return ItemTemplateEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
       description: json['description']?.toString() ?? '',
-      quality: (json['Quality'] as num?)?.toInt() ?? 0,
-      className: (json['class'] as num?)?.toInt() ?? 0,
-      subclass: (json['subclass'] as num?)?.toInt() ?? 0,
-      soundOverrideSubclass:
-          (json['SoundOverrideSubclass'] as num?)?.toInt() ?? -1,
-      material: (json['Material'] as num?)?.toInt() ?? 0,
-      displayId: (json['displayid'] as num?)?.toInt() ?? 0,
-      inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
-      sheath: (json['sheath'] as num?)?.toInt() ?? 0,
-      bonding: (json['bonding'] as num?)?.toInt() ?? 0,
-      itemset: (json['itemset'] as num?)?.toInt() ?? 0,
-      randomProperty: (json['RandomProperty'] as num?)?.toInt() ?? 0,
-      randomSuffix: (json['RandomSuffix'] as num?)?.toInt() ?? 0,
-      maxDurability: (json['MaxDurability'] as num?)?.toInt() ?? 0,
-      buyPrice: (json['BuyPrice'] as num?)?.toInt() ?? 0,
-      sellPrice: (json['SellPrice'] as num?)?.toInt() ?? 0,
-      buyCount: (json['BuyCount'] as num?)?.toInt() ?? 1,
-      maxcount: (json['maxcount'] as num?)?.toInt() ?? 0,
-      stackable: (json['stackable'] as num?)?.toInt() ?? 1,
-      totemCategory: (json['TotemCategory'] as num?)?.toInt() ?? 0,
-      foodType: (json['FoodType'] as num?)?.toInt() ?? 0,
-      bagFamily: (json['BagFamily'] as num?)?.toInt() ?? 0,
-      containerSlots: (json['ContainerSlots'] as num?)?.toInt() ?? 0,
-      itemLimitCategory: (json['ItemLimitCategory'] as num?)?.toInt() ?? 0,
-      startquest: (json['startquest'] as num?)?.toInt() ?? 0,
-      duration: (json['duration'] as num?)?.toInt() ?? 0,
-      disenchantId: (json['DisenchantID'] as num?)?.toInt() ?? 0,
-      minMoneyLoot: (json['minMoneyLoot'] as num?)?.toInt() ?? 0,
-      maxMoneyLoot: (json['maxMoneyLoot'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      flagsExtra: (json['FlagsExtra'] as num?)?.toInt() ?? 0,
-      flagsCustom: (json['flagsCustom'] as num?)?.toInt() ?? 0,
-      delay: (json['delay'] as num?)?.toInt() ?? 1000,
+      quality: json['Quality'] == true
+          ? 1
+          : json['Quality'] == false
+          ? 0
+          : (json['Quality'] as num?)?.toInt() ?? 0,
+      className: json['class'] == true
+          ? 1
+          : json['class'] == false
+          ? 0
+          : (json['class'] as num?)?.toInt() ?? 0,
+      subclass: json['subclass'] == true
+          ? 1
+          : json['subclass'] == false
+          ? 0
+          : (json['subclass'] as num?)?.toInt() ?? 0,
+      soundOverrideSubclass: json['SoundOverrideSubclass'] == true
+          ? 1
+          : json['SoundOverrideSubclass'] == false
+          ? 0
+          : (json['SoundOverrideSubclass'] as num?)?.toInt() ?? -1,
+      material: json['Material'] == true
+          ? 1
+          : json['Material'] == false
+          ? 0
+          : (json['Material'] as num?)?.toInt() ?? 0,
+      displayId: json['displayid'] == true
+          ? 1
+          : json['displayid'] == false
+          ? 0
+          : (json['displayid'] as num?)?.toInt() ?? 0,
+      inventoryType: json['InventoryType'] == true
+          ? 1
+          : json['InventoryType'] == false
+          ? 0
+          : (json['InventoryType'] as num?)?.toInt() ?? 0,
+      sheath: json['sheath'] == true
+          ? 1
+          : json['sheath'] == false
+          ? 0
+          : (json['sheath'] as num?)?.toInt() ?? 0,
+      bonding: json['bonding'] == true
+          ? 1
+          : json['bonding'] == false
+          ? 0
+          : (json['bonding'] as num?)?.toInt() ?? 0,
+      itemset: json['itemset'] == true
+          ? 1
+          : json['itemset'] == false
+          ? 0
+          : (json['itemset'] as num?)?.toInt() ?? 0,
+      randomProperty: json['RandomProperty'] == true
+          ? 1
+          : json['RandomProperty'] == false
+          ? 0
+          : (json['RandomProperty'] as num?)?.toInt() ?? 0,
+      randomSuffix: json['RandomSuffix'] == true
+          ? 1
+          : json['RandomSuffix'] == false
+          ? 0
+          : (json['RandomSuffix'] as num?)?.toInt() ?? 0,
+      maxDurability: json['MaxDurability'] == true
+          ? 1
+          : json['MaxDurability'] == false
+          ? 0
+          : (json['MaxDurability'] as num?)?.toInt() ?? 0,
+      buyPrice: json['BuyPrice'] == true
+          ? 1
+          : json['BuyPrice'] == false
+          ? 0
+          : (json['BuyPrice'] as num?)?.toInt() ?? 0,
+      sellPrice: json['SellPrice'] == true
+          ? 1
+          : json['SellPrice'] == false
+          ? 0
+          : (json['SellPrice'] as num?)?.toInt() ?? 0,
+      buyCount: json['BuyCount'] == true
+          ? 1
+          : json['BuyCount'] == false
+          ? 0
+          : (json['BuyCount'] as num?)?.toInt() ?? 1,
+      maxcount: json['maxcount'] == true
+          ? 1
+          : json['maxcount'] == false
+          ? 0
+          : (json['maxcount'] as num?)?.toInt() ?? 0,
+      stackable: json['stackable'] == true
+          ? 1
+          : json['stackable'] == false
+          ? 0
+          : (json['stackable'] as num?)?.toInt() ?? 1,
+      totemCategory: json['TotemCategory'] == true
+          ? 1
+          : json['TotemCategory'] == false
+          ? 0
+          : (json['TotemCategory'] as num?)?.toInt() ?? 0,
+      foodType: json['FoodType'] == true
+          ? 1
+          : json['FoodType'] == false
+          ? 0
+          : (json['FoodType'] as num?)?.toInt() ?? 0,
+      bagFamily: json['BagFamily'] == true
+          ? 1
+          : json['BagFamily'] == false
+          ? 0
+          : (json['BagFamily'] as num?)?.toInt() ?? 0,
+      containerSlots: json['ContainerSlots'] == true
+          ? 1
+          : json['ContainerSlots'] == false
+          ? 0
+          : (json['ContainerSlots'] as num?)?.toInt() ?? 0,
+      itemLimitCategory: json['ItemLimitCategory'] == true
+          ? 1
+          : json['ItemLimitCategory'] == false
+          ? 0
+          : (json['ItemLimitCategory'] as num?)?.toInt() ?? 0,
+      startquest: json['startquest'] == true
+          ? 1
+          : json['startquest'] == false
+          ? 0
+          : (json['startquest'] as num?)?.toInt() ?? 0,
+      duration: json['duration'] == true
+          ? 1
+          : json['duration'] == false
+          ? 0
+          : (json['duration'] as num?)?.toInt() ?? 0,
+      disenchantId: json['DisenchantID'] == true
+          ? 1
+          : json['DisenchantID'] == false
+          ? 0
+          : (json['DisenchantID'] as num?)?.toInt() ?? 0,
+      minMoneyLoot: json['minMoneyLoot'] == true
+          ? 1
+          : json['minMoneyLoot'] == false
+          ? 0
+          : (json['minMoneyLoot'] as num?)?.toInt() ?? 0,
+      maxMoneyLoot: json['maxMoneyLoot'] == true
+          ? 1
+          : json['maxMoneyLoot'] == false
+          ? 0
+          : (json['maxMoneyLoot'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      flagsExtra: json['FlagsExtra'] == true
+          ? 1
+          : json['FlagsExtra'] == false
+          ? 0
+          : (json['FlagsExtra'] as num?)?.toInt() ?? 0,
+      flagsCustom: json['flagsCustom'] == true
+          ? 1
+          : json['flagsCustom'] == false
+          ? 0
+          : (json['flagsCustom'] as num?)?.toInt() ?? 0,
+      delay: json['delay'] == true
+          ? 1
+          : json['delay'] == false
+          ? 0
+          : (json['delay'] as num?)?.toInt() ?? 1000,
       rangedModRange: (json['RangedModRange'] as num?)?.toDouble() ?? 0.0,
       armorDamageModifier:
           (json['ArmorDamageModifier'] as num?)?.toDouble() ?? 0.0,
-      dmgType1: (json['dmg_type1'] as num?)?.toInt() ?? 0,
+      dmgType1: json['dmg_type1'] == true
+          ? 1
+          : json['dmg_type1'] == false
+          ? 0
+          : (json['dmg_type1'] as num?)?.toInt() ?? 0,
       dmgMin1: (json['dmg_min1'] as num?)?.toDouble() ?? 0.0,
       dmgMax1: (json['dmg_max1'] as num?)?.toDouble() ?? 0.0,
-      dmgType2: (json['dmg_type2'] as num?)?.toInt() ?? 0,
+      dmgType2: json['dmg_type2'] == true
+          ? 1
+          : json['dmg_type2'] == false
+          ? 0
+          : (json['dmg_type2'] as num?)?.toInt() ?? 0,
       dmgMin2: (json['dmg_min2'] as num?)?.toDouble() ?? 0.0,
       dmgMax2: (json['dmg_max2'] as num?)?.toDouble() ?? 0.0,
-      ammoType: (json['ammo_type'] as num?)?.toInt() ?? 0,
-      armor: (json['armor'] as num?)?.toInt() ?? 0,
-      block: (json['block'] as num?)?.toInt() ?? 0,
-      scalingStatDistribution:
-          (json['ScalingStatDistribution'] as num?)?.toInt() ?? 0,
-      scalingStatValue: (json['ScalingStatValue'] as num?)?.toInt() ?? 0,
-      statType1: (json['stat_type1'] as num?)?.toInt() ?? 0,
-      statValue1: (json['stat_value1'] as num?)?.toInt() ?? 0,
-      statType2: (json['stat_type2'] as num?)?.toInt() ?? 0,
-      statValue2: (json['stat_value2'] as num?)?.toInt() ?? 0,
-      statType3: (json['stat_type3'] as num?)?.toInt() ?? 0,
-      statValue3: (json['stat_value3'] as num?)?.toInt() ?? 0,
-      statType4: (json['stat_type4'] as num?)?.toInt() ?? 0,
-      statValue4: (json['stat_value4'] as num?)?.toInt() ?? 0,
-      statType5: (json['stat_type5'] as num?)?.toInt() ?? 0,
-      statValue5: (json['stat_value5'] as num?)?.toInt() ?? 0,
-      statType6: (json['stat_type6'] as num?)?.toInt() ?? 0,
-      statValue6: (json['stat_value6'] as num?)?.toInt() ?? 0,
-      statType7: (json['stat_type7'] as num?)?.toInt() ?? 0,
-      statValue7: (json['stat_value7'] as num?)?.toInt() ?? 0,
-      statType8: (json['stat_type8'] as num?)?.toInt() ?? 0,
-      statValue8: (json['stat_value8'] as num?)?.toInt() ?? 0,
-      statType9: (json['stat_type9'] as num?)?.toInt() ?? 0,
-      statValue9: (json['stat_value9'] as num?)?.toInt() ?? 0,
-      statType10: (json['stat_type10'] as num?)?.toInt() ?? 0,
-      statValue10: (json['stat_value10'] as num?)?.toInt() ?? 0,
-      holyRes: (json['holy_res'] as num?)?.toInt() ?? 0,
-      fireRes: (json['fire_res'] as num?)?.toInt() ?? 0,
-      natureRes: (json['nature_res'] as num?)?.toInt() ?? 0,
-      shadowRes: (json['shadow_res'] as num?)?.toInt() ?? 0,
-      frostRes: (json['frost_res'] as num?)?.toInt() ?? 0,
-      arcaneRes: (json['arcane_res'] as num?)?.toInt() ?? 0,
-      spellId1: (json['spellid_1'] as num?)?.toInt() ?? 0,
-      spellTrigger1: (json['spelltrigger_1'] as num?)?.toInt() ?? 0,
-      spellCharges1: (json['spellcharges_1'] as num?)?.toInt() ?? 0,
+      ammoType: json['ammo_type'] == true
+          ? 1
+          : json['ammo_type'] == false
+          ? 0
+          : (json['ammo_type'] as num?)?.toInt() ?? 0,
+      armor: json['armor'] == true
+          ? 1
+          : json['armor'] == false
+          ? 0
+          : (json['armor'] as num?)?.toInt() ?? 0,
+      block: json['block'] == true
+          ? 1
+          : json['block'] == false
+          ? 0
+          : (json['block'] as num?)?.toInt() ?? 0,
+      scalingStatDistribution: json['ScalingStatDistribution'] == true
+          ? 1
+          : json['ScalingStatDistribution'] == false
+          ? 0
+          : (json['ScalingStatDistribution'] as num?)?.toInt() ?? 0,
+      scalingStatValue: json['ScalingStatValue'] == true
+          ? 1
+          : json['ScalingStatValue'] == false
+          ? 0
+          : (json['ScalingStatValue'] as num?)?.toInt() ?? 0,
+      statType1: json['stat_type1'] == true
+          ? 1
+          : json['stat_type1'] == false
+          ? 0
+          : (json['stat_type1'] as num?)?.toInt() ?? 0,
+      statValue1: json['stat_value1'] == true
+          ? 1
+          : json['stat_value1'] == false
+          ? 0
+          : (json['stat_value1'] as num?)?.toInt() ?? 0,
+      statType2: json['stat_type2'] == true
+          ? 1
+          : json['stat_type2'] == false
+          ? 0
+          : (json['stat_type2'] as num?)?.toInt() ?? 0,
+      statValue2: json['stat_value2'] == true
+          ? 1
+          : json['stat_value2'] == false
+          ? 0
+          : (json['stat_value2'] as num?)?.toInt() ?? 0,
+      statType3: json['stat_type3'] == true
+          ? 1
+          : json['stat_type3'] == false
+          ? 0
+          : (json['stat_type3'] as num?)?.toInt() ?? 0,
+      statValue3: json['stat_value3'] == true
+          ? 1
+          : json['stat_value3'] == false
+          ? 0
+          : (json['stat_value3'] as num?)?.toInt() ?? 0,
+      statType4: json['stat_type4'] == true
+          ? 1
+          : json['stat_type4'] == false
+          ? 0
+          : (json['stat_type4'] as num?)?.toInt() ?? 0,
+      statValue4: json['stat_value4'] == true
+          ? 1
+          : json['stat_value4'] == false
+          ? 0
+          : (json['stat_value4'] as num?)?.toInt() ?? 0,
+      statType5: json['stat_type5'] == true
+          ? 1
+          : json['stat_type5'] == false
+          ? 0
+          : (json['stat_type5'] as num?)?.toInt() ?? 0,
+      statValue5: json['stat_value5'] == true
+          ? 1
+          : json['stat_value5'] == false
+          ? 0
+          : (json['stat_value5'] as num?)?.toInt() ?? 0,
+      statType6: json['stat_type6'] == true
+          ? 1
+          : json['stat_type6'] == false
+          ? 0
+          : (json['stat_type6'] as num?)?.toInt() ?? 0,
+      statValue6: json['stat_value6'] == true
+          ? 1
+          : json['stat_value6'] == false
+          ? 0
+          : (json['stat_value6'] as num?)?.toInt() ?? 0,
+      statType7: json['stat_type7'] == true
+          ? 1
+          : json['stat_type7'] == false
+          ? 0
+          : (json['stat_type7'] as num?)?.toInt() ?? 0,
+      statValue7: json['stat_value7'] == true
+          ? 1
+          : json['stat_value7'] == false
+          ? 0
+          : (json['stat_value7'] as num?)?.toInt() ?? 0,
+      statType8: json['stat_type8'] == true
+          ? 1
+          : json['stat_type8'] == false
+          ? 0
+          : (json['stat_type8'] as num?)?.toInt() ?? 0,
+      statValue8: json['stat_value8'] == true
+          ? 1
+          : json['stat_value8'] == false
+          ? 0
+          : (json['stat_value8'] as num?)?.toInt() ?? 0,
+      statType9: json['stat_type9'] == true
+          ? 1
+          : json['stat_type9'] == false
+          ? 0
+          : (json['stat_type9'] as num?)?.toInt() ?? 0,
+      statValue9: json['stat_value9'] == true
+          ? 1
+          : json['stat_value9'] == false
+          ? 0
+          : (json['stat_value9'] as num?)?.toInt() ?? 0,
+      statType10: json['stat_type10'] == true
+          ? 1
+          : json['stat_type10'] == false
+          ? 0
+          : (json['stat_type10'] as num?)?.toInt() ?? 0,
+      statValue10: json['stat_value10'] == true
+          ? 1
+          : json['stat_value10'] == false
+          ? 0
+          : (json['stat_value10'] as num?)?.toInt() ?? 0,
+      holyRes: json['holy_res'] == true
+          ? 1
+          : json['holy_res'] == false
+          ? 0
+          : (json['holy_res'] as num?)?.toInt() ?? 0,
+      fireRes: json['fire_res'] == true
+          ? 1
+          : json['fire_res'] == false
+          ? 0
+          : (json['fire_res'] as num?)?.toInt() ?? 0,
+      natureRes: json['nature_res'] == true
+          ? 1
+          : json['nature_res'] == false
+          ? 0
+          : (json['nature_res'] as num?)?.toInt() ?? 0,
+      shadowRes: json['shadow_res'] == true
+          ? 1
+          : json['shadow_res'] == false
+          ? 0
+          : (json['shadow_res'] as num?)?.toInt() ?? 0,
+      frostRes: json['frost_res'] == true
+          ? 1
+          : json['frost_res'] == false
+          ? 0
+          : (json['frost_res'] as num?)?.toInt() ?? 0,
+      arcaneRes: json['arcane_res'] == true
+          ? 1
+          : json['arcane_res'] == false
+          ? 0
+          : (json['arcane_res'] as num?)?.toInt() ?? 0,
+      spellId1: json['spellid_1'] == true
+          ? 1
+          : json['spellid_1'] == false
+          ? 0
+          : (json['spellid_1'] as num?)?.toInt() ?? 0,
+      spellTrigger1: json['spelltrigger_1'] == true
+          ? 1
+          : json['spelltrigger_1'] == false
+          ? 0
+          : (json['spelltrigger_1'] as num?)?.toInt() ?? 0,
+      spellCharges1: json['spellcharges_1'] == true
+          ? 1
+          : json['spellcharges_1'] == false
+          ? 0
+          : (json['spellcharges_1'] as num?)?.toInt() ?? 0,
       spellPpmRate1: (json['spellppmRate_1'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown1: (json['spellcooldown_1'] as num?)?.toInt() ?? -1,
-      spellCategory1: (json['spellcategory_1'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown1:
-          (json['spellcategorycooldown_1'] as num?)?.toInt() ?? -1,
-      spellId2: (json['spellid_2'] as num?)?.toInt() ?? 0,
-      spellTrigger2: (json['spelltrigger_2'] as num?)?.toInt() ?? 0,
-      spellCharges2: (json['spellcharges_2'] as num?)?.toInt() ?? 0,
+      spellCooldown1: json['spellcooldown_1'] == true
+          ? 1
+          : json['spellcooldown_1'] == false
+          ? 0
+          : (json['spellcooldown_1'] as num?)?.toInt() ?? -1,
+      spellCategory1: json['spellcategory_1'] == true
+          ? 1
+          : json['spellcategory_1'] == false
+          ? 0
+          : (json['spellcategory_1'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown1: json['spellcategorycooldown_1'] == true
+          ? 1
+          : json['spellcategorycooldown_1'] == false
+          ? 0
+          : (json['spellcategorycooldown_1'] as num?)?.toInt() ?? -1,
+      spellId2: json['spellid_2'] == true
+          ? 1
+          : json['spellid_2'] == false
+          ? 0
+          : (json['spellid_2'] as num?)?.toInt() ?? 0,
+      spellTrigger2: json['spelltrigger_2'] == true
+          ? 1
+          : json['spelltrigger_2'] == false
+          ? 0
+          : (json['spelltrigger_2'] as num?)?.toInt() ?? 0,
+      spellCharges2: json['spellcharges_2'] == true
+          ? 1
+          : json['spellcharges_2'] == false
+          ? 0
+          : (json['spellcharges_2'] as num?)?.toInt() ?? 0,
       spellPpmRate2: (json['spellppmRate_2'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown2: (json['spellcooldown_2'] as num?)?.toInt() ?? -1,
-      spellCategory2: (json['spellcategory_2'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown2:
-          (json['spellcategorycooldown_2'] as num?)?.toInt() ?? -1,
-      spellId3: (json['spellid_3'] as num?)?.toInt() ?? 0,
-      spellTrigger3: (json['spelltrigger_3'] as num?)?.toInt() ?? 0,
-      spellCharges3: (json['spellcharges_3'] as num?)?.toInt() ?? 0,
+      spellCooldown2: json['spellcooldown_2'] == true
+          ? 1
+          : json['spellcooldown_2'] == false
+          ? 0
+          : (json['spellcooldown_2'] as num?)?.toInt() ?? -1,
+      spellCategory2: json['spellcategory_2'] == true
+          ? 1
+          : json['spellcategory_2'] == false
+          ? 0
+          : (json['spellcategory_2'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown2: json['spellcategorycooldown_2'] == true
+          ? 1
+          : json['spellcategorycooldown_2'] == false
+          ? 0
+          : (json['spellcategorycooldown_2'] as num?)?.toInt() ?? -1,
+      spellId3: json['spellid_3'] == true
+          ? 1
+          : json['spellid_3'] == false
+          ? 0
+          : (json['spellid_3'] as num?)?.toInt() ?? 0,
+      spellTrigger3: json['spelltrigger_3'] == true
+          ? 1
+          : json['spelltrigger_3'] == false
+          ? 0
+          : (json['spelltrigger_3'] as num?)?.toInt() ?? 0,
+      spellCharges3: json['spellcharges_3'] == true
+          ? 1
+          : json['spellcharges_3'] == false
+          ? 0
+          : (json['spellcharges_3'] as num?)?.toInt() ?? 0,
       spellPpmRate3: (json['spellppmRate_3'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown3: (json['spellcooldown_3'] as num?)?.toInt() ?? -1,
-      spellCategory3: (json['spellcategory_3'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown3:
-          (json['spellcategorycooldown_3'] as num?)?.toInt() ?? -1,
-      spellId4: (json['spellid_4'] as num?)?.toInt() ?? 0,
-      spellTrigger4: (json['spelltrigger_4'] as num?)?.toInt() ?? 0,
-      spellCharges4: (json['spellcharges_4'] as num?)?.toInt() ?? 0,
+      spellCooldown3: json['spellcooldown_3'] == true
+          ? 1
+          : json['spellcooldown_3'] == false
+          ? 0
+          : (json['spellcooldown_3'] as num?)?.toInt() ?? -1,
+      spellCategory3: json['spellcategory_3'] == true
+          ? 1
+          : json['spellcategory_3'] == false
+          ? 0
+          : (json['spellcategory_3'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown3: json['spellcategorycooldown_3'] == true
+          ? 1
+          : json['spellcategorycooldown_3'] == false
+          ? 0
+          : (json['spellcategorycooldown_3'] as num?)?.toInt() ?? -1,
+      spellId4: json['spellid_4'] == true
+          ? 1
+          : json['spellid_4'] == false
+          ? 0
+          : (json['spellid_4'] as num?)?.toInt() ?? 0,
+      spellTrigger4: json['spelltrigger_4'] == true
+          ? 1
+          : json['spelltrigger_4'] == false
+          ? 0
+          : (json['spelltrigger_4'] as num?)?.toInt() ?? 0,
+      spellCharges4: json['spellcharges_4'] == true
+          ? 1
+          : json['spellcharges_4'] == false
+          ? 0
+          : (json['spellcharges_4'] as num?)?.toInt() ?? 0,
       spellPpmRate4: (json['spellppmRate_4'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown4: (json['spellcooldown_4'] as num?)?.toInt() ?? -1,
-      spellCategory4: (json['spellcategory_4'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown4:
-          (json['spellcategorycooldown_4'] as num?)?.toInt() ?? -1,
-      spellId5: (json['spellid_5'] as num?)?.toInt() ?? 0,
-      spellTrigger5: (json['spelltrigger_5'] as num?)?.toInt() ?? 0,
-      spellCharges5: (json['spellcharges_5'] as num?)?.toInt() ?? 0,
+      spellCooldown4: json['spellcooldown_4'] == true
+          ? 1
+          : json['spellcooldown_4'] == false
+          ? 0
+          : (json['spellcooldown_4'] as num?)?.toInt() ?? -1,
+      spellCategory4: json['spellcategory_4'] == true
+          ? 1
+          : json['spellcategory_4'] == false
+          ? 0
+          : (json['spellcategory_4'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown4: json['spellcategorycooldown_4'] == true
+          ? 1
+          : json['spellcategorycooldown_4'] == false
+          ? 0
+          : (json['spellcategorycooldown_4'] as num?)?.toInt() ?? -1,
+      spellId5: json['spellid_5'] == true
+          ? 1
+          : json['spellid_5'] == false
+          ? 0
+          : (json['spellid_5'] as num?)?.toInt() ?? 0,
+      spellTrigger5: json['spelltrigger_5'] == true
+          ? 1
+          : json['spelltrigger_5'] == false
+          ? 0
+          : (json['spelltrigger_5'] as num?)?.toInt() ?? 0,
+      spellCharges5: json['spellcharges_5'] == true
+          ? 1
+          : json['spellcharges_5'] == false
+          ? 0
+          : (json['spellcharges_5'] as num?)?.toInt() ?? 0,
       spellPpmRate5: (json['spellppmRate_5'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown5: (json['spellcooldown_5'] as num?)?.toInt() ?? -1,
-      spellCategory5: (json['spellcategory_5'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown5:
-          (json['spellcategorycooldown_5'] as num?)?.toInt() ?? -1,
-      allowableClass: (json['AllowableClass'] as num?)?.toInt() ?? -1,
-      allowableRace: (json['AllowableRace'] as num?)?.toInt() ?? -1,
-      itemLevel: (json['ItemLevel'] as num?)?.toInt() ?? 0,
-      requiredLevel: (json['RequiredLevel'] as num?)?.toInt() ?? 0,
-      requiredSkill: (json['RequiredSkill'] as num?)?.toInt() ?? 0,
-      requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
-      requiredSpell: (json['requiredspell'] as num?)?.toInt() ?? 0,
-      requiredHonorRank: (json['requiredhonorrank'] as num?)?.toInt() ?? 0,
-      requiredCityRank: (json['RequiredCityRank'] as num?)?.toInt() ?? 0,
-      requiredReputationFaction:
-          (json['RequiredReputationFaction'] as num?)?.toInt() ?? 0,
-      requiredReputationRank:
-          (json['RequiredReputationRank'] as num?)?.toInt() ?? 0,
-      requiredDisenchantSkill:
-          (json['RequiredDisenchantSkill'] as num?)?.toInt() ?? -1,
-      mapId: (json['Map'] as num?)?.toInt() ?? 0,
-      area: (json['area'] as num?)?.toInt() ?? 0,
-      holidayId: (json['HolidayId'] as num?)?.toInt() ?? 0,
-      lockid: (json['lockid'] as num?)?.toInt() ?? 0,
-      gemProperties: (json['GemProperties'] as num?)?.toInt() ?? 0,
-      socketBonus: (json['socketBonus'] as num?)?.toInt() ?? 0,
-      socketColor1: (json['socketColor_1'] as num?)?.toInt() ?? 0,
-      socketContent1: (json['socketContent_1'] as num?)?.toInt() ?? 0,
-      socketColor2: (json['socketColor_2'] as num?)?.toInt() ?? 0,
-      socketContent2: (json['socketContent_2'] as num?)?.toInt() ?? 0,
-      socketColor3: (json['socketColor_3'] as num?)?.toInt() ?? 0,
-      socketContent3: (json['socketContent_3'] as num?)?.toInt() ?? 0,
-      pageText: (json['PageText'] as num?)?.toInt() ?? 0,
-      pageMaterial: (json['PageMaterial'] as num?)?.toInt() ?? 0,
-      languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
+      spellCooldown5: json['spellcooldown_5'] == true
+          ? 1
+          : json['spellcooldown_5'] == false
+          ? 0
+          : (json['spellcooldown_5'] as num?)?.toInt() ?? -1,
+      spellCategory5: json['spellcategory_5'] == true
+          ? 1
+          : json['spellcategory_5'] == false
+          ? 0
+          : (json['spellcategory_5'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown5: json['spellcategorycooldown_5'] == true
+          ? 1
+          : json['spellcategorycooldown_5'] == false
+          ? 0
+          : (json['spellcategorycooldown_5'] as num?)?.toInt() ?? -1,
+      allowableClass: json['AllowableClass'] == true
+          ? 1
+          : json['AllowableClass'] == false
+          ? 0
+          : (json['AllowableClass'] as num?)?.toInt() ?? -1,
+      allowableRace: json['AllowableRace'] == true
+          ? 1
+          : json['AllowableRace'] == false
+          ? 0
+          : (json['AllowableRace'] as num?)?.toInt() ?? -1,
+      itemLevel: json['ItemLevel'] == true
+          ? 1
+          : json['ItemLevel'] == false
+          ? 0
+          : (json['ItemLevel'] as num?)?.toInt() ?? 0,
+      requiredLevel: json['RequiredLevel'] == true
+          ? 1
+          : json['RequiredLevel'] == false
+          ? 0
+          : (json['RequiredLevel'] as num?)?.toInt() ?? 0,
+      requiredSkill: json['RequiredSkill'] == true
+          ? 1
+          : json['RequiredSkill'] == false
+          ? 0
+          : (json['RequiredSkill'] as num?)?.toInt() ?? 0,
+      requiredSkillRank: json['RequiredSkillRank'] == true
+          ? 1
+          : json['RequiredSkillRank'] == false
+          ? 0
+          : (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
+      requiredSpell: json['requiredspell'] == true
+          ? 1
+          : json['requiredspell'] == false
+          ? 0
+          : (json['requiredspell'] as num?)?.toInt() ?? 0,
+      requiredHonorRank: json['requiredhonorrank'] == true
+          ? 1
+          : json['requiredhonorrank'] == false
+          ? 0
+          : (json['requiredhonorrank'] as num?)?.toInt() ?? 0,
+      requiredCityRank: json['RequiredCityRank'] == true
+          ? 1
+          : json['RequiredCityRank'] == false
+          ? 0
+          : (json['RequiredCityRank'] as num?)?.toInt() ?? 0,
+      requiredReputationFaction: json['RequiredReputationFaction'] == true
+          ? 1
+          : json['RequiredReputationFaction'] == false
+          ? 0
+          : (json['RequiredReputationFaction'] as num?)?.toInt() ?? 0,
+      requiredReputationRank: json['RequiredReputationRank'] == true
+          ? 1
+          : json['RequiredReputationRank'] == false
+          ? 0
+          : (json['RequiredReputationRank'] as num?)?.toInt() ?? 0,
+      requiredDisenchantSkill: json['RequiredDisenchantSkill'] == true
+          ? 1
+          : json['RequiredDisenchantSkill'] == false
+          ? 0
+          : (json['RequiredDisenchantSkill'] as num?)?.toInt() ?? -1,
+      mapId: json['Map'] == true
+          ? 1
+          : json['Map'] == false
+          ? 0
+          : (json['Map'] as num?)?.toInt() ?? 0,
+      area: json['area'] == true
+          ? 1
+          : json['area'] == false
+          ? 0
+          : (json['area'] as num?)?.toInt() ?? 0,
+      holidayId: json['HolidayId'] == true
+          ? 1
+          : json['HolidayId'] == false
+          ? 0
+          : (json['HolidayId'] as num?)?.toInt() ?? 0,
+      lockid: json['lockid'] == true
+          ? 1
+          : json['lockid'] == false
+          ? 0
+          : (json['lockid'] as num?)?.toInt() ?? 0,
+      gemProperties: json['GemProperties'] == true
+          ? 1
+          : json['GemProperties'] == false
+          ? 0
+          : (json['GemProperties'] as num?)?.toInt() ?? 0,
+      socketBonus: json['socketBonus'] == true
+          ? 1
+          : json['socketBonus'] == false
+          ? 0
+          : (json['socketBonus'] as num?)?.toInt() ?? 0,
+      socketColor1: json['socketColor_1'] == true
+          ? 1
+          : json['socketColor_1'] == false
+          ? 0
+          : (json['socketColor_1'] as num?)?.toInt() ?? 0,
+      socketContent1: json['socketContent_1'] == true
+          ? 1
+          : json['socketContent_1'] == false
+          ? 0
+          : (json['socketContent_1'] as num?)?.toInt() ?? 0,
+      socketColor2: json['socketColor_2'] == true
+          ? 1
+          : json['socketColor_2'] == false
+          ? 0
+          : (json['socketColor_2'] as num?)?.toInt() ?? 0,
+      socketContent2: json['socketContent_2'] == true
+          ? 1
+          : json['socketContent_2'] == false
+          ? 0
+          : (json['socketContent_2'] as num?)?.toInt() ?? 0,
+      socketColor3: json['socketColor_3'] == true
+          ? 1
+          : json['socketColor_3'] == false
+          ? 0
+          : (json['socketColor_3'] as num?)?.toInt() ?? 0,
+      socketContent3: json['socketContent_3'] == true
+          ? 1
+          : json['socketContent_3'] == false
+          ? 0
+          : (json['socketContent_3'] as num?)?.toInt() ?? 0,
+      pageText: json['PageText'] == true
+          ? 1
+          : json['PageText'] == false
+          ? 0
+          : (json['PageText'] as num?)?.toInt() ?? 0,
+      pageMaterial: json['PageMaterial'] == true
+          ? 1
+          : json['PageMaterial'] == false
+          ? 0
+          : (json['PageMaterial'] as num?)?.toInt() ?? 0,
+      languageId: json['LanguageID'] == true
+          ? 1
+          : json['LanguageID'] == false
+          ? 0
+          : (json['LanguageID'] as num?)?.toInt() ?? 0,
       scriptName: json['ScriptName']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

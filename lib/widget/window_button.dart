@@ -9,8 +9,35 @@ class WindowButton extends StatefulWidget {
   State<WindowButton> createState() => _WindowButtonState();
 }
 
-class _WindowButtonState extends State<WindowButton> {
+class _WindowButtonState extends State<WindowButton> with WindowListener {
   var isMaximized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // 系统吸附(Win+↑)、任务栏操作等途径改变的最大化状态同样需要同步,
+    // 否则按钮状态失步(再点会执行反向操作)。
+    windowManager.addListener(this);
+    windowManager.isMaximized().then((value) {
+      if (mounted) setState(() => isMaximized = value);
+    });
+  }
+
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
+  }
+
+  @override
+  void onWindowMaximize() {
+    setState(() => isMaximized = true);
+  }
+
+  @override
+  void onWindowUnmaximize() {
+    setState(() => isMaximized = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +48,7 @@ class _WindowButtonState extends State<WindowButton> {
     );
     var maximizeButton = IconButton(
       onPressed: _toggleMaximize,
-      icon: const Icon(LucideIcons.maximize),
+      icon: Icon(isMaximized ? LucideIcons.copy : LucideIcons.maximize),
       visualDensity: VisualDensity.compact,
     );
     var closeButton = IconButton(
@@ -44,6 +71,7 @@ class _WindowButtonState extends State<WindowButton> {
     } else {
       windowManager.maximize();
     }
-    isMaximized = !isMaximized;
+    // 状态由 onWindowMaximize/onWindowUnmaximize 事件回写,这里不再自行
+    // 翻转,避免与事件到达顺序竞争。
   }
 }

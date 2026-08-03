@@ -21,10 +21,26 @@ final class BriefCurrencyTypeEntity {
 
   factory BriefCurrencyTypeEntity.fromJson(Map<String, dynamic> json) {
     return BriefCurrencyTypeEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      itemId: (json['ItemID'] as num?)?.toInt() ?? 0,
-      categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
-      bitIndex: (json['BitIndex'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      itemId: json['ItemID'] == true
+          ? 1
+          : json['ItemID'] == false
+          ? 0
+          : (json['ItemID'] as num?)?.toInt() ?? 0,
+      categoryId: json['CategoryID'] == true
+          ? 1
+          : json['CategoryID'] == false
+          ? 0
+          : (json['CategoryID'] as num?)?.toInt() ?? 0,
+      bitIndex: json['BitIndex'] == true
+          ? 1
+          : json['BitIndex'] == false
+          ? 0
+          : (json['BitIndex'] as num?)?.toInt() ?? 0,
       itemName: json['itemName']?.toString() ?? '',
       localeItemName: json['localeItemName']?.toString() ?? '',
     );
@@ -130,10 +146,26 @@ mixin _CurrencyTypeEntityMixin {
 
   static CurrencyTypeEntity fromJson(Map<String, dynamic> json) {
     return CurrencyTypeEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      itemId: (json['ItemID'] as num?)?.toInt() ?? 0,
-      categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
-      bitIndex: (json['BitIndex'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      itemId: json['ItemID'] == true
+          ? 1
+          : json['ItemID'] == false
+          ? 0
+          : (json['ItemID'] as num?)?.toInt() ?? 0,
+      categoryId: json['CategoryID'] == true
+          ? 1
+          : json['CategoryID'] == false
+          ? 0
+          : (json['CategoryID'] as num?)?.toInt() ?? 0,
+      bitIndex: json['BitIndex'] == true
+          ? 1
+          : json['BitIndex'] == false
+          ? 0
+          : (json['BitIndex'] as num?)?.toInt() ?? 0,
     );
   }
 }

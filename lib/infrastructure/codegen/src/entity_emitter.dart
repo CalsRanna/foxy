@@ -304,14 +304,20 @@ final class EntityEmitter {
     final fallback = field.constructorDefaultValue == null
         ? ''
         : ' ?? ${dartLiteral(field.constructorDefaultValue, asType: field.nonNullableType)}';
+    // laconic_mysql 把 tinyint(1) 列解码成 Dart bool（二进制与文本协议都如此），
+    // 而 tinyint(1) 常被声明为 int/bool 字段（如 creature_onkill_reputation）——
+    // 因此 int/bool 的 fromJson 必须双容忍 bool/num 两种形态，否则读真实数据即抛
+    // TypeError（feature_entity.dart 手写代码 `== 1 || == true` 同此考虑）。
     return switch (field.nonNullableType) {
-      'int' => "(json[$key] as num?)?.toInt()$fallback",
+      'int' =>
+        "json[$key] == true ? 1 : json[$key] == false ? 0 : "
+            "(json[$key] as num?)?.toInt()$fallback",
       'double' => "(json[$key] as num?)?.toDouble()$fallback",
       'String' => "json[$key]?.toString()$fallback",
       'bool' =>
         "json[$key] == null ? "
             "${dartLiteral(field.constructorDefaultValue, asType: 'bool')} : "
-            "(json[$key] as num).toInt() == 1",
+            "(json[$key] == true || json[$key] == 1)",
       _ => throw InvalidGenerationSourceError(
         'Unsupported field type ${field.dartType}',
       ),

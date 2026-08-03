@@ -63,7 +63,7 @@ class ItemVisualEffectRepository
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.model.isNotEmpty) {
       builder = builder.where('Model', '%${escapeLike(filter.model)}%', comparator: 'like');

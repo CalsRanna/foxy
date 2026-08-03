@@ -118,7 +118,7 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'milling_loot_template',
           '`Item`',
-          where: {'Entry': millingLootTemplate.entry},
+          where: {'`Entry`': millingLootTemplate.entry},
         ),
       );
       try {

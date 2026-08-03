@@ -19,8 +19,16 @@ final class BriefGameObjectTemplateEntity {
 
   factory BriefGameObjectTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefGameObjectTemplateEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      type: (json['type'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      type: json['type'] == true
+          ? 1
+          : json['type'] == false
+          ? 0
+          : (json['type'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
       size: (json['size'] as num?)?.toDouble() ?? 1.0,
       localeName: json['localeName']?.toString() ?? '',
@@ -304,41 +312,153 @@ mixin _GameObjectTemplateEntityMixin {
 
   static GameObjectTemplateEntity fromJson(Map<String, dynamic> json) {
     return GameObjectTemplateEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      type: (json['type'] as num?)?.toInt() ?? 0,
-      displayId: (json['displayId'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      type: json['type'] == true
+          ? 1
+          : json['type'] == false
+          ? 0
+          : (json['type'] as num?)?.toInt() ?? 0,
+      displayId: json['displayId'] == true
+          ? 1
+          : json['displayId'] == false
+          ? 0
+          : (json['displayId'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
       iconName: json['IconName']?.toString() ?? '',
       castBarCaption: json['castBarCaption']?.toString() ?? '',
       unk1: json['unk1']?.toString() ?? '',
       size: (json['size'] as num?)?.toDouble() ?? 1.0,
-      data0: (json['Data0'] as num?)?.toInt() ?? 0,
-      data1: (json['Data1'] as num?)?.toInt() ?? 0,
-      data2: (json['Data2'] as num?)?.toInt() ?? 0,
-      data3: (json['Data3'] as num?)?.toInt() ?? 0,
-      data4: (json['Data4'] as num?)?.toInt() ?? 0,
-      data5: (json['Data5'] as num?)?.toInt() ?? 0,
-      data6: (json['Data6'] as num?)?.toInt() ?? 0,
-      data7: (json['Data7'] as num?)?.toInt() ?? 0,
-      data8: (json['Data8'] as num?)?.toInt() ?? 0,
-      data9: (json['Data9'] as num?)?.toInt() ?? 0,
-      data10: (json['Data10'] as num?)?.toInt() ?? 0,
-      data11: (json['Data11'] as num?)?.toInt() ?? 0,
-      data12: (json['Data12'] as num?)?.toInt() ?? 0,
-      data13: (json['Data13'] as num?)?.toInt() ?? 0,
-      data14: (json['Data14'] as num?)?.toInt() ?? 0,
-      data15: (json['Data15'] as num?)?.toInt() ?? 0,
-      data16: (json['Data16'] as num?)?.toInt() ?? 0,
-      data17: (json['Data17'] as num?)?.toInt() ?? 0,
-      data18: (json['Data18'] as num?)?.toInt() ?? 0,
-      data19: (json['Data19'] as num?)?.toInt() ?? 0,
-      data20: (json['Data20'] as num?)?.toInt() ?? 0,
-      data21: (json['Data21'] as num?)?.toInt() ?? 0,
-      data22: (json['Data22'] as num?)?.toInt() ?? 0,
-      data23: (json['Data23'] as num?)?.toInt() ?? 0,
+      data0: json['Data0'] == true
+          ? 1
+          : json['Data0'] == false
+          ? 0
+          : (json['Data0'] as num?)?.toInt() ?? 0,
+      data1: json['Data1'] == true
+          ? 1
+          : json['Data1'] == false
+          ? 0
+          : (json['Data1'] as num?)?.toInt() ?? 0,
+      data2: json['Data2'] == true
+          ? 1
+          : json['Data2'] == false
+          ? 0
+          : (json['Data2'] as num?)?.toInt() ?? 0,
+      data3: json['Data3'] == true
+          ? 1
+          : json['Data3'] == false
+          ? 0
+          : (json['Data3'] as num?)?.toInt() ?? 0,
+      data4: json['Data4'] == true
+          ? 1
+          : json['Data4'] == false
+          ? 0
+          : (json['Data4'] as num?)?.toInt() ?? 0,
+      data5: json['Data5'] == true
+          ? 1
+          : json['Data5'] == false
+          ? 0
+          : (json['Data5'] as num?)?.toInt() ?? 0,
+      data6: json['Data6'] == true
+          ? 1
+          : json['Data6'] == false
+          ? 0
+          : (json['Data6'] as num?)?.toInt() ?? 0,
+      data7: json['Data7'] == true
+          ? 1
+          : json['Data7'] == false
+          ? 0
+          : (json['Data7'] as num?)?.toInt() ?? 0,
+      data8: json['Data8'] == true
+          ? 1
+          : json['Data8'] == false
+          ? 0
+          : (json['Data8'] as num?)?.toInt() ?? 0,
+      data9: json['Data9'] == true
+          ? 1
+          : json['Data9'] == false
+          ? 0
+          : (json['Data9'] as num?)?.toInt() ?? 0,
+      data10: json['Data10'] == true
+          ? 1
+          : json['Data10'] == false
+          ? 0
+          : (json['Data10'] as num?)?.toInt() ?? 0,
+      data11: json['Data11'] == true
+          ? 1
+          : json['Data11'] == false
+          ? 0
+          : (json['Data11'] as num?)?.toInt() ?? 0,
+      data12: json['Data12'] == true
+          ? 1
+          : json['Data12'] == false
+          ? 0
+          : (json['Data12'] as num?)?.toInt() ?? 0,
+      data13: json['Data13'] == true
+          ? 1
+          : json['Data13'] == false
+          ? 0
+          : (json['Data13'] as num?)?.toInt() ?? 0,
+      data14: json['Data14'] == true
+          ? 1
+          : json['Data14'] == false
+          ? 0
+          : (json['Data14'] as num?)?.toInt() ?? 0,
+      data15: json['Data15'] == true
+          ? 1
+          : json['Data15'] == false
+          ? 0
+          : (json['Data15'] as num?)?.toInt() ?? 0,
+      data16: json['Data16'] == true
+          ? 1
+          : json['Data16'] == false
+          ? 0
+          : (json['Data16'] as num?)?.toInt() ?? 0,
+      data17: json['Data17'] == true
+          ? 1
+          : json['Data17'] == false
+          ? 0
+          : (json['Data17'] as num?)?.toInt() ?? 0,
+      data18: json['Data18'] == true
+          ? 1
+          : json['Data18'] == false
+          ? 0
+          : (json['Data18'] as num?)?.toInt() ?? 0,
+      data19: json['Data19'] == true
+          ? 1
+          : json['Data19'] == false
+          ? 0
+          : (json['Data19'] as num?)?.toInt() ?? 0,
+      data20: json['Data20'] == true
+          ? 1
+          : json['Data20'] == false
+          ? 0
+          : (json['Data20'] as num?)?.toInt() ?? 0,
+      data21: json['Data21'] == true
+          ? 1
+          : json['Data21'] == false
+          ? 0
+          : (json['Data21'] as num?)?.toInt() ?? 0,
+      data22: json['Data22'] == true
+          ? 1
+          : json['Data22'] == false
+          ? 0
+          : (json['Data22'] as num?)?.toInt() ?? 0,
+      data23: json['Data23'] == true
+          ? 1
+          : json['Data23'] == false
+          ? 0
+          : (json['Data23'] as num?)?.toInt() ?? 0,
       aiName: json['AIName']?.toString() ?? '',
       scriptName: json['ScriptName']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

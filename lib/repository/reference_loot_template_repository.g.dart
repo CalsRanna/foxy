@@ -127,8 +127,11 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = referenceLootTemplate.copyWith(
-        entry: await nextMaxPlusOne('reference_loot_template', '`Entry`'),
-        item: await nextMaxPlusOne('reference_loot_template', '`Item`'),
+        item: await nextMaxPlusOne(
+          'reference_loot_template',
+          '`Item`',
+          where: {'`Entry`': referenceLootTemplate.entry},
+        ),
       );
       try {
         await laconic.table('reference_loot_template').insert([
@@ -175,7 +178,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('`Entry`', filter.entry);
+      builder = builder.where('`Entry`', int.tryParse(filter.entry) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where('`it.name`', filter.name);

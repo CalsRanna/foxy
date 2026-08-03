@@ -17,10 +17,18 @@ final class BriefPageTextLocaleEntity {
 
   factory BriefPageTextLocaleEntity.fromJson(Map<String, dynamic> json) {
     return BriefPageTextLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       text: json['Text']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -143,10 +151,18 @@ mixin _PageTextLocaleEntityMixin {
 
   static PageTextLocaleEntity fromJson(Map<String, dynamic> json) {
     return PageTextLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       text: json['Text']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

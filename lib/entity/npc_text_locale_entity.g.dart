@@ -10,7 +10,11 @@ final class BriefNpcTextLocaleEntity {
 
   factory BriefNpcTextLocaleEntity.fromJson(Map<String, dynamic> json) {
     return BriefNpcTextLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['Locale']?.toString() ?? 'zhCN',
     );
   }
@@ -214,7 +218,11 @@ mixin _NpcTextLocaleEntityMixin {
 
   static NpcTextLocaleEntity fromJson(Map<String, dynamic> json) {
     return NpcTextLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['Locale']?.toString() ?? 'zhCN',
       text00: json['Text0_0']?.toString() ?? '',
       text01: json['Text0_1']?.toString() ?? '',

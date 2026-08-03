@@ -15,7 +15,11 @@ final class BriefMailTemplateEntity {
 
   factory BriefMailTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefMailTemplateEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       subjectLangZhCN: json['Subject_lang_zhCN']?.toString() ?? '',
       bodyLangZhCN: json['Body_lang_zhCN']?.toString() ?? '',
     );
@@ -294,7 +298,11 @@ mixin _MailTemplateEntityMixin {
 
   static MailTemplateEntity fromJson(Map<String, dynamic> json) {
     return MailTemplateEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       subjectLangEnUS: json['Subject_lang_enUS']?.toString() ?? '',
       subjectLangKoKR: json['Subject_lang_koKR']?.toString() ?? '',
       subjectLangFrFR: json['Subject_lang_frFR']?.toString() ?? '',
@@ -311,7 +319,11 @@ mixin _MailTemplateEntityMixin {
       subjectLangUnk1: json['Subject_lang_unk1']?.toString() ?? '',
       subjectLangUnk2: json['Subject_lang_unk2']?.toString() ?? '',
       subjectLangUnk3: json['Subject_lang_unk3']?.toString() ?? '',
-      subjectLangFlags: (json['Subject_lang_Flags'] as num?)?.toInt() ?? 0,
+      subjectLangFlags: json['Subject_lang_Flags'] == true
+          ? 1
+          : json['Subject_lang_Flags'] == false
+          ? 0
+          : (json['Subject_lang_Flags'] as num?)?.toInt() ?? 0,
       bodyLangEnUS: json['Body_lang_enUS']?.toString() ?? '',
       bodyLangKoKR: json['Body_lang_koKR']?.toString() ?? '',
       bodyLangFrFR: json['Body_lang_frFR']?.toString() ?? '',
@@ -328,7 +340,11 @@ mixin _MailTemplateEntityMixin {
       bodyLangUnk1: json['Body_lang_unk1']?.toString() ?? '',
       bodyLangUnk2: json['Body_lang_unk2']?.toString() ?? '',
       bodyLangUnk3: json['Body_lang_unk3']?.toString() ?? '',
-      bodyLangFlags: (json['Body_lang_Flags'] as num?)?.toInt() ?? 0,
+      bodyLangFlags: json['Body_lang_Flags'] == true
+          ? 1
+          : json['Body_lang_Flags'] == false
+          ? 0
+          : (json['Body_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -55,9 +55,9 @@ class LightRepository with RepositoryMixin, _LightRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, LightFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     if (filter.continentId.isNotEmpty) {
-      builder = builder.where('ContinentID', filter.continentId);
+      builder = builder.where('ContinentID', int.tryParse(filter.continentId) ?? 0);
     }
     return builder;
   }

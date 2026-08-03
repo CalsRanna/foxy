@@ -81,7 +81,16 @@ sealed class FieldController<T> {
 mixin FieldControllerMixin {
   final _fieldControllers = <FieldController>[];
 
+  /// 已释放标记:initSignals 的慢查询(冷连接/远程库)在页面销毁后返回时,
+  /// 不能再写已 dispose 的 TextEditingController(debug 下抛 FlutterError),
+  /// 生成与手写 initSignals 在 await 后先检查本标记再写 Controller/信号。
+  bool _disposed = false;
+
+  /// 是否已释放(disposeControllers 后为 true)。
+  bool get isDisposed => _disposed;
+
   void disposeControllers() {
+    _disposed = true;
     for (final controller in _fieldControllers) {
       controller.dispose();
     }

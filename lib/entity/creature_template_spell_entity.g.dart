@@ -21,10 +21,26 @@ final class BriefCreatureTemplateSpellEntity {
 
   factory BriefCreatureTemplateSpellEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureTemplateSpellEntity(
-      creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
-      index: (json['Index'] as num?)?.toInt() ?? 0,
-      spell: (json['Spell'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureID: json['CreatureID'] == true
+          ? 1
+          : json['CreatureID'] == false
+          ? 0
+          : (json['CreatureID'] as num?)?.toInt() ?? 0,
+      index: json['Index'] == true
+          ? 1
+          : json['Index'] == false
+          ? 0
+          : (json['Index'] as num?)?.toInt() ?? 0,
+      spell: json['Spell'] == true
+          ? 1
+          : json['Spell'] == false
+          ? 0
+          : (json['Spell'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
       spellName: json['spellName']?.toString() ?? '',
       spellSubtext: json['spellSubtext']?.toString() ?? '',
     );
@@ -170,10 +186,26 @@ mixin _CreatureTemplateSpellEntityMixin {
 
   static CreatureTemplateSpellEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateSpellEntity(
-      creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
-      index: (json['Index'] as num?)?.toInt() ?? 0,
-      spell: (json['Spell'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureID: json['CreatureID'] == true
+          ? 1
+          : json['CreatureID'] == false
+          ? 0
+          : (json['CreatureID'] as num?)?.toInt() ?? 0,
+      index: json['Index'] == true
+          ? 1
+          : json['Index'] == false
+          ? 0
+          : (json['Index'] as num?)?.toInt() ?? 0,
+      spell: json['Spell'] == true
+          ? 1
+          : json['Spell'] == false
+          ? 0
+          : (json['Spell'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

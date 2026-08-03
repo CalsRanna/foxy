@@ -15,9 +15,17 @@ final class BriefZoneIntroMusicEntity {
 
   factory BriefZoneIntroMusicEntity.fromJson(Map<String, dynamic> json) {
     return BriefZoneIntroMusicEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
+      soundId: json['SoundID'] == true
+          ? 1
+          : json['SoundID'] == false
+          ? 0
+          : (json['SoundID'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -114,11 +122,27 @@ mixin _ZoneIntroMusicEntityMixin {
 
   static ZoneIntroMusicEntity fromJson(Map<String, dynamic> json) {
     return ZoneIntroMusicEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
-      priority: (json['Priority'] as num?)?.toInt() ?? 0,
-      minDelayMinutes: (json['MinDelayMinutes'] as num?)?.toInt() ?? 0,
+      soundId: json['SoundID'] == true
+          ? 1
+          : json['SoundID'] == false
+          ? 0
+          : (json['SoundID'] as num?)?.toInt() ?? 0,
+      priority: json['Priority'] == true
+          ? 1
+          : json['Priority'] == false
+          ? 0
+          : (json['Priority'] as num?)?.toInt() ?? 0,
+      minDelayMinutes: json['MinDelayMinutes'] == true
+          ? 1
+          : json['MinDelayMinutes'] == false
+          ? 0
+          : (json['MinDelayMinutes'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -1,28 +1,11 @@
 import 'package:flutter/material.dart';
 
-class FoxyCard extends StatefulWidget {
+class FoxyCard extends StatelessWidget {
   final Widget? title;
   final Widget child;
 
   const FoxyCard({super.key, this.title, required this.child});
 
-  @override
-  State<FoxyCard> createState() => _FoxyCardState();
-}
-
-class _Divider extends StatelessWidget {
-  const _Divider();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline;
-    return Divider(color: outline.withValues(alpha: 0.2), height: 1);
-  }
-}
-
-class _FoxyCardState extends State<FoxyCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -39,22 +22,34 @@ class _FoxyCardState extends State<FoxyCard> {
       boxShadow: [boxShadow],
       color: surface,
     );
-    final title = _buildTitle();
+    final title = _buildTitle(context);
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [...title, widget.child],
+      children: [...title, child],
     );
     return Container(decoration: boxDecoration, child: column);
   }
 
-  List<Widget> _buildTitle() {
-    if (widget.title == null) return [];
+  List<Widget> _buildTitle(BuildContext context) {
+    if (title == null) return [];
     const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
-    final title = DefaultTextStyle.merge(
+    final titleWidget = DefaultTextStyle.merge(
       style: textStyle,
-      child: widget.title!,
+      child: title!,
     );
-    final padding = Padding(padding: EdgeInsets.all(16), child: title);
+    final padding = Padding(padding: EdgeInsets.all(16), child: titleWidget);
     return [padding, const _Divider()];
+  }
+}
+
+class _Divider extends StatelessWidget {
+  const _Divider();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final outline = colorScheme.outline;
+    return Divider(color: outline.withValues(alpha: 0.2), height: 1);
   }
 }

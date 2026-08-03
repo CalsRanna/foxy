@@ -29,7 +29,11 @@ final class BriefSpellEntity {
 
   factory BriefSpellEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
       subtext: json['subtext']?.toString() ?? '',
       localeName: json['localeName']?.toString() ?? '',
@@ -1583,166 +1587,652 @@ mixin _SpellEntityMixin {
 
   static SpellEntity fromJson(Map<String, dynamic> json) {
     return SpellEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      category: (json['Category'] as num?)?.toInt() ?? 0,
-      dispelType: (json['DispelType'] as num?)?.toInt() ?? 0,
-      mechanic: (json['Mechanic'] as num?)?.toInt() ?? 0,
-      attributes: (json['Attributes'] as num?)?.toInt() ?? 0,
-      attributesEx: (json['AttributesEx'] as num?)?.toInt() ?? 0,
-      attributesExB: (json['AttributesExB'] as num?)?.toInt() ?? 0,
-      attributesExC: (json['AttributesExC'] as num?)?.toInt() ?? 0,
-      attributesExD: (json['AttributesExD'] as num?)?.toInt() ?? 0,
-      attributesExE: (json['AttributesExE'] as num?)?.toInt() ?? 0,
-      attributesExF: (json['AttributesExF'] as num?)?.toInt() ?? 0,
-      attributesExG: (json['AttributesExG'] as num?)?.toInt() ?? 0,
-      shapeshiftMask0: (json['ShapeshiftMask0'] as num?)?.toInt() ?? 0,
-      shapeshiftMask1: (json['ShapeshiftMask1'] as num?)?.toInt() ?? 0,
-      shapeshiftExclude0: (json['ShapeshiftExclude0'] as num?)?.toInt() ?? 0,
-      shapeshiftExclude1: (json['ShapeshiftExclude1'] as num?)?.toInt() ?? 0,
-      targets: (json['Targets'] as num?)?.toInt() ?? 0,
-      targetCreatureType: (json['TargetCreatureType'] as num?)?.toInt() ?? 0,
-      requiresSpellFocus: (json['RequiresSpellFocus'] as num?)?.toInt() ?? 0,
-      facingCasterFlags: (json['FacingCasterFlags'] as num?)?.toInt() ?? 0,
-      casterAuraState: (json['CasterAuraState'] as num?)?.toInt() ?? 0,
-      targetAuraState: (json['TargetAuraState'] as num?)?.toInt() ?? 0,
-      excludeCasterAuraState:
-          (json['ExcludeCasterAuraState'] as num?)?.toInt() ?? 0,
-      excludeTargetAuraState:
-          (json['ExcludeTargetAuraState'] as num?)?.toInt() ?? 0,
-      casterAuraSpell: (json['CasterAuraSpell'] as num?)?.toInt() ?? 0,
-      targetAuraSpell: (json['TargetAuraSpell'] as num?)?.toInt() ?? 0,
-      excludeCasterAuraSpell:
-          (json['ExcludeCasterAuraSpell'] as num?)?.toInt() ?? 0,
-      excludeTargetAuraSpell:
-          (json['ExcludeTargetAuraSpell'] as num?)?.toInt() ?? 0,
-      castingTimeIndex: (json['CastingTimeIndex'] as num?)?.toInt() ?? 0,
-      recoveryTime: (json['RecoveryTime'] as num?)?.toInt() ?? 0,
-      categoryRecoveryTime:
-          (json['CategoryRecoveryTime'] as num?)?.toInt() ?? 0,
-      interruptFlags: (json['InterruptFlags'] as num?)?.toInt() ?? 0,
-      auraInterruptFlags: (json['AuraInterruptFlags'] as num?)?.toInt() ?? 0,
-      channelInterruptFlags:
-          (json['ChannelInterruptFlags'] as num?)?.toInt() ?? 0,
-      procTypeMask: (json['ProcTypeMask'] as num?)?.toInt() ?? 0,
-      procChance: (json['ProcChance'] as num?)?.toInt() ?? 0,
-      procCharges: (json['ProcCharges'] as num?)?.toInt() ?? 0,
-      maxLevel: (json['MaxLevel'] as num?)?.toInt() ?? 0,
-      baseLevel: (json['BaseLevel'] as num?)?.toInt() ?? 0,
-      spellLevel: (json['SpellLevel'] as num?)?.toInt() ?? 0,
-      durationIndex: (json['DurationIndex'] as num?)?.toInt() ?? 0,
-      powerType: (json['PowerType'] as num?)?.toInt() ?? 0,
-      manaCost: (json['ManaCost'] as num?)?.toInt() ?? 0,
-      manaCostPerLevel: (json['ManaCostPerLevel'] as num?)?.toInt() ?? 0,
-      manaPerSecond: (json['ManaPerSecond'] as num?)?.toInt() ?? 0,
-      manaPerSecondPerLevel:
-          (json['ManaPerSecondPerLevel'] as num?)?.toInt() ?? 0,
-      rangeIndex: (json['RangeIndex'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      category: json['Category'] == true
+          ? 1
+          : json['Category'] == false
+          ? 0
+          : (json['Category'] as num?)?.toInt() ?? 0,
+      dispelType: json['DispelType'] == true
+          ? 1
+          : json['DispelType'] == false
+          ? 0
+          : (json['DispelType'] as num?)?.toInt() ?? 0,
+      mechanic: json['Mechanic'] == true
+          ? 1
+          : json['Mechanic'] == false
+          ? 0
+          : (json['Mechanic'] as num?)?.toInt() ?? 0,
+      attributes: json['Attributes'] == true
+          ? 1
+          : json['Attributes'] == false
+          ? 0
+          : (json['Attributes'] as num?)?.toInt() ?? 0,
+      attributesEx: json['AttributesEx'] == true
+          ? 1
+          : json['AttributesEx'] == false
+          ? 0
+          : (json['AttributesEx'] as num?)?.toInt() ?? 0,
+      attributesExB: json['AttributesExB'] == true
+          ? 1
+          : json['AttributesExB'] == false
+          ? 0
+          : (json['AttributesExB'] as num?)?.toInt() ?? 0,
+      attributesExC: json['AttributesExC'] == true
+          ? 1
+          : json['AttributesExC'] == false
+          ? 0
+          : (json['AttributesExC'] as num?)?.toInt() ?? 0,
+      attributesExD: json['AttributesExD'] == true
+          ? 1
+          : json['AttributesExD'] == false
+          ? 0
+          : (json['AttributesExD'] as num?)?.toInt() ?? 0,
+      attributesExE: json['AttributesExE'] == true
+          ? 1
+          : json['AttributesExE'] == false
+          ? 0
+          : (json['AttributesExE'] as num?)?.toInt() ?? 0,
+      attributesExF: json['AttributesExF'] == true
+          ? 1
+          : json['AttributesExF'] == false
+          ? 0
+          : (json['AttributesExF'] as num?)?.toInt() ?? 0,
+      attributesExG: json['AttributesExG'] == true
+          ? 1
+          : json['AttributesExG'] == false
+          ? 0
+          : (json['AttributesExG'] as num?)?.toInt() ?? 0,
+      shapeshiftMask0: json['ShapeshiftMask0'] == true
+          ? 1
+          : json['ShapeshiftMask0'] == false
+          ? 0
+          : (json['ShapeshiftMask0'] as num?)?.toInt() ?? 0,
+      shapeshiftMask1: json['ShapeshiftMask1'] == true
+          ? 1
+          : json['ShapeshiftMask1'] == false
+          ? 0
+          : (json['ShapeshiftMask1'] as num?)?.toInt() ?? 0,
+      shapeshiftExclude0: json['ShapeshiftExclude0'] == true
+          ? 1
+          : json['ShapeshiftExclude0'] == false
+          ? 0
+          : (json['ShapeshiftExclude0'] as num?)?.toInt() ?? 0,
+      shapeshiftExclude1: json['ShapeshiftExclude1'] == true
+          ? 1
+          : json['ShapeshiftExclude1'] == false
+          ? 0
+          : (json['ShapeshiftExclude1'] as num?)?.toInt() ?? 0,
+      targets: json['Targets'] == true
+          ? 1
+          : json['Targets'] == false
+          ? 0
+          : (json['Targets'] as num?)?.toInt() ?? 0,
+      targetCreatureType: json['TargetCreatureType'] == true
+          ? 1
+          : json['TargetCreatureType'] == false
+          ? 0
+          : (json['TargetCreatureType'] as num?)?.toInt() ?? 0,
+      requiresSpellFocus: json['RequiresSpellFocus'] == true
+          ? 1
+          : json['RequiresSpellFocus'] == false
+          ? 0
+          : (json['RequiresSpellFocus'] as num?)?.toInt() ?? 0,
+      facingCasterFlags: json['FacingCasterFlags'] == true
+          ? 1
+          : json['FacingCasterFlags'] == false
+          ? 0
+          : (json['FacingCasterFlags'] as num?)?.toInt() ?? 0,
+      casterAuraState: json['CasterAuraState'] == true
+          ? 1
+          : json['CasterAuraState'] == false
+          ? 0
+          : (json['CasterAuraState'] as num?)?.toInt() ?? 0,
+      targetAuraState: json['TargetAuraState'] == true
+          ? 1
+          : json['TargetAuraState'] == false
+          ? 0
+          : (json['TargetAuraState'] as num?)?.toInt() ?? 0,
+      excludeCasterAuraState: json['ExcludeCasterAuraState'] == true
+          ? 1
+          : json['ExcludeCasterAuraState'] == false
+          ? 0
+          : (json['ExcludeCasterAuraState'] as num?)?.toInt() ?? 0,
+      excludeTargetAuraState: json['ExcludeTargetAuraState'] == true
+          ? 1
+          : json['ExcludeTargetAuraState'] == false
+          ? 0
+          : (json['ExcludeTargetAuraState'] as num?)?.toInt() ?? 0,
+      casterAuraSpell: json['CasterAuraSpell'] == true
+          ? 1
+          : json['CasterAuraSpell'] == false
+          ? 0
+          : (json['CasterAuraSpell'] as num?)?.toInt() ?? 0,
+      targetAuraSpell: json['TargetAuraSpell'] == true
+          ? 1
+          : json['TargetAuraSpell'] == false
+          ? 0
+          : (json['TargetAuraSpell'] as num?)?.toInt() ?? 0,
+      excludeCasterAuraSpell: json['ExcludeCasterAuraSpell'] == true
+          ? 1
+          : json['ExcludeCasterAuraSpell'] == false
+          ? 0
+          : (json['ExcludeCasterAuraSpell'] as num?)?.toInt() ?? 0,
+      excludeTargetAuraSpell: json['ExcludeTargetAuraSpell'] == true
+          ? 1
+          : json['ExcludeTargetAuraSpell'] == false
+          ? 0
+          : (json['ExcludeTargetAuraSpell'] as num?)?.toInt() ?? 0,
+      castingTimeIndex: json['CastingTimeIndex'] == true
+          ? 1
+          : json['CastingTimeIndex'] == false
+          ? 0
+          : (json['CastingTimeIndex'] as num?)?.toInt() ?? 0,
+      recoveryTime: json['RecoveryTime'] == true
+          ? 1
+          : json['RecoveryTime'] == false
+          ? 0
+          : (json['RecoveryTime'] as num?)?.toInt() ?? 0,
+      categoryRecoveryTime: json['CategoryRecoveryTime'] == true
+          ? 1
+          : json['CategoryRecoveryTime'] == false
+          ? 0
+          : (json['CategoryRecoveryTime'] as num?)?.toInt() ?? 0,
+      interruptFlags: json['InterruptFlags'] == true
+          ? 1
+          : json['InterruptFlags'] == false
+          ? 0
+          : (json['InterruptFlags'] as num?)?.toInt() ?? 0,
+      auraInterruptFlags: json['AuraInterruptFlags'] == true
+          ? 1
+          : json['AuraInterruptFlags'] == false
+          ? 0
+          : (json['AuraInterruptFlags'] as num?)?.toInt() ?? 0,
+      channelInterruptFlags: json['ChannelInterruptFlags'] == true
+          ? 1
+          : json['ChannelInterruptFlags'] == false
+          ? 0
+          : (json['ChannelInterruptFlags'] as num?)?.toInt() ?? 0,
+      procTypeMask: json['ProcTypeMask'] == true
+          ? 1
+          : json['ProcTypeMask'] == false
+          ? 0
+          : (json['ProcTypeMask'] as num?)?.toInt() ?? 0,
+      procChance: json['ProcChance'] == true
+          ? 1
+          : json['ProcChance'] == false
+          ? 0
+          : (json['ProcChance'] as num?)?.toInt() ?? 0,
+      procCharges: json['ProcCharges'] == true
+          ? 1
+          : json['ProcCharges'] == false
+          ? 0
+          : (json['ProcCharges'] as num?)?.toInt() ?? 0,
+      maxLevel: json['MaxLevel'] == true
+          ? 1
+          : json['MaxLevel'] == false
+          ? 0
+          : (json['MaxLevel'] as num?)?.toInt() ?? 0,
+      baseLevel: json['BaseLevel'] == true
+          ? 1
+          : json['BaseLevel'] == false
+          ? 0
+          : (json['BaseLevel'] as num?)?.toInt() ?? 0,
+      spellLevel: json['SpellLevel'] == true
+          ? 1
+          : json['SpellLevel'] == false
+          ? 0
+          : (json['SpellLevel'] as num?)?.toInt() ?? 0,
+      durationIndex: json['DurationIndex'] == true
+          ? 1
+          : json['DurationIndex'] == false
+          ? 0
+          : (json['DurationIndex'] as num?)?.toInt() ?? 0,
+      powerType: json['PowerType'] == true
+          ? 1
+          : json['PowerType'] == false
+          ? 0
+          : (json['PowerType'] as num?)?.toInt() ?? 0,
+      manaCost: json['ManaCost'] == true
+          ? 1
+          : json['ManaCost'] == false
+          ? 0
+          : (json['ManaCost'] as num?)?.toInt() ?? 0,
+      manaCostPerLevel: json['ManaCostPerLevel'] == true
+          ? 1
+          : json['ManaCostPerLevel'] == false
+          ? 0
+          : (json['ManaCostPerLevel'] as num?)?.toInt() ?? 0,
+      manaPerSecond: json['ManaPerSecond'] == true
+          ? 1
+          : json['ManaPerSecond'] == false
+          ? 0
+          : (json['ManaPerSecond'] as num?)?.toInt() ?? 0,
+      manaPerSecondPerLevel: json['ManaPerSecondPerLevel'] == true
+          ? 1
+          : json['ManaPerSecondPerLevel'] == false
+          ? 0
+          : (json['ManaPerSecondPerLevel'] as num?)?.toInt() ?? 0,
+      rangeIndex: json['RangeIndex'] == true
+          ? 1
+          : json['RangeIndex'] == false
+          ? 0
+          : (json['RangeIndex'] as num?)?.toInt() ?? 0,
       speed: (json['Speed'] as num?)?.toDouble() ?? 0.0,
-      modalNextSpell: (json['ModalNextSpell'] as num?)?.toInt() ?? 0,
-      cumulativeAura: (json['CumulativeAura'] as num?)?.toInt() ?? 0,
-      totem0: (json['Totem0'] as num?)?.toInt() ?? 0,
-      totem1: (json['Totem1'] as num?)?.toInt() ?? 0,
-      reagent0: (json['Reagent0'] as num?)?.toInt() ?? 0,
-      reagent1: (json['Reagent1'] as num?)?.toInt() ?? 0,
-      reagent2: (json['Reagent2'] as num?)?.toInt() ?? 0,
-      reagent3: (json['Reagent3'] as num?)?.toInt() ?? 0,
-      reagent4: (json['Reagent4'] as num?)?.toInt() ?? 0,
-      reagent5: (json['Reagent5'] as num?)?.toInt() ?? 0,
-      reagent6: (json['Reagent6'] as num?)?.toInt() ?? 0,
-      reagent7: (json['Reagent7'] as num?)?.toInt() ?? 0,
-      reagentCount0: (json['ReagentCount0'] as num?)?.toInt() ?? 0,
-      reagentCount1: (json['ReagentCount1'] as num?)?.toInt() ?? 0,
-      reagentCount2: (json['ReagentCount2'] as num?)?.toInt() ?? 0,
-      reagentCount3: (json['ReagentCount3'] as num?)?.toInt() ?? 0,
-      reagentCount4: (json['ReagentCount4'] as num?)?.toInt() ?? 0,
-      reagentCount5: (json['ReagentCount5'] as num?)?.toInt() ?? 0,
-      reagentCount6: (json['ReagentCount6'] as num?)?.toInt() ?? 0,
-      reagentCount7: (json['ReagentCount7'] as num?)?.toInt() ?? 0,
-      equippedItemClass: (json['EquippedItemClass'] as num?)?.toInt() ?? 0,
-      equippedItemSubclass:
-          (json['EquippedItemSubclass'] as num?)?.toInt() ?? 0,
-      equippedItemInvTypes:
-          (json['EquippedItemInvTypes'] as num?)?.toInt() ?? 0,
-      effect0: (json['Effect0'] as num?)?.toInt() ?? 0,
-      effect1: (json['Effect1'] as num?)?.toInt() ?? 0,
-      effect2: (json['Effect2'] as num?)?.toInt() ?? 0,
-      effectDieSides0: (json['EffectDieSides0'] as num?)?.toInt() ?? 0,
-      effectDieSides1: (json['EffectDieSides1'] as num?)?.toInt() ?? 0,
-      effectDieSides2: (json['EffectDieSides2'] as num?)?.toInt() ?? 0,
+      modalNextSpell: json['ModalNextSpell'] == true
+          ? 1
+          : json['ModalNextSpell'] == false
+          ? 0
+          : (json['ModalNextSpell'] as num?)?.toInt() ?? 0,
+      cumulativeAura: json['CumulativeAura'] == true
+          ? 1
+          : json['CumulativeAura'] == false
+          ? 0
+          : (json['CumulativeAura'] as num?)?.toInt() ?? 0,
+      totem0: json['Totem0'] == true
+          ? 1
+          : json['Totem0'] == false
+          ? 0
+          : (json['Totem0'] as num?)?.toInt() ?? 0,
+      totem1: json['Totem1'] == true
+          ? 1
+          : json['Totem1'] == false
+          ? 0
+          : (json['Totem1'] as num?)?.toInt() ?? 0,
+      reagent0: json['Reagent0'] == true
+          ? 1
+          : json['Reagent0'] == false
+          ? 0
+          : (json['Reagent0'] as num?)?.toInt() ?? 0,
+      reagent1: json['Reagent1'] == true
+          ? 1
+          : json['Reagent1'] == false
+          ? 0
+          : (json['Reagent1'] as num?)?.toInt() ?? 0,
+      reagent2: json['Reagent2'] == true
+          ? 1
+          : json['Reagent2'] == false
+          ? 0
+          : (json['Reagent2'] as num?)?.toInt() ?? 0,
+      reagent3: json['Reagent3'] == true
+          ? 1
+          : json['Reagent3'] == false
+          ? 0
+          : (json['Reagent3'] as num?)?.toInt() ?? 0,
+      reagent4: json['Reagent4'] == true
+          ? 1
+          : json['Reagent4'] == false
+          ? 0
+          : (json['Reagent4'] as num?)?.toInt() ?? 0,
+      reagent5: json['Reagent5'] == true
+          ? 1
+          : json['Reagent5'] == false
+          ? 0
+          : (json['Reagent5'] as num?)?.toInt() ?? 0,
+      reagent6: json['Reagent6'] == true
+          ? 1
+          : json['Reagent6'] == false
+          ? 0
+          : (json['Reagent6'] as num?)?.toInt() ?? 0,
+      reagent7: json['Reagent7'] == true
+          ? 1
+          : json['Reagent7'] == false
+          ? 0
+          : (json['Reagent7'] as num?)?.toInt() ?? 0,
+      reagentCount0: json['ReagentCount0'] == true
+          ? 1
+          : json['ReagentCount0'] == false
+          ? 0
+          : (json['ReagentCount0'] as num?)?.toInt() ?? 0,
+      reagentCount1: json['ReagentCount1'] == true
+          ? 1
+          : json['ReagentCount1'] == false
+          ? 0
+          : (json['ReagentCount1'] as num?)?.toInt() ?? 0,
+      reagentCount2: json['ReagentCount2'] == true
+          ? 1
+          : json['ReagentCount2'] == false
+          ? 0
+          : (json['ReagentCount2'] as num?)?.toInt() ?? 0,
+      reagentCount3: json['ReagentCount3'] == true
+          ? 1
+          : json['ReagentCount3'] == false
+          ? 0
+          : (json['ReagentCount3'] as num?)?.toInt() ?? 0,
+      reagentCount4: json['ReagentCount4'] == true
+          ? 1
+          : json['ReagentCount4'] == false
+          ? 0
+          : (json['ReagentCount4'] as num?)?.toInt() ?? 0,
+      reagentCount5: json['ReagentCount5'] == true
+          ? 1
+          : json['ReagentCount5'] == false
+          ? 0
+          : (json['ReagentCount5'] as num?)?.toInt() ?? 0,
+      reagentCount6: json['ReagentCount6'] == true
+          ? 1
+          : json['ReagentCount6'] == false
+          ? 0
+          : (json['ReagentCount6'] as num?)?.toInt() ?? 0,
+      reagentCount7: json['ReagentCount7'] == true
+          ? 1
+          : json['ReagentCount7'] == false
+          ? 0
+          : (json['ReagentCount7'] as num?)?.toInt() ?? 0,
+      equippedItemClass: json['EquippedItemClass'] == true
+          ? 1
+          : json['EquippedItemClass'] == false
+          ? 0
+          : (json['EquippedItemClass'] as num?)?.toInt() ?? 0,
+      equippedItemSubclass: json['EquippedItemSubclass'] == true
+          ? 1
+          : json['EquippedItemSubclass'] == false
+          ? 0
+          : (json['EquippedItemSubclass'] as num?)?.toInt() ?? 0,
+      equippedItemInvTypes: json['EquippedItemInvTypes'] == true
+          ? 1
+          : json['EquippedItemInvTypes'] == false
+          ? 0
+          : (json['EquippedItemInvTypes'] as num?)?.toInt() ?? 0,
+      effect0: json['Effect0'] == true
+          ? 1
+          : json['Effect0'] == false
+          ? 0
+          : (json['Effect0'] as num?)?.toInt() ?? 0,
+      effect1: json['Effect1'] == true
+          ? 1
+          : json['Effect1'] == false
+          ? 0
+          : (json['Effect1'] as num?)?.toInt() ?? 0,
+      effect2: json['Effect2'] == true
+          ? 1
+          : json['Effect2'] == false
+          ? 0
+          : (json['Effect2'] as num?)?.toInt() ?? 0,
+      effectDieSides0: json['EffectDieSides0'] == true
+          ? 1
+          : json['EffectDieSides0'] == false
+          ? 0
+          : (json['EffectDieSides0'] as num?)?.toInt() ?? 0,
+      effectDieSides1: json['EffectDieSides1'] == true
+          ? 1
+          : json['EffectDieSides1'] == false
+          ? 0
+          : (json['EffectDieSides1'] as num?)?.toInt() ?? 0,
+      effectDieSides2: json['EffectDieSides2'] == true
+          ? 1
+          : json['EffectDieSides2'] == false
+          ? 0
+          : (json['EffectDieSides2'] as num?)?.toInt() ?? 0,
       effectRealPointsPerLevel0:
           (json['EffectRealPointsPerLevel0'] as num?)?.toDouble() ?? 0.0,
       effectRealPointsPerLevel1:
           (json['EffectRealPointsPerLevel1'] as num?)?.toDouble() ?? 0.0,
       effectRealPointsPerLevel2:
           (json['EffectRealPointsPerLevel2'] as num?)?.toDouble() ?? 0.0,
-      effectBasePoints0: (json['EffectBasePoints0'] as num?)?.toInt() ?? 0,
-      effectBasePoints1: (json['EffectBasePoints1'] as num?)?.toInt() ?? 0,
-      effectBasePoints2: (json['EffectBasePoints2'] as num?)?.toInt() ?? 0,
-      effectMechanic0: (json['EffectMechanic0'] as num?)?.toInt() ?? 0,
-      effectMechanic1: (json['EffectMechanic1'] as num?)?.toInt() ?? 0,
-      effectMechanic2: (json['EffectMechanic2'] as num?)?.toInt() ?? 0,
-      implicitTargetA0: (json['ImplicitTargetA0'] as num?)?.toInt() ?? 0,
-      implicitTargetA1: (json['ImplicitTargetA1'] as num?)?.toInt() ?? 0,
-      implicitTargetA2: (json['ImplicitTargetA2'] as num?)?.toInt() ?? 0,
-      implicitTargetB0: (json['ImplicitTargetB0'] as num?)?.toInt() ?? 0,
-      implicitTargetB1: (json['ImplicitTargetB1'] as num?)?.toInt() ?? 0,
-      implicitTargetB2: (json['ImplicitTargetB2'] as num?)?.toInt() ?? 0,
-      effectRadiusIndex0: (json['EffectRadiusIndex0'] as num?)?.toInt() ?? 0,
-      effectRadiusIndex1: (json['EffectRadiusIndex1'] as num?)?.toInt() ?? 0,
-      effectRadiusIndex2: (json['EffectRadiusIndex2'] as num?)?.toInt() ?? 0,
-      effectAura0: (json['EffectAura0'] as num?)?.toInt() ?? 0,
-      effectAura1: (json['EffectAura1'] as num?)?.toInt() ?? 0,
-      effectAura2: (json['EffectAura2'] as num?)?.toInt() ?? 0,
-      effectAuraPeriod0: (json['EffectAuraPeriod0'] as num?)?.toInt() ?? 0,
-      effectAuraPeriod1: (json['EffectAuraPeriod1'] as num?)?.toInt() ?? 0,
-      effectAuraPeriod2: (json['EffectAuraPeriod2'] as num?)?.toInt() ?? 0,
+      effectBasePoints0: json['EffectBasePoints0'] == true
+          ? 1
+          : json['EffectBasePoints0'] == false
+          ? 0
+          : (json['EffectBasePoints0'] as num?)?.toInt() ?? 0,
+      effectBasePoints1: json['EffectBasePoints1'] == true
+          ? 1
+          : json['EffectBasePoints1'] == false
+          ? 0
+          : (json['EffectBasePoints1'] as num?)?.toInt() ?? 0,
+      effectBasePoints2: json['EffectBasePoints2'] == true
+          ? 1
+          : json['EffectBasePoints2'] == false
+          ? 0
+          : (json['EffectBasePoints2'] as num?)?.toInt() ?? 0,
+      effectMechanic0: json['EffectMechanic0'] == true
+          ? 1
+          : json['EffectMechanic0'] == false
+          ? 0
+          : (json['EffectMechanic0'] as num?)?.toInt() ?? 0,
+      effectMechanic1: json['EffectMechanic1'] == true
+          ? 1
+          : json['EffectMechanic1'] == false
+          ? 0
+          : (json['EffectMechanic1'] as num?)?.toInt() ?? 0,
+      effectMechanic2: json['EffectMechanic2'] == true
+          ? 1
+          : json['EffectMechanic2'] == false
+          ? 0
+          : (json['EffectMechanic2'] as num?)?.toInt() ?? 0,
+      implicitTargetA0: json['ImplicitTargetA0'] == true
+          ? 1
+          : json['ImplicitTargetA0'] == false
+          ? 0
+          : (json['ImplicitTargetA0'] as num?)?.toInt() ?? 0,
+      implicitTargetA1: json['ImplicitTargetA1'] == true
+          ? 1
+          : json['ImplicitTargetA1'] == false
+          ? 0
+          : (json['ImplicitTargetA1'] as num?)?.toInt() ?? 0,
+      implicitTargetA2: json['ImplicitTargetA2'] == true
+          ? 1
+          : json['ImplicitTargetA2'] == false
+          ? 0
+          : (json['ImplicitTargetA2'] as num?)?.toInt() ?? 0,
+      implicitTargetB0: json['ImplicitTargetB0'] == true
+          ? 1
+          : json['ImplicitTargetB0'] == false
+          ? 0
+          : (json['ImplicitTargetB0'] as num?)?.toInt() ?? 0,
+      implicitTargetB1: json['ImplicitTargetB1'] == true
+          ? 1
+          : json['ImplicitTargetB1'] == false
+          ? 0
+          : (json['ImplicitTargetB1'] as num?)?.toInt() ?? 0,
+      implicitTargetB2: json['ImplicitTargetB2'] == true
+          ? 1
+          : json['ImplicitTargetB2'] == false
+          ? 0
+          : (json['ImplicitTargetB2'] as num?)?.toInt() ?? 0,
+      effectRadiusIndex0: json['EffectRadiusIndex0'] == true
+          ? 1
+          : json['EffectRadiusIndex0'] == false
+          ? 0
+          : (json['EffectRadiusIndex0'] as num?)?.toInt() ?? 0,
+      effectRadiusIndex1: json['EffectRadiusIndex1'] == true
+          ? 1
+          : json['EffectRadiusIndex1'] == false
+          ? 0
+          : (json['EffectRadiusIndex1'] as num?)?.toInt() ?? 0,
+      effectRadiusIndex2: json['EffectRadiusIndex2'] == true
+          ? 1
+          : json['EffectRadiusIndex2'] == false
+          ? 0
+          : (json['EffectRadiusIndex2'] as num?)?.toInt() ?? 0,
+      effectAura0: json['EffectAura0'] == true
+          ? 1
+          : json['EffectAura0'] == false
+          ? 0
+          : (json['EffectAura0'] as num?)?.toInt() ?? 0,
+      effectAura1: json['EffectAura1'] == true
+          ? 1
+          : json['EffectAura1'] == false
+          ? 0
+          : (json['EffectAura1'] as num?)?.toInt() ?? 0,
+      effectAura2: json['EffectAura2'] == true
+          ? 1
+          : json['EffectAura2'] == false
+          ? 0
+          : (json['EffectAura2'] as num?)?.toInt() ?? 0,
+      effectAuraPeriod0: json['EffectAuraPeriod0'] == true
+          ? 1
+          : json['EffectAuraPeriod0'] == false
+          ? 0
+          : (json['EffectAuraPeriod0'] as num?)?.toInt() ?? 0,
+      effectAuraPeriod1: json['EffectAuraPeriod1'] == true
+          ? 1
+          : json['EffectAuraPeriod1'] == false
+          ? 0
+          : (json['EffectAuraPeriod1'] as num?)?.toInt() ?? 0,
+      effectAuraPeriod2: json['EffectAuraPeriod2'] == true
+          ? 1
+          : json['EffectAuraPeriod2'] == false
+          ? 0
+          : (json['EffectAuraPeriod2'] as num?)?.toInt() ?? 0,
       effectAmplitude0: (json['EffectAmplitude0'] as num?)?.toDouble() ?? 0.0,
       effectAmplitude1: (json['EffectAmplitude1'] as num?)?.toDouble() ?? 0.0,
       effectAmplitude2: (json['EffectAmplitude2'] as num?)?.toDouble() ?? 0.0,
-      effectChainTargets0: (json['EffectChainTargets0'] as num?)?.toInt() ?? 0,
-      effectChainTargets1: (json['EffectChainTargets1'] as num?)?.toInt() ?? 0,
-      effectChainTargets2: (json['EffectChainTargets2'] as num?)?.toInt() ?? 0,
-      effectItemType0: (json['EffectItemType0'] as num?)?.toInt() ?? 0,
-      effectItemType1: (json['EffectItemType1'] as num?)?.toInt() ?? 0,
-      effectItemType2: (json['EffectItemType2'] as num?)?.toInt() ?? 0,
-      effectMiscValue0: (json['EffectMiscValue0'] as num?)?.toInt() ?? 0,
-      effectMiscValue1: (json['EffectMiscValue1'] as num?)?.toInt() ?? 0,
-      effectMiscValue2: (json['EffectMiscValue2'] as num?)?.toInt() ?? 0,
-      effectMiscValueB0: (json['EffectMiscValueB0'] as num?)?.toInt() ?? 0,
-      effectMiscValueB1: (json['EffectMiscValueB1'] as num?)?.toInt() ?? 0,
-      effectMiscValueB2: (json['EffectMiscValueB2'] as num?)?.toInt() ?? 0,
-      effectTriggerSpell0: (json['EffectTriggerSpell0'] as num?)?.toInt() ?? 0,
-      effectTriggerSpell1: (json['EffectTriggerSpell1'] as num?)?.toInt() ?? 0,
-      effectTriggerSpell2: (json['EffectTriggerSpell2'] as num?)?.toInt() ?? 0,
+      effectChainTargets0: json['EffectChainTargets0'] == true
+          ? 1
+          : json['EffectChainTargets0'] == false
+          ? 0
+          : (json['EffectChainTargets0'] as num?)?.toInt() ?? 0,
+      effectChainTargets1: json['EffectChainTargets1'] == true
+          ? 1
+          : json['EffectChainTargets1'] == false
+          ? 0
+          : (json['EffectChainTargets1'] as num?)?.toInt() ?? 0,
+      effectChainTargets2: json['EffectChainTargets2'] == true
+          ? 1
+          : json['EffectChainTargets2'] == false
+          ? 0
+          : (json['EffectChainTargets2'] as num?)?.toInt() ?? 0,
+      effectItemType0: json['EffectItemType0'] == true
+          ? 1
+          : json['EffectItemType0'] == false
+          ? 0
+          : (json['EffectItemType0'] as num?)?.toInt() ?? 0,
+      effectItemType1: json['EffectItemType1'] == true
+          ? 1
+          : json['EffectItemType1'] == false
+          ? 0
+          : (json['EffectItemType1'] as num?)?.toInt() ?? 0,
+      effectItemType2: json['EffectItemType2'] == true
+          ? 1
+          : json['EffectItemType2'] == false
+          ? 0
+          : (json['EffectItemType2'] as num?)?.toInt() ?? 0,
+      effectMiscValue0: json['EffectMiscValue0'] == true
+          ? 1
+          : json['EffectMiscValue0'] == false
+          ? 0
+          : (json['EffectMiscValue0'] as num?)?.toInt() ?? 0,
+      effectMiscValue1: json['EffectMiscValue1'] == true
+          ? 1
+          : json['EffectMiscValue1'] == false
+          ? 0
+          : (json['EffectMiscValue1'] as num?)?.toInt() ?? 0,
+      effectMiscValue2: json['EffectMiscValue2'] == true
+          ? 1
+          : json['EffectMiscValue2'] == false
+          ? 0
+          : (json['EffectMiscValue2'] as num?)?.toInt() ?? 0,
+      effectMiscValueB0: json['EffectMiscValueB0'] == true
+          ? 1
+          : json['EffectMiscValueB0'] == false
+          ? 0
+          : (json['EffectMiscValueB0'] as num?)?.toInt() ?? 0,
+      effectMiscValueB1: json['EffectMiscValueB1'] == true
+          ? 1
+          : json['EffectMiscValueB1'] == false
+          ? 0
+          : (json['EffectMiscValueB1'] as num?)?.toInt() ?? 0,
+      effectMiscValueB2: json['EffectMiscValueB2'] == true
+          ? 1
+          : json['EffectMiscValueB2'] == false
+          ? 0
+          : (json['EffectMiscValueB2'] as num?)?.toInt() ?? 0,
+      effectTriggerSpell0: json['EffectTriggerSpell0'] == true
+          ? 1
+          : json['EffectTriggerSpell0'] == false
+          ? 0
+          : (json['EffectTriggerSpell0'] as num?)?.toInt() ?? 0,
+      effectTriggerSpell1: json['EffectTriggerSpell1'] == true
+          ? 1
+          : json['EffectTriggerSpell1'] == false
+          ? 0
+          : (json['EffectTriggerSpell1'] as num?)?.toInt() ?? 0,
+      effectTriggerSpell2: json['EffectTriggerSpell2'] == true
+          ? 1
+          : json['EffectTriggerSpell2'] == false
+          ? 0
+          : (json['EffectTriggerSpell2'] as num?)?.toInt() ?? 0,
       effectPointsPerCombo0:
           (json['EffectPointsPerCombo0'] as num?)?.toDouble() ?? 0.0,
       effectPointsPerCombo1:
           (json['EffectPointsPerCombo1'] as num?)?.toDouble() ?? 0.0,
       effectPointsPerCombo2:
           (json['EffectPointsPerCombo2'] as num?)?.toDouble() ?? 0.0,
-      effectSpellClassMaskA0:
-          (json['EffectSpellClassMaskA0'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskA1:
-          (json['EffectSpellClassMaskA1'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskA2:
-          (json['EffectSpellClassMaskA2'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskB0:
-          (json['EffectSpellClassMaskB0'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskB1:
-          (json['EffectSpellClassMaskB1'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskB2:
-          (json['EffectSpellClassMaskB2'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskC0:
-          (json['EffectSpellClassMaskC0'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskC1:
-          (json['EffectSpellClassMaskC1'] as num?)?.toInt() ?? 0,
-      effectSpellClassMaskC2:
-          (json['EffectSpellClassMaskC2'] as num?)?.toInt() ?? 0,
-      spellVisualID0: (json['SpellVisualID0'] as num?)?.toInt() ?? 0,
-      spellVisualID1: (json['SpellVisualID1'] as num?)?.toInt() ?? 0,
-      spellIconID: (json['SpellIconID'] as num?)?.toInt() ?? 0,
-      activeIconID: (json['ActiveIconID'] as num?)?.toInt() ?? 0,
-      spellPriority: (json['SpellPriority'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskA0: json['EffectSpellClassMaskA0'] == true
+          ? 1
+          : json['EffectSpellClassMaskA0'] == false
+          ? 0
+          : (json['EffectSpellClassMaskA0'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskA1: json['EffectSpellClassMaskA1'] == true
+          ? 1
+          : json['EffectSpellClassMaskA1'] == false
+          ? 0
+          : (json['EffectSpellClassMaskA1'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskA2: json['EffectSpellClassMaskA2'] == true
+          ? 1
+          : json['EffectSpellClassMaskA2'] == false
+          ? 0
+          : (json['EffectSpellClassMaskA2'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskB0: json['EffectSpellClassMaskB0'] == true
+          ? 1
+          : json['EffectSpellClassMaskB0'] == false
+          ? 0
+          : (json['EffectSpellClassMaskB0'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskB1: json['EffectSpellClassMaskB1'] == true
+          ? 1
+          : json['EffectSpellClassMaskB1'] == false
+          ? 0
+          : (json['EffectSpellClassMaskB1'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskB2: json['EffectSpellClassMaskB2'] == true
+          ? 1
+          : json['EffectSpellClassMaskB2'] == false
+          ? 0
+          : (json['EffectSpellClassMaskB2'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskC0: json['EffectSpellClassMaskC0'] == true
+          ? 1
+          : json['EffectSpellClassMaskC0'] == false
+          ? 0
+          : (json['EffectSpellClassMaskC0'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskC1: json['EffectSpellClassMaskC1'] == true
+          ? 1
+          : json['EffectSpellClassMaskC1'] == false
+          ? 0
+          : (json['EffectSpellClassMaskC1'] as num?)?.toInt() ?? 0,
+      effectSpellClassMaskC2: json['EffectSpellClassMaskC2'] == true
+          ? 1
+          : json['EffectSpellClassMaskC2'] == false
+          ? 0
+          : (json['EffectSpellClassMaskC2'] as num?)?.toInt() ?? 0,
+      spellVisualID0: json['SpellVisualID0'] == true
+          ? 1
+          : json['SpellVisualID0'] == false
+          ? 0
+          : (json['SpellVisualID0'] as num?)?.toInt() ?? 0,
+      spellVisualID1: json['SpellVisualID1'] == true
+          ? 1
+          : json['SpellVisualID1'] == false
+          ? 0
+          : (json['SpellVisualID1'] as num?)?.toInt() ?? 0,
+      spellIconID: json['SpellIconID'] == true
+          ? 1
+          : json['SpellIconID'] == false
+          ? 0
+          : (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      activeIconID: json['ActiveIconID'] == true
+          ? 1
+          : json['ActiveIconID'] == false
+          ? 0
+          : (json['ActiveIconID'] as num?)?.toInt() ?? 0,
+      spellPriority: json['SpellPriority'] == true
+          ? 1
+          : json['SpellPriority'] == false
+          ? 0
+          : (json['SpellPriority'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -1759,7 +2249,11 @@ mixin _SpellEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
       nameSubtextLangEnUS: json['NameSubtext_lang_enUS']?.toString() ?? '',
       nameSubtextLangKoKR: json['NameSubtext_lang_koKR']?.toString() ?? '',
       nameSubtextLangFrFR: json['NameSubtext_lang_frFR']?.toString() ?? '',
@@ -1776,8 +2270,11 @@ mixin _SpellEntityMixin {
       nameSubtextLangUnk1: json['NameSubtext_lang_unk1']?.toString() ?? '',
       nameSubtextLangUnk2: json['NameSubtext_lang_unk2']?.toString() ?? '',
       nameSubtextLangUnk3: json['NameSubtext_lang_unk3']?.toString() ?? '',
-      nameSubtextLangFlags:
-          (json['NameSubtext_lang_Flags'] as num?)?.toInt() ?? 0,
+      nameSubtextLangFlags: json['NameSubtext_lang_Flags'] == true
+          ? 1
+          : json['NameSubtext_lang_Flags'] == false
+          ? 0
+          : (json['NameSubtext_lang_Flags'] as num?)?.toInt() ?? 0,
       descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
       descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
       descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
@@ -1794,8 +2291,11 @@ mixin _SpellEntityMixin {
       descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
       descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
       descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      descriptionLangFlags: json['Description_lang_Flags'] == true
+          ? 1
+          : json['Description_lang_Flags'] == false
+          ? 0
+          : (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
       auraDescriptionLangEnUS:
           json['AuraDescription_lang_enUS']?.toString() ?? '',
       auraDescriptionLangKoKR:
@@ -1828,48 +2328,143 @@ mixin _SpellEntityMixin {
           json['AuraDescription_lang_unk2']?.toString() ?? '',
       auraDescriptionLangUnk3:
           json['AuraDescription_lang_unk3']?.toString() ?? '',
-      auraDescriptionLangFlags:
-          (json['AuraDescription_lang_Flags'] as num?)?.toInt() ?? 0,
-      manaCostPct: (json['ManaCostPct'] as num?)?.toInt() ?? 0,
-      startRecoveryCategory:
-          (json['StartRecoveryCategory'] as num?)?.toInt() ?? 0,
-      startRecoveryTime: (json['StartRecoveryTime'] as num?)?.toInt() ?? 0,
-      maxTargetLevel: (json['MaxTargetLevel'] as num?)?.toInt() ?? 0,
-      spellClassSet: (json['SpellClassSet'] as num?)?.toInt() ?? 0,
-      spellClassMask0: (json['SpellClassMask0'] as num?)?.toInt() ?? 0,
-      spellClassMask1: (json['SpellClassMask1'] as num?)?.toInt() ?? 0,
-      spellClassMask2: (json['SpellClassMask2'] as num?)?.toInt() ?? 0,
-      maxTargets: (json['MaxTargets'] as num?)?.toInt() ?? 0,
-      defenseType: (json['DefenseType'] as num?)?.toInt() ?? 0,
-      preventionType: (json['PreventionType'] as num?)?.toInt() ?? 0,
-      stanceBarOrder: (json['StanceBarOrder'] as num?)?.toInt() ?? 0,
+      auraDescriptionLangFlags: json['AuraDescription_lang_Flags'] == true
+          ? 1
+          : json['AuraDescription_lang_Flags'] == false
+          ? 0
+          : (json['AuraDescription_lang_Flags'] as num?)?.toInt() ?? 0,
+      manaCostPct: json['ManaCostPct'] == true
+          ? 1
+          : json['ManaCostPct'] == false
+          ? 0
+          : (json['ManaCostPct'] as num?)?.toInt() ?? 0,
+      startRecoveryCategory: json['StartRecoveryCategory'] == true
+          ? 1
+          : json['StartRecoveryCategory'] == false
+          ? 0
+          : (json['StartRecoveryCategory'] as num?)?.toInt() ?? 0,
+      startRecoveryTime: json['StartRecoveryTime'] == true
+          ? 1
+          : json['StartRecoveryTime'] == false
+          ? 0
+          : (json['StartRecoveryTime'] as num?)?.toInt() ?? 0,
+      maxTargetLevel: json['MaxTargetLevel'] == true
+          ? 1
+          : json['MaxTargetLevel'] == false
+          ? 0
+          : (json['MaxTargetLevel'] as num?)?.toInt() ?? 0,
+      spellClassSet: json['SpellClassSet'] == true
+          ? 1
+          : json['SpellClassSet'] == false
+          ? 0
+          : (json['SpellClassSet'] as num?)?.toInt() ?? 0,
+      spellClassMask0: json['SpellClassMask0'] == true
+          ? 1
+          : json['SpellClassMask0'] == false
+          ? 0
+          : (json['SpellClassMask0'] as num?)?.toInt() ?? 0,
+      spellClassMask1: json['SpellClassMask1'] == true
+          ? 1
+          : json['SpellClassMask1'] == false
+          ? 0
+          : (json['SpellClassMask1'] as num?)?.toInt() ?? 0,
+      spellClassMask2: json['SpellClassMask2'] == true
+          ? 1
+          : json['SpellClassMask2'] == false
+          ? 0
+          : (json['SpellClassMask2'] as num?)?.toInt() ?? 0,
+      maxTargets: json['MaxTargets'] == true
+          ? 1
+          : json['MaxTargets'] == false
+          ? 0
+          : (json['MaxTargets'] as num?)?.toInt() ?? 0,
+      defenseType: json['DefenseType'] == true
+          ? 1
+          : json['DefenseType'] == false
+          ? 0
+          : (json['DefenseType'] as num?)?.toInt() ?? 0,
+      preventionType: json['PreventionType'] == true
+          ? 1
+          : json['PreventionType'] == false
+          ? 0
+          : (json['PreventionType'] as num?)?.toInt() ?? 0,
+      stanceBarOrder: json['StanceBarOrder'] == true
+          ? 1
+          : json['StanceBarOrder'] == false
+          ? 0
+          : (json['StanceBarOrder'] as num?)?.toInt() ?? 0,
       effectChainAmplitude0:
           (json['EffectChainAmplitude0'] as num?)?.toDouble() ?? 0.0,
       effectChainAmplitude1:
           (json['EffectChainAmplitude1'] as num?)?.toDouble() ?? 0.0,
       effectChainAmplitude2:
           (json['EffectChainAmplitude2'] as num?)?.toDouble() ?? 0.0,
-      minFactionID: (json['MinFactionID'] as num?)?.toInt() ?? 0,
-      minReputation: (json['MinReputation'] as num?)?.toInt() ?? 0,
-      requiredAuraVision: (json['RequiredAuraVision'] as num?)?.toInt() ?? 0,
-      requiredTotemCategoryID0:
-          (json['RequiredTotemCategoryID0'] as num?)?.toInt() ?? 0,
-      requiredTotemCategoryID1:
-          (json['RequiredTotemCategoryID1'] as num?)?.toInt() ?? 0,
-      requiredAreasID: (json['RequiredAreasID'] as num?)?.toInt() ?? 0,
-      schoolMask: (json['SchoolMask'] as num?)?.toInt() ?? 0,
-      runeCostID: (json['RuneCostID'] as num?)?.toInt() ?? 0,
-      spellMissileID: (json['SpellMissileID'] as num?)?.toInt() ?? 0,
-      powerDisplayID: (json['PowerDisplayID'] as num?)?.toInt() ?? 0,
+      minFactionID: json['MinFactionID'] == true
+          ? 1
+          : json['MinFactionID'] == false
+          ? 0
+          : (json['MinFactionID'] as num?)?.toInt() ?? 0,
+      minReputation: json['MinReputation'] == true
+          ? 1
+          : json['MinReputation'] == false
+          ? 0
+          : (json['MinReputation'] as num?)?.toInt() ?? 0,
+      requiredAuraVision: json['RequiredAuraVision'] == true
+          ? 1
+          : json['RequiredAuraVision'] == false
+          ? 0
+          : (json['RequiredAuraVision'] as num?)?.toInt() ?? 0,
+      requiredTotemCategoryID0: json['RequiredTotemCategoryID0'] == true
+          ? 1
+          : json['RequiredTotemCategoryID0'] == false
+          ? 0
+          : (json['RequiredTotemCategoryID0'] as num?)?.toInt() ?? 0,
+      requiredTotemCategoryID1: json['RequiredTotemCategoryID1'] == true
+          ? 1
+          : json['RequiredTotemCategoryID1'] == false
+          ? 0
+          : (json['RequiredTotemCategoryID1'] as num?)?.toInt() ?? 0,
+      requiredAreasID: json['RequiredAreasID'] == true
+          ? 1
+          : json['RequiredAreasID'] == false
+          ? 0
+          : (json['RequiredAreasID'] as num?)?.toInt() ?? 0,
+      schoolMask: json['SchoolMask'] == true
+          ? 1
+          : json['SchoolMask'] == false
+          ? 0
+          : (json['SchoolMask'] as num?)?.toInt() ?? 0,
+      runeCostID: json['RuneCostID'] == true
+          ? 1
+          : json['RuneCostID'] == false
+          ? 0
+          : (json['RuneCostID'] as num?)?.toInt() ?? 0,
+      spellMissileID: json['SpellMissileID'] == true
+          ? 1
+          : json['SpellMissileID'] == false
+          ? 0
+          : (json['SpellMissileID'] as num?)?.toInt() ?? 0,
+      powerDisplayID: json['PowerDisplayID'] == true
+          ? 1
+          : json['PowerDisplayID'] == false
+          ? 0
+          : (json['PowerDisplayID'] as num?)?.toInt() ?? 0,
       effectBonusCoefficient0:
           (json['EffectBonusCoefficient0'] as num?)?.toDouble() ?? 0.0,
       effectBonusCoefficient1:
           (json['EffectBonusCoefficient1'] as num?)?.toDouble() ?? 0.0,
       effectBonusCoefficient2:
           (json['EffectBonusCoefficient2'] as num?)?.toDouble() ?? 0.0,
-      spellDescriptionVariableID:
-          (json['DescriptionVariablesID'] as num?)?.toInt() ?? 0,
-      spellDifficultyID: (json['Difficulty'] as num?)?.toInt() ?? 0,
+      spellDescriptionVariableID: json['DescriptionVariablesID'] == true
+          ? 1
+          : json['DescriptionVariablesID'] == false
+          ? 0
+          : (json['DescriptionVariablesID'] as num?)?.toInt() ?? 0,
+      spellDifficultyID: json['Difficulty'] == true
+          ? 1
+          : json['Difficulty'] == false
+          ? 0
+          : (json['Difficulty'] as num?)?.toInt() ?? 0,
     );
   }
 }

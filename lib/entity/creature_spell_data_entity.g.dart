@@ -27,11 +27,31 @@ final class BriefCreatureSpellDataEntity {
 
   factory BriefCreatureSpellDataEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureSpellDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      spells0: (json['Spells0'] as num?)?.toInt() ?? 0,
-      spells1: (json['Spells1'] as num?)?.toInt() ?? 0,
-      spells2: (json['Spells2'] as num?)?.toInt() ?? 0,
-      spells3: (json['Spells3'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      spells0: json['Spells0'] == true
+          ? 1
+          : json['Spells0'] == false
+          ? 0
+          : (json['Spells0'] as num?)?.toInt() ?? 0,
+      spells1: json['Spells1'] == true
+          ? 1
+          : json['Spells1'] == false
+          ? 0
+          : (json['Spells1'] as num?)?.toInt() ?? 0,
+      spells2: json['Spells2'] == true
+          ? 1
+          : json['Spells2'] == false
+          ? 0
+          : (json['Spells2'] as num?)?.toInt() ?? 0,
+      spells3: json['Spells3'] == true
+          ? 1
+          : json['Spells3'] == false
+          ? 0
+          : (json['Spells3'] as num?)?.toInt() ?? 0,
       spellName1: json['spellName1']?.toString() ?? '',
       spellName2: json['spellName2']?.toString() ?? '',
       spellName3: json['spellName3']?.toString() ?? '',
@@ -178,15 +198,51 @@ mixin _CreatureSpellDataEntityMixin {
 
   static CreatureSpellDataEntity fromJson(Map<String, dynamic> json) {
     return CreatureSpellDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      spells0: (json['Spells0'] as num?)?.toInt() ?? 0,
-      spells1: (json['Spells1'] as num?)?.toInt() ?? 0,
-      spells2: (json['Spells2'] as num?)?.toInt() ?? 0,
-      spells3: (json['Spells3'] as num?)?.toInt() ?? 0,
-      availability0: (json['Availability0'] as num?)?.toInt() ?? 0,
-      availability1: (json['Availability1'] as num?)?.toInt() ?? 0,
-      availability2: (json['Availability2'] as num?)?.toInt() ?? 0,
-      availability3: (json['Availability3'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      spells0: json['Spells0'] == true
+          ? 1
+          : json['Spells0'] == false
+          ? 0
+          : (json['Spells0'] as num?)?.toInt() ?? 0,
+      spells1: json['Spells1'] == true
+          ? 1
+          : json['Spells1'] == false
+          ? 0
+          : (json['Spells1'] as num?)?.toInt() ?? 0,
+      spells2: json['Spells2'] == true
+          ? 1
+          : json['Spells2'] == false
+          ? 0
+          : (json['Spells2'] as num?)?.toInt() ?? 0,
+      spells3: json['Spells3'] == true
+          ? 1
+          : json['Spells3'] == false
+          ? 0
+          : (json['Spells3'] as num?)?.toInt() ?? 0,
+      availability0: json['Availability0'] == true
+          ? 1
+          : json['Availability0'] == false
+          ? 0
+          : (json['Availability0'] as num?)?.toInt() ?? 0,
+      availability1: json['Availability1'] == true
+          ? 1
+          : json['Availability1'] == false
+          ? 0
+          : (json['Availability1'] as num?)?.toInt() ?? 0,
+      availability2: json['Availability2'] == true
+          ? 1
+          : json['Availability2'] == false
+          ? 0
+          : (json['Availability2'] as num?)?.toInt() ?? 0,
+      availability3: json['Availability3'] == true
+          ? 1
+          : json['Availability3'] == false
+          ? 0
+          : (json['Availability3'] as num?)?.toInt() ?? 0,
     );
   }
 }

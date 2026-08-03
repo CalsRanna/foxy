@@ -36,7 +36,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.id.isNotEmpty) {
-        builder = builder.where('ID', filter.id);
+        builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
       }
       if (filter != null && filter.text.isNotEmpty) {
         builder = builder.where('Text', '%${escapeLike(filter.text)}%', comparator: 'like');
@@ -94,7 +94,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('pt.ID', filter.id);
+      builder = builder.where('pt.ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.text.isNotEmpty) {
       if (localeEnabled) {

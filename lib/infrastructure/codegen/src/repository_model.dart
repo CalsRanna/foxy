@@ -18,6 +18,12 @@ final class RepositoryGenerationModel {
 
   /// 关联键字段列表(声明 `linkKey:` 的子表仓库);空 = 主表形态。
   final List<RepositoryKeyFieldModel> linkKeyFields;
+
+  /// `autoIncrementKey:` 声明的字段(dart 名);null = 未声明。
+  final String? autoIncrementKey;
+
+  /// `autoIncrementScope:` 声明的作用域字段(dart 名列表)。
+  final List<String> autoIncrementScope;
   final bool queryLayerEnabled;
   final String repositoryClassName;
   final String table;
@@ -32,6 +38,8 @@ final class RepositoryGenerationModel {
     required this.mixinName,
     required this.briefProjectionColumns,
     required this.linkKeyFields,
+    required this.autoIncrementKey,
+    required this.autoIncrementScope,
     required this.queryLayerEnabled,
     required this.repositoryClassName,
     required this.table,

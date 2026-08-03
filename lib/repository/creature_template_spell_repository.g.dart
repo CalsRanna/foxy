@@ -96,7 +96,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
         index: await nextMaxPlusOne(
           'creature_template_spell',
           '`Index`',
-          where: {'CreatureID': creatureTemplateSpell.creatureID},
+          where: {'`CreatureID`': creatureTemplateSpell.creatureID},
         ),
       );
       try {

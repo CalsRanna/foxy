@@ -15,8 +15,16 @@ final class BriefSkillLineEntity {
 
   factory BriefSkillLineEntity.fromJson(Map<String, dynamic> json) {
     return BriefSkillLineEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      categoryId: json['CategoryID'] == true
+          ? 1
+          : json['CategoryID'] == false
+          ? 0
+          : (json['CategoryID'] as num?)?.toInt() ?? 0,
       displayNameZhCN: json['displayNameZhCN']?.toString() ?? '',
     );
   }
@@ -437,9 +445,21 @@ mixin _SkillLineEntityMixin {
 
   static SkillLineEntity fromJson(Map<String, dynamic> json) {
     return SkillLineEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
-      skillCostsId: (json['SkillCostsID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      categoryId: json['CategoryID'] == true
+          ? 1
+          : json['CategoryID'] == false
+          ? 0
+          : (json['CategoryID'] as num?)?.toInt() ?? 0,
+      skillCostsId: json['SkillCostsID'] == true
+          ? 1
+          : json['SkillCostsID'] == false
+          ? 0
+          : (json['SkillCostsID'] as num?)?.toInt() ?? 0,
       displayNameLangEnUS: json['DisplayName_lang_enUS']?.toString() ?? '',
       displayNameLangKoKR: json['DisplayName_lang_koKR']?.toString() ?? '',
       displayNameLangFrFR: json['DisplayName_lang_frFR']?.toString() ?? '',
@@ -456,8 +476,11 @@ mixin _SkillLineEntityMixin {
       displayNameLangUnk1: json['DisplayName_lang_unk1']?.toString() ?? '',
       displayNameLangUnk2: json['DisplayName_lang_unk2']?.toString() ?? '',
       displayNameLangUnk3: json['DisplayName_lang_unk3']?.toString() ?? '',
-      displayNameLangFlags:
-          (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
+      displayNameLangFlags: json['DisplayName_lang_Flags'] == true
+          ? 1
+          : json['DisplayName_lang_Flags'] == false
+          ? 0
+          : (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
       descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
       descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
       descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
@@ -474,9 +497,16 @@ mixin _SkillLineEntityMixin {
       descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
       descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
       descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
-      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      descriptionLangFlags: json['Description_lang_Flags'] == true
+          ? 1
+          : json['Description_lang_Flags'] == false
+          ? 0
+          : (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      spellIconId: json['SpellIconID'] == true
+          ? 1
+          : json['SpellIconID'] == false
+          ? 0
+          : (json['SpellIconID'] as num?)?.toInt() ?? 0,
       alternateVerbLangEnUS: json['AlternateVerb_lang_enUS']?.toString() ?? '',
       alternateVerbLangKoKR: json['AlternateVerb_lang_koKR']?.toString() ?? '',
       alternateVerbLangFrFR: json['AlternateVerb_lang_frFR']?.toString() ?? '',
@@ -493,9 +523,16 @@ mixin _SkillLineEntityMixin {
       alternateVerbLangUnk1: json['AlternateVerb_lang_unk1']?.toString() ?? '',
       alternateVerbLangUnk2: json['AlternateVerb_lang_unk2']?.toString() ?? '',
       alternateVerbLangUnk3: json['AlternateVerb_lang_unk3']?.toString() ?? '',
-      alternateVerbLangFlags:
-          (json['AlternateVerb_lang_Flags'] as num?)?.toInt() ?? 0,
-      canLink: (json['CanLink'] as num?)?.toInt() ?? 0,
+      alternateVerbLangFlags: json['AlternateVerb_lang_Flags'] == true
+          ? 1
+          : json['AlternateVerb_lang_Flags'] == false
+          ? 0
+          : (json['AlternateVerb_lang_Flags'] as num?)?.toInt() ?? 0,
+      canLink: json['CanLink'] == true
+          ? 1
+          : json['CanLink'] == false
+          ? 0
+          : (json['CanLink'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -11,7 +11,11 @@ final class BriefNpcTextEntity {
 
   factory BriefNpcTextEntity.fromJson(Map<String, dynamic> json) {
     return BriefNpcTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       text0: json['text0']?.toString() ?? '',
       text1: json['text1']?.toString() ?? '',
     );
@@ -620,96 +624,360 @@ mixin _NpcTextEntityMixin {
 
   static NpcTextEntity fromJson(Map<String, dynamic> json) {
     return NpcTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       text00: json['text0_0']?.toString() ?? '',
       text01: json['text0_1']?.toString() ?? '',
-      broadcastTextId0: (json['BroadcastTextID0'] as num?)?.toInt() ?? 0,
-      lang0: (json['lang0'] as num?)?.toInt() ?? 0,
+      broadcastTextId0: json['BroadcastTextID0'] == true
+          ? 1
+          : json['BroadcastTextID0'] == false
+          ? 0
+          : (json['BroadcastTextID0'] as num?)?.toInt() ?? 0,
+      lang0: json['lang0'] == true
+          ? 1
+          : json['lang0'] == false
+          ? 0
+          : (json['lang0'] as num?)?.toInt() ?? 0,
       probability0: (json['Probability0'] as num?)?.toDouble() ?? 0.0,
-      em00: (json['em0_0'] as num?)?.toInt() ?? 0,
-      em01: (json['em0_1'] as num?)?.toInt() ?? 0,
-      em02: (json['em0_2'] as num?)?.toInt() ?? 0,
-      em03: (json['em0_3'] as num?)?.toInt() ?? 0,
-      em04: (json['em0_4'] as num?)?.toInt() ?? 0,
-      em05: (json['em0_5'] as num?)?.toInt() ?? 0,
+      em00: json['em0_0'] == true
+          ? 1
+          : json['em0_0'] == false
+          ? 0
+          : (json['em0_0'] as num?)?.toInt() ?? 0,
+      em01: json['em0_1'] == true
+          ? 1
+          : json['em0_1'] == false
+          ? 0
+          : (json['em0_1'] as num?)?.toInt() ?? 0,
+      em02: json['em0_2'] == true
+          ? 1
+          : json['em0_2'] == false
+          ? 0
+          : (json['em0_2'] as num?)?.toInt() ?? 0,
+      em03: json['em0_3'] == true
+          ? 1
+          : json['em0_3'] == false
+          ? 0
+          : (json['em0_3'] as num?)?.toInt() ?? 0,
+      em04: json['em0_4'] == true
+          ? 1
+          : json['em0_4'] == false
+          ? 0
+          : (json['em0_4'] as num?)?.toInt() ?? 0,
+      em05: json['em0_5'] == true
+          ? 1
+          : json['em0_5'] == false
+          ? 0
+          : (json['em0_5'] as num?)?.toInt() ?? 0,
       text10: json['text1_0']?.toString() ?? '',
       text11: json['text1_1']?.toString() ?? '',
-      broadcastTextId1: (json['BroadcastTextID1'] as num?)?.toInt() ?? 0,
-      lang1: (json['lang1'] as num?)?.toInt() ?? 0,
+      broadcastTextId1: json['BroadcastTextID1'] == true
+          ? 1
+          : json['BroadcastTextID1'] == false
+          ? 0
+          : (json['BroadcastTextID1'] as num?)?.toInt() ?? 0,
+      lang1: json['lang1'] == true
+          ? 1
+          : json['lang1'] == false
+          ? 0
+          : (json['lang1'] as num?)?.toInt() ?? 0,
       probability1: (json['Probability1'] as num?)?.toDouble() ?? 0.0,
-      em10: (json['em1_0'] as num?)?.toInt() ?? 0,
-      em11: (json['em1_1'] as num?)?.toInt() ?? 0,
-      em12: (json['em1_2'] as num?)?.toInt() ?? 0,
-      em13: (json['em1_3'] as num?)?.toInt() ?? 0,
-      em14: (json['em1_4'] as num?)?.toInt() ?? 0,
-      em15: (json['em1_5'] as num?)?.toInt() ?? 0,
+      em10: json['em1_0'] == true
+          ? 1
+          : json['em1_0'] == false
+          ? 0
+          : (json['em1_0'] as num?)?.toInt() ?? 0,
+      em11: json['em1_1'] == true
+          ? 1
+          : json['em1_1'] == false
+          ? 0
+          : (json['em1_1'] as num?)?.toInt() ?? 0,
+      em12: json['em1_2'] == true
+          ? 1
+          : json['em1_2'] == false
+          ? 0
+          : (json['em1_2'] as num?)?.toInt() ?? 0,
+      em13: json['em1_3'] == true
+          ? 1
+          : json['em1_3'] == false
+          ? 0
+          : (json['em1_3'] as num?)?.toInt() ?? 0,
+      em14: json['em1_4'] == true
+          ? 1
+          : json['em1_4'] == false
+          ? 0
+          : (json['em1_4'] as num?)?.toInt() ?? 0,
+      em15: json['em1_5'] == true
+          ? 1
+          : json['em1_5'] == false
+          ? 0
+          : (json['em1_5'] as num?)?.toInt() ?? 0,
       text20: json['text2_0']?.toString() ?? '',
       text21: json['text2_1']?.toString() ?? '',
-      broadcastTextId2: (json['BroadcastTextID2'] as num?)?.toInt() ?? 0,
-      lang2: (json['lang2'] as num?)?.toInt() ?? 0,
+      broadcastTextId2: json['BroadcastTextID2'] == true
+          ? 1
+          : json['BroadcastTextID2'] == false
+          ? 0
+          : (json['BroadcastTextID2'] as num?)?.toInt() ?? 0,
+      lang2: json['lang2'] == true
+          ? 1
+          : json['lang2'] == false
+          ? 0
+          : (json['lang2'] as num?)?.toInt() ?? 0,
       probability2: (json['Probability2'] as num?)?.toDouble() ?? 0.0,
-      em20: (json['em2_0'] as num?)?.toInt() ?? 0,
-      em21: (json['em2_1'] as num?)?.toInt() ?? 0,
-      em22: (json['em2_2'] as num?)?.toInt() ?? 0,
-      em23: (json['em2_3'] as num?)?.toInt() ?? 0,
-      em24: (json['em2_4'] as num?)?.toInt() ?? 0,
-      em25: (json['em2_5'] as num?)?.toInt() ?? 0,
+      em20: json['em2_0'] == true
+          ? 1
+          : json['em2_0'] == false
+          ? 0
+          : (json['em2_0'] as num?)?.toInt() ?? 0,
+      em21: json['em2_1'] == true
+          ? 1
+          : json['em2_1'] == false
+          ? 0
+          : (json['em2_1'] as num?)?.toInt() ?? 0,
+      em22: json['em2_2'] == true
+          ? 1
+          : json['em2_2'] == false
+          ? 0
+          : (json['em2_2'] as num?)?.toInt() ?? 0,
+      em23: json['em2_3'] == true
+          ? 1
+          : json['em2_3'] == false
+          ? 0
+          : (json['em2_3'] as num?)?.toInt() ?? 0,
+      em24: json['em2_4'] == true
+          ? 1
+          : json['em2_4'] == false
+          ? 0
+          : (json['em2_4'] as num?)?.toInt() ?? 0,
+      em25: json['em2_5'] == true
+          ? 1
+          : json['em2_5'] == false
+          ? 0
+          : (json['em2_5'] as num?)?.toInt() ?? 0,
       text30: json['text3_0']?.toString() ?? '',
       text31: json['text3_1']?.toString() ?? '',
-      broadcastTextId3: (json['BroadcastTextID3'] as num?)?.toInt() ?? 0,
-      lang3: (json['lang3'] as num?)?.toInt() ?? 0,
+      broadcastTextId3: json['BroadcastTextID3'] == true
+          ? 1
+          : json['BroadcastTextID3'] == false
+          ? 0
+          : (json['BroadcastTextID3'] as num?)?.toInt() ?? 0,
+      lang3: json['lang3'] == true
+          ? 1
+          : json['lang3'] == false
+          ? 0
+          : (json['lang3'] as num?)?.toInt() ?? 0,
       probability3: (json['Probability3'] as num?)?.toDouble() ?? 0.0,
-      em30: (json['em3_0'] as num?)?.toInt() ?? 0,
-      em31: (json['em3_1'] as num?)?.toInt() ?? 0,
-      em32: (json['em3_2'] as num?)?.toInt() ?? 0,
-      em33: (json['em3_3'] as num?)?.toInt() ?? 0,
-      em34: (json['em3_4'] as num?)?.toInt() ?? 0,
-      em35: (json['em3_5'] as num?)?.toInt() ?? 0,
+      em30: json['em3_0'] == true
+          ? 1
+          : json['em3_0'] == false
+          ? 0
+          : (json['em3_0'] as num?)?.toInt() ?? 0,
+      em31: json['em3_1'] == true
+          ? 1
+          : json['em3_1'] == false
+          ? 0
+          : (json['em3_1'] as num?)?.toInt() ?? 0,
+      em32: json['em3_2'] == true
+          ? 1
+          : json['em3_2'] == false
+          ? 0
+          : (json['em3_2'] as num?)?.toInt() ?? 0,
+      em33: json['em3_3'] == true
+          ? 1
+          : json['em3_3'] == false
+          ? 0
+          : (json['em3_3'] as num?)?.toInt() ?? 0,
+      em34: json['em3_4'] == true
+          ? 1
+          : json['em3_4'] == false
+          ? 0
+          : (json['em3_4'] as num?)?.toInt() ?? 0,
+      em35: json['em3_5'] == true
+          ? 1
+          : json['em3_5'] == false
+          ? 0
+          : (json['em3_5'] as num?)?.toInt() ?? 0,
       text40: json['text4_0']?.toString() ?? '',
       text41: json['text4_1']?.toString() ?? '',
-      broadcastTextId4: (json['BroadcastTextID4'] as num?)?.toInt() ?? 0,
-      lang4: (json['lang4'] as num?)?.toInt() ?? 0,
+      broadcastTextId4: json['BroadcastTextID4'] == true
+          ? 1
+          : json['BroadcastTextID4'] == false
+          ? 0
+          : (json['BroadcastTextID4'] as num?)?.toInt() ?? 0,
+      lang4: json['lang4'] == true
+          ? 1
+          : json['lang4'] == false
+          ? 0
+          : (json['lang4'] as num?)?.toInt() ?? 0,
       probability4: (json['Probability4'] as num?)?.toDouble() ?? 0.0,
-      em40: (json['em4_0'] as num?)?.toInt() ?? 0,
-      em41: (json['em4_1'] as num?)?.toInt() ?? 0,
-      em42: (json['em4_2'] as num?)?.toInt() ?? 0,
-      em43: (json['em4_3'] as num?)?.toInt() ?? 0,
-      em44: (json['em4_4'] as num?)?.toInt() ?? 0,
-      em45: (json['em4_5'] as num?)?.toInt() ?? 0,
+      em40: json['em4_0'] == true
+          ? 1
+          : json['em4_0'] == false
+          ? 0
+          : (json['em4_0'] as num?)?.toInt() ?? 0,
+      em41: json['em4_1'] == true
+          ? 1
+          : json['em4_1'] == false
+          ? 0
+          : (json['em4_1'] as num?)?.toInt() ?? 0,
+      em42: json['em4_2'] == true
+          ? 1
+          : json['em4_2'] == false
+          ? 0
+          : (json['em4_2'] as num?)?.toInt() ?? 0,
+      em43: json['em4_3'] == true
+          ? 1
+          : json['em4_3'] == false
+          ? 0
+          : (json['em4_3'] as num?)?.toInt() ?? 0,
+      em44: json['em4_4'] == true
+          ? 1
+          : json['em4_4'] == false
+          ? 0
+          : (json['em4_4'] as num?)?.toInt() ?? 0,
+      em45: json['em4_5'] == true
+          ? 1
+          : json['em4_5'] == false
+          ? 0
+          : (json['em4_5'] as num?)?.toInt() ?? 0,
       text50: json['text5_0']?.toString() ?? '',
       text51: json['text5_1']?.toString() ?? '',
-      broadcastTextId5: (json['BroadcastTextID5'] as num?)?.toInt() ?? 0,
-      lang5: (json['lang5'] as num?)?.toInt() ?? 0,
+      broadcastTextId5: json['BroadcastTextID5'] == true
+          ? 1
+          : json['BroadcastTextID5'] == false
+          ? 0
+          : (json['BroadcastTextID5'] as num?)?.toInt() ?? 0,
+      lang5: json['lang5'] == true
+          ? 1
+          : json['lang5'] == false
+          ? 0
+          : (json['lang5'] as num?)?.toInt() ?? 0,
       probability5: (json['Probability5'] as num?)?.toDouble() ?? 0.0,
-      em50: (json['em5_0'] as num?)?.toInt() ?? 0,
-      em51: (json['em5_1'] as num?)?.toInt() ?? 0,
-      em52: (json['em5_2'] as num?)?.toInt() ?? 0,
-      em53: (json['em5_3'] as num?)?.toInt() ?? 0,
-      em54: (json['em5_4'] as num?)?.toInt() ?? 0,
-      em55: (json['em5_5'] as num?)?.toInt() ?? 0,
+      em50: json['em5_0'] == true
+          ? 1
+          : json['em5_0'] == false
+          ? 0
+          : (json['em5_0'] as num?)?.toInt() ?? 0,
+      em51: json['em5_1'] == true
+          ? 1
+          : json['em5_1'] == false
+          ? 0
+          : (json['em5_1'] as num?)?.toInt() ?? 0,
+      em52: json['em5_2'] == true
+          ? 1
+          : json['em5_2'] == false
+          ? 0
+          : (json['em5_2'] as num?)?.toInt() ?? 0,
+      em53: json['em5_3'] == true
+          ? 1
+          : json['em5_3'] == false
+          ? 0
+          : (json['em5_3'] as num?)?.toInt() ?? 0,
+      em54: json['em5_4'] == true
+          ? 1
+          : json['em5_4'] == false
+          ? 0
+          : (json['em5_4'] as num?)?.toInt() ?? 0,
+      em55: json['em5_5'] == true
+          ? 1
+          : json['em5_5'] == false
+          ? 0
+          : (json['em5_5'] as num?)?.toInt() ?? 0,
       text60: json['text6_0']?.toString() ?? '',
       text61: json['text6_1']?.toString() ?? '',
-      broadcastTextId6: (json['BroadcastTextID6'] as num?)?.toInt() ?? 0,
-      lang6: (json['lang6'] as num?)?.toInt() ?? 0,
+      broadcastTextId6: json['BroadcastTextID6'] == true
+          ? 1
+          : json['BroadcastTextID6'] == false
+          ? 0
+          : (json['BroadcastTextID6'] as num?)?.toInt() ?? 0,
+      lang6: json['lang6'] == true
+          ? 1
+          : json['lang6'] == false
+          ? 0
+          : (json['lang6'] as num?)?.toInt() ?? 0,
       probability6: (json['Probability6'] as num?)?.toDouble() ?? 0.0,
-      em60: (json['em6_0'] as num?)?.toInt() ?? 0,
-      em61: (json['em6_1'] as num?)?.toInt() ?? 0,
-      em62: (json['em6_2'] as num?)?.toInt() ?? 0,
-      em63: (json['em6_3'] as num?)?.toInt() ?? 0,
-      em64: (json['em6_4'] as num?)?.toInt() ?? 0,
-      em65: (json['em6_5'] as num?)?.toInt() ?? 0,
+      em60: json['em6_0'] == true
+          ? 1
+          : json['em6_0'] == false
+          ? 0
+          : (json['em6_0'] as num?)?.toInt() ?? 0,
+      em61: json['em6_1'] == true
+          ? 1
+          : json['em6_1'] == false
+          ? 0
+          : (json['em6_1'] as num?)?.toInt() ?? 0,
+      em62: json['em6_2'] == true
+          ? 1
+          : json['em6_2'] == false
+          ? 0
+          : (json['em6_2'] as num?)?.toInt() ?? 0,
+      em63: json['em6_3'] == true
+          ? 1
+          : json['em6_3'] == false
+          ? 0
+          : (json['em6_3'] as num?)?.toInt() ?? 0,
+      em64: json['em6_4'] == true
+          ? 1
+          : json['em6_4'] == false
+          ? 0
+          : (json['em6_4'] as num?)?.toInt() ?? 0,
+      em65: json['em6_5'] == true
+          ? 1
+          : json['em6_5'] == false
+          ? 0
+          : (json['em6_5'] as num?)?.toInt() ?? 0,
       text70: json['text7_0']?.toString() ?? '',
       text71: json['text7_1']?.toString() ?? '',
-      broadcastTextId7: (json['BroadcastTextID7'] as num?)?.toInt() ?? 0,
-      lang7: (json['lang7'] as num?)?.toInt() ?? 0,
+      broadcastTextId7: json['BroadcastTextID7'] == true
+          ? 1
+          : json['BroadcastTextID7'] == false
+          ? 0
+          : (json['BroadcastTextID7'] as num?)?.toInt() ?? 0,
+      lang7: json['lang7'] == true
+          ? 1
+          : json['lang7'] == false
+          ? 0
+          : (json['lang7'] as num?)?.toInt() ?? 0,
       probability7: (json['Probability7'] as num?)?.toDouble() ?? 0.0,
-      em70: (json['em7_0'] as num?)?.toInt() ?? 0,
-      em71: (json['em7_1'] as num?)?.toInt() ?? 0,
-      em72: (json['em7_2'] as num?)?.toInt() ?? 0,
-      em73: (json['em7_3'] as num?)?.toInt() ?? 0,
-      em74: (json['em7_4'] as num?)?.toInt() ?? 0,
-      em75: (json['em7_5'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      em70: json['em7_0'] == true
+          ? 1
+          : json['em7_0'] == false
+          ? 0
+          : (json['em7_0'] as num?)?.toInt() ?? 0,
+      em71: json['em7_1'] == true
+          ? 1
+          : json['em7_1'] == false
+          ? 0
+          : (json['em7_1'] as num?)?.toInt() ?? 0,
+      em72: json['em7_2'] == true
+          ? 1
+          : json['em7_2'] == false
+          ? 0
+          : (json['em7_2'] as num?)?.toInt() ?? 0,
+      em73: json['em7_3'] == true
+          ? 1
+          : json['em7_3'] == false
+          ? 0
+          : (json['em7_3'] as num?)?.toInt() ?? 0,
+      em74: json['em7_4'] == true
+          ? 1
+          : json['em7_4'] == false
+          ? 0
+          : (json['em7_4'] as num?)?.toInt() ?? 0,
+      em75: json['em7_5'] == true
+          ? 1
+          : json['em7_5'] == false
+          ? 0
+          : (json['em7_5'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

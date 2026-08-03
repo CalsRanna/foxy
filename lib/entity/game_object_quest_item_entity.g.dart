@@ -25,13 +25,33 @@ final class BriefGameObjectQuestItemEntity {
 
   factory BriefGameObjectQuestItemEntity.fromJson(Map<String, dynamic> json) {
     return BriefGameObjectQuestItemEntity(
-      gameObjectEntry: (json['GameObjectEntry'] as num?)?.toInt() ?? 0,
-      idx: (json['Idx'] as num?)?.toInt() ?? 0,
-      itemId: (json['ItemId'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      gameObjectEntry: json['GameObjectEntry'] == true
+          ? 1
+          : json['GameObjectEntry'] == false
+          ? 0
+          : (json['GameObjectEntry'] as num?)?.toInt() ?? 0,
+      idx: json['Idx'] == true
+          ? 1
+          : json['Idx'] == false
+          ? 0
+          : (json['Idx'] as num?)?.toInt() ?? 0,
+      itemId: json['ItemId'] == true
+          ? 1
+          : json['ItemId'] == false
+          ? 0
+          : (json['ItemId'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
       itemName: json['itemName']?.toString() ?? '',
       itemLocaleName: json['itemLocaleName']?.toString() ?? '',
-      itemQuality: (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemQuality: json['itemQuality'] == true
+          ? 1
+          : json['itemQuality'] == false
+          ? 0
+          : (json['itemQuality'] as num?)?.toInt() ?? 0,
       itemIcon: json['itemIcon']?.toString() ?? '',
     );
   }
@@ -180,10 +200,26 @@ mixin _GameObjectQuestItemEntityMixin {
 
   static GameObjectQuestItemEntity fromJson(Map<String, dynamic> json) {
     return GameObjectQuestItemEntity(
-      gameObjectEntry: (json['GameObjectEntry'] as num?)?.toInt() ?? 0,
-      idx: (json['Idx'] as num?)?.toInt() ?? 0,
-      itemId: (json['ItemId'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      gameObjectEntry: json['GameObjectEntry'] == true
+          ? 1
+          : json['GameObjectEntry'] == false
+          ? 0
+          : (json['GameObjectEntry'] as num?)?.toInt() ?? 0,
+      idx: json['Idx'] == true
+          ? 1
+          : json['Idx'] == false
+          ? 0
+          : (json['Idx'] as num?)?.toInt() ?? 0,
+      itemId: json['ItemId'] == true
+          ? 1
+          : json['ItemId'] == false
+          ? 0
+          : (json['ItemId'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

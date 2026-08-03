@@ -23,16 +23,30 @@ final class BriefCreatureOnKillReputationEntity {
     Map<String, dynamic> json,
   ) {
     return BriefCreatureOnKillReputationEntity(
-      creatureID: (json['creature_id'] as num?)?.toInt() ?? 0,
-      rewOnKillRepFaction1:
-          (json['RewOnKillRepFaction1'] as num?)?.toInt() ?? 0,
-      rewOnKillRepFaction2:
-          (json['RewOnKillRepFaction2'] as num?)?.toInt() ?? 0,
+      creatureID: json['creature_id'] == true
+          ? 1
+          : json['creature_id'] == false
+          ? 0
+          : (json['creature_id'] as num?)?.toInt() ?? 0,
+      rewOnKillRepFaction1: json['RewOnKillRepFaction1'] == true
+          ? 1
+          : json['RewOnKillRepFaction1'] == false
+          ? 0
+          : (json['RewOnKillRepFaction1'] as num?)?.toInt() ?? 0,
+      rewOnKillRepFaction2: json['RewOnKillRepFaction2'] == true
+          ? 1
+          : json['RewOnKillRepFaction2'] == false
+          ? 0
+          : (json['RewOnKillRepFaction2'] as num?)?.toInt() ?? 0,
       rewOnKillRepValue1:
           (json['RewOnKillRepValue1'] as num?)?.toDouble() ?? 0.0,
       rewOnKillRepValue2:
           (json['RewOnKillRepValue2'] as num?)?.toDouble() ?? 0.0,
-      teamDependent: (json['TeamDependent'] as num?)?.toInt() ?? 0,
+      teamDependent: json['TeamDependent'] == true
+          ? 1
+          : json['TeamDependent'] == false
+          ? 0
+          : (json['TeamDependent'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -172,24 +186,46 @@ mixin _CreatureOnKillReputationEntityMixin {
 
   static CreatureOnKillReputationEntity fromJson(Map<String, dynamic> json) {
     return CreatureOnKillReputationEntity(
-      creatureID: (json['creature_id'] as num?)?.toInt() ?? 0,
-      rewOnKillRepFaction1:
-          (json['RewOnKillRepFaction1'] as num?)?.toInt() ?? 0,
-      rewOnKillRepFaction2:
-          (json['RewOnKillRepFaction2'] as num?)?.toInt() ?? 0,
-      maxStanding1: (json['MaxStanding1'] as num?)?.toInt() ?? 0,
-      maxStanding2: (json['MaxStanding2'] as num?)?.toInt() ?? 0,
+      creatureID: json['creature_id'] == true
+          ? 1
+          : json['creature_id'] == false
+          ? 0
+          : (json['creature_id'] as num?)?.toInt() ?? 0,
+      rewOnKillRepFaction1: json['RewOnKillRepFaction1'] == true
+          ? 1
+          : json['RewOnKillRepFaction1'] == false
+          ? 0
+          : (json['RewOnKillRepFaction1'] as num?)?.toInt() ?? 0,
+      rewOnKillRepFaction2: json['RewOnKillRepFaction2'] == true
+          ? 1
+          : json['RewOnKillRepFaction2'] == false
+          ? 0
+          : (json['RewOnKillRepFaction2'] as num?)?.toInt() ?? 0,
+      maxStanding1: json['MaxStanding1'] == true
+          ? 1
+          : json['MaxStanding1'] == false
+          ? 0
+          : (json['MaxStanding1'] as num?)?.toInt() ?? 0,
+      maxStanding2: json['MaxStanding2'] == true
+          ? 1
+          : json['MaxStanding2'] == false
+          ? 0
+          : (json['MaxStanding2'] as num?)?.toInt() ?? 0,
       isTeamAward1: json['IsTeamAward1'] == null
           ? false
-          : (json['IsTeamAward1'] as num).toInt() == 1,
+          : (json['IsTeamAward1'] == true || json['IsTeamAward1'] == 1),
       isTeamAward2: json['IsTeamAward2'] == null
           ? false
-          : (json['IsTeamAward2'] as num).toInt() == 1,
+          : (json['IsTeamAward2'] == true || json['IsTeamAward2'] == 1),
       rewOnKillRepValue1:
           (json['RewOnKillRepValue1'] as num?)?.toDouble() ?? 0.0,
       rewOnKillRepValue2:
           (json['RewOnKillRepValue2'] as num?)?.toDouble() ?? 0.0,
-      teamDependent: (json['TeamDependent'] as num?)?.toInt() ?? 0,
+      teamDependent: json['TeamDependent'] == true
+          ? 1
+          : json['TeamDependent'] == false
+          ? 0
+          : (json['TeamDependent'] as num?)?.toInt() ?? 0,
     );
   }
 }

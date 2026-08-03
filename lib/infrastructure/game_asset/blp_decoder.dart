@@ -29,6 +29,11 @@ BlpImage decodeBlp(Uint8List bytes) {
   if (width == 0 || height == 0) {
     throw const BlpFormatException('invalid image dimensions');
   }
+  // 文件头声明的宽高不可信(游戏图标恒为 64×64):超大声明会在
+  // `width * height * 4` 分配时撑爆内存,先按合理上限拦截。
+  if (width > 4096 || height > 4096) {
+    throw const BlpFormatException('image dimensions out of range');
+  }
   if (mip0Offset + mip0Size > bytes.length) {
     throw const BlpFormatException('mip0 data out of bounds');
   }

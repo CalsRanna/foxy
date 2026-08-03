@@ -63,7 +63,7 @@ class ItemVisualsRepository with RepositoryMixin, _ItemVisualsRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, ItemVisualsFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     return builder;
   }

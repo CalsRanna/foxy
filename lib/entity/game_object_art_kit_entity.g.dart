@@ -15,7 +15,11 @@ final class BriefGameObjectArtKitEntity {
 
   factory BriefGameObjectArtKitEntity.fromJson(Map<String, dynamic> json) {
     return BriefGameObjectArtKitEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       textureVariation0: json['TextureVariation0']?.toString() ?? '',
       attachModel0: json['AttachModel0']?.toString() ?? '',
     );
@@ -132,7 +136,11 @@ mixin _GameObjectArtKitEntityMixin {
 
   static GameObjectArtKitEntity fromJson(Map<String, dynamic> json) {
     return GameObjectArtKitEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       textureVariation0: json['TextureVariation0']?.toString() ?? '',
       textureVariation1: json['TextureVariation1']?.toString() ?? '',
       textureVariation2: json['TextureVariation2']?.toString() ?? '',

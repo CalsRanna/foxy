@@ -17,7 +17,11 @@ final class BriefAchievementEntity {
 
   factory BriefAchievementEntity.fromJson(Map<String, dynamic> json) {
     return BriefAchievementEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       titleLangZhCN: json['Title_lang_zhCN']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
       rewardLangZhCN: json['Reward_lang_zhCN']?.toString() ?? '',
@@ -462,10 +466,26 @@ mixin _AchievementEntityMixin {
 
   static AchievementEntity fromJson(Map<String, dynamic> json) {
     return AchievementEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      faction: (json['Faction'] as num?)?.toInt() ?? -1,
-      instanceId: (json['Instance_ID'] as num?)?.toInt() ?? -1,
-      supercedes: (json['Supercedes'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      faction: json['Faction'] == true
+          ? 1
+          : json['Faction'] == false
+          ? 0
+          : (json['Faction'] as num?)?.toInt() ?? -1,
+      instanceId: json['Instance_ID'] == true
+          ? 1
+          : json['Instance_ID'] == false
+          ? 0
+          : (json['Instance_ID'] as num?)?.toInt() ?? -1,
+      supercedes: json['Supercedes'] == true
+          ? 1
+          : json['Supercedes'] == false
+          ? 0
+          : (json['Supercedes'] as num?)?.toInt() ?? 0,
       titleLangEnUS: json['Title_lang_enUS']?.toString() ?? '',
       titleLangKoKR: json['Title_lang_koKR']?.toString() ?? '',
       titleLangFrFR: json['Title_lang_frFR']?.toString() ?? '',
@@ -482,7 +502,11 @@ mixin _AchievementEntityMixin {
       titleLangUnk1: json['Title_lang_unk1']?.toString() ?? '',
       titleLangUnk2: json['Title_lang_unk2']?.toString() ?? '',
       titleLangUnk3: json['Title_lang_unk3']?.toString() ?? '',
-      titleLangFlags: (json['Title_lang_Flags'] as num?)?.toInt() ?? 0,
+      titleLangFlags: json['Title_lang_Flags'] == true
+          ? 1
+          : json['Title_lang_Flags'] == false
+          ? 0
+          : (json['Title_lang_Flags'] as num?)?.toInt() ?? 0,
       descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
       descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
       descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
@@ -499,13 +523,36 @@ mixin _AchievementEntityMixin {
       descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
       descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
       descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
-      category: (json['Category'] as num?)?.toInt() ?? 0,
-      points: (json['Points'] as num?)?.toInt() ?? 0,
-      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      iconId: (json['IconID'] as num?)?.toInt() ?? 0,
+      descriptionLangFlags: json['Description_lang_Flags'] == true
+          ? 1
+          : json['Description_lang_Flags'] == false
+          ? 0
+          : (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      category: json['Category'] == true
+          ? 1
+          : json['Category'] == false
+          ? 0
+          : (json['Category'] as num?)?.toInt() ?? 0,
+      points: json['Points'] == true
+          ? 1
+          : json['Points'] == false
+          ? 0
+          : (json['Points'] as num?)?.toInt() ?? 0,
+      uiOrder: json['Ui_order'] == true
+          ? 1
+          : json['Ui_order'] == false
+          ? 0
+          : (json['Ui_order'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      iconId: json['IconID'] == true
+          ? 1
+          : json['IconID'] == false
+          ? 0
+          : (json['IconID'] as num?)?.toInt() ?? 0,
       rewardLangEnUS: json['Reward_lang_enUS']?.toString() ?? '',
       rewardLangKoKR: json['Reward_lang_koKR']?.toString() ?? '',
       rewardLangFrFR: json['Reward_lang_frFR']?.toString() ?? '',
@@ -522,9 +569,21 @@ mixin _AchievementEntityMixin {
       rewardLangUnk1: json['Reward_lang_unk1']?.toString() ?? '',
       rewardLangUnk2: json['Reward_lang_unk2']?.toString() ?? '',
       rewardLangUnk3: json['Reward_lang_unk3']?.toString() ?? '',
-      rewardLangFlags: (json['Reward_lang_Flags'] as num?)?.toInt() ?? 0,
-      minimumCriteria: (json['Minimum_criteria'] as num?)?.toInt() ?? 0,
-      sharesCriteria: (json['Shares_criteria'] as num?)?.toInt() ?? 0,
+      rewardLangFlags: json['Reward_lang_Flags'] == true
+          ? 1
+          : json['Reward_lang_Flags'] == false
+          ? 0
+          : (json['Reward_lang_Flags'] as num?)?.toInt() ?? 0,
+      minimumCriteria: json['Minimum_criteria'] == true
+          ? 1
+          : json['Minimum_criteria'] == false
+          ? 0
+          : (json['Minimum_criteria'] as num?)?.toInt() ?? 0,
+      sharesCriteria: json['Shares_criteria'] == true
+          ? 1
+          : json['Shares_criteria'] == false
+          ? 0
+          : (json['Shares_criteria'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -120,7 +120,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'skinning_loot_template',
           '`Item`',
-          where: {'Entry': skinningLootTemplate.entry},
+          where: {'`Entry`': skinningLootTemplate.entry},
         ),
       );
       try {

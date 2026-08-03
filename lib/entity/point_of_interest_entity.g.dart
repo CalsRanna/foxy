@@ -15,7 +15,11 @@ final class BriefPointOfInterestEntity {
 
   factory BriefPointOfInterestEntity.fromJson(Map<String, dynamic> json) {
     return BriefPointOfInterestEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
       localeName: json['localeName']?.toString() ?? '',
     );
@@ -126,12 +130,28 @@ mixin _PointOfInterestEntityMixin {
 
   static PointOfInterestEntity fromJson(Map<String, dynamic> json) {
     return PointOfInterestEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       positionX: (json['PositionX'] as num?)?.toDouble() ?? 0.0,
       positionY: (json['PositionY'] as num?)?.toDouble() ?? 0.0,
-      icon: (json['Icon'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      importance: (json['Importance'] as num?)?.toInt() ?? 0,
+      icon: json['Icon'] == true
+          ? 1
+          : json['Icon'] == false
+          ? 0
+          : (json['Icon'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      importance: json['Importance'] == true
+          ? 1
+          : json['Importance'] == false
+          ? 0
+          : (json['Importance'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
     );
   }

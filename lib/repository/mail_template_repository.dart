@@ -70,7 +70,7 @@ class MailTemplateRepository
 
   QueryBuilder _applyFilter(QueryBuilder builder, MailTemplateFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     if (filter.subject.isNotEmpty) {
       builder = builder.where(
         'Subject_lang_zhCN',

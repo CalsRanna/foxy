@@ -30,7 +30,7 @@ class CreatureSpellDataRepository
     if (!needsSpellJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.id.isNotEmpty) {
-        builder = builder.where('ID', filter.id);
+        builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
       }
       return builder.count();
     }
@@ -89,7 +89,7 @@ class CreatureSpellDataRepository
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('dcsd.ID', filter.id);
+      builder = builder.where('dcsd.ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.spell.isNotEmpty) {
       builder = builder.whereAny(

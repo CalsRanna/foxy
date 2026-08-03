@@ -31,6 +31,7 @@ class GossipMenuDetailViewModel
         final blank = (await _repository.createGossipMenu()).copyWith(
           textId: reservedText.id,
         );
+        if (isDisposed) return;
         _reservedTextId = reservedText.id;
         entity.value = blank;
         _applyCandidate(blank);
@@ -41,6 +42,7 @@ class GossipMenuDetailViewModel
       if (existing == null) {
         throw RecordNotFoundException('record not found');
       }
+      if (isDisposed) return;
       entity.value = existing;
       _applyCandidate(existing);
       persistedKey.value = key;
@@ -63,6 +65,17 @@ class GossipMenuDetailViewModel
       if (candidate.menuId <= 0) throw ValidationException('invalid MenuID');
       if (candidate.textId <= 0) {
         throw ValidationException('invalid NPC text selection');
+      }
+      // 新建路径的保留文本行(由 CreateGossipMenuUseCase 补建)不需要
+      // 预存在;其余路径(编辑、或新建后把 textId 改成其他值)必须指向
+      // 真实存在的 npc_text 行,否则落库后 core 加载该菜单时文本为空。
+      if (candidate.textId != _reservedTextId) {
+        final text = await _npcTextRepository.getNpcText(candidate.textId);
+        if (text == null) {
+          throw ValidationException(
+            'NPC text does not exist: ${candidate.textId}',
+          );
+        }
       }
       final originalKey = persistedKey.value;
       final action = originalKey == null

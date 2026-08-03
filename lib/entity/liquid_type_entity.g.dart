@@ -19,11 +19,27 @@ final class BriefLiquidTypeEntity {
 
   factory BriefLiquidTypeEntity.fromJson(Map<String, dynamic> json) {
     return BriefLiquidTypeEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      soundBank: (json['SoundBank'] as num?)?.toInt() ?? 0,
-      spellId: (json['SpellID'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      soundBank: json['SoundBank'] == true
+          ? 1
+          : json['SoundBank'] == false
+          ? 0
+          : (json['SoundBank'] as num?)?.toInt() ?? 0,
+      spellId: json['SpellID'] == true
+          ? 1
+          : json['SpellID'] == false
+          ? 0
+          : (json['SpellID'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -364,12 +380,32 @@ mixin _LiquidTypeEntityMixin {
 
   static LiquidTypeEntity fromJson(Map<String, dynamic> json) {
     return LiquidTypeEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      soundBank: (json['SoundBank'] as num?)?.toInt() ?? 0,
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
-      spellId: (json['SpellID'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      soundBank: json['SoundBank'] == true
+          ? 1
+          : json['SoundBank'] == false
+          ? 0
+          : (json['SoundBank'] as num?)?.toInt() ?? 0,
+      soundId: json['SoundID'] == true
+          ? 1
+          : json['SoundID'] == false
+          ? 0
+          : (json['SoundID'] as num?)?.toInt() ?? 0,
+      spellId: json['SpellID'] == true
+          ? 1
+          : json['SpellID'] == false
+          ? 0
+          : (json['SpellID'] as num?)?.toInt() ?? 0,
       maxDarkenDepth: (json['MaxDarkenDepth'] as num?)?.toDouble() ?? 0.0,
       fogDarkenIntensity:
           (json['FogDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
@@ -377,19 +413,43 @@ mixin _LiquidTypeEntityMixin {
           (json['AmbDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
       dirDarkenIntensity:
           (json['DirDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
-      lightId: (json['LightID'] as num?)?.toInt() ?? 0,
+      lightId: json['LightID'] == true
+          ? 1
+          : json['LightID'] == false
+          ? 0
+          : (json['LightID'] as num?)?.toInt() ?? 0,
       particleScale: (json['ParticleScale'] as num?)?.toDouble() ?? 0.0,
-      particleMovement: (json['ParticleMovement'] as num?)?.toInt() ?? 0,
-      particleTexSlots: (json['ParticleTexSlots'] as num?)?.toInt() ?? 0,
-      materialId: (json['MaterialID'] as num?)?.toInt() ?? 0,
+      particleMovement: json['ParticleMovement'] == true
+          ? 1
+          : json['ParticleMovement'] == false
+          ? 0
+          : (json['ParticleMovement'] as num?)?.toInt() ?? 0,
+      particleTexSlots: json['ParticleTexSlots'] == true
+          ? 1
+          : json['ParticleTexSlots'] == false
+          ? 0
+          : (json['ParticleTexSlots'] as num?)?.toInt() ?? 0,
+      materialId: json['MaterialID'] == true
+          ? 1
+          : json['MaterialID'] == false
+          ? 0
+          : (json['MaterialID'] as num?)?.toInt() ?? 0,
       texture0: json['Texture0']?.toString() ?? '',
       texture1: json['Texture1']?.toString() ?? '',
       texture2: json['Texture2']?.toString() ?? '',
       texture3: json['Texture3']?.toString() ?? '',
       texture4: json['Texture4']?.toString() ?? '',
       texture5: json['Texture5']?.toString() ?? '',
-      color0: (json['Color0'] as num?)?.toInt() ?? 0,
-      color1: (json['Color1'] as num?)?.toInt() ?? 0,
+      color0: json['Color0'] == true
+          ? 1
+          : json['Color0'] == false
+          ? 0
+          : (json['Color0'] as num?)?.toInt() ?? 0,
+      color1: json['Color1'] == true
+          ? 1
+          : json['Color1'] == false
+          ? 0
+          : (json['Color1'] as num?)?.toInt() ?? 0,
       float0: (json['Float0'] as num?)?.toDouble() ?? 0.0,
       float1: (json['Float1'] as num?)?.toDouble() ?? 0.0,
       float2: (json['Float2'] as num?)?.toDouble() ?? 0.0,
@@ -408,10 +468,26 @@ mixin _LiquidTypeEntityMixin {
       float15: (json['Float15'] as num?)?.toDouble() ?? 0.0,
       float16: (json['Float16'] as num?)?.toDouble() ?? 0.0,
       float17: (json['Float17'] as num?)?.toDouble() ?? 0.0,
-      int0: (json['Int0'] as num?)?.toInt() ?? 0,
-      int1: (json['Int1'] as num?)?.toInt() ?? 0,
-      int2: (json['Int2'] as num?)?.toInt() ?? 0,
-      int3: (json['Int3'] as num?)?.toInt() ?? 0,
+      int0: json['Int0'] == true
+          ? 1
+          : json['Int0'] == false
+          ? 0
+          : (json['Int0'] as num?)?.toInt() ?? 0,
+      int1: json['Int1'] == true
+          ? 1
+          : json['Int1'] == false
+          ? 0
+          : (json['Int1'] as num?)?.toInt() ?? 0,
+      int2: json['Int2'] == true
+          ? 1
+          : json['Int2'] == false
+          ? 0
+          : (json['Int2'] as num?)?.toInt() ?? 0,
+      int3: json['Int3'] == true
+          ? 1
+          : json['Int3'] == false
+          ? 0
+          : (json['Int3'] as num?)?.toInt() ?? 0,
     );
   }
 }

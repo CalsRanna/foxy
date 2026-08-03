@@ -43,8 +43,16 @@ mixin _CreatureDefaultTrainerEntityMixin {
 
   static CreatureDefaultTrainerEntity fromJson(Map<String, dynamic> json) {
     return CreatureDefaultTrainerEntity(
-      creatureId: (json['CreatureId'] as num?)?.toInt() ?? 0,
-      trainerId: (json['TrainerId'] as num?)?.toInt() ?? 0,
+      creatureId: json['CreatureId'] == true
+          ? 1
+          : json['CreatureId'] == false
+          ? 0
+          : (json['CreatureId'] as num?)?.toInt() ?? 0,
+      trainerId: json['TrainerId'] == true
+          ? 1
+          : json['TrainerId'] == false
+          ? 0
+          : (json['TrainerId'] as num?)?.toInt() ?? 0,
     );
   }
 }

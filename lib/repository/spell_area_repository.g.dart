@@ -114,44 +114,7 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
       await laconic.table('spell_area').insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
-      final retried = spellArea.copyWith(
-        area: await nextMaxPlusOne(
-          'spell_area',
-          '`area`',
-          where: {'spell': spellArea.spell},
-        ),
-        questStart: await nextMaxPlusOne(
-          'spell_area',
-          '`quest_start`',
-          where: {'spell': spellArea.spell},
-        ),
-        auraSpell: await nextMaxPlusOne(
-          'spell_area',
-          '`aura_spell`',
-          where: {'spell': spellArea.spell},
-        ),
-        racemask: await nextMaxPlusOne(
-          'spell_area',
-          '`racemask`',
-          where: {'spell': spellArea.spell},
-        ),
-        gender: await nextMaxPlusOne(
-          'spell_area',
-          '`gender`',
-          where: {'spell': spellArea.spell},
-        ),
-      );
-      try {
-        await laconic.table('spell_area').insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
-        return;
-      } catch (retryError) {
-        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
-          throw DuplicateKeyException('duplicate key in spell_area');
-        }
-        rethrow;
-      }
+      throw DuplicateKeyException('duplicate key in spell_area');
     }
   }
 

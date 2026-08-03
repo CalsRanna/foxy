@@ -30,7 +30,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
     if (!needsTextJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.menuId.isNotEmpty) {
-        builder = builder.where('MenuID', filter.menuId);
+        builder = builder.where('MenuID', int.tryParse(filter.menuId) ?? 0);
       }
       return builder.count();
     }
@@ -106,7 +106,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, GossipMenuFilter? filter) {
     if (filter == null) return builder;
     if (filter.menuId.isNotEmpty) {
-      builder = builder.where('gm.MenuID', filter.menuId);
+      builder = builder.where('gm.MenuID', int.tryParse(filter.menuId) ?? 0);
     }
     if (filter.text.isNotEmpty) {
       final textColumns = localeEnabled

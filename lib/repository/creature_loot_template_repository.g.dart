@@ -139,17 +139,7 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'creature_loot_template',
           '`Item`',
-          where: {'Entry': creatureLootTemplate.entry},
-        ),
-        reference: await nextMaxPlusOne(
-          'creature_loot_template',
-          '`Reference`',
-          where: {'Entry': creatureLootTemplate.entry},
-        ),
-        groupId: await nextMaxPlusOne(
-          'creature_loot_template',
-          '`GroupId`',
-          where: {'Entry': creatureLootTemplate.entry},
+          where: {'`Entry`': creatureLootTemplate.entry},
         ),
       );
       try {

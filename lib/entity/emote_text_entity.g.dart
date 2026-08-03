@@ -11,9 +11,17 @@ final class BriefEmoteTextEntity {
 
   factory BriefEmoteTextEntity.fromJson(Map<String, dynamic> json) {
     return BriefEmoteTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
-      emoteId: (json['EmoteID'] as num?)?.toInt() ?? 0,
+      emoteId: json['EmoteID'] == true
+          ? 1
+          : json['EmoteID'] == false
+          ? 0
+          : (json['EmoteID'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -194,25 +202,97 @@ mixin _EmoteTextEntityMixin {
 
   static EmoteTextEntity fromJson(Map<String, dynamic> json) {
     return EmoteTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
-      emoteId: (json['EmoteID'] as num?)?.toInt() ?? 0,
-      emoteText0: (json['EmoteText0'] as num?)?.toInt() ?? 0,
-      emoteText1: (json['EmoteText1'] as num?)?.toInt() ?? 0,
-      emoteText2: (json['EmoteText2'] as num?)?.toInt() ?? 0,
-      emoteText3: (json['EmoteText3'] as num?)?.toInt() ?? 0,
-      emoteText4: (json['EmoteText4'] as num?)?.toInt() ?? 0,
-      emoteText5: (json['EmoteText5'] as num?)?.toInt() ?? 0,
-      emoteText6: (json['EmoteText6'] as num?)?.toInt() ?? 0,
-      emoteText7: (json['EmoteText7'] as num?)?.toInt() ?? 0,
-      emoteText8: (json['EmoteText8'] as num?)?.toInt() ?? 0,
-      emoteText9: (json['EmoteText9'] as num?)?.toInt() ?? 0,
-      emoteText10: (json['EmoteText10'] as num?)?.toInt() ?? 0,
-      emoteText11: (json['EmoteText11'] as num?)?.toInt() ?? 0,
-      emoteText12: (json['EmoteText12'] as num?)?.toInt() ?? 0,
-      emoteText13: (json['EmoteText13'] as num?)?.toInt() ?? 0,
-      emoteText14: (json['EmoteText14'] as num?)?.toInt() ?? 0,
-      emoteText15: (json['EmoteText15'] as num?)?.toInt() ?? 0,
+      emoteId: json['EmoteID'] == true
+          ? 1
+          : json['EmoteID'] == false
+          ? 0
+          : (json['EmoteID'] as num?)?.toInt() ?? 0,
+      emoteText0: json['EmoteText0'] == true
+          ? 1
+          : json['EmoteText0'] == false
+          ? 0
+          : (json['EmoteText0'] as num?)?.toInt() ?? 0,
+      emoteText1: json['EmoteText1'] == true
+          ? 1
+          : json['EmoteText1'] == false
+          ? 0
+          : (json['EmoteText1'] as num?)?.toInt() ?? 0,
+      emoteText2: json['EmoteText2'] == true
+          ? 1
+          : json['EmoteText2'] == false
+          ? 0
+          : (json['EmoteText2'] as num?)?.toInt() ?? 0,
+      emoteText3: json['EmoteText3'] == true
+          ? 1
+          : json['EmoteText3'] == false
+          ? 0
+          : (json['EmoteText3'] as num?)?.toInt() ?? 0,
+      emoteText4: json['EmoteText4'] == true
+          ? 1
+          : json['EmoteText4'] == false
+          ? 0
+          : (json['EmoteText4'] as num?)?.toInt() ?? 0,
+      emoteText5: json['EmoteText5'] == true
+          ? 1
+          : json['EmoteText5'] == false
+          ? 0
+          : (json['EmoteText5'] as num?)?.toInt() ?? 0,
+      emoteText6: json['EmoteText6'] == true
+          ? 1
+          : json['EmoteText6'] == false
+          ? 0
+          : (json['EmoteText6'] as num?)?.toInt() ?? 0,
+      emoteText7: json['EmoteText7'] == true
+          ? 1
+          : json['EmoteText7'] == false
+          ? 0
+          : (json['EmoteText7'] as num?)?.toInt() ?? 0,
+      emoteText8: json['EmoteText8'] == true
+          ? 1
+          : json['EmoteText8'] == false
+          ? 0
+          : (json['EmoteText8'] as num?)?.toInt() ?? 0,
+      emoteText9: json['EmoteText9'] == true
+          ? 1
+          : json['EmoteText9'] == false
+          ? 0
+          : (json['EmoteText9'] as num?)?.toInt() ?? 0,
+      emoteText10: json['EmoteText10'] == true
+          ? 1
+          : json['EmoteText10'] == false
+          ? 0
+          : (json['EmoteText10'] as num?)?.toInt() ?? 0,
+      emoteText11: json['EmoteText11'] == true
+          ? 1
+          : json['EmoteText11'] == false
+          ? 0
+          : (json['EmoteText11'] as num?)?.toInt() ?? 0,
+      emoteText12: json['EmoteText12'] == true
+          ? 1
+          : json['EmoteText12'] == false
+          ? 0
+          : (json['EmoteText12'] as num?)?.toInt() ?? 0,
+      emoteText13: json['EmoteText13'] == true
+          ? 1
+          : json['EmoteText13'] == false
+          ? 0
+          : (json['EmoteText13'] as num?)?.toInt() ?? 0,
+      emoteText14: json['EmoteText14'] == true
+          ? 1
+          : json['EmoteText14'] == false
+          ? 0
+          : (json['EmoteText14'] as num?)?.toInt() ?? 0,
+      emoteText15: json['EmoteText15'] == true
+          ? 1
+          : json['EmoteText15'] == false
+          ? 0
+          : (json['EmoteText15'] as num?)?.toInt() ?? 0,
     );
   }
 }

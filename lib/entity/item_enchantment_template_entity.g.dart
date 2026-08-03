@@ -87,8 +87,16 @@ mixin _ItemEnchantmentTemplateEntityMixin {
 
   static ItemEnchantmentTemplateEntity fromJson(Map<String, dynamic> json) {
     return ItemEnchantmentTemplateEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      ench: (json['ench'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      ench: json['ench'] == true
+          ? 1
+          : json['ench'] == false
+          ? 0
+          : (json['ench'] as num?)?.toInt() ?? 0,
       chance: (json['chance'] as num?)?.toDouble() ?? 0.0,
     );
   }

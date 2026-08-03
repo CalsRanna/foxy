@@ -83,10 +83,10 @@ class DbcFactionTemplateRepository
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('dft.ID', filter.id);
+      builder = builder.where('dft.ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.faction.isNotEmpty) {
-      builder = builder.where('dft.Faction', filter.faction);
+      builder = builder.where('dft.Faction', int.tryParse(filter.faction) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(

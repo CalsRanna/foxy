@@ -13,7 +13,11 @@ final class BriefCreatureMovementInfoEntity {
 
   factory BriefCreatureMovementInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureMovementInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       smoothFacingChaseRate:
           (json['SmoothFacingChaseRate'] as num?)?.toDouble() ?? 0.0,
     );
@@ -90,7 +94,11 @@ mixin _CreatureMovementInfoEntityMixin {
 
   static CreatureMovementInfoEntity fromJson(Map<String, dynamic> json) {
     return CreatureMovementInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       smoothFacingChaseRate:
           (json['SmoothFacingChaseRate'] as num?)?.toDouble() ?? 0.0,
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
@@ -44,7 +45,7 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     } catch (e, s) {
       LoggerUtil.instance.e('加载 DBC 本地化失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
-      _showErrorToast(context, '加载失败: $e');
+      _showErrorToast(context, '加载失败: ${foxyErrorMessage(e)}');
       return null;
     }
     if (!context.mounted) return null;
@@ -201,8 +202,8 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: $e');
-      DbcLocaleFieldEditor._showErrorToast(context, '保存失败: $e');
+      setState(() => _errorMessage = '保存失败: ${foxyErrorMessage(e)}');
+      DbcLocaleFieldEditor._showErrorToast(context, '保存失败: ${foxyErrorMessage(e)}');
     } finally {
       if (mounted) {
         setState(() => _saving = false);

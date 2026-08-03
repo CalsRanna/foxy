@@ -17,10 +17,26 @@ final class BriefDestructibleModelDataEntity {
 
   factory BriefDestructibleModelDataEntity.fromJson(Map<String, dynamic> json) {
     return BriefDestructibleModelDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      state1Wmo: (json['State1WMO'] as num?)?.toInt() ?? 0,
-      state2Wmo: (json['State2WMO'] as num?)?.toInt() ?? 0,
-      state3Wmo: (json['State3WMO'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      state1Wmo: json['State1WMO'] == true
+          ? 1
+          : json['State1WMO'] == false
+          ? 0
+          : (json['State1WMO'] as num?)?.toInt() ?? 0,
+      state2Wmo: json['State2WMO'] == true
+          ? 1
+          : json['State2WMO'] == false
+          ? 0
+          : (json['State2WMO'] as num?)?.toInt() ?? 0,
+      state3Wmo: json['State3WMO'] == true
+          ? 1
+          : json['State3WMO'] == false
+          ? 0
+          : (json['State3WMO'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -217,34 +233,101 @@ mixin _DestructibleModelDataEntityMixin {
 
   static DestructibleModelDataEntity fromJson(Map<String, dynamic> json) {
     return DestructibleModelDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      state0ImpactEffectDoodadSet:
-          (json['State0ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
-      state0AmbientDoodadSet:
-          (json['State0AmbientDoodadSet'] as num?)?.toInt() ?? 0,
-      state1Wmo: (json['State1WMO'] as num?)?.toInt() ?? 0,
-      state1DestructionDoodadSet:
-          (json['State1DestructionDoodadSet'] as num?)?.toInt() ?? 0,
-      state1ImpactEffectDoodadSet:
-          (json['State1ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
-      state1AmbientDoodadSet:
-          (json['State1AmbientDoodadSet'] as num?)?.toInt() ?? 0,
-      state2Wmo: (json['State2WMO'] as num?)?.toInt() ?? 0,
-      state2DestructionDoodadSet:
-          (json['State2DestructionDoodadSet'] as num?)?.toInt() ?? 0,
-      state2ImpactEffectDoodadSet:
-          (json['State2ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
-      state2AmbientDoodadSet:
-          (json['State2AmbientDoodadSet'] as num?)?.toInt() ?? 0,
-      state3Wmo: (json['State3WMO'] as num?)?.toInt() ?? 0,
-      state3InitDoodadSet: (json['State3InitDoodadSet'] as num?)?.toInt() ?? 0,
-      state3AmbientDoodadSet:
-          (json['State3AmbientDoodadSet'] as num?)?.toInt() ?? 0,
-      ejectDirection: (json['EjectDirection'] as num?)?.toInt() ?? 0,
-      repairGroundFx: (json['RepairGroundFx'] as num?)?.toInt() ?? 0,
-      doNotHighlight: (json['DoNotHighlight'] as num?)?.toInt() ?? 0,
-      healEffect: (json['HealEffect'] as num?)?.toInt() ?? 0,
-      healEffectSpeed: (json['HealEffectSpeed'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      state0ImpactEffectDoodadSet: json['State0ImpactEffectDoodadSet'] == true
+          ? 1
+          : json['State0ImpactEffectDoodadSet'] == false
+          ? 0
+          : (json['State0ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
+      state0AmbientDoodadSet: json['State0AmbientDoodadSet'] == true
+          ? 1
+          : json['State0AmbientDoodadSet'] == false
+          ? 0
+          : (json['State0AmbientDoodadSet'] as num?)?.toInt() ?? 0,
+      state1Wmo: json['State1WMO'] == true
+          ? 1
+          : json['State1WMO'] == false
+          ? 0
+          : (json['State1WMO'] as num?)?.toInt() ?? 0,
+      state1DestructionDoodadSet: json['State1DestructionDoodadSet'] == true
+          ? 1
+          : json['State1DestructionDoodadSet'] == false
+          ? 0
+          : (json['State1DestructionDoodadSet'] as num?)?.toInt() ?? 0,
+      state1ImpactEffectDoodadSet: json['State1ImpactEffectDoodadSet'] == true
+          ? 1
+          : json['State1ImpactEffectDoodadSet'] == false
+          ? 0
+          : (json['State1ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
+      state1AmbientDoodadSet: json['State1AmbientDoodadSet'] == true
+          ? 1
+          : json['State1AmbientDoodadSet'] == false
+          ? 0
+          : (json['State1AmbientDoodadSet'] as num?)?.toInt() ?? 0,
+      state2Wmo: json['State2WMO'] == true
+          ? 1
+          : json['State2WMO'] == false
+          ? 0
+          : (json['State2WMO'] as num?)?.toInt() ?? 0,
+      state2DestructionDoodadSet: json['State2DestructionDoodadSet'] == true
+          ? 1
+          : json['State2DestructionDoodadSet'] == false
+          ? 0
+          : (json['State2DestructionDoodadSet'] as num?)?.toInt() ?? 0,
+      state2ImpactEffectDoodadSet: json['State2ImpactEffectDoodadSet'] == true
+          ? 1
+          : json['State2ImpactEffectDoodadSet'] == false
+          ? 0
+          : (json['State2ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
+      state2AmbientDoodadSet: json['State2AmbientDoodadSet'] == true
+          ? 1
+          : json['State2AmbientDoodadSet'] == false
+          ? 0
+          : (json['State2AmbientDoodadSet'] as num?)?.toInt() ?? 0,
+      state3Wmo: json['State3WMO'] == true
+          ? 1
+          : json['State3WMO'] == false
+          ? 0
+          : (json['State3WMO'] as num?)?.toInt() ?? 0,
+      state3InitDoodadSet: json['State3InitDoodadSet'] == true
+          ? 1
+          : json['State3InitDoodadSet'] == false
+          ? 0
+          : (json['State3InitDoodadSet'] as num?)?.toInt() ?? 0,
+      state3AmbientDoodadSet: json['State3AmbientDoodadSet'] == true
+          ? 1
+          : json['State3AmbientDoodadSet'] == false
+          ? 0
+          : (json['State3AmbientDoodadSet'] as num?)?.toInt() ?? 0,
+      ejectDirection: json['EjectDirection'] == true
+          ? 1
+          : json['EjectDirection'] == false
+          ? 0
+          : (json['EjectDirection'] as num?)?.toInt() ?? 0,
+      repairGroundFx: json['RepairGroundFx'] == true
+          ? 1
+          : json['RepairGroundFx'] == false
+          ? 0
+          : (json['RepairGroundFx'] as num?)?.toInt() ?? 0,
+      doNotHighlight: json['DoNotHighlight'] == true
+          ? 1
+          : json['DoNotHighlight'] == false
+          ? 0
+          : (json['DoNotHighlight'] as num?)?.toInt() ?? 0,
+      healEffect: json['HealEffect'] == true
+          ? 1
+          : json['HealEffect'] == false
+          ? 0
+          : (json['HealEffect'] as num?)?.toInt() ?? 0,
+      healEffectSpeed: json['HealEffectSpeed'] == true
+          ? 1
+          : json['HealEffectSpeed'] == false
+          ? 0
+          : (json['HealEffectSpeed'] as num?)?.toInt() ?? 0,
     );
   }
 }

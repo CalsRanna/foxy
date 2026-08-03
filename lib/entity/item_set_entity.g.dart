@@ -17,10 +17,22 @@ final class BriefItemSetEntity {
 
   factory BriefItemSetEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemSetEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      requiredSkill: (json['RequiredSkill'] as num?)?.toInt() ?? 0,
-      requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
+      requiredSkill: json['RequiredSkill'] == true
+          ? 1
+          : json['RequiredSkill'] == false
+          ? 0
+          : (json['RequiredSkill'] as num?)?.toInt() ?? 0,
+      requiredSkillRank: json['RequiredSkillRank'] == true
+          ? 1
+          : json['RequiredSkillRank'] == false
+          ? 0
+          : (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -408,7 +420,11 @@ mixin _ItemSetEntityMixin {
 
   static ItemSetEntity fromJson(Map<String, dynamic> json) {
     return ItemSetEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -425,42 +441,186 @@ mixin _ItemSetEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      itemId0: (json['ItemID0'] as num?)?.toInt() ?? 0,
-      itemId1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemId2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemId3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      itemId4: (json['ItemID4'] as num?)?.toInt() ?? 0,
-      itemId5: (json['ItemID5'] as num?)?.toInt() ?? 0,
-      itemId6: (json['ItemID6'] as num?)?.toInt() ?? 0,
-      itemId7: (json['ItemID7'] as num?)?.toInt() ?? 0,
-      itemId8: (json['ItemID8'] as num?)?.toInt() ?? 0,
-      itemId9: (json['ItemID9'] as num?)?.toInt() ?? 0,
-      itemId10: (json['ItemID10'] as num?)?.toInt() ?? 0,
-      itemId11: (json['ItemID11'] as num?)?.toInt() ?? 0,
-      itemId12: (json['ItemID12'] as num?)?.toInt() ?? 0,
-      itemId13: (json['ItemID13'] as num?)?.toInt() ?? 0,
-      itemId14: (json['ItemID14'] as num?)?.toInt() ?? 0,
-      itemId15: (json['ItemID15'] as num?)?.toInt() ?? 0,
-      itemId16: (json['ItemID16'] as num?)?.toInt() ?? 0,
-      setSpellId0: (json['SetSpellID0'] as num?)?.toInt() ?? 0,
-      setSpellId1: (json['SetSpellID1'] as num?)?.toInt() ?? 0,
-      setSpellId2: (json['SetSpellID2'] as num?)?.toInt() ?? 0,
-      setSpellId3: (json['SetSpellID3'] as num?)?.toInt() ?? 0,
-      setSpellId4: (json['SetSpellID4'] as num?)?.toInt() ?? 0,
-      setSpellId5: (json['SetSpellID5'] as num?)?.toInt() ?? 0,
-      setSpellId6: (json['SetSpellID6'] as num?)?.toInt() ?? 0,
-      setSpellId7: (json['SetSpellID7'] as num?)?.toInt() ?? 0,
-      setThreshold0: (json['SetThreshold0'] as num?)?.toInt() ?? 0,
-      setThreshold1: (json['SetThreshold1'] as num?)?.toInt() ?? 0,
-      setThreshold2: (json['SetThreshold2'] as num?)?.toInt() ?? 0,
-      setThreshold3: (json['SetThreshold3'] as num?)?.toInt() ?? 0,
-      setThreshold4: (json['SetThreshold4'] as num?)?.toInt() ?? 0,
-      setThreshold5: (json['SetThreshold5'] as num?)?.toInt() ?? 0,
-      setThreshold6: (json['SetThreshold6'] as num?)?.toInt() ?? 0,
-      setThreshold7: (json['SetThreshold7'] as num?)?.toInt() ?? 0,
-      requiredSkill: (json['RequiredSkill'] as num?)?.toInt() ?? 0,
-      requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      itemId0: json['ItemID0'] == true
+          ? 1
+          : json['ItemID0'] == false
+          ? 0
+          : (json['ItemID0'] as num?)?.toInt() ?? 0,
+      itemId1: json['ItemID1'] == true
+          ? 1
+          : json['ItemID1'] == false
+          ? 0
+          : (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemId2: json['ItemID2'] == true
+          ? 1
+          : json['ItemID2'] == false
+          ? 0
+          : (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemId3: json['ItemID3'] == true
+          ? 1
+          : json['ItemID3'] == false
+          ? 0
+          : (json['ItemID3'] as num?)?.toInt() ?? 0,
+      itemId4: json['ItemID4'] == true
+          ? 1
+          : json['ItemID4'] == false
+          ? 0
+          : (json['ItemID4'] as num?)?.toInt() ?? 0,
+      itemId5: json['ItemID5'] == true
+          ? 1
+          : json['ItemID5'] == false
+          ? 0
+          : (json['ItemID5'] as num?)?.toInt() ?? 0,
+      itemId6: json['ItemID6'] == true
+          ? 1
+          : json['ItemID6'] == false
+          ? 0
+          : (json['ItemID6'] as num?)?.toInt() ?? 0,
+      itemId7: json['ItemID7'] == true
+          ? 1
+          : json['ItemID7'] == false
+          ? 0
+          : (json['ItemID7'] as num?)?.toInt() ?? 0,
+      itemId8: json['ItemID8'] == true
+          ? 1
+          : json['ItemID8'] == false
+          ? 0
+          : (json['ItemID8'] as num?)?.toInt() ?? 0,
+      itemId9: json['ItemID9'] == true
+          ? 1
+          : json['ItemID9'] == false
+          ? 0
+          : (json['ItemID9'] as num?)?.toInt() ?? 0,
+      itemId10: json['ItemID10'] == true
+          ? 1
+          : json['ItemID10'] == false
+          ? 0
+          : (json['ItemID10'] as num?)?.toInt() ?? 0,
+      itemId11: json['ItemID11'] == true
+          ? 1
+          : json['ItemID11'] == false
+          ? 0
+          : (json['ItemID11'] as num?)?.toInt() ?? 0,
+      itemId12: json['ItemID12'] == true
+          ? 1
+          : json['ItemID12'] == false
+          ? 0
+          : (json['ItemID12'] as num?)?.toInt() ?? 0,
+      itemId13: json['ItemID13'] == true
+          ? 1
+          : json['ItemID13'] == false
+          ? 0
+          : (json['ItemID13'] as num?)?.toInt() ?? 0,
+      itemId14: json['ItemID14'] == true
+          ? 1
+          : json['ItemID14'] == false
+          ? 0
+          : (json['ItemID14'] as num?)?.toInt() ?? 0,
+      itemId15: json['ItemID15'] == true
+          ? 1
+          : json['ItemID15'] == false
+          ? 0
+          : (json['ItemID15'] as num?)?.toInt() ?? 0,
+      itemId16: json['ItemID16'] == true
+          ? 1
+          : json['ItemID16'] == false
+          ? 0
+          : (json['ItemID16'] as num?)?.toInt() ?? 0,
+      setSpellId0: json['SetSpellID0'] == true
+          ? 1
+          : json['SetSpellID0'] == false
+          ? 0
+          : (json['SetSpellID0'] as num?)?.toInt() ?? 0,
+      setSpellId1: json['SetSpellID1'] == true
+          ? 1
+          : json['SetSpellID1'] == false
+          ? 0
+          : (json['SetSpellID1'] as num?)?.toInt() ?? 0,
+      setSpellId2: json['SetSpellID2'] == true
+          ? 1
+          : json['SetSpellID2'] == false
+          ? 0
+          : (json['SetSpellID2'] as num?)?.toInt() ?? 0,
+      setSpellId3: json['SetSpellID3'] == true
+          ? 1
+          : json['SetSpellID3'] == false
+          ? 0
+          : (json['SetSpellID3'] as num?)?.toInt() ?? 0,
+      setSpellId4: json['SetSpellID4'] == true
+          ? 1
+          : json['SetSpellID4'] == false
+          ? 0
+          : (json['SetSpellID4'] as num?)?.toInt() ?? 0,
+      setSpellId5: json['SetSpellID5'] == true
+          ? 1
+          : json['SetSpellID5'] == false
+          ? 0
+          : (json['SetSpellID5'] as num?)?.toInt() ?? 0,
+      setSpellId6: json['SetSpellID6'] == true
+          ? 1
+          : json['SetSpellID6'] == false
+          ? 0
+          : (json['SetSpellID6'] as num?)?.toInt() ?? 0,
+      setSpellId7: json['SetSpellID7'] == true
+          ? 1
+          : json['SetSpellID7'] == false
+          ? 0
+          : (json['SetSpellID7'] as num?)?.toInt() ?? 0,
+      setThreshold0: json['SetThreshold0'] == true
+          ? 1
+          : json['SetThreshold0'] == false
+          ? 0
+          : (json['SetThreshold0'] as num?)?.toInt() ?? 0,
+      setThreshold1: json['SetThreshold1'] == true
+          ? 1
+          : json['SetThreshold1'] == false
+          ? 0
+          : (json['SetThreshold1'] as num?)?.toInt() ?? 0,
+      setThreshold2: json['SetThreshold2'] == true
+          ? 1
+          : json['SetThreshold2'] == false
+          ? 0
+          : (json['SetThreshold2'] as num?)?.toInt() ?? 0,
+      setThreshold3: json['SetThreshold3'] == true
+          ? 1
+          : json['SetThreshold3'] == false
+          ? 0
+          : (json['SetThreshold3'] as num?)?.toInt() ?? 0,
+      setThreshold4: json['SetThreshold4'] == true
+          ? 1
+          : json['SetThreshold4'] == false
+          ? 0
+          : (json['SetThreshold4'] as num?)?.toInt() ?? 0,
+      setThreshold5: json['SetThreshold5'] == true
+          ? 1
+          : json['SetThreshold5'] == false
+          ? 0
+          : (json['SetThreshold5'] as num?)?.toInt() ?? 0,
+      setThreshold6: json['SetThreshold6'] == true
+          ? 1
+          : json['SetThreshold6'] == false
+          ? 0
+          : (json['SetThreshold6'] as num?)?.toInt() ?? 0,
+      setThreshold7: json['SetThreshold7'] == true
+          ? 1
+          : json['SetThreshold7'] == false
+          ? 0
+          : (json['SetThreshold7'] as num?)?.toInt() ?? 0,
+      requiredSkill: json['RequiredSkill'] == true
+          ? 1
+          : json['RequiredSkill'] == false
+          ? 0
+          : (json['RequiredSkill'] as num?)?.toInt() ?? 0,
+      requiredSkillRank: json['RequiredSkillRank'] == true
+          ? 1
+          : json['RequiredSkillRank'] == false
+          ? 0
+          : (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
     );
   }
 }

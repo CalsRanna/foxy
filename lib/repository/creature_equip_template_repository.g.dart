@@ -95,7 +95,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
         id: await nextMaxPlusOne(
           'creature_equip_template',
           '`ID`',
-          where: {'CreatureID': creatureEquipTemplate.creatureID},
+          where: {'`CreatureID`': creatureEquipTemplate.creatureID},
         ),
       );
       try {

@@ -16,15 +16,25 @@ class GameIconCache {
 
   final LinkedHashMap<String, ui.Image> _images = LinkedHashMap();
 
+  /// 确定性缺失（文件不存在）的负缓存：默认状态下大量图标未提取，
+  /// 每个新可见行都重新 File.exists() 是纯浪费的 IO 往返。
+  final Set<String> _missing = {};
+
+  /// 清空/版本协调：clear() 后 in-flight 解码结果一律丢弃，
+  /// 避免已 dispose 的旧纹理被重新写回缓存或继续绘制。
+  int _generation = 0;
+
   final Map<String, Future<ui.Image?>> _pending = {};
   GameIconCache({int maxEntries = 256}) : _maxEntries = maxEntries;
 
   /// 清空缓存（提取完成后调用，避免引用已删除的旧图标）。
   void clear() {
+    _generation++;
     for (final image in _images.values) {
       image.dispose();
     }
     _images.clear();
+    _missing.clear();
   }
 
   /// 是否已缓存（供测试与诊断）。
@@ -32,6 +42,7 @@ class GameIconCache {
 
   /// 加载并解码 BLP 文件；文件缺失或解码失败返回 null。
   Future<ui.Image?> load(String path) async {
+    if (_missing.contains(path)) return null;
     final cached = _images.remove(path);
     if (cached != null) {
       _images[path] = cached; // 置顶
@@ -40,9 +51,10 @@ class GameIconCache {
     final inFlight = _pending[path];
     if (inFlight != null) return inFlight;
 
+    final generation = _generation;
     final future = _decode(path).then(
       (image) {
-        if (image != null) {
+        if (image != null && generation == _generation) {
           _images.remove(path);
           _images[path] = image;
           while (_images.length > _maxEntries) {
@@ -50,6 +62,10 @@ class GameIconCache {
             final evicted = _images.remove(_images.keys.first);
             evicted?.dispose();
           }
+        } else if (image != null) {
+          // clear() 期间完成的解码:缓存已清空,丢弃并释放纹理。
+          image.dispose();
+          return null;
         }
         _pending.remove(path);
         return image;
@@ -68,7 +84,10 @@ class GameIconCache {
   Future<ui.Image?> _decode(String path) async {
     final file = File(path);
     try {
-      if (!await file.exists()) return null;
+      if (!await file.exists()) {
+        _missing.add(path);
+        return null;
+      }
       final bytes = await file.readAsBytes();
       final BlpImage decoded;
       try {

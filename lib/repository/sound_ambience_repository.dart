@@ -50,7 +50,7 @@ class SoundAmbienceRepository
 
   QueryBuilder _applyFilter(QueryBuilder builder, SoundAmbienceFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     return builder;
   }

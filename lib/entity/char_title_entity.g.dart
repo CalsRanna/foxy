@@ -10,7 +10,11 @@ final class BriefCharTitleEntity {
 
   factory BriefCharTitleEntity.fromJson(Map<String, dynamic> json) {
     return BriefCharTitleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -298,8 +302,16 @@ mixin _CharTitleEntityMixin {
 
   static CharTitleEntity fromJson(Map<String, dynamic> json) {
     return CharTitleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      conditionId: (json['Condition_ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      conditionId: json['Condition_ID'] == true
+          ? 1
+          : json['Condition_ID'] == false
+          ? 0
+          : (json['Condition_ID'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -316,7 +328,11 @@ mixin _CharTitleEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
       name1LangEnUS: json['Name1_lang_enUS']?.toString() ?? '',
       name1LangKoKR: json['Name1_lang_koKR']?.toString() ?? '',
       name1LangFrFR: json['Name1_lang_frFR']?.toString() ?? '',
@@ -333,8 +349,16 @@ mixin _CharTitleEntityMixin {
       name1LangUnk1: json['Name1_lang_unk1']?.toString() ?? '',
       name1LangUnk2: json['Name1_lang_unk2']?.toString() ?? '',
       name1LangUnk3: json['Name1_lang_unk3']?.toString() ?? '',
-      name1LangFlags: (json['Name1_lang_Flags'] as num?)?.toInt() ?? 0,
-      maskId: (json['Mask_ID'] as num?)?.toInt() ?? 0,
+      name1LangFlags: json['Name1_lang_Flags'] == true
+          ? 1
+          : json['Name1_lang_Flags'] == false
+          ? 0
+          : (json['Name1_lang_Flags'] as num?)?.toInt() ?? 0,
+      maskId: json['Mask_ID'] == true
+          ? 1
+          : json['Mask_ID'] == false
+          ? 0
+          : (json['Mask_ID'] as num?)?.toInt() ?? 0,
     );
   }
 }

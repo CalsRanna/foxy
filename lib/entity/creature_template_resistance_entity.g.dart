@@ -19,10 +19,26 @@ final class BriefCreatureTemplateResistanceEntity {
     Map<String, dynamic> json,
   ) {
     return BriefCreatureTemplateResistanceEntity(
-      creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
-      school: (json['School'] as num?)?.toInt() ?? 0,
-      resistance: (json['Resistance'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureID: json['CreatureID'] == true
+          ? 1
+          : json['CreatureID'] == false
+          ? 0
+          : (json['CreatureID'] as num?)?.toInt() ?? 0,
+      school: json['School'] == true
+          ? 1
+          : json['School'] == false
+          ? 0
+          : (json['School'] as num?)?.toInt() ?? 0,
+      resistance: json['Resistance'] == true
+          ? 1
+          : json['Resistance'] == false
+          ? 0
+          : (json['Resistance'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -159,10 +175,26 @@ mixin _CreatureTemplateResistanceEntityMixin {
 
   static CreatureTemplateResistanceEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateResistanceEntity(
-      creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
-      school: (json['School'] as num?)?.toInt() ?? 0,
-      resistance: (json['Resistance'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureID: json['CreatureID'] == true
+          ? 1
+          : json['CreatureID'] == false
+          ? 0
+          : (json['CreatureID'] as num?)?.toInt() ?? 0,
+      school: json['School'] == true
+          ? 1
+          : json['School'] == false
+          ? 0
+          : (json['School'] as num?)?.toInt() ?? 0,
+      resistance: json['Resistance'] == true
+          ? 1
+          : json['Resistance'] == false
+          ? 0
+          : (json['Resistance'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

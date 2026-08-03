@@ -25,14 +25,46 @@ final class BriefScalingStatValueEntity {
 
   factory BriefScalingStatValueEntity.fromJson(Map<String, dynamic> json) {
     return BriefScalingStatValueEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      charlevel: (json['Charlevel'] as num?)?.toInt() ?? 0,
-      shoulderBudget: (json['ShoulderBudget'] as num?)?.toInt() ?? 0,
-      trinketBudget: (json['TrinketBudget'] as num?)?.toInt() ?? 0,
-      weaponBudget1H: (json['WeaponBudget1H'] as num?)?.toInt() ?? 0,
-      rangedBudget: (json['RangedBudget'] as num?)?.toInt() ?? 0,
-      primaryBudget: (json['PrimaryBudget'] as num?)?.toInt() ?? 0,
-      tertiaryBudget: (json['TertiaryBudget'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      charlevel: json['Charlevel'] == true
+          ? 1
+          : json['Charlevel'] == false
+          ? 0
+          : (json['Charlevel'] as num?)?.toInt() ?? 0,
+      shoulderBudget: json['ShoulderBudget'] == true
+          ? 1
+          : json['ShoulderBudget'] == false
+          ? 0
+          : (json['ShoulderBudget'] as num?)?.toInt() ?? 0,
+      trinketBudget: json['TrinketBudget'] == true
+          ? 1
+          : json['TrinketBudget'] == false
+          ? 0
+          : (json['TrinketBudget'] as num?)?.toInt() ?? 0,
+      weaponBudget1H: json['WeaponBudget1H'] == true
+          ? 1
+          : json['WeaponBudget1H'] == false
+          ? 0
+          : (json['WeaponBudget1H'] as num?)?.toInt() ?? 0,
+      rangedBudget: json['RangedBudget'] == true
+          ? 1
+          : json['RangedBudget'] == false
+          ? 0
+          : (json['RangedBudget'] as num?)?.toInt() ?? 0,
+      primaryBudget: json['PrimaryBudget'] == true
+          ? 1
+          : json['PrimaryBudget'] == false
+          ? 0
+          : (json['PrimaryBudget'] as num?)?.toInt() ?? 0,
+      tertiaryBudget: json['TertiaryBudget'] == true
+          ? 1
+          : json['TertiaryBudget'] == false
+          ? 0
+          : (json['TertiaryBudget'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -262,31 +294,126 @@ mixin _ScalingStatValueEntityMixin {
 
   static ScalingStatValueEntity fromJson(Map<String, dynamic> json) {
     return ScalingStatValueEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      charlevel: (json['Charlevel'] as num?)?.toInt() ?? 0,
-      shoulderBudget: (json['ShoulderBudget'] as num?)?.toInt() ?? 0,
-      trinketBudget: (json['TrinketBudget'] as num?)?.toInt() ?? 0,
-      weaponBudget1H: (json['WeaponBudget1H'] as num?)?.toInt() ?? 0,
-      rangedBudget: (json['RangedBudget'] as num?)?.toInt() ?? 0,
-      clothShoulderArmor: (json['ClothShoulderArmor'] as num?)?.toInt() ?? 0,
-      leatherShoulderArmor:
-          (json['LeatherShoulderArmor'] as num?)?.toInt() ?? 0,
-      mailShoulderArmor: (json['MailShoulderArmor'] as num?)?.toInt() ?? 0,
-      plateShoulderArmor: (json['PlateShoulderArmor'] as num?)?.toInt() ?? 0,
-      weaponDPS1H: (json['WeaponDPS1H'] as num?)?.toInt() ?? 0,
-      weaponDPS2H: (json['WeaponDPS2H'] as num?)?.toInt() ?? 0,
-      spellcasterDPS1H: (json['SpellcasterDPS1H'] as num?)?.toInt() ?? 0,
-      spellcasterDPS2H: (json['SpellcasterDPS2H'] as num?)?.toInt() ?? 0,
-      rangedDPS: (json['RangedDPS'] as num?)?.toInt() ?? 0,
-      wandDPS: (json['WandDPS'] as num?)?.toInt() ?? 0,
-      spellPower: (json['SpellPower'] as num?)?.toInt() ?? 0,
-      primaryBudget: (json['PrimaryBudget'] as num?)?.toInt() ?? 0,
-      tertiaryBudget: (json['TertiaryBudget'] as num?)?.toInt() ?? 0,
-      clothCloakArmor: (json['ClothCloakArmor'] as num?)?.toInt() ?? 0,
-      clothChestArmor: (json['ClothChestArmor'] as num?)?.toInt() ?? 0,
-      leatherChestArmor: (json['LeatherChestArmor'] as num?)?.toInt() ?? 0,
-      mailChestArmor: (json['MailChestArmor'] as num?)?.toInt() ?? 0,
-      plateChestArmor: (json['PlateChestArmor'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      charlevel: json['Charlevel'] == true
+          ? 1
+          : json['Charlevel'] == false
+          ? 0
+          : (json['Charlevel'] as num?)?.toInt() ?? 0,
+      shoulderBudget: json['ShoulderBudget'] == true
+          ? 1
+          : json['ShoulderBudget'] == false
+          ? 0
+          : (json['ShoulderBudget'] as num?)?.toInt() ?? 0,
+      trinketBudget: json['TrinketBudget'] == true
+          ? 1
+          : json['TrinketBudget'] == false
+          ? 0
+          : (json['TrinketBudget'] as num?)?.toInt() ?? 0,
+      weaponBudget1H: json['WeaponBudget1H'] == true
+          ? 1
+          : json['WeaponBudget1H'] == false
+          ? 0
+          : (json['WeaponBudget1H'] as num?)?.toInt() ?? 0,
+      rangedBudget: json['RangedBudget'] == true
+          ? 1
+          : json['RangedBudget'] == false
+          ? 0
+          : (json['RangedBudget'] as num?)?.toInt() ?? 0,
+      clothShoulderArmor: json['ClothShoulderArmor'] == true
+          ? 1
+          : json['ClothShoulderArmor'] == false
+          ? 0
+          : (json['ClothShoulderArmor'] as num?)?.toInt() ?? 0,
+      leatherShoulderArmor: json['LeatherShoulderArmor'] == true
+          ? 1
+          : json['LeatherShoulderArmor'] == false
+          ? 0
+          : (json['LeatherShoulderArmor'] as num?)?.toInt() ?? 0,
+      mailShoulderArmor: json['MailShoulderArmor'] == true
+          ? 1
+          : json['MailShoulderArmor'] == false
+          ? 0
+          : (json['MailShoulderArmor'] as num?)?.toInt() ?? 0,
+      plateShoulderArmor: json['PlateShoulderArmor'] == true
+          ? 1
+          : json['PlateShoulderArmor'] == false
+          ? 0
+          : (json['PlateShoulderArmor'] as num?)?.toInt() ?? 0,
+      weaponDPS1H: json['WeaponDPS1H'] == true
+          ? 1
+          : json['WeaponDPS1H'] == false
+          ? 0
+          : (json['WeaponDPS1H'] as num?)?.toInt() ?? 0,
+      weaponDPS2H: json['WeaponDPS2H'] == true
+          ? 1
+          : json['WeaponDPS2H'] == false
+          ? 0
+          : (json['WeaponDPS2H'] as num?)?.toInt() ?? 0,
+      spellcasterDPS1H: json['SpellcasterDPS1H'] == true
+          ? 1
+          : json['SpellcasterDPS1H'] == false
+          ? 0
+          : (json['SpellcasterDPS1H'] as num?)?.toInt() ?? 0,
+      spellcasterDPS2H: json['SpellcasterDPS2H'] == true
+          ? 1
+          : json['SpellcasterDPS2H'] == false
+          ? 0
+          : (json['SpellcasterDPS2H'] as num?)?.toInt() ?? 0,
+      rangedDPS: json['RangedDPS'] == true
+          ? 1
+          : json['RangedDPS'] == false
+          ? 0
+          : (json['RangedDPS'] as num?)?.toInt() ?? 0,
+      wandDPS: json['WandDPS'] == true
+          ? 1
+          : json['WandDPS'] == false
+          ? 0
+          : (json['WandDPS'] as num?)?.toInt() ?? 0,
+      spellPower: json['SpellPower'] == true
+          ? 1
+          : json['SpellPower'] == false
+          ? 0
+          : (json['SpellPower'] as num?)?.toInt() ?? 0,
+      primaryBudget: json['PrimaryBudget'] == true
+          ? 1
+          : json['PrimaryBudget'] == false
+          ? 0
+          : (json['PrimaryBudget'] as num?)?.toInt() ?? 0,
+      tertiaryBudget: json['TertiaryBudget'] == true
+          ? 1
+          : json['TertiaryBudget'] == false
+          ? 0
+          : (json['TertiaryBudget'] as num?)?.toInt() ?? 0,
+      clothCloakArmor: json['ClothCloakArmor'] == true
+          ? 1
+          : json['ClothCloakArmor'] == false
+          ? 0
+          : (json['ClothCloakArmor'] as num?)?.toInt() ?? 0,
+      clothChestArmor: json['ClothChestArmor'] == true
+          ? 1
+          : json['ClothChestArmor'] == false
+          ? 0
+          : (json['ClothChestArmor'] as num?)?.toInt() ?? 0,
+      leatherChestArmor: json['LeatherChestArmor'] == true
+          ? 1
+          : json['LeatherChestArmor'] == false
+          ? 0
+          : (json['LeatherChestArmor'] as num?)?.toInt() ?? 0,
+      mailChestArmor: json['MailChestArmor'] == true
+          ? 1
+          : json['MailChestArmor'] == false
+          ? 0
+          : (json['MailChestArmor'] as num?)?.toInt() ?? 0,
+      plateChestArmor: json['PlateChestArmor'] == true
+          ? 1
+          : json['PlateChestArmor'] == false
+          ? 0
+          : (json['PlateChestArmor'] as num?)?.toInt() ?? 0,
     );
   }
 }

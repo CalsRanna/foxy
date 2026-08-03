@@ -87,7 +87,7 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
         spellId: await nextMaxPlusOne(
           'trainer_spell',
           '`SpellId`',
-          where: {'TrainerId': npcTrainer.trainerId},
+          where: {'`TrainerId`': npcTrainer.trainerId},
         ),
       );
       try {

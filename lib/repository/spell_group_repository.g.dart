@@ -75,7 +75,7 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
         id: await nextMaxPlusOne(
           'spell_group',
           '`id`',
-          where: {'spell_id': spellGroup.spellId},
+          where: {'`spell_id`': spellGroup.spellId},
         ),
       );
       try {

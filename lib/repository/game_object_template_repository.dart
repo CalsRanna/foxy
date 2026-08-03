@@ -36,7 +36,7 @@ class GameObjectTemplateRepository
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.entry.isNotEmpty) {
-        builder = builder.where('entry', filter.entry);
+        builder = builder.where('entry', int.tryParse(filter.entry) ?? 0);
       }
       if (filter != null && filter.name.isNotEmpty) {
         builder = builder.where('name', '%${escapeLike(filter.name)}%', comparator: 'like');
@@ -103,7 +103,7 @@ class GameObjectTemplateRepository
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('gt.entry', filter.entry);
+      builder = builder.where('gt.entry', int.tryParse(filter.entry) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       if (localeEnabled) {

@@ -31,17 +31,61 @@ final class BriefQuestFactionRewardEntity {
 
   factory BriefQuestFactionRewardEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestFactionRewardEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      difficulty0: (json['Difficulty0'] as num?)?.toInt() ?? 0,
-      difficulty1: (json['Difficulty1'] as num?)?.toInt() ?? 0,
-      difficulty2: (json['Difficulty2'] as num?)?.toInt() ?? 0,
-      difficulty3: (json['Difficulty3'] as num?)?.toInt() ?? 0,
-      difficulty4: (json['Difficulty4'] as num?)?.toInt() ?? 0,
-      difficulty5: (json['Difficulty5'] as num?)?.toInt() ?? 0,
-      difficulty6: (json['Difficulty6'] as num?)?.toInt() ?? 0,
-      difficulty7: (json['Difficulty7'] as num?)?.toInt() ?? 0,
-      difficulty8: (json['Difficulty8'] as num?)?.toInt() ?? 0,
-      difficulty9: (json['Difficulty9'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      difficulty0: json['Difficulty0'] == true
+          ? 1
+          : json['Difficulty0'] == false
+          ? 0
+          : (json['Difficulty0'] as num?)?.toInt() ?? 0,
+      difficulty1: json['Difficulty1'] == true
+          ? 1
+          : json['Difficulty1'] == false
+          ? 0
+          : (json['Difficulty1'] as num?)?.toInt() ?? 0,
+      difficulty2: json['Difficulty2'] == true
+          ? 1
+          : json['Difficulty2'] == false
+          ? 0
+          : (json['Difficulty2'] as num?)?.toInt() ?? 0,
+      difficulty3: json['Difficulty3'] == true
+          ? 1
+          : json['Difficulty3'] == false
+          ? 0
+          : (json['Difficulty3'] as num?)?.toInt() ?? 0,
+      difficulty4: json['Difficulty4'] == true
+          ? 1
+          : json['Difficulty4'] == false
+          ? 0
+          : (json['Difficulty4'] as num?)?.toInt() ?? 0,
+      difficulty5: json['Difficulty5'] == true
+          ? 1
+          : json['Difficulty5'] == false
+          ? 0
+          : (json['Difficulty5'] as num?)?.toInt() ?? 0,
+      difficulty6: json['Difficulty6'] == true
+          ? 1
+          : json['Difficulty6'] == false
+          ? 0
+          : (json['Difficulty6'] as num?)?.toInt() ?? 0,
+      difficulty7: json['Difficulty7'] == true
+          ? 1
+          : json['Difficulty7'] == false
+          ? 0
+          : (json['Difficulty7'] as num?)?.toInt() ?? 0,
+      difficulty8: json['Difficulty8'] == true
+          ? 1
+          : json['Difficulty8'] == false
+          ? 0
+          : (json['Difficulty8'] as num?)?.toInt() ?? 0,
+      difficulty9: json['Difficulty9'] == true
+          ? 1
+          : json['Difficulty9'] == false
+          ? 0
+          : (json['Difficulty9'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -202,17 +246,61 @@ mixin _QuestFactionRewardEntityMixin {
 
   static QuestFactionRewardEntity fromJson(Map<String, dynamic> json) {
     return QuestFactionRewardEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      difficulty0: (json['Difficulty0'] as num?)?.toInt() ?? 0,
-      difficulty1: (json['Difficulty1'] as num?)?.toInt() ?? 0,
-      difficulty2: (json['Difficulty2'] as num?)?.toInt() ?? 0,
-      difficulty3: (json['Difficulty3'] as num?)?.toInt() ?? 0,
-      difficulty4: (json['Difficulty4'] as num?)?.toInt() ?? 0,
-      difficulty5: (json['Difficulty5'] as num?)?.toInt() ?? 0,
-      difficulty6: (json['Difficulty6'] as num?)?.toInt() ?? 0,
-      difficulty7: (json['Difficulty7'] as num?)?.toInt() ?? 0,
-      difficulty8: (json['Difficulty8'] as num?)?.toInt() ?? 0,
-      difficulty9: (json['Difficulty9'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      difficulty0: json['Difficulty0'] == true
+          ? 1
+          : json['Difficulty0'] == false
+          ? 0
+          : (json['Difficulty0'] as num?)?.toInt() ?? 0,
+      difficulty1: json['Difficulty1'] == true
+          ? 1
+          : json['Difficulty1'] == false
+          ? 0
+          : (json['Difficulty1'] as num?)?.toInt() ?? 0,
+      difficulty2: json['Difficulty2'] == true
+          ? 1
+          : json['Difficulty2'] == false
+          ? 0
+          : (json['Difficulty2'] as num?)?.toInt() ?? 0,
+      difficulty3: json['Difficulty3'] == true
+          ? 1
+          : json['Difficulty3'] == false
+          ? 0
+          : (json['Difficulty3'] as num?)?.toInt() ?? 0,
+      difficulty4: json['Difficulty4'] == true
+          ? 1
+          : json['Difficulty4'] == false
+          ? 0
+          : (json['Difficulty4'] as num?)?.toInt() ?? 0,
+      difficulty5: json['Difficulty5'] == true
+          ? 1
+          : json['Difficulty5'] == false
+          ? 0
+          : (json['Difficulty5'] as num?)?.toInt() ?? 0,
+      difficulty6: json['Difficulty6'] == true
+          ? 1
+          : json['Difficulty6'] == false
+          ? 0
+          : (json['Difficulty6'] as num?)?.toInt() ?? 0,
+      difficulty7: json['Difficulty7'] == true
+          ? 1
+          : json['Difficulty7'] == false
+          ? 0
+          : (json['Difficulty7'] as num?)?.toInt() ?? 0,
+      difficulty8: json['Difficulty8'] == true
+          ? 1
+          : json['Difficulty8'] == false
+          ? 0
+          : (json['Difficulty8'] as num?)?.toInt() ?? 0,
+      difficulty9: json['Difficulty9'] == true
+          ? 1
+          : json['Difficulty9'] == false
+          ? 0
+          : (json['Difficulty9'] as num?)?.toInt() ?? 0,
     );
   }
 }

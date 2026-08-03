@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -52,7 +53,9 @@ class DatabaseLocaleEditor extends StatefulWidget {
       LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
       try {
-        ShadSonner.of(context).show(ShadToast(description: Text('加载失败: $e')));
+        ShadSonner.of(context).show(
+          ShadToast(description: Text('加载失败: ${foxyErrorMessage(e)}')),
+        );
       } catch (_) {}
       return null;
     }
@@ -260,9 +263,11 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: $e');
+      setState(() => _errorMessage = '保存失败: ${foxyErrorMessage(e)}');
       try {
-        ShadSonner.of(context).show(ShadToast(description: Text('保存失败: $e')));
+        ShadSonner.of(context).show(
+          ShadToast(description: Text('保存失败: ${foxyErrorMessage(e)}')),
+        );
       } catch (_) {}
     } finally {
       if (mounted) {

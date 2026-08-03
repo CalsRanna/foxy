@@ -115,7 +115,7 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'item_loot_template',
           '`Item`',
-          where: {'Entry': itemLootTemplate.entry},
+          where: {'`Entry`': itemLootTemplate.entry},
         ),
       );
       try {

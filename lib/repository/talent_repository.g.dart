@@ -141,7 +141,7 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, TalentFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('`ID`', filter.id);
+      builder = builder.where('`ID`', int.tryParse(filter.id) ?? 0);
     }
     if (filter.spell.isNotEmpty) {
       builder = builder.where('`SpellRank0`', filter.spell);

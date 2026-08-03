@@ -11,7 +11,11 @@ final class BriefSpellItemEnchantmentConditionEntity {
     Map<String, dynamic> json,
   ) {
     return BriefSpellItemEnchantmentConditionEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -261,37 +265,161 @@ mixin _SpellItemEnchantmentConditionEntityMixin {
     Map<String, dynamic> json,
   ) {
     return SpellItemEnchantmentConditionEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      ltOperandType0: (json['Lt_operandType0'] as num?)?.toInt() ?? 0,
-      ltOperandType1: (json['Lt_operandType1'] as num?)?.toInt() ?? 0,
-      ltOperandType2: (json['Lt_operandType2'] as num?)?.toInt() ?? 0,
-      ltOperandType3: (json['Lt_operandType3'] as num?)?.toInt() ?? 0,
-      ltOperandType4: (json['Lt_operandType4'] as num?)?.toInt() ?? 0,
-      ltOperand0: (json['Lt_operand0'] as num?)?.toInt() ?? 0,
-      ltOperand1: (json['Lt_operand1'] as num?)?.toInt() ?? 0,
-      ltOperand2: (json['Lt_operand2'] as num?)?.toInt() ?? 0,
-      ltOperand3: (json['Lt_operand3'] as num?)?.toInt() ?? 0,
-      ltOperand4: (json['Lt_operand4'] as num?)?.toInt() ?? 0,
-      operator0: (json['Operator0'] as num?)?.toInt() ?? 0,
-      operator1: (json['Operator1'] as num?)?.toInt() ?? 0,
-      operator2: (json['Operator2'] as num?)?.toInt() ?? 0,
-      operator3: (json['Operator3'] as num?)?.toInt() ?? 0,
-      operator4: (json['Operator4'] as num?)?.toInt() ?? 0,
-      rtOperandType0: (json['Rt_operandType0'] as num?)?.toInt() ?? 0,
-      rtOperandType1: (json['Rt_operandType1'] as num?)?.toInt() ?? 0,
-      rtOperandType2: (json['Rt_operandType2'] as num?)?.toInt() ?? 0,
-      rtOperandType3: (json['Rt_operandType3'] as num?)?.toInt() ?? 0,
-      rtOperandType4: (json['Rt_operandType4'] as num?)?.toInt() ?? 0,
-      rtOperand0: (json['Rt_operand0'] as num?)?.toInt() ?? 0,
-      rtOperand1: (json['Rt_operand1'] as num?)?.toInt() ?? 0,
-      rtOperand2: (json['Rt_operand2'] as num?)?.toInt() ?? 0,
-      rtOperand3: (json['Rt_operand3'] as num?)?.toInt() ?? 0,
-      rtOperand4: (json['Rt_operand4'] as num?)?.toInt() ?? 0,
-      logic0: (json['Logic0'] as num?)?.toInt() ?? 0,
-      logic1: (json['Logic1'] as num?)?.toInt() ?? 0,
-      logic2: (json['Logic2'] as num?)?.toInt() ?? 0,
-      logic3: (json['Logic3'] as num?)?.toInt() ?? 0,
-      logic4: (json['Logic4'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      ltOperandType0: json['Lt_operandType0'] == true
+          ? 1
+          : json['Lt_operandType0'] == false
+          ? 0
+          : (json['Lt_operandType0'] as num?)?.toInt() ?? 0,
+      ltOperandType1: json['Lt_operandType1'] == true
+          ? 1
+          : json['Lt_operandType1'] == false
+          ? 0
+          : (json['Lt_operandType1'] as num?)?.toInt() ?? 0,
+      ltOperandType2: json['Lt_operandType2'] == true
+          ? 1
+          : json['Lt_operandType2'] == false
+          ? 0
+          : (json['Lt_operandType2'] as num?)?.toInt() ?? 0,
+      ltOperandType3: json['Lt_operandType3'] == true
+          ? 1
+          : json['Lt_operandType3'] == false
+          ? 0
+          : (json['Lt_operandType3'] as num?)?.toInt() ?? 0,
+      ltOperandType4: json['Lt_operandType4'] == true
+          ? 1
+          : json['Lt_operandType4'] == false
+          ? 0
+          : (json['Lt_operandType4'] as num?)?.toInt() ?? 0,
+      ltOperand0: json['Lt_operand0'] == true
+          ? 1
+          : json['Lt_operand0'] == false
+          ? 0
+          : (json['Lt_operand0'] as num?)?.toInt() ?? 0,
+      ltOperand1: json['Lt_operand1'] == true
+          ? 1
+          : json['Lt_operand1'] == false
+          ? 0
+          : (json['Lt_operand1'] as num?)?.toInt() ?? 0,
+      ltOperand2: json['Lt_operand2'] == true
+          ? 1
+          : json['Lt_operand2'] == false
+          ? 0
+          : (json['Lt_operand2'] as num?)?.toInt() ?? 0,
+      ltOperand3: json['Lt_operand3'] == true
+          ? 1
+          : json['Lt_operand3'] == false
+          ? 0
+          : (json['Lt_operand3'] as num?)?.toInt() ?? 0,
+      ltOperand4: json['Lt_operand4'] == true
+          ? 1
+          : json['Lt_operand4'] == false
+          ? 0
+          : (json['Lt_operand4'] as num?)?.toInt() ?? 0,
+      operator0: json['Operator0'] == true
+          ? 1
+          : json['Operator0'] == false
+          ? 0
+          : (json['Operator0'] as num?)?.toInt() ?? 0,
+      operator1: json['Operator1'] == true
+          ? 1
+          : json['Operator1'] == false
+          ? 0
+          : (json['Operator1'] as num?)?.toInt() ?? 0,
+      operator2: json['Operator2'] == true
+          ? 1
+          : json['Operator2'] == false
+          ? 0
+          : (json['Operator2'] as num?)?.toInt() ?? 0,
+      operator3: json['Operator3'] == true
+          ? 1
+          : json['Operator3'] == false
+          ? 0
+          : (json['Operator3'] as num?)?.toInt() ?? 0,
+      operator4: json['Operator4'] == true
+          ? 1
+          : json['Operator4'] == false
+          ? 0
+          : (json['Operator4'] as num?)?.toInt() ?? 0,
+      rtOperandType0: json['Rt_operandType0'] == true
+          ? 1
+          : json['Rt_operandType0'] == false
+          ? 0
+          : (json['Rt_operandType0'] as num?)?.toInt() ?? 0,
+      rtOperandType1: json['Rt_operandType1'] == true
+          ? 1
+          : json['Rt_operandType1'] == false
+          ? 0
+          : (json['Rt_operandType1'] as num?)?.toInt() ?? 0,
+      rtOperandType2: json['Rt_operandType2'] == true
+          ? 1
+          : json['Rt_operandType2'] == false
+          ? 0
+          : (json['Rt_operandType2'] as num?)?.toInt() ?? 0,
+      rtOperandType3: json['Rt_operandType3'] == true
+          ? 1
+          : json['Rt_operandType3'] == false
+          ? 0
+          : (json['Rt_operandType3'] as num?)?.toInt() ?? 0,
+      rtOperandType4: json['Rt_operandType4'] == true
+          ? 1
+          : json['Rt_operandType4'] == false
+          ? 0
+          : (json['Rt_operandType4'] as num?)?.toInt() ?? 0,
+      rtOperand0: json['Rt_operand0'] == true
+          ? 1
+          : json['Rt_operand0'] == false
+          ? 0
+          : (json['Rt_operand0'] as num?)?.toInt() ?? 0,
+      rtOperand1: json['Rt_operand1'] == true
+          ? 1
+          : json['Rt_operand1'] == false
+          ? 0
+          : (json['Rt_operand1'] as num?)?.toInt() ?? 0,
+      rtOperand2: json['Rt_operand2'] == true
+          ? 1
+          : json['Rt_operand2'] == false
+          ? 0
+          : (json['Rt_operand2'] as num?)?.toInt() ?? 0,
+      rtOperand3: json['Rt_operand3'] == true
+          ? 1
+          : json['Rt_operand3'] == false
+          ? 0
+          : (json['Rt_operand3'] as num?)?.toInt() ?? 0,
+      rtOperand4: json['Rt_operand4'] == true
+          ? 1
+          : json['Rt_operand4'] == false
+          ? 0
+          : (json['Rt_operand4'] as num?)?.toInt() ?? 0,
+      logic0: json['Logic0'] == true
+          ? 1
+          : json['Logic0'] == false
+          ? 0
+          : (json['Logic0'] as num?)?.toInt() ?? 0,
+      logic1: json['Logic1'] == true
+          ? 1
+          : json['Logic1'] == false
+          ? 0
+          : (json['Logic1'] as num?)?.toInt() ?? 0,
+      logic2: json['Logic2'] == true
+          ? 1
+          : json['Logic2'] == false
+          ? 0
+          : (json['Logic2'] as num?)?.toInt() ?? 0,
+      logic3: json['Logic3'] == true
+          ? 1
+          : json['Logic3'] == false
+          ? 0
+          : (json['Logic3'] as num?)?.toInt() ?? 0,
+      logic4: json['Logic4'] == true
+          ? 1
+          : json['Logic4'] == false
+          ? 0
+          : (json['Logic4'] as num?)?.toInt() ?? 0,
     );
   }
 }

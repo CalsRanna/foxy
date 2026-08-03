@@ -10,6 +10,8 @@ class BootstrapSimulatorForm extends StatelessWidget {
   final StringFieldController databaseController;
   final StringFieldController usernameController;
   final StringFieldController passwordController;
+  final bool useSsl;
+  final ValueChanged<bool>? onUseSslChanged;
   const BootstrapSimulatorForm({
     super.key,
     this.onConnect,
@@ -18,6 +20,8 @@ class BootstrapSimulatorForm extends StatelessWidget {
     required this.databaseController,
     required this.usernameController,
     required this.passwordController,
+    this.useSsl = false,
+    this.onUseSslChanged,
   });
 
   @override
@@ -70,6 +74,16 @@ class BootstrapSimulatorForm extends StatelessWidget {
                     controller: passwordController,
                     placeholder: 'Password',
                     obscureText: true,
+                  ),
+                  Row(
+                    children: [
+                      ShadSwitch(
+                        value: useSsl,
+                        onChanged: onUseSslChanged,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text('使用 SSL 加密连接'),
+                    ],
                   ),
                 ],
               ),

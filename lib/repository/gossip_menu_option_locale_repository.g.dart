@@ -38,26 +38,7 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
       await laconic.table('gossip_menu_option_locale').insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
-      final retried = gossipMenuOptionLocale.copyWith(
-        menuId: await nextMaxPlusOne('gossip_menu_option_locale', '`MenuID`'),
-        optionId: await nextMaxPlusOne(
-          'gossip_menu_option_locale',
-          '`OptionID`',
-        ),
-      );
-      try {
-        await laconic.table('gossip_menu_option_locale').insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
-        return;
-      } catch (retryError) {
-        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
-          throw DuplicateKeyException(
-            'duplicate key in gossip_menu_option_locale',
-          );
-        }
-        rethrow;
-      }
+      throw DuplicateKeyException('duplicate key in gossip_menu_option_locale');
     }
   }
 

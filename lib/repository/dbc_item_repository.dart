@@ -65,7 +65,7 @@ class DbcItemRepository with RepositoryMixin, _DbcItemRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     if (filter.handEquippableOnly) {
       builder = builder.whereIn('InventoryType', handEquippableInventoryTypes);
     }

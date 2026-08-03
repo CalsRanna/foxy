@@ -45,23 +45,59 @@ final class BriefCreatureEquipTemplateEntity {
 
   factory BriefCreatureEquipTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureEquipTemplateEntity(
-      creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureID: json['CreatureID'] == true
+          ? 1
+          : json['CreatureID'] == false
+          ? 0
+          : (json['CreatureID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      itemID1: json['ItemID1'] == true
+          ? 1
+          : json['ItemID1'] == false
+          ? 0
+          : (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemID2: json['ItemID2'] == true
+          ? 1
+          : json['ItemID2'] == false
+          ? 0
+          : (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemID3: json['ItemID3'] == true
+          ? 1
+          : json['ItemID3'] == false
+          ? 0
+          : (json['ItemID3'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
       name1: json['name1']?.toString() ?? '',
       localeName1: json['localeName1']?.toString() ?? '',
-      quality1: (json['quality1'] as num?)?.toInt() ?? 0,
+      quality1: json['quality1'] == true
+          ? 1
+          : json['quality1'] == false
+          ? 0
+          : (json['quality1'] as num?)?.toInt() ?? 0,
       icon1: json['icon1']?.toString() ?? '',
       name2: json['name2']?.toString() ?? '',
       localeName2: json['localeName2']?.toString() ?? '',
-      quality2: (json['quality2'] as num?)?.toInt() ?? 0,
+      quality2: json['quality2'] == true
+          ? 1
+          : json['quality2'] == false
+          ? 0
+          : (json['quality2'] as num?)?.toInt() ?? 0,
       icon2: json['icon2']?.toString() ?? '',
       name3: json['name3']?.toString() ?? '',
       localeName3: json['localeName3']?.toString() ?? '',
-      quality3: (json['quality3'] as num?)?.toInt() ?? 0,
+      quality3: json['quality3'] == true
+          ? 1
+          : json['quality3'] == false
+          ? 0
+          : (json['quality3'] as num?)?.toInt() ?? 0,
       icon3: json['icon3']?.toString() ?? '',
     );
   }
@@ -251,12 +287,36 @@ mixin _CreatureEquipTemplateEntityMixin {
 
   static CreatureEquipTemplateEntity fromJson(Map<String, dynamic> json) {
     return CreatureEquipTemplateEntity(
-      creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureID: json['CreatureID'] == true
+          ? 1
+          : json['CreatureID'] == false
+          ? 0
+          : (json['CreatureID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      itemID1: json['ItemID1'] == true
+          ? 1
+          : json['ItemID1'] == false
+          ? 0
+          : (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemID2: json['ItemID2'] == true
+          ? 1
+          : json['ItemID2'] == false
+          ? 0
+          : (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemID3: json['ItemID3'] == true
+          ? 1
+          : json['ItemID3'] == false
+          ? 0
+          : (json['ItemID3'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -17,9 +17,17 @@ final class BriefPageTextEntity {
 
   factory BriefPageTextEntity.fromJson(Map<String, dynamic> json) {
     return BriefPageTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       text: json['Text']?.toString() ?? '',
-      nextPageId: (json['NextPageID'] as num?)?.toInt() ?? 0,
+      nextPageId: json['NextPageID'] == true
+          ? 1
+          : json['NextPageID'] == false
+          ? 0
+          : (json['NextPageID'] as num?)?.toInt() ?? 0,
       localeText: json['localeText']?.toString() ?? '',
     );
   }
@@ -113,10 +121,22 @@ mixin _PageTextEntityMixin {
 
   static PageTextEntity fromJson(Map<String, dynamic> json) {
     return PageTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       text: json['Text']?.toString() ?? '',
-      nextPageId: (json['NextPageID'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      nextPageId: json['NextPageID'] == true
+          ? 1
+          : json['NextPageID'] == false
+          ? 0
+          : (json['NextPageID'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -25,10 +25,26 @@ final class BriefPlayerCreateInfoEntity {
 
   factory BriefPlayerCreateInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefPlayerCreateInfoEntity(
-      race: (json['race'] as num?)?.toInt() ?? 0,
-      class_: (json['class'] as num?)?.toInt() ?? 0,
-      map: (json['map'] as num?)?.toInt() ?? 0,
-      zone: (json['zone'] as num?)?.toInt() ?? 0,
+      race: json['race'] == true
+          ? 1
+          : json['race'] == false
+          ? 0
+          : (json['race'] as num?)?.toInt() ?? 0,
+      class_: json['class'] == true
+          ? 1
+          : json['class'] == false
+          ? 0
+          : (json['class'] as num?)?.toInt() ?? 0,
+      map: json['map'] == true
+          ? 1
+          : json['map'] == false
+          ? 0
+          : (json['map'] as num?)?.toInt() ?? 0,
+      zone: json['zone'] == true
+          ? 1
+          : json['zone'] == false
+          ? 0
+          : (json['zone'] as num?)?.toInt() ?? 0,
       positionX: (json['position_x'] as num?)?.toDouble() ?? 0.0,
       positionY: (json['position_y'] as num?)?.toDouble() ?? 0.0,
       positionZ: (json['position_z'] as num?)?.toDouble() ?? 0.0,
@@ -198,10 +214,26 @@ mixin _PlayerCreateInfoEntityMixin {
 
   static PlayerCreateInfoEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoEntity(
-      race: (json['race'] as num?)?.toInt() ?? 0,
-      class_: (json['class'] as num?)?.toInt() ?? 0,
-      map: (json['map'] as num?)?.toInt() ?? 0,
-      zone: (json['zone'] as num?)?.toInt() ?? 0,
+      race: json['race'] == true
+          ? 1
+          : json['race'] == false
+          ? 0
+          : (json['race'] as num?)?.toInt() ?? 0,
+      class_: json['class'] == true
+          ? 1
+          : json['class'] == false
+          ? 0
+          : (json['class'] as num?)?.toInt() ?? 0,
+      map: json['map'] == true
+          ? 1
+          : json['map'] == false
+          ? 0
+          : (json['map'] as num?)?.toInt() ?? 0,
+      zone: json['zone'] == true
+          ? 1
+          : json['zone'] == false
+          ? 0
+          : (json['zone'] as num?)?.toInt() ?? 0,
       positionX: (json['position_x'] as num?)?.toDouble() ?? 0.0,
       positionY: (json['position_y'] as num?)?.toDouble() ?? 0.0,
       positionZ: (json['position_z'] as num?)?.toDouble() ?? 0.0,

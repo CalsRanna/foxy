@@ -65,6 +65,7 @@ class SmartScriptDetailViewModel
     try {
       if (key == null) {
         final blank = await _repository.createSmartScript();
+        if (isDisposed) return;
         entity.value = blank;
         _applyCandidate(blank);
         persistedKey.value = null;
@@ -74,6 +75,7 @@ class SmartScriptDetailViewModel
       if (result == null) {
         throw RecordNotFoundException('record not found');
       }
+      if (isDisposed) return;
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;

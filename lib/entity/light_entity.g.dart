@@ -19,8 +19,16 @@ final class BriefLightEntity {
 
   factory BriefLightEntity.fromJson(Map<String, dynamic> json) {
     return BriefLightEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      continentId: json['ContinentID'] == true
+          ? 1
+          : json['ContinentID'] == false
+          ? 0
+          : (json['ContinentID'] as num?)?.toInt() ?? 0,
       gameCoords0: (json['GameCoords0'] as num?)?.toDouble() ?? 0.0,
       gameCoords1: (json['GameCoords1'] as num?)?.toDouble() ?? 0.0,
       gameCoords2: (json['GameCoords2'] as num?)?.toDouble() ?? 0.0,
@@ -185,21 +193,61 @@ mixin _LightEntityMixin {
 
   static LightEntity fromJson(Map<String, dynamic> json) {
     return LightEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      continentId: json['ContinentID'] == true
+          ? 1
+          : json['ContinentID'] == false
+          ? 0
+          : (json['ContinentID'] as num?)?.toInt() ?? 0,
       gameCoords0: (json['GameCoords0'] as num?)?.toDouble() ?? 0.0,
       gameCoords1: (json['GameCoords1'] as num?)?.toDouble() ?? 0.0,
       gameCoords2: (json['GameCoords2'] as num?)?.toDouble() ?? 0.0,
       gameFalloffStart: (json['GameFalloffStart'] as num?)?.toDouble() ?? 0.0,
       gameFalloffEnd: (json['GameFalloffEnd'] as num?)?.toDouble() ?? 0.0,
-      lightParamsId0: (json['LightParamsID0'] as num?)?.toInt() ?? 0,
-      lightParamsId1: (json['LightParamsID1'] as num?)?.toInt() ?? 0,
-      lightParamsId2: (json['LightParamsID2'] as num?)?.toInt() ?? 0,
-      lightParamsId3: (json['LightParamsID3'] as num?)?.toInt() ?? 0,
-      lightParamsId4: (json['LightParamsID4'] as num?)?.toInt() ?? 0,
-      lightParamsId5: (json['LightParamsID5'] as num?)?.toInt() ?? 0,
-      lightParamsId6: (json['LightParamsID6'] as num?)?.toInt() ?? 0,
-      lightParamsId7: (json['LightParamsID7'] as num?)?.toInt() ?? 0,
+      lightParamsId0: json['LightParamsID0'] == true
+          ? 1
+          : json['LightParamsID0'] == false
+          ? 0
+          : (json['LightParamsID0'] as num?)?.toInt() ?? 0,
+      lightParamsId1: json['LightParamsID1'] == true
+          ? 1
+          : json['LightParamsID1'] == false
+          ? 0
+          : (json['LightParamsID1'] as num?)?.toInt() ?? 0,
+      lightParamsId2: json['LightParamsID2'] == true
+          ? 1
+          : json['LightParamsID2'] == false
+          ? 0
+          : (json['LightParamsID2'] as num?)?.toInt() ?? 0,
+      lightParamsId3: json['LightParamsID3'] == true
+          ? 1
+          : json['LightParamsID3'] == false
+          ? 0
+          : (json['LightParamsID3'] as num?)?.toInt() ?? 0,
+      lightParamsId4: json['LightParamsID4'] == true
+          ? 1
+          : json['LightParamsID4'] == false
+          ? 0
+          : (json['LightParamsID4'] as num?)?.toInt() ?? 0,
+      lightParamsId5: json['LightParamsID5'] == true
+          ? 1
+          : json['LightParamsID5'] == false
+          ? 0
+          : (json['LightParamsID5'] as num?)?.toInt() ?? 0,
+      lightParamsId6: json['LightParamsID6'] == true
+          ? 1
+          : json['LightParamsID6'] == false
+          ? 0
+          : (json['LightParamsID6'] as num?)?.toInt() ?? 0,
+      lightParamsId7: json['LightParamsID7'] == true
+          ? 1
+          : json['LightParamsID7'] == false
+          ? 0
+          : (json['LightParamsID7'] as num?)?.toInt() ?? 0,
     );
   }
 }

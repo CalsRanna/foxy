@@ -31,18 +31,56 @@ final class BriefConditionEntity {
 
   factory BriefConditionEntity.fromJson(Map<String, dynamic> json) {
     return BriefConditionEntity(
-      sourceTypeOrReferenceId:
-          (json['SourceTypeOrReferenceId'] as num?)?.toInt() ?? 0,
-      sourceGroup: (json['SourceGroup'] as num?)?.toInt() ?? 0,
-      sourceEntry: (json['SourceEntry'] as num?)?.toInt() ?? 0,
-      sourceId: (json['SourceId'] as num?)?.toInt() ?? 0,
-      elseGroup: (json['ElseGroup'] as num?)?.toInt() ?? 0,
-      conditionTypeOrReference:
-          (json['ConditionTypeOrReference'] as num?)?.toInt() ?? 0,
-      conditionTarget: (json['ConditionTarget'] as num?)?.toInt() ?? 0,
-      conditionValue1: (json['ConditionValue1'] as num?)?.toInt() ?? 0,
-      conditionValue2: (json['ConditionValue2'] as num?)?.toInt() ?? 0,
-      conditionValue3: (json['ConditionValue3'] as num?)?.toInt() ?? 0,
+      sourceTypeOrReferenceId: json['SourceTypeOrReferenceId'] == true
+          ? 1
+          : json['SourceTypeOrReferenceId'] == false
+          ? 0
+          : (json['SourceTypeOrReferenceId'] as num?)?.toInt() ?? 0,
+      sourceGroup: json['SourceGroup'] == true
+          ? 1
+          : json['SourceGroup'] == false
+          ? 0
+          : (json['SourceGroup'] as num?)?.toInt() ?? 0,
+      sourceEntry: json['SourceEntry'] == true
+          ? 1
+          : json['SourceEntry'] == false
+          ? 0
+          : (json['SourceEntry'] as num?)?.toInt() ?? 0,
+      sourceId: json['SourceId'] == true
+          ? 1
+          : json['SourceId'] == false
+          ? 0
+          : (json['SourceId'] as num?)?.toInt() ?? 0,
+      elseGroup: json['ElseGroup'] == true
+          ? 1
+          : json['ElseGroup'] == false
+          ? 0
+          : (json['ElseGroup'] as num?)?.toInt() ?? 0,
+      conditionTypeOrReference: json['ConditionTypeOrReference'] == true
+          ? 1
+          : json['ConditionTypeOrReference'] == false
+          ? 0
+          : (json['ConditionTypeOrReference'] as num?)?.toInt() ?? 0,
+      conditionTarget: json['ConditionTarget'] == true
+          ? 1
+          : json['ConditionTarget'] == false
+          ? 0
+          : (json['ConditionTarget'] as num?)?.toInt() ?? 0,
+      conditionValue1: json['ConditionValue1'] == true
+          ? 1
+          : json['ConditionValue1'] == false
+          ? 0
+          : (json['ConditionValue1'] as num?)?.toInt() ?? 0,
+      conditionValue2: json['ConditionValue2'] == true
+          ? 1
+          : json['ConditionValue2'] == false
+          ? 0
+          : (json['ConditionValue2'] as num?)?.toInt() ?? 0,
+      conditionValue3: json['ConditionValue3'] == true
+          ? 1
+          : json['ConditionValue3'] == false
+          ? 0
+          : (json['ConditionValue3'] as num?)?.toInt() ?? 0,
       comment: json['Comment']?.toString() ?? '',
     );
   }
@@ -330,21 +368,71 @@ mixin _ConditionEntityMixin {
 
   static ConditionEntity fromJson(Map<String, dynamic> json) {
     return ConditionEntity(
-      sourceTypeOrReferenceId:
-          (json['SourceTypeOrReferenceId'] as num?)?.toInt() ?? 0,
-      sourceGroup: (json['SourceGroup'] as num?)?.toInt() ?? 0,
-      sourceEntry: (json['SourceEntry'] as num?)?.toInt() ?? 0,
-      sourceId: (json['SourceId'] as num?)?.toInt() ?? 0,
-      elseGroup: (json['ElseGroup'] as num?)?.toInt() ?? 0,
-      conditionTypeOrReference:
-          (json['ConditionTypeOrReference'] as num?)?.toInt() ?? 0,
-      conditionTarget: (json['ConditionTarget'] as num?)?.toInt() ?? 0,
-      conditionValue1: (json['ConditionValue1'] as num?)?.toInt() ?? 0,
-      conditionValue2: (json['ConditionValue2'] as num?)?.toInt() ?? 0,
-      conditionValue3: (json['ConditionValue3'] as num?)?.toInt() ?? 0,
-      negativeCondition: (json['NegativeCondition'] as num?)?.toInt() ?? 0,
-      errorType: (json['ErrorType'] as num?)?.toInt() ?? 0,
-      errorTextId: (json['ErrorTextId'] as num?)?.toInt() ?? 0,
+      sourceTypeOrReferenceId: json['SourceTypeOrReferenceId'] == true
+          ? 1
+          : json['SourceTypeOrReferenceId'] == false
+          ? 0
+          : (json['SourceTypeOrReferenceId'] as num?)?.toInt() ?? 0,
+      sourceGroup: json['SourceGroup'] == true
+          ? 1
+          : json['SourceGroup'] == false
+          ? 0
+          : (json['SourceGroup'] as num?)?.toInt() ?? 0,
+      sourceEntry: json['SourceEntry'] == true
+          ? 1
+          : json['SourceEntry'] == false
+          ? 0
+          : (json['SourceEntry'] as num?)?.toInt() ?? 0,
+      sourceId: json['SourceId'] == true
+          ? 1
+          : json['SourceId'] == false
+          ? 0
+          : (json['SourceId'] as num?)?.toInt() ?? 0,
+      elseGroup: json['ElseGroup'] == true
+          ? 1
+          : json['ElseGroup'] == false
+          ? 0
+          : (json['ElseGroup'] as num?)?.toInt() ?? 0,
+      conditionTypeOrReference: json['ConditionTypeOrReference'] == true
+          ? 1
+          : json['ConditionTypeOrReference'] == false
+          ? 0
+          : (json['ConditionTypeOrReference'] as num?)?.toInt() ?? 0,
+      conditionTarget: json['ConditionTarget'] == true
+          ? 1
+          : json['ConditionTarget'] == false
+          ? 0
+          : (json['ConditionTarget'] as num?)?.toInt() ?? 0,
+      conditionValue1: json['ConditionValue1'] == true
+          ? 1
+          : json['ConditionValue1'] == false
+          ? 0
+          : (json['ConditionValue1'] as num?)?.toInt() ?? 0,
+      conditionValue2: json['ConditionValue2'] == true
+          ? 1
+          : json['ConditionValue2'] == false
+          ? 0
+          : (json['ConditionValue2'] as num?)?.toInt() ?? 0,
+      conditionValue3: json['ConditionValue3'] == true
+          ? 1
+          : json['ConditionValue3'] == false
+          ? 0
+          : (json['ConditionValue3'] as num?)?.toInt() ?? 0,
+      negativeCondition: json['NegativeCondition'] == true
+          ? 1
+          : json['NegativeCondition'] == false
+          ? 0
+          : (json['NegativeCondition'] as num?)?.toInt() ?? 0,
+      errorType: json['ErrorType'] == true
+          ? 1
+          : json['ErrorType'] == false
+          ? 0
+          : (json['ErrorType'] as num?)?.toInt() ?? 0,
+      errorTextId: json['ErrorTextId'] == true
+          ? 1
+          : json['ErrorTextId'] == false
+          ? 0
+          : (json['ErrorTextId'] as num?)?.toInt() ?? 0,
       scriptName: json['ScriptName']?.toString() ?? '',
       comment: json['Comment']?.toString() ?? '',
     );

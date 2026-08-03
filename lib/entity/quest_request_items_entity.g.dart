@@ -17,9 +17,21 @@ final class BriefQuestRequestItemsEntity {
 
   factory BriefQuestRequestItemsEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestRequestItemsEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      emoteOnComplete: (json['EmoteOnComplete'] as num?)?.toInt() ?? 0,
-      emoteOnIncomplete: (json['EmoteOnIncomplete'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      emoteOnComplete: json['EmoteOnComplete'] == true
+          ? 1
+          : json['EmoteOnComplete'] == false
+          ? 0
+          : (json['EmoteOnComplete'] as num?)?.toInt() ?? 0,
+      emoteOnIncomplete: json['EmoteOnIncomplete'] == true
+          ? 1
+          : json['EmoteOnIncomplete'] == false
+          ? 0
+          : (json['EmoteOnIncomplete'] as num?)?.toInt() ?? 0,
       completionText: json['CompletionText']?.toString() ?? '',
     );
   }
@@ -120,11 +132,27 @@ mixin _QuestRequestItemsEntityMixin {
 
   static QuestRequestItemsEntity fromJson(Map<String, dynamic> json) {
     return QuestRequestItemsEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      emoteOnComplete: (json['EmoteOnComplete'] as num?)?.toInt() ?? 0,
-      emoteOnIncomplete: (json['EmoteOnIncomplete'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      emoteOnComplete: json['EmoteOnComplete'] == true
+          ? 1
+          : json['EmoteOnComplete'] == false
+          ? 0
+          : (json['EmoteOnComplete'] as num?)?.toInt() ?? 0,
+      emoteOnIncomplete: json['EmoteOnIncomplete'] == true
+          ? 1
+          : json['EmoteOnIncomplete'] == false
+          ? 0
+          : (json['EmoteOnIncomplete'] as num?)?.toInt() ?? 0,
       completionText: json['CompletionText']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

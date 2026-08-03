@@ -25,10 +25,26 @@ final class BriefQuestTemplateEntity {
 
   factory BriefQuestTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestTemplateEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      questType: (json['QuestType'] as num?)?.toInt() ?? 2,
-      questLevel: (json['QuestLevel'] as num?)?.toInt() ?? 1,
-      minLevel: (json['MinLevel'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      questType: json['QuestType'] == true
+          ? 1
+          : json['QuestType'] == false
+          ? 0
+          : (json['QuestType'] as num?)?.toInt() ?? 2,
+      questLevel: json['QuestLevel'] == true
+          ? 1
+          : json['QuestLevel'] == false
+          ? 0
+          : (json['QuestLevel'] as num?)?.toInt() ?? 1,
+      minLevel: json['MinLevel'] == true
+          ? 1
+          : json['MinLevel'] == false
+          ? 0
+          : (json['MinLevel'] as num?)?.toInt() ?? 0,
       logTitle: json['LogTitle']?.toString() ?? '',
       questDescription: json['QuestDescription']?.toString() ?? '',
       localeTitle: json['localeTitle']?.toString() ?? '',
@@ -766,129 +782,483 @@ mixin _QuestTemplateEntityMixin {
 
   static QuestTemplateEntity fromJson(Map<String, dynamic> json) {
     return QuestTemplateEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      questType: (json['QuestType'] as num?)?.toInt() ?? 2,
-      questLevel: (json['QuestLevel'] as num?)?.toInt() ?? 1,
-      minLevel: (json['MinLevel'] as num?)?.toInt() ?? 0,
-      questSortId: (json['QuestSortID'] as num?)?.toInt() ?? 0,
-      questInfoId: (json['QuestInfoID'] as num?)?.toInt() ?? 0,
-      suggestedGroupNum: (json['SuggestedGroupNum'] as num?)?.toInt() ?? 0,
-      requiredFactionId1: (json['RequiredFactionId1'] as num?)?.toInt() ?? 0,
-      requiredFactionId2: (json['RequiredFactionId2'] as num?)?.toInt() ?? 0,
-      requiredFactionValue1:
-          (json['RequiredFactionValue1'] as num?)?.toInt() ?? 0,
-      requiredFactionValue2:
-          (json['RequiredFactionValue2'] as num?)?.toInt() ?? 0,
-      rewardNextQuest: (json['RewardNextQuest'] as num?)?.toInt() ?? 0,
-      rewardXpDifficulty: (json['RewardXPDifficulty'] as num?)?.toInt() ?? 0,
-      rewardMoney: (json['RewardMoney'] as num?)?.toInt() ?? 0,
-      rewardMoneyDifficulty:
-          (json['RewardMoneyDifficulty'] as num?)?.toInt() ?? 0,
-      rewardDisplaySpell: (json['RewardDisplaySpell'] as num?)?.toInt() ?? 0,
-      rewardSpell: (json['RewardSpell'] as num?)?.toInt() ?? 0,
-      rewardHonor: (json['RewardHonor'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      questType: json['QuestType'] == true
+          ? 1
+          : json['QuestType'] == false
+          ? 0
+          : (json['QuestType'] as num?)?.toInt() ?? 2,
+      questLevel: json['QuestLevel'] == true
+          ? 1
+          : json['QuestLevel'] == false
+          ? 0
+          : (json['QuestLevel'] as num?)?.toInt() ?? 1,
+      minLevel: json['MinLevel'] == true
+          ? 1
+          : json['MinLevel'] == false
+          ? 0
+          : (json['MinLevel'] as num?)?.toInt() ?? 0,
+      questSortId: json['QuestSortID'] == true
+          ? 1
+          : json['QuestSortID'] == false
+          ? 0
+          : (json['QuestSortID'] as num?)?.toInt() ?? 0,
+      questInfoId: json['QuestInfoID'] == true
+          ? 1
+          : json['QuestInfoID'] == false
+          ? 0
+          : (json['QuestInfoID'] as num?)?.toInt() ?? 0,
+      suggestedGroupNum: json['SuggestedGroupNum'] == true
+          ? 1
+          : json['SuggestedGroupNum'] == false
+          ? 0
+          : (json['SuggestedGroupNum'] as num?)?.toInt() ?? 0,
+      requiredFactionId1: json['RequiredFactionId1'] == true
+          ? 1
+          : json['RequiredFactionId1'] == false
+          ? 0
+          : (json['RequiredFactionId1'] as num?)?.toInt() ?? 0,
+      requiredFactionId2: json['RequiredFactionId2'] == true
+          ? 1
+          : json['RequiredFactionId2'] == false
+          ? 0
+          : (json['RequiredFactionId2'] as num?)?.toInt() ?? 0,
+      requiredFactionValue1: json['RequiredFactionValue1'] == true
+          ? 1
+          : json['RequiredFactionValue1'] == false
+          ? 0
+          : (json['RequiredFactionValue1'] as num?)?.toInt() ?? 0,
+      requiredFactionValue2: json['RequiredFactionValue2'] == true
+          ? 1
+          : json['RequiredFactionValue2'] == false
+          ? 0
+          : (json['RequiredFactionValue2'] as num?)?.toInt() ?? 0,
+      rewardNextQuest: json['RewardNextQuest'] == true
+          ? 1
+          : json['RewardNextQuest'] == false
+          ? 0
+          : (json['RewardNextQuest'] as num?)?.toInt() ?? 0,
+      rewardXpDifficulty: json['RewardXPDifficulty'] == true
+          ? 1
+          : json['RewardXPDifficulty'] == false
+          ? 0
+          : (json['RewardXPDifficulty'] as num?)?.toInt() ?? 0,
+      rewardMoney: json['RewardMoney'] == true
+          ? 1
+          : json['RewardMoney'] == false
+          ? 0
+          : (json['RewardMoney'] as num?)?.toInt() ?? 0,
+      rewardMoneyDifficulty: json['RewardMoneyDifficulty'] == true
+          ? 1
+          : json['RewardMoneyDifficulty'] == false
+          ? 0
+          : (json['RewardMoneyDifficulty'] as num?)?.toInt() ?? 0,
+      rewardDisplaySpell: json['RewardDisplaySpell'] == true
+          ? 1
+          : json['RewardDisplaySpell'] == false
+          ? 0
+          : (json['RewardDisplaySpell'] as num?)?.toInt() ?? 0,
+      rewardSpell: json['RewardSpell'] == true
+          ? 1
+          : json['RewardSpell'] == false
+          ? 0
+          : (json['RewardSpell'] as num?)?.toInt() ?? 0,
+      rewardHonor: json['RewardHonor'] == true
+          ? 1
+          : json['RewardHonor'] == false
+          ? 0
+          : (json['RewardHonor'] as num?)?.toInt() ?? 0,
       rewardKillHonor: (json['RewardKillHonor'] as num?)?.toDouble() ?? 0.0,
-      startItem: (json['StartItem'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      requiredPlayerKills: (json['RequiredPlayerKills'] as num?)?.toInt() ?? 0,
-      rewardItem1: (json['RewardItem1'] as num?)?.toInt() ?? 0,
-      rewardAmount1: (json['RewardAmount1'] as num?)?.toInt() ?? 0,
-      rewardItem2: (json['RewardItem2'] as num?)?.toInt() ?? 0,
-      rewardAmount2: (json['RewardAmount2'] as num?)?.toInt() ?? 0,
-      rewardItem3: (json['RewardItem3'] as num?)?.toInt() ?? 0,
-      rewardAmount3: (json['RewardAmount3'] as num?)?.toInt() ?? 0,
-      rewardItem4: (json['RewardItem4'] as num?)?.toInt() ?? 0,
-      rewardAmount4: (json['RewardAmount4'] as num?)?.toInt() ?? 0,
-      itemDrop1: (json['ItemDrop1'] as num?)?.toInt() ?? 0,
-      itemDropQuantity1: (json['ItemDropQuantity1'] as num?)?.toInt() ?? 0,
-      itemDrop2: (json['ItemDrop2'] as num?)?.toInt() ?? 0,
-      itemDropQuantity2: (json['ItemDropQuantity2'] as num?)?.toInt() ?? 0,
-      itemDrop3: (json['ItemDrop3'] as num?)?.toInt() ?? 0,
-      itemDropQuantity3: (json['ItemDropQuantity3'] as num?)?.toInt() ?? 0,
-      itemDrop4: (json['ItemDrop4'] as num?)?.toInt() ?? 0,
-      itemDropQuantity4: (json['ItemDropQuantity4'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId1: (json['RewardChoiceItemID1'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity1:
-          (json['RewardChoiceItemQuantity1'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId2: (json['RewardChoiceItemID2'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity2:
-          (json['RewardChoiceItemQuantity2'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId3: (json['RewardChoiceItemID3'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity3:
-          (json['RewardChoiceItemQuantity3'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId4: (json['RewardChoiceItemID4'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity4:
-          (json['RewardChoiceItemQuantity4'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId5: (json['RewardChoiceItemID5'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity5:
-          (json['RewardChoiceItemQuantity5'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId6: (json['RewardChoiceItemID6'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity6:
-          (json['RewardChoiceItemQuantity6'] as num?)?.toInt() ?? 0,
-      poiContinent: (json['POIContinent'] as num?)?.toInt() ?? 0,
+      startItem: json['StartItem'] == true
+          ? 1
+          : json['StartItem'] == false
+          ? 0
+          : (json['StartItem'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      requiredPlayerKills: json['RequiredPlayerKills'] == true
+          ? 1
+          : json['RequiredPlayerKills'] == false
+          ? 0
+          : (json['RequiredPlayerKills'] as num?)?.toInt() ?? 0,
+      rewardItem1: json['RewardItem1'] == true
+          ? 1
+          : json['RewardItem1'] == false
+          ? 0
+          : (json['RewardItem1'] as num?)?.toInt() ?? 0,
+      rewardAmount1: json['RewardAmount1'] == true
+          ? 1
+          : json['RewardAmount1'] == false
+          ? 0
+          : (json['RewardAmount1'] as num?)?.toInt() ?? 0,
+      rewardItem2: json['RewardItem2'] == true
+          ? 1
+          : json['RewardItem2'] == false
+          ? 0
+          : (json['RewardItem2'] as num?)?.toInt() ?? 0,
+      rewardAmount2: json['RewardAmount2'] == true
+          ? 1
+          : json['RewardAmount2'] == false
+          ? 0
+          : (json['RewardAmount2'] as num?)?.toInt() ?? 0,
+      rewardItem3: json['RewardItem3'] == true
+          ? 1
+          : json['RewardItem3'] == false
+          ? 0
+          : (json['RewardItem3'] as num?)?.toInt() ?? 0,
+      rewardAmount3: json['RewardAmount3'] == true
+          ? 1
+          : json['RewardAmount3'] == false
+          ? 0
+          : (json['RewardAmount3'] as num?)?.toInt() ?? 0,
+      rewardItem4: json['RewardItem4'] == true
+          ? 1
+          : json['RewardItem4'] == false
+          ? 0
+          : (json['RewardItem4'] as num?)?.toInt() ?? 0,
+      rewardAmount4: json['RewardAmount4'] == true
+          ? 1
+          : json['RewardAmount4'] == false
+          ? 0
+          : (json['RewardAmount4'] as num?)?.toInt() ?? 0,
+      itemDrop1: json['ItemDrop1'] == true
+          ? 1
+          : json['ItemDrop1'] == false
+          ? 0
+          : (json['ItemDrop1'] as num?)?.toInt() ?? 0,
+      itemDropQuantity1: json['ItemDropQuantity1'] == true
+          ? 1
+          : json['ItemDropQuantity1'] == false
+          ? 0
+          : (json['ItemDropQuantity1'] as num?)?.toInt() ?? 0,
+      itemDrop2: json['ItemDrop2'] == true
+          ? 1
+          : json['ItemDrop2'] == false
+          ? 0
+          : (json['ItemDrop2'] as num?)?.toInt() ?? 0,
+      itemDropQuantity2: json['ItemDropQuantity2'] == true
+          ? 1
+          : json['ItemDropQuantity2'] == false
+          ? 0
+          : (json['ItemDropQuantity2'] as num?)?.toInt() ?? 0,
+      itemDrop3: json['ItemDrop3'] == true
+          ? 1
+          : json['ItemDrop3'] == false
+          ? 0
+          : (json['ItemDrop3'] as num?)?.toInt() ?? 0,
+      itemDropQuantity3: json['ItemDropQuantity3'] == true
+          ? 1
+          : json['ItemDropQuantity3'] == false
+          ? 0
+          : (json['ItemDropQuantity3'] as num?)?.toInt() ?? 0,
+      itemDrop4: json['ItemDrop4'] == true
+          ? 1
+          : json['ItemDrop4'] == false
+          ? 0
+          : (json['ItemDrop4'] as num?)?.toInt() ?? 0,
+      itemDropQuantity4: json['ItemDropQuantity4'] == true
+          ? 1
+          : json['ItemDropQuantity4'] == false
+          ? 0
+          : (json['ItemDropQuantity4'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId1: json['RewardChoiceItemID1'] == true
+          ? 1
+          : json['RewardChoiceItemID1'] == false
+          ? 0
+          : (json['RewardChoiceItemID1'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity1: json['RewardChoiceItemQuantity1'] == true
+          ? 1
+          : json['RewardChoiceItemQuantity1'] == false
+          ? 0
+          : (json['RewardChoiceItemQuantity1'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId2: json['RewardChoiceItemID2'] == true
+          ? 1
+          : json['RewardChoiceItemID2'] == false
+          ? 0
+          : (json['RewardChoiceItemID2'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity2: json['RewardChoiceItemQuantity2'] == true
+          ? 1
+          : json['RewardChoiceItemQuantity2'] == false
+          ? 0
+          : (json['RewardChoiceItemQuantity2'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId3: json['RewardChoiceItemID3'] == true
+          ? 1
+          : json['RewardChoiceItemID3'] == false
+          ? 0
+          : (json['RewardChoiceItemID3'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity3: json['RewardChoiceItemQuantity3'] == true
+          ? 1
+          : json['RewardChoiceItemQuantity3'] == false
+          ? 0
+          : (json['RewardChoiceItemQuantity3'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId4: json['RewardChoiceItemID4'] == true
+          ? 1
+          : json['RewardChoiceItemID4'] == false
+          ? 0
+          : (json['RewardChoiceItemID4'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity4: json['RewardChoiceItemQuantity4'] == true
+          ? 1
+          : json['RewardChoiceItemQuantity4'] == false
+          ? 0
+          : (json['RewardChoiceItemQuantity4'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId5: json['RewardChoiceItemID5'] == true
+          ? 1
+          : json['RewardChoiceItemID5'] == false
+          ? 0
+          : (json['RewardChoiceItemID5'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity5: json['RewardChoiceItemQuantity5'] == true
+          ? 1
+          : json['RewardChoiceItemQuantity5'] == false
+          ? 0
+          : (json['RewardChoiceItemQuantity5'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId6: json['RewardChoiceItemID6'] == true
+          ? 1
+          : json['RewardChoiceItemID6'] == false
+          ? 0
+          : (json['RewardChoiceItemID6'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity6: json['RewardChoiceItemQuantity6'] == true
+          ? 1
+          : json['RewardChoiceItemQuantity6'] == false
+          ? 0
+          : (json['RewardChoiceItemQuantity6'] as num?)?.toInt() ?? 0,
+      poiContinent: json['POIContinent'] == true
+          ? 1
+          : json['POIContinent'] == false
+          ? 0
+          : (json['POIContinent'] as num?)?.toInt() ?? 0,
       poiX: (json['POIx'] as num?)?.toDouble() ?? 0.0,
       poiY: (json['POIy'] as num?)?.toDouble() ?? 0.0,
-      poiPriority: (json['POIPriority'] as num?)?.toInt() ?? 0,
-      rewardTitle: (json['RewardTitle'] as num?)?.toInt() ?? 0,
-      rewardTalents: (json['RewardTalents'] as num?)?.toInt() ?? 0,
-      rewardArenaPoints: (json['RewardArenaPoints'] as num?)?.toInt() ?? 0,
-      rewardFactionId1: (json['RewardFactionID1'] as num?)?.toInt() ?? 0,
-      rewardFactionValue1: (json['RewardFactionValue1'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride1:
-          (json['RewardFactionOverride1'] as num?)?.toInt() ?? 0,
-      rewardFactionId2: (json['RewardFactionID2'] as num?)?.toInt() ?? 0,
-      rewardFactionValue2: (json['RewardFactionValue2'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride2:
-          (json['RewardFactionOverride2'] as num?)?.toInt() ?? 0,
-      rewardFactionId3: (json['RewardFactionID3'] as num?)?.toInt() ?? 0,
-      rewardFactionValue3: (json['RewardFactionValue3'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride3:
-          (json['RewardFactionOverride3'] as num?)?.toInt() ?? 0,
-      rewardFactionId4: (json['RewardFactionID4'] as num?)?.toInt() ?? 0,
-      rewardFactionValue4: (json['RewardFactionValue4'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride4:
-          (json['RewardFactionOverride4'] as num?)?.toInt() ?? 0,
-      rewardFactionId5: (json['RewardFactionID5'] as num?)?.toInt() ?? 0,
-      rewardFactionValue5: (json['RewardFactionValue5'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride5:
-          (json['RewardFactionOverride5'] as num?)?.toInt() ?? 0,
-      timeAllowed: (json['TimeAllowed'] as num?)?.toInt() ?? 0,
-      allowableRaces: (json['AllowableRaces'] as num?)?.toInt() ?? 0,
+      poiPriority: json['POIPriority'] == true
+          ? 1
+          : json['POIPriority'] == false
+          ? 0
+          : (json['POIPriority'] as num?)?.toInt() ?? 0,
+      rewardTitle: json['RewardTitle'] == true
+          ? 1
+          : json['RewardTitle'] == false
+          ? 0
+          : (json['RewardTitle'] as num?)?.toInt() ?? 0,
+      rewardTalents: json['RewardTalents'] == true
+          ? 1
+          : json['RewardTalents'] == false
+          ? 0
+          : (json['RewardTalents'] as num?)?.toInt() ?? 0,
+      rewardArenaPoints: json['RewardArenaPoints'] == true
+          ? 1
+          : json['RewardArenaPoints'] == false
+          ? 0
+          : (json['RewardArenaPoints'] as num?)?.toInt() ?? 0,
+      rewardFactionId1: json['RewardFactionID1'] == true
+          ? 1
+          : json['RewardFactionID1'] == false
+          ? 0
+          : (json['RewardFactionID1'] as num?)?.toInt() ?? 0,
+      rewardFactionValue1: json['RewardFactionValue1'] == true
+          ? 1
+          : json['RewardFactionValue1'] == false
+          ? 0
+          : (json['RewardFactionValue1'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride1: json['RewardFactionOverride1'] == true
+          ? 1
+          : json['RewardFactionOverride1'] == false
+          ? 0
+          : (json['RewardFactionOverride1'] as num?)?.toInt() ?? 0,
+      rewardFactionId2: json['RewardFactionID2'] == true
+          ? 1
+          : json['RewardFactionID2'] == false
+          ? 0
+          : (json['RewardFactionID2'] as num?)?.toInt() ?? 0,
+      rewardFactionValue2: json['RewardFactionValue2'] == true
+          ? 1
+          : json['RewardFactionValue2'] == false
+          ? 0
+          : (json['RewardFactionValue2'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride2: json['RewardFactionOverride2'] == true
+          ? 1
+          : json['RewardFactionOverride2'] == false
+          ? 0
+          : (json['RewardFactionOverride2'] as num?)?.toInt() ?? 0,
+      rewardFactionId3: json['RewardFactionID3'] == true
+          ? 1
+          : json['RewardFactionID3'] == false
+          ? 0
+          : (json['RewardFactionID3'] as num?)?.toInt() ?? 0,
+      rewardFactionValue3: json['RewardFactionValue3'] == true
+          ? 1
+          : json['RewardFactionValue3'] == false
+          ? 0
+          : (json['RewardFactionValue3'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride3: json['RewardFactionOverride3'] == true
+          ? 1
+          : json['RewardFactionOverride3'] == false
+          ? 0
+          : (json['RewardFactionOverride3'] as num?)?.toInt() ?? 0,
+      rewardFactionId4: json['RewardFactionID4'] == true
+          ? 1
+          : json['RewardFactionID4'] == false
+          ? 0
+          : (json['RewardFactionID4'] as num?)?.toInt() ?? 0,
+      rewardFactionValue4: json['RewardFactionValue4'] == true
+          ? 1
+          : json['RewardFactionValue4'] == false
+          ? 0
+          : (json['RewardFactionValue4'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride4: json['RewardFactionOverride4'] == true
+          ? 1
+          : json['RewardFactionOverride4'] == false
+          ? 0
+          : (json['RewardFactionOverride4'] as num?)?.toInt() ?? 0,
+      rewardFactionId5: json['RewardFactionID5'] == true
+          ? 1
+          : json['RewardFactionID5'] == false
+          ? 0
+          : (json['RewardFactionID5'] as num?)?.toInt() ?? 0,
+      rewardFactionValue5: json['RewardFactionValue5'] == true
+          ? 1
+          : json['RewardFactionValue5'] == false
+          ? 0
+          : (json['RewardFactionValue5'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride5: json['RewardFactionOverride5'] == true
+          ? 1
+          : json['RewardFactionOverride5'] == false
+          ? 0
+          : (json['RewardFactionOverride5'] as num?)?.toInt() ?? 0,
+      timeAllowed: json['TimeAllowed'] == true
+          ? 1
+          : json['TimeAllowed'] == false
+          ? 0
+          : (json['TimeAllowed'] as num?)?.toInt() ?? 0,
+      allowableRaces: json['AllowableRaces'] == true
+          ? 1
+          : json['AllowableRaces'] == false
+          ? 0
+          : (json['AllowableRaces'] as num?)?.toInt() ?? 0,
       logTitle: json['LogTitle']?.toString() ?? '',
       logDescription: json['LogDescription']?.toString() ?? '',
       questDescription: json['QuestDescription']?.toString() ?? '',
       areaDescription: json['AreaDescription']?.toString() ?? '',
       questCompletionLog: json['QuestCompletionLog']?.toString() ?? '',
-      requiredNpcOrGo1: (json['RequiredNpcOrGo1'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGo2: (json['RequiredNpcOrGo2'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGo3: (json['RequiredNpcOrGo3'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGo4: (json['RequiredNpcOrGo4'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount1:
-          (json['RequiredNpcOrGoCount1'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount2:
-          (json['RequiredNpcOrGoCount2'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount3:
-          (json['RequiredNpcOrGoCount3'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount4:
-          (json['RequiredNpcOrGoCount4'] as num?)?.toInt() ?? 0,
-      requiredItemId1: (json['RequiredItemId1'] as num?)?.toInt() ?? 0,
-      requiredItemId2: (json['RequiredItemId2'] as num?)?.toInt() ?? 0,
-      requiredItemId3: (json['RequiredItemId3'] as num?)?.toInt() ?? 0,
-      requiredItemId4: (json['RequiredItemId4'] as num?)?.toInt() ?? 0,
-      requiredItemId5: (json['RequiredItemId5'] as num?)?.toInt() ?? 0,
-      requiredItemId6: (json['RequiredItemId6'] as num?)?.toInt() ?? 0,
-      requiredItemCount1: (json['RequiredItemCount1'] as num?)?.toInt() ?? 0,
-      requiredItemCount2: (json['RequiredItemCount2'] as num?)?.toInt() ?? 0,
-      requiredItemCount3: (json['RequiredItemCount3'] as num?)?.toInt() ?? 0,
-      requiredItemCount4: (json['RequiredItemCount4'] as num?)?.toInt() ?? 0,
-      requiredItemCount5: (json['RequiredItemCount5'] as num?)?.toInt() ?? 0,
-      requiredItemCount6: (json['RequiredItemCount6'] as num?)?.toInt() ?? 0,
-      unknown0: (json['Unknown0'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGo1: json['RequiredNpcOrGo1'] == true
+          ? 1
+          : json['RequiredNpcOrGo1'] == false
+          ? 0
+          : (json['RequiredNpcOrGo1'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGo2: json['RequiredNpcOrGo2'] == true
+          ? 1
+          : json['RequiredNpcOrGo2'] == false
+          ? 0
+          : (json['RequiredNpcOrGo2'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGo3: json['RequiredNpcOrGo3'] == true
+          ? 1
+          : json['RequiredNpcOrGo3'] == false
+          ? 0
+          : (json['RequiredNpcOrGo3'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGo4: json['RequiredNpcOrGo4'] == true
+          ? 1
+          : json['RequiredNpcOrGo4'] == false
+          ? 0
+          : (json['RequiredNpcOrGo4'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount1: json['RequiredNpcOrGoCount1'] == true
+          ? 1
+          : json['RequiredNpcOrGoCount1'] == false
+          ? 0
+          : (json['RequiredNpcOrGoCount1'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount2: json['RequiredNpcOrGoCount2'] == true
+          ? 1
+          : json['RequiredNpcOrGoCount2'] == false
+          ? 0
+          : (json['RequiredNpcOrGoCount2'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount3: json['RequiredNpcOrGoCount3'] == true
+          ? 1
+          : json['RequiredNpcOrGoCount3'] == false
+          ? 0
+          : (json['RequiredNpcOrGoCount3'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount4: json['RequiredNpcOrGoCount4'] == true
+          ? 1
+          : json['RequiredNpcOrGoCount4'] == false
+          ? 0
+          : (json['RequiredNpcOrGoCount4'] as num?)?.toInt() ?? 0,
+      requiredItemId1: json['RequiredItemId1'] == true
+          ? 1
+          : json['RequiredItemId1'] == false
+          ? 0
+          : (json['RequiredItemId1'] as num?)?.toInt() ?? 0,
+      requiredItemId2: json['RequiredItemId2'] == true
+          ? 1
+          : json['RequiredItemId2'] == false
+          ? 0
+          : (json['RequiredItemId2'] as num?)?.toInt() ?? 0,
+      requiredItemId3: json['RequiredItemId3'] == true
+          ? 1
+          : json['RequiredItemId3'] == false
+          ? 0
+          : (json['RequiredItemId3'] as num?)?.toInt() ?? 0,
+      requiredItemId4: json['RequiredItemId4'] == true
+          ? 1
+          : json['RequiredItemId4'] == false
+          ? 0
+          : (json['RequiredItemId4'] as num?)?.toInt() ?? 0,
+      requiredItemId5: json['RequiredItemId5'] == true
+          ? 1
+          : json['RequiredItemId5'] == false
+          ? 0
+          : (json['RequiredItemId5'] as num?)?.toInt() ?? 0,
+      requiredItemId6: json['RequiredItemId6'] == true
+          ? 1
+          : json['RequiredItemId6'] == false
+          ? 0
+          : (json['RequiredItemId6'] as num?)?.toInt() ?? 0,
+      requiredItemCount1: json['RequiredItemCount1'] == true
+          ? 1
+          : json['RequiredItemCount1'] == false
+          ? 0
+          : (json['RequiredItemCount1'] as num?)?.toInt() ?? 0,
+      requiredItemCount2: json['RequiredItemCount2'] == true
+          ? 1
+          : json['RequiredItemCount2'] == false
+          ? 0
+          : (json['RequiredItemCount2'] as num?)?.toInt() ?? 0,
+      requiredItemCount3: json['RequiredItemCount3'] == true
+          ? 1
+          : json['RequiredItemCount3'] == false
+          ? 0
+          : (json['RequiredItemCount3'] as num?)?.toInt() ?? 0,
+      requiredItemCount4: json['RequiredItemCount4'] == true
+          ? 1
+          : json['RequiredItemCount4'] == false
+          ? 0
+          : (json['RequiredItemCount4'] as num?)?.toInt() ?? 0,
+      requiredItemCount5: json['RequiredItemCount5'] == true
+          ? 1
+          : json['RequiredItemCount5'] == false
+          ? 0
+          : (json['RequiredItemCount5'] as num?)?.toInt() ?? 0,
+      requiredItemCount6: json['RequiredItemCount6'] == true
+          ? 1
+          : json['RequiredItemCount6'] == false
+          ? 0
+          : (json['RequiredItemCount6'] as num?)?.toInt() ?? 0,
+      unknown0: json['Unknown0'] == true
+          ? 1
+          : json['Unknown0'] == false
+          ? 0
+          : (json['Unknown0'] as num?)?.toInt() ?? 0,
       objectiveText1: json['ObjectiveText1']?.toString() ?? '',
       objectiveText2: json['ObjectiveText2']?.toString() ?? '',
       objectiveText3: json['ObjectiveText3']?.toString() ?? '',
       objectiveText4: json['ObjectiveText4']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

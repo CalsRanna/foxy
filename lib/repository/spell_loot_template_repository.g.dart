@@ -92,7 +92,7 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'spell_loot_template',
           '`Item`',
-          where: {'Entry': spellLootTemplate.entry},
+          where: {'`Entry`': spellLootTemplate.entry},
         ),
       );
       try {

@@ -15,7 +15,11 @@ final class BriefDbcFactionEntity {
 
   factory BriefDbcFactionEntity.fromJson(Map<String, dynamic> json) {
     return BriefDbcFactionEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
     );
@@ -426,33 +430,113 @@ mixin _DbcFactionEntityMixin {
 
   static DbcFactionEntity fromJson(Map<String, dynamic> json) {
     return DbcFactionEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      reputationIndex: (json['ReputationIndex'] as num?)?.toInt() ?? 0,
-      reputationRaceMask0: (json['ReputationRaceMask0'] as num?)?.toInt() ?? 0,
-      reputationRaceMask1: (json['ReputationRaceMask1'] as num?)?.toInt() ?? 0,
-      reputationRaceMask2: (json['ReputationRaceMask2'] as num?)?.toInt() ?? 0,
-      reputationRaceMask3: (json['ReputationRaceMask3'] as num?)?.toInt() ?? 0,
-      reputationClassMask0:
-          (json['ReputationClassMask0'] as num?)?.toInt() ?? 0,
-      reputationClassMask1:
-          (json['ReputationClassMask1'] as num?)?.toInt() ?? 0,
-      reputationClassMask2:
-          (json['ReputationClassMask2'] as num?)?.toInt() ?? 0,
-      reputationClassMask3:
-          (json['ReputationClassMask3'] as num?)?.toInt() ?? 0,
-      reputationBase0: (json['ReputationBase0'] as num?)?.toInt() ?? 0,
-      reputationBase1: (json['ReputationBase1'] as num?)?.toInt() ?? 0,
-      reputationBase2: (json['ReputationBase2'] as num?)?.toInt() ?? 0,
-      reputationBase3: (json['ReputationBase3'] as num?)?.toInt() ?? 0,
-      reputationFlags0: (json['ReputationFlags0'] as num?)?.toInt() ?? 0,
-      reputationFlags1: (json['ReputationFlags1'] as num?)?.toInt() ?? 0,
-      reputationFlags2: (json['ReputationFlags2'] as num?)?.toInt() ?? 0,
-      reputationFlags3: (json['ReputationFlags3'] as num?)?.toInt() ?? 0,
-      parentFactionId: (json['ParentFactionID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      reputationIndex: json['ReputationIndex'] == true
+          ? 1
+          : json['ReputationIndex'] == false
+          ? 0
+          : (json['ReputationIndex'] as num?)?.toInt() ?? 0,
+      reputationRaceMask0: json['ReputationRaceMask0'] == true
+          ? 1
+          : json['ReputationRaceMask0'] == false
+          ? 0
+          : (json['ReputationRaceMask0'] as num?)?.toInt() ?? 0,
+      reputationRaceMask1: json['ReputationRaceMask1'] == true
+          ? 1
+          : json['ReputationRaceMask1'] == false
+          ? 0
+          : (json['ReputationRaceMask1'] as num?)?.toInt() ?? 0,
+      reputationRaceMask2: json['ReputationRaceMask2'] == true
+          ? 1
+          : json['ReputationRaceMask2'] == false
+          ? 0
+          : (json['ReputationRaceMask2'] as num?)?.toInt() ?? 0,
+      reputationRaceMask3: json['ReputationRaceMask3'] == true
+          ? 1
+          : json['ReputationRaceMask3'] == false
+          ? 0
+          : (json['ReputationRaceMask3'] as num?)?.toInt() ?? 0,
+      reputationClassMask0: json['ReputationClassMask0'] == true
+          ? 1
+          : json['ReputationClassMask0'] == false
+          ? 0
+          : (json['ReputationClassMask0'] as num?)?.toInt() ?? 0,
+      reputationClassMask1: json['ReputationClassMask1'] == true
+          ? 1
+          : json['ReputationClassMask1'] == false
+          ? 0
+          : (json['ReputationClassMask1'] as num?)?.toInt() ?? 0,
+      reputationClassMask2: json['ReputationClassMask2'] == true
+          ? 1
+          : json['ReputationClassMask2'] == false
+          ? 0
+          : (json['ReputationClassMask2'] as num?)?.toInt() ?? 0,
+      reputationClassMask3: json['ReputationClassMask3'] == true
+          ? 1
+          : json['ReputationClassMask3'] == false
+          ? 0
+          : (json['ReputationClassMask3'] as num?)?.toInt() ?? 0,
+      reputationBase0: json['ReputationBase0'] == true
+          ? 1
+          : json['ReputationBase0'] == false
+          ? 0
+          : (json['ReputationBase0'] as num?)?.toInt() ?? 0,
+      reputationBase1: json['ReputationBase1'] == true
+          ? 1
+          : json['ReputationBase1'] == false
+          ? 0
+          : (json['ReputationBase1'] as num?)?.toInt() ?? 0,
+      reputationBase2: json['ReputationBase2'] == true
+          ? 1
+          : json['ReputationBase2'] == false
+          ? 0
+          : (json['ReputationBase2'] as num?)?.toInt() ?? 0,
+      reputationBase3: json['ReputationBase3'] == true
+          ? 1
+          : json['ReputationBase3'] == false
+          ? 0
+          : (json['ReputationBase3'] as num?)?.toInt() ?? 0,
+      reputationFlags0: json['ReputationFlags0'] == true
+          ? 1
+          : json['ReputationFlags0'] == false
+          ? 0
+          : (json['ReputationFlags0'] as num?)?.toInt() ?? 0,
+      reputationFlags1: json['ReputationFlags1'] == true
+          ? 1
+          : json['ReputationFlags1'] == false
+          ? 0
+          : (json['ReputationFlags1'] as num?)?.toInt() ?? 0,
+      reputationFlags2: json['ReputationFlags2'] == true
+          ? 1
+          : json['ReputationFlags2'] == false
+          ? 0
+          : (json['ReputationFlags2'] as num?)?.toInt() ?? 0,
+      reputationFlags3: json['ReputationFlags3'] == true
+          ? 1
+          : json['ReputationFlags3'] == false
+          ? 0
+          : (json['ReputationFlags3'] as num?)?.toInt() ?? 0,
+      parentFactionId: json['ParentFactionID'] == true
+          ? 1
+          : json['ParentFactionID'] == false
+          ? 0
+          : (json['ParentFactionID'] as num?)?.toInt() ?? 0,
       parentFactionMod0: (json['ParentFactionMod0'] as num?)?.toDouble() ?? 0.0,
       parentFactionMod1: (json['ParentFactionMod1'] as num?)?.toDouble() ?? 0.0,
-      parentFactionCap0: (json['ParentFactionCap0'] as num?)?.toInt() ?? 0,
-      parentFactionCap1: (json['ParentFactionCap1'] as num?)?.toInt() ?? 0,
+      parentFactionCap0: json['ParentFactionCap0'] == true
+          ? 1
+          : json['ParentFactionCap0'] == false
+          ? 0
+          : (json['ParentFactionCap0'] as num?)?.toInt() ?? 0,
+      parentFactionCap1: json['ParentFactionCap1'] == true
+          ? 1
+          : json['ParentFactionCap1'] == false
+          ? 0
+          : (json['ParentFactionCap1'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -469,7 +553,11 @@ mixin _DbcFactionEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
       descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
       descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
       descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
@@ -486,8 +574,11 @@ mixin _DbcFactionEntityMixin {
       descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
       descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
       descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      descriptionLangFlags: json['Description_lang_Flags'] == true
+          ? 1
+          : json['Description_lang_Flags'] == false
+          ? 0
+          : (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -98,7 +98,7 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
         school: await nextMaxPlusOne(
           'creature_template_resistance',
           '`School`',
-          where: {'CreatureID': creatureTemplateResistance.creatureID},
+          where: {'`CreatureID`': creatureTemplateResistance.creatureID},
         ),
       );
       try {

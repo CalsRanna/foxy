@@ -19,11 +19,27 @@ final class BriefTalentTabEntity {
 
   factory BriefTalentTabEntity.fromJson(Map<String, dynamic> json) {
     return BriefTalentTabEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      classMask: (json['ClassMask'] as num?)?.toInt() ?? 0,
-      categoryEnumId: (json['CategoryEnumID'] as num?)?.toInt() ?? 0,
-      orderIndex: (json['OrderIndex'] as num?)?.toInt() ?? 0,
+      classMask: json['ClassMask'] == true
+          ? 1
+          : json['ClassMask'] == false
+          ? 0
+          : (json['ClassMask'] as num?)?.toInt() ?? 0,
+      categoryEnumId: json['CategoryEnumID'] == true
+          ? 1
+          : json['CategoryEnumID'] == false
+          ? 0
+          : (json['CategoryEnumID'] as num?)?.toInt() ?? 0,
+      orderIndex: json['OrderIndex'] == true
+          ? 1
+          : json['OrderIndex'] == false
+          ? 0
+          : (json['OrderIndex'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -239,7 +255,11 @@ mixin _TalentTabEntityMixin {
 
   static TalentTabEntity fromJson(Map<String, dynamic> json) {
     return TalentTabEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -256,12 +276,36 @@ mixin _TalentTabEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
-      raceMask: (json['RaceMask'] as num?)?.toInt() ?? 0,
-      classMask: (json['ClassMask'] as num?)?.toInt() ?? 0,
-      categoryEnumId: (json['CategoryEnumID'] as num?)?.toInt() ?? 0,
-      orderIndex: (json['OrderIndex'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      spellIconId: json['SpellIconID'] == true
+          ? 1
+          : json['SpellIconID'] == false
+          ? 0
+          : (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      raceMask: json['RaceMask'] == true
+          ? 1
+          : json['RaceMask'] == false
+          ? 0
+          : (json['RaceMask'] as num?)?.toInt() ?? 0,
+      classMask: json['ClassMask'] == true
+          ? 1
+          : json['ClassMask'] == false
+          ? 0
+          : (json['ClassMask'] as num?)?.toInt() ?? 0,
+      categoryEnumId: json['CategoryEnumID'] == true
+          ? 1
+          : json['CategoryEnumID'] == false
+          ? 0
+          : (json['CategoryEnumID'] as num?)?.toInt() ?? 0,
+      orderIndex: json['OrderIndex'] == true
+          ? 1
+          : json['OrderIndex'] == false
+          ? 0
+          : (json['OrderIndex'] as num?)?.toInt() ?? 0,
       backgroundFile: json['BackgroundFile']?.toString() ?? '',
     );
   }

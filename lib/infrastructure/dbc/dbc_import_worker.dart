@@ -19,6 +19,7 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
     :database,
     :username,
     :password,
+    :useSsl,
     :jobId,
   ) = args;
   final cancelPort = ReceivePort();
@@ -62,7 +63,7 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           database: database,
           username: username,
           password: password,
-          useSsl: false,
+          useSsl: useSsl,
         ),
       ),
     );
@@ -359,8 +360,14 @@ String _readAndEscape(dynamic record, int index, String type) {
   return switch (type) {
     'string' => _escapeString(record.getString(index) as String),
     'float' => record.getFloat(index).toString(),
-    'int32' || 'uint32' || 'id' => record.getInt(index).toString(),
-    'int64' || 'uint64' => record.getInt64(index).toString(),
+    'int32' || 'id' => record.getInt(index).toString(),
+    // uint32 按无符号读:getInt 会把 ≥2^31 的 flags 变成负数,
+    // 存入 UNSIGNED 列前必须还原为正数。
+    'uint32' => record.getUint(index).toString(),
+    'int64' => record.getInt64(index).toString(),
+    // uint64 高位(≥2^63)超出 Dart int 范围,存 BIGINT UNSIGNED 时
+    // 驱动回读为 BigInt;写入侧 warcrafty 仍按 int64 读,保持原样。
+    'uint64' => record.getInt64(index).toString(),
     'int16' || 'uint16' => record.getInt16(index).toString(),
     'int8' => record.getInt8(index).toString(),
     'uint8' => record.getUint8(index).toString(),
@@ -460,8 +467,12 @@ void _sendStatus(
 String _sqlType(FieldType type) {
   return switch (type) {
     FieldType.id => 'INT NOT NULL PRIMARY KEY',
-    FieldType.int32 || FieldType.uint32 => 'INT',
-    FieldType.int64 || FieldType.uint64 => 'BIGINT',
+    FieldType.int32 => 'INT',
+    // 无符号字段必须建 UNSIGNED 列:flags 类字段高位置位(≥2^31)按
+    // 有符号存会变负数,UI 显示负值、按 wowhead 正值编辑会报 1264。
+    FieldType.uint32 => 'INT UNSIGNED',
+    FieldType.int64 => 'BIGINT',
+    FieldType.uint64 => 'BIGINT UNSIGNED',
     FieldType.int16 || FieldType.uint16 => 'SMALLINT',
     FieldType.int8 || FieldType.uint8 => 'TINYINT UNSIGNED',
     FieldType.float => 'FLOAT',
@@ -519,6 +530,7 @@ typedef DbcImportWorkerArgs = ({
   String database,
   String username,
   String password,
+  bool useSsl,
   String jobId,
 });
 

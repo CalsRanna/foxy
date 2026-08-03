@@ -60,7 +60,7 @@ class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     if (filter.text.isNotEmpty) {
       builder = builder.whereAny(
         ['text0_0', 'text0_1'],

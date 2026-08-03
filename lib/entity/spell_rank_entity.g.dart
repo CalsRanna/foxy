@@ -23,9 +23,21 @@ final class BriefSpellRankEntity {
 
   factory BriefSpellRankEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellRankEntity(
-      firstSpellId: (json['first_spell_id'] as num?)?.toInt() ?? 0,
-      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
-      rank: (json['rank'] as num?)?.toInt() ?? 0,
+      firstSpellId: json['first_spell_id'] == true
+          ? 1
+          : json['first_spell_id'] == false
+          ? 0
+          : (json['first_spell_id'] as num?)?.toInt() ?? 0,
+      spellId: json['spell_id'] == true
+          ? 1
+          : json['spell_id'] == false
+          ? 0
+          : (json['spell_id'] as num?)?.toInt() ?? 0,
+      rank: json['rank'] == true
+          ? 1
+          : json['rank'] == false
+          ? 0
+          : (json['rank'] as num?)?.toInt() ?? 0,
       firstSpellName: json['firstSpellName']?.toString() ?? '',
       firstSpellSubtext: json['firstSpellSubtext']?.toString() ?? '',
       spellName: json['spellName']?.toString() ?? '',
@@ -158,9 +170,21 @@ mixin _SpellRankEntityMixin {
 
   static SpellRankEntity fromJson(Map<String, dynamic> json) {
     return SpellRankEntity(
-      firstSpellId: (json['first_spell_id'] as num?)?.toInt() ?? 0,
-      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
-      rank: (json['rank'] as num?)?.toInt() ?? 0,
+      firstSpellId: json['first_spell_id'] == true
+          ? 1
+          : json['first_spell_id'] == false
+          ? 0
+          : (json['first_spell_id'] as num?)?.toInt() ?? 0,
+      spellId: json['spell_id'] == true
+          ? 1
+          : json['spell_id'] == false
+          ? 0
+          : (json['spell_id'] as num?)?.toInt() ?? 0,
+      rank: json['rank'] == true
+          ? 1
+          : json['rank'] == false
+          ? 0
+          : (json['rank'] as num?)?.toInt() ?? 0,
     );
   }
 }

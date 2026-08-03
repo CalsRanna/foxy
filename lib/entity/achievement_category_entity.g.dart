@@ -17,10 +17,22 @@ final class BriefAchievementCategoryEntity {
 
   factory BriefAchievementCategoryEntity.fromJson(Map<String, dynamic> json) {
     return BriefAchievementCategoryEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      parent: (json['Parent'] as num?)?.toInt() ?? -1,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      parent: json['Parent'] == true
+          ? 1
+          : json['Parent'] == false
+          ? 0
+          : (json['Parent'] as num?)?.toInt() ?? -1,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
+      uiOrder: json['Ui_order'] == true
+          ? 1
+          : json['Ui_order'] == false
+          ? 0
+          : (json['Ui_order'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -209,8 +221,16 @@ mixin _AchievementCategoryEntityMixin {
 
   static AchievementCategoryEntity fromJson(Map<String, dynamic> json) {
     return AchievementCategoryEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      parent: (json['Parent'] as num?)?.toInt() ?? -1,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      parent: json['Parent'] == true
+          ? 1
+          : json['Parent'] == false
+          ? 0
+          : (json['Parent'] as num?)?.toInt() ?? -1,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -227,8 +247,16 @@ mixin _AchievementCategoryEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      uiOrder: json['Ui_order'] == true
+          ? 1
+          : json['Ui_order'] == false
+          ? 0
+          : (json['Ui_order'] as num?)?.toInt() ?? 0,
     );
   }
 }

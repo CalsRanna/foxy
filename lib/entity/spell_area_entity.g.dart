@@ -27,15 +27,51 @@ final class BriefSpellAreaEntity {
 
   factory BriefSpellAreaEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellAreaEntity(
-      spell: (json['spell'] as num?)?.toInt() ?? 0,
-      area: (json['area'] as num?)?.toInt() ?? 0,
-      questStart: (json['quest_start'] as num?)?.toInt() ?? 0,
-      questEnd: (json['quest_end'] as num?)?.toInt() ?? 0,
-      auraSpell: (json['aura_spell'] as num?)?.toInt() ?? 0,
-      racemask: (json['racemask'] as num?)?.toInt() ?? 0,
-      gender: (json['gender'] as num?)?.toInt() ?? 2,
-      questStartStatus: (json['quest_start_status'] as num?)?.toInt() ?? 64,
-      questEndStatus: (json['quest_end_status'] as num?)?.toInt() ?? 11,
+      spell: json['spell'] == true
+          ? 1
+          : json['spell'] == false
+          ? 0
+          : (json['spell'] as num?)?.toInt() ?? 0,
+      area: json['area'] == true
+          ? 1
+          : json['area'] == false
+          ? 0
+          : (json['area'] as num?)?.toInt() ?? 0,
+      questStart: json['quest_start'] == true
+          ? 1
+          : json['quest_start'] == false
+          ? 0
+          : (json['quest_start'] as num?)?.toInt() ?? 0,
+      questEnd: json['quest_end'] == true
+          ? 1
+          : json['quest_end'] == false
+          ? 0
+          : (json['quest_end'] as num?)?.toInt() ?? 0,
+      auraSpell: json['aura_spell'] == true
+          ? 1
+          : json['aura_spell'] == false
+          ? 0
+          : (json['aura_spell'] as num?)?.toInt() ?? 0,
+      racemask: json['racemask'] == true
+          ? 1
+          : json['racemask'] == false
+          ? 0
+          : (json['racemask'] as num?)?.toInt() ?? 0,
+      gender: json['gender'] == true
+          ? 1
+          : json['gender'] == false
+          ? 0
+          : (json['gender'] as num?)?.toInt() ?? 2,
+      questStartStatus: json['quest_start_status'] == true
+          ? 1
+          : json['quest_start_status'] == false
+          ? 0
+          : (json['quest_start_status'] as num?)?.toInt() ?? 64,
+      questEndStatus: json['quest_end_status'] == true
+          ? 1
+          : json['quest_end_status'] == false
+          ? 0
+          : (json['quest_end_status'] as num?)?.toInt() ?? 11,
     );
   }
 
@@ -250,16 +286,56 @@ mixin _SpellAreaEntityMixin {
 
   static SpellAreaEntity fromJson(Map<String, dynamic> json) {
     return SpellAreaEntity(
-      spell: (json['spell'] as num?)?.toInt() ?? 0,
-      area: (json['area'] as num?)?.toInt() ?? 0,
-      questStart: (json['quest_start'] as num?)?.toInt() ?? 0,
-      questEnd: (json['quest_end'] as num?)?.toInt() ?? 0,
-      auraSpell: (json['aura_spell'] as num?)?.toInt() ?? 0,
-      racemask: (json['racemask'] as num?)?.toInt() ?? 0,
-      gender: (json['gender'] as num?)?.toInt() ?? 2,
-      autocast: (json['autocast'] as num?)?.toInt() ?? 0,
-      questStartStatus: (json['quest_start_status'] as num?)?.toInt() ?? 64,
-      questEndStatus: (json['quest_end_status'] as num?)?.toInt() ?? 11,
+      spell: json['spell'] == true
+          ? 1
+          : json['spell'] == false
+          ? 0
+          : (json['spell'] as num?)?.toInt() ?? 0,
+      area: json['area'] == true
+          ? 1
+          : json['area'] == false
+          ? 0
+          : (json['area'] as num?)?.toInt() ?? 0,
+      questStart: json['quest_start'] == true
+          ? 1
+          : json['quest_start'] == false
+          ? 0
+          : (json['quest_start'] as num?)?.toInt() ?? 0,
+      questEnd: json['quest_end'] == true
+          ? 1
+          : json['quest_end'] == false
+          ? 0
+          : (json['quest_end'] as num?)?.toInt() ?? 0,
+      auraSpell: json['aura_spell'] == true
+          ? 1
+          : json['aura_spell'] == false
+          ? 0
+          : (json['aura_spell'] as num?)?.toInt() ?? 0,
+      racemask: json['racemask'] == true
+          ? 1
+          : json['racemask'] == false
+          ? 0
+          : (json['racemask'] as num?)?.toInt() ?? 0,
+      gender: json['gender'] == true
+          ? 1
+          : json['gender'] == false
+          ? 0
+          : (json['gender'] as num?)?.toInt() ?? 2,
+      autocast: json['autocast'] == true
+          ? 1
+          : json['autocast'] == false
+          ? 0
+          : (json['autocast'] as num?)?.toInt() ?? 0,
+      questStartStatus: json['quest_start_status'] == true
+          ? 1
+          : json['quest_start_status'] == false
+          ? 0
+          : (json['quest_start_status'] as num?)?.toInt() ?? 64,
+      questEndStatus: json['quest_end_status'] == true
+          ? 1
+          : json['quest_end_status'] == false
+          ? 0
+          : (json['quest_end_status'] as num?)?.toInt() ?? 11,
     );
   }
 }

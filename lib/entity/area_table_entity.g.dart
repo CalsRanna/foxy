@@ -21,10 +21,26 @@ final class BriefAreaTableEntity {
 
   factory BriefAreaTableEntity.fromJson(Map<String, dynamic> json) {
     return BriefAreaTableEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
-      zoneMusic: (json['ZoneMusic'] as num?)?.toInt() ?? 0,
-      explorationLevel: (json['ExplorationLevel'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      continentId: json['ContinentID'] == true
+          ? 1
+          : json['ContinentID'] == false
+          ? 0
+          : (json['ContinentID'] as num?)?.toInt() ?? 0,
+      zoneMusic: json['ZoneMusic'] == true
+          ? 1
+          : json['ZoneMusic'] == false
+          ? 0
+          : (json['ZoneMusic'] as num?)?.toInt() ?? 0,
+      explorationLevel: json['ExplorationLevel'] == true
+          ? 1
+          : json['ExplorationLevel'] == false
+          ? 0
+          : (json['ExplorationLevel'] as num?)?.toInt() ?? 0,
       areaNameLangZhCN: json['AreaName_lang_zhCN']?.toString() ?? '',
       minElevation: (json['MinElevation'] as num?)?.toDouble() ?? 0.0,
     );
@@ -324,18 +340,61 @@ mixin _AreaTableEntityMixin {
 
   static AreaTableEntity fromJson(Map<String, dynamic> json) {
     return AreaTableEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
-      parentAreaId: (json['ParentAreaID'] as num?)?.toInt() ?? 0,
-      areaBit: (json['AreaBit'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      soundProviderPref: (json['SoundProviderPref'] as num?)?.toInt() ?? 0,
-      soundProviderPrefUnderwater:
-          (json['SoundProviderPrefUnderwater'] as num?)?.toInt() ?? 0,
-      ambienceId: (json['AmbienceID'] as num?)?.toInt() ?? 0,
-      zoneMusic: (json['ZoneMusic'] as num?)?.toInt() ?? 0,
-      introSound: (json['IntroSound'] as num?)?.toInt() ?? 0,
-      explorationLevel: (json['ExplorationLevel'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      continentId: json['ContinentID'] == true
+          ? 1
+          : json['ContinentID'] == false
+          ? 0
+          : (json['ContinentID'] as num?)?.toInt() ?? 0,
+      parentAreaId: json['ParentAreaID'] == true
+          ? 1
+          : json['ParentAreaID'] == false
+          ? 0
+          : (json['ParentAreaID'] as num?)?.toInt() ?? 0,
+      areaBit: json['AreaBit'] == true
+          ? 1
+          : json['AreaBit'] == false
+          ? 0
+          : (json['AreaBit'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      soundProviderPref: json['SoundProviderPref'] == true
+          ? 1
+          : json['SoundProviderPref'] == false
+          ? 0
+          : (json['SoundProviderPref'] as num?)?.toInt() ?? 0,
+      soundProviderPrefUnderwater: json['SoundProviderPrefUnderwater'] == true
+          ? 1
+          : json['SoundProviderPrefUnderwater'] == false
+          ? 0
+          : (json['SoundProviderPrefUnderwater'] as num?)?.toInt() ?? 0,
+      ambienceId: json['AmbienceID'] == true
+          ? 1
+          : json['AmbienceID'] == false
+          ? 0
+          : (json['AmbienceID'] as num?)?.toInt() ?? 0,
+      zoneMusic: json['ZoneMusic'] == true
+          ? 1
+          : json['ZoneMusic'] == false
+          ? 0
+          : (json['ZoneMusic'] as num?)?.toInt() ?? 0,
+      introSound: json['IntroSound'] == true
+          ? 1
+          : json['IntroSound'] == false
+          ? 0
+          : (json['IntroSound'] as num?)?.toInt() ?? 0,
+      explorationLevel: json['ExplorationLevel'] == true
+          ? 1
+          : json['ExplorationLevel'] == false
+          ? 0
+          : (json['ExplorationLevel'] as num?)?.toInt() ?? 0,
       areaNameLangEnUS: json['AreaName_lang_enUS']?.toString() ?? '',
       areaNameLangKoKR: json['AreaName_lang_koKR']?.toString() ?? '',
       areaNameLangFrFR: json['AreaName_lang_frFR']?.toString() ?? '',
@@ -352,16 +411,44 @@ mixin _AreaTableEntityMixin {
       areaNameLangUnk1: json['AreaName_lang_unk1']?.toString() ?? '',
       areaNameLangUnk2: json['AreaName_lang_unk2']?.toString() ?? '',
       areaNameLangUnk3: json['AreaName_lang_unk3']?.toString() ?? '',
-      areaNameLangFlags: (json['AreaName_lang_Flags'] as num?)?.toInt() ?? 0,
-      factionGroupMask: (json['FactionGroupMask'] as num?)?.toInt() ?? 0,
-      liquidTypeId0: (json['LiquidTypeID0'] as num?)?.toInt() ?? 0,
-      liquidTypeId1: (json['LiquidTypeID1'] as num?)?.toInt() ?? 0,
-      liquidTypeId2: (json['LiquidTypeID2'] as num?)?.toInt() ?? 0,
-      liquidTypeId3: (json['LiquidTypeID3'] as num?)?.toInt() ?? 0,
+      areaNameLangFlags: json['AreaName_lang_Flags'] == true
+          ? 1
+          : json['AreaName_lang_Flags'] == false
+          ? 0
+          : (json['AreaName_lang_Flags'] as num?)?.toInt() ?? 0,
+      factionGroupMask: json['FactionGroupMask'] == true
+          ? 1
+          : json['FactionGroupMask'] == false
+          ? 0
+          : (json['FactionGroupMask'] as num?)?.toInt() ?? 0,
+      liquidTypeId0: json['LiquidTypeID0'] == true
+          ? 1
+          : json['LiquidTypeID0'] == false
+          ? 0
+          : (json['LiquidTypeID0'] as num?)?.toInt() ?? 0,
+      liquidTypeId1: json['LiquidTypeID1'] == true
+          ? 1
+          : json['LiquidTypeID1'] == false
+          ? 0
+          : (json['LiquidTypeID1'] as num?)?.toInt() ?? 0,
+      liquidTypeId2: json['LiquidTypeID2'] == true
+          ? 1
+          : json['LiquidTypeID2'] == false
+          ? 0
+          : (json['LiquidTypeID2'] as num?)?.toInt() ?? 0,
+      liquidTypeId3: json['LiquidTypeID3'] == true
+          ? 1
+          : json['LiquidTypeID3'] == false
+          ? 0
+          : (json['LiquidTypeID3'] as num?)?.toInt() ?? 0,
       minElevation: (json['MinElevation'] as num?)?.toDouble() ?? 0.0,
       ambientMultiplier:
           (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0,
-      lightId: (json['LightID'] as num?)?.toInt() ?? 0,
+      lightId: json['LightID'] == true
+          ? 1
+          : json['LightID'] == false
+          ? 0
+          : (json['LightID'] as num?)?.toInt() ?? 0,
     );
   }
 }

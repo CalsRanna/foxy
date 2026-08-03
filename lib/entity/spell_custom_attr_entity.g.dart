@@ -10,8 +10,16 @@ final class BriefSpellCustomAttrEntity {
 
   factory BriefSpellCustomAttrEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellCustomAttrEntity(
-      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
-      attributes: (json['attributes'] as num?)?.toInt() ?? 0,
+      spellId: json['spell_id'] == true
+          ? 1
+          : json['spell_id'] == false
+          ? 0
+          : (json['spell_id'] as num?)?.toInt() ?? 0,
+      attributes: json['attributes'] == true
+          ? 1
+          : json['attributes'] == false
+          ? 0
+          : (json['attributes'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -78,8 +86,16 @@ mixin _SpellCustomAttrEntityMixin {
 
   static SpellCustomAttrEntity fromJson(Map<String, dynamic> json) {
     return SpellCustomAttrEntity(
-      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
-      attributes: (json['attributes'] as num?)?.toInt() ?? 0,
+      spellId: json['spell_id'] == true
+          ? 1
+          : json['spell_id'] == false
+          ? 0
+          : (json['spell_id'] as num?)?.toInt() ?? 0,
+      attributes: json['attributes'] == true
+          ? 1
+          : json['attributes'] == false
+          ? 0
+          : (json['attributes'] as num?)?.toInt() ?? 0,
     );
   }
 }

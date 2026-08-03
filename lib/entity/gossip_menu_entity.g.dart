@@ -21,8 +21,16 @@ final class BriefGossipMenuEntity {
 
   factory BriefGossipMenuEntity.fromJson(Map<String, dynamic> json) {
     return BriefGossipMenuEntity(
-      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
-      textId: (json['TextID'] as num?)?.toInt() ?? 0,
+      menuId: json['MenuID'] == true
+          ? 1
+          : json['MenuID'] == false
+          ? 0
+          : (json['MenuID'] as num?)?.toInt() ?? 0,
+      textId: json['TextID'] == true
+          ? 1
+          : json['TextID'] == false
+          ? 0
+          : (json['TextID'] as num?)?.toInt() ?? 0,
       text00: json['text00']?.toString() ?? '',
       text01: json['text01']?.toString() ?? '',
       textLocale00: json['textLocale00']?.toString() ?? '',
@@ -140,8 +148,16 @@ mixin _GossipMenuEntityMixin {
 
   static GossipMenuEntity fromJson(Map<String, dynamic> json) {
     return GossipMenuEntity(
-      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
-      textId: (json['TextID'] as num?)?.toInt() ?? 0,
+      menuId: json['MenuID'] == true
+          ? 1
+          : json['MenuID'] == false
+          ? 0
+          : (json['MenuID'] as num?)?.toInt() ?? 0,
+      textId: json['TextID'] == true
+          ? 1
+          : json['TextID'] == false
+          ? 0
+          : (json['TextID'] as num?)?.toInt() ?? 0,
     );
   }
 }

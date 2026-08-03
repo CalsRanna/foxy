@@ -15,9 +15,21 @@ final class BriefCinematicSequenceEntity {
 
   factory BriefCinematicSequenceEntity.fromJson(Map<String, dynamic> json) {
     return BriefCinematicSequenceEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
-      camera0: (json['Camera0'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      soundId: json['SoundID'] == true
+          ? 1
+          : json['SoundID'] == false
+          ? 0
+          : (json['SoundID'] as num?)?.toInt() ?? 0,
+      camera0: json['Camera0'] == true
+          ? 1
+          : json['Camera0'] == false
+          ? 0
+          : (json['Camera0'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -144,16 +156,56 @@ mixin _CinematicSequenceEntityMixin {
 
   static CinematicSequenceEntity fromJson(Map<String, dynamic> json) {
     return CinematicSequenceEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
-      camera0: (json['Camera0'] as num?)?.toInt() ?? 0,
-      camera1: (json['Camera1'] as num?)?.toInt() ?? 0,
-      camera2: (json['Camera2'] as num?)?.toInt() ?? 0,
-      camera3: (json['Camera3'] as num?)?.toInt() ?? 0,
-      camera4: (json['Camera4'] as num?)?.toInt() ?? 0,
-      camera5: (json['Camera5'] as num?)?.toInt() ?? 0,
-      camera6: (json['Camera6'] as num?)?.toInt() ?? 0,
-      camera7: (json['Camera7'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      soundId: json['SoundID'] == true
+          ? 1
+          : json['SoundID'] == false
+          ? 0
+          : (json['SoundID'] as num?)?.toInt() ?? 0,
+      camera0: json['Camera0'] == true
+          ? 1
+          : json['Camera0'] == false
+          ? 0
+          : (json['Camera0'] as num?)?.toInt() ?? 0,
+      camera1: json['Camera1'] == true
+          ? 1
+          : json['Camera1'] == false
+          ? 0
+          : (json['Camera1'] as num?)?.toInt() ?? 0,
+      camera2: json['Camera2'] == true
+          ? 1
+          : json['Camera2'] == false
+          ? 0
+          : (json['Camera2'] as num?)?.toInt() ?? 0,
+      camera3: json['Camera3'] == true
+          ? 1
+          : json['Camera3'] == false
+          ? 0
+          : (json['Camera3'] as num?)?.toInt() ?? 0,
+      camera4: json['Camera4'] == true
+          ? 1
+          : json['Camera4'] == false
+          ? 0
+          : (json['Camera4'] as num?)?.toInt() ?? 0,
+      camera5: json['Camera5'] == true
+          ? 1
+          : json['Camera5'] == false
+          ? 0
+          : (json['Camera5'] as num?)?.toInt() ?? 0,
+      camera6: json['Camera6'] == true
+          ? 1
+          : json['Camera6'] == false
+          ? 0
+          : (json['Camera6'] as num?)?.toInt() ?? 0,
+      camera7: json['Camera7'] == true
+          ? 1
+          : json['Camera7'] == false
+          ? 0
+          : (json['Camera7'] as num?)?.toInt() ?? 0,
     );
   }
 }

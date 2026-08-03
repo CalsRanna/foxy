@@ -23,11 +23,31 @@ final class BriefNpcTrainerEntity {
 
   factory BriefNpcTrainerEntity.fromJson(Map<String, dynamic> json) {
     return BriefNpcTrainerEntity(
-      trainerId: (json['TrainerId'] as num?)?.toInt() ?? 0,
-      spellId: (json['SpellId'] as num?)?.toInt() ?? 0,
-      moneyCost: (json['MoneyCost'] as num?)?.toInt() ?? 0,
-      reqSkillLine: (json['ReqSkillLine'] as num?)?.toInt() ?? 0,
-      reqLevel: (json['ReqLevel'] as num?)?.toInt() ?? 0,
+      trainerId: json['TrainerId'] == true
+          ? 1
+          : json['TrainerId'] == false
+          ? 0
+          : (json['TrainerId'] as num?)?.toInt() ?? 0,
+      spellId: json['SpellId'] == true
+          ? 1
+          : json['SpellId'] == false
+          ? 0
+          : (json['SpellId'] as num?)?.toInt() ?? 0,
+      moneyCost: json['MoneyCost'] == true
+          ? 1
+          : json['MoneyCost'] == false
+          ? 0
+          : (json['MoneyCost'] as num?)?.toInt() ?? 0,
+      reqSkillLine: json['ReqSkillLine'] == true
+          ? 1
+          : json['ReqSkillLine'] == false
+          ? 0
+          : (json['ReqSkillLine'] as num?)?.toInt() ?? 0,
+      reqLevel: json['ReqLevel'] == true
+          ? 1
+          : json['ReqLevel'] == false
+          ? 0
+          : (json['ReqLevel'] as num?)?.toInt() ?? 0,
       spellName: json['spellName']?.toString() ?? '',
       spellSubtext: json['spellSubtext']?.toString() ?? '',
     );
@@ -204,16 +224,56 @@ mixin _NpcTrainerEntityMixin {
 
   static NpcTrainerEntity fromJson(Map<String, dynamic> json) {
     return NpcTrainerEntity(
-      trainerId: (json['TrainerId'] as num?)?.toInt() ?? 0,
-      spellId: (json['SpellId'] as num?)?.toInt() ?? 0,
-      moneyCost: (json['MoneyCost'] as num?)?.toInt() ?? 0,
-      reqSkillLine: (json['ReqSkillLine'] as num?)?.toInt() ?? 0,
-      reqSkillRank: (json['ReqSkillRank'] as num?)?.toInt() ?? 0,
-      reqAbility1: (json['ReqAbility1'] as num?)?.toInt() ?? 0,
-      reqAbility2: (json['ReqAbility2'] as num?)?.toInt() ?? 0,
-      reqAbility3: (json['ReqAbility3'] as num?)?.toInt() ?? 0,
-      reqLevel: (json['ReqLevel'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      trainerId: json['TrainerId'] == true
+          ? 1
+          : json['TrainerId'] == false
+          ? 0
+          : (json['TrainerId'] as num?)?.toInt() ?? 0,
+      spellId: json['SpellId'] == true
+          ? 1
+          : json['SpellId'] == false
+          ? 0
+          : (json['SpellId'] as num?)?.toInt() ?? 0,
+      moneyCost: json['MoneyCost'] == true
+          ? 1
+          : json['MoneyCost'] == false
+          ? 0
+          : (json['MoneyCost'] as num?)?.toInt() ?? 0,
+      reqSkillLine: json['ReqSkillLine'] == true
+          ? 1
+          : json['ReqSkillLine'] == false
+          ? 0
+          : (json['ReqSkillLine'] as num?)?.toInt() ?? 0,
+      reqSkillRank: json['ReqSkillRank'] == true
+          ? 1
+          : json['ReqSkillRank'] == false
+          ? 0
+          : (json['ReqSkillRank'] as num?)?.toInt() ?? 0,
+      reqAbility1: json['ReqAbility1'] == true
+          ? 1
+          : json['ReqAbility1'] == false
+          ? 0
+          : (json['ReqAbility1'] as num?)?.toInt() ?? 0,
+      reqAbility2: json['ReqAbility2'] == true
+          ? 1
+          : json['ReqAbility2'] == false
+          ? 0
+          : (json['ReqAbility2'] as num?)?.toInt() ?? 0,
+      reqAbility3: json['ReqAbility3'] == true
+          ? 1
+          : json['ReqAbility3'] == false
+          ? 0
+          : (json['ReqAbility3'] as num?)?.toInt() ?? 0,
+      reqLevel: json['ReqLevel'] == true
+          ? 1
+          : json['ReqLevel'] == false
+          ? 0
+          : (json['ReqLevel'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -124,7 +124,7 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'disenchant_loot_template',
           '`Item`',
-          where: {'Entry': disenchantLootTemplate.entry},
+          where: {'`Entry`': disenchantLootTemplate.entry},
         ),
       );
       try {

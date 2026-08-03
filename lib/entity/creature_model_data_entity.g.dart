@@ -17,9 +17,17 @@ final class BriefCreatureModelDataEntity {
 
   factory BriefCreatureModelDataEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureModelDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       modelName: json['ModelName']?.toString() ?? '',
-      sizeClass: (json['SizeClass'] as num?)?.toInt() ?? 0,
+      sizeClass: json['SizeClass'] == true
+          ? 1
+          : json['SizeClass'] == false
+          ? 0
+          : (json['SizeClass'] as num?)?.toInt() ?? 0,
       modelScale: (json['ModelScale'] as num?)?.toDouble() ?? 0.0,
     );
   }
@@ -262,23 +270,59 @@ mixin _CreatureModelDataEntityMixin {
 
   static CreatureModelDataEntity fromJson(Map<String, dynamic> json) {
     return CreatureModelDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
       modelName: json['ModelName']?.toString() ?? '',
-      sizeClass: (json['SizeClass'] as num?)?.toInt() ?? 0,
+      sizeClass: json['SizeClass'] == true
+          ? 1
+          : json['SizeClass'] == false
+          ? 0
+          : (json['SizeClass'] as num?)?.toInt() ?? 0,
       modelScale: (json['ModelScale'] as num?)?.toDouble() ?? 0.0,
-      bloodId: (json['BloodID'] as num?)?.toInt() ?? 0,
-      footprintTextureId: (json['FootprintTextureID'] as num?)?.toInt() ?? 0,
+      bloodId: json['BloodID'] == true
+          ? 1
+          : json['BloodID'] == false
+          ? 0
+          : (json['BloodID'] as num?)?.toInt() ?? 0,
+      footprintTextureId: json['FootprintTextureID'] == true
+          ? 1
+          : json['FootprintTextureID'] == false
+          ? 0
+          : (json['FootprintTextureID'] as num?)?.toInt() ?? 0,
       footprintTextureLength:
           (json['FootprintTextureLength'] as num?)?.toDouble() ?? 0.0,
       footprintTextureWidth:
           (json['FootprintTextureWidth'] as num?)?.toDouble() ?? 0.0,
       footprintParticleScale:
           (json['FootprintParticleScale'] as num?)?.toDouble() ?? 0.0,
-      foleyMaterialId: (json['FoleyMaterialID'] as num?)?.toInt() ?? 0,
-      footstepShakeSize: (json['FootstepShakeSize'] as num?)?.toInt() ?? 0,
-      deathThudShakeSize: (json['DeathThudShakeSize'] as num?)?.toInt() ?? 0,
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
+      foleyMaterialId: json['FoleyMaterialID'] == true
+          ? 1
+          : json['FoleyMaterialID'] == false
+          ? 0
+          : (json['FoleyMaterialID'] as num?)?.toInt() ?? 0,
+      footstepShakeSize: json['FootstepShakeSize'] == true
+          ? 1
+          : json['FootstepShakeSize'] == false
+          ? 0
+          : (json['FootstepShakeSize'] as num?)?.toInt() ?? 0,
+      deathThudShakeSize: json['DeathThudShakeSize'] == true
+          ? 1
+          : json['DeathThudShakeSize'] == false
+          ? 0
+          : (json['DeathThudShakeSize'] as num?)?.toInt() ?? 0,
+      soundId: json['SoundID'] == true
+          ? 1
+          : json['SoundID'] == false
+          ? 0
+          : (json['SoundID'] as num?)?.toInt() ?? 0,
       collisionWidth: (json['CollisionWidth'] as num?)?.toDouble() ?? 0.0,
       collisionHeight: (json['CollisionHeight'] as num?)?.toDouble() ?? 0.0,
       mountHeight: (json['MountHeight'] as num?)?.toDouble() ?? 0.0,

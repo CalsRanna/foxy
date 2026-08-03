@@ -19,12 +19,23 @@ final class BriefCreatureModelInfoEntity {
 
   factory BriefCreatureModelInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureModelInfoEntity(
-      displayId: (json['DisplayID'] as num?)?.toInt() ?? 0,
+      displayId: json['DisplayID'] == true
+          ? 1
+          : json['DisplayID'] == false
+          ? 0
+          : (json['DisplayID'] as num?)?.toInt() ?? 0,
       boundingRadius: (json['BoundingRadius'] as num?)?.toDouble() ?? 0.0,
       combatReach: (json['CombatReach'] as num?)?.toDouble() ?? 0.0,
-      gender: (json['Gender'] as num?)?.toInt() ?? 0,
-      displayIdOtherGender:
-          (json['DisplayID_Other_Gender'] as num?)?.toInt() ?? 0,
+      gender: json['Gender'] == true
+          ? 1
+          : json['Gender'] == false
+          ? 0
+          : (json['Gender'] as num?)?.toInt() ?? 0,
+      displayIdOtherGender: json['DisplayID_Other_Gender'] == true
+          ? 1
+          : json['DisplayID_Other_Gender'] == false
+          ? 0
+          : (json['DisplayID_Other_Gender'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -137,13 +148,28 @@ mixin _CreatureModelInfoEntityMixin {
 
   static CreatureModelInfoEntity fromJson(Map<String, dynamic> json) {
     return CreatureModelInfoEntity(
-      displayId: (json['DisplayID'] as num?)?.toInt() ?? 0,
+      displayId: json['DisplayID'] == true
+          ? 1
+          : json['DisplayID'] == false
+          ? 0
+          : (json['DisplayID'] as num?)?.toInt() ?? 0,
       boundingRadius: (json['BoundingRadius'] as num?)?.toDouble() ?? 0.0,
       combatReach: (json['CombatReach'] as num?)?.toDouble() ?? 0.0,
-      gender: (json['Gender'] as num?)?.toInt() ?? 0,
-      displayIdOtherGender:
-          (json['DisplayID_Other_Gender'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      gender: json['Gender'] == true
+          ? 1
+          : json['Gender'] == false
+          ? 0
+          : (json['Gender'] as num?)?.toInt() ?? 0,
+      displayIdOtherGender: json['DisplayID_Other_Gender'] == true
+          ? 1
+          : json['DisplayID_Other_Gender'] == false
+          ? 0
+          : (json['DisplayID_Other_Gender'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -37,7 +37,7 @@ class CreatureTemplateRepository
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.entry.isNotEmpty) {
-        builder = builder.where('entry', filter.entry);
+        builder = builder.where('entry', int.tryParse(filter.entry) ?? 0);
       }
       if (filter != null && filter.name.isNotEmpty) {
         builder = builder.where('name', '%${escapeLike(filter.name)}%', comparator: 'like');
@@ -114,7 +114,7 @@ class CreatureTemplateRepository
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('ct.entry', filter.entry);
+      builder = builder.where('ct.entry', int.tryParse(filter.entry) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       if (localeEnabled) {

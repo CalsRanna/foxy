@@ -310,7 +310,11 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
     } catch (e) {
       LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
-      setState(() => _errorMessage = '${widget.delegate.errorLabel}: $e');
+      // UI 只展示 foxyErrorMessage 映射后的用户文案,原始异常串进日志。
+      setState(
+        () => _errorMessage =
+            '${widget.delegate.errorLabel}: ${foxyErrorMessage(e)}',
+      );
     }
   }
 }

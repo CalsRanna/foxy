@@ -7,7 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'smart_script_repository.g.dart';
 
-@FoxyRepository(SmartScriptEntity)
+@FoxyRepository(
+  SmartScriptEntity,
+  autoIncrementKey: 'id',
+  autoIncrementScope: ['entryOrGuid', 'sourceType'],
+)
 @FoxyFilter.text('entryOrGuid')
 @FoxyFilter.text('comment')
 class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
@@ -54,7 +58,7 @@ class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, SmartScriptFilter? filter) {
     if (filter == null) return builder;
     if (filter.entryOrGuid.isNotEmpty) {
-      builder = builder.where('entryorguid', filter.entryOrGuid);
+      builder = builder.where('entryorguid', int.tryParse(filter.entryOrGuid) ?? 0);
     }
     if (filter.comment.isNotEmpty) {
       builder = builder.where(

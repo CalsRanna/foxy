@@ -39,7 +39,7 @@ class ItemTemplateRepository
       var builder = laconic.table(_table);
       if (filter != null) {
         if (filter.entry.isNotEmpty) {
-          builder = builder.where('entry', filter.entry);
+          builder = builder.where('entry', int.tryParse(filter.entry) ?? 0);
         }
         if (filter.name.isNotEmpty) {
           builder = builder.where(
@@ -121,7 +121,7 @@ class ItemTemplateRepository
   QueryBuilder _applyFilter(QueryBuilder builder, ItemTemplateFilter? filter) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('it.entry', filter.entry);
+      builder = builder.where('it.entry', int.tryParse(filter.entry) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       if (localeEnabled) {

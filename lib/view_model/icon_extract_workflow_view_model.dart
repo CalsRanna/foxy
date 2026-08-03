@@ -1,5 +1,6 @@
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_summary.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
@@ -120,7 +121,7 @@ class IconExtractWorkflowViewModel {
       } else if (nextResult.success) {
         status.value = WorkflowStatus.succeeded;
       } else {
-        errorMessage.value = _formatFailure(nextResult);
+        errorMessage.value = formatIconExtractionFailureSummary(nextResult);
         status.value = WorkflowStatus.failed;
       }
     } catch (error) {
@@ -153,12 +154,4 @@ class IconExtractWorkflowViewModel {
     }
   }
 
-  static String _formatFailure(GameIconExtractionResult result) {
-    final top = result.errors.take(5).join('\n');
-    final suffix = result.errors.length > 5
-        ? '\n...等 ${result.errors.length} 个错误'
-        : '';
-    return '提取结束，部分文件失败（成功 ${result.extracted}，跳过 ${result.skipped}）：\n'
-        '$top$suffix';
-  }
 }

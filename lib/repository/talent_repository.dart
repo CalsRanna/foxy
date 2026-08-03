@@ -31,11 +31,11 @@ class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, TalentFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     if (filter.spell.isNotEmpty) {
       builder = builder.whereNested(
         (query) => query
-            .where('SpellRank0', filter.spell)
+            .where('SpellRank0', int.tryParse(filter.spell) ?? 0)
             .orWhere('SpellRank1', filter.spell)
             .orWhere('SpellRank2', filter.spell)
             .orWhere('SpellRank3', filter.spell)

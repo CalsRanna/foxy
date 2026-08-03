@@ -21,12 +21,36 @@ final class BriefItemVisualsEntity {
 
   factory BriefItemVisualsEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemVisualsEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      slot0: (json['Slot0'] as num?)?.toInt() ?? 0,
-      slot1: (json['Slot1'] as num?)?.toInt() ?? 0,
-      slot2: (json['Slot2'] as num?)?.toInt() ?? 0,
-      slot3: (json['Slot3'] as num?)?.toInt() ?? 0,
-      slot4: (json['Slot4'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      slot0: json['Slot0'] == true
+          ? 1
+          : json['Slot0'] == false
+          ? 0
+          : (json['Slot0'] as num?)?.toInt() ?? 0,
+      slot1: json['Slot1'] == true
+          ? 1
+          : json['Slot1'] == false
+          ? 0
+          : (json['Slot1'] as num?)?.toInt() ?? 0,
+      slot2: json['Slot2'] == true
+          ? 1
+          : json['Slot2'] == false
+          ? 0
+          : (json['Slot2'] as num?)?.toInt() ?? 0,
+      slot3: json['Slot3'] == true
+          ? 1
+          : json['Slot3'] == false
+          ? 0
+          : (json['Slot3'] as num?)?.toInt() ?? 0,
+      slot4: json['Slot4'] == true
+          ? 1
+          : json['Slot4'] == false
+          ? 0
+          : (json['Slot4'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -135,12 +159,36 @@ mixin _ItemVisualsEntityMixin {
 
   static ItemVisualsEntity fromJson(Map<String, dynamic> json) {
     return ItemVisualsEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      slot0: (json['Slot0'] as num?)?.toInt() ?? 0,
-      slot1: (json['Slot1'] as num?)?.toInt() ?? 0,
-      slot2: (json['Slot2'] as num?)?.toInt() ?? 0,
-      slot3: (json['Slot3'] as num?)?.toInt() ?? 0,
-      slot4: (json['Slot4'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      slot0: json['Slot0'] == true
+          ? 1
+          : json['Slot0'] == false
+          ? 0
+          : (json['Slot0'] as num?)?.toInt() ?? 0,
+      slot1: json['Slot1'] == true
+          ? 1
+          : json['Slot1'] == false
+          ? 0
+          : (json['Slot1'] as num?)?.toInt() ?? 0,
+      slot2: json['Slot2'] == true
+          ? 1
+          : json['Slot2'] == false
+          ? 0
+          : (json['Slot2'] as num?)?.toInt() ?? 0,
+      slot3: json['Slot3'] == true
+          ? 1
+          : json['Slot3'] == false
+          ? 0
+          : (json['Slot3'] as num?)?.toInt() ?? 0,
+      slot4: json['Slot4'] == true
+          ? 1
+          : json['Slot4'] == false
+          ? 0
+          : (json['Slot4'] as num?)?.toInt() ?? 0,
     );
   }
 }

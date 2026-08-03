@@ -124,7 +124,7 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'pickpocketing_loot_template',
           '`Item`',
-          where: {'Entry': pickpocketingLootTemplate.entry},
+          where: {'`Entry`': pickpocketingLootTemplate.entry},
         ),
       );
       try {

@@ -19,7 +19,11 @@ final class BriefGameObjectTemplateLocaleEntity {
     Map<String, dynamic> json,
   ) {
     return BriefGameObjectTemplateLocaleEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
       castBarCaption: json['castBarCaption']?.toString() ?? '',
@@ -161,11 +165,19 @@ mixin _GameObjectTemplateLocaleEntityMixin {
 
   static GameObjectTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
     return GameObjectTemplateLocaleEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
       castBarCaption: json['castBarCaption']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

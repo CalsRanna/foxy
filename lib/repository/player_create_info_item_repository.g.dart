@@ -101,8 +101,8 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
           'playercreateinfo_item',
           '`itemid`',
           where: {
-            'race': playerCreateInfoItem.race,
-            'class': playerCreateInfoItem.class_,
+            '`race`': playerCreateInfoItem.race,
+            '`class`': playerCreateInfoItem.class_,
           },
         ),
       );

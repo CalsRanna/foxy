@@ -111,8 +111,8 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
           'playercreateinfo_skills',
           '`skill`',
           where: {
-            'raceMask': playerCreateInfoSkill.raceMask,
-            'classMask': playerCreateInfoSkill.classMask,
+            '`raceMask`': playerCreateInfoSkill.raceMask,
+            '`classMask`': playerCreateInfoSkill.classMask,
           },
         ),
       );

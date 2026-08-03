@@ -21,11 +21,31 @@ final class BriefGameObjectTemplateAddonEntity {
     Map<String, dynamic> json,
   ) {
     return BriefGameObjectTemplateAddonEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      faction: (json['faction'] as num?)?.toInt() ?? 0,
-      flags: (json['flags'] as num?)?.toInt() ?? 0,
-      minGold: (json['mingold'] as num?)?.toInt() ?? 0,
-      maxGold: (json['maxgold'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      faction: json['faction'] == true
+          ? 1
+          : json['faction'] == false
+          ? 0
+          : (json['faction'] as num?)?.toInt() ?? 0,
+      flags: json['flags'] == true
+          ? 1
+          : json['flags'] == false
+          ? 0
+          : (json['flags'] as num?)?.toInt() ?? 0,
+      minGold: json['mingold'] == true
+          ? 1
+          : json['mingold'] == false
+          ? 0
+          : (json['mingold'] as num?)?.toInt() ?? 0,
+      maxGold: json['maxgold'] == true
+          ? 1
+          : json['maxgold'] == false
+          ? 0
+          : (json['maxgold'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -150,15 +170,51 @@ mixin _GameObjectTemplateAddonEntityMixin {
 
   static GameObjectTemplateAddonEntity fromJson(Map<String, dynamic> json) {
     return GameObjectTemplateAddonEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      faction: (json['faction'] as num?)?.toInt() ?? 0,
-      flags: (json['flags'] as num?)?.toInt() ?? 0,
-      minGold: (json['mingold'] as num?)?.toInt() ?? 0,
-      maxGold: (json['maxgold'] as num?)?.toInt() ?? 0,
-      artkit0: (json['artkit0'] as num?)?.toInt() ?? 0,
-      artkit1: (json['artkit1'] as num?)?.toInt() ?? 0,
-      artkit2: (json['artkit2'] as num?)?.toInt() ?? 0,
-      artkit3: (json['artkit3'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      faction: json['faction'] == true
+          ? 1
+          : json['faction'] == false
+          ? 0
+          : (json['faction'] as num?)?.toInt() ?? 0,
+      flags: json['flags'] == true
+          ? 1
+          : json['flags'] == false
+          ? 0
+          : (json['flags'] as num?)?.toInt() ?? 0,
+      minGold: json['mingold'] == true
+          ? 1
+          : json['mingold'] == false
+          ? 0
+          : (json['mingold'] as num?)?.toInt() ?? 0,
+      maxGold: json['maxgold'] == true
+          ? 1
+          : json['maxgold'] == false
+          ? 0
+          : (json['maxgold'] as num?)?.toInt() ?? 0,
+      artkit0: json['artkit0'] == true
+          ? 1
+          : json['artkit0'] == false
+          ? 0
+          : (json['artkit0'] as num?)?.toInt() ?? 0,
+      artkit1: json['artkit1'] == true
+          ? 1
+          : json['artkit1'] == false
+          ? 0
+          : (json['artkit1'] as num?)?.toInt() ?? 0,
+      artkit2: json['artkit2'] == true
+          ? 1
+          : json['artkit2'] == false
+          ? 0
+          : (json['artkit2'] as num?)?.toInt() ?? 0,
+      artkit3: json['artkit3'] == true
+          ? 1
+          : json['artkit3'] == false
+          ? 0
+          : (json['artkit3'] as num?)?.toInt() ?? 0,
     );
   }
 }

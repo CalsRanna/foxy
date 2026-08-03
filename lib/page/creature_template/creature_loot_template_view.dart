@@ -308,7 +308,10 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
+                  onPressed: () {
+                    viewModel.selectedKey.value = items[row].key;
+                    _destroy(viewModel.selectedKey.value!);
+                  },
                   child: Text('删除'),
                 ),
               ],

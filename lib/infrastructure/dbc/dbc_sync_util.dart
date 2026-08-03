@@ -631,6 +631,7 @@ class DbcSyncUtil {
           database: mysqlConfig.database,
           username: mysqlConfig.username,
           password: mysqlConfig.password,
+          useSsl: mysqlConfig.useSsl,
           jobId: job.jobId,
         ),
         onError: errorPort.sendPort,

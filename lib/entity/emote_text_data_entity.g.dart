@@ -10,7 +10,11 @@ final class BriefEmoteTextDataEntity {
 
   factory BriefEmoteTextDataEntity.fromJson(Map<String, dynamic> json) {
     return BriefEmoteTextDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       textLangZhCN: json['Text_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -184,7 +188,11 @@ mixin _EmoteTextDataEntityMixin {
 
   static EmoteTextDataEntity fromJson(Map<String, dynamic> json) {
     return EmoteTextDataEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       textLangEnUS: json['Text_lang_enUS']?.toString() ?? '',
       textLangKoKR: json['Text_lang_koKR']?.toString() ?? '',
       textLangFrFR: json['Text_lang_frFR']?.toString() ?? '',
@@ -201,7 +209,11 @@ mixin _EmoteTextDataEntityMixin {
       textLangUnk1: json['Text_lang_unk1']?.toString() ?? '',
       textLangUnk2: json['Text_lang_unk2']?.toString() ?? '',
       textLangUnk3: json['Text_lang_unk3']?.toString() ?? '',
-      textLangFlags: (json['Text_lang_Flags'] as num?)?.toInt() ?? 0,
+      textLangFlags: json['Text_lang_Flags'] == true
+          ? 1
+          : json['Text_lang_Flags'] == false
+          ? 0
+          : (json['Text_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

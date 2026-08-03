@@ -19,8 +19,16 @@ final class BriefGossipMenuOptionLocaleEntity {
     Map<String, dynamic> json,
   ) {
     return BriefGossipMenuOptionLocaleEntity(
-      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
-      optionId: (json['OptionID'] as num?)?.toInt() ?? 0,
+      menuId: json['MenuID'] == true
+          ? 1
+          : json['MenuID'] == false
+          ? 0
+          : (json['MenuID'] as num?)?.toInt() ?? 0,
+      optionId: json['OptionID'] == true
+          ? 1
+          : json['OptionID'] == false
+          ? 0
+          : (json['OptionID'] as num?)?.toInt() ?? 0,
       locale: json['Locale']?.toString() ?? 'zhCN',
       optionText: json['OptionText']?.toString() ?? '',
     );
@@ -170,8 +178,16 @@ mixin _GossipMenuOptionLocaleEntityMixin {
 
   static GossipMenuOptionLocaleEntity fromJson(Map<String, dynamic> json) {
     return GossipMenuOptionLocaleEntity(
-      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
-      optionId: (json['OptionID'] as num?)?.toInt() ?? 0,
+      menuId: json['MenuID'] == true
+          ? 1
+          : json['MenuID'] == false
+          ? 0
+          : (json['MenuID'] as num?)?.toInt() ?? 0,
+      optionId: json['OptionID'] == true
+          ? 1
+          : json['OptionID'] == false
+          ? 0
+          : (json['OptionID'] as num?)?.toInt() ?? 0,
       locale: json['Locale']?.toString() ?? 'zhCN',
       optionText: json['OptionText']?.toString() ?? '',
       boxText: json['BoxText']?.toString() ?? '',

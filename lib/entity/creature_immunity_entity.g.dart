@@ -21,11 +21,31 @@ final class BriefCreatureImmunityEntity {
 
   factory BriefCreatureImmunityEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureImmunityEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      schoolMask: (json['SchoolMask'] as num?)?.toInt() ?? 0,
-      mechanicsMask: (json['MechanicsMask'] as num?)?.toInt() ?? 0,
-      immuneAoE: (json['ImmuneAoE'] as num?)?.toInt() ?? 0,
-      immuneChain: (json['ImmuneChain'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      schoolMask: json['SchoolMask'] == true
+          ? 1
+          : json['SchoolMask'] == false
+          ? 0
+          : (json['SchoolMask'] as num?)?.toInt() ?? 0,
+      mechanicsMask: json['MechanicsMask'] == true
+          ? 1
+          : json['MechanicsMask'] == false
+          ? 0
+          : (json['MechanicsMask'] as num?)?.toInt() ?? 0,
+      immuneAoE: json['ImmuneAoE'] == true
+          ? 1
+          : json['ImmuneAoE'] == false
+          ? 0
+          : (json['ImmuneAoE'] as num?)?.toInt() ?? 0,
+      immuneChain: json['ImmuneChain'] == true
+          ? 1
+          : json['ImmuneChain'] == false
+          ? 0
+          : (json['ImmuneChain'] as num?)?.toInt() ?? 0,
       comment: json['Comment']?.toString() ?? '',
     );
   }
@@ -160,14 +180,38 @@ mixin _CreatureImmunityEntityMixin {
 
   static CreatureImmunityEntity fromJson(Map<String, dynamic> json) {
     return CreatureImmunityEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      schoolMask: (json['SchoolMask'] as num?)?.toInt() ?? 0,
-      dispelTypeMask: (json['DispelTypeMask'] as num?)?.toInt() ?? 0,
-      mechanicsMask: (json['MechanicsMask'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      schoolMask: json['SchoolMask'] == true
+          ? 1
+          : json['SchoolMask'] == false
+          ? 0
+          : (json['SchoolMask'] as num?)?.toInt() ?? 0,
+      dispelTypeMask: json['DispelTypeMask'] == true
+          ? 1
+          : json['DispelTypeMask'] == false
+          ? 0
+          : (json['DispelTypeMask'] as num?)?.toInt() ?? 0,
+      mechanicsMask: json['MechanicsMask'] == true
+          ? 1
+          : json['MechanicsMask'] == false
+          ? 0
+          : (json['MechanicsMask'] as num?)?.toInt() ?? 0,
       effects: json['Effects']?.toString() ?? '',
       auras: json['Auras']?.toString() ?? '',
-      immuneAoE: (json['ImmuneAoE'] as num?)?.toInt() ?? 0,
-      immuneChain: (json['ImmuneChain'] as num?)?.toInt() ?? 0,
+      immuneAoE: json['ImmuneAoE'] == true
+          ? 1
+          : json['ImmuneAoE'] == false
+          ? 0
+          : (json['ImmuneAoE'] as num?)?.toInt() ?? 0,
+      immuneChain: json['ImmuneChain'] == true
+          ? 1
+          : json['ImmuneChain'] == false
+          ? 0
+          : (json['ImmuneChain'] as num?)?.toInt() ?? 0,
       comment: json['Comment']?.toString() ?? '',
     );
   }

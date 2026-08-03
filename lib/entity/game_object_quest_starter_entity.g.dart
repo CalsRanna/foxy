@@ -19,8 +19,16 @@ final class BriefGameObjectQuestStarterEntity {
     Map<String, dynamic> json,
   ) {
     return BriefGameObjectQuestStarterEntity(
-      id: (json['id'] as num?)?.toInt() ?? 0,
-      quest: (json['quest'] as num?)?.toInt() ?? 0,
+      id: json['id'] == true
+          ? 1
+          : json['id'] == false
+          ? 0
+          : (json['id'] as num?)?.toInt() ?? 0,
+      quest: json['quest'] == true
+          ? 1
+          : json['quest'] == false
+          ? 0
+          : (json['quest'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
       localeName: json['localeName']?.toString() ?? '',
     );
@@ -127,8 +135,16 @@ mixin _GameObjectQuestStarterEntityMixin {
 
   static GameObjectQuestStarterEntity fromJson(Map<String, dynamic> json) {
     return GameObjectQuestStarterEntity(
-      id: (json['id'] as num?)?.toInt() ?? 0,
-      quest: (json['quest'] as num?)?.toInt() ?? 0,
+      id: json['id'] == true
+          ? 1
+          : json['id'] == false
+          ? 0
+          : (json['id'] as num?)?.toInt() ?? 0,
+      quest: json['quest'] == true
+          ? 1
+          : json['quest'] == false
+          ? 0
+          : (json['quest'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -180,25 +180,29 @@ final class LinkedDetailEmitter {
       ..writeln('    try {')
       ..writeln('      final existing = await _repository.get${model.baseName}('
           'linkSnapshot);')
-      ..writeln('      if (token != _refreshToken) return;')
+      // 慢查询返回时页面可能已销毁(disposeControllers),再写
+      // TextEditingController 会在 debug 下抛 FlutterError。
+      ..writeln('      if (token != _refreshToken || isDisposed) return;')
       ..writeln('      final candidate =')
       ..writeln(
         '          existing ?? await _repository.create${model.baseName}('
         'linkSnapshot);',
       )
-      ..writeln('      if (token != _refreshToken) return;')
+      ..writeln('      if (token != _refreshToken || isDisposed) return;')
       ..writeln('      entity.value = candidate;')
       ..writeln('      editingKey.value = existing == null ? null : linkSnapshot;')
       ..writeln('      _applyCandidate(candidate);')
       ..writeln('    } catch (error, stackTrace) {')
-      ..writeln('      if (token != _refreshToken) return;')
+      ..writeln('      if (token != _refreshToken || isDisposed) return;')
       ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln(
         '      LoggerUtil.instance.e('
         "'加载单行编辑器失败', error: error, stackTrace: stackTrace);",
       )
       ..writeln('    } finally {')
-      ..writeln('      if (token == _refreshToken) loading.value = false;')
+      ..writeln(
+        '      if (token == _refreshToken && !isDisposed) loading.value = false;',
+      )
       ..writeln('    }')
       ..writeln('  }')
       ..writeln('}');

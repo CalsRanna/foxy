@@ -8,6 +8,14 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 ///
 /// 传入 ViewModel 持有的 [NumberFieldController]。类型参数 [T] 标识字段数值类型。
 class FoxyNumberInput<T extends num> extends StatelessWidget {
+  // RegExp 构造即编译,详情大表单(如 spell 67 个、creature 50 个输入框)
+  // 每帧 build 重建会重复编译,提取为 static final 复用。
+  static final _floatRegExp = RegExp(r'[0-9.\-]');
+  static final _intRegExp = RegExp(r'[0-9\-]');
+  static final _floatFormatter =
+      FilteringTextInputFormatter.allow(_floatRegExp);
+  static final _intFormatter = FilteringTextInputFormatter.allow(_intRegExp);
+
   final NumberFieldController<T> controller;
   final String? placeholder;
   final bool readOnly;
@@ -38,9 +46,7 @@ class FoxyNumberInput<T extends num> extends StatelessWidget {
           signed: true,
         ),
         inputFormatters: [
-          FilteringTextInputFormatter.allow(
-            _isFloat ? RegExp(r'[0-9.\-]') : RegExp(r'[0-9\-]'),
-          ),
+          _isFloat ? _floatFormatter : _intFormatter,
         ],
       ),
     );

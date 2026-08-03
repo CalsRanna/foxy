@@ -11,8 +11,16 @@ final class BriefVehicleEntity {
 
   factory BriefVehicleEntity.fromJson(Map<String, dynamic> json) {
     return BriefVehicleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
       turnSpeed: (json['TurnSpeed'] as num?)?.toDouble() ?? 0.0,
     );
   }
@@ -329,20 +337,60 @@ mixin _VehicleEntityMixin {
 
   static VehicleEntity fromJson(Map<String, dynamic> json) {
     return VehicleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
       turnSpeed: (json['TurnSpeed'] as num?)?.toDouble() ?? 0.0,
       pitchSpeed: (json['PitchSpeed'] as num?)?.toDouble() ?? 0.0,
       pitchMin: (json['PitchMin'] as num?)?.toDouble() ?? 0.0,
       pitchMax: (json['PitchMax'] as num?)?.toDouble() ?? 0.0,
-      seatID0: (json['SeatID0'] as num?)?.toInt() ?? 0,
-      seatID1: (json['SeatID1'] as num?)?.toInt() ?? 0,
-      seatID2: (json['SeatID2'] as num?)?.toInt() ?? 0,
-      seatID3: (json['SeatID3'] as num?)?.toInt() ?? 0,
-      seatID4: (json['SeatID4'] as num?)?.toInt() ?? 0,
-      seatID5: (json['SeatID5'] as num?)?.toInt() ?? 0,
-      seatID6: (json['SeatID6'] as num?)?.toInt() ?? 0,
-      seatID7: (json['SeatID7'] as num?)?.toInt() ?? 0,
+      seatID0: json['SeatID0'] == true
+          ? 1
+          : json['SeatID0'] == false
+          ? 0
+          : (json['SeatID0'] as num?)?.toInt() ?? 0,
+      seatID1: json['SeatID1'] == true
+          ? 1
+          : json['SeatID1'] == false
+          ? 0
+          : (json['SeatID1'] as num?)?.toInt() ?? 0,
+      seatID2: json['SeatID2'] == true
+          ? 1
+          : json['SeatID2'] == false
+          ? 0
+          : (json['SeatID2'] as num?)?.toInt() ?? 0,
+      seatID3: json['SeatID3'] == true
+          ? 1
+          : json['SeatID3'] == false
+          ? 0
+          : (json['SeatID3'] as num?)?.toInt() ?? 0,
+      seatID4: json['SeatID4'] == true
+          ? 1
+          : json['SeatID4'] == false
+          ? 0
+          : (json['SeatID4'] as num?)?.toInt() ?? 0,
+      seatID5: json['SeatID5'] == true
+          ? 1
+          : json['SeatID5'] == false
+          ? 0
+          : (json['SeatID5'] as num?)?.toInt() ?? 0,
+      seatID6: json['SeatID6'] == true
+          ? 1
+          : json['SeatID6'] == false
+          ? 0
+          : (json['SeatID6'] as num?)?.toInt() ?? 0,
+      seatID7: json['SeatID7'] == true
+          ? 1
+          : json['SeatID7'] == false
+          ? 0
+          : (json['SeatID7'] as num?)?.toInt() ?? 0,
       mouseLookOffsetPitch:
           (json['MouseLookOffsetPitch'] as num?)?.toDouble() ?? 0.0,
       cameraFadeDistScalarMin:
@@ -372,14 +420,33 @@ mixin _VehicleEntityMixin {
       msslTrgtImpactModel0: json['MsslTrgtImpactModel0']?.toString() ?? '',
       msslTrgtImpactModel1: json['MsslTrgtImpactModel1']?.toString() ?? '',
       cameraYawOffset: (json['CameraYawOffset'] as num?)?.toDouble() ?? 0.0,
-      uiLocomotionType: (json['UiLocomotionType'] as num?)?.toInt() ?? 0,
+      uiLocomotionType: json['UiLocomotionType'] == true
+          ? 1
+          : json['UiLocomotionType'] == false
+          ? 0
+          : (json['UiLocomotionType'] as num?)?.toInt() ?? 0,
       msslTrgtImpactTexRadius:
           (json['MsslTrgtImpactTexRadius'] as num?)?.toDouble() ?? 0.0,
-      vehicleUIIndicatorID:
-          (json['VehicleUIIndicatorID'] as num?)?.toInt() ?? 0,
-      powerDisplayID0: (json['PowerDisplayID0'] as num?)?.toInt() ?? 0,
-      powerDisplayID1: (json['PowerDisplayID1'] as num?)?.toInt() ?? 0,
-      powerDisplayID2: (json['PowerDisplayID2'] as num?)?.toInt() ?? 0,
+      vehicleUIIndicatorID: json['VehicleUIIndicatorID'] == true
+          ? 1
+          : json['VehicleUIIndicatorID'] == false
+          ? 0
+          : (json['VehicleUIIndicatorID'] as num?)?.toInt() ?? 0,
+      powerDisplayID0: json['PowerDisplayID0'] == true
+          ? 1
+          : json['PowerDisplayID0'] == false
+          ? 0
+          : (json['PowerDisplayID0'] as num?)?.toInt() ?? 0,
+      powerDisplayID1: json['PowerDisplayID1'] == true
+          ? 1
+          : json['PowerDisplayID1'] == false
+          ? 0
+          : (json['PowerDisplayID1'] as num?)?.toInt() ?? 0,
+      powerDisplayID2: json['PowerDisplayID2'] == true
+          ? 1
+          : json['PowerDisplayID2'] == false
+          ? 0
+          : (json['PowerDisplayID2'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -7,7 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'reference_loot_template_repository.g.dart';
 
-@FoxyRepository(ReferenceLootTemplateEntity)
+@FoxyRepository(
+  ReferenceLootTemplateEntity,
+  autoIncrementKey: 'item',
+  autoIncrementScope: ['entry'],
+)
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name', column: 'it.name')
 class ReferenceLootTemplateRepository
@@ -42,7 +46,7 @@ class ReferenceLootTemplateRepository
     if (!needsNameJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.entry.isNotEmpty) {
-        builder = builder.where('Entry', filter.entry);
+        builder = builder.where('Entry', int.tryParse(filter.entry) ?? 0);
       }
       return builder.count();
     }
@@ -150,7 +154,7 @@ class ReferenceLootTemplateRepository
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('lt.Entry', filter.entry);
+      builder = builder.where('lt.Entry', int.tryParse(filter.entry) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       if (localeEnabled) {

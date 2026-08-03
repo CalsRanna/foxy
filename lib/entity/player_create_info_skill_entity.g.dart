@@ -19,10 +19,26 @@ final class BriefPlayerCreateInfoSkillEntity {
 
   factory BriefPlayerCreateInfoSkillEntity.fromJson(Map<String, dynamic> json) {
     return BriefPlayerCreateInfoSkillEntity(
-      raceMask: (json['raceMask'] as num?)?.toInt() ?? 0,
-      classMask: (json['classMask'] as num?)?.toInt() ?? 0,
-      skill: (json['skill'] as num?)?.toInt() ?? 0,
-      rank: (json['rank'] as num?)?.toInt() ?? 0,
+      raceMask: json['raceMask'] == true
+          ? 1
+          : json['raceMask'] == false
+          ? 0
+          : (json['raceMask'] as num?)?.toInt() ?? 0,
+      classMask: json['classMask'] == true
+          ? 1
+          : json['classMask'] == false
+          ? 0
+          : (json['classMask'] as num?)?.toInt() ?? 0,
+      skill: json['skill'] == true
+          ? 1
+          : json['skill'] == false
+          ? 0
+          : (json['skill'] as num?)?.toInt() ?? 0,
+      rank: json['rank'] == true
+          ? 1
+          : json['rank'] == false
+          ? 0
+          : (json['rank'] as num?)?.toInt() ?? 0,
       comment: json['comment']?.toString() ?? '',
     );
   }
@@ -174,10 +190,26 @@ mixin _PlayerCreateInfoSkillEntityMixin {
 
   static PlayerCreateInfoSkillEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoSkillEntity(
-      raceMask: (json['raceMask'] as num?)?.toInt() ?? 0,
-      classMask: (json['classMask'] as num?)?.toInt() ?? 0,
-      skill: (json['skill'] as num?)?.toInt() ?? 0,
-      rank: (json['rank'] as num?)?.toInt() ?? 0,
+      raceMask: json['raceMask'] == true
+          ? 1
+          : json['raceMask'] == false
+          ? 0
+          : (json['raceMask'] as num?)?.toInt() ?? 0,
+      classMask: json['classMask'] == true
+          ? 1
+          : json['classMask'] == false
+          ? 0
+          : (json['classMask'] as num?)?.toInt() ?? 0,
+      skill: json['skill'] == true
+          ? 1
+          : json['skill'] == false
+          ? 0
+          : (json['skill'] as num?)?.toInt() ?? 0,
+      rank: json['rank'] == true
+          ? 1
+          : json['rank'] == false
+          ? 0
+          : (json['rank'] as num?)?.toInt() ?? 0,
       comment: json['comment']?.toString() ?? '',
     );
   }

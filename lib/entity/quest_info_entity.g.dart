@@ -10,7 +10,11 @@ final class BriefQuestInfoEntity {
 
   factory BriefQuestInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       infoNameLangZhCN: json['InfoName_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -184,7 +188,11 @@ mixin _QuestInfoEntityMixin {
 
   static QuestInfoEntity fromJson(Map<String, dynamic> json) {
     return QuestInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       infoNameLangEnUS: json['InfoName_lang_enUS']?.toString() ?? '',
       infoNameLangKoKR: json['InfoName_lang_koKR']?.toString() ?? '',
       infoNameLangFrFR: json['InfoName_lang_frFR']?.toString() ?? '',
@@ -201,7 +209,11 @@ mixin _QuestInfoEntityMixin {
       infoNameLangUnk1: json['InfoName_lang_unk1']?.toString() ?? '',
       infoNameLangUnk2: json['InfoName_lang_unk2']?.toString() ?? '',
       infoNameLangUnk3: json['InfoName_lang_unk3']?.toString() ?? '',
-      infoNameLangFlags: (json['InfoName_lang_Flags'] as num?)?.toInt() ?? 0,
+      infoNameLangFlags: json['InfoName_lang_Flags'] == true
+          ? 1
+          : json['InfoName_lang_Flags'] == false
+          ? 0
+          : (json['InfoName_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

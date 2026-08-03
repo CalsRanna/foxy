@@ -124,7 +124,7 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'prospecting_loot_template',
           '`Item`',
-          where: {'Entry': prospectingLootTemplate.entry},
+          where: {'`Entry`': prospectingLootTemplate.entry},
         ),
       );
       try {

@@ -15,8 +15,16 @@ final class BriefBroadcastTextEntity {
 
   factory BriefBroadcastTextEntity.fromJson(Map<String, dynamic> json) {
     return BriefBroadcastTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      languageId: json['LanguageID'] == true
+          ? 1
+          : json['LanguageID'] == false
+          ? 0
+          : (json['LanguageID'] as num?)?.toInt() ?? 0,
       maleText: json['MaleText']?.toString() ?? '',
     );
   }
@@ -108,8 +116,16 @@ mixin _BroadcastTextEntityMixin {
 
   static BroadcastTextEntity fromJson(Map<String, dynamic> json) {
     return BroadcastTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      languageId: json['LanguageID'] == true
+          ? 1
+          : json['LanguageID'] == false
+          ? 0
+          : (json['LanguageID'] as num?)?.toInt() ?? 0,
       maleText: json['MaleText']?.toString() ?? '',
       femaleText: json['FemaleText']?.toString() ?? '',
     );

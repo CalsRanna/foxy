@@ -19,10 +19,26 @@ final class BriefPlayerCreateInfoItemEntity {
 
   factory BriefPlayerCreateInfoItemEntity.fromJson(Map<String, dynamic> json) {
     return BriefPlayerCreateInfoItemEntity(
-      race: (json['race'] as num?)?.toInt() ?? 0,
-      class_: (json['class'] as num?)?.toInt() ?? 0,
-      itemId: (json['itemid'] as num?)?.toInt() ?? 0,
-      amount: (json['amount'] as num?)?.toInt() ?? 1,
+      race: json['race'] == true
+          ? 1
+          : json['race'] == false
+          ? 0
+          : (json['race'] as num?)?.toInt() ?? 0,
+      class_: json['class'] == true
+          ? 1
+          : json['class'] == false
+          ? 0
+          : (json['class'] as num?)?.toInt() ?? 0,
+      itemId: json['itemid'] == true
+          ? 1
+          : json['itemid'] == false
+          ? 0
+          : (json['itemid'] as num?)?.toInt() ?? 0,
+      amount: json['amount'] == true
+          ? 1
+          : json['amount'] == false
+          ? 0
+          : (json['amount'] as num?)?.toInt() ?? 1,
       note: json['Note']?.toString() ?? '',
     );
   }
@@ -169,10 +185,26 @@ mixin _PlayerCreateInfoItemEntityMixin {
 
   static PlayerCreateInfoItemEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoItemEntity(
-      race: (json['race'] as num?)?.toInt() ?? 0,
-      class_: (json['class'] as num?)?.toInt() ?? 0,
-      itemId: (json['itemid'] as num?)?.toInt() ?? 0,
-      amount: (json['amount'] as num?)?.toInt() ?? 1,
+      race: json['race'] == true
+          ? 1
+          : json['race'] == false
+          ? 0
+          : (json['race'] as num?)?.toInt() ?? 0,
+      class_: json['class'] == true
+          ? 1
+          : json['class'] == false
+          ? 0
+          : (json['class'] as num?)?.toInt() ?? 0,
+      itemId: json['itemid'] == true
+          ? 1
+          : json['itemid'] == false
+          ? 0
+          : (json['itemid'] as num?)?.toInt() ?? 0,
+      amount: json['amount'] == true
+          ? 1
+          : json['amount'] == false
+          ? 0
+          : (json['amount'] as num?)?.toInt() ?? 1,
       note: json['Note']?.toString() ?? '',
     );
   }

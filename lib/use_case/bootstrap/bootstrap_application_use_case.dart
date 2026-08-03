@@ -15,12 +15,16 @@ final class BootstrapApplicationInput {
   final String username;
   final String password;
 
+  /// 是否启用 TLS(引导页开关);null 时沿用已保存配置。
+  final bool? useSsl;
+
   const BootstrapApplicationInput({
     required this.host,
     required this.port,
     required this.database,
     required this.username,
     required this.password,
+    this.useSsl,
   });
 }
 
@@ -57,13 +61,19 @@ final class BootstrapApplicationUseCase {
   Future<BootstrapApplicationResult> execute(
     BootstrapApplicationInput input,
   ) async {
+    // 先读本地配置(无网络依赖),TLS 开关缺省沿用已保存值;
+    // 首次引导且 host 为远程地址时建议开启(数据面加密)。
+    final savedConfig = await _configUtil.load();
+    final useSsl = input.useSsl ??
+        savedConfig['use_ssl'] == true ||
+            _isRemoteHost(input.host);
     final config = MysqlConfig(
       host: input.host,
       port: input.port,
       database: input.database,
       username: input.username,
       password: input.password,
-      useSsl: false,
+      useSsl: useSsl,
     );
     await Database.instance.connect(
       config,
@@ -72,7 +82,6 @@ final class BootstrapApplicationUseCase {
     await _versionRepository.connect();
 
     final hasLocaleTables = await _settingRepository.hasLocaleTables();
-    final savedConfig = await _configUtil.load();
     var localeEnabled = savedConfig['locale_enabled'] == true;
     if (hasLocaleTables && !savedConfig.containsKey('locale_enabled')) {
       localeEnabled = true;
@@ -92,6 +101,7 @@ final class BootstrapApplicationUseCase {
         'database': input.database,
         'username': input.username,
         'password': input.password,
+        'use_ssl': useSsl,
       });
     } catch (error) {
       configSaved = false;
@@ -104,5 +114,13 @@ final class BootstrapApplicationUseCase {
       features: List.unmodifiable(features),
       configSaved: configSaved,
     );
+  }
+
+  /// 非本机回环地址视为远程主机(远程连接建议启用 TLS)。
+  static bool _isRemoteHost(String host) {
+    final normalized = host.trim().toLowerCase();
+    return normalized != 'localhost' &&
+        normalized != '127.0.0.1' &&
+        normalized != '::1';
   }
 }

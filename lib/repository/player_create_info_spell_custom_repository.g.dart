@@ -118,8 +118,8 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
           'playercreateinfo_spell_custom',
           '`Spell`',
           where: {
-            'racemask': playerCreateInfoSpellCustom.raceMask,
-            'classmask': playerCreateInfoSpellCustom.classMask,
+            '`racemask`': playerCreateInfoSpellCustom.raceMask,
+            '`classmask`': playerCreateInfoSpellCustom.classMask,
           },
         ),
       );

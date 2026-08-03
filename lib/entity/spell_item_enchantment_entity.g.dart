@@ -21,11 +21,31 @@ final class BriefSpellItemEnchantmentEntity {
 
   factory BriefSpellItemEnchantmentEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellItemEnchantmentEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      charges: (json['Charges'] as num?)?.toInt() ?? 0,
-      effect0: (json['Effect0'] as num?)?.toInt() ?? 0,
-      effect1: (json['Effect1'] as num?)?.toInt() ?? 0,
-      effect2: (json['Effect2'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      charges: json['Charges'] == true
+          ? 1
+          : json['Charges'] == false
+          ? 0
+          : (json['Charges'] as num?)?.toInt() ?? 0,
+      effect0: json['Effect0'] == true
+          ? 1
+          : json['Effect0'] == false
+          ? 0
+          : (json['Effect0'] as num?)?.toInt() ?? 0,
+      effect1: json['Effect1'] == true
+          ? 1
+          : json['Effect1'] == false
+          ? 0
+          : (json['Effect1'] as num?)?.toInt() ?? 0,
+      effect2: json['Effect2'] == true
+          ? 1
+          : json['Effect2'] == false
+          ? 0
+          : (json['Effect2'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -328,20 +348,76 @@ mixin _SpellItemEnchantmentEntityMixin {
 
   static SpellItemEnchantmentEntity fromJson(Map<String, dynamic> json) {
     return SpellItemEnchantmentEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      charges: (json['Charges'] as num?)?.toInt() ?? 0,
-      effect0: (json['Effect0'] as num?)?.toInt() ?? 0,
-      effect1: (json['Effect1'] as num?)?.toInt() ?? 0,
-      effect2: (json['Effect2'] as num?)?.toInt() ?? 0,
-      effectPointsMin0: (json['EffectPointsMin0'] as num?)?.toInt() ?? 0,
-      effectPointsMin1: (json['EffectPointsMin1'] as num?)?.toInt() ?? 0,
-      effectPointsMin2: (json['EffectPointsMin2'] as num?)?.toInt() ?? 0,
-      effectPointsMax0: (json['EffectPointsMax0'] as num?)?.toInt() ?? 0,
-      effectPointsMax1: (json['EffectPointsMax1'] as num?)?.toInt() ?? 0,
-      effectPointsMax2: (json['EffectPointsMax2'] as num?)?.toInt() ?? 0,
-      effectArg0: (json['EffectArg0'] as num?)?.toInt() ?? 0,
-      effectArg1: (json['EffectArg1'] as num?)?.toInt() ?? 0,
-      effectArg2: (json['EffectArg2'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      charges: json['Charges'] == true
+          ? 1
+          : json['Charges'] == false
+          ? 0
+          : (json['Charges'] as num?)?.toInt() ?? 0,
+      effect0: json['Effect0'] == true
+          ? 1
+          : json['Effect0'] == false
+          ? 0
+          : (json['Effect0'] as num?)?.toInt() ?? 0,
+      effect1: json['Effect1'] == true
+          ? 1
+          : json['Effect1'] == false
+          ? 0
+          : (json['Effect1'] as num?)?.toInt() ?? 0,
+      effect2: json['Effect2'] == true
+          ? 1
+          : json['Effect2'] == false
+          ? 0
+          : (json['Effect2'] as num?)?.toInt() ?? 0,
+      effectPointsMin0: json['EffectPointsMin0'] == true
+          ? 1
+          : json['EffectPointsMin0'] == false
+          ? 0
+          : (json['EffectPointsMin0'] as num?)?.toInt() ?? 0,
+      effectPointsMin1: json['EffectPointsMin1'] == true
+          ? 1
+          : json['EffectPointsMin1'] == false
+          ? 0
+          : (json['EffectPointsMin1'] as num?)?.toInt() ?? 0,
+      effectPointsMin2: json['EffectPointsMin2'] == true
+          ? 1
+          : json['EffectPointsMin2'] == false
+          ? 0
+          : (json['EffectPointsMin2'] as num?)?.toInt() ?? 0,
+      effectPointsMax0: json['EffectPointsMax0'] == true
+          ? 1
+          : json['EffectPointsMax0'] == false
+          ? 0
+          : (json['EffectPointsMax0'] as num?)?.toInt() ?? 0,
+      effectPointsMax1: json['EffectPointsMax1'] == true
+          ? 1
+          : json['EffectPointsMax1'] == false
+          ? 0
+          : (json['EffectPointsMax1'] as num?)?.toInt() ?? 0,
+      effectPointsMax2: json['EffectPointsMax2'] == true
+          ? 1
+          : json['EffectPointsMax2'] == false
+          ? 0
+          : (json['EffectPointsMax2'] as num?)?.toInt() ?? 0,
+      effectArg0: json['EffectArg0'] == true
+          ? 1
+          : json['EffectArg0'] == false
+          ? 0
+          : (json['EffectArg0'] as num?)?.toInt() ?? 0,
+      effectArg1: json['EffectArg1'] == true
+          ? 1
+          : json['EffectArg1'] == false
+          ? 0
+          : (json['EffectArg1'] as num?)?.toInt() ?? 0,
+      effectArg2: json['EffectArg2'] == true
+          ? 1
+          : json['EffectArg2'] == false
+          ? 0
+          : (json['EffectArg2'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -358,14 +434,46 @@ mixin _SpellItemEnchantmentEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      itemVisual: (json['ItemVisual'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      srcItemId: (json['Src_itemID'] as num?)?.toInt() ?? 0,
-      conditionId: (json['Condition_ID'] as num?)?.toInt() ?? 0,
-      requiredSkillId: (json['RequiredSkillID'] as num?)?.toInt() ?? 0,
-      requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
-      minLevel: (json['MinLevel'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      itemVisual: json['ItemVisual'] == true
+          ? 1
+          : json['ItemVisual'] == false
+          ? 0
+          : (json['ItemVisual'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      srcItemId: json['Src_itemID'] == true
+          ? 1
+          : json['Src_itemID'] == false
+          ? 0
+          : (json['Src_itemID'] as num?)?.toInt() ?? 0,
+      conditionId: json['Condition_ID'] == true
+          ? 1
+          : json['Condition_ID'] == false
+          ? 0
+          : (json['Condition_ID'] as num?)?.toInt() ?? 0,
+      requiredSkillId: json['RequiredSkillID'] == true
+          ? 1
+          : json['RequiredSkillID'] == false
+          ? 0
+          : (json['RequiredSkillID'] as num?)?.toInt() ?? 0,
+      requiredSkillRank: json['RequiredSkillRank'] == true
+          ? 1
+          : json['RequiredSkillRank'] == false
+          ? 0
+          : (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
+      minLevel: json['MinLevel'] == true
+          ? 1
+          : json['MinLevel'] == false
+          ? 0
+          : (json['MinLevel'] as num?)?.toInt() ?? 0,
     );
   }
 }

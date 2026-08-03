@@ -40,7 +40,7 @@ class WaypointDataRepository with RepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, WaypointDataFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('id', filter.id);
+      builder = builder.where('id', int.tryParse(filter.id) ?? 0);
     }
     return builder;
   }

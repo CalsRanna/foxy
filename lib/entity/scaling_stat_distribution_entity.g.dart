@@ -55,28 +55,116 @@ final class BriefScalingStatDistributionEntity {
     Map<String, dynamic> json,
   ) {
     return BriefScalingStatDistributionEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      statId0: (json['StatID0'] as num?)?.toInt() ?? -1,
-      statId1: (json['StatID1'] as num?)?.toInt() ?? -1,
-      statId2: (json['StatID2'] as num?)?.toInt() ?? -1,
-      statId3: (json['StatID3'] as num?)?.toInt() ?? -1,
-      statId4: (json['StatID4'] as num?)?.toInt() ?? -1,
-      statId5: (json['StatID5'] as num?)?.toInt() ?? -1,
-      statId6: (json['StatID6'] as num?)?.toInt() ?? -1,
-      statId7: (json['StatID7'] as num?)?.toInt() ?? -1,
-      statId8: (json['StatID8'] as num?)?.toInt() ?? -1,
-      statId9: (json['StatID9'] as num?)?.toInt() ?? -1,
-      bonus0: (json['Bonus0'] as num?)?.toInt() ?? 0,
-      bonus1: (json['Bonus1'] as num?)?.toInt() ?? 0,
-      bonus2: (json['Bonus2'] as num?)?.toInt() ?? 0,
-      bonus3: (json['Bonus3'] as num?)?.toInt() ?? 0,
-      bonus4: (json['Bonus4'] as num?)?.toInt() ?? 0,
-      bonus5: (json['Bonus5'] as num?)?.toInt() ?? 0,
-      bonus6: (json['Bonus6'] as num?)?.toInt() ?? 0,
-      bonus7: (json['Bonus7'] as num?)?.toInt() ?? 0,
-      bonus8: (json['Bonus8'] as num?)?.toInt() ?? 0,
-      bonus9: (json['Bonus9'] as num?)?.toInt() ?? 0,
-      maxlevel: (json['Maxlevel'] as num?)?.toInt() ?? 80,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      statId0: json['StatID0'] == true
+          ? 1
+          : json['StatID0'] == false
+          ? 0
+          : (json['StatID0'] as num?)?.toInt() ?? -1,
+      statId1: json['StatID1'] == true
+          ? 1
+          : json['StatID1'] == false
+          ? 0
+          : (json['StatID1'] as num?)?.toInt() ?? -1,
+      statId2: json['StatID2'] == true
+          ? 1
+          : json['StatID2'] == false
+          ? 0
+          : (json['StatID2'] as num?)?.toInt() ?? -1,
+      statId3: json['StatID3'] == true
+          ? 1
+          : json['StatID3'] == false
+          ? 0
+          : (json['StatID3'] as num?)?.toInt() ?? -1,
+      statId4: json['StatID4'] == true
+          ? 1
+          : json['StatID4'] == false
+          ? 0
+          : (json['StatID4'] as num?)?.toInt() ?? -1,
+      statId5: json['StatID5'] == true
+          ? 1
+          : json['StatID5'] == false
+          ? 0
+          : (json['StatID5'] as num?)?.toInt() ?? -1,
+      statId6: json['StatID6'] == true
+          ? 1
+          : json['StatID6'] == false
+          ? 0
+          : (json['StatID6'] as num?)?.toInt() ?? -1,
+      statId7: json['StatID7'] == true
+          ? 1
+          : json['StatID7'] == false
+          ? 0
+          : (json['StatID7'] as num?)?.toInt() ?? -1,
+      statId8: json['StatID8'] == true
+          ? 1
+          : json['StatID8'] == false
+          ? 0
+          : (json['StatID8'] as num?)?.toInt() ?? -1,
+      statId9: json['StatID9'] == true
+          ? 1
+          : json['StatID9'] == false
+          ? 0
+          : (json['StatID9'] as num?)?.toInt() ?? -1,
+      bonus0: json['Bonus0'] == true
+          ? 1
+          : json['Bonus0'] == false
+          ? 0
+          : (json['Bonus0'] as num?)?.toInt() ?? 0,
+      bonus1: json['Bonus1'] == true
+          ? 1
+          : json['Bonus1'] == false
+          ? 0
+          : (json['Bonus1'] as num?)?.toInt() ?? 0,
+      bonus2: json['Bonus2'] == true
+          ? 1
+          : json['Bonus2'] == false
+          ? 0
+          : (json['Bonus2'] as num?)?.toInt() ?? 0,
+      bonus3: json['Bonus3'] == true
+          ? 1
+          : json['Bonus3'] == false
+          ? 0
+          : (json['Bonus3'] as num?)?.toInt() ?? 0,
+      bonus4: json['Bonus4'] == true
+          ? 1
+          : json['Bonus4'] == false
+          ? 0
+          : (json['Bonus4'] as num?)?.toInt() ?? 0,
+      bonus5: json['Bonus5'] == true
+          ? 1
+          : json['Bonus5'] == false
+          ? 0
+          : (json['Bonus5'] as num?)?.toInt() ?? 0,
+      bonus6: json['Bonus6'] == true
+          ? 1
+          : json['Bonus6'] == false
+          ? 0
+          : (json['Bonus6'] as num?)?.toInt() ?? 0,
+      bonus7: json['Bonus7'] == true
+          ? 1
+          : json['Bonus7'] == false
+          ? 0
+          : (json['Bonus7'] as num?)?.toInt() ?? 0,
+      bonus8: json['Bonus8'] == true
+          ? 1
+          : json['Bonus8'] == false
+          ? 0
+          : (json['Bonus8'] as num?)?.toInt() ?? 0,
+      bonus9: json['Bonus9'] == true
+          ? 1
+          : json['Bonus9'] == false
+          ? 0
+          : (json['Bonus9'] as num?)?.toInt() ?? 0,
+      maxlevel: json['Maxlevel'] == true
+          ? 1
+          : json['Maxlevel'] == false
+          ? 0
+          : (json['Maxlevel'] as num?)?.toInt() ?? 80,
     );
   }
 
@@ -336,28 +424,116 @@ mixin _ScalingStatDistributionEntityMixin {
 
   static ScalingStatDistributionEntity fromJson(Map<String, dynamic> json) {
     return ScalingStatDistributionEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      statId0: (json['StatID0'] as num?)?.toInt() ?? -1,
-      statId1: (json['StatID1'] as num?)?.toInt() ?? -1,
-      statId2: (json['StatID2'] as num?)?.toInt() ?? -1,
-      statId3: (json['StatID3'] as num?)?.toInt() ?? -1,
-      statId4: (json['StatID4'] as num?)?.toInt() ?? -1,
-      statId5: (json['StatID5'] as num?)?.toInt() ?? -1,
-      statId6: (json['StatID6'] as num?)?.toInt() ?? -1,
-      statId7: (json['StatID7'] as num?)?.toInt() ?? -1,
-      statId8: (json['StatID8'] as num?)?.toInt() ?? -1,
-      statId9: (json['StatID9'] as num?)?.toInt() ?? -1,
-      bonus0: (json['Bonus0'] as num?)?.toInt() ?? 0,
-      bonus1: (json['Bonus1'] as num?)?.toInt() ?? 0,
-      bonus2: (json['Bonus2'] as num?)?.toInt() ?? 0,
-      bonus3: (json['Bonus3'] as num?)?.toInt() ?? 0,
-      bonus4: (json['Bonus4'] as num?)?.toInt() ?? 0,
-      bonus5: (json['Bonus5'] as num?)?.toInt() ?? 0,
-      bonus6: (json['Bonus6'] as num?)?.toInt() ?? 0,
-      bonus7: (json['Bonus7'] as num?)?.toInt() ?? 0,
-      bonus8: (json['Bonus8'] as num?)?.toInt() ?? 0,
-      bonus9: (json['Bonus9'] as num?)?.toInt() ?? 0,
-      maxlevel: (json['Maxlevel'] as num?)?.toInt() ?? 80,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      statId0: json['StatID0'] == true
+          ? 1
+          : json['StatID0'] == false
+          ? 0
+          : (json['StatID0'] as num?)?.toInt() ?? -1,
+      statId1: json['StatID1'] == true
+          ? 1
+          : json['StatID1'] == false
+          ? 0
+          : (json['StatID1'] as num?)?.toInt() ?? -1,
+      statId2: json['StatID2'] == true
+          ? 1
+          : json['StatID2'] == false
+          ? 0
+          : (json['StatID2'] as num?)?.toInt() ?? -1,
+      statId3: json['StatID3'] == true
+          ? 1
+          : json['StatID3'] == false
+          ? 0
+          : (json['StatID3'] as num?)?.toInt() ?? -1,
+      statId4: json['StatID4'] == true
+          ? 1
+          : json['StatID4'] == false
+          ? 0
+          : (json['StatID4'] as num?)?.toInt() ?? -1,
+      statId5: json['StatID5'] == true
+          ? 1
+          : json['StatID5'] == false
+          ? 0
+          : (json['StatID5'] as num?)?.toInt() ?? -1,
+      statId6: json['StatID6'] == true
+          ? 1
+          : json['StatID6'] == false
+          ? 0
+          : (json['StatID6'] as num?)?.toInt() ?? -1,
+      statId7: json['StatID7'] == true
+          ? 1
+          : json['StatID7'] == false
+          ? 0
+          : (json['StatID7'] as num?)?.toInt() ?? -1,
+      statId8: json['StatID8'] == true
+          ? 1
+          : json['StatID8'] == false
+          ? 0
+          : (json['StatID8'] as num?)?.toInt() ?? -1,
+      statId9: json['StatID9'] == true
+          ? 1
+          : json['StatID9'] == false
+          ? 0
+          : (json['StatID9'] as num?)?.toInt() ?? -1,
+      bonus0: json['Bonus0'] == true
+          ? 1
+          : json['Bonus0'] == false
+          ? 0
+          : (json['Bonus0'] as num?)?.toInt() ?? 0,
+      bonus1: json['Bonus1'] == true
+          ? 1
+          : json['Bonus1'] == false
+          ? 0
+          : (json['Bonus1'] as num?)?.toInt() ?? 0,
+      bonus2: json['Bonus2'] == true
+          ? 1
+          : json['Bonus2'] == false
+          ? 0
+          : (json['Bonus2'] as num?)?.toInt() ?? 0,
+      bonus3: json['Bonus3'] == true
+          ? 1
+          : json['Bonus3'] == false
+          ? 0
+          : (json['Bonus3'] as num?)?.toInt() ?? 0,
+      bonus4: json['Bonus4'] == true
+          ? 1
+          : json['Bonus4'] == false
+          ? 0
+          : (json['Bonus4'] as num?)?.toInt() ?? 0,
+      bonus5: json['Bonus5'] == true
+          ? 1
+          : json['Bonus5'] == false
+          ? 0
+          : (json['Bonus5'] as num?)?.toInt() ?? 0,
+      bonus6: json['Bonus6'] == true
+          ? 1
+          : json['Bonus6'] == false
+          ? 0
+          : (json['Bonus6'] as num?)?.toInt() ?? 0,
+      bonus7: json['Bonus7'] == true
+          ? 1
+          : json['Bonus7'] == false
+          ? 0
+          : (json['Bonus7'] as num?)?.toInt() ?? 0,
+      bonus8: json['Bonus8'] == true
+          ? 1
+          : json['Bonus8'] == false
+          ? 0
+          : (json['Bonus8'] as num?)?.toInt() ?? 0,
+      bonus9: json['Bonus9'] == true
+          ? 1
+          : json['Bonus9'] == false
+          ? 0
+          : (json['Bonus9'] as num?)?.toInt() ?? 0,
+      maxlevel: json['Maxlevel'] == true
+          ? 1
+          : json['Maxlevel'] == false
+          ? 0
+          : (json['Maxlevel'] as num?)?.toInt() ?? 80,
     );
   }
 }

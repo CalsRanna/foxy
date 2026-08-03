@@ -15,9 +15,17 @@ final class BriefDbcEmoteEntity {
 
   factory BriefDbcEmoteEntity.fromJson(Map<String, dynamic> json) {
     return BriefDbcEmoteEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       slashCommand: json['EmoteSlashCommand']?.toString() ?? '',
-      animId: (json['AnimID'] as num?)?.toInt() ?? 0,
+      animId: json['AnimID'] == true
+          ? 1
+          : json['AnimID'] == false
+          ? 0
+          : (json['AnimID'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -126,13 +134,37 @@ mixin _DbcEmoteEntityMixin {
 
   static DbcEmoteEntity fromJson(Map<String, dynamic> json) {
     return DbcEmoteEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       slashCommand: json['EmoteSlashCommand']?.toString() ?? '',
-      animId: (json['AnimID'] as num?)?.toInt() ?? 0,
-      flags: (json['EmoteFlags'] as num?)?.toInt() ?? 0,
-      specProc: (json['EmoteSpecProc'] as num?)?.toInt() ?? 0,
-      specProcParam: (json['EmoteSpecProcParam'] as num?)?.toInt() ?? 0,
-      eventSoundId: (json['EventSoundID'] as num?)?.toInt() ?? 0,
+      animId: json['AnimID'] == true
+          ? 1
+          : json['AnimID'] == false
+          ? 0
+          : (json['AnimID'] as num?)?.toInt() ?? 0,
+      flags: json['EmoteFlags'] == true
+          ? 1
+          : json['EmoteFlags'] == false
+          ? 0
+          : (json['EmoteFlags'] as num?)?.toInt() ?? 0,
+      specProc: json['EmoteSpecProc'] == true
+          ? 1
+          : json['EmoteSpecProc'] == false
+          ? 0
+          : (json['EmoteSpecProc'] as num?)?.toInt() ?? 0,
+      specProcParam: json['EmoteSpecProcParam'] == true
+          ? 1
+          : json['EmoteSpecProcParam'] == false
+          ? 0
+          : (json['EmoteSpecProcParam'] as num?)?.toInt() ?? 0,
+      eventSoundId: json['EventSoundID'] == true
+          ? 1
+          : json['EventSoundID'] == false
+          ? 0
+          : (json['EventSoundID'] as num?)?.toInt() ?? 0,
     );
   }
 }

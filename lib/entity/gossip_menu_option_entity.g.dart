@@ -25,13 +25,37 @@ final class BriefGossipMenuOptionEntity {
 
   factory BriefGossipMenuOptionEntity.fromJson(Map<String, dynamic> json) {
     return BriefGossipMenuOptionEntity(
-      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
-      optionId: (json['OptionID'] as num?)?.toInt() ?? 0,
-      optionIcon: (json['OptionIcon'] as num?)?.toInt() ?? 0,
+      menuId: json['MenuID'] == true
+          ? 1
+          : json['MenuID'] == false
+          ? 0
+          : (json['MenuID'] as num?)?.toInt() ?? 0,
+      optionId: json['OptionID'] == true
+          ? 1
+          : json['OptionID'] == false
+          ? 0
+          : (json['OptionID'] as num?)?.toInt() ?? 0,
+      optionIcon: json['OptionIcon'] == true
+          ? 1
+          : json['OptionIcon'] == false
+          ? 0
+          : (json['OptionIcon'] as num?)?.toInt() ?? 0,
       optionText: json['OptionText']?.toString() ?? '',
-      optionType: (json['OptionType'] as num?)?.toInt() ?? 0,
-      optionNpcFlag: (json['OptionNpcFlag'] as num?)?.toInt() ?? 0,
-      actionMenuId: (json['ActionMenuID'] as num?)?.toInt() ?? 0,
+      optionType: json['OptionType'] == true
+          ? 1
+          : json['OptionType'] == false
+          ? 0
+          : (json['OptionType'] as num?)?.toInt() ?? 0,
+      optionNpcFlag: json['OptionNpcFlag'] == true
+          ? 1
+          : json['OptionNpcFlag'] == false
+          ? 0
+          : (json['OptionNpcFlag'] as num?)?.toInt() ?? 0,
+      actionMenuId: json['ActionMenuID'] == true
+          ? 1
+          : json['ActionMenuID'] == false
+          ? 0
+          : (json['ActionMenuID'] as num?)?.toInt() ?? 0,
       localeOptionText: json['localeOptionText']?.toString() ?? '',
     );
   }
@@ -238,21 +262,68 @@ mixin _GossipMenuOptionEntityMixin {
 
   static GossipMenuOptionEntity fromJson(Map<String, dynamic> json) {
     return GossipMenuOptionEntity(
-      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
-      optionId: (json['OptionID'] as num?)?.toInt() ?? 0,
-      optionIcon: (json['OptionIcon'] as num?)?.toInt() ?? 0,
+      menuId: json['MenuID'] == true
+          ? 1
+          : json['MenuID'] == false
+          ? 0
+          : (json['MenuID'] as num?)?.toInt() ?? 0,
+      optionId: json['OptionID'] == true
+          ? 1
+          : json['OptionID'] == false
+          ? 0
+          : (json['OptionID'] as num?)?.toInt() ?? 0,
+      optionIcon: json['OptionIcon'] == true
+          ? 1
+          : json['OptionIcon'] == false
+          ? 0
+          : (json['OptionIcon'] as num?)?.toInt() ?? 0,
       optionText: json['OptionText']?.toString() ?? '',
-      optionBroadcastTextId:
-          (json['OptionBroadcastTextID'] as num?)?.toInt() ?? 0,
-      optionType: (json['OptionType'] as num?)?.toInt() ?? 0,
-      optionNpcFlag: (json['OptionNpcFlag'] as num?)?.toInt() ?? 0,
-      boxCoded: (json['BoxCoded'] as num?)?.toInt() ?? 0,
-      boxMoney: (json['BoxMoney'] as num?)?.toInt() ?? 0,
+      optionBroadcastTextId: json['OptionBroadcastTextID'] == true
+          ? 1
+          : json['OptionBroadcastTextID'] == false
+          ? 0
+          : (json['OptionBroadcastTextID'] as num?)?.toInt() ?? 0,
+      optionType: json['OptionType'] == true
+          ? 1
+          : json['OptionType'] == false
+          ? 0
+          : (json['OptionType'] as num?)?.toInt() ?? 0,
+      optionNpcFlag: json['OptionNpcFlag'] == true
+          ? 1
+          : json['OptionNpcFlag'] == false
+          ? 0
+          : (json['OptionNpcFlag'] as num?)?.toInt() ?? 0,
+      boxCoded: json['BoxCoded'] == true
+          ? 1
+          : json['BoxCoded'] == false
+          ? 0
+          : (json['BoxCoded'] as num?)?.toInt() ?? 0,
+      boxMoney: json['BoxMoney'] == true
+          ? 1
+          : json['BoxMoney'] == false
+          ? 0
+          : (json['BoxMoney'] as num?)?.toInt() ?? 0,
       boxText: json['BoxText']?.toString() ?? '',
-      boxBroadcastTextId: (json['BoxBroadcastTextID'] as num?)?.toInt() ?? 0,
-      actionMenuId: (json['ActionMenuID'] as num?)?.toInt() ?? 0,
-      actionPoiId: (json['ActionPoiID'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      boxBroadcastTextId: json['BoxBroadcastTextID'] == true
+          ? 1
+          : json['BoxBroadcastTextID'] == false
+          ? 0
+          : (json['BoxBroadcastTextID'] as num?)?.toInt() ?? 0,
+      actionMenuId: json['ActionMenuID'] == true
+          ? 1
+          : json['ActionMenuID'] == false
+          ? 0
+          : (json['ActionMenuID'] as num?)?.toInt() ?? 0,
+      actionPoiId: json['ActionPoiID'] == true
+          ? 1
+          : json['ActionPoiID'] == false
+          ? 0
+          : (json['ActionPoiID'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

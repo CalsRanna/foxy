@@ -19,10 +19,26 @@ final class BriefCreatureTemplateAddonEntity {
 
   factory BriefCreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureTemplateAddonEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      pathId: (json['path_id'] as num?)?.toInt() ?? 0,
-      mount: (json['mount'] as num?)?.toInt() ?? 0,
-      emote: (json['emote'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      pathId: json['path_id'] == true
+          ? 1
+          : json['path_id'] == false
+          ? 0
+          : (json['path_id'] as num?)?.toInt() ?? 0,
+      mount: json['mount'] == true
+          ? 1
+          : json['mount'] == false
+          ? 0
+          : (json['mount'] as num?)?.toInt() ?? 0,
+      emote: json['emote'] == true
+          ? 1
+          : json['emote'] == false
+          ? 0
+          : (json['emote'] as num?)?.toInt() ?? 0,
       auras: json['auras']?.toString() ?? '',
     );
   }
@@ -143,14 +159,41 @@ mixin _CreatureTemplateAddonEntityMixin {
 
   static CreatureTemplateAddonEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateAddonEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      pathId: (json['path_id'] as num?)?.toInt() ?? 0,
-      mount: (json['mount'] as num?)?.toInt() ?? 0,
-      emote: (json['emote'] as num?)?.toInt() ?? 0,
-      bytes1: (json['bytes1'] as num?)?.toInt() ?? 0,
-      bytes2: (json['bytes2'] as num?)?.toInt() ?? 0,
-      visibilityDistanceType:
-          (json['visibilityDistanceType'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      pathId: json['path_id'] == true
+          ? 1
+          : json['path_id'] == false
+          ? 0
+          : (json['path_id'] as num?)?.toInt() ?? 0,
+      mount: json['mount'] == true
+          ? 1
+          : json['mount'] == false
+          ? 0
+          : (json['mount'] as num?)?.toInt() ?? 0,
+      emote: json['emote'] == true
+          ? 1
+          : json['emote'] == false
+          ? 0
+          : (json['emote'] as num?)?.toInt() ?? 0,
+      bytes1: json['bytes1'] == true
+          ? 1
+          : json['bytes1'] == false
+          ? 0
+          : (json['bytes1'] as num?)?.toInt() ?? 0,
+      bytes2: json['bytes2'] == true
+          ? 1
+          : json['bytes2'] == false
+          ? 0
+          : (json['bytes2'] as num?)?.toInt() ?? 0,
+      visibilityDistanceType: json['visibilityDistanceType'] == true
+          ? 1
+          : json['visibilityDistanceType'] == false
+          ? 0
+          : (json['visibilityDistanceType'] as num?)?.toInt() ?? 0,
       auras: json['auras']?.toString() ?? '',
     );
   }

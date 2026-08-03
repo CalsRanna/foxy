@@ -124,10 +124,14 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = smartScript.copyWith(
-        entryOrGuid: await nextMaxPlusOne('smart_scripts', '`entryorguid`'),
-        sourceType: await nextMaxPlusOne('smart_scripts', '`source_type`'),
-        id: await nextMaxPlusOne('smart_scripts', '`id`'),
-        link: await nextMaxPlusOne('smart_scripts', '`link`'),
+        id: await nextMaxPlusOne(
+          'smart_scripts',
+          '`id`',
+          where: {
+            '`entryorguid`': smartScript.entryOrGuid,
+            '`source_type`': smartScript.sourceType,
+          },
+        ),
       );
       try {
         await laconic.table('smart_scripts').insert([

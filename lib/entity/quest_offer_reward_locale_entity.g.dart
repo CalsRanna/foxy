@@ -17,7 +17,11 @@ final class BriefQuestOfferRewardLocaleEntity {
     Map<String, dynamic> json,
   ) {
     return BriefQuestOfferRewardLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       rewardText: json['RewardText']?.toString() ?? '',
     );
@@ -144,10 +148,18 @@ mixin _QuestOfferRewardLocaleEntityMixin {
 
   static QuestOfferRewardLocaleEntity fromJson(Map<String, dynamic> json) {
     return QuestOfferRewardLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -33,19 +33,47 @@ final class BriefSkinningLootTemplateEntity {
 
   factory BriefSkinningLootTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefSkinningLootTemplateEntity(
-      entry: (json['Entry'] as num?)?.toInt() ?? 0,
-      item: (json['Item'] as num?)?.toInt() ?? 0,
-      reference: (json['Reference'] as num?)?.toInt() ?? 0,
+      entry: json['Entry'] == true
+          ? 1
+          : json['Entry'] == false
+          ? 0
+          : (json['Entry'] as num?)?.toInt() ?? 0,
+      item: json['Item'] == true
+          ? 1
+          : json['Item'] == false
+          ? 0
+          : (json['Item'] as num?)?.toInt() ?? 0,
+      reference: json['Reference'] == true
+          ? 1
+          : json['Reference'] == false
+          ? 0
+          : (json['Reference'] as num?)?.toInt() ?? 0,
       chance: (json['Chance'] as num?)?.toDouble() ?? 100.0,
       questRequired: json['QuestRequired'] == null
           ? false
-          : (json['QuestRequired'] as num).toInt() == 1,
-      groupId: (json['GroupId'] as num?)?.toInt() ?? 0,
-      minCount: (json['MinCount'] as num?)?.toInt() ?? 1,
-      maxCount: (json['MaxCount'] as num?)?.toInt() ?? 1,
+          : (json['QuestRequired'] == true || json['QuestRequired'] == 1),
+      groupId: json['GroupId'] == true
+          ? 1
+          : json['GroupId'] == false
+          ? 0
+          : (json['GroupId'] as num?)?.toInt() ?? 0,
+      minCount: json['MinCount'] == true
+          ? 1
+          : json['MinCount'] == false
+          ? 0
+          : (json['MinCount'] as num?)?.toInt() ?? 1,
+      maxCount: json['MaxCount'] == true
+          ? 1
+          : json['MaxCount'] == false
+          ? 0
+          : (json['MaxCount'] as num?)?.toInt() ?? 1,
       itemName: json['itemName']?.toString() ?? '',
       itemLocaleName: json['itemLocaleName']?.toString() ?? '',
-      itemQuality: (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemQuality: json['itemQuality'] == true
+          ? 1
+          : json['itemQuality'] == false
+          ? 0
+          : (json['itemQuality'] as num?)?.toInt() ?? 0,
       itemIcon: json['itemIcon']?.toString() ?? '',
     );
   }
@@ -238,17 +266,45 @@ mixin _SkinningLootTemplateEntityMixin {
 
   static SkinningLootTemplateEntity fromJson(Map<String, dynamic> json) {
     return SkinningLootTemplateEntity(
-      entry: (json['Entry'] as num?)?.toInt() ?? 0,
-      item: (json['Item'] as num?)?.toInt() ?? 0,
-      reference: (json['Reference'] as num?)?.toInt() ?? 0,
+      entry: json['Entry'] == true
+          ? 1
+          : json['Entry'] == false
+          ? 0
+          : (json['Entry'] as num?)?.toInt() ?? 0,
+      item: json['Item'] == true
+          ? 1
+          : json['Item'] == false
+          ? 0
+          : (json['Item'] as num?)?.toInt() ?? 0,
+      reference: json['Reference'] == true
+          ? 1
+          : json['Reference'] == false
+          ? 0
+          : (json['Reference'] as num?)?.toInt() ?? 0,
       chance: (json['Chance'] as num?)?.toDouble() ?? 100.0,
       questRequired: json['QuestRequired'] == null
           ? false
-          : (json['QuestRequired'] as num).toInt() == 1,
-      lootMode: (json['LootMode'] as num?)?.toInt() ?? 1,
-      groupId: (json['GroupId'] as num?)?.toInt() ?? 0,
-      minCount: (json['MinCount'] as num?)?.toInt() ?? 1,
-      maxCount: (json['MaxCount'] as num?)?.toInt() ?? 1,
+          : (json['QuestRequired'] == true || json['QuestRequired'] == 1),
+      lootMode: json['LootMode'] == true
+          ? 1
+          : json['LootMode'] == false
+          ? 0
+          : (json['LootMode'] as num?)?.toInt() ?? 1,
+      groupId: json['GroupId'] == true
+          ? 1
+          : json['GroupId'] == false
+          ? 0
+          : (json['GroupId'] as num?)?.toInt() ?? 0,
+      minCount: json['MinCount'] == true
+          ? 1
+          : json['MinCount'] == false
+          ? 0
+          : (json['MinCount'] as num?)?.toInt() ?? 1,
+      maxCount: json['MaxCount'] == true
+          ? 1
+          : json['MaxCount'] == false
+          ? 0
+          : (json['MaxCount'] as num?)?.toInt() ?? 1,
       comment: json['Comment']?.toString() ?? '',
     );
   }

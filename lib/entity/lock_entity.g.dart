@@ -17,10 +17,26 @@ final class BriefLockEntity {
 
   factory BriefLockEntity.fromJson(Map<String, dynamic> json) {
     return BriefLockEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      type0: (json['Type0'] as num?)?.toInt() ?? 0,
-      index0: (json['Index0'] as num?)?.toInt() ?? 0,
-      skill0: (json['Skill0'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      type0: json['Type0'] == true
+          ? 1
+          : json['Type0'] == false
+          ? 0
+          : (json['Type0'] as num?)?.toInt() ?? 0,
+      index0: json['Index0'] == true
+          ? 1
+          : json['Index0'] == false
+          ? 0
+          : (json['Index0'] as num?)?.toInt() ?? 0,
+      skill0: json['Skill0'] == true
+          ? 1
+          : json['Skill0'] == false
+          ? 0
+          : (json['Skill0'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -287,39 +303,171 @@ mixin _LockEntityMixin {
 
   static LockEntity fromJson(Map<String, dynamic> json) {
     return LockEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      type0: (json['Type0'] as num?)?.toInt() ?? 0,
-      type1: (json['Type1'] as num?)?.toInt() ?? 0,
-      type2: (json['Type2'] as num?)?.toInt() ?? 0,
-      type3: (json['Type3'] as num?)?.toInt() ?? 0,
-      type4: (json['Type4'] as num?)?.toInt() ?? 0,
-      type5: (json['Type5'] as num?)?.toInt() ?? 0,
-      type6: (json['Type6'] as num?)?.toInt() ?? 0,
-      type7: (json['Type7'] as num?)?.toInt() ?? 0,
-      index0: (json['Index0'] as num?)?.toInt() ?? 0,
-      index1: (json['Index1'] as num?)?.toInt() ?? 0,
-      index2: (json['Index2'] as num?)?.toInt() ?? 0,
-      index3: (json['Index3'] as num?)?.toInt() ?? 0,
-      index4: (json['Index4'] as num?)?.toInt() ?? 0,
-      index5: (json['Index5'] as num?)?.toInt() ?? 0,
-      index6: (json['Index6'] as num?)?.toInt() ?? 0,
-      index7: (json['Index7'] as num?)?.toInt() ?? 0,
-      skill0: (json['Skill0'] as num?)?.toInt() ?? 0,
-      skill1: (json['Skill1'] as num?)?.toInt() ?? 0,
-      skill2: (json['Skill2'] as num?)?.toInt() ?? 0,
-      skill3: (json['Skill3'] as num?)?.toInt() ?? 0,
-      skill4: (json['Skill4'] as num?)?.toInt() ?? 0,
-      skill5: (json['Skill5'] as num?)?.toInt() ?? 0,
-      skill6: (json['Skill6'] as num?)?.toInt() ?? 0,
-      skill7: (json['Skill7'] as num?)?.toInt() ?? 0,
-      action0: (json['Action0'] as num?)?.toInt() ?? 0,
-      action1: (json['Action1'] as num?)?.toInt() ?? 0,
-      action2: (json['Action2'] as num?)?.toInt() ?? 0,
-      action3: (json['Action3'] as num?)?.toInt() ?? 0,
-      action4: (json['Action4'] as num?)?.toInt() ?? 0,
-      action5: (json['Action5'] as num?)?.toInt() ?? 0,
-      action6: (json['Action6'] as num?)?.toInt() ?? 0,
-      action7: (json['Action7'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      type0: json['Type0'] == true
+          ? 1
+          : json['Type0'] == false
+          ? 0
+          : (json['Type0'] as num?)?.toInt() ?? 0,
+      type1: json['Type1'] == true
+          ? 1
+          : json['Type1'] == false
+          ? 0
+          : (json['Type1'] as num?)?.toInt() ?? 0,
+      type2: json['Type2'] == true
+          ? 1
+          : json['Type2'] == false
+          ? 0
+          : (json['Type2'] as num?)?.toInt() ?? 0,
+      type3: json['Type3'] == true
+          ? 1
+          : json['Type3'] == false
+          ? 0
+          : (json['Type3'] as num?)?.toInt() ?? 0,
+      type4: json['Type4'] == true
+          ? 1
+          : json['Type4'] == false
+          ? 0
+          : (json['Type4'] as num?)?.toInt() ?? 0,
+      type5: json['Type5'] == true
+          ? 1
+          : json['Type5'] == false
+          ? 0
+          : (json['Type5'] as num?)?.toInt() ?? 0,
+      type6: json['Type6'] == true
+          ? 1
+          : json['Type6'] == false
+          ? 0
+          : (json['Type6'] as num?)?.toInt() ?? 0,
+      type7: json['Type7'] == true
+          ? 1
+          : json['Type7'] == false
+          ? 0
+          : (json['Type7'] as num?)?.toInt() ?? 0,
+      index0: json['Index0'] == true
+          ? 1
+          : json['Index0'] == false
+          ? 0
+          : (json['Index0'] as num?)?.toInt() ?? 0,
+      index1: json['Index1'] == true
+          ? 1
+          : json['Index1'] == false
+          ? 0
+          : (json['Index1'] as num?)?.toInt() ?? 0,
+      index2: json['Index2'] == true
+          ? 1
+          : json['Index2'] == false
+          ? 0
+          : (json['Index2'] as num?)?.toInt() ?? 0,
+      index3: json['Index3'] == true
+          ? 1
+          : json['Index3'] == false
+          ? 0
+          : (json['Index3'] as num?)?.toInt() ?? 0,
+      index4: json['Index4'] == true
+          ? 1
+          : json['Index4'] == false
+          ? 0
+          : (json['Index4'] as num?)?.toInt() ?? 0,
+      index5: json['Index5'] == true
+          ? 1
+          : json['Index5'] == false
+          ? 0
+          : (json['Index5'] as num?)?.toInt() ?? 0,
+      index6: json['Index6'] == true
+          ? 1
+          : json['Index6'] == false
+          ? 0
+          : (json['Index6'] as num?)?.toInt() ?? 0,
+      index7: json['Index7'] == true
+          ? 1
+          : json['Index7'] == false
+          ? 0
+          : (json['Index7'] as num?)?.toInt() ?? 0,
+      skill0: json['Skill0'] == true
+          ? 1
+          : json['Skill0'] == false
+          ? 0
+          : (json['Skill0'] as num?)?.toInt() ?? 0,
+      skill1: json['Skill1'] == true
+          ? 1
+          : json['Skill1'] == false
+          ? 0
+          : (json['Skill1'] as num?)?.toInt() ?? 0,
+      skill2: json['Skill2'] == true
+          ? 1
+          : json['Skill2'] == false
+          ? 0
+          : (json['Skill2'] as num?)?.toInt() ?? 0,
+      skill3: json['Skill3'] == true
+          ? 1
+          : json['Skill3'] == false
+          ? 0
+          : (json['Skill3'] as num?)?.toInt() ?? 0,
+      skill4: json['Skill4'] == true
+          ? 1
+          : json['Skill4'] == false
+          ? 0
+          : (json['Skill4'] as num?)?.toInt() ?? 0,
+      skill5: json['Skill5'] == true
+          ? 1
+          : json['Skill5'] == false
+          ? 0
+          : (json['Skill5'] as num?)?.toInt() ?? 0,
+      skill6: json['Skill6'] == true
+          ? 1
+          : json['Skill6'] == false
+          ? 0
+          : (json['Skill6'] as num?)?.toInt() ?? 0,
+      skill7: json['Skill7'] == true
+          ? 1
+          : json['Skill7'] == false
+          ? 0
+          : (json['Skill7'] as num?)?.toInt() ?? 0,
+      action0: json['Action0'] == true
+          ? 1
+          : json['Action0'] == false
+          ? 0
+          : (json['Action0'] as num?)?.toInt() ?? 0,
+      action1: json['Action1'] == true
+          ? 1
+          : json['Action1'] == false
+          ? 0
+          : (json['Action1'] as num?)?.toInt() ?? 0,
+      action2: json['Action2'] == true
+          ? 1
+          : json['Action2'] == false
+          ? 0
+          : (json['Action2'] as num?)?.toInt() ?? 0,
+      action3: json['Action3'] == true
+          ? 1
+          : json['Action3'] == false
+          ? 0
+          : (json['Action3'] as num?)?.toInt() ?? 0,
+      action4: json['Action4'] == true
+          ? 1
+          : json['Action4'] == false
+          ? 0
+          : (json['Action4'] as num?)?.toInt() ?? 0,
+      action5: json['Action5'] == true
+          ? 1
+          : json['Action5'] == false
+          ? 0
+          : (json['Action5'] as num?)?.toInt() ?? 0,
+      action6: json['Action6'] == true
+          ? 1
+          : json['Action6'] == false
+          ? 0
+          : (json['Action6'] as num?)?.toInt() ?? 0,
+      action7: json['Action7'] == true
+          ? 1
+          : json['Action7'] == false
+          ? 0
+          : (json['Action7'] as num?)?.toInt() ?? 0,
     );
   }
 }

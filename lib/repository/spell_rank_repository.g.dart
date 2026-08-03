@@ -85,7 +85,7 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
         rank: await nextMaxPlusOne(
           'spell_ranks',
           '`rank`',
-          where: {'first_spell_id': spellRank.firstSpellId},
+          where: {'`first_spell_id`': spellRank.firstSpellId},
         ),
       );
       try {

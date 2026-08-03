@@ -89,7 +89,7 @@ mixin _CreatureQuestStarterRepositoryMixin on RepositoryMixin {
         id: await nextMaxPlusOne(
           'creature_queststarter',
           '`id`',
-          where: {'quest': creatureQuestStarter.quest},
+          where: {'`quest`': creatureQuestStarter.quest},
         ),
       );
       try {

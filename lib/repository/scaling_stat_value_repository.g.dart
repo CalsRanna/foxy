@@ -174,7 +174,7 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('`ID`', filter.id);
+      builder = builder.where('`ID`', int.tryParse(filter.id) ?? 0);
     }
     if (filter.charlevel.isNotEmpty) {
       builder = builder.where('`Charlevel`', filter.charlevel);

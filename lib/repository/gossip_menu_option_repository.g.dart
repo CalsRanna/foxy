@@ -95,7 +95,7 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
         optionId: await nextMaxPlusOne(
           'gossip_menu_option',
           '`OptionID`',
-          where: {'MenuID': gossipMenuOption.menuId},
+          where: {'`MenuID`': gossipMenuOption.menuId},
         ),
       );
       try {

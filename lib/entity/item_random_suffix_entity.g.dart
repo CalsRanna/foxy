@@ -15,7 +15,11 @@ final class BriefItemRandomSuffixEntity {
 
   factory BriefItemRandomSuffixEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemRandomSuffixEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
       internalName: json['InternalName']?.toString() ?? '',
     );
@@ -258,7 +262,11 @@ mixin _ItemRandomSuffixEntityMixin {
 
   static ItemRandomSuffixEntity fromJson(Map<String, dynamic> json) {
     return ItemRandomSuffixEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -275,18 +283,62 @@ mixin _ItemRandomSuffixEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
       internalName: json['InternalName']?.toString() ?? '',
-      enchantment0: (json['Enchantment0'] as num?)?.toInt() ?? 0,
-      enchantment1: (json['Enchantment1'] as num?)?.toInt() ?? 0,
-      enchantment2: (json['Enchantment2'] as num?)?.toInt() ?? 0,
-      enchantment3: (json['Enchantment3'] as num?)?.toInt() ?? 0,
-      enchantment4: (json['Enchantment4'] as num?)?.toInt() ?? 0,
-      allocationPct0: (json['AllocationPct0'] as num?)?.toInt() ?? 0,
-      allocationPct1: (json['AllocationPct1'] as num?)?.toInt() ?? 0,
-      allocationPct2: (json['AllocationPct2'] as num?)?.toInt() ?? 0,
-      allocationPct3: (json['AllocationPct3'] as num?)?.toInt() ?? 0,
-      allocationPct4: (json['AllocationPct4'] as num?)?.toInt() ?? 0,
+      enchantment0: json['Enchantment0'] == true
+          ? 1
+          : json['Enchantment0'] == false
+          ? 0
+          : (json['Enchantment0'] as num?)?.toInt() ?? 0,
+      enchantment1: json['Enchantment1'] == true
+          ? 1
+          : json['Enchantment1'] == false
+          ? 0
+          : (json['Enchantment1'] as num?)?.toInt() ?? 0,
+      enchantment2: json['Enchantment2'] == true
+          ? 1
+          : json['Enchantment2'] == false
+          ? 0
+          : (json['Enchantment2'] as num?)?.toInt() ?? 0,
+      enchantment3: json['Enchantment3'] == true
+          ? 1
+          : json['Enchantment3'] == false
+          ? 0
+          : (json['Enchantment3'] as num?)?.toInt() ?? 0,
+      enchantment4: json['Enchantment4'] == true
+          ? 1
+          : json['Enchantment4'] == false
+          ? 0
+          : (json['Enchantment4'] as num?)?.toInt() ?? 0,
+      allocationPct0: json['AllocationPct0'] == true
+          ? 1
+          : json['AllocationPct0'] == false
+          ? 0
+          : (json['AllocationPct0'] as num?)?.toInt() ?? 0,
+      allocationPct1: json['AllocationPct1'] == true
+          ? 1
+          : json['AllocationPct1'] == false
+          ? 0
+          : (json['AllocationPct1'] as num?)?.toInt() ?? 0,
+      allocationPct2: json['AllocationPct2'] == true
+          ? 1
+          : json['AllocationPct2'] == false
+          ? 0
+          : (json['AllocationPct2'] as num?)?.toInt() ?? 0,
+      allocationPct3: json['AllocationPct3'] == true
+          ? 1
+          : json['AllocationPct3'] == false
+          ? 0
+          : (json['AllocationPct3'] as num?)?.toInt() ?? 0,
+      allocationPct4: json['AllocationPct4'] == true
+          ? 1
+          : json['AllocationPct4'] == false
+          ? 0
+          : (json['AllocationPct4'] as num?)?.toInt() ?? 0,
     );
   }
 }

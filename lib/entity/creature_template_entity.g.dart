@@ -23,9 +23,21 @@ final class BriefCreatureTemplateEntity {
 
   factory BriefCreatureTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefCreatureTemplateEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      maxLevel: (json['maxlevel'] as num?)?.toInt() ?? 1,
-      minLevel: (json['minlevel'] as num?)?.toInt() ?? 1,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      maxLevel: json['maxlevel'] == true
+          ? 1
+          : json['maxlevel'] == false
+          ? 0
+          : (json['maxlevel'] as num?)?.toInt() ?? 1,
+      minLevel: json['minlevel'] == true
+          ? 1
+          : json['minlevel'] == false
+          ? 0
+          : (json['minlevel'] as num?)?.toInt() ?? 1,
       name: json['name']?.toString() ?? '',
       subName: json['subname']?.toString() ?? '',
       localeName: json['localeName']?.toString() ?? '',
@@ -444,61 +456,208 @@ mixin _CreatureTemplateEntityMixin {
     return CreatureTemplateEntity(
       aiName: json['AIName']?.toString() ?? '',
       armorModifier: (json['ArmorModifier'] as num?)?.toDouble() ?? 1.0,
-      baseAttackTime: (json['BaseAttackTime'] as num?)?.toInt() ?? 0,
+      baseAttackTime: json['BaseAttackTime'] == true
+          ? 1
+          : json['BaseAttackTime'] == false
+          ? 0
+          : (json['BaseAttackTime'] as num?)?.toInt() ?? 0,
       baseVariance: (json['BaseVariance'] as num?)?.toDouble() ?? 1.0,
       damageModifier: (json['DamageModifier'] as num?)?.toDouble() ?? 1.0,
-      difficultyEntry1: (json['difficulty_entry_1'] as num?)?.toInt() ?? 0,
-      difficultyEntry2: (json['difficulty_entry_2'] as num?)?.toInt() ?? 0,
-      difficultyEntry3: (json['difficulty_entry_3'] as num?)?.toInt() ?? 0,
-      damageSchool: (json['dmgschool'] as num?)?.toInt() ?? 0,
+      difficultyEntry1: json['difficulty_entry_1'] == true
+          ? 1
+          : json['difficulty_entry_1'] == false
+          ? 0
+          : (json['difficulty_entry_1'] as num?)?.toInt() ?? 0,
+      difficultyEntry2: json['difficulty_entry_2'] == true
+          ? 1
+          : json['difficulty_entry_2'] == false
+          ? 0
+          : (json['difficulty_entry_2'] as num?)?.toInt() ?? 0,
+      difficultyEntry3: json['difficulty_entry_3'] == true
+          ? 1
+          : json['difficulty_entry_3'] == false
+          ? 0
+          : (json['difficulty_entry_3'] as num?)?.toInt() ?? 0,
+      damageSchool: json['dmgschool'] == true
+          ? 1
+          : json['dmgschool'] == false
+          ? 0
+          : (json['dmgschool'] as num?)?.toInt() ?? 0,
       detectionRange: (json['detection_range'] as num?)?.toDouble() ?? 20.0,
-      dynamicFlags: (json['dynamicflags'] as num?)?.toInt() ?? 0,
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      exp: (json['exp'] as num?)?.toInt() ?? 0,
+      dynamicFlags: json['dynamicflags'] == true
+          ? 1
+          : json['dynamicflags'] == false
+          ? 0
+          : (json['dynamicflags'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      exp: json['exp'] == true
+          ? 1
+          : json['exp'] == false
+          ? 0
+          : (json['exp'] as num?)?.toInt() ?? 0,
       experienceModifier:
           (json['ExperienceModifier'] as num?)?.toDouble() ?? 1.0,
-      faction: (json['faction'] as num?)?.toInt() ?? 0,
-      family: (json['family'] as num?)?.toInt() ?? 0,
-      flagsExtra: (json['flags_extra'] as num?)?.toInt() ?? 0,
-      gossipMenuId: (json['gossip_menu_id'] as num?)?.toInt() ?? 0,
+      faction: json['faction'] == true
+          ? 1
+          : json['faction'] == false
+          ? 0
+          : (json['faction'] as num?)?.toInt() ?? 0,
+      family: json['family'] == true
+          ? 1
+          : json['family'] == false
+          ? 0
+          : (json['family'] as num?)?.toInt() ?? 0,
+      flagsExtra: json['flags_extra'] == true
+          ? 1
+          : json['flags_extra'] == false
+          ? 0
+          : (json['flags_extra'] as num?)?.toInt() ?? 0,
+      gossipMenuId: json['gossip_menu_id'] == true
+          ? 1
+          : json['gossip_menu_id'] == false
+          ? 0
+          : (json['gossip_menu_id'] as num?)?.toInt() ?? 0,
       healthModifier: (json['HealthModifier'] as num?)?.toDouble() ?? 1.0,
       hoverHeight: (json['HoverHeight'] as num?)?.toDouble() ?? 1.0,
       iconName: json['IconName']?.toString() ?? '',
-      killCredit1: (json['KillCredit1'] as num?)?.toInt() ?? 0,
-      killCredit2: (json['KillCredit2'] as num?)?.toInt() ?? 0,
-      lootId: (json['lootid'] as num?)?.toInt() ?? 0,
-      maxGold: (json['maxgold'] as num?)?.toInt() ?? 0,
-      maxLevel: (json['maxlevel'] as num?)?.toInt() ?? 1,
+      killCredit1: json['KillCredit1'] == true
+          ? 1
+          : json['KillCredit1'] == false
+          ? 0
+          : (json['KillCredit1'] as num?)?.toInt() ?? 0,
+      killCredit2: json['KillCredit2'] == true
+          ? 1
+          : json['KillCredit2'] == false
+          ? 0
+          : (json['KillCredit2'] as num?)?.toInt() ?? 0,
+      lootId: json['lootid'] == true
+          ? 1
+          : json['lootid'] == false
+          ? 0
+          : (json['lootid'] as num?)?.toInt() ?? 0,
+      maxGold: json['maxgold'] == true
+          ? 1
+          : json['maxgold'] == false
+          ? 0
+          : (json['maxgold'] as num?)?.toInt() ?? 0,
+      maxLevel: json['maxlevel'] == true
+          ? 1
+          : json['maxlevel'] == false
+          ? 0
+          : (json['maxlevel'] as num?)?.toInt() ?? 1,
       manaModifier: (json['ManaModifier'] as num?)?.toDouble() ?? 1.0,
-      minLevel: (json['minlevel'] as num?)?.toInt() ?? 1,
-      minGold: (json['mingold'] as num?)?.toInt() ?? 0,
-      movementId: (json['movementId'] as num?)?.toInt() ?? 0,
-      movementType: (json['MovementType'] as num?)?.toInt() ?? 0,
+      minLevel: json['minlevel'] == true
+          ? 1
+          : json['minlevel'] == false
+          ? 0
+          : (json['minlevel'] as num?)?.toInt() ?? 1,
+      minGold: json['mingold'] == true
+          ? 1
+          : json['mingold'] == false
+          ? 0
+          : (json['mingold'] as num?)?.toInt() ?? 0,
+      movementId: json['movementId'] == true
+          ? 1
+          : json['movementId'] == false
+          ? 0
+          : (json['movementId'] as num?)?.toInt() ?? 0,
+      movementType: json['MovementType'] == true
+          ? 1
+          : json['MovementType'] == false
+          ? 0
+          : (json['MovementType'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
-      npcFlag: (json['npcflag'] as num?)?.toInt() ?? 0,
-      petSpellDataId: (json['PetSpellDataId'] as num?)?.toInt() ?? 0,
-      pickpocketLoot: (json['pickpocketloot'] as num?)?.toInt() ?? 0,
-      racialLeader: (json['RacialLeader'] as num?)?.toInt() ?? 0,
-      rangeAttackTime: (json['RangeAttackTime'] as num?)?.toInt() ?? 0,
+      npcFlag: json['npcflag'] == true
+          ? 1
+          : json['npcflag'] == false
+          ? 0
+          : (json['npcflag'] as num?)?.toInt() ?? 0,
+      petSpellDataId: json['PetSpellDataId'] == true
+          ? 1
+          : json['PetSpellDataId'] == false
+          ? 0
+          : (json['PetSpellDataId'] as num?)?.toInt() ?? 0,
+      pickpocketLoot: json['pickpocketloot'] == true
+          ? 1
+          : json['pickpocketloot'] == false
+          ? 0
+          : (json['pickpocketloot'] as num?)?.toInt() ?? 0,
+      racialLeader: json['RacialLeader'] == true
+          ? 1
+          : json['RacialLeader'] == false
+          ? 0
+          : (json['RacialLeader'] as num?)?.toInt() ?? 0,
+      rangeAttackTime: json['RangeAttackTime'] == true
+          ? 1
+          : json['RangeAttackTime'] == false
+          ? 0
+          : (json['RangeAttackTime'] as num?)?.toInt() ?? 0,
       rangeVariance: (json['RangeVariance'] as num?)?.toDouble() ?? 1.0,
-      rank: (json['rank'] as num?)?.toInt() ?? 0,
-      regenHealth: (json['RegenHealth'] as num?)?.toInt() ?? 1,
+      rank: json['rank'] == true
+          ? 1
+          : json['rank'] == false
+          ? 0
+          : (json['rank'] as num?)?.toInt() ?? 0,
+      regenHealth: json['RegenHealth'] == true
+          ? 1
+          : json['RegenHealth'] == false
+          ? 0
+          : (json['RegenHealth'] as num?)?.toInt() ?? 1,
       scriptName: json['ScriptName']?.toString() ?? '',
-      skinLoot: (json['skinloot'] as num?)?.toInt() ?? 0,
+      skinLoot: json['skinloot'] == true
+          ? 1
+          : json['skinloot'] == false
+          ? 0
+          : (json['skinloot'] as num?)?.toInt() ?? 0,
       speedFlight: (json['speed_flight'] as num?)?.toDouble() ?? 1.0,
       speedRun: (json['speed_run'] as num?)?.toDouble() ?? 1.14286,
       speedSwim: (json['speed_swim'] as num?)?.toDouble() ?? 1.0,
       speedWalk: (json['speed_walk'] as num?)?.toDouble() ?? 1.0,
       subName: json['subname']?.toString() ?? '',
-      type: (json['type'] as num?)?.toInt() ?? 0,
-      typeFlags: (json['type_flags'] as num?)?.toInt() ?? 0,
-      unitClass: (json['unit_class'] as num?)?.toInt() ?? 1,
-      unitFlags: (json['unit_flags'] as num?)?.toInt() ?? 0,
-      unitFlags2: (json['unit_flags2'] as num?)?.toInt() ?? 0,
-      vehicleId: (json['VehicleId'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
-      creatureImmunitiesId:
-          (json['CreatureImmunitiesId'] as num?)?.toInt() ?? 0,
+      type: json['type'] == true
+          ? 1
+          : json['type'] == false
+          ? 0
+          : (json['type'] as num?)?.toInt() ?? 0,
+      typeFlags: json['type_flags'] == true
+          ? 1
+          : json['type_flags'] == false
+          ? 0
+          : (json['type_flags'] as num?)?.toInt() ?? 0,
+      unitClass: json['unit_class'] == true
+          ? 1
+          : json['unit_class'] == false
+          ? 0
+          : (json['unit_class'] as num?)?.toInt() ?? 1,
+      unitFlags: json['unit_flags'] == true
+          ? 1
+          : json['unit_flags'] == false
+          ? 0
+          : (json['unit_flags'] as num?)?.toInt() ?? 0,
+      unitFlags2: json['unit_flags2'] == true
+          ? 1
+          : json['unit_flags2'] == false
+          ? 0
+          : (json['unit_flags2'] as num?)?.toInt() ?? 0,
+      vehicleId: json['VehicleId'] == true
+          ? 1
+          : json['VehicleId'] == false
+          ? 0
+          : (json['VehicleId'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureImmunitiesId: json['CreatureImmunitiesId'] == true
+          ? 1
+          : json['CreatureImmunitiesId'] == false
+          ? 0
+          : (json['CreatureImmunitiesId'] as num?)?.toInt() ?? 0,
     );
   }
 }

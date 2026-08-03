@@ -82,6 +82,9 @@ final class FormEmitter {
       ..writeln(
         '        final blank = await _repository.create${model.baseName}();',
       )
+      // 慢查询返回时页面可能已销毁(disposeControllers),再写
+      // TextEditingController 会在 debug 下抛 FlutterError。
+      ..writeln('        if (isDisposed) return;')
       ..writeln('        entity.value = blank;')
       ..writeln('        _applyCandidate(blank);')
       ..writeln('        persistedKey.value = null;')
@@ -93,6 +96,7 @@ final class FormEmitter {
       ..writeln('      if (result == null) {')
       ..writeln("        throw RecordNotFoundException('record not found');")
       ..writeln('      }')
+      ..writeln('      if (isDisposed) return;')
       ..writeln('      entity.value = result;')
       ..writeln('      _applyCandidate(result);')
       ..writeln('      persistedKey.value = key;')

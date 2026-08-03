@@ -103,8 +103,8 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
           'playercreateinfo_action',
           '`button`',
           where: {
-            'race': playerCreateInfoAction.race,
-            'class': playerCreateInfoAction.class_,
+            '`race`': playerCreateInfoAction.race,
+            '`class`': playerCreateInfoAction.class_,
           },
         ),
       );

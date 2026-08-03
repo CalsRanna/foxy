@@ -32,7 +32,7 @@ class CreatureDisplayInfoRepository
     if (!needsModelJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.id.isNotEmpty) {
-        builder = builder.where('ID', filter.id);
+        builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
       }
       return builder.count();
     }
@@ -83,7 +83,7 @@ class CreatureDisplayInfoRepository
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('cdi.ID', filter.id);
+      builder = builder.where('cdi.ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.modelName.isNotEmpty) {
       builder = builder.where(

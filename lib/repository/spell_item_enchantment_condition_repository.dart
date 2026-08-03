@@ -70,7 +70,7 @@ class SpellItemEnchantmentConditionRepository
     SpellItemEnchantmentConditionFilter? filter,
   ) {
     if (filter != null && filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     return builder;
   }

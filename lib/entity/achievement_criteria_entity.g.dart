@@ -17,9 +17,21 @@ final class BriefAchievementCriteriaEntity {
 
   factory BriefAchievementCriteriaEntity.fromJson(Map<String, dynamic> json) {
     return BriefAchievementCriteriaEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      achievementId: (json['Achievement_ID'] as num?)?.toInt() ?? 0,
-      type: (json['Type'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      achievementId: json['Achievement_ID'] == true
+          ? 1
+          : json['Achievement_ID'] == false
+          ? 0
+          : (json['Achievement_ID'] as num?)?.toInt() ?? 0,
+      type: json['Type'] == true
+          ? 1
+          : json['Type'] == false
+          ? 0
+          : (json['Type'] as num?)?.toInt() ?? 0,
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -276,15 +288,51 @@ mixin _AchievementCriteriaEntityMixin {
 
   static AchievementCriteriaEntity fromJson(Map<String, dynamic> json) {
     return AchievementCriteriaEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      achievementId: (json['Achievement_ID'] as num?)?.toInt() ?? 0,
-      type: (json['Type'] as num?)?.toInt() ?? 0,
-      assetId: (json['Asset_ID'] as num?)?.toInt() ?? 0,
-      quantity: (json['Quantity'] as num?)?.toInt() ?? 0,
-      startEvent: (json['Start_event'] as num?)?.toInt() ?? 0,
-      startAsset: (json['Start_asset'] as num?)?.toInt() ?? 0,
-      failEvent: (json['Fail_event'] as num?)?.toInt() ?? 0,
-      failAsset: (json['Fail_asset'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      achievementId: json['Achievement_ID'] == true
+          ? 1
+          : json['Achievement_ID'] == false
+          ? 0
+          : (json['Achievement_ID'] as num?)?.toInt() ?? 0,
+      type: json['Type'] == true
+          ? 1
+          : json['Type'] == false
+          ? 0
+          : (json['Type'] as num?)?.toInt() ?? 0,
+      assetId: json['Asset_ID'] == true
+          ? 1
+          : json['Asset_ID'] == false
+          ? 0
+          : (json['Asset_ID'] as num?)?.toInt() ?? 0,
+      quantity: json['Quantity'] == true
+          ? 1
+          : json['Quantity'] == false
+          ? 0
+          : (json['Quantity'] as num?)?.toInt() ?? 0,
+      startEvent: json['Start_event'] == true
+          ? 1
+          : json['Start_event'] == false
+          ? 0
+          : (json['Start_event'] as num?)?.toInt() ?? 0,
+      startAsset: json['Start_asset'] == true
+          ? 1
+          : json['Start_asset'] == false
+          ? 0
+          : (json['Start_asset'] as num?)?.toInt() ?? 0,
+      failEvent: json['Fail_event'] == true
+          ? 1
+          : json['Fail_event'] == false
+          ? 0
+          : (json['Fail_event'] as num?)?.toInt() ?? 0,
+      failAsset: json['Fail_asset'] == true
+          ? 1
+          : json['Fail_asset'] == false
+          ? 0
+          : (json['Fail_asset'] as num?)?.toInt() ?? 0,
       descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
       descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
       descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
@@ -301,13 +349,36 @@ mixin _AchievementCriteriaEntityMixin {
       descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
       descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
       descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      timerStartEvent: (json['Timer_start_event'] as num?)?.toInt() ?? 0,
-      timerAssetId: (json['Timer_asset_ID'] as num?)?.toInt() ?? 0,
-      timerTime: (json['Timer_time'] as num?)?.toInt() ?? 0,
-      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
+      descriptionLangFlags: json['Description_lang_Flags'] == true
+          ? 1
+          : json['Description_lang_Flags'] == false
+          ? 0
+          : (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      timerStartEvent: json['Timer_start_event'] == true
+          ? 1
+          : json['Timer_start_event'] == false
+          ? 0
+          : (json['Timer_start_event'] as num?)?.toInt() ?? 0,
+      timerAssetId: json['Timer_asset_ID'] == true
+          ? 1
+          : json['Timer_asset_ID'] == false
+          ? 0
+          : (json['Timer_asset_ID'] as num?)?.toInt() ?? 0,
+      timerTime: json['Timer_time'] == true
+          ? 1
+          : json['Timer_time'] == false
+          ? 0
+          : (json['Timer_time'] as num?)?.toInt() ?? 0,
+      uiOrder: json['Ui_order'] == true
+          ? 1
+          : json['Ui_order'] == false
+          ? 0
+          : (json['Ui_order'] as num?)?.toInt() ?? 0,
     );
   }
 }

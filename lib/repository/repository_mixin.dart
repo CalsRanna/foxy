@@ -1,4 +1,5 @@
 import 'package:foxy/database/database.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
@@ -46,9 +47,17 @@ mixin RepositoryMixin {
     final result = await builder.first();
     final raw = result.toMap()['max_id'];
     if (raw == null) return firstValue;
-    if (raw is int) return raw + 1;
-    if (raw is num) return raw.toInt() + 1;
-    return (int.tryParse(raw.toString()) ?? 0) + 1;
+    final current = raw is int
+        ? raw
+        : raw is num
+        ? raw.toInt()
+        : (int.tryParse(raw.toString()) ?? 0);
+    if (current >= 2147483647) {
+      // INT 上限处 MAX+1 溢出,落库报 1264 且无法被重复键重试逻辑区分;
+      // 显式抛 IdExhaustedException 让调用方得到可映射的用户文案。
+      throw IdExhaustedException('primary key exhausted: $table.$column');
+    }
+    return current + 1;
   }
 
   /// 把 Entity `toJson()` 的物理列名包装成反引号标识符，用于写入语句。

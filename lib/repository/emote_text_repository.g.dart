@@ -146,7 +146,7 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('`ID`', filter.id);
+      builder = builder.where('`ID`', int.tryParse(filter.id) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where('`Name`', filter.name);

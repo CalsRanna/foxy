@@ -17,9 +17,21 @@ final class BriefSpellLinkedSpellEntity {
 
   factory BriefSpellLinkedSpellEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellLinkedSpellEntity(
-      spellTrigger: (json['spell_trigger'] as num?)?.toInt() ?? 0,
-      spellEffect: (json['spell_effect'] as num?)?.toInt() ?? 0,
-      type: (json['type'] as num?)?.toInt() ?? 0,
+      spellTrigger: json['spell_trigger'] == true
+          ? 1
+          : json['spell_trigger'] == false
+          ? 0
+          : (json['spell_trigger'] as num?)?.toInt() ?? 0,
+      spellEffect: json['spell_effect'] == true
+          ? 1
+          : json['spell_effect'] == false
+          ? 0
+          : (json['spell_effect'] as num?)?.toInt() ?? 0,
+      type: json['type'] == true
+          ? 1
+          : json['type'] == false
+          ? 0
+          : (json['type'] as num?)?.toInt() ?? 0,
       comment: json['comment']?.toString() ?? '',
     );
   }
@@ -161,9 +173,21 @@ mixin _SpellLinkedSpellEntityMixin {
 
   static SpellLinkedSpellEntity fromJson(Map<String, dynamic> json) {
     return SpellLinkedSpellEntity(
-      spellTrigger: (json['spell_trigger'] as num?)?.toInt() ?? 0,
-      spellEffect: (json['spell_effect'] as num?)?.toInt() ?? 0,
-      type: (json['type'] as num?)?.toInt() ?? 0,
+      spellTrigger: json['spell_trigger'] == true
+          ? 1
+          : json['spell_trigger'] == false
+          ? 0
+          : (json['spell_trigger'] as num?)?.toInt() ?? 0,
+      spellEffect: json['spell_effect'] == true
+          ? 1
+          : json['spell_effect'] == false
+          ? 0
+          : (json['spell_effect'] as num?)?.toInt() ?? 0,
+      type: json['type'] == true
+          ? 1
+          : json['type'] == false
+          ? 0
+          : (json['type'] as num?)?.toInt() ?? 0,
       comment: json['comment']?.toString() ?? '',
     );
   }

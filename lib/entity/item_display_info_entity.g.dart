@@ -15,7 +15,11 @@ final class BriefItemDisplayInfoEntity {
 
   factory BriefItemDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemDisplayInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       modelName0: json['ModelName0']?.toString() ?? '',
       inventoryIcon0: json['InventoryIcon0']?.toString() ?? '',
     );
@@ -234,21 +238,57 @@ mixin _ItemDisplayInfoEntityMixin {
 
   static ItemDisplayInfoEntity fromJson(Map<String, dynamic> json) {
     return ItemDisplayInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       modelName0: json['ModelName0']?.toString() ?? '',
       modelName1: json['ModelName1']?.toString() ?? '',
       modelTexture0: json['ModelTexture0']?.toString() ?? '',
       modelTexture1: json['ModelTexture1']?.toString() ?? '',
       inventoryIcon0: json['InventoryIcon0']?.toString() ?? '',
       inventoryIcon1: json['InventoryIcon1']?.toString() ?? '',
-      geosetGroup0: (json['GeosetGroup0'] as num?)?.toInt() ?? 0,
-      geosetGroup1: (json['GeosetGroup1'] as num?)?.toInt() ?? 0,
-      geosetGroup2: (json['GeosetGroup2'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      spellVisualId: (json['SpellVisualID'] as num?)?.toInt() ?? 0,
-      groupSoundIndex: (json['GroupSoundIndex'] as num?)?.toInt() ?? 0,
-      helmetGeosetVisId0: (json['HelmetGeosetVisID0'] as num?)?.toInt() ?? 0,
-      helmetGeosetVisId1: (json['HelmetGeosetVisID1'] as num?)?.toInt() ?? 0,
+      geosetGroup0: json['GeosetGroup0'] == true
+          ? 1
+          : json['GeosetGroup0'] == false
+          ? 0
+          : (json['GeosetGroup0'] as num?)?.toInt() ?? 0,
+      geosetGroup1: json['GeosetGroup1'] == true
+          ? 1
+          : json['GeosetGroup1'] == false
+          ? 0
+          : (json['GeosetGroup1'] as num?)?.toInt() ?? 0,
+      geosetGroup2: json['GeosetGroup2'] == true
+          ? 1
+          : json['GeosetGroup2'] == false
+          ? 0
+          : (json['GeosetGroup2'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      spellVisualId: json['SpellVisualID'] == true
+          ? 1
+          : json['SpellVisualID'] == false
+          ? 0
+          : (json['SpellVisualID'] as num?)?.toInt() ?? 0,
+      groupSoundIndex: json['GroupSoundIndex'] == true
+          ? 1
+          : json['GroupSoundIndex'] == false
+          ? 0
+          : (json['GroupSoundIndex'] as num?)?.toInt() ?? 0,
+      helmetGeosetVisId0: json['HelmetGeosetVisID0'] == true
+          ? 1
+          : json['HelmetGeosetVisID0'] == false
+          ? 0
+          : (json['HelmetGeosetVisID0'] as num?)?.toInt() ?? 0,
+      helmetGeosetVisId1: json['HelmetGeosetVisID1'] == true
+          ? 1
+          : json['HelmetGeosetVisID1'] == false
+          ? 0
+          : (json['HelmetGeosetVisID1'] as num?)?.toInt() ?? 0,
       texture0: json['Texture0']?.toString() ?? '',
       texture1: json['Texture1']?.toString() ?? '',
       texture2: json['Texture2']?.toString() ?? '',
@@ -257,8 +297,16 @@ mixin _ItemDisplayInfoEntityMixin {
       texture5: json['Texture5']?.toString() ?? '',
       texture6: json['Texture6']?.toString() ?? '',
       texture7: json['Texture7']?.toString() ?? '',
-      itemVisual: (json['ItemVisual'] as num?)?.toInt() ?? 0,
-      particleColorId: (json['ParticleColorID'] as num?)?.toInt() ?? 0,
+      itemVisual: json['ItemVisual'] == true
+          ? 1
+          : json['ItemVisual'] == false
+          ? 0
+          : (json['ItemVisual'] as num?)?.toInt() ?? 0,
+      particleColorId: json['ParticleColorID'] == true
+          ? 1
+          : json['ParticleColorID'] == false
+          ? 0
+          : (json['ParticleColorID'] as num?)?.toInt() ?? 0,
     );
   }
 }

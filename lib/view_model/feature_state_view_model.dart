@@ -63,13 +63,18 @@ class FeatureStateViewModel {
       throw RecordNotFoundException('feature module not found: $id');
     }
 
-    final feature = features[index];
-    final nextValue = !feature.isFavorite;
+    final nextValue = !features[index].isFavorite;
     errorMessage.value = null;
     try {
       await _repository.updateFavorite(id, nextValue);
-      final nextFeatures = [...features];
-      nextFeatures[index] = feature.copyWith(isFavorite: nextValue);
+      // 写回前重读最新快照:并发 toggle 时若仍基于 await 前的旧快照重建,
+      // 后完成的写回会覆盖先完成者的本地翻转(UI 与 DB 不一致)。
+      final latest = allFeatures.value;
+      final latestIndex = latest.indexWhere((feature) => feature.id == id);
+      if (latestIndex == -1) return;
+      final nextFeatures = [...latest];
+      nextFeatures[latestIndex] =
+          latest[latestIndex].copyWith(isFavorite: nextValue);
       allFeatures.value = nextFeatures;
     } catch (error) {
       errorMessage.value = '更新收藏状态失败: ${foxyErrorMessage(error)}';
@@ -84,13 +89,17 @@ class FeatureStateViewModel {
       throw RecordNotFoundException('feature module not found: $id');
     }
 
-    final feature = features[index];
-    final nextValue = !feature.isPinned;
+    final nextValue = !features[index].isPinned;
     errorMessage.value = null;
     try {
       await _repository.updatePinned(id, nextValue);
-      final nextFeatures = [...features];
-      nextFeatures[index] = feature.copyWith(isPinned: nextValue);
+      // 同 toggleFavorite:写回前重读最新快照,避免并发覆盖本地翻转。
+      final latest = allFeatures.value;
+      final latestIndex = latest.indexWhere((feature) => feature.id == id);
+      if (latestIndex == -1) return;
+      final nextFeatures = [...latest];
+      nextFeatures[latestIndex] =
+          latest[latestIndex].copyWith(isPinned: nextValue);
       allFeatures.value = nextFeatures;
     } catch (error) {
       errorMessage.value = '更新固定状态失败: ${foxyErrorMessage(error)}';

@@ -564,12 +564,12 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     errorMessage.value = null;
     try {
       final main = await _repository.getNpcText(linkSnapshot);
-      if (token != _refreshToken) return;
+      if (token != _refreshToken || isDisposed) return;
       final candidate = main ?? await _repository.createNpcText(linkSnapshot);
-      if (token != _refreshToken) return;
+      if (token != _refreshToken || isDisposed) return;
       final localeKey = NpcTextLocaleKey(id: linkSnapshot, locale: 'zhCN');
       final locale = await _localeRepository.getNpcTextLocale(localeKey);
-      if (token != _refreshToken) return;
+      if (token != _refreshToken || isDisposed) return;
       entity.value = candidate;
       editingKey.value = main == null ? null : linkSnapshot;
       localeEditingKey.value = locale == null ? null : localeKey;

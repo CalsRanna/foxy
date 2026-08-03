@@ -124,7 +124,7 @@ mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
         item: await nextMaxPlusOne(
           'gameobject_loot_template',
           '`Item`',
-          where: {'Entry': gameObjectLootTemplate.entry},
+          where: {'`Entry`': gameObjectLootTemplate.entry},
         ),
       );
       try {

@@ -15,8 +15,16 @@ final class BriefHolidayEntity {
 
   factory BriefHolidayEntity.fromJson(Map<String, dynamic> json) {
     return BriefHolidayEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      holidayNameId: (json['HolidayNameID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      holidayNameId: json['HolidayNameID'] == true
+          ? 1
+          : json['HolidayNameID'] == false
+          ? 0
+          : (json['HolidayNameID'] as num?)?.toInt() ?? 0,
       textureFileName: json['TextureFileName']?.toString() ?? '',
     );
   }
@@ -414,62 +422,277 @@ mixin _HolidayEntityMixin {
 
   static HolidayEntity fromJson(Map<String, dynamic> json) {
     return HolidayEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      duration0: (json['Duration0'] as num?)?.toInt() ?? 0,
-      duration1: (json['Duration1'] as num?)?.toInt() ?? 0,
-      duration2: (json['Duration2'] as num?)?.toInt() ?? 0,
-      duration3: (json['Duration3'] as num?)?.toInt() ?? 0,
-      duration4: (json['Duration4'] as num?)?.toInt() ?? 0,
-      duration5: (json['Duration5'] as num?)?.toInt() ?? 0,
-      duration6: (json['Duration6'] as num?)?.toInt() ?? 0,
-      duration7: (json['Duration7'] as num?)?.toInt() ?? 0,
-      duration8: (json['Duration8'] as num?)?.toInt() ?? 0,
-      duration9: (json['Duration9'] as num?)?.toInt() ?? 0,
-      date0: (json['Date0'] as num?)?.toInt() ?? 0,
-      date1: (json['Date1'] as num?)?.toInt() ?? 0,
-      date2: (json['Date2'] as num?)?.toInt() ?? 0,
-      date3: (json['Date3'] as num?)?.toInt() ?? 0,
-      date4: (json['Date4'] as num?)?.toInt() ?? 0,
-      date5: (json['Date5'] as num?)?.toInt() ?? 0,
-      date6: (json['Date6'] as num?)?.toInt() ?? 0,
-      date7: (json['Date7'] as num?)?.toInt() ?? 0,
-      date8: (json['Date8'] as num?)?.toInt() ?? 0,
-      date9: (json['Date9'] as num?)?.toInt() ?? 0,
-      date10: (json['Date10'] as num?)?.toInt() ?? 0,
-      date11: (json['Date11'] as num?)?.toInt() ?? 0,
-      date12: (json['Date12'] as num?)?.toInt() ?? 0,
-      date13: (json['Date13'] as num?)?.toInt() ?? 0,
-      date14: (json['Date14'] as num?)?.toInt() ?? 0,
-      date15: (json['Date15'] as num?)?.toInt() ?? 0,
-      date16: (json['Date16'] as num?)?.toInt() ?? 0,
-      date17: (json['Date17'] as num?)?.toInt() ?? 0,
-      date18: (json['Date18'] as num?)?.toInt() ?? 0,
-      date19: (json['Date19'] as num?)?.toInt() ?? 0,
-      date20: (json['Date20'] as num?)?.toInt() ?? 0,
-      date21: (json['Date21'] as num?)?.toInt() ?? 0,
-      date22: (json['Date22'] as num?)?.toInt() ?? 0,
-      date23: (json['Date23'] as num?)?.toInt() ?? 0,
-      date24: (json['Date24'] as num?)?.toInt() ?? 0,
-      date25: (json['Date25'] as num?)?.toInt() ?? 0,
-      region: (json['Region'] as num?)?.toInt() ?? 0,
-      looping: (json['Looping'] as num?)?.toInt() ?? 0,
-      calendarFlags0: (json['CalendarFlags0'] as num?)?.toInt() ?? 0,
-      calendarFlags1: (json['CalendarFlags1'] as num?)?.toInt() ?? 0,
-      calendarFlags2: (json['CalendarFlags2'] as num?)?.toInt() ?? 0,
-      calendarFlags3: (json['CalendarFlags3'] as num?)?.toInt() ?? 0,
-      calendarFlags4: (json['CalendarFlags4'] as num?)?.toInt() ?? 0,
-      calendarFlags5: (json['CalendarFlags5'] as num?)?.toInt() ?? 0,
-      calendarFlags6: (json['CalendarFlags6'] as num?)?.toInt() ?? 0,
-      calendarFlags7: (json['CalendarFlags7'] as num?)?.toInt() ?? 0,
-      calendarFlags8: (json['CalendarFlags8'] as num?)?.toInt() ?? 0,
-      calendarFlags9: (json['CalendarFlags9'] as num?)?.toInt() ?? 0,
-      holidayNameId: (json['HolidayNameID'] as num?)?.toInt() ?? 0,
-      holidayDescriptionId:
-          (json['HolidayDescriptionID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      duration0: json['Duration0'] == true
+          ? 1
+          : json['Duration0'] == false
+          ? 0
+          : (json['Duration0'] as num?)?.toInt() ?? 0,
+      duration1: json['Duration1'] == true
+          ? 1
+          : json['Duration1'] == false
+          ? 0
+          : (json['Duration1'] as num?)?.toInt() ?? 0,
+      duration2: json['Duration2'] == true
+          ? 1
+          : json['Duration2'] == false
+          ? 0
+          : (json['Duration2'] as num?)?.toInt() ?? 0,
+      duration3: json['Duration3'] == true
+          ? 1
+          : json['Duration3'] == false
+          ? 0
+          : (json['Duration3'] as num?)?.toInt() ?? 0,
+      duration4: json['Duration4'] == true
+          ? 1
+          : json['Duration4'] == false
+          ? 0
+          : (json['Duration4'] as num?)?.toInt() ?? 0,
+      duration5: json['Duration5'] == true
+          ? 1
+          : json['Duration5'] == false
+          ? 0
+          : (json['Duration5'] as num?)?.toInt() ?? 0,
+      duration6: json['Duration6'] == true
+          ? 1
+          : json['Duration6'] == false
+          ? 0
+          : (json['Duration6'] as num?)?.toInt() ?? 0,
+      duration7: json['Duration7'] == true
+          ? 1
+          : json['Duration7'] == false
+          ? 0
+          : (json['Duration7'] as num?)?.toInt() ?? 0,
+      duration8: json['Duration8'] == true
+          ? 1
+          : json['Duration8'] == false
+          ? 0
+          : (json['Duration8'] as num?)?.toInt() ?? 0,
+      duration9: json['Duration9'] == true
+          ? 1
+          : json['Duration9'] == false
+          ? 0
+          : (json['Duration9'] as num?)?.toInt() ?? 0,
+      date0: json['Date0'] == true
+          ? 1
+          : json['Date0'] == false
+          ? 0
+          : (json['Date0'] as num?)?.toInt() ?? 0,
+      date1: json['Date1'] == true
+          ? 1
+          : json['Date1'] == false
+          ? 0
+          : (json['Date1'] as num?)?.toInt() ?? 0,
+      date2: json['Date2'] == true
+          ? 1
+          : json['Date2'] == false
+          ? 0
+          : (json['Date2'] as num?)?.toInt() ?? 0,
+      date3: json['Date3'] == true
+          ? 1
+          : json['Date3'] == false
+          ? 0
+          : (json['Date3'] as num?)?.toInt() ?? 0,
+      date4: json['Date4'] == true
+          ? 1
+          : json['Date4'] == false
+          ? 0
+          : (json['Date4'] as num?)?.toInt() ?? 0,
+      date5: json['Date5'] == true
+          ? 1
+          : json['Date5'] == false
+          ? 0
+          : (json['Date5'] as num?)?.toInt() ?? 0,
+      date6: json['Date6'] == true
+          ? 1
+          : json['Date6'] == false
+          ? 0
+          : (json['Date6'] as num?)?.toInt() ?? 0,
+      date7: json['Date7'] == true
+          ? 1
+          : json['Date7'] == false
+          ? 0
+          : (json['Date7'] as num?)?.toInt() ?? 0,
+      date8: json['Date8'] == true
+          ? 1
+          : json['Date8'] == false
+          ? 0
+          : (json['Date8'] as num?)?.toInt() ?? 0,
+      date9: json['Date9'] == true
+          ? 1
+          : json['Date9'] == false
+          ? 0
+          : (json['Date9'] as num?)?.toInt() ?? 0,
+      date10: json['Date10'] == true
+          ? 1
+          : json['Date10'] == false
+          ? 0
+          : (json['Date10'] as num?)?.toInt() ?? 0,
+      date11: json['Date11'] == true
+          ? 1
+          : json['Date11'] == false
+          ? 0
+          : (json['Date11'] as num?)?.toInt() ?? 0,
+      date12: json['Date12'] == true
+          ? 1
+          : json['Date12'] == false
+          ? 0
+          : (json['Date12'] as num?)?.toInt() ?? 0,
+      date13: json['Date13'] == true
+          ? 1
+          : json['Date13'] == false
+          ? 0
+          : (json['Date13'] as num?)?.toInt() ?? 0,
+      date14: json['Date14'] == true
+          ? 1
+          : json['Date14'] == false
+          ? 0
+          : (json['Date14'] as num?)?.toInt() ?? 0,
+      date15: json['Date15'] == true
+          ? 1
+          : json['Date15'] == false
+          ? 0
+          : (json['Date15'] as num?)?.toInt() ?? 0,
+      date16: json['Date16'] == true
+          ? 1
+          : json['Date16'] == false
+          ? 0
+          : (json['Date16'] as num?)?.toInt() ?? 0,
+      date17: json['Date17'] == true
+          ? 1
+          : json['Date17'] == false
+          ? 0
+          : (json['Date17'] as num?)?.toInt() ?? 0,
+      date18: json['Date18'] == true
+          ? 1
+          : json['Date18'] == false
+          ? 0
+          : (json['Date18'] as num?)?.toInt() ?? 0,
+      date19: json['Date19'] == true
+          ? 1
+          : json['Date19'] == false
+          ? 0
+          : (json['Date19'] as num?)?.toInt() ?? 0,
+      date20: json['Date20'] == true
+          ? 1
+          : json['Date20'] == false
+          ? 0
+          : (json['Date20'] as num?)?.toInt() ?? 0,
+      date21: json['Date21'] == true
+          ? 1
+          : json['Date21'] == false
+          ? 0
+          : (json['Date21'] as num?)?.toInt() ?? 0,
+      date22: json['Date22'] == true
+          ? 1
+          : json['Date22'] == false
+          ? 0
+          : (json['Date22'] as num?)?.toInt() ?? 0,
+      date23: json['Date23'] == true
+          ? 1
+          : json['Date23'] == false
+          ? 0
+          : (json['Date23'] as num?)?.toInt() ?? 0,
+      date24: json['Date24'] == true
+          ? 1
+          : json['Date24'] == false
+          ? 0
+          : (json['Date24'] as num?)?.toInt() ?? 0,
+      date25: json['Date25'] == true
+          ? 1
+          : json['Date25'] == false
+          ? 0
+          : (json['Date25'] as num?)?.toInt() ?? 0,
+      region: json['Region'] == true
+          ? 1
+          : json['Region'] == false
+          ? 0
+          : (json['Region'] as num?)?.toInt() ?? 0,
+      looping: json['Looping'] == true
+          ? 1
+          : json['Looping'] == false
+          ? 0
+          : (json['Looping'] as num?)?.toInt() ?? 0,
+      calendarFlags0: json['CalendarFlags0'] == true
+          ? 1
+          : json['CalendarFlags0'] == false
+          ? 0
+          : (json['CalendarFlags0'] as num?)?.toInt() ?? 0,
+      calendarFlags1: json['CalendarFlags1'] == true
+          ? 1
+          : json['CalendarFlags1'] == false
+          ? 0
+          : (json['CalendarFlags1'] as num?)?.toInt() ?? 0,
+      calendarFlags2: json['CalendarFlags2'] == true
+          ? 1
+          : json['CalendarFlags2'] == false
+          ? 0
+          : (json['CalendarFlags2'] as num?)?.toInt() ?? 0,
+      calendarFlags3: json['CalendarFlags3'] == true
+          ? 1
+          : json['CalendarFlags3'] == false
+          ? 0
+          : (json['CalendarFlags3'] as num?)?.toInt() ?? 0,
+      calendarFlags4: json['CalendarFlags4'] == true
+          ? 1
+          : json['CalendarFlags4'] == false
+          ? 0
+          : (json['CalendarFlags4'] as num?)?.toInt() ?? 0,
+      calendarFlags5: json['CalendarFlags5'] == true
+          ? 1
+          : json['CalendarFlags5'] == false
+          ? 0
+          : (json['CalendarFlags5'] as num?)?.toInt() ?? 0,
+      calendarFlags6: json['CalendarFlags6'] == true
+          ? 1
+          : json['CalendarFlags6'] == false
+          ? 0
+          : (json['CalendarFlags6'] as num?)?.toInt() ?? 0,
+      calendarFlags7: json['CalendarFlags7'] == true
+          ? 1
+          : json['CalendarFlags7'] == false
+          ? 0
+          : (json['CalendarFlags7'] as num?)?.toInt() ?? 0,
+      calendarFlags8: json['CalendarFlags8'] == true
+          ? 1
+          : json['CalendarFlags8'] == false
+          ? 0
+          : (json['CalendarFlags8'] as num?)?.toInt() ?? 0,
+      calendarFlags9: json['CalendarFlags9'] == true
+          ? 1
+          : json['CalendarFlags9'] == false
+          ? 0
+          : (json['CalendarFlags9'] as num?)?.toInt() ?? 0,
+      holidayNameId: json['HolidayNameID'] == true
+          ? 1
+          : json['HolidayNameID'] == false
+          ? 0
+          : (json['HolidayNameID'] as num?)?.toInt() ?? 0,
+      holidayDescriptionId: json['HolidayDescriptionID'] == true
+          ? 1
+          : json['HolidayDescriptionID'] == false
+          ? 0
+          : (json['HolidayDescriptionID'] as num?)?.toInt() ?? 0,
       textureFileName: json['TextureFileName']?.toString() ?? '',
-      priority: (json['Priority'] as num?)?.toInt() ?? 0,
-      calendarFilterType: (json['CalendarFilterType'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      priority: json['Priority'] == true
+          ? 1
+          : json['Priority'] == false
+          ? 0
+          : (json['Priority'] as num?)?.toInt() ?? 0,
+      calendarFilterType: json['CalendarFilterType'] == true
+          ? 1
+          : json['CalendarFilterType'] == false
+          ? 0
+          : (json['CalendarFilterType'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

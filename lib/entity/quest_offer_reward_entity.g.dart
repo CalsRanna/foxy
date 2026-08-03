@@ -15,8 +15,16 @@ final class BriefQuestOfferRewardEntity {
 
   factory BriefQuestOfferRewardEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestOfferRewardEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      emote1: (json['Emote1'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      emote1: json['Emote1'] == true
+          ? 1
+          : json['Emote1'] == false
+          ? 0
+          : (json['Emote1'] as num?)?.toInt() ?? 0,
       rewardText: json['RewardText']?.toString() ?? '',
     );
   }
@@ -150,17 +158,57 @@ mixin _QuestOfferRewardEntityMixin {
 
   static QuestOfferRewardEntity fromJson(Map<String, dynamic> json) {
     return QuestOfferRewardEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      emote1: (json['Emote1'] as num?)?.toInt() ?? 0,
-      emote2: (json['Emote2'] as num?)?.toInt() ?? 0,
-      emote3: (json['Emote3'] as num?)?.toInt() ?? 0,
-      emote4: (json['Emote4'] as num?)?.toInt() ?? 0,
-      emoteDelay1: (json['EmoteDelay1'] as num?)?.toInt() ?? 0,
-      emoteDelay2: (json['EmoteDelay2'] as num?)?.toInt() ?? 0,
-      emoteDelay3: (json['EmoteDelay3'] as num?)?.toInt() ?? 0,
-      emoteDelay4: (json['EmoteDelay4'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      emote1: json['Emote1'] == true
+          ? 1
+          : json['Emote1'] == false
+          ? 0
+          : (json['Emote1'] as num?)?.toInt() ?? 0,
+      emote2: json['Emote2'] == true
+          ? 1
+          : json['Emote2'] == false
+          ? 0
+          : (json['Emote2'] as num?)?.toInt() ?? 0,
+      emote3: json['Emote3'] == true
+          ? 1
+          : json['Emote3'] == false
+          ? 0
+          : (json['Emote3'] as num?)?.toInt() ?? 0,
+      emote4: json['Emote4'] == true
+          ? 1
+          : json['Emote4'] == false
+          ? 0
+          : (json['Emote4'] as num?)?.toInt() ?? 0,
+      emoteDelay1: json['EmoteDelay1'] == true
+          ? 1
+          : json['EmoteDelay1'] == false
+          ? 0
+          : (json['EmoteDelay1'] as num?)?.toInt() ?? 0,
+      emoteDelay2: json['EmoteDelay2'] == true
+          ? 1
+          : json['EmoteDelay2'] == false
+          ? 0
+          : (json['EmoteDelay2'] as num?)?.toInt() ?? 0,
+      emoteDelay3: json['EmoteDelay3'] == true
+          ? 1
+          : json['EmoteDelay3'] == false
+          ? 0
+          : (json['EmoteDelay3'] as num?)?.toInt() ?? 0,
+      emoteDelay4: json['EmoteDelay4'] == true
+          ? 1
+          : json['EmoteDelay4'] == false
+          ? 0
+          : (json['EmoteDelay4'] as num?)?.toInt() ?? 0,
       rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

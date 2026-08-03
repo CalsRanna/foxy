@@ -68,7 +68,7 @@ class EmoteTextDataRepository
 
   QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextDataFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     if (filter.text.isNotEmpty) {
       builder = builder.where(
         'Text_lang_zhCN',

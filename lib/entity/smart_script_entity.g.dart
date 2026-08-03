@@ -25,13 +25,41 @@ final class BriefSmartScriptEntity {
 
   factory BriefSmartScriptEntity.fromJson(Map<String, dynamic> json) {
     return BriefSmartScriptEntity(
-      entryOrGuid: (json['entryorguid'] as num?)?.toInt() ?? 0,
-      sourceType: (json['source_type'] as num?)?.toInt() ?? 0,
-      id: (json['id'] as num?)?.toInt() ?? 0,
-      link: (json['link'] as num?)?.toInt() ?? 0,
-      eventType: (json['event_type'] as num?)?.toInt() ?? 0,
-      actionType: (json['action_type'] as num?)?.toInt() ?? 0,
-      targetType: (json['target_type'] as num?)?.toInt() ?? 0,
+      entryOrGuid: json['entryorguid'] == true
+          ? 1
+          : json['entryorguid'] == false
+          ? 0
+          : (json['entryorguid'] as num?)?.toInt() ?? 0,
+      sourceType: json['source_type'] == true
+          ? 1
+          : json['source_type'] == false
+          ? 0
+          : (json['source_type'] as num?)?.toInt() ?? 0,
+      id: json['id'] == true
+          ? 1
+          : json['id'] == false
+          ? 0
+          : (json['id'] as num?)?.toInt() ?? 0,
+      link: json['link'] == true
+          ? 1
+          : json['link'] == false
+          ? 0
+          : (json['link'] as num?)?.toInt() ?? 0,
+      eventType: json['event_type'] == true
+          ? 1
+          : json['event_type'] == false
+          ? 0
+          : (json['event_type'] as num?)?.toInt() ?? 0,
+      actionType: json['action_type'] == true
+          ? 1
+          : json['action_type'] == false
+          ? 0
+          : (json['action_type'] as num?)?.toInt() ?? 0,
+      targetType: json['target_type'] == true
+          ? 1
+          : json['target_type'] == false
+          ? 0
+          : (json['target_type'] as num?)?.toInt() ?? 0,
       comment: json['comment']?.toString() ?? '',
     );
   }
@@ -357,32 +385,136 @@ mixin _SmartScriptEntityMixin {
 
   static SmartScriptEntity fromJson(Map<String, dynamic> json) {
     return SmartScriptEntity(
-      entryOrGuid: (json['entryorguid'] as num?)?.toInt() ?? 0,
-      sourceType: (json['source_type'] as num?)?.toInt() ?? 0,
-      id: (json['id'] as num?)?.toInt() ?? 0,
-      link: (json['link'] as num?)?.toInt() ?? 0,
-      eventType: (json['event_type'] as num?)?.toInt() ?? 0,
-      eventPhaseMask: (json['event_phase_mask'] as num?)?.toInt() ?? 0,
-      eventChance: (json['event_chance'] as num?)?.toInt() ?? 100,
-      eventFlags: (json['event_flags'] as num?)?.toInt() ?? 0,
-      eventParam1: (json['event_param1'] as num?)?.toInt() ?? 0,
-      eventParam2: (json['event_param2'] as num?)?.toInt() ?? 0,
-      eventParam3: (json['event_param3'] as num?)?.toInt() ?? 0,
-      eventParam4: (json['event_param4'] as num?)?.toInt() ?? 0,
-      eventParam5: (json['event_param5'] as num?)?.toInt() ?? 0,
-      eventParam6: (json['event_param6'] as num?)?.toInt() ?? 0,
-      actionType: (json['action_type'] as num?)?.toInt() ?? 0,
-      actionParam1: (json['action_param1'] as num?)?.toInt() ?? 0,
-      actionParam2: (json['action_param2'] as num?)?.toInt() ?? 0,
-      actionParam3: (json['action_param3'] as num?)?.toInt() ?? 0,
-      actionParam4: (json['action_param4'] as num?)?.toInt() ?? 0,
-      actionParam5: (json['action_param5'] as num?)?.toInt() ?? 0,
-      actionParam6: (json['action_param6'] as num?)?.toInt() ?? 0,
-      targetType: (json['target_type'] as num?)?.toInt() ?? 0,
-      targetParam1: (json['target_param1'] as num?)?.toInt() ?? 0,
-      targetParam2: (json['target_param2'] as num?)?.toInt() ?? 0,
-      targetParam3: (json['target_param3'] as num?)?.toInt() ?? 0,
-      targetParam4: (json['target_param4'] as num?)?.toInt() ?? 0,
+      entryOrGuid: json['entryorguid'] == true
+          ? 1
+          : json['entryorguid'] == false
+          ? 0
+          : (json['entryorguid'] as num?)?.toInt() ?? 0,
+      sourceType: json['source_type'] == true
+          ? 1
+          : json['source_type'] == false
+          ? 0
+          : (json['source_type'] as num?)?.toInt() ?? 0,
+      id: json['id'] == true
+          ? 1
+          : json['id'] == false
+          ? 0
+          : (json['id'] as num?)?.toInt() ?? 0,
+      link: json['link'] == true
+          ? 1
+          : json['link'] == false
+          ? 0
+          : (json['link'] as num?)?.toInt() ?? 0,
+      eventType: json['event_type'] == true
+          ? 1
+          : json['event_type'] == false
+          ? 0
+          : (json['event_type'] as num?)?.toInt() ?? 0,
+      eventPhaseMask: json['event_phase_mask'] == true
+          ? 1
+          : json['event_phase_mask'] == false
+          ? 0
+          : (json['event_phase_mask'] as num?)?.toInt() ?? 0,
+      eventChance: json['event_chance'] == true
+          ? 1
+          : json['event_chance'] == false
+          ? 0
+          : (json['event_chance'] as num?)?.toInt() ?? 100,
+      eventFlags: json['event_flags'] == true
+          ? 1
+          : json['event_flags'] == false
+          ? 0
+          : (json['event_flags'] as num?)?.toInt() ?? 0,
+      eventParam1: json['event_param1'] == true
+          ? 1
+          : json['event_param1'] == false
+          ? 0
+          : (json['event_param1'] as num?)?.toInt() ?? 0,
+      eventParam2: json['event_param2'] == true
+          ? 1
+          : json['event_param2'] == false
+          ? 0
+          : (json['event_param2'] as num?)?.toInt() ?? 0,
+      eventParam3: json['event_param3'] == true
+          ? 1
+          : json['event_param3'] == false
+          ? 0
+          : (json['event_param3'] as num?)?.toInt() ?? 0,
+      eventParam4: json['event_param4'] == true
+          ? 1
+          : json['event_param4'] == false
+          ? 0
+          : (json['event_param4'] as num?)?.toInt() ?? 0,
+      eventParam5: json['event_param5'] == true
+          ? 1
+          : json['event_param5'] == false
+          ? 0
+          : (json['event_param5'] as num?)?.toInt() ?? 0,
+      eventParam6: json['event_param6'] == true
+          ? 1
+          : json['event_param6'] == false
+          ? 0
+          : (json['event_param6'] as num?)?.toInt() ?? 0,
+      actionType: json['action_type'] == true
+          ? 1
+          : json['action_type'] == false
+          ? 0
+          : (json['action_type'] as num?)?.toInt() ?? 0,
+      actionParam1: json['action_param1'] == true
+          ? 1
+          : json['action_param1'] == false
+          ? 0
+          : (json['action_param1'] as num?)?.toInt() ?? 0,
+      actionParam2: json['action_param2'] == true
+          ? 1
+          : json['action_param2'] == false
+          ? 0
+          : (json['action_param2'] as num?)?.toInt() ?? 0,
+      actionParam3: json['action_param3'] == true
+          ? 1
+          : json['action_param3'] == false
+          ? 0
+          : (json['action_param3'] as num?)?.toInt() ?? 0,
+      actionParam4: json['action_param4'] == true
+          ? 1
+          : json['action_param4'] == false
+          ? 0
+          : (json['action_param4'] as num?)?.toInt() ?? 0,
+      actionParam5: json['action_param5'] == true
+          ? 1
+          : json['action_param5'] == false
+          ? 0
+          : (json['action_param5'] as num?)?.toInt() ?? 0,
+      actionParam6: json['action_param6'] == true
+          ? 1
+          : json['action_param6'] == false
+          ? 0
+          : (json['action_param6'] as num?)?.toInt() ?? 0,
+      targetType: json['target_type'] == true
+          ? 1
+          : json['target_type'] == false
+          ? 0
+          : (json['target_type'] as num?)?.toInt() ?? 0,
+      targetParam1: json['target_param1'] == true
+          ? 1
+          : json['target_param1'] == false
+          ? 0
+          : (json['target_param1'] as num?)?.toInt() ?? 0,
+      targetParam2: json['target_param2'] == true
+          ? 1
+          : json['target_param2'] == false
+          ? 0
+          : (json['target_param2'] as num?)?.toInt() ?? 0,
+      targetParam3: json['target_param3'] == true
+          ? 1
+          : json['target_param3'] == false
+          ? 0
+          : (json['target_param3'] as num?)?.toInt() ?? 0,
+      targetParam4: json['target_param4'] == true
+          ? 1
+          : json['target_param4'] == false
+          ? 0
+          : (json['target_param4'] as num?)?.toInt() ?? 0,
       targetX: (json['target_x'] as num?)?.toDouble() ?? 0.0,
       targetY: (json['target_y'] as num?)?.toDouble() ?? 0.0,
       targetZ: (json['target_z'] as num?)?.toDouble() ?? 0.0,

@@ -89,7 +89,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
         id: await nextMaxPlusOne(
           'gameobject_queststarter',
           '`id`',
-          where: {'quest': gameObjectQuestStarter.quest},
+          where: {'`quest`': gameObjectQuestStarter.quest},
         ),
       );
       try {

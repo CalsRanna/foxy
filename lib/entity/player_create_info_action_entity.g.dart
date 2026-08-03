@@ -21,11 +21,31 @@ final class BriefPlayerCreateInfoActionEntity {
     Map<String, dynamic> json,
   ) {
     return BriefPlayerCreateInfoActionEntity(
-      race: (json['race'] as num?)?.toInt() ?? 0,
-      class_: (json['class'] as num?)?.toInt() ?? 0,
-      button: (json['button'] as num?)?.toInt() ?? 0,
-      action: (json['action'] as num?)?.toInt() ?? 0,
-      type: (json['type'] as num?)?.toInt() ?? 0,
+      race: json['race'] == true
+          ? 1
+          : json['race'] == false
+          ? 0
+          : (json['race'] as num?)?.toInt() ?? 0,
+      class_: json['class'] == true
+          ? 1
+          : json['class'] == false
+          ? 0
+          : (json['class'] as num?)?.toInt() ?? 0,
+      button: json['button'] == true
+          ? 1
+          : json['button'] == false
+          ? 0
+          : (json['button'] as num?)?.toInt() ?? 0,
+      action: json['action'] == true
+          ? 1
+          : json['action'] == false
+          ? 0
+          : (json['action'] as num?)?.toInt() ?? 0,
+      type: json['type'] == true
+          ? 1
+          : json['type'] == false
+          ? 0
+          : (json['type'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -175,11 +195,31 @@ mixin _PlayerCreateInfoActionEntityMixin {
 
   static PlayerCreateInfoActionEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoActionEntity(
-      race: (json['race'] as num?)?.toInt() ?? 0,
-      class_: (json['class'] as num?)?.toInt() ?? 0,
-      button: (json['button'] as num?)?.toInt() ?? 0,
-      action: (json['action'] as num?)?.toInt() ?? 0,
-      type: (json['type'] as num?)?.toInt() ?? 0,
+      race: json['race'] == true
+          ? 1
+          : json['race'] == false
+          ? 0
+          : (json['race'] as num?)?.toInt() ?? 0,
+      class_: json['class'] == true
+          ? 1
+          : json['class'] == false
+          ? 0
+          : (json['class'] as num?)?.toInt() ?? 0,
+      button: json['button'] == true
+          ? 1
+          : json['button'] == false
+          ? 0
+          : (json['button'] as num?)?.toInt() ?? 0,
+      action: json['action'] == true
+          ? 1
+          : json['action'] == false
+          ? 0
+          : (json['action'] as num?)?.toInt() ?? 0,
+      type: json['type'] == true
+          ? 1
+          : json['type'] == false
+          ? 0
+          : (json['type'] as num?)?.toInt() ?? 0,
     );
   }
 }

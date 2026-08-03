@@ -73,7 +73,7 @@ class ItemRandomPropertiesRepository
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where(

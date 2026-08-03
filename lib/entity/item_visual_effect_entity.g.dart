@@ -10,7 +10,11 @@ final class BriefItemVisualEffectEntity {
 
   factory BriefItemVisualEffectEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemVisualEffectEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       model: json['Model']?.toString() ?? '',
     );
   }
@@ -78,7 +82,11 @@ mixin _ItemVisualEffectEntityMixin {
 
   static ItemVisualEffectEntity fromJson(Map<String, dynamic> json) {
     return ItemVisualEffectEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       model: json['Model']?.toString() ?? '',
     );
   }

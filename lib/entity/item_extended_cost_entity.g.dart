@@ -37,20 +37,76 @@ final class BriefItemExtendedCostEntity {
 
   factory BriefItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemExtendedCostEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      honorPoints: (json['HonorPoints'] as num?)?.toInt() ?? 0,
-      arenaPoints: (json['ArenaPoints'] as num?)?.toInt() ?? 0,
-      arenaBracket: (json['ArenaBracket'] as num?)?.toInt() ?? 0,
-      itemID0: (json['ItemID0'] as num?)?.toInt() ?? 0,
-      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      itemID4: (json['ItemID4'] as num?)?.toInt() ?? 0,
-      itemCount0: (json['ItemCount0'] as num?)?.toInt() ?? 0,
-      itemCount1: (json['ItemCount1'] as num?)?.toInt() ?? 0,
-      itemCount2: (json['ItemCount2'] as num?)?.toInt() ?? 0,
-      itemCount3: (json['ItemCount3'] as num?)?.toInt() ?? 0,
-      itemCount4: (json['ItemCount4'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      honorPoints: json['HonorPoints'] == true
+          ? 1
+          : json['HonorPoints'] == false
+          ? 0
+          : (json['HonorPoints'] as num?)?.toInt() ?? 0,
+      arenaPoints: json['ArenaPoints'] == true
+          ? 1
+          : json['ArenaPoints'] == false
+          ? 0
+          : (json['ArenaPoints'] as num?)?.toInt() ?? 0,
+      arenaBracket: json['ArenaBracket'] == true
+          ? 1
+          : json['ArenaBracket'] == false
+          ? 0
+          : (json['ArenaBracket'] as num?)?.toInt() ?? 0,
+      itemID0: json['ItemID0'] == true
+          ? 1
+          : json['ItemID0'] == false
+          ? 0
+          : (json['ItemID0'] as num?)?.toInt() ?? 0,
+      itemID1: json['ItemID1'] == true
+          ? 1
+          : json['ItemID1'] == false
+          ? 0
+          : (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemID2: json['ItemID2'] == true
+          ? 1
+          : json['ItemID2'] == false
+          ? 0
+          : (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemID3: json['ItemID3'] == true
+          ? 1
+          : json['ItemID3'] == false
+          ? 0
+          : (json['ItemID3'] as num?)?.toInt() ?? 0,
+      itemID4: json['ItemID4'] == true
+          ? 1
+          : json['ItemID4'] == false
+          ? 0
+          : (json['ItemID4'] as num?)?.toInt() ?? 0,
+      itemCount0: json['ItemCount0'] == true
+          ? 1
+          : json['ItemCount0'] == false
+          ? 0
+          : (json['ItemCount0'] as num?)?.toInt() ?? 0,
+      itemCount1: json['ItemCount1'] == true
+          ? 1
+          : json['ItemCount1'] == false
+          ? 0
+          : (json['ItemCount1'] as num?)?.toInt() ?? 0,
+      itemCount2: json['ItemCount2'] == true
+          ? 1
+          : json['ItemCount2'] == false
+          ? 0
+          : (json['ItemCount2'] as num?)?.toInt() ?? 0,
+      itemCount3: json['ItemCount3'] == true
+          ? 1
+          : json['ItemCount3'] == false
+          ? 0
+          : (json['ItemCount3'] as num?)?.toInt() ?? 0,
+      itemCount4: json['ItemCount4'] == true
+          ? 1
+          : json['ItemCount4'] == false
+          ? 0
+          : (json['ItemCount4'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -250,22 +306,86 @@ mixin _ItemExtendedCostEntityMixin {
 
   static ItemExtendedCostEntity fromJson(Map<String, dynamic> json) {
     return ItemExtendedCostEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      honorPoints: (json['HonorPoints'] as num?)?.toInt() ?? 0,
-      arenaPoints: (json['ArenaPoints'] as num?)?.toInt() ?? 0,
-      arenaBracket: (json['ArenaBracket'] as num?)?.toInt() ?? 0,
-      itemID0: (json['ItemID0'] as num?)?.toInt() ?? 0,
-      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      itemID4: (json['ItemID4'] as num?)?.toInt() ?? 0,
-      itemCount0: (json['ItemCount0'] as num?)?.toInt() ?? 0,
-      itemCount1: (json['ItemCount1'] as num?)?.toInt() ?? 0,
-      itemCount2: (json['ItemCount2'] as num?)?.toInt() ?? 0,
-      itemCount3: (json['ItemCount3'] as num?)?.toInt() ?? 0,
-      itemCount4: (json['ItemCount4'] as num?)?.toInt() ?? 0,
-      requiredArenaRating: (json['RequiredArenaRating'] as num?)?.toInt() ?? 0,
-      itemPurchaseGroup: (json['ItemPurchaseGroup'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      honorPoints: json['HonorPoints'] == true
+          ? 1
+          : json['HonorPoints'] == false
+          ? 0
+          : (json['HonorPoints'] as num?)?.toInt() ?? 0,
+      arenaPoints: json['ArenaPoints'] == true
+          ? 1
+          : json['ArenaPoints'] == false
+          ? 0
+          : (json['ArenaPoints'] as num?)?.toInt() ?? 0,
+      arenaBracket: json['ArenaBracket'] == true
+          ? 1
+          : json['ArenaBracket'] == false
+          ? 0
+          : (json['ArenaBracket'] as num?)?.toInt() ?? 0,
+      itemID0: json['ItemID0'] == true
+          ? 1
+          : json['ItemID0'] == false
+          ? 0
+          : (json['ItemID0'] as num?)?.toInt() ?? 0,
+      itemID1: json['ItemID1'] == true
+          ? 1
+          : json['ItemID1'] == false
+          ? 0
+          : (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemID2: json['ItemID2'] == true
+          ? 1
+          : json['ItemID2'] == false
+          ? 0
+          : (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemID3: json['ItemID3'] == true
+          ? 1
+          : json['ItemID3'] == false
+          ? 0
+          : (json['ItemID3'] as num?)?.toInt() ?? 0,
+      itemID4: json['ItemID4'] == true
+          ? 1
+          : json['ItemID4'] == false
+          ? 0
+          : (json['ItemID4'] as num?)?.toInt() ?? 0,
+      itemCount0: json['ItemCount0'] == true
+          ? 1
+          : json['ItemCount0'] == false
+          ? 0
+          : (json['ItemCount0'] as num?)?.toInt() ?? 0,
+      itemCount1: json['ItemCount1'] == true
+          ? 1
+          : json['ItemCount1'] == false
+          ? 0
+          : (json['ItemCount1'] as num?)?.toInt() ?? 0,
+      itemCount2: json['ItemCount2'] == true
+          ? 1
+          : json['ItemCount2'] == false
+          ? 0
+          : (json['ItemCount2'] as num?)?.toInt() ?? 0,
+      itemCount3: json['ItemCount3'] == true
+          ? 1
+          : json['ItemCount3'] == false
+          ? 0
+          : (json['ItemCount3'] as num?)?.toInt() ?? 0,
+      itemCount4: json['ItemCount4'] == true
+          ? 1
+          : json['ItemCount4'] == false
+          ? 0
+          : (json['ItemCount4'] as num?)?.toInt() ?? 0,
+      requiredArenaRating: json['RequiredArenaRating'] == true
+          ? 1
+          : json['RequiredArenaRating'] == false
+          ? 0
+          : (json['RequiredArenaRating'] as num?)?.toInt() ?? 0,
+      itemPurchaseGroup: json['ItemPurchaseGroup'] == true
+          ? 1
+          : json['ItemPurchaseGroup'] == false
+          ? 0
+          : (json['ItemPurchaseGroup'] as num?)?.toInt() ?? 0,
     );
   }
 }

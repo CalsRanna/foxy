@@ -19,9 +19,21 @@ final class BriefPlayerCreateInfoCastSpellEntity {
     Map<String, dynamic> json,
   ) {
     return BriefPlayerCreateInfoCastSpellEntity(
-      raceMask: (json['raceMask'] as num?)?.toInt() ?? 0,
-      classMask: (json['classMask'] as num?)?.toInt() ?? 0,
-      spell: (json['spell'] as num?)?.toInt() ?? 0,
+      raceMask: json['raceMask'] == true
+          ? 1
+          : json['raceMask'] == false
+          ? 0
+          : (json['raceMask'] as num?)?.toInt() ?? 0,
+      classMask: json['classMask'] == true
+          ? 1
+          : json['classMask'] == false
+          ? 0
+          : (json['classMask'] as num?)?.toInt() ?? 0,
+      spell: json['spell'] == true
+          ? 1
+          : json['spell'] == false
+          ? 0
+          : (json['spell'] as num?)?.toInt() ?? 0,
       note: json['note']?.toString(),
     );
   }
@@ -170,9 +182,21 @@ mixin _PlayerCreateInfoCastSpellEntityMixin {
 
   static PlayerCreateInfoCastSpellEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoCastSpellEntity(
-      raceMask: (json['raceMask'] as num?)?.toInt() ?? 0,
-      classMask: (json['classMask'] as num?)?.toInt() ?? 0,
-      spell: (json['spell'] as num?)?.toInt() ?? 0,
+      raceMask: json['raceMask'] == true
+          ? 1
+          : json['raceMask'] == false
+          ? 0
+          : (json['raceMask'] as num?)?.toInt() ?? 0,
+      classMask: json['classMask'] == true
+          ? 1
+          : json['classMask'] == false
+          ? 0
+          : (json['classMask'] as num?)?.toInt() ?? 0,
+      spell: json['spell'] == true
+          ? 1
+          : json['spell'] == false
+          ? 0
+          : (json['spell'] as num?)?.toInt() ?? 0,
       note: json['note']?.toString(),
     );
   }

@@ -109,6 +109,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
     try {
       if (key == null) {
         final blank = await _repository.createCondition();
+        if (isDisposed) return;
         entity.value = blank;
         _applyCandidate(blank);
         persistedKey.value = null;
@@ -118,6 +119,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
       if (result == null) {
         throw RecordNotFoundException('record not found');
       }
+      if (isDisposed) return;
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;
@@ -345,7 +347,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
       throw ArgumentError.value(
         type,
         'ConditionTypeOrReference',
-        '当前 3.3.5a core 不加载该条件类型',
+        'unsupported condition type: $type (not loaded by 3.3.5a core)',
       );
     }
   }

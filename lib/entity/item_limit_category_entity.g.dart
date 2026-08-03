@@ -17,9 +17,21 @@ final class BriefItemLimitCategoryEntity {
 
   factory BriefItemLimitCategoryEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemLimitCategoryEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      quantity: (json['Quantity'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      quantity: json['Quantity'] == true
+          ? 1
+          : json['Quantity'] == false
+          ? 0
+          : (json['Quantity'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
     );
   }
@@ -209,7 +221,11 @@ mixin _ItemLimitCategoryEntityMixin {
 
   static ItemLimitCategoryEntity fromJson(Map<String, dynamic> json) {
     return ItemLimitCategoryEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -226,9 +242,21 @@ mixin _ItemLimitCategoryEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      quantity: (json['Quantity'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      quantity: json['Quantity'] == true
+          ? 1
+          : json['Quantity'] == false
+          ? 0
+          : (json['Quantity'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

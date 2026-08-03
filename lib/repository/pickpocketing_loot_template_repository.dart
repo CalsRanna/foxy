@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'pickpocketing_loot_template_repository.g.dart';
 
-@FoxyRepository(PickpocketingLootTemplateEntity, linkKey: ['entry'])
+@FoxyRepository(PickpocketingLootTemplateEntity, linkKey: ['entry'], autoIncrementKey: 'item')
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class PickpocketingLootTemplateRepository
@@ -35,7 +35,7 @@ class PickpocketingLootTemplateRepository
     if (!needsNameJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.entry.isNotEmpty) {
-        builder = builder.where('Entry', filter.entry);
+        builder = builder.where('Entry', int.tryParse(filter.entry) ?? 0);
       }
       return builder.count();
     }
@@ -147,7 +147,7 @@ class PickpocketingLootTemplateRepository
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('lt.Entry', filter.entry);
+      builder = builder.where('lt.Entry', int.tryParse(filter.entry) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       if (localeEnabled) {

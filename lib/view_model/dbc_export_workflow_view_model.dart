@@ -1,5 +1,6 @@
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_summary.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
@@ -211,7 +212,7 @@ class DbcExportWorkflowViewModel {
       } else if (nextResult.success) {
         status.value = WorkflowStatus.succeeded;
       } else {
-        errorMessage.value = _formatFailure(nextResult);
+        errorMessage.value = formatDbcSyncFailureSummary(nextResult, '导出');
         status.value = WorkflowStatus.failed;
       }
     } catch (error) {
@@ -246,9 +247,4 @@ class DbcExportWorkflowViewModel {
     }
   }
 
-  static String _formatFailure(DbcSyncResult result) {
-    final top = result.errors.take(5).join('\n');
-    return '导出结束，部分文件失败（成功 ${result.completed}，跳过 ${result.skipped}）：\n'
-        '$top${result.errors.length > 5 ? '\n...等 ${result.errors.length} 个错误' : ''}';
-  }
 }

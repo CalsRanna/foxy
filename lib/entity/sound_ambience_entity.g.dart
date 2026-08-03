@@ -15,9 +15,21 @@ final class BriefSoundAmbienceEntity {
 
   factory BriefSoundAmbienceEntity.fromJson(Map<String, dynamic> json) {
     return BriefSoundAmbienceEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      ambienceId0: (json['AmbienceID0'] as num?)?.toInt() ?? 0,
-      ambienceId1: (json['AmbienceID1'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      ambienceId0: json['AmbienceID0'] == true
+          ? 1
+          : json['AmbienceID0'] == false
+          ? 0
+          : (json['AmbienceID0'] as num?)?.toInt() ?? 0,
+      ambienceId1: json['AmbienceID1'] == true
+          ? 1
+          : json['AmbienceID1'] == false
+          ? 0
+          : (json['AmbienceID1'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -98,9 +110,21 @@ mixin _SoundAmbienceEntityMixin {
 
   static SoundAmbienceEntity fromJson(Map<String, dynamic> json) {
     return SoundAmbienceEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      ambienceId0: (json['AmbienceID0'] as num?)?.toInt() ?? 0,
-      ambienceId1: (json['AmbienceID1'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      ambienceId0: json['AmbienceID0'] == true
+          ? 1
+          : json['AmbienceID0'] == false
+          ? 0
+          : (json['AmbienceID0'] as num?)?.toInt() ?? 0,
+      ambienceId1: json['AmbienceID1'] == true
+          ? 1
+          : json['AmbienceID1'] == false
+          ? 0
+          : (json['AmbienceID1'] as num?)?.toInt() ?? 0,
     );
   }
 }

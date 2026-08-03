@@ -10,7 +10,11 @@ final class BriefQuestSortEntity {
 
   factory BriefQuestSortEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestSortEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       sortNameLangZhCN: json['SortName_lang_zhCN']?.toString() ?? '',
     );
   }
@@ -184,7 +188,11 @@ mixin _QuestSortEntityMixin {
 
   static QuestSortEntity fromJson(Map<String, dynamic> json) {
     return QuestSortEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       sortNameLangEnUS: json['SortName_lang_enUS']?.toString() ?? '',
       sortNameLangKoKR: json['SortName_lang_koKR']?.toString() ?? '',
       sortNameLangFrFR: json['SortName_lang_frFR']?.toString() ?? '',
@@ -201,7 +209,11 @@ mixin _QuestSortEntityMixin {
       sortNameLangUnk1: json['SortName_lang_unk1']?.toString() ?? '',
       sortNameLangUnk2: json['SortName_lang_unk2']?.toString() ?? '',
       sortNameLangUnk3: json['SortName_lang_unk3']?.toString() ?? '',
-      sortNameLangFlags: (json['SortName_lang_Flags'] as num?)?.toInt() ?? 0,
+      sortNameLangFlags: json['SortName_lang_Flags'] == true
+          ? 1
+          : json['SortName_lang_Flags'] == false
+          ? 0
+          : (json['SortName_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

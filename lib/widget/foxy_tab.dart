@@ -133,6 +133,9 @@ class _FoxyTabState extends State<FoxyTab> {
     keys = widget.tabs.map((e) => GlobalKey()).toList();
     width = List.generate(widget.tabs.length, (index) => 0.0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 首帧完成前组件可能已被移除(如详情页快速 pop),dispose 后再
+      // setState 会在 debug 下抛断言。
+      if (!mounted) return;
       for (var i = 0; i < keys.length; i++) {
         final key = keys[i];
         final context = key.currentContext;

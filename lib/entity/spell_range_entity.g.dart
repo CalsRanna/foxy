@@ -17,7 +17,11 @@ final class BriefSpellRangeEntity {
 
   factory BriefSpellRangeEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellRangeEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       rangeMin0: (json['RangeMin0'] as num?)?.toDouble() ?? 0.0,
       rangeMax0: (json['RangeMax0'] as num?)?.toDouble() ?? 0.0,
       displayNameLangZhCN: json['DisplayName_lang_zhCN']?.toString() ?? '',
@@ -347,12 +351,20 @@ mixin _SpellRangeEntityMixin {
 
   static SpellRangeEntity fromJson(Map<String, dynamic> json) {
     return SpellRangeEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       rangeMin0: (json['RangeMin0'] as num?)?.toDouble() ?? 0.0,
       rangeMin1: (json['RangeMin1'] as num?)?.toDouble() ?? 0.0,
       rangeMax0: (json['RangeMax0'] as num?)?.toDouble() ?? 0.0,
       rangeMax1: (json['RangeMax1'] as num?)?.toDouble() ?? 0.0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
       displayNameLangEnUS: json['DisplayName_lang_enUS']?.toString() ?? '',
       displayNameLangKoKR: json['DisplayName_lang_koKR']?.toString() ?? '',
       displayNameLangFrFR: json['DisplayName_lang_frFR']?.toString() ?? '',
@@ -369,8 +381,11 @@ mixin _SpellRangeEntityMixin {
       displayNameLangUnk1: json['DisplayName_lang_unk1']?.toString() ?? '',
       displayNameLangUnk2: json['DisplayName_lang_unk2']?.toString() ?? '',
       displayNameLangUnk3: json['DisplayName_lang_unk3']?.toString() ?? '',
-      displayNameLangFlags:
-          (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
+      displayNameLangFlags: json['DisplayName_lang_Flags'] == true
+          ? 1
+          : json['DisplayName_lang_Flags'] == false
+          ? 0
+          : (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
       displayNameShortLangEnUS:
           json['DisplayNameShort_lang_enUS']?.toString() ?? '',
       displayNameShortLangKoKR:
@@ -403,8 +418,11 @@ mixin _SpellRangeEntityMixin {
           json['DisplayNameShort_lang_unk2']?.toString() ?? '',
       displayNameShortLangUnk3:
           json['DisplayNameShort_lang_unk3']?.toString() ?? '',
-      displayNameShortLangFlags:
-          (json['DisplayNameShort_lang_Flags'] as num?)?.toInt() ?? 0,
+      displayNameShortLangFlags: json['DisplayNameShort_lang_Flags'] == true
+          ? 1
+          : json['DisplayNameShort_lang_Flags'] == false
+          ? 0
+          : (json['DisplayNameShort_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

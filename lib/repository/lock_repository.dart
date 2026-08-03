@@ -53,7 +53,7 @@ class LockRepository with RepositoryMixin, _LockRepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, LockFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     return builder;
   }

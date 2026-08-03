@@ -25,12 +25,36 @@ final class BriefDbcFactionTemplateEntity {
 
   factory BriefDbcFactionTemplateEntity.fromJson(Map<String, dynamic> json) {
     return BriefDbcFactionTemplateEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      faction: (json['Faction'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      factionGroup: (json['FactionGroup'] as num?)?.toInt() ?? 0,
-      friendGroup: (json['FriendGroup'] as num?)?.toInt() ?? 0,
-      enemyGroup: (json['EnemyGroup'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      faction: json['Faction'] == true
+          ? 1
+          : json['Faction'] == false
+          ? 0
+          : (json['Faction'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      factionGroup: json['FactionGroup'] == true
+          ? 1
+          : json['FactionGroup'] == false
+          ? 0
+          : (json['FactionGroup'] as num?)?.toInt() ?? 0,
+      friendGroup: json['FriendGroup'] == true
+          ? 1
+          : json['FriendGroup'] == false
+          ? 0
+          : (json['FriendGroup'] as num?)?.toInt() ?? 0,
+      enemyGroup: json['EnemyGroup'] == true
+          ? 1
+          : json['EnemyGroup'] == false
+          ? 0
+          : (json['EnemyGroup'] as num?)?.toInt() ?? 0,
       factionNameZhCN: json['factionNameZhCN']?.toString() ?? '',
       factionNameEnUS: json['factionNameEnUS']?.toString() ?? '',
     );
@@ -202,20 +226,76 @@ mixin _DbcFactionTemplateEntityMixin {
 
   static DbcFactionTemplateEntity fromJson(Map<String, dynamic> json) {
     return DbcFactionTemplateEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      faction: (json['Faction'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      factionGroup: (json['FactionGroup'] as num?)?.toInt() ?? 0,
-      friendGroup: (json['FriendGroup'] as num?)?.toInt() ?? 0,
-      enemyGroup: (json['EnemyGroup'] as num?)?.toInt() ?? 0,
-      enemies0: (json['Enemies0'] as num?)?.toInt() ?? 0,
-      enemies1: (json['Enemies1'] as num?)?.toInt() ?? 0,
-      enemies2: (json['Enemies2'] as num?)?.toInt() ?? 0,
-      enemies3: (json['Enemies3'] as num?)?.toInt() ?? 0,
-      friend0: (json['Friend0'] as num?)?.toInt() ?? 0,
-      friend1: (json['Friend1'] as num?)?.toInt() ?? 0,
-      friend2: (json['Friend2'] as num?)?.toInt() ?? 0,
-      friend3: (json['Friend3'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      faction: json['Faction'] == true
+          ? 1
+          : json['Faction'] == false
+          ? 0
+          : (json['Faction'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      factionGroup: json['FactionGroup'] == true
+          ? 1
+          : json['FactionGroup'] == false
+          ? 0
+          : (json['FactionGroup'] as num?)?.toInt() ?? 0,
+      friendGroup: json['FriendGroup'] == true
+          ? 1
+          : json['FriendGroup'] == false
+          ? 0
+          : (json['FriendGroup'] as num?)?.toInt() ?? 0,
+      enemyGroup: json['EnemyGroup'] == true
+          ? 1
+          : json['EnemyGroup'] == false
+          ? 0
+          : (json['EnemyGroup'] as num?)?.toInt() ?? 0,
+      enemies0: json['Enemies0'] == true
+          ? 1
+          : json['Enemies0'] == false
+          ? 0
+          : (json['Enemies0'] as num?)?.toInt() ?? 0,
+      enemies1: json['Enemies1'] == true
+          ? 1
+          : json['Enemies1'] == false
+          ? 0
+          : (json['Enemies1'] as num?)?.toInt() ?? 0,
+      enemies2: json['Enemies2'] == true
+          ? 1
+          : json['Enemies2'] == false
+          ? 0
+          : (json['Enemies2'] as num?)?.toInt() ?? 0,
+      enemies3: json['Enemies3'] == true
+          ? 1
+          : json['Enemies3'] == false
+          ? 0
+          : (json['Enemies3'] as num?)?.toInt() ?? 0,
+      friend0: json['Friend0'] == true
+          ? 1
+          : json['Friend0'] == false
+          ? 0
+          : (json['Friend0'] as num?)?.toInt() ?? 0,
+      friend1: json['Friend1'] == true
+          ? 1
+          : json['Friend1'] == false
+          ? 0
+          : (json['Friend1'] as num?)?.toInt() ?? 0,
+      friend2: json['Friend2'] == true
+          ? 1
+          : json['Friend2'] == false
+          ? 0
+          : (json['Friend2'] as num?)?.toInt() ?? 0,
+      friend3: json['Friend3'] == true
+          ? 1
+          : json['Friend3'] == false
+          ? 0
+          : (json['Friend3'] as num?)?.toInt() ?? 0,
     );
   }
 }

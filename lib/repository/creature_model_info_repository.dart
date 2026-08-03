@@ -72,7 +72,7 @@ class CreatureModelInfoRepository
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('DisplayID', filter.id);
+      builder = builder.where('DisplayID', int.tryParse(filter.id) ?? 0);
     }
     return builder;
   }

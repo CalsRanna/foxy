@@ -87,7 +87,7 @@ class SpellRepository
   QueryBuilder _applyFilter(QueryBuilder builder, SpellFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('ds.ID', filter.id);
+      builder = builder.where('ds.ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(

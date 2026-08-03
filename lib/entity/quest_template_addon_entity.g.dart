@@ -19,11 +19,31 @@ final class BriefQuestTemplateAddonEntity {
 
   factory BriefQuestTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestTemplateAddonEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      maxLevel: (json['MaxLevel'] as num?)?.toInt() ?? 0,
-      prevQuestId: (json['PrevQuestID'] as num?)?.toInt() ?? 0,
-      nextQuestId: (json['NextQuestID'] as num?)?.toInt() ?? 0,
-      specialFlags: (json['SpecialFlags'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      maxLevel: json['MaxLevel'] == true
+          ? 1
+          : json['MaxLevel'] == false
+          ? 0
+          : (json['MaxLevel'] as num?)?.toInt() ?? 0,
+      prevQuestId: json['PrevQuestID'] == true
+          ? 1
+          : json['PrevQuestID'] == false
+          ? 0
+          : (json['PrevQuestID'] as num?)?.toInt() ?? 0,
+      nextQuestId: json['NextQuestID'] == true
+          ? 1
+          : json['NextQuestID'] == false
+          ? 0
+          : (json['NextQuestID'] as num?)?.toInt() ?? 0,
+      specialFlags: json['SpecialFlags'] == true
+          ? 1
+          : json['SpecialFlags'] == false
+          ? 0
+          : (json['SpecialFlags'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -205,28 +225,96 @@ mixin _QuestTemplateAddonEntityMixin {
 
   static QuestTemplateAddonEntity fromJson(Map<String, dynamic> json) {
     return QuestTemplateAddonEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      maxLevel: (json['MaxLevel'] as num?)?.toInt() ?? 0,
-      allowableClasses: (json['AllowableClasses'] as num?)?.toInt() ?? 0,
-      sourceSpellId: (json['SourceSpellID'] as num?)?.toInt() ?? 0,
-      prevQuestId: (json['PrevQuestID'] as num?)?.toInt() ?? 0,
-      nextQuestId: (json['NextQuestID'] as num?)?.toInt() ?? 0,
-      exclusiveGroup: (json['ExclusiveGroup'] as num?)?.toInt() ?? 0,
-      breadcrumbForQuestId:
-          (json['BreadcrumbForQuestId'] as num?)?.toInt() ?? 0,
-      rewardMailTemplateId:
-          (json['RewardMailTemplateID'] as num?)?.toInt() ?? 0,
-      rewardMailDelay: (json['RewardMailDelay'] as num?)?.toInt() ?? 0,
-      requiredSkillId: (json['RequiredSkillID'] as num?)?.toInt() ?? 0,
-      requiredSkillPoints: (json['RequiredSkillPoints'] as num?)?.toInt() ?? 0,
-      requiredMinRepFaction:
-          (json['RequiredMinRepFaction'] as num?)?.toInt() ?? 0,
-      requiredMaxRepFaction:
-          (json['RequiredMaxRepFaction'] as num?)?.toInt() ?? 0,
-      requiredMinRepValue: (json['RequiredMinRepValue'] as num?)?.toInt() ?? 0,
-      requiredMaxRepValue: (json['RequiredMaxRepValue'] as num?)?.toInt() ?? 0,
-      providedItemCount: (json['ProvidedItemCount'] as num?)?.toInt() ?? 0,
-      specialFlags: (json['SpecialFlags'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      maxLevel: json['MaxLevel'] == true
+          ? 1
+          : json['MaxLevel'] == false
+          ? 0
+          : (json['MaxLevel'] as num?)?.toInt() ?? 0,
+      allowableClasses: json['AllowableClasses'] == true
+          ? 1
+          : json['AllowableClasses'] == false
+          ? 0
+          : (json['AllowableClasses'] as num?)?.toInt() ?? 0,
+      sourceSpellId: json['SourceSpellID'] == true
+          ? 1
+          : json['SourceSpellID'] == false
+          ? 0
+          : (json['SourceSpellID'] as num?)?.toInt() ?? 0,
+      prevQuestId: json['PrevQuestID'] == true
+          ? 1
+          : json['PrevQuestID'] == false
+          ? 0
+          : (json['PrevQuestID'] as num?)?.toInt() ?? 0,
+      nextQuestId: json['NextQuestID'] == true
+          ? 1
+          : json['NextQuestID'] == false
+          ? 0
+          : (json['NextQuestID'] as num?)?.toInt() ?? 0,
+      exclusiveGroup: json['ExclusiveGroup'] == true
+          ? 1
+          : json['ExclusiveGroup'] == false
+          ? 0
+          : (json['ExclusiveGroup'] as num?)?.toInt() ?? 0,
+      breadcrumbForQuestId: json['BreadcrumbForQuestId'] == true
+          ? 1
+          : json['BreadcrumbForQuestId'] == false
+          ? 0
+          : (json['BreadcrumbForQuestId'] as num?)?.toInt() ?? 0,
+      rewardMailTemplateId: json['RewardMailTemplateID'] == true
+          ? 1
+          : json['RewardMailTemplateID'] == false
+          ? 0
+          : (json['RewardMailTemplateID'] as num?)?.toInt() ?? 0,
+      rewardMailDelay: json['RewardMailDelay'] == true
+          ? 1
+          : json['RewardMailDelay'] == false
+          ? 0
+          : (json['RewardMailDelay'] as num?)?.toInt() ?? 0,
+      requiredSkillId: json['RequiredSkillID'] == true
+          ? 1
+          : json['RequiredSkillID'] == false
+          ? 0
+          : (json['RequiredSkillID'] as num?)?.toInt() ?? 0,
+      requiredSkillPoints: json['RequiredSkillPoints'] == true
+          ? 1
+          : json['RequiredSkillPoints'] == false
+          ? 0
+          : (json['RequiredSkillPoints'] as num?)?.toInt() ?? 0,
+      requiredMinRepFaction: json['RequiredMinRepFaction'] == true
+          ? 1
+          : json['RequiredMinRepFaction'] == false
+          ? 0
+          : (json['RequiredMinRepFaction'] as num?)?.toInt() ?? 0,
+      requiredMaxRepFaction: json['RequiredMaxRepFaction'] == true
+          ? 1
+          : json['RequiredMaxRepFaction'] == false
+          ? 0
+          : (json['RequiredMaxRepFaction'] as num?)?.toInt() ?? 0,
+      requiredMinRepValue: json['RequiredMinRepValue'] == true
+          ? 1
+          : json['RequiredMinRepValue'] == false
+          ? 0
+          : (json['RequiredMinRepValue'] as num?)?.toInt() ?? 0,
+      requiredMaxRepValue: json['RequiredMaxRepValue'] == true
+          ? 1
+          : json['RequiredMaxRepValue'] == false
+          ? 0
+          : (json['RequiredMaxRepValue'] as num?)?.toInt() ?? 0,
+      providedItemCount: json['ProvidedItemCount'] == true
+          ? 1
+          : json['ProvidedItemCount'] == false
+          ? 0
+          : (json['ProvidedItemCount'] as num?)?.toInt() ?? 0,
+      specialFlags: json['SpecialFlags'] == true
+          ? 1
+          : json['SpecialFlags'] == false
+          ? 0
+          : (json['SpecialFlags'] as num?)?.toInt() ?? 0,
     );
   }
 }

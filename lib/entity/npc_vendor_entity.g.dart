@@ -27,15 +27,43 @@ final class BriefNpcVendorEntity {
 
   factory BriefNpcVendorEntity.fromJson(Map<String, dynamic> json) {
     return BriefNpcVendorEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      slot: (json['slot'] as num?)?.toInt() ?? 0,
-      item: (json['item'] as num?)?.toInt() ?? 0,
-      maxcount: (json['maxcount'] as num?)?.toInt() ?? 0,
-      incrtime: (json['incrtime'] as num?)?.toInt() ?? 0,
-      extendedCost: (json['ExtendedCost'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      slot: json['slot'] == true
+          ? 1
+          : json['slot'] == false
+          ? 0
+          : (json['slot'] as num?)?.toInt() ?? 0,
+      item: json['item'] == true
+          ? 1
+          : json['item'] == false
+          ? 0
+          : (json['item'] as num?)?.toInt() ?? 0,
+      maxcount: json['maxcount'] == true
+          ? 1
+          : json['maxcount'] == false
+          ? 0
+          : (json['maxcount'] as num?)?.toInt() ?? 0,
+      incrtime: json['incrtime'] == true
+          ? 1
+          : json['incrtime'] == false
+          ? 0
+          : (json['incrtime'] as num?)?.toInt() ?? 0,
+      extendedCost: json['ExtendedCost'] == true
+          ? 1
+          : json['ExtendedCost'] == false
+          ? 0
+          : (json['ExtendedCost'] as num?)?.toInt() ?? 0,
       itemName: json['itemName']?.toString() ?? '',
       itemLocaleName: json['itemLocaleName']?.toString() ?? '',
-      itemQuality: (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemQuality: json['itemQuality'] == true
+          ? 1
+          : json['itemQuality'] == false
+          ? 0
+          : (json['itemQuality'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -209,13 +237,41 @@ mixin _NpcVendorEntityMixin {
 
   static NpcVendorEntity fromJson(Map<String, dynamic> json) {
     return NpcVendorEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
-      slot: (json['slot'] as num?)?.toInt() ?? 0,
-      item: (json['item'] as num?)?.toInt() ?? 0,
-      maxcount: (json['maxcount'] as num?)?.toInt() ?? 0,
-      incrtime: (json['incrtime'] as num?)?.toInt() ?? 0,
-      extendedCost: (json['ExtendedCost'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
+      slot: json['slot'] == true
+          ? 1
+          : json['slot'] == false
+          ? 0
+          : (json['slot'] as num?)?.toInt() ?? 0,
+      item: json['item'] == true
+          ? 1
+          : json['item'] == false
+          ? 0
+          : (json['item'] as num?)?.toInt() ?? 0,
+      maxcount: json['maxcount'] == true
+          ? 1
+          : json['maxcount'] == false
+          ? 0
+          : (json['maxcount'] as num?)?.toInt() ?? 0,
+      incrtime: json['incrtime'] == true
+          ? 1
+          : json['incrtime'] == false
+          ? 0
+          : (json['incrtime'] as num?)?.toInt() ?? 0,
+      extendedCost: json['ExtendedCost'] == true
+          ? 1
+          : json['ExtendedCost'] == false
+          ? 0
+          : (json['ExtendedCost'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

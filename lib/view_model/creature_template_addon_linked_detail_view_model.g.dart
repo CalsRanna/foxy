@@ -166,20 +166,20 @@ mixin _CreatureTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
     errorMessage.value = null;
     try {
       final existing = await _repository.getCreatureTemplateAddon(linkSnapshot);
-      if (token != _refreshToken) return;
+      if (token != _refreshToken || isDisposed) return;
       final candidate =
           existing ??
           await _repository.createCreatureTemplateAddon(linkSnapshot);
-      if (token != _refreshToken) return;
+      if (token != _refreshToken || isDisposed) return;
       entity.value = candidate;
       editingKey.value = existing == null ? null : linkSnapshot;
       _applyCandidate(candidate);
     } catch (error, stackTrace) {
-      if (token != _refreshToken) return;
+      if (token != _refreshToken || isDisposed) return;
       errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
     } finally {
-      if (token == _refreshToken) loading.value = false;
+      if (token == _refreshToken && !isDisposed) loading.value = false;
     }
   }
 }

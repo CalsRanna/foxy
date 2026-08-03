@@ -6,6 +6,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/gem_property_list_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
@@ -104,6 +105,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
+          loading: viewModel.loading.value,
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
@@ -175,7 +177,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
       },
     );
 
-    var children = [toolbar, Expanded(child: layoutBuilder)];
+    var children = [Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)), toolbar, Expanded(child: layoutBuilder)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

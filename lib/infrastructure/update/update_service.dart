@@ -333,6 +333,24 @@ class UpdateService {
   /// [extractArchiveToDisk] 内置处理)。
   static Future<void> _extractZip(File zipFile, Directory targetDir) async {
     final archive = ZipDecoder().decodeBytes(await zipFile.readAsBytes());
+    // 畸形/恶意 zip 的防御性上限:更新包实际只有几十个文件、几十 MB,
+    // 上限远高于正常值,只拦明显异常(防解压阶段的内存峰值)。
+    if (archive.length > 2000) {
+      throw UpdateException(
+        UpdateErrorKind.fileSystem,
+        'Update zip contains too many entries: ${archive.length}',
+      );
+    }
+    final totalBytes = archive.fold<int>(
+      0,
+      (sum, file) => sum + file.size,
+    );
+    if (totalBytes > 2 * 1024 * 1024 * 1024) {
+      throw UpdateException(
+        UpdateErrorKind.fileSystem,
+        'Update zip is too large: $totalBytes bytes',
+      );
+    }
     await extractArchiveToDisk(archive, targetDir.path);
   }
 

@@ -17,9 +17,21 @@ final class BriefTotemCategoryEntity {
 
   factory BriefTotemCategoryEntity.fromJson(Map<String, dynamic> json) {
     return BriefTotemCategoryEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      categoryType: (json['TotemCategoryType'] as num?)?.toInt() ?? 0,
-      categoryMask: (json['TotemCategoryMask'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      categoryType: json['TotemCategoryType'] == true
+          ? 1
+          : json['TotemCategoryType'] == false
+          ? 0
+          : (json['TotemCategoryType'] as num?)?.toInt() ?? 0,
+      categoryMask: json['TotemCategoryMask'] == true
+          ? 1
+          : json['TotemCategoryMask'] == false
+          ? 0
+          : (json['TotemCategoryMask'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
     );
   }
@@ -209,7 +221,11 @@ mixin _TotemCategoryEntityMixin {
 
   static TotemCategoryEntity fromJson(Map<String, dynamic> json) {
     return TotemCategoryEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -226,9 +242,21 @@ mixin _TotemCategoryEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      categoryType: (json['TotemCategoryType'] as num?)?.toInt() ?? 0,
-      categoryMask: (json['TotemCategoryMask'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      categoryType: json['TotemCategoryType'] == true
+          ? 1
+          : json['TotemCategoryType'] == false
+          ? 0
+          : (json['TotemCategoryType'] as num?)?.toInt() ?? 0,
+      categoryMask: json['TotemCategoryMask'] == true
+          ? 1
+          : json['TotemCategoryMask'] == false
+          ? 0
+          : (json['TotemCategoryMask'] as num?)?.toInt() ?? 0,
     );
   }
 }

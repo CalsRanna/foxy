@@ -30,6 +30,7 @@ mixin _PageTextDetailViewModelMixin on FieldControllerMixin {
     try {
       if (key == null) {
         final blank = await _repository.createPageText();
+        if (isDisposed) return;
         entity.value = blank;
         _applyCandidate(blank);
         persistedKey.value = null;
@@ -39,6 +40,7 @@ mixin _PageTextDetailViewModelMixin on FieldControllerMixin {
       if (result == null) {
         throw RecordNotFoundException('record not found');
       }
+      if (isDisposed) return;
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;

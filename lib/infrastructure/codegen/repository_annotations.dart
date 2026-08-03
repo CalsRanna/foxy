@@ -40,5 +40,25 @@ final class FoxyRepository {
   /// 关联键;player_create_info 系列按 (race, class) 两个关联键。
   final List<String> linkKey;
 
-  const FoxyRepository(this.entity, {this.linkKey = const []});
+  /// store 遇到重复键时自动重分配的主键字段(实体 dart 名)。
+  ///
+  /// 复合主键表(如 smart_scripts 的 entryorguid/source_type/id/link)
+  /// 里「粘贴已存在行」会触发 ER_DUP_ENTRY 重试:若不声明,生成代码对
+  /// 全部非 link int 主键取全局 MAX+1,可能静默写入无关垃圾行。声明后
+  /// 重试只重分配本列,并用 [autoIncrementScope] 限定作用域(与手写
+  /// `copySmartScript` 只重算 `id`、scope `entryorguid+source_type` 一致)。
+  /// 未声明且非 link int 主键多于一个时,重试直接抛 [DuplicateKeyException]
+  /// 而不是改写多个键。
+  final String? autoIncrementKey;
+
+  /// [autoIncrementKey] 重分配时的作用域字段(实体 dart 名,须为 key 字段)。
+  /// 与 [linkKey] 合并为 `nextMaxPlusOne` 的 where 条件。
+  final List<String> autoIncrementScope;
+
+  const FoxyRepository(
+    this.entity, {
+    this.linkKey = const [],
+    this.autoIncrementKey,
+    this.autoIncrementScope = const [],
+  });
 }

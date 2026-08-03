@@ -15,7 +15,11 @@ final class BriefItemRandomPropertiesEntity {
 
   factory BriefItemRandomPropertiesEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemRandomPropertiesEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
     );
@@ -228,13 +232,37 @@ mixin _ItemRandomPropertiesEntityMixin {
 
   static ItemRandomPropertiesEntity fromJson(Map<String, dynamic> json) {
     return ItemRandomPropertiesEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
-      enchantment0: (json['Enchantment0'] as num?)?.toInt() ?? 0,
-      enchantment1: (json['Enchantment1'] as num?)?.toInt() ?? 0,
-      enchantment2: (json['Enchantment2'] as num?)?.toInt() ?? 0,
-      enchantment3: (json['Enchantment3'] as num?)?.toInt() ?? 0,
-      enchantment4: (json['Enchantment4'] as num?)?.toInt() ?? 0,
+      enchantment0: json['Enchantment0'] == true
+          ? 1
+          : json['Enchantment0'] == false
+          ? 0
+          : (json['Enchantment0'] as num?)?.toInt() ?? 0,
+      enchantment1: json['Enchantment1'] == true
+          ? 1
+          : json['Enchantment1'] == false
+          ? 0
+          : (json['Enchantment1'] as num?)?.toInt() ?? 0,
+      enchantment2: json['Enchantment2'] == true
+          ? 1
+          : json['Enchantment2'] == false
+          ? 0
+          : (json['Enchantment2'] as num?)?.toInt() ?? 0,
+      enchantment3: json['Enchantment3'] == true
+          ? 1
+          : json['Enchantment3'] == false
+          ? 0
+          : (json['Enchantment3'] as num?)?.toInt() ?? 0,
+      enchantment4: json['Enchantment4'] == true
+          ? 1
+          : json['Enchantment4'] == false
+          ? 0
+          : (json['Enchantment4'] as num?)?.toInt() ?? 0,
       nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
       nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
       nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
@@ -251,7 +279,11 @@ mixin _ItemRandomPropertiesEntityMixin {
       nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
       nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
       nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      nameLangFlags: json['Name_lang_Flags'] == true
+          ? 1
+          : json['Name_lang_Flags'] == false
+          ? 0
+          : (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/condition_list_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
@@ -120,6 +121,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
         var flexWidth = constraints.maxWidth - 120;
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
+          loading: viewModel.loading.value,
           builder: (context, vicinity) {
             final condition = conditions[vicinity.row];
             return switch (vicinity.column) {
@@ -191,6 +193,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
       child: Column(
         spacing: 16,
         children: [
+          Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)),
           toolbar,
           Expanded(child: layoutBuilder),
         ],

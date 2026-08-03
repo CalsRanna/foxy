@@ -1,0 +1,58 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:path/path.dart' as p;
+
+void main() {
+  late Directory tempDir;
+  late _TempConfigUtil configUtil;
+
+  setUp(() {
+    tempDir = Directory.systemTemp.createTempSync('foxy_config_util_test_');
+    configUtil = _TempConfigUtil(tempDir.path);
+  });
+
+  tearDown(() {
+    tempDir.deleteSync(recursive: true);
+  });
+
+  test('不存在的配置文件返回空配置', () async {
+    expect(await configUtil.load(), isEmpty);
+  });
+
+  test('update 后 load 回读一致', () async {
+    await configUtil.update({'host': '192.168.1.10', 'use_ssl': true});
+    final loaded = await configUtil.load();
+    expect(loaded['host'], '192.168.1.10');
+    expect(loaded['use_ssl'], true);
+  });
+
+  test('损坏的 YAML 自愈:返回空配置并备份 .bak', () async {
+    final file = File(configUtil.configPath);
+    await file.writeAsString('host: [unclosed\n  broken: yaml: :');
+
+    final loaded = await configUtil.load();
+
+    expect(loaded, isEmpty);
+    expect(await File('${configUtil.configPath}.bak').exists(), isTrue);
+    // 自愈后仍可继续保存(应用能恢复)。
+    await configUtil.update({'host': '127.0.0.1'});
+    expect((await configUtil.load())['host'], '127.0.0.1');
+  });
+
+  test('非 Map 的顶层 YAML(如纯字符串)按空配置处理', () async {
+    await File(configUtil.configPath).writeAsString('just a string');
+    expect(await configUtil.load(), isEmpty);
+  });
+}
+
+/// 指向临时目录的 ConfigUtil(避免测试污染项目根目录 config.yaml)。
+final class _TempConfigUtil extends ConfigUtil {
+  final String _dir;
+
+  _TempConfigUtil(this._dir);
+
+  @override
+  String get configPath => p.join(_dir, 'config.yaml');
+}

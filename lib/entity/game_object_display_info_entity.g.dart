@@ -10,7 +10,11 @@ final class BriefGameObjectDisplayInfoEntity {
 
   factory BriefGameObjectDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
     return BriefGameObjectDisplayInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       modelName: json['ModelName']?.toString() ?? '',
     );
   }
@@ -191,26 +195,73 @@ mixin _GameObjectDisplayInfoEntityMixin {
 
   static GameObjectDisplayInfoEntity fromJson(Map<String, dynamic> json) {
     return GameObjectDisplayInfoEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       modelName: json['ModelName']?.toString() ?? '',
-      sound0: (json['Sound0'] as num?)?.toInt() ?? 0,
-      sound1: (json['Sound1'] as num?)?.toInt() ?? 0,
-      sound2: (json['Sound2'] as num?)?.toInt() ?? 0,
-      sound3: (json['Sound3'] as num?)?.toInt() ?? 0,
-      sound4: (json['Sound4'] as num?)?.toInt() ?? 0,
-      sound5: (json['Sound5'] as num?)?.toInt() ?? 0,
-      sound6: (json['Sound6'] as num?)?.toInt() ?? 0,
-      sound7: (json['Sound7'] as num?)?.toInt() ?? 0,
-      sound8: (json['Sound8'] as num?)?.toInt() ?? 0,
-      sound9: (json['Sound9'] as num?)?.toInt() ?? 0,
+      sound0: json['Sound0'] == true
+          ? 1
+          : json['Sound0'] == false
+          ? 0
+          : (json['Sound0'] as num?)?.toInt() ?? 0,
+      sound1: json['Sound1'] == true
+          ? 1
+          : json['Sound1'] == false
+          ? 0
+          : (json['Sound1'] as num?)?.toInt() ?? 0,
+      sound2: json['Sound2'] == true
+          ? 1
+          : json['Sound2'] == false
+          ? 0
+          : (json['Sound2'] as num?)?.toInt() ?? 0,
+      sound3: json['Sound3'] == true
+          ? 1
+          : json['Sound3'] == false
+          ? 0
+          : (json['Sound3'] as num?)?.toInt() ?? 0,
+      sound4: json['Sound4'] == true
+          ? 1
+          : json['Sound4'] == false
+          ? 0
+          : (json['Sound4'] as num?)?.toInt() ?? 0,
+      sound5: json['Sound5'] == true
+          ? 1
+          : json['Sound5'] == false
+          ? 0
+          : (json['Sound5'] as num?)?.toInt() ?? 0,
+      sound6: json['Sound6'] == true
+          ? 1
+          : json['Sound6'] == false
+          ? 0
+          : (json['Sound6'] as num?)?.toInt() ?? 0,
+      sound7: json['Sound7'] == true
+          ? 1
+          : json['Sound7'] == false
+          ? 0
+          : (json['Sound7'] as num?)?.toInt() ?? 0,
+      sound8: json['Sound8'] == true
+          ? 1
+          : json['Sound8'] == false
+          ? 0
+          : (json['Sound8'] as num?)?.toInt() ?? 0,
+      sound9: json['Sound9'] == true
+          ? 1
+          : json['Sound9'] == false
+          ? 0
+          : (json['Sound9'] as num?)?.toInt() ?? 0,
       geoBoxMin0: (json['GeoBoxMin0'] as num?)?.toDouble() ?? 0.0,
       geoBoxMin1: (json['GeoBoxMin1'] as num?)?.toDouble() ?? 0.0,
       geoBoxMin2: (json['GeoBoxMin2'] as num?)?.toDouble() ?? 0.0,
       geoBoxMax0: (json['GeoBoxMax0'] as num?)?.toDouble() ?? 0.0,
       geoBoxMax1: (json['GeoBoxMax1'] as num?)?.toDouble() ?? 0.0,
       geoBoxMax2: (json['GeoBoxMax2'] as num?)?.toDouble() ?? 0.0,
-      objectEffectPackageId:
-          (json['ObjectEffectPackageID'] as num?)?.toInt() ?? 0,
+      objectEffectPackageId: json['ObjectEffectPackageID'] == true
+          ? 1
+          : json['ObjectEffectPackageID'] == false
+          ? 0
+          : (json['ObjectEffectPackageID'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -587,6 +587,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     try {
       if (key == null) {
         final blank = await _repository.createSpell();
+        if (isDisposed) return;
         entity.value = blank;
         _applyCandidate(blank);
         _wireEffectSignals();
@@ -597,6 +598,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       if (result == null) {
         throw RecordNotFoundException('record not found');
       }
+      if (isDisposed) return;
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;

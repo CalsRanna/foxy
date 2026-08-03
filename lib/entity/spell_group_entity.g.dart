@@ -10,8 +10,16 @@ final class BriefSpellGroupEntity {
 
   factory BriefSpellGroupEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellGroupEntity(
-      id: (json['id'] as num?)?.toInt() ?? 0,
-      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
+      id: json['id'] == true
+          ? 1
+          : json['id'] == false
+          ? 0
+          : (json['id'] as num?)?.toInt() ?? 0,
+      spellId: json['spell_id'] == true
+          ? 1
+          : json['spell_id'] == false
+          ? 0
+          : (json['spell_id'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -108,8 +116,16 @@ mixin _SpellGroupEntityMixin {
 
   static SpellGroupEntity fromJson(Map<String, dynamic> json) {
     return SpellGroupEntity(
-      id: (json['id'] as num?)?.toInt() ?? 0,
-      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
+      id: json['id'] == true
+          ? 1
+          : json['id'] == false
+          ? 0
+          : (json['id'] as num?)?.toInt() ?? 0,
+      spellId: json['spell_id'] == true
+          ? 1
+          : json['spell_id'] == false
+          ? 0
+          : (json['spell_id'] as num?)?.toInt() ?? 0,
     );
   }
 }

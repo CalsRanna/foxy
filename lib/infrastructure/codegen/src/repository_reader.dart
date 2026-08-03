@@ -258,6 +258,50 @@ final class RepositoryReader {
       );
     }
 
+    // autoIncrementKey: 复合主键表声明「重复键重试时只重分配的序号列」;
+    // 校验其必须是 int 类型 key 字段,scope 必须是 key 字段(dart 名)。
+    final autoIncrementKey = annotation.peek('autoIncrementKey')?.stringValue;
+    String? resolvedAutoIncrementKey;
+    if (autoIncrementKey != null && autoIncrementKey.isNotEmpty) {
+      final matched = keyFields.where((field) => field.dartName == autoIncrementKey);
+      if (matched.isEmpty) {
+        _fail(
+          '$repositoryClassName 的 autoIncrementKey: \'$autoIncrementKey\' '
+              '不是 $entityClassName 的 key 字段。',
+          element,
+          'autoIncrementKey 必须是实体上 @FoxyFullField(key: true) 的字段名。',
+        );
+      }
+      if (matched.single.dartType != 'int') {
+        _fail(
+          '$repositoryClassName 的 autoIncrementKey: \'$autoIncrementKey\' '
+              '类型是 ${matched.single.dartType},必须是 int。',
+          element,
+          '只有 int 主键列支持 MAX+1 自动重分配。',
+        );
+      }
+      resolvedAutoIncrementKey = autoIncrementKey;
+    }
+    final declaredAutoIncrementScope = <String>[];
+    final scopeReader = annotation.peek('autoIncrementScope');
+    if (scopeReader != null && !scopeReader.isNull) {
+      for (final value in scopeReader.listValue) {
+        declaredAutoIncrementScope.add(value.toStringValue()!);
+      }
+    }
+    for (final declared in declaredAutoIncrementScope) {
+      final matched =
+          keyFields.where((field) => field.dartName == declared).toList();
+      if (matched.isEmpty) {
+        _fail(
+          '$repositoryClassName 的 autoIncrementScope: \'$declared\' '
+              '不是 $entityClassName 的 key 字段。',
+          element,
+          'autoIncrementScope 必须是实体上 @FoxyFullField(key: true) 的字段名。',
+        );
+      }
+    }
+
     return RepositoryGenerationModel(
       entityClassName: entityClassName,
       entityParameterName: entityParameterName,
@@ -268,6 +312,8 @@ final class RepositoryReader {
       mixinName: mixinName,
       briefProjectionColumns: List.unmodifiable(briefProjectionColumns),
       linkKeyFields: List.unmodifiable(linkKeyFields),
+      autoIncrementKey: resolvedAutoIncrementKey,
+      autoIncrementScope: List.unmodifiable(declaredAutoIncrementScope),
       queryLayerEnabled: queryLayerEnabled,
       repositoryClassName: repositoryClassName,
       table: table,

@@ -97,6 +97,8 @@ class _BootstrapPageState extends State<BootstrapPage> {
         databaseController: viewModel.databaseController,
         usernameController: viewModel.usernameController,
         passwordController: viewModel.passwordController,
+        useSsl: viewModel.useSsl.value,
+        onUseSslChanged: (value) => viewModel.useSsl.value = value,
         onConnect: _connect,
       ),
     );

@@ -21,7 +21,11 @@ final class BriefSpellBonusDataEntity {
 
   factory BriefSpellBonusDataEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellBonusDataEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       directBonus: (json['direct_bonus'] as num?)?.toDouble() ?? 0.0,
       dotBonus: (json['dot_bonus'] as num?)?.toDouble() ?? 0.0,
       apBonus: (json['ap_bonus'] as num?)?.toDouble() ?? 0.0,
@@ -142,7 +146,11 @@ mixin _SpellBonusDataEntityMixin {
 
   static SpellBonusDataEntity fromJson(Map<String, dynamic> json) {
     return SpellBonusDataEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       directBonus: (json['direct_bonus'] as num?)?.toDouble() ?? 0.0,
       dotBonus: (json['dot_bonus'] as num?)?.toDouble() ?? 0.0,
       apBonus: (json['ap_bonus'] as num?)?.toDouble() ?? 0.0,

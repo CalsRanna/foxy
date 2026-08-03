@@ -17,10 +17,26 @@ final class BriefGlyphPropertyEntity {
 
   factory BriefGlyphPropertyEntity.fromJson(Map<String, dynamic> json) {
     return BriefGlyphPropertyEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      spellId: (json['SpellID'] as num?)?.toInt() ?? 0,
-      glyphSlotFlags: (json['GlyphSlotFlags'] as num?)?.toInt() ?? 0,
-      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      spellId: json['SpellID'] == true
+          ? 1
+          : json['SpellID'] == false
+          ? 0
+          : (json['SpellID'] as num?)?.toInt() ?? 0,
+      glyphSlotFlags: json['GlyphSlotFlags'] == true
+          ? 1
+          : json['GlyphSlotFlags'] == false
+          ? 0
+          : (json['GlyphSlotFlags'] as num?)?.toInt() ?? 0,
+      spellIconId: json['SpellIconID'] == true
+          ? 1
+          : json['SpellIconID'] == false
+          ? 0
+          : (json['SpellIconID'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -114,10 +130,26 @@ mixin _GlyphPropertyEntityMixin {
 
   static GlyphPropertyEntity fromJson(Map<String, dynamic> json) {
     return GlyphPropertyEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      spellId: (json['SpellID'] as num?)?.toInt() ?? 0,
-      glyphSlotFlags: (json['GlyphSlotFlags'] as num?)?.toInt() ?? 0,
-      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      spellId: json['SpellID'] == true
+          ? 1
+          : json['SpellID'] == false
+          ? 0
+          : (json['SpellID'] as num?)?.toInt() ?? 0,
+      glyphSlotFlags: json['GlyphSlotFlags'] == true
+          ? 1
+          : json['GlyphSlotFlags'] == false
+          ? 0
+          : (json['GlyphSlotFlags'] as num?)?.toInt() ?? 0,
+      spellIconId: json['SpellIconID'] == true
+          ? 1
+          : json['SpellIconID'] == false
+          ? 0
+          : (json['SpellIconID'] as num?)?.toInt() ?? 0,
     );
   }
 }

@@ -19,11 +19,31 @@ final class BriefTalentEntity {
 
   factory BriefTalentEntity.fromJson(Map<String, dynamic> json) {
     return BriefTalentEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      tabId: (json['TabID'] as num?)?.toInt() ?? 0,
-      tierId: (json['TierID'] as num?)?.toInt() ?? 0,
-      columnIndex: (json['ColumnIndex'] as num?)?.toInt() ?? 0,
-      spellRank0: (json['SpellRank0'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      tabId: json['TabID'] == true
+          ? 1
+          : json['TabID'] == false
+          ? 0
+          : (json['TabID'] as num?)?.toInt() ?? 0,
+      tierId: json['TierID'] == true
+          ? 1
+          : json['TierID'] == false
+          ? 0
+          : (json['TierID'] as num?)?.toInt() ?? 0,
+      columnIndex: json['ColumnIndex'] == true
+          ? 1
+          : json['ColumnIndex'] == false
+          ? 0
+          : (json['ColumnIndex'] as num?)?.toInt() ?? 0,
+      spellRank0: json['SpellRank0'] == true
+          ? 1
+          : json['SpellRank0'] == false
+          ? 0
+          : (json['SpellRank0'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -233,29 +253,121 @@ mixin _TalentEntityMixin {
 
   static TalentEntity fromJson(Map<String, dynamic> json) {
     return TalentEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      tabId: (json['TabID'] as num?)?.toInt() ?? 0,
-      tierId: (json['TierID'] as num?)?.toInt() ?? 0,
-      columnIndex: (json['ColumnIndex'] as num?)?.toInt() ?? 0,
-      spellRank0: (json['SpellRank0'] as num?)?.toInt() ?? 0,
-      spellRank1: (json['SpellRank1'] as num?)?.toInt() ?? 0,
-      spellRank2: (json['SpellRank2'] as num?)?.toInt() ?? 0,
-      spellRank3: (json['SpellRank3'] as num?)?.toInt() ?? 0,
-      spellRank4: (json['SpellRank4'] as num?)?.toInt() ?? 0,
-      spellRank5: (json['SpellRank5'] as num?)?.toInt() ?? 0,
-      spellRank6: (json['SpellRank6'] as num?)?.toInt() ?? 0,
-      spellRank7: (json['SpellRank7'] as num?)?.toInt() ?? 0,
-      spellRank8: (json['SpellRank8'] as num?)?.toInt() ?? 0,
-      prereqTalent0: (json['PrereqTalent0'] as num?)?.toInt() ?? 0,
-      prereqTalent1: (json['PrereqTalent1'] as num?)?.toInt() ?? 0,
-      prereqTalent2: (json['PrereqTalent2'] as num?)?.toInt() ?? 0,
-      prereqRank0: (json['PrereqRank0'] as num?)?.toInt() ?? 0,
-      prereqRank1: (json['PrereqRank1'] as num?)?.toInt() ?? 0,
-      prereqRank2: (json['PrereqRank2'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      requiredSpellId: (json['RequiredSpellID'] as num?)?.toInt() ?? 0,
-      categoryMask0: (json['CategoryMask0'] as num?)?.toInt() ?? 0,
-      categoryMask1: (json['CategoryMask1'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      tabId: json['TabID'] == true
+          ? 1
+          : json['TabID'] == false
+          ? 0
+          : (json['TabID'] as num?)?.toInt() ?? 0,
+      tierId: json['TierID'] == true
+          ? 1
+          : json['TierID'] == false
+          ? 0
+          : (json['TierID'] as num?)?.toInt() ?? 0,
+      columnIndex: json['ColumnIndex'] == true
+          ? 1
+          : json['ColumnIndex'] == false
+          ? 0
+          : (json['ColumnIndex'] as num?)?.toInt() ?? 0,
+      spellRank0: json['SpellRank0'] == true
+          ? 1
+          : json['SpellRank0'] == false
+          ? 0
+          : (json['SpellRank0'] as num?)?.toInt() ?? 0,
+      spellRank1: json['SpellRank1'] == true
+          ? 1
+          : json['SpellRank1'] == false
+          ? 0
+          : (json['SpellRank1'] as num?)?.toInt() ?? 0,
+      spellRank2: json['SpellRank2'] == true
+          ? 1
+          : json['SpellRank2'] == false
+          ? 0
+          : (json['SpellRank2'] as num?)?.toInt() ?? 0,
+      spellRank3: json['SpellRank3'] == true
+          ? 1
+          : json['SpellRank3'] == false
+          ? 0
+          : (json['SpellRank3'] as num?)?.toInt() ?? 0,
+      spellRank4: json['SpellRank4'] == true
+          ? 1
+          : json['SpellRank4'] == false
+          ? 0
+          : (json['SpellRank4'] as num?)?.toInt() ?? 0,
+      spellRank5: json['SpellRank5'] == true
+          ? 1
+          : json['SpellRank5'] == false
+          ? 0
+          : (json['SpellRank5'] as num?)?.toInt() ?? 0,
+      spellRank6: json['SpellRank6'] == true
+          ? 1
+          : json['SpellRank6'] == false
+          ? 0
+          : (json['SpellRank6'] as num?)?.toInt() ?? 0,
+      spellRank7: json['SpellRank7'] == true
+          ? 1
+          : json['SpellRank7'] == false
+          ? 0
+          : (json['SpellRank7'] as num?)?.toInt() ?? 0,
+      spellRank8: json['SpellRank8'] == true
+          ? 1
+          : json['SpellRank8'] == false
+          ? 0
+          : (json['SpellRank8'] as num?)?.toInt() ?? 0,
+      prereqTalent0: json['PrereqTalent0'] == true
+          ? 1
+          : json['PrereqTalent0'] == false
+          ? 0
+          : (json['PrereqTalent0'] as num?)?.toInt() ?? 0,
+      prereqTalent1: json['PrereqTalent1'] == true
+          ? 1
+          : json['PrereqTalent1'] == false
+          ? 0
+          : (json['PrereqTalent1'] as num?)?.toInt() ?? 0,
+      prereqTalent2: json['PrereqTalent2'] == true
+          ? 1
+          : json['PrereqTalent2'] == false
+          ? 0
+          : (json['PrereqTalent2'] as num?)?.toInt() ?? 0,
+      prereqRank0: json['PrereqRank0'] == true
+          ? 1
+          : json['PrereqRank0'] == false
+          ? 0
+          : (json['PrereqRank0'] as num?)?.toInt() ?? 0,
+      prereqRank1: json['PrereqRank1'] == true
+          ? 1
+          : json['PrereqRank1'] == false
+          ? 0
+          : (json['PrereqRank1'] as num?)?.toInt() ?? 0,
+      prereqRank2: json['PrereqRank2'] == true
+          ? 1
+          : json['PrereqRank2'] == false
+          ? 0
+          : (json['PrereqRank2'] as num?)?.toInt() ?? 0,
+      flags: json['Flags'] == true
+          ? 1
+          : json['Flags'] == false
+          ? 0
+          : (json['Flags'] as num?)?.toInt() ?? 0,
+      requiredSpellId: json['RequiredSpellID'] == true
+          ? 1
+          : json['RequiredSpellID'] == false
+          ? 0
+          : (json['RequiredSpellID'] as num?)?.toInt() ?? 0,
+      categoryMask0: json['CategoryMask0'] == true
+          ? 1
+          : json['CategoryMask0'] == false
+          ? 0
+          : (json['CategoryMask0'] as num?)?.toInt() ?? 0,
+      categoryMask1: json['CategoryMask1'] == true
+          ? 1
+          : json['CategoryMask1'] == false
+          ? 0
+          : (json['CategoryMask1'] as num?)?.toInt() ?? 0,
     );
   }
 }

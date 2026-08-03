@@ -15,7 +15,11 @@ final class BriefItemTemplateLocaleEntity {
 
   factory BriefItemTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemTemplateLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       name: json['Name']?.toString() ?? '',
     );
@@ -146,11 +150,19 @@ mixin _ItemTemplateLocaleEntityMixin {
 
   static ItemTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
     return ItemTemplateLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       name: json['Name']?.toString() ?? '',
       description: json['Description']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

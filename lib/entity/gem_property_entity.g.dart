@@ -19,11 +19,31 @@ final class BriefGemPropertyEntity {
 
   factory BriefGemPropertyEntity.fromJson(Map<String, dynamic> json) {
     return BriefGemPropertyEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      enchantId: (json['Enchant_ID'] as num?)?.toInt() ?? 0,
-      maxCountInv: (json['Maxcount_inv'] as num?)?.toInt() ?? 0,
-      maxCountItem: (json['Maxcount_item'] as num?)?.toInt() ?? 0,
-      type: (json['Type'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      enchantId: json['Enchant_ID'] == true
+          ? 1
+          : json['Enchant_ID'] == false
+          ? 0
+          : (json['Enchant_ID'] as num?)?.toInt() ?? 0,
+      maxCountInv: json['Maxcount_inv'] == true
+          ? 1
+          : json['Maxcount_inv'] == false
+          ? 0
+          : (json['Maxcount_inv'] as num?)?.toInt() ?? 0,
+      maxCountItem: json['Maxcount_item'] == true
+          ? 1
+          : json['Maxcount_item'] == false
+          ? 0
+          : (json['Maxcount_item'] as num?)?.toInt() ?? 0,
+      type: json['Type'] == true
+          ? 1
+          : json['Type'] == false
+          ? 0
+          : (json['Type'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -125,11 +145,31 @@ mixin _GemPropertyEntityMixin {
 
   static GemPropertyEntity fromJson(Map<String, dynamic> json) {
     return GemPropertyEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      enchantId: (json['Enchant_ID'] as num?)?.toInt() ?? 0,
-      maxCountInv: (json['Maxcount_inv'] as num?)?.toInt() ?? 0,
-      maxCountItem: (json['Maxcount_item'] as num?)?.toInt() ?? 0,
-      type: (json['Type'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      enchantId: json['Enchant_ID'] == true
+          ? 1
+          : json['Enchant_ID'] == false
+          ? 0
+          : (json['Enchant_ID'] as num?)?.toInt() ?? 0,
+      maxCountInv: json['Maxcount_inv'] == true
+          ? 1
+          : json['Maxcount_inv'] == false
+          ? 0
+          : (json['Maxcount_inv'] as num?)?.toInt() ?? 0,
+      maxCountItem: json['Maxcount_item'] == true
+          ? 1
+          : json['Maxcount_item'] == false
+          ? 0
+          : (json['Maxcount_item'] as num?)?.toInt() ?? 0,
+      type: json['Type'] == true
+          ? 1
+          : json['Type'] == false
+          ? 0
+          : (json['Type'] as num?)?.toInt() ?? 0,
     );
   }
 }

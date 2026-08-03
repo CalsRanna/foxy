@@ -344,47 +344,73 @@ final class RepositoryEmitter {
         )
         ..writeln('    }');
     }
+    // 重复键重试只重分配「序号列」:声明 autoIncrementKey 时只重分配它;
+    // 未声明时仅当非 link int 主键恰有一个才重试(MAX+1 竞态只发生在数值
+    // 主键);否则宁抛 DuplicateKeyException,也不改写多个主键——粘贴已存在
+    // 的复合键行时,多键同时取全局 MAX+1 会静默写入无关垃圾行。
+    final retriedKeys = model.autoIncrementKey != null
+        ? [model.autoIncrementKey!]
+        : model.keyFields
+              .where(
+                (field) =>
+                    field.dartType == 'int' &&
+                    !model.linkKeyFields.any(
+                      (p) => p.dartName == field.dartName,
+                    ),
+              )
+              .map((field) => field.dartName)
+              .toList();
+    final retryScope = <String>{
+      ...model.linkKeyFields.map((p) => p.dartName),
+      ...model.autoIncrementScope,
+    }.toList();
     buffer
       ..writeln('    await _beforeStore($parameter);')
       ..writeln('    final json = prepareWriteJson($parameter.toJson());')
       ..writeln('    try {')
       ..writeln('      await laconic.table(${_table(model)}).insert([json]);')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;')
-      // TOCTOU 兜底:并发 create 取到同一 MAX+1 时,自动重新分配主键重试一次。
-      // 已知边界:重试成功后调用方持有的 key 不更新,刷新列表可见新行。
-      ..writeln('      final retried = $parameter.copyWith(');
-    for (final field in model.keyFields) {
-      if (model.linkKeyFields.any((p) => p.dartName == field.dartName)) {
-        continue;
-      }
-      // 只重分配 int 类型 key:MAX+1 竞态只发生在数值主键;
-      // String 复合键(如 locale 仓库的 `Locale` 列)保持原值。
-      if (field.dartType != 'int') continue;
+      ..writeln('      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;');
+    if (retriedKeys.length != 1) {
       buffer
-        ..writeln('        ${field.dartName}: await nextMaxPlusOne(')
-        ..writeln('          ${_table(model)}, ${_column(field.columnName)},');
-      if (model.linkKeyFields.isNotEmpty) {
+        ..writeln(
+          "      throw DuplicateKeyException('duplicate key in ${model.table}');",
+        );
+    } else {
+      final retriedKey = retriedKeys.single;
+      final retriedField = model.keyFields.firstWhere(
+        (field) => field.dartName == retriedKey,
+      );
+      buffer
+        // TOCTOU 兜底:并发 create 取到同一 MAX+1 时,自动重新分配序号列重试一次。
+        // 已知边界:重试成功后调用方持有的 key 不更新,刷新列表可见新行。
+        ..writeln('      final retried = $parameter.copyWith(')
+        ..writeln('        $retriedKey: await nextMaxPlusOne(')
+        ..writeln(
+          '          ${_table(model)}, ${_column(retriedField.columnName)},',
+        );
+      if (retryScope.isNotEmpty) {
         buffer.writeln(
-          '          where: {${_retryWhereMap(model, parameter)}},',
+          '          where: {${_retryWhereMap(model, parameter, retryScope)}},',
         );
       }
-      buffer.writeln('        ),');
+      buffer
+        ..writeln('        ),')
+        ..writeln('      );')
+        ..writeln('      try {')
+        ..writeln('        await laconic.table(${_table(model)})'
+          '.insert([prepareWriteJson(retried.toJson())]);')
+        ..writeln('        return;')
+        ..writeln('      } catch (retryError) {')
+        ..writeln('        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {')
+        ..writeln(
+          "          throw DuplicateKeyException('duplicate key in ${model.table}');",
+        )
+        ..writeln('        }')
+        ..writeln('        rethrow;')
+        ..writeln('      }');
     }
     buffer
-      ..writeln('      );')
-      ..writeln('      try {')
-      ..writeln('        await laconic.table(${_table(model)})'
-        '.insert([prepareWriteJson(retried.toJson())]);')
-      ..writeln('        return;')
-      ..writeln('      } catch (retryError) {')
-      ..writeln('        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {')
-      ..writeln(
-        "          throw DuplicateKeyException('duplicate key in ${model.table}');",
-      )
-      ..writeln('        }')
-      ..writeln('        rethrow;')
-      ..writeln('      }')
       ..writeln('    }')
       ..writeln('  }')
       ..writeln();
@@ -476,11 +502,20 @@ final class RepositoryEmitter {
   String _linkWhereMap(List<RepositoryKeyFieldModel> links) =>
       links.map((p) => "'${p.columnName}': ${p.dartName}").join(', ');
 
-  /// 重试路径的关联键 where 映射:以实体参数引用,如
-  /// `'`CreatureID`': loot.CreatureID`。
-  String _retryWhereMap(RepositoryGenerationModel model, String parameter) =>
-      model.linkKeyFields
-          .map((p) => "'${p.columnName}': $parameter.${p.dartName}")
+  /// 重试路径的序号列 where 映射:以实体参数引用,如
+  /// `'CreatureID': loot.CreatureID`(_column 已返回带引号字面量)。
+  /// [scopeNames] 为 linkKey 与 autoIncrementScope 合并后的字段 dart 名。
+  String _retryWhereMap(
+    RepositoryGenerationModel model,
+    String parameter,
+    List<String> scopeNames,
+  ) =>
+      scopeNames
+          .map(
+            (name) => '${_column(
+              model.keyFields.firstWhere((f) => f.dartName == name).columnName,
+            )}: $parameter.$name',
+          )
           .join(', ');
 
   /// `.orderBy('`ID`')` 或复合 key 的链式 `.orderBy(...).orderBy(...)`。

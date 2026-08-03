@@ -19,7 +19,11 @@ final class BriefCreatureTemplateLocaleEntity {
     Map<String, dynamic> json,
   ) {
     return BriefCreatureTemplateLocaleEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       name: json['Name']?.toString() ?? '',
       title: json['Title']?.toString() ?? '',
@@ -158,11 +162,19 @@ mixin _CreatureTemplateLocaleEntityMixin {
 
   static CreatureTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateLocaleEntity(
-      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      entry: json['entry'] == true
+          ? 1
+          : json['entry'] == false
+          ? 0
+          : (json['entry'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       name: json['Name']?.toString() ?? '',
       title: json['Title']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }

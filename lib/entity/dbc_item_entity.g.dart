@@ -19,11 +19,31 @@ final class BriefDbcItemEntity {
 
   factory BriefDbcItemEntity.fromJson(Map<String, dynamic> json) {
     return BriefDbcItemEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      classId: (json['ClassID'] as num?)?.toInt() ?? 0,
-      subclassId: (json['SubclassID'] as num?)?.toInt() ?? 0,
-      displayInfoId: (json['DisplayInfoID'] as num?)?.toInt() ?? 0,
-      inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      classId: json['ClassID'] == true
+          ? 1
+          : json['ClassID'] == false
+          ? 0
+          : (json['ClassID'] as num?)?.toInt() ?? 0,
+      subclassId: json['SubclassID'] == true
+          ? 1
+          : json['SubclassID'] == false
+          ? 0
+          : (json['SubclassID'] as num?)?.toInt() ?? 0,
+      displayInfoId: json['DisplayInfoID'] == true
+          ? 1
+          : json['DisplayInfoID'] == false
+          ? 0
+          : (json['DisplayInfoID'] as num?)?.toInt() ?? 0,
+      inventoryType: json['InventoryType'] == true
+          ? 1
+          : json['InventoryType'] == false
+          ? 0
+          : (json['InventoryType'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -144,15 +164,46 @@ mixin _DbcItemEntityMixin {
 
   static DbcItemEntity fromJson(Map<String, dynamic> json) {
     return DbcItemEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      classId: (json['ClassID'] as num?)?.toInt() ?? 0,
-      subclassId: (json['SubclassID'] as num?)?.toInt() ?? 0,
-      soundOverrideSubclassId:
-          (json['Sound_override_subclassID'] as num?)?.toInt() ?? 0,
-      material: (json['Material'] as num?)?.toInt() ?? 0,
-      displayInfoId: (json['DisplayInfoID'] as num?)?.toInt() ?? 0,
-      inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
-      sheatheType: (json['SheatheType'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
+      classId: json['ClassID'] == true
+          ? 1
+          : json['ClassID'] == false
+          ? 0
+          : (json['ClassID'] as num?)?.toInt() ?? 0,
+      subclassId: json['SubclassID'] == true
+          ? 1
+          : json['SubclassID'] == false
+          ? 0
+          : (json['SubclassID'] as num?)?.toInt() ?? 0,
+      soundOverrideSubclassId: json['Sound_override_subclassID'] == true
+          ? 1
+          : json['Sound_override_subclassID'] == false
+          ? 0
+          : (json['Sound_override_subclassID'] as num?)?.toInt() ?? 0,
+      material: json['Material'] == true
+          ? 1
+          : json['Material'] == false
+          ? 0
+          : (json['Material'] as num?)?.toInt() ?? 0,
+      displayInfoId: json['DisplayInfoID'] == true
+          ? 1
+          : json['DisplayInfoID'] == false
+          ? 0
+          : (json['DisplayInfoID'] as num?)?.toInt() ?? 0,
+      inventoryType: json['InventoryType'] == true
+          ? 1
+          : json['InventoryType'] == false
+          ? 0
+          : (json['InventoryType'] as num?)?.toInt() ?? 0,
+      sheatheType: json['SheatheType'] == true
+          ? 1
+          : json['SheatheType'] == false
+          ? 0
+          : (json['SheatheType'] as num?)?.toInt() ?? 0,
     );
   }
 }

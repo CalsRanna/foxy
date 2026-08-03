@@ -17,10 +17,22 @@ final class BriefZoneMusicEntity {
 
   factory BriefZoneMusicEntity.fromJson(Map<String, dynamic> json) {
     return BriefZoneMusicEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       setName: json['SetName']?.toString() ?? '',
-      sounds0: (json['Sounds0'] as num?)?.toInt() ?? 0,
-      sounds1: (json['Sounds1'] as num?)?.toInt() ?? 0,
+      sounds0: json['Sounds0'] == true
+          ? 1
+          : json['Sounds0'] == false
+          ? 0
+          : (json['Sounds0'] as num?)?.toInt() ?? 0,
+      sounds1: json['Sounds1'] == true
+          ? 1
+          : json['Sounds1'] == false
+          ? 0
+          : (json['Sounds1'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -137,14 +149,42 @@ mixin _ZoneMusicEntityMixin {
 
   static ZoneMusicEntity fromJson(Map<String, dynamic> json) {
     return ZoneMusicEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       setName: json['SetName']?.toString() ?? '',
-      silenceIntervalMin0: (json['SilenceIntervalMin0'] as num?)?.toInt() ?? 0,
-      silenceIntervalMin1: (json['SilenceIntervalMin1'] as num?)?.toInt() ?? 0,
-      silenceIntervalMax0: (json['SilenceIntervalMax0'] as num?)?.toInt() ?? 0,
-      silenceIntervalMax1: (json['SilenceIntervalMax1'] as num?)?.toInt() ?? 0,
-      sounds0: (json['Sounds0'] as num?)?.toInt() ?? 0,
-      sounds1: (json['Sounds1'] as num?)?.toInt() ?? 0,
+      silenceIntervalMin0: json['SilenceIntervalMin0'] == true
+          ? 1
+          : json['SilenceIntervalMin0'] == false
+          ? 0
+          : (json['SilenceIntervalMin0'] as num?)?.toInt() ?? 0,
+      silenceIntervalMin1: json['SilenceIntervalMin1'] == true
+          ? 1
+          : json['SilenceIntervalMin1'] == false
+          ? 0
+          : (json['SilenceIntervalMin1'] as num?)?.toInt() ?? 0,
+      silenceIntervalMax0: json['SilenceIntervalMax0'] == true
+          ? 1
+          : json['SilenceIntervalMax0'] == false
+          ? 0
+          : (json['SilenceIntervalMax0'] as num?)?.toInt() ?? 0,
+      silenceIntervalMax1: json['SilenceIntervalMax1'] == true
+          ? 1
+          : json['SilenceIntervalMax1'] == false
+          ? 0
+          : (json['SilenceIntervalMax1'] as num?)?.toInt() ?? 0,
+      sounds0: json['Sounds0'] == true
+          ? 1
+          : json['Sounds0'] == false
+          ? 0
+          : (json['Sounds0'] as num?)?.toInt() ?? 0,
+      sounds1: json['Sounds1'] == true
+          ? 1
+          : json['Sounds1'] == false
+          ? 0
+          : (json['Sounds1'] as num?)?.toInt() ?? 0,
     );
   }
 }

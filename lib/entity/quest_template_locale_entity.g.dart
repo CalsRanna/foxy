@@ -15,7 +15,11 @@ final class BriefQuestTemplateLocaleEntity {
 
   factory BriefQuestTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
     return BriefQuestTemplateLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       title: json['Title']?.toString() ?? '',
     );
@@ -188,7 +192,11 @@ mixin _QuestTemplateLocaleEntityMixin {
 
   static QuestTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
     return QuestTemplateLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
+      id: json['ID'] == true
+          ? 1
+          : json['ID'] == false
+          ? 0
+          : (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       title: json['Title']?.toString() ?? '',
       details: json['Details']?.toString() ?? '',
@@ -199,7 +207,11 @@ mixin _QuestTemplateLocaleEntityMixin {
       objectiveText2: json['ObjectiveText2']?.toString() ?? '',
       objectiveText3: json['ObjectiveText3']?.toString() ?? '',
       objectiveText4: json['ObjectiveText4']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      verifiedBuild: json['VerifiedBuild'] == true
+          ? 1
+          : json['VerifiedBuild'] == false
+          ? 0
+          : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
   }
 }
