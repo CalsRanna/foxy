@@ -1,7 +1,10 @@
 import 'dart:math';
 
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
@@ -82,6 +85,11 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     try {
       await _copyUseCase.execute(key);
       if (token != _interactionToken || linkKey.value != link) return;
+      try {
+        _logActivity(ActivityActionType.copy, key);
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -132,6 +140,11 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     try {
       await _destroyUseCase.execute(key);
       if (token != _interactionToken || linkKey.value != link) return;
+      try {
+        _logActivity(ActivityActionType.delete, key);
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -221,6 +234,17 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
         ),
       );
       if (token != _interactionToken || linkKey.value != link) return;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      try {
+        _logActivity(
+          action,
+          originalKey ?? GossipMenuOptionKey.fromEntity(candidate),
+        );
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -306,6 +330,16 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     );
   }
 
+  void _logActivity(ActivityActionType action, GossipMenuOptionKey key) {
+    final log = ActivityLogEntity(
+      module: 'gossip_menu_option',
+      actionType: action,
+      entityName: key.toString(),
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
+  }
+
   Future<void> _refresh() async {
     final link = linkKey.value;
     if (link == null) return;
@@ -328,8 +362,10 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       total.value = count;
       _clearEditingState();
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
-      rethrow;
+      if (token == _refreshToken) {
+        errorMessage.value = foxyErrorMessage(error);
+        LoggerUtil.instance.e('刷新子表列表失败: $error');
+      }
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

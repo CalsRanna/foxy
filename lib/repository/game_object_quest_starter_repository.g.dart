@@ -84,10 +84,27 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('gameobject_queststarter').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in gameobject_queststarter');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = gameObjectQuestStarter.copyWith(
+        id: await nextMaxPlusOne(
+          'gameobject_queststarter',
+          '`id`',
+          where: {'quest': gameObjectQuestStarter.quest},
+        ),
+      );
+      try {
+        await laconic.table('gameobject_queststarter').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in gameobject_queststarter',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

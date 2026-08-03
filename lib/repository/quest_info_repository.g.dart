@@ -112,10 +112,21 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_quest_info').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_quest_info');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = questInfo.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_quest_info', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_quest_info').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_quest_info');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -90,10 +90,25 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('gossip_menu_option').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in gossip_menu_option');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = gossipMenuOption.copyWith(
+        optionId: await nextMaxPlusOne(
+          'gossip_menu_option',
+          '`OptionID`',
+          where: {'MenuID': gossipMenuOption.menuId},
+        ),
+      );
+      try {
+        await laconic.table('gossip_menu_option').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in gossip_menu_option');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

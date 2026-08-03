@@ -80,10 +80,25 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('spell_ranks').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in spell_ranks');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellRank.copyWith(
+        rank: await nextMaxPlusOne(
+          'spell_ranks',
+          '`rank`',
+          where: {'first_spell_id': spellRank.firstSpellId},
+        ),
+      );
+      try {
+        await laconic.table('spell_ranks').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in spell_ranks');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

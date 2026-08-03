@@ -37,12 +37,23 @@ mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('quest_offer_reward_locale').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in quest_offer_reward_locale',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = questOfferRewardLocale.copyWith(
+        id: await nextMaxPlusOne('quest_offer_reward_locale', '`ID`'),
+      );
+      try {
+        await laconic.table('quest_offer_reward_locale').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in quest_offer_reward_locale',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

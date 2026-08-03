@@ -58,10 +58,21 @@ mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('points_of_interest').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in points_of_interest');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = pointOfInterest.copyWith(
+        id: await nextMaxPlusOne('points_of_interest', '`ID`'),
+      );
+      try {
+        await laconic.table('points_of_interest').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in points_of_interest');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

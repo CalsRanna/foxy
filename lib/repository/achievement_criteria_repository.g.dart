@@ -96,12 +96,23 @@ mixin _AchievementCriteriaRepositoryMixin
     try {
       await laconic.table('foxy.dbc_achievement_criteria').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_achievement_criteria',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = achievementCriteria.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_achievement_criteria', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_achievement_criteria').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_achievement_criteria',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

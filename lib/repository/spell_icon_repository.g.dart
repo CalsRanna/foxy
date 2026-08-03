@@ -56,10 +56,21 @@ mixin _SpellIconRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_spell_icon').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_spell_icon');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellIcon.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_spell_icon', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_spell_icon').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_spell_icon');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

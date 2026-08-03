@@ -66,6 +66,11 @@ final class LinkedDetailEmitter {
       )
       ..writeln('        return;')
       ..writeln('      }')
+      ..writeln('      try {')
+      ..writeln('        _logActivity(ActivityActionType.delete, key);')
+      ..writeln('      } catch (_) {')
+      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln('      }')
       ..writeln('      editingKey.value = null;')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
@@ -122,6 +127,17 @@ final class LinkedDetailEmitter {
       ..writeln(
         '      editingKey.value = candidate.${model.singleKeyFieldName};',
       )
+      ..writeln('      final action = originalKey == null')
+      ..writeln('          ? ActivityActionType.create')
+      ..writeln('          : ActivityActionType.update;')
+      ..writeln('      try {')
+      ..writeln(
+        '        _logActivity(action, '
+        'originalKey ?? candidate.${model.singleKeyFieldName});',
+      )
+      ..writeln('      } catch (_) {')
+      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln('      }')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
       ..writeln(
@@ -145,6 +161,11 @@ final class LinkedDetailEmitter {
       ..writeln('    editingKey.value = null;')
       ..writeln('    await _refresh();')
       ..writeln('  }')
+      ..writeln()
+      ..writeln('  /// 覆写点:记录子表单行新增/更新/删除活动日志。')
+      ..writeln(
+        '  void _logActivity(ActivityActionType action, ${model.keyType} key) {}',
+      )
       ..writeln()
       ..writeln('  Future<void> _refresh() async {')
       ..writeln('    final token = ++_refreshToken;')
@@ -176,7 +197,6 @@ final class LinkedDetailEmitter {
         '      LoggerUtil.instance.e('
         "'加载单行编辑器失败', error: error, stackTrace: stackTrace);",
       )
-      ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      if (token == _refreshToken) loading.value = false;')
       ..writeln('    }')

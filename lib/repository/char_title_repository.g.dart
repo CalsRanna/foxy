@@ -67,10 +67,21 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_char_titles').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_char_titles');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = charTitle.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_char_titles', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_char_titles').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_char_titles');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

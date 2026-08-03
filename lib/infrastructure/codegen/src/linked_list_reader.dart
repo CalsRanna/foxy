@@ -82,6 +82,7 @@ final class LinkedListReader {
 
     // 校验 linkKey 字段确实存在于实体且为 int,并推断完整 key 类型。
     final keyFieldTypes = <String>[];
+    final keyFieldNames = <String>[];
     String? linkFieldType;
     for (final field in entityElement.fields.where(
       (field) => !field.isStatic && !field.isSynthetic,
@@ -92,8 +93,11 @@ final class LinkedListReader {
           false)) {
         continue;
       }
+      final keyFieldName = field.name;
+      if (keyFieldName == null) continue;
       keyFieldTypes.add(field.type.getDisplayString());
-      if (field.name == linkFieldName) {
+      keyFieldNames.add(keyFieldName);
+      if (keyFieldName == linkFieldName) {
         linkFieldType = field.type.getDisplayString();
       }
     }
@@ -122,6 +126,8 @@ final class LinkedListReader {
       keyType: keyFieldTypes.length == 1
           ? keyFieldTypes.single
           : '${form.baseName}Key',
+      singleKeyFieldName:
+          keyFieldTypes.length == 1 ? keyFieldNames.single : null,
       linkFieldName: linkFieldName,
       linkKeyType: linkFieldType,
     );

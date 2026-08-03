@@ -56,10 +56,21 @@ mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_liquid_type').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_liquid_type');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = liquidType.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_liquid_type', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_liquid_type').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_liquid_type');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

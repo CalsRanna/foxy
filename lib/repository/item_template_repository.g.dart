@@ -120,10 +120,21 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('item_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in item_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemTemplate.copyWith(
+        entry: await nextMaxPlusOne('item_template', '`entry`'),
+      );
+      try {
+        await laconic.table('item_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in item_template');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -112,12 +112,30 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('playercreateinfo_spell_custom').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in playercreateinfo_spell_custom',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = playerCreateInfoSpellCustom.copyWith(
+        spell: await nextMaxPlusOne(
+          'playercreateinfo_spell_custom',
+          '`Spell`',
+          where: {
+            'racemask': playerCreateInfoSpellCustom.raceMask,
+            'classmask': playerCreateInfoSpellCustom.classMask,
+          },
+        ),
+      );
+      try {
+        await laconic.table('playercreateinfo_spell_custom').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in playercreateinfo_spell_custom',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

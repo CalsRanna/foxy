@@ -67,10 +67,21 @@ mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_spell_range').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_spell_range');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellRange.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_spell_range', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_spell_range').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_spell_range');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

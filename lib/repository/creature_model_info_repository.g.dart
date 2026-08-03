@@ -54,10 +54,21 @@ mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_model_info').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in creature_model_info');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureModelInfo.copyWith(
+        displayId: await nextMaxPlusOne('creature_model_info', '`DisplayID`'),
+      );
+      try {
+        await laconic.table('creature_model_info').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in creature_model_info');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

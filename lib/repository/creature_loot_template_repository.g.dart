@@ -134,10 +134,37 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in creature_loot_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'creature_loot_template',
+          '`Item`',
+          where: {'Entry': creatureLootTemplate.entry},
+        ),
+        reference: await nextMaxPlusOne(
+          'creature_loot_template',
+          '`Reference`',
+          where: {'Entry': creatureLootTemplate.entry},
+        ),
+        groupId: await nextMaxPlusOne(
+          'creature_loot_template',
+          '`GroupId`',
+          where: {'Entry': creatureLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('creature_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in creature_loot_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

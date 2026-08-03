@@ -91,10 +91,27 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_template_spell').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in creature_template_spell');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureTemplateSpell.copyWith(
+        index: await nextMaxPlusOne(
+          'creature_template_spell',
+          '`Index`',
+          where: {'CreatureID': creatureTemplateSpell.creatureID},
+        ),
+      );
+      try {
+        await laconic.table('creature_template_spell').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in creature_template_spell',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

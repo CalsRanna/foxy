@@ -122,10 +122,24 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('smart_scripts').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in smart_scripts');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = smartScript.copyWith(
+        entryOrGuid: await nextMaxPlusOne('smart_scripts', '`entryorguid`'),
+        sourceType: await nextMaxPlusOne('smart_scripts', '`source_type`'),
+        id: await nextMaxPlusOne('smart_scripts', '`id`'),
+        link: await nextMaxPlusOne('smart_scripts', '`link`'),
+      );
+      try {
+        await laconic.table('smart_scripts').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in smart_scripts');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -56,10 +56,21 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('broadcast_text').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in broadcast_text');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = broadcastText.copyWith(
+        id: await nextMaxPlusOne('broadcast_text', '`ID`'),
+      );
+      try {
+        await laconic.table('broadcast_text').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in broadcast_text');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

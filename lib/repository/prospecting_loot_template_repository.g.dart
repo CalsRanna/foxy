@@ -119,12 +119,27 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('prospecting_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in prospecting_loot_template',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = prospectingLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'prospecting_loot_template',
+          '`Item`',
+          where: {'Entry': prospectingLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('prospecting_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in prospecting_loot_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

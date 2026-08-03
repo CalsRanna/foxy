@@ -114,10 +114,21 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_achievement').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_achievement');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = achievement.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_achievement', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_achievement').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_achievement');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

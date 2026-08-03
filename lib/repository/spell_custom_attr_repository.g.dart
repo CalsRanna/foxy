@@ -36,10 +36,21 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('spell_custom_attr').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in spell_custom_attr');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellCustomAttr.copyWith(
+        spellId: await nextMaxPlusOne('spell_custom_attr', '`spell_id`'),
+      );
+      try {
+        await laconic.table('spell_custom_attr').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in spell_custom_attr');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

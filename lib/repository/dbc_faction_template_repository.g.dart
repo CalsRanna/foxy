@@ -74,12 +74,23 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_faction_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_faction_template',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = dbcFactionTemplate.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_faction_template', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_faction_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_faction_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

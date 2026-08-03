@@ -63,12 +63,23 @@ mixin _CreatureSpellDataRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_creature_spell_data').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_creature_spell_data',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureSpellData.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_creature_spell_data', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_creature_spell_data').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_creature_spell_data',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -350,12 +350,41 @@ final class RepositoryEmitter {
       ..writeln('    try {')
       ..writeln('      await laconic.table(${_table(model)}).insert([json]);')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (MysqlErrorUtil.isDuplicateEntry(error)) {')
+      ..writeln('      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;')
+      // TOCTOU 兜底:并发 create 取到同一 MAX+1 时,自动重新分配主键重试一次。
+      // 已知边界:重试成功后调用方持有的 key 不更新,刷新列表可见新行。
+      ..writeln('      final retried = $parameter.copyWith(');
+    for (final field in model.keyFields) {
+      if (model.linkKeyFields.any((p) => p.dartName == field.dartName)) {
+        continue;
+      }
+      // 只重分配 int 类型 key:MAX+1 竞态只发生在数值主键;
+      // String 复合键(如 locale 仓库的 `Locale` 列)保持原值。
+      if (field.dartType != 'int') continue;
+      buffer
+        ..writeln('        ${field.dartName}: await nextMaxPlusOne(')
+        ..writeln('          ${_table(model)}, ${_column(field.columnName)},');
+      if (model.linkKeyFields.isNotEmpty) {
+        buffer.writeln(
+          '          where: {${_retryWhereMap(model, parameter)}},',
+        );
+      }
+      buffer.writeln('        ),');
+    }
+    buffer
+      ..writeln('      );')
+      ..writeln('      try {')
+      ..writeln('        await laconic.table(${_table(model)})'
+        '.insert([prepareWriteJson(retried.toJson())]);')
+      ..writeln('        return;')
+      ..writeln('      } catch (retryError) {')
+      ..writeln('        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {')
       ..writeln(
-        "        throw DuplicateKeyException('duplicate key in ${model.table}');",
+        "          throw DuplicateKeyException('duplicate key in ${model.table}');",
       )
+      ..writeln('        }')
+      ..writeln('        rethrow;')
       ..writeln('      }')
-      ..writeln('      rethrow;')
       ..writeln('    }')
       ..writeln('  }')
       ..writeln();
@@ -446,6 +475,13 @@ final class RepositoryEmitter {
   /// 关联键 where 映射字面量:`'`race`': race, '`class`': class_`。
   String _linkWhereMap(List<RepositoryKeyFieldModel> links) =>
       links.map((p) => "'${p.columnName}': ${p.dartName}").join(', ');
+
+  /// 重试路径的关联键 where 映射:以实体参数引用,如
+  /// `'`CreatureID`': loot.CreatureID`。
+  String _retryWhereMap(RepositoryGenerationModel model, String parameter) =>
+      model.linkKeyFields
+          .map((p) => "'${p.columnName}': $parameter.${p.dartName}")
+          .join(', ');
 
   /// `.orderBy('`ID`')` 或复合 key 的链式 `.orderBy(...).orderBy(...)`。
   String _orderByClause(RepositoryGenerationModel model) {

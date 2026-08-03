@@ -67,10 +67,21 @@ mixin _TalentTabRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_talent_tab').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_talent_tab');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = talentTab.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_talent_tab', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_talent_tab').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_talent_tab');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

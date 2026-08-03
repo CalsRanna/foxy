@@ -97,10 +97,30 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('playercreateinfo_action').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in playercreateinfo_action');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = playerCreateInfoAction.copyWith(
+        button: await nextMaxPlusOne(
+          'playercreateinfo_action',
+          '`button`',
+          where: {
+            'race': playerCreateInfoAction.race,
+            'class': playerCreateInfoAction.class_,
+          },
+        ),
+      );
+      try {
+        await laconic.table('playercreateinfo_action').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in playercreateinfo_action',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -116,10 +116,21 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_area_table').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_area_table');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = areaTable.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_area_table', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_area_table').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_area_table');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

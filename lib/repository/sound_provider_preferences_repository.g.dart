@@ -65,12 +65,23 @@ mixin _SoundProviderPreferencesRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_sound_provider_preferences').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_sound_provider_preferences',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = soundProviderPreferences.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_sound_provider_preferences', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_sound_provider_preferences').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_sound_provider_preferences',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

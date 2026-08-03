@@ -119,12 +119,27 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('pickpocketing_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in pickpocketing_loot_template',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = pickpocketingLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'pickpocketing_loot_template',
+          '`Item`',
+          where: {'Entry': pickpocketingLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('pickpocketing_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in pickpocketing_loot_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

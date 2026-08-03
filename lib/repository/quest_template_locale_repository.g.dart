@@ -33,10 +33,21 @@ mixin _QuestTemplateLocaleRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('quest_template_locale').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in quest_template_locale');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = questTemplateLocale.copyWith(
+        id: await nextMaxPlusOne('quest_template_locale', '`ID`'),
+      );
+      try {
+        await laconic.table('quest_template_locale').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in quest_template_locale');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

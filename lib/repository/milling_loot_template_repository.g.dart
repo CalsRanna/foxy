@@ -113,10 +113,25 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('milling_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in milling_loot_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = millingLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'milling_loot_template',
+          '`Item`',
+          where: {'Entry': millingLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('milling_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in milling_loot_template');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

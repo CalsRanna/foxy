@@ -131,6 +131,11 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
         return;
       }
+      try {
+        _logActivity(ActivityActionType.delete, key);
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       editingKey.value = null;
       await _refresh();
     } catch (error) {
@@ -174,6 +179,14 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       }
       entity.value = candidate;
       editingKey.value = candidate.id;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      try {
+        _logActivity(action, originalKey ?? candidate.id);
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       await _refresh();
     } catch (error) {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
@@ -193,6 +206,9 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
     editingKey.value = null;
     await _refresh();
   }
+
+  /// 覆写点:记录子表单行新增/更新/删除活动日志。
+  void _logActivity(ActivityActionType action, int key) {}
 
   Future<void> _refresh() async {
     final token = ++_refreshToken;
@@ -217,7 +233,6 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       if (token != _refreshToken) return;
       errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
-      rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

@@ -119,12 +119,27 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('disenchant_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in disenchant_loot_template',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = disenchantLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'disenchant_loot_template',
+          '`Item`',
+          where: {'Entry': disenchantLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('disenchant_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in disenchant_loot_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

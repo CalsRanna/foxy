@@ -40,12 +40,26 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_default_trainer').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in creature_default_trainer',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureDefaultTrainer.copyWith(
+        creatureId: await nextMaxPlusOne(
+          'creature_default_trainer',
+          '`CreatureId`',
+        ),
+      );
+      try {
+        await laconic.table('creature_default_trainer').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in creature_default_trainer',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -40,12 +40,26 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_onkill_reputation').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in creature_onkill_reputation',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureOnKillReputation.copyWith(
+        creatureID: await nextMaxPlusOne(
+          'creature_onkill_reputation',
+          '`creature_id`',
+        ),
+      );
+      try {
+        await laconic.table('creature_onkill_reputation').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in creature_onkill_reputation',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

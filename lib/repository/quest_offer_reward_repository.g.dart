@@ -36,10 +36,21 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('quest_offer_reward').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in quest_offer_reward');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = questOfferReward.copyWith(
+        id: await nextMaxPlusOne('quest_offer_reward', '`ID`'),
+      );
+      try {
+        await laconic.table('quest_offer_reward').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in quest_offer_reward');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

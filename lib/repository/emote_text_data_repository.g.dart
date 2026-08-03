@@ -70,12 +70,23 @@ mixin _EmoteTextDataRepositoryMixin
     try {
       await laconic.table('foxy.dbc_emotes_text_data').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_emotes_text_data',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = emoteTextData.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_emotes_text_data', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_emotes_text_data').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_emotes_text_data',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

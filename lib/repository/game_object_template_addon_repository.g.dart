@@ -40,12 +40,23 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('gameobject_template_addon').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in gameobject_template_addon',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = gameObjectTemplateAddon.copyWith(
+        entry: await nextMaxPlusOne('gameobject_template_addon', '`entry`'),
+      );
+      try {
+        await laconic.table('gameobject_template_addon').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in gameobject_template_addon',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

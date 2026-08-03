@@ -100,10 +100,22 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('gossip_menu').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in gossip_menu');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = gossipMenu.copyWith(
+        menuId: await nextMaxPlusOne('gossip_menu', '`MenuID`'),
+        textId: await nextMaxPlusOne('gossip_menu', '`TextID`'),
+      );
+      try {
+        await laconic.table('gossip_menu').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in gossip_menu');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

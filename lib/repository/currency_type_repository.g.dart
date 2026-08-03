@@ -106,10 +106,23 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_currency_types').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_currency_types');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = currencyType.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_currency_types', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_currency_types').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_currency_types',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

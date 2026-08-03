@@ -75,12 +75,23 @@ mixin _ItemRandomPropertiesRepositoryMixin
     try {
       await laconic.table('foxy.dbc_item_random_properties').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_item_random_properties',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemRandomProperties.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_item_random_properties', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_item_random_properties').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_item_random_properties',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

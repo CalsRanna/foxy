@@ -60,12 +60,23 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_item_display_info').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_item_display_info',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemDisplayInfo.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_item_display_info', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_item_display_info').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_item_display_info',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

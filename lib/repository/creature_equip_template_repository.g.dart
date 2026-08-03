@@ -90,10 +90,27 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_equip_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in creature_equip_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureEquipTemplate.copyWith(
+        id: await nextMaxPlusOne(
+          'creature_equip_template',
+          '`ID`',
+          where: {'CreatureID': creatureEquipTemplate.creatureID},
+        ),
+      );
+      try {
+        await laconic.table('creature_equip_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in creature_equip_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -21,6 +21,9 @@ final class LinkedListGenerationModel {
   /// 物理 Key 类型:`int` 或复合 `XxxKey`。
   final String keyType;
 
+  /// 单 key 字段的 dart 名(复合 key 为 null);活动日志用它从候选实体取 key。
+  final String? singleKeyFieldName;
+
   /// 关联字段的 dart 名(Repository 的 `linkKey:` 声明;单关联键形态)。
   final String linkFieldName;
 
@@ -34,6 +37,7 @@ final class LinkedListGenerationModel {
     required this.fields,
     required this.repositoryClassName,
     required this.keyType,
+    required this.singleKeyFieldName,
     required this.linkFieldName,
     required this.linkKeyType,
   });

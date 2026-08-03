@@ -98,10 +98,30 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('spell_linked_spell').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in spell_linked_spell');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellLinkedSpell.copyWith(
+        spellEffect: await nextMaxPlusOne(
+          'spell_linked_spell',
+          '`spell_effect`',
+          where: {'spell_trigger': spellLinkedSpell.spellTrigger},
+        ),
+        type: await nextMaxPlusOne(
+          'spell_linked_spell',
+          '`type`',
+          where: {'spell_trigger': spellLinkedSpell.spellTrigger},
+        ),
+      );
+      try {
+        await laconic.table('spell_linked_spell').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in spell_linked_spell');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

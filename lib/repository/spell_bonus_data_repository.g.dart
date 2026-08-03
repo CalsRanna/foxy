@@ -34,10 +34,21 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('spell_bonus_data').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in spell_bonus_data');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellBonusData.copyWith(
+        entry: await nextMaxPlusOne('spell_bonus_data', '`entry`'),
+      );
+      try {
+        await laconic.table('spell_bonus_data').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in spell_bonus_data');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

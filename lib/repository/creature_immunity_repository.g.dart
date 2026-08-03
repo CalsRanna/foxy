@@ -61,10 +61,21 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_immunities').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in creature_immunities');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureImmunity.copyWith(
+        id: await nextMaxPlusOne('creature_immunities', '`ID`'),
+      );
+      try {
+        await laconic.table('creature_immunities').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in creature_immunities');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

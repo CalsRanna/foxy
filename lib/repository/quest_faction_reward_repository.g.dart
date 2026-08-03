@@ -121,12 +121,23 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_quest_faction_reward').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_quest_faction_reward',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = questFactionReward.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_quest_faction_reward', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_quest_faction_reward').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_quest_faction_reward',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

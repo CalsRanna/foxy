@@ -57,12 +57,24 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('item_enchantment_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in item_enchantment_template',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemEnchantmentTemplate.copyWith(
+        entry: await nextMaxPlusOne('item_enchantment_template', '`entry`'),
+        ench: await nextMaxPlusOne('item_enchantment_template', '`ench`'),
+      );
+      try {
+        await laconic.table('item_enchantment_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in item_enchantment_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

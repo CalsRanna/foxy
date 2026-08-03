@@ -56,10 +56,21 @@ mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_zone_music').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_zone_music');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = zoneMusic.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_zone_music', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_zone_music').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_zone_music');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

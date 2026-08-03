@@ -125,10 +125,24 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('reference_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in reference_loot_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = referenceLootTemplate.copyWith(
+        entry: await nextMaxPlusOne('reference_loot_template', '`Entry`'),
+        item: await nextMaxPlusOne('reference_loot_template', '`Item`'),
+      );
+      try {
+        await laconic.table('reference_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in reference_loot_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

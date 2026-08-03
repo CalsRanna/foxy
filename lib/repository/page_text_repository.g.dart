@@ -98,10 +98,21 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('page_text').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in page_text');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = pageText.copyWith(
+        id: await nextMaxPlusOne('page_text', '`ID`'),
+      );
+      try {
+        await laconic.table('page_text').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in page_text');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

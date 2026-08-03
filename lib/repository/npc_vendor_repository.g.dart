@@ -89,10 +89,30 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('npc_vendor').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in npc_vendor');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = npcVendor.copyWith(
+        item: await nextMaxPlusOne(
+          'npc_vendor',
+          '`item`',
+          where: {'entry': npcVendor.entry},
+        ),
+        extendedCost: await nextMaxPlusOne(
+          'npc_vendor',
+          '`ExtendedCost`',
+          where: {'entry': npcVendor.entry},
+        ),
+      );
+      try {
+        await laconic.table('npc_vendor').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in npc_vendor');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

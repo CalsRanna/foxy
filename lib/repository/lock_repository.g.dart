@@ -52,10 +52,21 @@ mixin _LockRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_lock').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_lock');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = lock.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_lock', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_lock').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_lock');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

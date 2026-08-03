@@ -93,12 +93,27 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_template_resistance').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in creature_template_resistance',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureTemplateResistance.copyWith(
+        school: await nextMaxPlusOne(
+          'creature_template_resistance',
+          '`School`',
+          where: {'CreatureID': creatureTemplateResistance.creatureID},
+        ),
+      );
+      try {
+        await laconic.table('creature_template_resistance').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in creature_template_resistance',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

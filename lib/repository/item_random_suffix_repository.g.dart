@@ -72,12 +72,23 @@ mixin _ItemRandomSuffixRepositoryMixin
     try {
       await laconic.table('foxy.dbc_item_random_suffix').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_item_random_suffix',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemRandomSuffix.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_item_random_suffix', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_item_random_suffix').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_item_random_suffix',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -166,10 +166,48 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('conditions').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in conditions');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = condition.copyWith(
+        sourceTypeOrReferenceId: await nextMaxPlusOne(
+          'conditions',
+          '`SourceTypeOrReferenceId`',
+        ),
+        sourceGroup: await nextMaxPlusOne('conditions', '`SourceGroup`'),
+        sourceEntry: await nextMaxPlusOne('conditions', '`SourceEntry`'),
+        sourceId: await nextMaxPlusOne('conditions', '`SourceId`'),
+        elseGroup: await nextMaxPlusOne('conditions', '`ElseGroup`'),
+        conditionTypeOrReference: await nextMaxPlusOne(
+          'conditions',
+          '`ConditionTypeOrReference`',
+        ),
+        conditionTarget: await nextMaxPlusOne(
+          'conditions',
+          '`ConditionTarget`',
+        ),
+        conditionValue1: await nextMaxPlusOne(
+          'conditions',
+          '`ConditionValue1`',
+        ),
+        conditionValue2: await nextMaxPlusOne(
+          'conditions',
+          '`ConditionValue2`',
+        ),
+        conditionValue3: await nextMaxPlusOne(
+          'conditions',
+          '`ConditionValue3`',
+        ),
+      );
+      try {
+        await laconic.table('conditions').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in conditions');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

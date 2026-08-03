@@ -52,10 +52,21 @@ mixin _VehicleRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_vehicle').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_vehicle');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = vehicle.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_vehicle', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_vehicle').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_vehicle');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

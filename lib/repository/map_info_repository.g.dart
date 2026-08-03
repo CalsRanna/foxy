@@ -67,10 +67,21 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_map').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_map');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = mapInfo.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_map', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_map').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_map');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

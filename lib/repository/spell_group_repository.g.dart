@@ -70,10 +70,25 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('spell_group').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in spell_group');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellGroup.copyWith(
+        id: await nextMaxPlusOne(
+          'spell_group',
+          '`id`',
+          where: {'spell_id': spellGroup.spellId},
+        ),
+      );
+      try {
+        await laconic.table('spell_group').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in spell_group');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

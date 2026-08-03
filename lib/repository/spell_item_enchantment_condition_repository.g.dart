@@ -64,12 +64,26 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
         json,
       ]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_spell_item_enchantment_condition',
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellItemEnchantmentCondition.copyWith(
+        id: await nextMaxPlusOne(
+          'foxy.dbc_spell_item_enchantment_condition',
+          '`ID`',
+        ),
+      );
+      try {
+        await laconic.table('foxy.dbc_spell_item_enchantment_condition').insert(
+          [prepareWriteJson(retried.toJson())],
         );
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_spell_item_enchantment_condition',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

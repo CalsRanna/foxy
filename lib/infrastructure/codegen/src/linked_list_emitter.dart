@@ -73,6 +73,11 @@ final class LinkedListEmitter {
       ..writeln(
         '      if (token != _interactionToken || linkKey.value != link) return;',
       )
+      ..writeln('      try {')
+      ..writeln('        _logActivity(ActivityActionType.copy, key);')
+      ..writeln('      } catch (_) {')
+      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln('      }')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
       ..writeln(
@@ -134,6 +139,11 @@ final class LinkedListEmitter {
       ..writeln(
         '      if (token != _interactionToken || linkKey.value != link) return;',
       )
+      ..writeln('      try {')
+      ..writeln('        _logActivity(ActivityActionType.delete, key);')
+      ..writeln('      } catch (_) {')
+      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln('      }')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
       ..writeln(
@@ -221,6 +231,17 @@ final class LinkedListEmitter {
         'originalKey, candidate);',
       )
       ..writeln('      }')
+      ..writeln('      final action = originalKey == null')
+      ..writeln('          ? ActivityActionType.create')
+      ..writeln('          : ActivityActionType.update;')
+      ..writeln('      try {')
+      ..writeln(
+        '        _logActivity(action, '
+        '${model.singleKeyFieldName != null ? 'originalKey ?? candidate.${model.singleKeyFieldName}' : 'originalKey ?? ${model.baseName}Key.fromEntity(candidate)'});',
+      )
+      ..writeln('      } catch (_) {')
+      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln('      }')
       ..writeln(
         '      if (token != _interactionToken || linkKey.value != link) return;',
       )
@@ -254,6 +275,11 @@ final class LinkedListEmitter {
       ..writeln('    await _refresh();')
       ..writeln('  }')
       ..writeln()
+      ..writeln('  /// 覆写点:记录子表行新增/更新/复制/删除活动日志。')
+      ..writeln(
+        '  void _logActivity(ActivityActionType action, ${model.keyType} key) {}',
+      )
+      ..writeln()
       ..writeln('  Future<void> _refresh() async {')
       ..writeln('    final link = linkKey.value;')
       ..writeln('    if (link == null) return;')
@@ -281,11 +307,12 @@ final class LinkedListEmitter {
       ..writeln('      editingKey.value = null;')
       ..writeln('      selectedKey.value = null;')
       ..writeln('    } catch (error) {')
+      ..writeln('      if (token == _refreshToken) {')
       ..writeln(
-        '      if (token == _refreshToken) errorMessage.value = '
-        'foxyErrorMessage(error);',
+        '        errorMessage.value = foxyErrorMessage(error);',
       )
-      ..writeln('      rethrow;')
+      ..writeln("        LoggerUtil.instance.e('刷新子表列表失败: \$error');")
+      ..writeln('      }')
       ..writeln('    } finally {')
       ..writeln('      if (token == _refreshToken) loading.value = false;')
       ..writeln('    }')

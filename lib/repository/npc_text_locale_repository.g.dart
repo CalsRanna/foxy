@@ -29,10 +29,21 @@ mixin _NpcTextLocaleRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('npc_text_locale').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in npc_text_locale');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = npcTextLocale.copyWith(
+        id: await nextMaxPlusOne('npc_text_locale', '`ID`'),
+      );
+      try {
+        await laconic.table('npc_text_locale').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in npc_text_locale');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

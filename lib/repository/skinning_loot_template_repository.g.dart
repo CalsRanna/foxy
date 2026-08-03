@@ -115,10 +115,27 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('skinning_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in skinning_loot_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = skinningLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'skinning_loot_template',
+          '`Item`',
+          where: {'Entry': skinningLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('skinning_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in skinning_loot_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

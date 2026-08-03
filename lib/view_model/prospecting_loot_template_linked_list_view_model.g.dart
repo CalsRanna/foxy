@@ -84,6 +84,11 @@ mixin _ProspectingLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
     try {
       await _repository.copyProspectingLootTemplate(key);
       if (token != _interactionToken || linkKey.value != link) return;
+      try {
+        _logActivity(ActivityActionType.copy, key);
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -131,6 +136,11 @@ mixin _ProspectingLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
     try {
       await _repository.destroyProspectingLootTemplate(key);
       if (token != _interactionToken || linkKey.value != link) return;
+      try {
+        _logActivity(ActivityActionType.delete, key);
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -200,6 +210,17 @@ mixin _ProspectingLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
       } else {
         await _repository.updateProspectingLootTemplate(originalKey, candidate);
       }
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      try {
+        _logActivity(
+          action,
+          originalKey ?? ProspectingLootTemplateKey.fromEntity(candidate),
+        );
+      } catch (_) {
+        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+      }
       if (token != _interactionToken || linkKey.value != link) return;
       await _refresh();
     } catch (error) {
@@ -224,6 +245,12 @@ mixin _ProspectingLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
+  /// 覆写点:记录子表行新增/更新/复制/删除活动日志。
+  void _logActivity(
+    ActivityActionType action,
+    ProspectingLootTemplateKey key,
+  ) {}
+
   Future<void> _refresh() async {
     final link = linkKey.value;
     if (link == null) return;
@@ -247,8 +274,10 @@ mixin _ProspectingLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
       editingKey.value = null;
       selectedKey.value = null;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
-      rethrow;
+      if (token == _refreshToken) {
+        errorMessage.value = foxyErrorMessage(error);
+        LoggerUtil.instance.e('刷新子表列表失败: $error');
+      }
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

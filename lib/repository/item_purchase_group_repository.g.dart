@@ -72,12 +72,23 @@ mixin _ItemPurchaseGroupRepositoryMixin
     try {
       await laconic.table('foxy.dbc_item_purchase_group').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_item_purchase_group',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemPurchaseGroup.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_item_purchase_group', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_item_purchase_group').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_item_purchase_group',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

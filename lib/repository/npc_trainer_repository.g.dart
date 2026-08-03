@@ -82,10 +82,25 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('trainer_spell').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in trainer_spell');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = npcTrainer.copyWith(
+        spellId: await nextMaxPlusOne(
+          'trainer_spell',
+          '`SpellId`',
+          where: {'TrainerId': npcTrainer.trainerId},
+        ),
+      );
+      try {
+        await laconic.table('trainer_spell').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in trainer_spell');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

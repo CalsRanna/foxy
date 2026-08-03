@@ -122,10 +122,21 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in creature_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureTemplate.copyWith(
+        entry: await nextMaxPlusOne('creature_template', '`entry`'),
+      );
+      try {
+        await laconic.table('creature_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in creature_template');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

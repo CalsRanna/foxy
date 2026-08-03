@@ -79,10 +79,25 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('creature_questender').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in creature_questender');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = creatureQuestEnder.copyWith(
+        id: await nextMaxPlusOne(
+          'creature_questender',
+          '`id`',
+          where: {'quest': creatureQuestEnder.quest},
+        ),
+      );
+      try {
+        await laconic.table('creature_questender').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in creature_questender');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -56,12 +56,23 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_cinematic_sequences').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_cinematic_sequences',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = cinematicSequence.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_cinematic_sequences', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_cinematic_sequences').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_cinematic_sequences',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

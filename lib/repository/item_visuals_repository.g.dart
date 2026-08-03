@@ -52,10 +52,21 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_item_visuals').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_item_visuals');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemVisuals.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_item_visuals', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_item_visuals').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_item_visuals');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

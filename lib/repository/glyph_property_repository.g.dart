@@ -106,12 +106,23 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_glyph_properties').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in foxy.dbc_glyph_properties',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = glyphProperty.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_glyph_properties', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_glyph_properties').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in foxy.dbc_glyph_properties',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

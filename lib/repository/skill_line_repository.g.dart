@@ -56,10 +56,21 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('foxy.dbc_skill_line').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_skill_line');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = skillLine.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_skill_line', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_skill_line').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_skill_line');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -33,10 +33,21 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('item_template_locale').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in item_template_locale');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = itemTemplateLocale.copyWith(
+        id: await nextMaxPlusOne('item_template_locale', '`ID`'),
+      );
+      try {
+        await laconic.table('item_template_locale').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in item_template_locale');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

@@ -112,10 +112,21 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('gameobject_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in gameobject_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = gameObjectTemplate.copyWith(
+        entry: await nextMaxPlusOne('gameobject_template', '`entry`'),
+      );
+      try {
+        await laconic.table('gameobject_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in gameobject_template');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

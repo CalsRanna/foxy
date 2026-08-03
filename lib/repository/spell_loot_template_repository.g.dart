@@ -87,10 +87,25 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('spell_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in spell_loot_template');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = spellLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'spell_loot_template',
+          '`Item`',
+          where: {'Entry': spellLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('spell_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in spell_loot_template');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

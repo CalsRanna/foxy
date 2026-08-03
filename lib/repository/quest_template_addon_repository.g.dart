@@ -36,10 +36,21 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('quest_template_addon').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in quest_template_addon');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = questTemplateAddon.copyWith(
+        id: await nextMaxPlusOne('quest_template_addon', '`ID`'),
+      );
+      try {
+        await laconic.table('quest_template_addon').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in quest_template_addon');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

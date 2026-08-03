@@ -105,10 +105,30 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('playercreateinfo_skills').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in playercreateinfo_skills');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = playerCreateInfoSkill.copyWith(
+        skill: await nextMaxPlusOne(
+          'playercreateinfo_skills',
+          '`skill`',
+          where: {
+            'raceMask': playerCreateInfoSkill.raceMask,
+            'classMask': playerCreateInfoSkill.classMask,
+          },
+        ),
+      );
+      try {
+        await laconic.table('playercreateinfo_skills').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in playercreateinfo_skills',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

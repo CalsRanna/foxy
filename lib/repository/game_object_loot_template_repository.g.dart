@@ -119,12 +119,27 @@ mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
     try {
       await laconic.table('gameobject_loot_template').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException(
-          'duplicate key in gameobject_loot_template',
-        );
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = gameObjectLootTemplate.copyWith(
+        item: await nextMaxPlusOne(
+          'gameobject_loot_template',
+          '`Item`',
+          where: {'Entry': gameObjectLootTemplate.entry},
+        ),
+      );
+      try {
+        await laconic.table('gameobject_loot_template').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException(
+            'duplicate key in gameobject_loot_template',
+          );
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 

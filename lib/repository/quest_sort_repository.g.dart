@@ -112,10 +112,21 @@ mixin _QuestSortRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     try {
       await laconic.table('foxy.dbc_quest_sort').insert([json]);
     } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw DuplicateKeyException('duplicate key in foxy.dbc_quest_sort');
+      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
+      final retried = questSort.copyWith(
+        id: await nextMaxPlusOne('foxy.dbc_quest_sort', '`ID`'),
+      );
+      try {
+        await laconic.table('foxy.dbc_quest_sort').insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
+        return;
+      } catch (retryError) {
+        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
+          throw DuplicateKeyException('duplicate key in foxy.dbc_quest_sort');
+        }
+        rethrow;
       }
-      rethrow;
     }
   }
 
