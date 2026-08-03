@@ -10,7 +10,7 @@ packages:
     source: hosted
     version: "88.0.0"
   analyzer:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: analyzer
       sha256: "0b7b9c329d2879f8f05d6c05b32ee9ec025f39b077864bdb5ac9a7b63418a98f"
@@ -98,7 +98,7 @@ packages:
     source: hosted
     version: "1.2.3"
   build:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: build
       sha256: ce76b1d48875e3233fde17717c23d1f60a91cc631597e49a400c89b475395b1d
@@ -282,7 +282,7 @@ packages:
     source: hosted
     version: "0.8.1"
   custom_lint_builder:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: custom_lint_builder
       sha256: "1128db6f58e71d43842f3b9be7465c83f0c47f4dd8918f878dd6ad3b72a32072"
@@ -1083,7 +1083,7 @@ packages:
     source: hosted
     version: "4.18.0"
   source_gen:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: source_gen
       sha256: "7b19d6ba131c6eb98bfcbf8d56c1a7002eba438af2e7ae6f8398b2b0f4f381e3"
