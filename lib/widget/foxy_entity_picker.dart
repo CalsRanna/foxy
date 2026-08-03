@@ -96,6 +96,10 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   int? _selectedId;
   String? _errorMessage;
 
+  /// 是否用户主动点击过行。预选值(打开时输入框已有 ID)不染色,
+  /// 与其他表格保持一致;只有用户点击过的行才有选中底色反馈。
+  bool _userSelected = false;
+
   /// 请求序号:并发搜索时只接受最新一次的结果,防止慢请求覆盖快请求。
   int _searchSeq = 0;
 
@@ -233,14 +237,18 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
           rowSpanBackgroundDecoration: (row) {
             final dataRow = row - 1;
             if (dataRow < 0 || dataRow >= _items.length) return null;
-            if (widget.delegate.idOf(_items[dataRow]) == _selectedId) {
+            if (_userSelected &&
+                widget.delegate.idOf(_items[dataRow]) == _selectedId) {
               return TableSpanDecoration(color: theme.colorScheme.accent);
             }
             return null;
           },
           onRowTap: (row) {
             if (row >= 0 && row < _items.length) {
-              setState(() => _selectedId = widget.delegate.idOf(_items[row]));
+              setState(() {
+                _selectedId = widget.delegate.idOf(_items[row]);
+                _userSelected = true;
+              });
             }
           },
           onRowDoubleTap: (row) {

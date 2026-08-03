@@ -19,9 +19,6 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
   final result = signal<BootstrapApplicationResult?>(null);
   final version = signal('');
 
-  /// 是否启用 TLS(引导页开关;远程主机默认建议开启)。
-  final useSsl = signal(false);
-
   late final hostController = registerController(StringFieldController());
   late final portController = registerController(StringFieldController());
   late final databaseController = registerController(StringFieldController());
@@ -60,7 +57,6 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
       if (token != _attemptToken) return;
       hostController.init(config['host']?.toString() ?? '127.0.0.1');
       portController.init(config['port']?.toString() ?? '3306');
-      useSsl.value = config['use_ssl'] == true;
       databaseController.init(config['database']?.toString() ?? '');
       usernameController.init(config['username']?.toString() ?? '');
       passwordController.init(config['password']?.toString() ?? '');
@@ -112,6 +108,8 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
     errorMessage.value = null;
     result.value = null;
     try {
+      // useSsl 不开放给普通用户:UI 无开关,由 use case 从 config.yaml
+      // 的 use_ssl 键读取(远程主机缺省建议开启)。
       final nextResult = await _useCase.execute(
         BootstrapApplicationInput(
           host: hostController.collect(),
@@ -119,7 +117,6 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
           database: databaseController.collect(),
           username: usernameController.collect(),
           password: passwordController.collect(),
-          useSsl: useSsl.value,
         ),
       );
       if (token != _attemptToken) return;

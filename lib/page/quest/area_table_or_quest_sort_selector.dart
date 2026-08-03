@@ -81,6 +81,10 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
   int _page = 1;
   int _queryVersion = 0;
   int? _selectedId;
+
+  /// 是否用户主动点击过行。预选值(打开时输入框已有 ID)不染色,
+  /// 与 FoxyEntityPicker 及其他表格一致;只有点击过的行才有选中底色。
+  bool _userSelected = false;
   late String _currentMode;
 
   /// 请求序号:并发搜索只接受最新结果,防止区域/排序切换时旧响应覆盖。
@@ -251,6 +255,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
             },
             rowSpanBackgroundDecoration: (row) {
               final dataRow = row - 1;
+              if (!_userSelected) return null;
               if (_currentMode == 'AreaTable') {
                 if (dataRow < 0 || dataRow >= _areaItems.length) return null;
                 if (_areaItems[dataRow].id == _selectedId) {
@@ -267,11 +272,17 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
             onRowTap: (row) {
               if (_currentMode == 'AreaTable') {
                 if (row >= 0 && row < _areaItems.length) {
-                  setState(() => _selectedId = _areaItems[row].id);
+                  setState(() {
+                    _selectedId = _areaItems[row].id;
+                    _userSelected = true;
+                  });
                 }
               } else {
                 if (row >= 0 && row < _questItems.length) {
-                  setState(() => _selectedId = -_questItems[row].id);
+                  setState(() {
+                    _selectedId = -_questItems[row].id;
+                    _userSelected = true;
+                  });
                 }
               }
             },
