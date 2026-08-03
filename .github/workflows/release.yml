@@ -34,6 +34,10 @@ jobs:
       - name: Test
         run: flutter test
 
+      # 生成器测试依赖 dart:mirrors,flutter test VM 不提供,需用 dart test 跑。
+      - name: Test (codegen)
+        run: dart test test/infrastructure/codegen/
+
   release-windows:
     needs: check
     runs-on: windows-latest
