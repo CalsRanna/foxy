@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/game_object_template_addon_linked_detail_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -36,6 +37,9 @@ class _GameObjectTemplateAddonViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
+          Watch(
+            (_) => FoxyInlineError(message: viewModel.errorMessage.value),
+          ),
           FoxyFormSection(
             title: '模板补充',
             children: [

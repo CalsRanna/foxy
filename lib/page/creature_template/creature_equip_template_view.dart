@@ -3,6 +3,7 @@ import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/creature_equip_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -279,7 +280,13 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       },
     );
 
-    var children = [toolbar, layoutBuilder];
+    var children = [
+        Watch(
+          (_) => FoxyInlineError(message: viewModel.errorMessage.value),
+        ),
+        toolbar,
+        layoutBuilder,
+      ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

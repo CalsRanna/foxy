@@ -83,6 +83,9 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
   int? _selectedId;
   late String _currentMode;
 
+  /// 请求序号:并发搜索只接受最新结果,防止区域/排序切换时旧响应覆盖。
+  int _searchToken = 0;
+
   @override
   Widget build(BuildContext context) {
     final title = _currentMode == 'AreaTable' ? '区域' : '任务排序';
@@ -339,6 +342,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
   }
 
   Future<void> _search() async {
+    final token = ++_searchToken;
     try {
       if (_currentMode == 'AreaTable') {
         final repository = GetIt.instance.get<AreaTableRepository>();
@@ -351,13 +355,12 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
           page: _page,
         );
         final total = await repository.countAreaTables(filter: filter);
-        if (mounted) {
-          setState(() {
-            _areaItems = items;
-            _questItems = [];
-            _total = total;
-          });
-        }
+        if (!mounted || token != _searchToken) return;
+        setState(() {
+          _areaItems = items;
+          _questItems = [];
+          _total = total;
+        });
       } else {
         final repository = GetIt.instance.get<QuestSortRepository>();
         final filter = QuestSortFilter(
@@ -369,17 +372,17 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
           page: _page,
         );
         final total = await repository.countQuestSorts(filter: filter);
-        if (mounted) {
-          setState(() {
-            _questItems = items;
-            _areaItems = [];
-            _total = total;
-          });
-        }
+        if (!mounted || token != _searchToken) return;
+        setState(() {
+          _questItems = items;
+          _areaItems = [];
+          _total = total;
+        });
       }
     } catch (e) {
       LoggerUtil.instance.e('搜索失败: $e');
+      if (!mounted || token != _searchToken) return;
       DialogUtil.instance.error('搜索失败: $e');
-    } finally {}
+    }
   }
 }

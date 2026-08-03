@@ -96,6 +96,9 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   int? _selectedId;
   String? _errorMessage;
 
+  /// 请求序号:并发搜索时只接受最新一次的结果,防止慢请求覆盖快请求。
+  int _searchSeq = 0;
+
   List<String> get _filterValues =>
       _filterControllers.map((c) => c.text).toList();
 
@@ -294,17 +297,19 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
 
   Future<void> _search() async {
     final values = _filterValues;
+    final seq = ++_searchSeq;
     try {
       final result = await widget.delegate.fetch(_page, values);
       final count = await widget.delegate.count(values);
-      if (!mounted) return;
+      if (!mounted || seq != _searchSeq) return;
       setState(() {
         _items = result;
         _total = count;
+        _errorMessage = null; // 成功搜索清除上一次失败的错误提示
       });
     } catch (e) {
       LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
-      if (!mounted) return;
+      if (!mounted || seq != _searchSeq) return;
       setState(() => _errorMessage = '${widget.delegate.errorLabel}: $e');
     }
   }
@@ -342,7 +347,16 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
 
   Future<void> _openDialog() async {
     if (widget.readOnly) return;
-    final currentId = widget.controller.collect();
+    // 输入框可自由输入,非法文本会让 collect() 抛 FormatException;
+    // 捕获后提示用户而不是让搜索按钮静默失效。
+    final int currentId;
+    try {
+      currentId = widget.controller.collect();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error(foxyErrorMessage(error));
+      return;
+    }
     if (!mounted) return;
     final result = await showFoxyDialog<int>(
       context: context,

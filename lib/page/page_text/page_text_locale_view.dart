@@ -3,6 +3,7 @@ import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/page_text_locale_linked_list_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -37,6 +38,9 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
         child: Column(
           spacing: 16,
           children: [
+            Watch(
+              (_) => FoxyInlineError(message: viewModel.errorMessage.value),
+            ),
             Row(
               children: [
                 ShadButton(

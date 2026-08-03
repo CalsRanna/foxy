@@ -29,6 +29,10 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
   ui.Image? _image;
   bool _loading = true;
 
+  /// 本次请求的规范化路径;加载完成时与当前 widget 比对,
+  /// 防止旧路径的慢加载覆盖新路径的图标。
+  String? _requestedPath;
+
   @override
   Widget build(BuildContext context) {
     final image = _image;
@@ -53,7 +57,12 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
   @override
   void didUpdateWidget(covariant FoxyGameAssetIcon oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.rawPath != widget.rawPath) _load();
+    if (oldWidget.rawPath != widget.rawPath) {
+      // 换图时立即重置状态:清旧图、回到 loading,再发起新加载。
+      _image = null;
+      _loading = true;
+      _load();
+    }
   }
 
   @override
@@ -66,8 +75,15 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
     final path = GameIconPaths.blpPath(
       GameIconPaths.normalizeIconName(widget.rawPath),
     );
-    final image = await GameIconCache.instance.load(path);
-    if (!mounted) return;
+    _requestedPath = path;
+    ui.Image? image;
+    try {
+      image = await GameIconCache.instance.load(path);
+    } catch (_) {
+      // 缓存层解码失败应返回 null;此处兜底 IO/解码异常,按缺失处理。
+      image = null;
+    }
+    if (!mounted || path != _requestedPath) return;
     setState(() {
       _image = image;
       _loading = false;

@@ -3,6 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_addon_linked_detail_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -36,6 +37,9 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
+          Watch(
+            (_) => FoxyInlineError(message: viewModel.errorMessage.value),
+          ),
           ShadCard(
             padding: EdgeInsets.all(20),
             child: Column(

@@ -30,39 +30,45 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final template = viewModel.entity.value;
-      final entry = key ?? 0;
-      final enchantmentParentKey = template == null
-          ? null
-          : template.randomProperty != 0
-          ? ItemEnchantmentTemplateLinkKey(
-              entry: template.randomProperty,
-              kind: ItemEnchantmentKind.randomProperty,
-            )
-          : template.randomSuffix != 0
-          ? ItemEnchantmentTemplateLinkKey(
-              entry: template.randomSuffix,
-              kind: ItemEnchantmentKind.randomSuffix,
-            )
-          : null;
-      final name = key == null
-          ? '新建物品'
-          : template?.name.isNotEmpty == true
-          ? template?.name ?? ''
-          : '物品 #$key';
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
+    // Watch 拆分为标题区与页签区:编辑保存只更新标题;页签区仅在
+    // persistedKey/附魔与分解 linkKey 变化时重建(主表单带 ValueKey 复用)。
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          final template = viewModel.entity.value;
+          final name = key == null
+              ? '新建物品'
+              : template?.name.isNotEmpty == true
+              ? template?.name ?? ''
+              : '物品 #$key';
+          return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               name,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-          ),
-          FoxyTab(
+          );
+        }),
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          final template = viewModel.entity.value;
+          final entry = key ?? 0;
+          final enchantmentParentKey = template == null
+              ? null
+              : template.randomProperty != 0
+              ? ItemEnchantmentTemplateLinkKey(
+                  entry: template.randomProperty,
+                  kind: ItemEnchantmentKind.randomProperty,
+                )
+              : template.randomSuffix != 0
+              ? ItemEnchantmentTemplateLinkKey(
+                  entry: template.randomSuffix,
+                  kind: ItemEnchantmentKind.randomSuffix,
+                )
+              : null;
+          return FoxyTab(
             tabs: const [
               Text('物品模板'),
               Text('随机附魔组'),
@@ -72,7 +78,10 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
               Text('研磨掉落'),
             ],
             contents: [
-              ItemTemplateView(viewModel: viewModel),
+              ItemTemplateView(
+                key: ValueKey('main-$key'),
+                viewModel: viewModel,
+              ),
               ItemEnchantmentTemplateView(
                 key: ValueKey('enchantment-$enchantmentParentKey'),
                 linkKey: enchantmentParentKey,
@@ -95,10 +104,10 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
               ),
             ],
             disabledIndexes: key == null ? const {1, 2, 3, 4, 5} : const {},
-          ),
-        ],
-      );
-    });
+          );
+        }),
+      ],
+    );
   }
 
   @override

@@ -114,6 +114,7 @@ class _FoxyTabState extends State<FoxyTab> {
     // 1. 淡出
     setState(() => _opacity = 0.0);
     await Future.delayed(Duration(milliseconds: 150));
+    if (!mounted) return;
 
     // 2. 切换 Tab
     setState(() => index = targetIndex);
@@ -121,6 +122,7 @@ class _FoxyTabState extends State<FoxyTab> {
     // 3. 淡入
     setState(() => _opacity = 1.0);
     await Future.delayed(Duration(milliseconds: 150));
+    if (!mounted) return;
 
     _isAnimating = false;
   }
@@ -133,8 +135,12 @@ class _FoxyTabState extends State<FoxyTab> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (var i = 0; i < keys.length; i++) {
         final key = keys[i];
-        final renderBox = key.currentContext?.findRenderObject() as RenderBox;
-        width[i] = renderBox.size.width;
+        final context = key.currentContext;
+        if (context == null) continue;
+        // 窄窗口下横向 ListView 视口外的页签不会 build,currentContext 为 null,
+        // 不能强转,否则抛 TypeError。
+        final renderBox = context.findRenderObject() as RenderBox?;
+        width[i] = renderBox?.size.width ?? 0;
       }
       setState(() {});
     });

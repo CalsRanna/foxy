@@ -1404,7 +1404,12 @@ class SpellView extends StatelessWidget {
         2 => viewModel.effectChainTargets2Controller,
         _ => viewModel.effectChainTargets0Controller,
       };
-      final chainTargetsVal = chainTargetsCtrl.collect();
+      final chainTargetsVal = switch (i) {
+        0 => viewModel.effectChainTargets0Signal.value,
+        1 => viewModel.effectChainTargets1Signal.value,
+        2 => viewModel.effectChainTargets2Signal.value,
+        _ => 0,
+      };
       final needsChainAmplitude = chainTargetsVal > 0;
       final auraCtrl = switch (i) {
         0 => viewModel.effectAura0Controller,

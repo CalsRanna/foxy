@@ -24,6 +24,10 @@ class SpellDetailViewModel with FieldControllerMixin {
   final effectAura0Signal = signal<int>(0);
   final effectAura1Signal = signal<int>(0);
   final effectAura2Signal = signal<int>(0);
+  // ChainTarget 联动:输入 > 0 时解锁「效果伤害倍率」的可编辑状态。
+  final effectChainTargets0Signal = signal<int>(0);
+  final effectChainTargets1Signal = signal<int>(0);
+  final effectChainTargets2Signal = signal<int>(0);
   final spellClassSetSignal = signal<int>(0);
 
   /// 主键；新建时由 [createSpell] 预填 MAX+1，之后仍可编辑。
@@ -1090,7 +1094,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     if (_effectSignalsWired) return;
     _effectSignalsWired = true;
 
-    void sync(SelectFieldController<int> ctrl, Signal<int> sig) {
+    void sync<T>(FieldController<T> ctrl, Signal<T> sig) {
       sig.value = ctrl.collect();
       ctrl.addListener(() => sig.value = ctrl.collect());
     }
@@ -1101,6 +1105,9 @@ class SpellDetailViewModel with FieldControllerMixin {
     sync(effectAura0Controller, effectAura0Signal);
     sync(effectAura1Controller, effectAura1Signal);
     sync(effectAura2Controller, effectAura2Signal);
+    sync(effectChainTargets0Controller, effectChainTargets0Signal);
+    sync(effectChainTargets1Controller, effectChainTargets1Signal);
+    sync(effectChainTargets2Controller, effectChainTargets2Signal);
     sync(spellClassSetController, spellClassSetSignal);
   }
 }

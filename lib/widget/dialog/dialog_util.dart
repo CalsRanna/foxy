@@ -127,8 +127,10 @@ class DialogUtil {
   void dismissAll() {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
-    // 关闭所有对话框
+    // 只关闭对话框路由(PopupRoute),绝不弹出业务页面。
     while (Navigator.of(context).canPop()) {
+      final route = ModalRoute.of(context);
+      if (route is! PopupRoute) break;
       Navigator.of(context).pop();
     }
   }
@@ -137,12 +139,8 @@ class DialogUtil {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
-    // 兼容旧调用：若栈顶是 loading 等可 pop 路由则先关掉。
-    // 新代码应显式 dismiss loading 后再调用，避免依赖此隐式副作用。
-    if (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
-    }
-
+    // 不隐式 pop 栈顶:调用方如叠加了 loading 等对话框,应先显式 dismiss
+    // 再调用本方法,避免误弹掉真实页面(历史:曾无条件 pop 导致列表页被甩出)。
     showFoxyDialog(
       context: context,
       builder: (context) {

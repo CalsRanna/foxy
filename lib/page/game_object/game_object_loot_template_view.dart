@@ -3,6 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/game_object_loot_template_linked_list_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -57,6 +58,9 @@ class _GameObjectLootTemplateViewState
     return Column(
       spacing: 16,
       children: [
+        Watch(
+          (_) => FoxyInlineError(message: viewModel.errorMessage.value),
+        ),
         Row(
           spacing: 8,
           children: [

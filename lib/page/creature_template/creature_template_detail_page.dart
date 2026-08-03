@@ -41,43 +41,52 @@ class _CreatureTemplateDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final template = viewModel.entity.value;
-      final creatureId = key ?? 0;
-      final name = key == null
-          ? '新建生物'
-          : template?.name.isNotEmpty == true
-          ? template?.name ?? ''
-          : '生物 #$key';
-      const tabs = [
-        Text('生物模板'),
-        Text('模板补充'),
-        Text('击杀声望'),
-        Text('抗性'),
-        Text('技能'),
-        Text('装备模板'),
-        Text('任务物品'),
-        Text('商人'),
-        Text('训练师'),
-        Text('击杀掉落'),
-        Text('偷窃掉落'),
-        Text('剥皮掉落'),
-      ];
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
+    // Watch 拆分为标题区与页签区:编辑保存只更新标题;页签区仅在
+    // persistedKey/掉落 linkKey 变化时重建(主表单带 ValueKey 复用,不重建)。
+    const tabs = [
+      Text('生物模板'),
+      Text('模板补充'),
+      Text('击杀声望'),
+      Text('抗性'),
+      Text('技能'),
+      Text('装备模板'),
+      Text('任务物品'),
+      Text('商人'),
+      Text('训练师'),
+      Text('击杀掉落'),
+      Text('偷窃掉落'),
+      Text('剥皮掉落'),
+    ];
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          final template = viewModel.entity.value;
+          final name = key == null
+              ? '新建生物'
+              : template?.name.isNotEmpty == true
+              ? template?.name ?? ''
+              : '生物 #$key';
+          return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               name,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-          ),
-          FoxyTab(
+          );
+        }),
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          final template = viewModel.entity.value;
+          final creatureId = key ?? 0;
+          return FoxyTab(
             tabs: tabs,
             contents: [
-              CreatureTemplateView(viewModel: viewModel),
+              CreatureTemplateView(
+                key: ValueKey('main-$key'),
+                viewModel: viewModel,
+              ),
               CreatureTemplateAddonView(
                 key: ValueKey('addon-$creatureId'),
                 creatureId: creatureId,
@@ -127,10 +136,10 @@ class _CreatureTemplateDetailPageState
               key,
               tabs.length,
             ),
-          ),
-        ],
-      );
-    });
+          );
+        }),
+      ],
+    );
   }
 
   @override

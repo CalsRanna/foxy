@@ -30,28 +30,33 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final spell = viewModel.entity.value;
-      final spellId = key ?? 0;
-      final name = spell?.nameLangZhCN.isNotEmpty == true
-          ? spell?.nameLangZhCN ?? ''
-          : spell?.nameLangEnUS.isNotEmpty == true
-          ? spell?.nameLangEnUS ?? ''
-          : key == null
-          ? '新建法术'
-          : '法术 #$key';
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
+    // Watch 拆分为标题区与页签区:保存/加载只更新标题(名称可能变化),
+    // 不再整体重建 ~1700 行的 spell_view 及已访问页签(页签仅依赖 persistedKey)。
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          final spell = viewModel.entity.value;
+          final name = spell?.nameLangZhCN.isNotEmpty == true
+              ? spell?.nameLangZhCN ?? ''
+              : spell?.nameLangEnUS.isNotEmpty == true
+              ? spell?.nameLangEnUS ?? ''
+              : key == null
+              ? '新建法术'
+              : '法术 #$key';
+          return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               name,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-          ),
-          FoxyTab(
+          );
+        }),
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          final spellId = key ?? 0;
+          return FoxyTab(
             tabs: const [
               Text('基本信息'),
               Text('奖励系数'),
@@ -87,10 +92,10 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
             disabledIndexes: key == null
                 ? const {1, 2, 3, 4, 5, 6, 7}
                 : const {},
-          ),
-        ],
-      );
-    });
+          );
+        }),
+      ],
+    );
   }
 
   @override

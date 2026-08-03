@@ -23,31 +23,40 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final entity = viewModel.entity.value;
-      final name = key == null
-          ? '新建成就'
-          : entity?.titleLangZhCN.isNotEmpty == true
-          ? entity?.titleLangZhCN ?? ''
-          : '成就 #$key';
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
+    // Watch 拆分为标题区与页签区:编辑保存只更新标题,不重建表单。
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          final entity = viewModel.entity.value;
+          final name = key == null
+              ? '新建成就'
+              : entity?.titleLangZhCN.isNotEmpty == true
+              ? entity?.titleLangZhCN ?? ''
+              : '成就 #$key';
+          return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               name,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-          ),
-          FoxyTab(
+          );
+        }),
+        Watch((_) {
+          final key = viewModel.persistedKey.value;
+          return FoxyTab(
             tabs: const [Text('成就')],
-            contents: [AchievementView(viewModel: viewModel)],
-          ),
-        ],
-      );
-    });
+            contents: [
+              AchievementView(
+                key: ValueKey('main-$key'),
+                viewModel: viewModel,
+              ),
+            ],
+          );
+        }),
+      ],
+    );
   }
 
   @override

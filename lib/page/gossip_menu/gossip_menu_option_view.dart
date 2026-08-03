@@ -4,6 +4,7 @@ import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -373,7 +374,16 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       padding: const EdgeInsets.only(top: 16),
       child: ShadCard(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: Column(spacing: 16, children: [toolbar, table]),
+        child: Column(
+          spacing: 16,
+          children: [
+            Watch(
+              (_) => FoxyInlineError(message: viewModel.errorMessage.value),
+            ),
+            toolbar,
+            table,
+          ],
+        ),
       ),
     );
   }
