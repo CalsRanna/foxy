@@ -1,3 +1,13 @@
+/// 转义 LIKE 模式中的通配符,使筛选值按字面量匹配。
+///
+/// MySQL 默认以 `\` 为转义符(无需 ESCAPE 子句);laconic 只做参数绑定,
+/// 不会替调用方转义 `%`/`_`,用户输入含这些字符(如 `100%`)时会被当作
+/// 通配符,导致筛选命中大量无关记录。
+String escapeLike(String value) => value
+    .replaceAll('\\', '\\\\')
+    .replaceAll('%', '\\%')
+    .replaceAll('_', '\\_');
+
 /// 浮点字段解析，语义同 [parseIntField]。
 double parseDoubleField(String text, {String field = ''}) {
   final s = text.trim();

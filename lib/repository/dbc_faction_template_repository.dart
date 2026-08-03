@@ -1,6 +1,7 @@
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -90,7 +91,7 @@ class DbcFactionTemplateRepository
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(
         ['df.Name_lang_zhCN', 'df.Name_lang_enUS'],
-        '%${filter.name}%',
+        '%${escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

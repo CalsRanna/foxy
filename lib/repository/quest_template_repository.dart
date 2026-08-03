@@ -1,6 +1,7 @@
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -37,7 +38,7 @@ class QuestTemplateRepository
       if (filter != null && filter.title.isNotEmpty) {
         builder = builder.where(
           'LogTitle',
-          '%${filter.title}%',
+          '%${escapeLike(filter.title)}%',
           comparator: 'like',
         );
       }
@@ -107,13 +108,13 @@ class QuestTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['qt.LogTitle', 'qtl.Title'],
-          '%${filter.title}%',
+          '%${escapeLike(filter.title)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'qt.LogTitle',
-          '%${filter.title}%',
+          '%${escapeLike(filter.title)}%',
           comparator: 'like',
         );
       }

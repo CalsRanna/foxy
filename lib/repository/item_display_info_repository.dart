@@ -1,6 +1,7 @@
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -70,7 +71,7 @@ class ItemDisplayInfoRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'ModelName0',
-        '%${filter.name}%',
+        '%${escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

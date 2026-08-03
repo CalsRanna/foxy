@@ -82,9 +82,10 @@ class DbcExportUtil {
     required int recordIndex,
   }) {
     Never invalid(String expected) {
+      // 异常消息保持英文诊断(no_chinese_throw);用户文案经 foxyErrorMessage 映射。
       throw FormatException(
-        '$schemaName 第 ${recordIndex + 1} 条记录字段 $fieldName '
-        '期望 $expected，实际为 ${value.runtimeType}: $value',
+        '$schemaName record ${recordIndex + 1} field $fieldName '
+        'expected $expected, got ${value.runtimeType}: $value',
       );
     }
 
@@ -97,25 +98,27 @@ class DbcExportUtil {
     }
 
     int int32() {
-      final number = integer('32 位有符号整数');
+      final number = integer('32-bit signed integer');
       if (number < -2147483648 || number > 2147483647) {
-        return invalid('32 位有符号整数');
+        return invalid('32-bit signed integer');
       }
       return number;
     }
 
     double float32() {
-      if (value is! num || !value.isFinite) return invalid('有限浮点数');
+      if (value is! num || !value.isFinite) {
+        return invalid('finite float');
+      }
       final number = value.toDouble();
       if (!number.isFinite || number.abs() > 3.4028234663852886e38) {
-        return invalid('32 位浮点数');
+        return invalid('32-bit float');
       }
       return number;
     }
 
     String string() {
       if (value is! String || value.contains('\x00')) {
-        return invalid('不包含 NUL 的字符串');
+        return invalid('string without NUL');
       }
       return value;
     }
@@ -123,18 +126,18 @@ class DbcExportUtil {
     return switch (format) {
       's' => string(),
       'i' || 'n' => int32(),
-      'b' => switch (integer('0—255 的整数')) {
+      'b' => switch (integer('integer in 0-255')) {
         final number when number >= 0 && number <= 255 => number,
-        _ => invalid('0—255 的整数'),
+        _ => invalid('integer in 0-255'),
       },
       'f' => float32(),
       'l' => switch (value) {
         bool boolean => boolean,
         num number when number == 0 || number == 1 => number == 1,
-        _ => invalid('布尔值或 0/1'),
+        _ => invalid('boolean or 0/1'),
       },
       'x' || 'X' || 'd' => 0,
-      _ => throw FormatException('$schemaName 包含未知 DBC format: $format'),
+      _ => throw FormatException('$schemaName unknown DBC format: $format'),
     };
   }
 
@@ -181,7 +184,8 @@ class DbcExportUtil {
       }
       if (!row.containsKey(field.name)) {
         throw FormatException(
-          '${schema.name} 第 ${recordIndex + 1} 条记录缺少字段 ${field.name}',
+          '${schema.name} record ${recordIndex + 1} missing field '
+          '${field.name}',
         );
       }
       final value = row[field.name];
@@ -203,14 +207,14 @@ class DbcExportUtil {
     final loader = DbcLoader(path, schema.format);
     if (loader.recordCount != expectedRecords) {
       throw FormatException(
-        '${schema.name} 回读行数不一致：'
-        '期望 $expectedRecords，实际 ${loader.recordCount}',
+        '${schema.name} record count mismatch on re-read: '
+        'expected $expectedRecords, got ${loader.recordCount}',
       );
     }
     if (loader.fieldCount != schema.format.length) {
       throw FormatException(
-        '${schema.name} 回读字段数不一致：'
-        '期望 ${schema.format.length}，实际 ${loader.fieldCount}',
+        '${schema.name} field count mismatch on re-read: '
+        'expected ${schema.format.length}, got ${loader.fieldCount}',
       );
     }
   }

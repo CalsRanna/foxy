@@ -1,6 +1,7 @@
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -63,7 +64,7 @@ class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
     if (filter.text.isNotEmpty) {
       builder = builder.whereAny(
         ['text0_0', 'text0_1'],
-        '%${filter.text}%',
+        '%${escapeLike(filter.text)}%',
         comparator: 'like',
       );
     }

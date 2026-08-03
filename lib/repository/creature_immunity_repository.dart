@@ -1,6 +1,7 @@
 import 'package:foxy/entity/creature_immunity_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -77,7 +78,7 @@ class CreatureImmunityRepository
     if (filter.comment.isNotEmpty) {
       builder = builder.where(
         'Comment',
-        '%${filter.comment}%',
+        '%${escapeLike(filter.comment)}%',
         comparator: 'like',
       );
     }

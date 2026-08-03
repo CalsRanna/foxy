@@ -40,41 +40,54 @@ class GameIconCache {
     final inFlight = _pending[path];
     if (inFlight != null) return inFlight;
 
-    final future = _decode(path).then((image) {
-      if (image != null) {
-        _images.remove(path);
-        _images[path] = image;
-        while (_images.length > _maxEntries) {
-          // 淘汰最久未用条目并显式释放其 GPU 纹理。
-          final evicted = _images.remove(_images.keys.first);
-          evicted?.dispose();
+    final future = _decode(path).then(
+      (image) {
+        if (image != null) {
+          _images.remove(path);
+          _images[path] = image;
+          while (_images.length > _maxEntries) {
+            // 淘汰最久未用条目并显式释放其 GPU 纹理。
+            final evicted = _images.remove(_images.keys.first);
+            evicted?.dispose();
+          }
         }
-      }
-      _pending.remove(path);
-      return image;
-    });
+        _pending.remove(path);
+        return image;
+      },
+      onError: (Object _) {
+        // 解码/IO 失败不残留失败的 in-flight future:
+        // 后续 load() 应重新尝试而不是永远拿到同一个失败。
+        _pending.remove(path);
+        return null;
+      },
+    );
     _pending[path] = future;
     return future;
   }
 
   Future<ui.Image?> _decode(String path) async {
     final file = File(path);
-    if (!await file.exists()) return null;
-    final bytes = await file.readAsBytes();
-    final BlpImage decoded;
     try {
-      decoded = decodeBlp(bytes);
+      if (!await file.exists()) return null;
+      final bytes = await file.readAsBytes();
+      final BlpImage decoded;
+      try {
+        decoded = decodeBlp(bytes);
+      } on Object {
+        return null; // 损坏/不支持的 BLP 按缺失处理，显示占位。
+      }
+      final completer = Completer<ui.Image>();
+      ui.decodeImageFromPixels(
+        decoded.rgba,
+        decoded.width,
+        decoded.height,
+        ui.PixelFormat.rgba8888,
+        completer.complete,
+      );
+      return completer.future;
     } on Object {
-      return null; // 损坏/不支持的 BLP 按缺失处理，显示占位。
+      // 读文件 IO 异常(文件在 exists 与 readAsBytes 之间被删等)按缺失处理。
+      return null;
     }
-    final completer = Completer<ui.Image>();
-    ui.decodeImageFromPixels(
-      decoded.rgba,
-      decoded.width,
-      decoded.height,
-      ui.PixelFormat.rgba8888,
-      completer.complete,
-    );
-    return completer.future;
   }
 }

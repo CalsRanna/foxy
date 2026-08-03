@@ -2,6 +2,7 @@ import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -73,7 +74,7 @@ class MailTemplateRepository
     if (filter.subject.isNotEmpty) {
       builder = builder.where(
         'Subject_lang_zhCN',
-        '%${filter.subject}%',
+        '%${escapeLike(filter.subject)}%',
         comparator: 'like',
       );
     }

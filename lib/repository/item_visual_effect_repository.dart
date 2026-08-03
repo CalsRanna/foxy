@@ -1,6 +1,7 @@
 import 'package:foxy/entity/item_visual_effect_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -65,7 +66,7 @@ class ItemVisualEffectRepository
       builder = builder.where('ID', filter.id);
     }
     if (filter.model.isNotEmpty) {
-      builder = builder.where('Model', '%${filter.model}%', comparator: 'like');
+      builder = builder.where('Model', '%${escapeLike(filter.model)}%', comparator: 'like');
     }
     return builder;
   }

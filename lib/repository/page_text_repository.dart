@@ -2,6 +2,7 @@ import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -38,7 +39,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
         builder = builder.where('ID', filter.id);
       }
       if (filter != null && filter.text.isNotEmpty) {
-        builder = builder.where('Text', '%${filter.text}%', comparator: 'like');
+        builder = builder.where('Text', '%${escapeLike(filter.text)}%', comparator: 'like');
       }
       return builder.count();
     }
@@ -99,13 +100,13 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
       if (localeEnabled) {
         builder = builder.whereAny(
           ['pt.Text', 'ptl.Text'],
-          '%${filter.text}%',
+          '%${escapeLike(filter.text)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'pt.Text',
-          '%${filter.text}%',
+          '%${escapeLike(filter.text)}%',
           comparator: 'like',
         );
       }

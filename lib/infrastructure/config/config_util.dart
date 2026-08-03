@@ -16,9 +16,21 @@ class ConfigUtil {
     if (!await file.exists()) return {};
     final content = await file.readAsString();
     if (content.trim().isEmpty) return {};
-    final yaml = loadYaml(content);
-    if (yaml is! Map) return {};
-    return Map<String, dynamic>.from(yaml);
+    try {
+      final yaml = loadYaml(content);
+      if (yaml is! Map) return {};
+      return Map<String, dynamic>.from(yaml);
+    } on YamlException catch (error) {
+      // 配置损坏时自愈:备份损坏文件、按空配置返回,保证加载与保存可继续,
+      // 而不是让应用内永远无法恢复。
+      LoggerUtil.instance.w('config.yaml 解析失败,已备份为 config.yaml.bak: $error');
+      try {
+        await file.rename('${file.path}.bak');
+      } catch (_) {
+        // 备份失败不影响本次按空配置继续。
+      }
+      return {};
+    }
   }
 
   Future<void> update(Map<String, dynamic> values) {
@@ -36,6 +48,9 @@ class ConfigUtil {
     final config = {...await load(), ...values};
     final editor = YamlEditor('');
     editor.update([], config);
-    await file.writeAsString(editor.toString());
+    // 临时文件 + rename 原子替换,避免进程中断留下截断的 config.yaml。
+    final temporaryFile = File('$configPath.tmp');
+    await temporaryFile.writeAsString(editor.toString());
+    await temporaryFile.rename(configPath);
   }
 }

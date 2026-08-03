@@ -2,6 +2,7 @@ import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -91,7 +92,7 @@ class SpellRepository
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(
         ['ds.Name_lang_zhCN', 'ds.Name_lang_enUS'],
-        '%${filter.name}%',
+        '%${escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

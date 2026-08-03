@@ -1,6 +1,7 @@
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -65,7 +66,7 @@ class SoundProviderPreferencesRepository
     if (filter.description.isNotEmpty) {
       builder = builder.where(
         'Description',
-        '%${filter.description}%',
+        '%${escapeLike(filter.description)}%',
         comparator: 'like',
       );
     }

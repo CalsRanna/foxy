@@ -1,6 +1,7 @@
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -66,7 +67,7 @@ class GameObjectArtKitRepository
     if (filter.path.isNotEmpty) {
       builder = builder.whereAny(
         ['TextureVariation0', 'AttachModel0'],
-        '%${filter.path}%',
+        '%${escapeLike(filter.path)}%',
         comparator: 'like',
       );
     }

@@ -2,6 +2,7 @@ import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -71,7 +72,7 @@ class EmoteTextDataRepository
     if (filter.text.isNotEmpty) {
       builder = builder.where(
         'Text_lang_zhCN',
-        '%${filter.text}%',
+        '%${escapeLike(filter.text)}%',
         comparator: 'like',
       );
     }

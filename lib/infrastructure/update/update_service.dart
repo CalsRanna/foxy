@@ -130,6 +130,9 @@ class UpdateService {
 
   static const _requestTimeout = Duration(seconds: 30);
 
+  /// 下载正文相邻数据块之间的闲置超时,防止连接停滞时下载永久挂起。
+  static const _chunkTimeout = Duration(seconds: 30);
+
   final http.Client _client;
   final Uri _manifestUrl;
 
@@ -252,7 +255,9 @@ class UpdateService {
       final total = response.contentLength;
       sink = file.openWrite();
       var downloaded = 0;
-      await for (final chunk in response.stream) {
+      // 正文流逐块闲置超时:仅对响应头设超时不够,连接中途停滞时
+      // 下载会永久挂起且取消令牌永远等不到下一个 chunk。
+      await for (final chunk in response.stream.timeout(_chunkTimeout)) {
         if (cancelToken?.isCanceled ?? false) {
           throw const UpdateException(
             UpdateErrorKind.canceled,

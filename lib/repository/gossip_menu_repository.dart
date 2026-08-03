@@ -1,6 +1,7 @@
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -113,7 +114,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
           : ['nt.text0_0', 'nt.text0_1'];
       builder = builder.whereAny(
         textColumns,
-        '%${filter.text}%',
+        '%${escapeLike(filter.text)}%',
         comparator: 'like',
       );
     }

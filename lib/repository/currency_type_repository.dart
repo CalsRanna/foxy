@@ -1,6 +1,7 @@
 import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -88,9 +89,9 @@ class CurrencyTypeRepository
     if (filter.id.isNotEmpty) builder = builder.where('ct.ID', filter.id);
     if (filter.name.isNotEmpty) {
       builder = builder.whereNested((query) {
-        query.where('it.name', '%${filter.name}%', comparator: 'like');
+        query.where('it.name', '%${escapeLike(filter.name)}%', comparator: 'like');
         if (joinLocale) {
-          query.orWhere('itl.Name', '%${filter.name}%', comparator: 'like');
+          query.orWhere('itl.Name', '%${escapeLike(filter.name)}%', comparator: 'like');
         }
       });
     }

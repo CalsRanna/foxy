@@ -1,6 +1,7 @@
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -39,12 +40,12 @@ class CreatureTemplateRepository
         builder = builder.where('entry', filter.entry);
       }
       if (filter != null && filter.name.isNotEmpty) {
-        builder = builder.where('name', '%${filter.name}%', comparator: 'like');
+        builder = builder.where('name', '%${escapeLike(filter.name)}%', comparator: 'like');
       }
       if (filter != null && filter.subName.isNotEmpty) {
         builder = builder.where(
           'subname',
-          '%${filter.subName}%',
+          '%${escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       }
@@ -119,13 +120,13 @@ class CreatureTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['ct.name', 'ctl.Name'],
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'ct.name',
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }
@@ -134,13 +135,13 @@ class CreatureTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['ct.subname', 'ctl.Title'],
-          '%${filter.subName}%',
+          '%${escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'ct.subname',
-          '%${filter.subName}%',
+          '%${escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       }

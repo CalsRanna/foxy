@@ -1,6 +1,7 @@
 import 'package:foxy/entity/dbc_emote_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -61,7 +62,7 @@ class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
     if (filter.command.isNotEmpty) {
       builder = builder.where(
         'EmoteSlashCommand',
-        '%${filter.command}%',
+        '%${escapeLike(filter.command)}%',
         comparator: 'like',
       );
     }

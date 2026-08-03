@@ -1,6 +1,7 @@
 import 'package:foxy/entity/creature_model_data_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -76,7 +77,7 @@ class CreatureModelDataRepository
     if (filter.modelName.isNotEmpty) {
       builder = builder.where(
         'ModelName',
-        '%${filter.modelName}%',
+        '%${escapeLike(filter.modelName)}%',
         comparator: 'like',
       );
     }

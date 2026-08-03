@@ -1,6 +1,7 @@
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -43,14 +44,14 @@ class ItemTemplateRepository
         if (filter.name.isNotEmpty) {
           builder = builder.where(
             'name',
-            '%${filter.name}%',
+            '%${escapeLike(filter.name)}%',
             comparator: 'like',
           );
         }
         if (filter.description.isNotEmpty) {
           builder = builder.where(
             'description',
-            '%${filter.description}%',
+            '%${escapeLike(filter.description)}%',
             comparator: 'like',
           );
         }
@@ -126,13 +127,13 @@ class ItemTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['it.name', 'itl.Name'],
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'it.name',
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }
@@ -141,13 +142,13 @@ class ItemTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['it.description', 'itl.Description'],
-          '%${filter.description}%',
+          '%${escapeLike(filter.description)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'it.description',
-          '%${filter.description}%',
+          '%${escapeLike(filter.description)}%',
           comparator: 'like',
         );
       }

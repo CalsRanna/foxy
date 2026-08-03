@@ -1,6 +1,7 @@
 import 'package:foxy/entity/zone_intro_music_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -56,7 +57,7 @@ class ZoneIntroMusicRepository
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.name.isNotEmpty) {
-      builder = builder.where('Name', '%${filter.name}%', comparator: 'like');
+      builder = builder.where('Name', '%${escapeLike(filter.name)}%', comparator: 'like');
     }
     return builder;
   }

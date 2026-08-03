@@ -1,6 +1,7 @@
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -61,7 +62,7 @@ class SkillLineRepository with RepositoryMixin, _SkillLineRepositoryMixin {
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'DisplayName_lang_zhCN',
-        '%${filter.name}%',
+        '%${escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

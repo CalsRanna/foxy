@@ -321,14 +321,20 @@ class DbcSyncUtil {
 
   Future<void> _cleanupStaging(String jobId) async {
     try {
+      // 同时清理 __staging_ 与 __backup_ 表:强杀窗口期(rename 之后、drop 之前)
+      // 会遗留 backup 表,且会被 checkTables 的 LIKE 'dbc_%' 匹配到。
       final tables = dbcDefinitions
           .map(
-            (definition) => '${definition.qualifiedTableName}__staging_$jobId',
+            (definition) => [
+              '${definition.qualifiedTableName}__staging_$jobId',
+              '${definition.qualifiedTableName}__backup_$jobId',
+            ],
           )
+          .expand((t) => t)
           .join(', ');
       await Database.instance.laconic.statement('DROP TABLE IF EXISTS $tables');
     } catch (error) {
-      LoggerUtil.instance.w('DBC 取消后清理 staging 表失败: $error');
+      LoggerUtil.instance.w('DBC 取消后清理 staging/backup 表失败: $error');
     }
   }
 

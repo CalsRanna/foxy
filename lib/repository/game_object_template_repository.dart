@@ -1,6 +1,7 @@
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -38,7 +39,7 @@ class GameObjectTemplateRepository
         builder = builder.where('entry', filter.entry);
       }
       if (filter != null && filter.name.isNotEmpty) {
-        builder = builder.where('name', '%${filter.name}%', comparator: 'like');
+        builder = builder.where('name', '%${escapeLike(filter.name)}%', comparator: 'like');
       }
       return builder.count();
     }
@@ -108,13 +109,13 @@ class GameObjectTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['gt.name', 'gtl.name'],
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'gt.name',
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }

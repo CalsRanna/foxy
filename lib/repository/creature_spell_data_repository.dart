@@ -1,6 +1,7 @@
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -98,7 +99,7 @@ class CreatureSpellDataRepository
           'ds_3.Name_lang_zhCN',
           'ds_4.Name_lang_zhCN',
         ],
-        '%${filter.spell}%',
+        '%${escapeLike(filter.spell)}%',
         comparator: 'like',
       );
     }

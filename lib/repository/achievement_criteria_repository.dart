@@ -2,6 +2,7 @@ import 'package:foxy/entity/achievement_criteria_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -76,7 +77,7 @@ class AchievementCriteriaRepository
     if (filter.description.isNotEmpty) {
       builder = builder.where(
         'Description_lang_zhCN',
-        '%${filter.description}%',
+        '%${escapeLike(filter.description)}%',
         comparator: 'like',
       );
     }

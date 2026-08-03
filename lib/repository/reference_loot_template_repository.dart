@@ -1,6 +1,7 @@
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -155,13 +156,13 @@ class ReferenceLootTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['it.name', 'itl.Name'],
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'it.name',
-          '%${filter.name}%',
+          '%${escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }
