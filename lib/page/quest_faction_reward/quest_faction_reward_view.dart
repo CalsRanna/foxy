@@ -96,7 +96,7 @@ class QuestFactionRewardView extends StatelessWidget {
       ),
     );
 
-    /// 1. 基本信息
+    /// 1. Basic info
     final basicRows = [
       Row(
         spacing: 8,
@@ -109,7 +109,7 @@ class QuestFactionRewardView extends StatelessWidget {
       ),
     ];
 
-    /// 2. 声望奖励值
+    /// 2. Reputation reward values
     final difficultyRows = [
       Row(
         spacing: 8,

@@ -160,7 +160,7 @@ void main() {
       expect(merged.zhCN, '主框新值');
       expect(merged.valueOf('enUS'), 'other_enUS');
       expect(merged.valueOf('koKR'), 'other_koKR');
-      // 原列表不被修改
+      // The original list is not modified
       expect(values.zhCN, '库中旧值');
     });
   });

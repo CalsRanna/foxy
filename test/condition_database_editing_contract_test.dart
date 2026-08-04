@@ -380,10 +380,10 @@ void main() {
       addTearDown(viewModel.dispose);
       await viewModel.initSignals();
       _initControllers(viewModel, _condition());
-      // 切换到来源引用模式
+      // Switch to source-reference mode
       viewModel.sourceModeController.init(1);
       viewModel.sourceReferenceIdController.init(7);
-      // 隐藏字段的旧草稿
+      // Old draft of a hidden field
       viewModel.sourceGroupController.init(5);
       viewModel.sourceEntryController.init(2);
       viewModel.sourceIdController.init(1);
@@ -402,7 +402,7 @@ void main() {
       expect(stored.errorType, 0);
       expect(stored.errorTextId, 0);
 
-      // 切回普通模式，草稿仍保留
+      // Switching back to normal mode keeps the draft
       viewModel.sourceModeController.init(0);
       expect(viewModel.sourceGroupController.collect(), 5);
       expect(viewModel.sourceEntryController.collect(), 2);
@@ -414,7 +414,7 @@ void main() {
       addTearDown(viewModel.dispose);
       await viewModel.initSignals();
       _initControllers(viewModel, _condition());
-      // 切换到条件引用模式
+      // Switch to condition-reference mode
       viewModel.conditionModeController.init(1);
       viewModel.conditionReferenceIdController.init(5);
       viewModel.conditionValue1Controller.init(3);
@@ -451,12 +451,13 @@ void main() {
       await viewModel.initSignals();
       _initControllers(viewModel, _condition());
 
-      // 裸负号是非法草稿：组不通知、不抛异常，最后合法值保留。
+      // A bare minus is an invalid draft: the group neither notifies nor
+      // throws, and the last valid value is kept.
       viewModel.conditionValue1Controller.numberController.controller.text =
           '-';
       expect(viewModel.selectedConditionValue1.value, 1);
 
-      // 修复后正常保存。
+      // Saving works again after fixing the input.
       viewModel.conditionValue1Controller.numberController.controller.text =
           '3';
       await viewModel.persist();
@@ -488,7 +489,8 @@ void _initControllers(
   ConditionDetailViewModel viewModel,
   ConditionEntity condition,
 ) {
-  // 普通类型模式（测试数据均为非负来源/条件类型）。
+  // Normal-type mode (all test data uses non-negative source/condition
+  // types).
   viewModel.sourceModeController.init(0);
   viewModel.sourceTypeController.init(condition.sourceTypeOrReferenceId);
   viewModel.sourceGroupController.init(condition.sourceGroup);

@@ -1,6 +1,7 @@
-/// `Common.h::LocaleConstant` 中会被 `LoadPageTextLocales` 接受的 locale。
+/// Locales of `Common.h::LocaleConstant` accepted by `LoadPageTextLocales`.
 ///
-/// `enUS` 是 `page_text.Text` 的基础文本；locale 加载器会跳过对应分表记录。
+/// `enUS` is the base text of `page_text.Text`; the locale loader skips the
+/// matching sub-table record.
 const kPageTextLocaleOptions = <String, String>{
   'koKR': 'koKR',
   'frFR': 'frFR',

@@ -17,7 +17,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// 训练师Tab
+/// Trainer tab
 class NpcTrainerView extends StatefulWidget {
   final int creatureId;
 
@@ -58,7 +58,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
     _setParent(widget.creatureId);
   }
 
-  /// 对话框表单（垂直布局）
+  /// Dialog form (vertical layout)
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editingKey.value != null;
 
@@ -77,7 +77,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
               ),
             ),
             SizedBox(height: 16),
-            // 技能
+            // Spell
             FoxyFormItem(
               label: '技能',
               child: FoxyEntityPicker(
@@ -87,7 +87,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
               ),
             ),
             SizedBox(height: 16),
-            // 金币花费
+            // Gold cost
             FoxyFormItem(
               label: '金币花费',
               child: FoxyNumberInput<int>(
@@ -104,7 +104,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
               ),
             ),
             const SizedBox(height: 8),
-            // 需要技能线
+            // Required skill line
             FoxyFormItem(
               label: '需要技能线',
               child: FoxyEntityPicker(
@@ -114,7 +114,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
               ),
             ),
             SizedBox(height: 16),
-            // 需要技能等级
+            // Required skill rank
             FoxyFormItem(
               label: '需要技能等级',
               child: FoxyNumberInput<int>(
@@ -166,7 +166,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
               ),
             ),
             SizedBox(height: 24),
-            // 按钮行
+            // Button row
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -342,7 +342,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
     }
   }
 
-  /// 显示新增对话框
+  /// Shows the add dialog
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create();
@@ -362,7 +362,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
     );
   }
 
-  /// 显示编辑对话框
+  /// Shows the edit dialog
   void _showEditDialog() {
     showFoxyDialog(
       context: context,

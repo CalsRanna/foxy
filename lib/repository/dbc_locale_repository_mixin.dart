@@ -2,24 +2,27 @@ import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-/// DBC 宽表本地化字段的加载/局部更新实现。
+/// Load/partial-update implementation for DBC wide-table locale fields.
 ///
-/// 各 DBC Repository 混入本 mixin，并对外暴露本表命名的
-/// `get*Locales` / `save*Locales` 方法；页面不得绕过 Repository 直接操作 Laconic。
+/// Each DBC Repository mixes in this and exposes table-named
+/// `get*Locales` / `save*Locales` methods; pages must never bypass the
+/// Repository to touch Laconic directly.
 mixin DbcLocaleRepositoryMixin on RepositoryMixin {
-  /// 全限定表名，如 `foxy.dbc_spell`。
+  /// Fully-qualified table name, e.g. `foxy.dbc_spell`.
   String get dbcLocaleTableName;
 
-  /// 去掉 `foxy.` 前缀后的表名，与 [DbcLocaleFieldDefinition.tableName] 对齐。
+  /// Table name with the `foxy.` prefix stripped, aligned with
+  /// [DbcLocaleFieldDefinition.tableName].
   String get _unqualifiedDbcTableName {
     final name = dbcLocaleTableName;
     const prefix = 'foxy.';
     return name.startsWith(prefix) ? name.substring(prefix.length) : name;
   }
 
-  /// 加载指定记录上某个本地化字段的 16 个语言值。
+  /// Loads the 16 language values of a locale field on the given record.
   ///
-  /// 记录不存在时抛出 [StateError]，避免用空值掩盖错误 ID。
+  /// Throws [StateError] when the record does not exist, so an empty value
+  /// never masks a wrong ID.
   Future<List<DbcLocaleFieldValue>> loadDbcLocaleField(
     int id,
     DbcLocaleFieldDefinition field,
@@ -39,10 +42,12 @@ mixin DbcLocaleRepositoryMixin on RepositoryMixin {
     return DbcLocaleFieldCodec.decode(field, results.first.toMap());
   }
 
-  /// 局部更新指定本地化字段的 16 个语言列（不改 Flags 与其它字段）。
+  /// Partially updates the 16 language columns of a locale field (leaves
+  /// Flags and other fields untouched).
   ///
-  /// 更新前校验字段属于本表且记录存在；laconic 的 update 不返回受影响行数，
-  /// 因此以存在性检查代替 0 行 UPDATE 的静默成功。
+  /// Before updating, validates the field belongs to this table and the
+  /// record exists; laconic's update does not return an affected-row count,
+  /// so an existence check replaces the silent success of a 0-row UPDATE.
   Future<void> storeDbcLocaleField(
     int id,
     DbcLocaleFieldDefinition field,

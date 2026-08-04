@@ -17,7 +17,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// 任务物品Tab
+/// Quest-item tab
 class CreatureQuestItemView extends StatefulWidget {
   final int creatureId;
 
@@ -57,7 +57,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
     viewModel.initSignals(linkKey: widget.creatureId);
   }
 
-  /// 对话框表单（垂直布局）
+  /// Dialog form (vertical layout)
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editingKey.value != null;
 
@@ -67,7 +67,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 生物ID
+          // Creature ID
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
@@ -76,7 +76,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
             ),
           ),
           SizedBox(height: 16),
-          // 索引（主键序号）
+          // Index (primary-key sequence)
           FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
@@ -85,7 +85,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
             ),
           ),
           SizedBox(height: 16),
-          // 物品
+          // Item
           FoxyFormItem(
             label: '物品',
             child: FoxyEntityPicker(
@@ -104,7 +104,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
             ),
           ),
           SizedBox(height: 24),
-          // 按钮行
+          // Button row
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -143,13 +143,13 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
   }
 
   Widget _buildTable() {
-    // 新增按钮
+    // Add button
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
       child: Text('新增'),
     );
 
-    // 工具栏
+    // Toolbar
     final toolbar = Row(
       children: [
         createButton,
@@ -293,7 +293,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
     }
   }
 
-  /// 显示新增对话框
+  /// Shows the add dialog
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create();
@@ -313,7 +313,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
     );
   }
 
-  /// 显示编辑对话框
+  /// Shows the edit dialog
   void _showEditDialog(BuildContext context) {
     showFoxyDialog(
       context: context,

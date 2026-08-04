@@ -1,13 +1,14 @@
 import 'package:foxy/entity/dbc_locale.dart';
 
-/// 宽表 16 语言列 ↔ 编辑器 16 行值 的双向 Codec。
+/// Bidirectional codec between the wide table's 16 language columns and the
+/// editor's 16 row values.
 ///
-/// - 只处理当前字段组的 16 个字符串列。
-/// - 不读取/修改 `${columnPrefix}_Flags` 或其它字段。
+/// - Only handles the 16 string columns of the current field group.
+/// - Never reads or modifies `${columnPrefix}_Flags` or other fields.
 class DbcLocaleFieldCodec {
   const DbcLocaleFieldCodec._();
 
-  /// 从数据库行解码为固定顺序的 16 个 [DbcLocaleFieldValue]。
+  /// Decodes a database row into 16 [DbcLocaleFieldValue]s in fixed order.
   static List<DbcLocaleFieldValue> decode(
     DbcLocaleFieldDefinition field,
     Map<String, dynamic> row,
@@ -21,7 +22,7 @@ class DbcLocaleFieldCodec {
     ];
   }
 
-  /// 生成 16 个空值行（固定顺序）。
+  /// Produces 16 empty-value rows (fixed order).
   static List<DbcLocaleFieldValue> empty() {
     return [
       for (final locale in DbcLocale.values)
@@ -29,9 +30,10 @@ class DbcLocaleFieldCodec {
     ];
   }
 
-  /// 将 16 行编辑结果编码为仅含当前字段组语言列的更新 Map。
+  /// Encodes the 16 edited rows into an update map containing only the
+  /// language columns of the current field group.
   ///
-  /// 拒绝长度不对、重复或顺序非法的数据。
+  /// Rejects data with the wrong length, duplicates, or illegal ordering.
   static Map<String, dynamic> encode(
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> values,

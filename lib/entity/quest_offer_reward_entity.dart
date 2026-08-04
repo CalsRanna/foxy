@@ -2,8 +2,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'quest_offer_reward_entity.g.dart';
 
-/// QuestOfferReward 模型
-/// quest_offer_reward 表，1:1 关系与 quest_template，共享 ID 主键。
+/// QuestOfferReward model
+/// quest_offer_reward table, 1:1 with quest_template, sharing the ID
+/// primary key.
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'quest_offer_reward')

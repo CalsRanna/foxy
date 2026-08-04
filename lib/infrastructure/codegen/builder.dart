@@ -19,8 +19,8 @@ Builder foxyEntityBuilder(BuilderOptions options) {
   );
 }
 
-// part 顶层遵循 "Sort Members" 规则:公开 class(Filter)在前,
-// 私有 mixin(Repository)在后,所以 Filter 生成器排在前面。
+// Part top level follows the "Sort Members" rule: public classes (Filter) come
+// before the private mixin (Repository), so the Filter generator goes first.
 Builder foxyRepositoryBuilder(BuilderOptions options) {
   return SharedPartBuilder(
     [const FoxyFilterGenerator(), const FoxyRepositoryGenerator()],
@@ -29,7 +29,7 @@ Builder foxyRepositoryBuilder(BuilderOptions options) {
   );
 }
 
-// 生成器按名排序(FoxyLinkedDetailViewModelGenerator <
+// Generators are ordered by name (FoxyLinkedDetailViewModelGenerator <
 // FoxyLinkedListViewModelGenerator < FoxyListViewModelGenerator <
 // FoxyViewModelGenerator)。
 Builder foxyViewModelBuilder(BuilderOptions options) {

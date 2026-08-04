@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 在指定位置显示上下文菜单
+/// Shows a context menu at the given position
 ///
 /// [context] - BuildContext
-/// [position] - 菜单显示位置（全局坐标）
-/// [items] - 菜单项列表，使用 ShadContextMenuItem
+/// [position] - menu position (global coordinates)
+/// [items] - menu items, using ShadContextMenuItem
 void showFoxyContextMenu({
   required BuildContext context,
   required Offset position,

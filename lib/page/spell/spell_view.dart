@@ -31,7 +31,7 @@ class MiscValueFlagPicker extends MiscValueOptions {
 
 class MiscValueNumber extends MiscValueOptions {}
 
-/// MiscValue 的三态输入模式。
+/// Tri-state input modes for MiscValue.
 sealed class MiscValueOptions {
   const MiscValueOptions();
 }
@@ -53,7 +53,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 基础文本（主表单展示 zhCN，地球按钮编辑 16 语言）===
+    // === Basic text (main form shows zhCN; globe button edits 16 languages) ===
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
@@ -139,7 +139,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 图标/视觉 ===
+    // === Icon/visual ===
     final spellIconIDInput = FoxyFormItem(
       label: '图标',
       child: FoxyEntityPicker(
@@ -171,7 +171,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 分类/类型 ===
+    // === Category/type ===
     final categoryInput = FoxyFormItem(
       label: '分类',
       child: FoxyNumberInput<int>(
@@ -221,7 +221,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 施法参数 ===
+    // === Casting params ===
     final castingTimeIndexInput = FoxyFormItem(
       label: '施法时间',
       child: FoxyNumberInput<int>(
@@ -253,7 +253,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 等级 ===
+    // === Ranks ===
     final baseLevelInput = FoxyFormItem(
       label: '基础等级',
       child: FoxyNumberInput<int>(
@@ -283,7 +283,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 冷却/恢复 ===
+    // === Cooldown/recovery ===
     final startRecoveryCategoryInput = FoxyFormItem(
       label: '冷却分类',
       child: FoxyNumberInput<int>(
@@ -313,7 +313,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 目标 ===
+    // === Targets ===
     final targetCreatureTypeInput = FoxyFormItem(
       label: '目标生物类型',
       child: FoxyShadSelect<int>(
@@ -346,7 +346,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 状态 ===
+    // === States ===
     final casterAuraStateInput = FoxyFormItem(
       label: '施法者状态',
       child: FoxyShadSelect<int>(
@@ -378,7 +378,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 需求 ===
+    // === Requirements ===
     final requiredAreasIDInput = FoxyFormItem(
       label: '需求区域组',
       child: FoxyNumberInput<int>(
@@ -403,7 +403,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 能量消耗 ===
+    // === Power cost ===
     final powerDisplayIDInput = FoxyFormItem(
       label: '能量显示',
       child: FoxyNumberInput<int>(
@@ -462,7 +462,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 标志位（所有属性标志） ===
+    // === Flags (all attribute flags) ===
     final interruptFlagsInput = FoxyFormItem(
       label: '打断标志',
       child: FoxyFlagPicker(
@@ -563,7 +563,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 触发 ===
+    // === Procs ===
     final procTypeMaskInput = FoxyFormItem(
       label: '触发类型掩码',
       child: FoxyFlagPicker(
@@ -588,7 +588,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 法术分类掩码 ===
+    // === Spell-family mask ===
     final spellClassSetInput = FoxyFormItem(
       label: '法术族',
       child: FoxyShadSelect<int>(
@@ -598,9 +598,10 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // 效果区域的输入框已移至响应式 _buildEffectSection 方法中
+    // Effect-area inputs have moved into the reactive _buildEffectSection
+    // method
 
-    // === 装备限制 ===
+    // === Equip restrictions ===
     final equippedItemClassInput = FoxyFormItem(
       label: '装备类型',
       child: FoxyShadSelect<int>(
@@ -626,7 +627,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 图腾/施法材料 ===
+    // === Totems/casting materials ===
     final requiredTotemCategoryID0Input = FoxyFormItem(
       label: '图腾1类型',
       child: FoxyEntityPicker(
@@ -772,7 +773,7 @@ class SpellView extends StatelessWidget {
       ),
     );
 
-    // === 其他高级属性 ===
+    // === Other advanced props ===
     final casterAuraSpellInput = FoxyFormItem(
       label: '自身光环法术',
       child: FoxyEntityPicker(
@@ -1297,8 +1298,9 @@ class SpellView extends StatelessWidget {
     );
   }
 
-  /// 构建响应式效果区域
-  /// 根据 [effectSignal] 和 [effectAuraSignal] 决定子字段的 readonly 状态
+  /// Builds the reactive effect section
+  /// Decides sub-fields' readonly state from [effectSignal] and
+  /// [effectAuraSignal]
   Widget _buildEffectSection(String title, int i) {
     return Watch((_) {
       final effectValue = switch (i) {
@@ -1314,7 +1316,8 @@ class SpellView extends StatelessWidget {
         _ => 0,
       };
       final effectActive = effectValue != 0;
-      // 只有 SPELL_EFFECT_APPLY_AURA(6) 或区域光环效果才需要光环字段
+      // Only SPELL_EFFECT_APPLY_AURA (6) or area-aura effects need the aura
+      // fields
       final needsAura =
           effectValue == 6 ||
           effectValue == 27 ||
@@ -1324,7 +1327,7 @@ class SpellView extends StatelessWidget {
           effectValue == 128 ||
           effectValue == 129 ||
           effectValue == 143;
-      // 周期性光环
+      // Periodic auras
       final isPeriodic = const {
         3,
         8,
@@ -1339,7 +1342,8 @@ class SpellView extends StatelessWidget {
       }.contains(auraValue);
       final miscOptions = _miscValueOptions(effectValue, auraValue);
       final miscBOptions = _miscValueBOptions(effectValue, auraValue);
-      // 字段联动：某些子字段只在特定 Effect 下有意义
+      // Field linkage: some sub-fields only make sense under a specific
+      // Effect
       final needsItemType = const {
         24,
         34,
@@ -1776,7 +1780,7 @@ class SpellView extends StatelessWidget {
     GetIt.instance.get<RouterFacade>().goBack();
   }
 
-  /// MiscValueB 的动态标签
+  /// Dynamic label for MiscValueB
   String _miscValueBLabel(int effect, int aura) {
     if (effect == 0) return '杂项值B';
     return switch (effect) {
@@ -1789,25 +1793,25 @@ class SpellView extends StatelessWidget {
     };
   }
 
-  /// 返回 MiscValueB 对应的枚举选项
+  /// Returns the enum options for MiscValueB
   MiscValueOptions? _miscValueBOptions(int effect, int aura) {
     if (effect == 0) return null;
     return switch (effect) {
       6 => switch (aura) {
         174 => MiscValueDropdown(
           kStatsEnumOptions,
-        ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — 用 Stats 枚举！
+        ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — uses the Stats enum!
         _ => null,
       },
       _ => null,
     };
   }
 
-  /// 根据 Effect 和 EffectAura 返回 MiscValue 的动态标签
+  /// Returns the dynamic MiscValue label for the Effect/EffectAura pair
   String _miscValueLabel(int effect, int aura) {
     if (effect == 0) return '杂项值';
     switch (effect) {
-      case 6: // APPLY_AURA - 由 Aura 决定
+      case 6: // APPLY_AURA - decided by Aura
         return switch (aura) {
           13 || 87 || 174 || 237 || 238 => '法术类型掩码',
           22 || 83 => '抗性类型',
@@ -1852,7 +1856,7 @@ class SpellView extends StatelessWidget {
     }
   }
 
-  /// 返回 MiscValue 对应的枚举选项。
+  /// Returns the enum options for MiscValue.
   MiscValueOptions? _miscValueOptions(int effect, int aura) {
     if (effect == 0) return null;
     if (effect == 6) {
@@ -1860,14 +1864,14 @@ class SpellView extends StatelessWidget {
         13 || 87 || 174 || 237 || 238 => MiscValueFlagPicker(
           kSpellSchoolMaskOptions,
         ), // school mask → FlagPicker!
-        22 || 83 => MiscValueDropdown(kDamageSchoolOptions), // 单值抗性 → 下拉
+        22 || 83 => MiscValueDropdown(kDamageSchoolOptions), // single resistance → dropdown
         29 ||
         137 ||
         175 ||
         182 ||
         212 ||
-        268 => MiscValueDropdown(kStatTypeOptions), // 单值属性 → 下拉
-        30 || 98 => null, // 技能ID → 数字
+        268 => MiscValueDropdown(kStatTypeOptions), // single stat → dropdown
+        30 || 98 => null, // spell ID → number
         31 => MiscValueDropdown(kSpeedTypeOptions),
         36 => MiscValueDropdown(kShapeshiftFormOptions),
         99 => MiscValueDropdown(kAttackPowerTypeOptions),
@@ -1897,10 +1901,12 @@ class SpellView extends StatelessWidget {
   }
 }
 
-/// 根据上下文动态切换 数字输入 / 下拉框 / FlagPicker。
+/// Dynamically switches between number input / dropdown / FlagPicker by
+/// context.
 ///
-/// 源数据始终是 VM 的 [IntFieldController]；Select/Flag 模式使用本地适配器
-/// 控制器，通过 listener 写回 int 值。
+/// The data source is always the VM's [IntFieldController]; Select/Flag
+/// modes use a local adapter controller that writes the int back through a
+/// listener.
 class _MiscValueInput extends StatefulWidget {
   final IntFieldController controller;
   final MiscValueOptions? options;

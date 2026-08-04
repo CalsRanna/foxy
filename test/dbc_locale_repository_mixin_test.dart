@@ -34,14 +34,15 @@ void main() {
 
     test('AreaTableRepository 接受本表字段定义（失败应来自 DB 而非表名）', () async {
       final repo = AreaTableRepository();
-      // 未连接数据库时会在存在性检查或查询处失败，但不应是表名 ArgumentError
+      // Without a DB connection, failures happen at the existence check or
+      // query — never a table-name ArgumentError
       try {
         await repo.getAreaTableLocales(1, DbcLocaleFields.areaTableAreaName);
         fail('expected database error');
       } on ArgumentError catch (e) {
         fail('不应因表名校验失败: $e');
       } catch (_) {
-        // 预期：Database/StateError 等
+        // Expected: Database/StateError etc.
       }
     });
   });

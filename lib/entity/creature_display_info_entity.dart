@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_display_info_entity.g.dart';
 
-/// 生物显示信息 — 对应 foxy.dbc_creature_display_info 表
+/// Creature display info — maps to the foxy.dbc_creature_display_info table
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('modelName')

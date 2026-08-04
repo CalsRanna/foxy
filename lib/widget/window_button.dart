@@ -15,8 +15,9 @@ class _WindowButtonState extends State<WindowButton> with WindowListener {
   @override
   void initState() {
     super.initState();
-    // 系统吸附(Win+↑)、任务栏操作等途径改变的最大化状态同样需要同步,
-    // 否则按钮状态失步(再点会执行反向操作)。
+    // Maximize-state changes from other paths (system snap Win+Up,
+    // taskbar actions) must sync too, or the button state drifts (a
+    // re-click would perform the reverse action).
     windowManager.addListener(this);
     windowManager.isMaximized().then((value) {
       if (mounted) setState(() => isMaximized = value);
@@ -71,7 +72,8 @@ class _WindowButtonState extends State<WindowButton> with WindowListener {
     } else {
       windowManager.maximize();
     }
-    // 状态由 onWindowMaximize/onWindowUnmaximize 事件回写,这里不再自行
-    // 翻转,避免与事件到达顺序竞争。
+    // State is written back by the onWindowMaximize/onWindowUnmaximize
+    // events; we no longer flip it ourselves, avoiding a race with event
+    // arrival order.
   }
 }

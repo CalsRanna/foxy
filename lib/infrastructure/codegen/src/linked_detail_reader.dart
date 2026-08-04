@@ -20,7 +20,8 @@ final class LinkedDetailReader {
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    // controller 样板与 FoxyDetailViewModel 完全同构:复用 FormReader。
+    // Controller boilerplate is fully isomorphic with FoxyDetailViewModel:
+    // reuse FormReader.
     final form = await const FormReader().read(element, annotation, buildStep);
     if (form.repositoryClassName.isEmpty) {
       _fail(

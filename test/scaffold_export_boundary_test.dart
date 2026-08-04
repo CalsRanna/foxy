@@ -10,7 +10,7 @@ void main() {
     final source = await File(
       'lib/view_model/feature_state_view_model.dart',
     ).readAsString();
-    // 导出状态应在独立 workflow，不在 Scaffold。
+    // Export state belongs in a dedicated workflow, not the Scaffold.
     expect(source.contains('dbcExport'), isFalse);
     expect(source.contains('exportDbc'), isFalse);
     expect(source.contains('DbcExport'), isFalse);

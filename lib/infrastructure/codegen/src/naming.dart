@@ -1,7 +1,9 @@
-/// 把 Dart 类名转换成约定的 snake_case 源文件名主干。
+/// Converts a Dart class name to the conventional snake_case source-file
+/// stem.
 ///
 /// `AchievementEntity` → `achievement_entity`；
-/// 连续大写按缩写切分：`NPCVendorRepository` → `npc_vendor_repository`。
+/// Consecutive capitals split at acronym boundaries:
+/// `NPCVendorRepository` → `npc_vendor_repository`.
 String toSnakeCase(String value) => value
     .replaceAllMapped(
       RegExp(r'([A-Z]+)([A-Z][a-z])'),
@@ -13,10 +15,11 @@ String toSnakeCase(String value) => value
     )
     .toLowerCase();
 
-/// 列表方法的复数后缀：`GemProperty` → `GemProperties`。
+/// Plural suffix for list methods: `GemProperty` → `GemProperties`.
 ///
-/// 与手写仓库的 `getBrief*/count*` 命名一致：辅音 + y 结尾按
-/// y → ies（`GemPropertys` 是错误拼写），其余直接加 s。
+/// Matches the hand-written repositories' `getBrief*/count*` naming:
+/// consonant + y endings change y → ies (`GemPropertys` is a misspelling),
+/// everything else just gets an s.
 String pluralize(String name) {
   if (name.length >= 2 &&
       name.endsWith('y') &&

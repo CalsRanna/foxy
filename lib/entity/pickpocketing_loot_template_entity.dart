@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'pickpocketing_loot_template_entity.g.dart';
 
-/// 掉落模板 — 对应 pickpocketing_loot_template 表。
+/// Loot template — maps to the pickpocketing_loot_template table.
 @FoxyBriefEntity()
 @FoxyBriefField.text('itemName')
 @FoxyBriefField.text('itemLocaleName')

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 统一的表单分组区域：标题 + 卡片容器
+/// Uniform form-section area: title + card container
 ///
-/// 所有模块的 section 标题和卡片间距保持一致：
-/// 标题距卡片 8px，每行字段间距 8px。
+/// Section titles and card spacing stay consistent across all modules:
+/// 8px between title and card, 8px between field rows.
 class FoxyFormSection extends StatelessWidget {
   final String title;
   final List<Widget> children;

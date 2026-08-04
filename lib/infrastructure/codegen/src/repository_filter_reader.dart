@@ -83,10 +83,12 @@ final class RepositoryFilterReader {
   }
 }
 
-/// 从单个 `@FoxyFilter` 注解对象解析字段模型，供 Filter 生成器与
-/// Repository 生成器共用，保证两边读到一致的字段定义。
+/// Parses the field model from a single `@FoxyFilter` annotation, shared by
+/// the Filter and Repository generators so both read the same field
+/// definition.
 ///
-/// `column` 未显式声明时返回空字符串，由调用方决定推断或报错。
+/// Returns an empty string when `column` is not declared; callers decide
+/// whether to infer or error out.
 RepositoryFilterFieldModel readFilterField(
   DartObject object,
   String filterClassName,

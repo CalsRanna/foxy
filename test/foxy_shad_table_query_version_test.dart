@@ -10,12 +10,12 @@ void main() {
     await tester.pumpWidget(buildScrollableTable(0, controller));
     await tester.pumpAndSettle();
 
-    // 向下滚动一段距离
+    // Scroll down a bit
     await tester.drag(find.byType(FoxyShadTable), const Offset(0, -800));
     await tester.pumpAndSettle();
     expect(controller.offset, greaterThan(0));
 
-    // 查询版本变化 → 回到第一行
+    // Query version changes → back to the first row
     await tester.pumpWidget(buildScrollableTable(1, controller));
     await tester.pumpAndSettle();
     expect(controller.offset, 0);
@@ -31,7 +31,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(controller.offset, greaterThan(0));
 
-    // 数据型刷新：版本不变 → 位置保持
+    // Data refresh: version unchanged → position kept
     await tester.pumpWidget(buildScrollableTable(0, controller));
     await tester.pumpAndSettle();
     expect(controller.offset, greaterThan(0));
@@ -45,7 +45,8 @@ void main() {
   });
 }
 
-/// 构建有界高度（可滚动）的分页表格，[controller] 为外部垂直滚动控制器。
+/// Builds a bounded-height (scrollable) paginated table; [controller] is
+/// the external vertical scroll controller.
 Widget buildScrollableTable(int queryVersion, ScrollController controller) {
   return ShadApp(
     home: Scaffold(
@@ -70,7 +71,8 @@ Widget buildScrollableTable(int queryVersion, ScrollController controller) {
   );
 }
 
-/// 构建 shrinkWrap（无滚动）表格，验证传参不抛异常。
+/// Builds a shrinkWrap (non-scrolling) table, verifying the params do not
+/// throw.
 Widget buildShrinkWrapTable(int queryVersion) {
   return ShadApp(
     home: Scaffold(

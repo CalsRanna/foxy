@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-/// 只读路径选择器中的 path 分组标识，不是单个 waypoint_data 物理行主键。
+/// Path-group identifier in the read-only waypoint picker; not the primary
+/// key of a single waypoint_data row.
 @immutable
 final class WaypointDataKey {
   final int id;

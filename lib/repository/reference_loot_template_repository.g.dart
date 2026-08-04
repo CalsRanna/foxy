@@ -178,7 +178,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('`Entry`', int.tryParse(filter.entry) ?? 0);
+      builder = builder.where('`Entry`', filter.entry);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where('`it.name`', filter.name);

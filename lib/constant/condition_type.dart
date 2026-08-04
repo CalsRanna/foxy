@@ -1,8 +1,9 @@
-// Condition Type 枚举常量定义
-// 数据来源：AzerothCore ConditionMgr.h - ConditionTypes
+// Condition Type enum constant definitions
+// Source: AzerothCore ConditionMgr.h - ConditionTypes
 
-/// ConditionTypeOrReference 条件类型标签
-/// 非负值对应条件类型；负值表示引用另一组条件
+/// ConditionTypeOrReference condition-type labels
+/// Non-negative values map to condition types; negative values reference
+/// another condition group
 const kConditionTypeLabels = <int, String>{
   1: '光环', // CONDITION_AURA
   2: '物品', // CONDITION_ITEM

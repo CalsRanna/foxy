@@ -4,8 +4,9 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/foxy_card.dart';
 import 'package:foxy/widget/foxy_feature_card.dart';
 
-/// 仪表盘「常用功能」网格。仅接收已过滤的收藏功能列表，不依赖任何
-/// ViewModel；过滤与响应式由全局 Feature state 的 `computed` 负责。
+/// Dashboard "frequent modules" grid. Receives only the already-filtered
+/// favorite list and depends on no ViewModel; filtering and reactivity are
+/// handled by the global Feature state's `computed`.
 class FrequentModuleComponent extends StatelessWidget {
   final List<FeatureEntity> features;
   final void Function(RouterMenu menu)? onMenuTap;

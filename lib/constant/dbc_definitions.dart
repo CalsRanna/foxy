@@ -185,10 +185,10 @@ final List<String> requiredDbcTableNames = List.unmodifiable(
   dbcDefinitions.map((definition) => definition.tableName),
 );
 
-/// Foxy 支持同步的单个 DBC 定义。
+/// A single DBC definition Foxy supports syncing.
 ///
-/// DBC 的二进制结构仍以 [schema] 中的 warcrafty 定义为准；
-/// Foxy 只在此补充对应的数据库表名。
+/// The binary structure of a DBC still follows the warcrafty definition in
+/// [schema]; Foxy only adds the corresponding database table name here.
 class DbcDefinition {
   final String tableName;
   final DbcSchema schema;

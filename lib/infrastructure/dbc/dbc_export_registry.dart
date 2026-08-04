@@ -102,10 +102,10 @@ class DbcExportDelegate {
   }
 }
 
-/// 将 DBC 表名映射到对应的单表 Repository。
+/// Maps DBC table names to their single-table Repository.
 ///
-/// Registry 只负责选择 Repository 和将强类型 Entity 转成 JSON，
-/// 不参与 DBC 文件写入。
+/// The Registry only picks the Repository and converts strongly-typed
+/// Entities to JSON; it does not write DBC files.
 class DbcExportRegistry {
   final Map<String, DbcExportDelegate> _delegates;
 

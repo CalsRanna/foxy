@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 对话框统一最大宽度（全项目一致）。
+/// Uniform dialog max width (consistent across the project).
 const kFoxyDialogMaxWidth = 720.0;
 
-/// 对话框最大高度 = 屏高 × 此比例。
+/// Dialog max height = screen height × this ratio.
 const kFoxyDialogMaxHeightRatio = 0.8;
 
-/// 统一对话框约束：maxWidth 固定 [kFoxyDialogMaxWidth]，maxHeight 按屏幕比例。
+/// Uniform dialog constraints: maxWidth fixed to [kFoxyDialogMaxWidth],
+/// maxHeight by screen ratio.
 ///
-/// 所有业务对话框的 [ShadDialog.constraints] 都应使用本函数，
-/// 保证宽度、最大高度全项目一致。
+/// Every business dialog's [ShadDialog.constraints] should use this
+/// function, keeping width and max height consistent project-wide.
 BoxConstraints foxyDialogConstraints(BuildContext context) {
   return BoxConstraints(
     maxWidth: kFoxyDialogMaxWidth,
@@ -19,14 +20,17 @@ BoxConstraints foxyDialogConstraints(BuildContext context) {
   );
 }
 
-/// Foxy 对话框入口，封装 [showShadDialog] 并固定项目默认行为。
+/// Foxy dialog entry point, wrapping [showShadDialog] with the project's
+/// default behavior.
 ///
-/// ## 与 [showShadDialog] 的差异
-/// - **`opaque` 默认 `false`**：保留下层页面绘制，蒙层只做半透明遮罩。
-///   `shadcn_ui` 0.55+ 将 `opaque` 默认改为 `true`，会导致背景整页不绘制，
-///   看起来像「只有黑屏 + 对话框」。
+/// ## Differences from [showShadDialog]
+/// - **`opaque` defaults to `false`**: keeps the page below visible, the
+///   barrier being a mere translucent overlay. `shadcn_ui` 0.55+ changed
+///   the default to `true`, which stops the whole background from drawing
+///   — looking like "black screen + dialog only".
 ///
-/// 业务代码应调用本函数，而不是直接使用 [showShadDialog]。
+/// Business code should call this function instead of [showShadDialog]
+/// directly.
 Future<T?> showFoxyDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
@@ -38,7 +42,8 @@ Future<T?> showFoxyDialog<T>({
   Offset? anchorPoint,
   ShadDialogVariant variant = ShadDialogVariant.primary,
 
-  /// 是否遮挡下层路由。Foxy 默认 `false`（见函数文档）。
+  /// Whether the route below is obscured. Foxy defaults to `false` (see
+  /// the function docs).
   bool opaque = false,
 }) {
   return showShadDialog<T>(
@@ -60,9 +65,10 @@ class DialogUtil {
 
   DialogUtil._();
 
-  /// 显示阻塞式提示对话框，用户点「确定」后返回。
+  /// Shows a blocking notice dialog; returns after the user clicks "OK".
   ///
-  /// 不隐式 pop 栈顶；调用方应先自行关闭 loading 等临时对话框。
+  /// Does not implicitly pop the stack top; callers should close temporary
+  /// dialogs such as loading first.
   Future<void> alert({required String title, required String message}) async {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
@@ -127,7 +133,7 @@ class DialogUtil {
   void dismissAll() {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
-    // 只关闭对话框路由(PopupRoute),绝不弹出业务页面。
+    // Only close dialog routes (PopupRoute), never pop a business page.
     while (Navigator.of(context).canPop()) {
       final route = ModalRoute.of(context);
       if (route is! PopupRoute) break;
@@ -139,8 +145,10 @@ class DialogUtil {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
-    // 不隐式 pop 栈顶:调用方如叠加了 loading 等对话框,应先显式 dismiss
-    // 再调用本方法,避免误弹掉真实页面(历史:曾无条件 pop 导致列表页被甩出)。
+    // Do not implicitly pop the stack top: if callers stacked dialogs such
+    // as loading, they should dismiss explicitly first, so a real page is
+    // never popped by accident (historically an unconditional pop flung the
+    // list page out).
     showFoxyDialog(
       context: context,
       builder: (context) {

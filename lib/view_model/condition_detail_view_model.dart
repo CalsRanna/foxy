@@ -11,7 +11,8 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-/// 来源/条件两列的「普通类型 | 引用模板」模式选项。
+/// "Normal type | reference template" mode options for the source/condition
+/// columns.
 const kConditionModeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
 
 class ConditionDetailViewModel with FieldControllerMixin {
@@ -24,7 +25,8 @@ class ConditionDetailViewModel with FieldControllerMixin {
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
 
-  /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
+  /// Currently selected condition type; drives the label/cascade rebuild of
+  /// the param1/2/3 controls
   final selectedConditionType = signal(0);
   final selectedSourceType = signal(0);
   final selectedSourceGroup = signal(0);
@@ -33,7 +35,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
   final selectedSourceMode = signal(0);
   final selectedConditionMode = signal(0);
 
-  // 来源：模式 + 类型/引用 ID 两组语义 controller
+  // Source: two semantic controller groups — mode + type/reference ID
   late final sourceModeController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -50,7 +52,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
   late final sourceIdController = registerController(IntFieldControllerGroup());
   late final elseGroupController = registerController(IntFieldController());
 
-  // 条件：模式 + 类型/引用 ID 两组语义 controller
+  // Condition: two semantic controller groups — mode + type/reference ID
   late final conditionModeController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -72,7 +74,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
   late final conditionValue3Controller = registerController(
     IntFieldControllerGroup(),
   );
-  // 非键字段
+  // Non-key fields
   late final negativeConditionController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -138,8 +140,10 @@ class ConditionDetailViewModel with FieldControllerMixin {
     errorMessage.value = null;
     try {
       final data = _collectCandidate();
-      // 来源/条件类型为 0 时既不是合法普通类型也不是合法引用，写库会
-      // 导致 core 无法加载该条件（_collectCandidate 已校验负数引用为正）。
+      // A type of 0 is neither a valid normal type nor a valid reference;
+      // persisting it would stop core from loading the condition
+      // (_collectCandidate already ensures negative references are
+      // positive).
       _requireWriteableType(data);
       final originalKey = persistedKey.value;
       final newKey = ConditionKey.fromEntity(data);
@@ -194,7 +198,8 @@ class ConditionDetailViewModel with FieldControllerMixin {
     errorTextIdController.init(c.errorTextId);
     scriptNameController.init(c.scriptName);
     commentController.init(c.comment);
-    // 显式刷新一次编辑规格，不依赖类型 controller 监听的回调顺序。
+    // Explicitly refresh the edit specs once, independent of the type
+    // controller listener callback order.
     _refreshSourceEditors();
     _refreshConditionValueEditors();
   }
@@ -216,8 +221,9 @@ class ConditionDetailViewModel with FieldControllerMixin {
         : conditionTypeController.collect();
     return ConditionEntity(
       sourceTypeOrReferenceId: sourceTypeOrReferenceId,
-      // 引用模式下 AzerothCore 明确不使用的物理字段投影为 0；
-      // controller 草稿保留，切回普通模式后仍可继续编辑。
+      // In reference mode, physical fields AzerothCore explicitly ignores
+      // project as 0; controller drafts are kept, so editing can resume
+      // after switching back to normal mode.
       sourceGroup: sourceReferenceMode ? 0 : sourceGroupController.collect(),
       sourceEntry: sourceReferenceMode ? 0 : sourceEntryController.collect(),
       sourceId: sourceReferenceMode ? 0 : sourceIdController.collect(),
@@ -311,7 +317,8 @@ class ConditionDetailViewModel with FieldControllerMixin {
     final mode = sourceModeController.collect();
     final type = sourceTypeController.collect();
     if (mode == 1) {
-      // 引用模式下来源组/来源 ID 始终是只读数字输入。
+      // In reference mode, the source group/source ID are always read-only
+      // number inputs.
       sourceGroupController.configure(IntegerFieldEditor.number);
       sourceIdController.configure(IntegerFieldEditor.number);
       return;
@@ -324,9 +331,10 @@ class ConditionDetailViewModel with FieldControllerMixin {
     );
   }
 
-  /// 引用模板（物理负值）必须满足 core 的引用约束：不设置来源组、来源
-  /// 条目等字段；普通类型必须存在于 core 加载表（引用 ID 为正已由
-  /// _collectCandidate 保证）。
+  /// Reference templates (physically negative) must satisfy core's
+  /// reference constraints: the source group/source entry fields stay
+  /// unset; normal types must exist in core's load table (positive
+  /// reference IDs are already guaranteed by _collectCandidate).
   void _requireWriteableType(ConditionEntity condition) {
     final source = condition.sourceTypeOrReferenceId;
     if (source >= 0) {
@@ -352,13 +360,14 @@ class ConditionDetailViewModel with FieldControllerMixin {
     }
   }
 
-  /// 物理值 → 模式：负数表示引用模板，否则为普通类型。
+  /// Physical value → mode: negative means a reference template, otherwise
+  /// a normal type.
   static int _decodeMode(int value) => value < 0 ? 1 : 0;
 
-  /// 物理值 → 引用 ID（正数）。
+  /// Physical value → reference ID (positive).
   static int _decodeReferenceId(int value) => value < 0 ? -value : 0;
 
-  /// 物理值 → 类型（非负）。
+  /// Physical value → type (non-negative).
   static int _decodeType(int value) => value < 0 ? 0 : value;
 
   static int _positiveReferenceId(int id, String field) {

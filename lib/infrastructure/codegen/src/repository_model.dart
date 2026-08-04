@@ -8,21 +8,26 @@ final class RepositoryGenerationModel {
   final String mixinName;
   final List<String> briefProjectionColumns;
 
-  /// 是否存在 `lib/view_model/<base>_list_view_model.dart`(主表列表页)。
-  /// 全量列表 `getXxxs` 与 `_applyFilter` 只为主表仓库生成。
+  /// Whether `lib/view_model/<base>_list_view_model.dart` exists
+  /// (main-table list page).
+  /// Full-list `getXxxs` and `_applyFilter` are only generated for main-table
+  /// repositories.
   final bool listViewModelPresent;
 
-  /// 是否生成 `get*Locales`/`save*Locales` 委托(仓库混入
-  /// `DbcLocaleRepositoryMixin` 并声明 `dbcLocaleTableName`)。
+  /// Whether to generate `get*Locales`/`save*Locales` delegates (the
+  /// repository mixes in `DbcLocaleRepositoryMixin` and declares
+  /// `dbcLocaleTableName`).
   final bool localeHelpersEnabled;
 
-  /// 关联键字段列表(声明 `linkKey:` 的子表仓库);空 = 主表形态。
+  /// Link-key field list (child-table repositories declaring `linkKey:`);
+  /// empty = main-table form.
   final List<RepositoryKeyFieldModel> linkKeyFields;
 
-  /// `autoIncrementKey:` 声明的字段(dart 名);null = 未声明。
+  /// Field declared via `autoIncrementKey:` (dart name); null = not
+  /// declared.
   final String? autoIncrementKey;
 
-  /// `autoIncrementScope:` 声明的作用域字段(dart 名列表)。
+  /// Scope fields declared via `autoIncrementScope:` (dart names).
   final List<String> autoIncrementScope;
   final bool queryLayerEnabled;
   final String repositoryClassName;

@@ -5,9 +5,11 @@ import 'package:laconic/laconic.dart';
 
 part 'waypoint_data_repository.g.dart';
 
-/// 路径点选择器按 path `id` 聚合展示（points = COUNT(point)）。
+/// The waypoint picker displays waypoints aggregated by path `id`
+/// (points = COUNT(point)).
 ///
-/// 聚合结果不是 `waypoint_data` 的物理行，不在此仓储提供伪 CRUD。
+/// Aggregate results are not physical `waypoint_data` rows, so no
+/// pseudo-CRUD is offered here.
 @FoxyFilter.text('id')
 class WaypointDataRepository with RepositoryMixin {
   static const _table = 'waypoint_data';

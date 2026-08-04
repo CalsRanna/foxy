@@ -42,14 +42,14 @@ void main() {
         ),
       ),
     );
-    await tester.pump(); // 完成 _prepare（同步 config 微任务）
+    await tester.pump(); // finish _prepare (synchronous config microtask)
     await tester.pump();
   }
 
   testWidgets('提取中显示进度条与计数', (tester) async {
     await pumpDialog(tester);
 
-    // 手动驱动 VM 信号，模拟 worker 进度事件
+    // Drive the VM signals manually, simulating worker progress events
     vm.status.value = WorkflowStatus.running;
     vm.progress.value = 0.5;
     vm.progressLabel.value = 'inv_sword_01';
@@ -77,7 +77,8 @@ void main() {
   });
 }
 
-/// 同步 ConfigUtil：load 无真实 IO（测试环境不需要 runAsync）。
+/// Synchronous ConfigUtil: load does no real IO (no runAsync needed in
+/// tests).
 final class _SyncConfigUtil extends ConfigUtil {
   final String _dir;
 

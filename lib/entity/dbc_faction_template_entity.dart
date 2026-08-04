@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'dbc_faction_template_entity.g.dart';
 
-/// DBC 阵营模板，对应 `foxy.dbc_faction_template` 表。
+/// DBC faction template, maps to the `foxy.dbc_faction_template` table.
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('factionNameZhCN')

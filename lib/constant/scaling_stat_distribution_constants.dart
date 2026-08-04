@@ -1,7 +1,9 @@
-/// `ScalingStatDistributionEntry::StatMod` 使用的属性类型。
+/// Attribute types used by `ScalingStatDistributionEntry::StatMod`.
 ///
-/// AzerothCore 将非负值直接作为 `ItemModType` 处理，`-1` 表示空槽。
-/// 40 虽未在服务端 `ItemModType` 中声明，但存在于 3.3.5a 客户端 DBC。
+/// AzerothCore treats non-negative values directly as `ItemModType`;
+/// `-1` means an empty slot.
+/// 40 is not declared in the server's `ItemModType`, but exists in the
+/// 3.3.5a client DBC.
 const kScalingStatDistributionStatOptions = {
   -1: '空槽',
   0: '法力值',

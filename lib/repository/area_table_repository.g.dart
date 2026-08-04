@@ -160,7 +160,7 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, AreaTableFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('`ID`', int.tryParse(filter.id) ?? 0);
+      builder = builder.where('`ID`', filter.id);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where('`AreaName_lang_zhCN`', filter.name);

@@ -156,7 +156,7 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, QuestInfoFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('`ID`', int.tryParse(filter.id) ?? 0);
+      builder = builder.where('`ID`', filter.id);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where('`InfoName_lang_zhCN`', filter.name);

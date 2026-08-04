@@ -16,8 +16,9 @@ class IconExtractDialog extends StatefulWidget {
 }
 
 class _IconExtractDialogState extends State<IconExtractDialog> {
-  /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
-  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
+  /// The ready flag uses a signal: Watch subscribes directly, avoiding a
+  /// parent setState rebuilding the Watch and triggering signals_flutter's
+  /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
 
   IconExtractWorkflowViewModel get _vm => widget.vm;

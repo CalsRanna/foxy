@@ -51,7 +51,8 @@ void main() {
   test('LRU 超限淘汰最久未用条目，淘汰后可重新加载', () async {
     final cache = GameIconCache(maxEntries: 2);
     final dir = Directory(p.join(tempDir.path, 'icons'))..createSync();
-    // 同一份 BLP 复制 3 份（解码内容相同不影响缓存键）。
+    // Copy the same BLP 3 times (identical decode content does not affect
+    // cache keys).
     for (final name in ['a', 'b', 'c']) {
       File('test/fixture/icons/fixture_dxt1.blp').copySync(
         p.join(dir.path, '$name.blp'),
@@ -65,11 +66,11 @@ void main() {
     expect(cache.contains(p.join(dir.path, 'b.blp')), isTrue);
     expect(cache.contains(p.join(dir.path, 'c.blp')), isTrue);
 
-    // 再次访问 b 使其置顶，然后淘汰 c。
+    // Touch b again to promote it, then evict c.
     await cache.load(p.join(dir.path, 'b.blp'));
     await cache.load(p.join(dir.path, 'a.blp'));
     expect(cache.contains(p.join(dir.path, 'c.blp')), isFalse, reason: 'c 被淘汰');
-    // 淘汰后可重新加载（文件仍在磁盘）。
+    // After eviction the file can be reloaded (still on disk).
     final reloaded = await cache.load(p.join(dir.path, 'a.blp'));
     expect(reloaded, isNotNull);
   });

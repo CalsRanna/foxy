@@ -1,7 +1,7 @@
-// Item Template 枚举常量定义
-// 数据来源：AzerothCore SharedDefines.h, ItemDefines.h
+// Item Template enum constant definitions
+// Source: AzerothCore SharedDefines.h, ItemDefines.h
 
-/// Bonding 绑定类型选项
+/// Bonding type options
 const kItemBondingOptions = {
   0: '不绑定', // No Bind
   1: '拾取时绑定', // Bind on Pickup
@@ -11,7 +11,7 @@ const kItemBondingOptions = {
   5: '任务物品1', // Quest Item 1
 };
 
-/// FoodType 食物类型选项
+/// FoodType options
 const kItemFoodTypeOptions = {
   0: '无', // None
   1: '肉', // Meat
@@ -24,7 +24,7 @@ const kItemFoodTypeOptions = {
   8: '生鱼', // Raw Fish
 };
 
-/// Material 材质类型选项
+/// Material options
 const kItemMaterialOptions = {
   -1: '消耗品', // Consumable
   0: '未定义', // None
@@ -38,7 +38,7 @@ const kItemMaterialOptions = {
   8: '皮甲', // Leather
 };
 
-/// Quality 物品品质选项
+/// Quality options
 const kItemQualityOptions = {
   0: '粗糙', // Poor
   1: '普通', // Common
@@ -62,7 +62,7 @@ const kItemReputationRankOptions = {
   7: '崇拜',
 };
 
-/// Sheath 武器挂载类型选项
+/// Sheath options
 const kItemSheathOptions = {
   0: '无', // None
   1: '双手武器，背在后面尖向下', // Two-Hand
@@ -73,7 +73,7 @@ const kItemSheathOptions = {
   6: '拳套/火把/锄头等', // Fist Weapon
 };
 
-/// SpellTrigger 法术触发类型选项
+/// SpellTrigger options
 const kItemSpellTriggerOptions = {
   0: '使用', // Use
   1: '装备', // Equip
@@ -83,7 +83,7 @@ const kItemSpellTriggerOptions = {
   6: '学习法术', // Learn Spell
 };
 
-/// StatType 属性类型选项
+/// StatType options
 const kItemStatTypeOptions = {
   0: '法力值', // Mana
   1: '生命值', // Health

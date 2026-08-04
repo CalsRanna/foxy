@@ -21,7 +21,8 @@ void main() {
         'foxy|lib/view_model/addon_linked_detail_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // 字段:repository + 关联键/编辑键/entity 状态信号
+                // Fields: repository + link-key/editing-key/entity state
+                // signals
                 contains(
                   'final _repository = '
                   'GetIt.instance.get<AddonRepository>();',
@@ -32,13 +33,14 @@ void main() {
                 contains('final loading = signal(false);'),
                 contains('final submitting = signal(false);'),
                 contains('final errorMessage = signal<String?>(null);'),
-                // controller 样板(复用 FormEmitter)
+                // Controller boilerplate (reuses FormEmitter)
                 contains('late final entryController = '
                     'registerController(IntFieldController());'),
-                // 竞态 token
+                // Race token
                 contains('int _refreshToken = 0;'),
                 contains('int _linkToken = 0;'),
-                // 公开方法:destroy/dispose/initSignals/persist/setLinkKey
+                // Public methods:
+                // destroy/dispose/initSignals/persist/setLinkKey
                 contains('Future<void> destroy() async {'),
                 contains('await _repository.destroyAddon(key);'),
                 contains('void dispose() {'),
@@ -53,7 +55,8 @@ void main() {
                 contains('await _repository.updateAddon('),
                 contains('editingKey.value = candidate.entry;'),
                 contains('Future<void> setLinkKey(int linkKey) async {'),
-                // 私有:_refresh 走 get-or-create(关联键即主键)
+                // Private: _refresh goes get-or-create (link key is the
+                // primary key)
                 contains('final existing = await _repository.getAddon('),
                 contains('existing ?? await _repository.createAddon('),
                 contains('editingKey.value = existing == null ? null : linkSnapshot;'),
@@ -189,7 +192,8 @@ class CompositeLinkedDetailViewModel
     with FieldControllerMixin, _CompositeLinkedDetailViewModelMixin {}
 ''';
 
-/// 直接读取真实注解源码，而不是在测试里维护手抄副本。
+/// Reads the real annotation source directly instead of keeping a
+/// hand-copied duplicate in tests.
 final formAnnotationSource = File(
   'lib/infrastructure/codegen/form_annotations.dart',
 ).readAsStringSync();

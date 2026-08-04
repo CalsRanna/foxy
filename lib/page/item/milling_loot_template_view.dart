@@ -22,7 +22,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// 研磨掉落Tab
+/// Milling loot tab
 class MillingLootTemplateView extends StatefulWidget {
   final int linkKey;
 

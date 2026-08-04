@@ -179,13 +179,16 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     );
   }
 
-  /// 强制检查首次设置：未完成（两个目录未配置或图标未提取）则弹出
-  /// 不可关闭的三步引导；已完成步骤由引导内部判定并跳过。
+  /// Enforces the first-setup check: when incomplete (either directory
+  /// unconfigured or icons not extracted), opens the non-dismissable
+  /// three-step wizard; completed steps are detected and skipped inside
+  /// the wizard.
   Future<void> _checkSetup() async {
     try {
       await setupViewModel.prepare();
     } catch (_) {
-      // 配置读取失败按未完成处理，引导会再次弹出。
+      // A config read failure counts as incomplete; the wizard will show
+      // again.
     }
     if (!mounted) return;
     if (!setupViewModel.isSetupComplete) {

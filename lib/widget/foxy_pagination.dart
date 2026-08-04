@@ -18,7 +18,7 @@ class FoxyPagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 确保 count 至少为 1
+    // Ensure count is at least 1
     final count = max(1, (total / pageSize).ceil());
     final canGoLeft = page > 1;
     final canGoRight = page < count;
@@ -38,7 +38,7 @@ class FoxyPagination extends StatelessWidget {
       child: const Text('1'),
     );
 
-    // 只有当 count > 1 时才显示 last，避免重复显示 "1"
+    // Only show last when count > 1, avoiding a duplicate "1"
     final showLast = count > 1;
     final last = showLast
         ? _Tile(
@@ -49,7 +49,7 @@ class FoxyPagination extends StatelessWidget {
         : null;
 
     List<_Tile> tiles = [];
-    // 只有当 count > 2 时才需要中间的页码
+    // Middle page numbers only needed when count > 2
     if (count > 2) {
       final lower = max(2, page - 2);
       final upper = min(page + 2, count - 1);

@@ -14,7 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-/// 击杀声望Tab
+/// On-kill reputation tab
 class CreatureOnKillReputationView extends StatefulWidget {
   final int creatureId;
 

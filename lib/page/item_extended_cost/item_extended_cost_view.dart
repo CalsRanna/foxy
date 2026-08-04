@@ -145,7 +145,7 @@ class ItemExtendedCostView extends StatelessWidget {
       ),
     );
 
-    /// 1. 基本信息
+    /// 1. Basic info
     final basicRows = [
       Row(
         spacing: 8,
@@ -158,7 +158,7 @@ class ItemExtendedCostView extends StatelessWidget {
       ),
     ];
 
-    /// 2. 所需物品
+    /// 2. Required items
     final itemRows = [
       Row(
         spacing: 8,
@@ -189,7 +189,7 @@ class ItemExtendedCostView extends StatelessWidget {
       ),
     ];
 
-    /// 3. 评分需求
+    /// 3. Arena requirements
     final ratingRows = [
       Row(
         spacing: 8,
@@ -202,7 +202,7 @@ class ItemExtendedCostView extends StatelessWidget {
       ),
     ];
 
-    /// 4. 购买组
+    /// 4. Purchase groups
     final purchaseGroupRows = [
       Row(
         spacing: 8,

@@ -11,10 +11,12 @@ final class DatabaseLocaleChanges {
   });
 }
 
-/// 普通数据库 locale 编辑行。
+/// A regular database locale edit row.
 ///
-/// [originalLocale] 是已有行打开编辑器时的 locale；新增行为 null。即使用户修改
-/// [values] 中的 locale，它也保持不变，供领域 Delegate 构造原始强类型 Key。
+/// [originalLocale] is the locale when opening the editor on an existing
+/// row; null for new rows. Even if the user changes the locale inside
+/// [values], this stays untouched, letting the domain delegate build the
+/// original strongly-typed Key.
 @immutable
 final class DatabaseLocaleRow {
   final String? originalLocale;

@@ -67,8 +67,9 @@ class FeatureStateViewModel {
     errorMessage.value = null;
     try {
       await _repository.updateFavorite(id, nextValue);
-      // 写回前重读最新快照:并发 toggle 时若仍基于 await 前的旧快照重建,
-      // 后完成的写回会覆盖先完成者的本地翻转(UI 与 DB 不一致)。
+      // Re-read the latest snapshot before writing back: with concurrent
+      // toggles, rebuilding from a pre-await snapshot would let the later
+      // write overwrite the earlier one's local flip (UI vs DB mismatch).
       final latest = allFeatures.value;
       final latestIndex = latest.indexWhere((feature) => feature.id == id);
       if (latestIndex == -1) return;
@@ -93,7 +94,8 @@ class FeatureStateViewModel {
     errorMessage.value = null;
     try {
       await _repository.updatePinned(id, nextValue);
-      // 同 toggleFavorite:写回前重读最新快照,避免并发覆盖本地翻转。
+      // Same as toggleFavorite: re-read the latest snapshot before writing
+      // back to avoid concurrent overwrites of the local flip.
       final latest = allFeatures.value;
       final latestIndex = latest.indexWhere((feature) => feature.id == id);
       if (latestIndex == -1) return;

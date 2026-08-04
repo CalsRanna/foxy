@@ -6,9 +6,11 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// DBC 单字段本地化编辑器：固定 16 行「语言编号 + 当前字段」。
+/// DBC single-field locale editor: fixed 16 rows of "language code +
+/// current field".
 ///
-/// 不提供添加/删除语言，不允许修改语言编号，允许清空字段值。
+/// No add/remove of languages, no editing of language codes, but field
+/// values may be cleared.
 class DbcLocaleFieldEditor extends StatefulWidget {
   final String title;
   final int entry;
@@ -28,9 +30,10 @@ class DbcLocaleFieldEditor extends StatefulWidget {
   @override
   State<DbcLocaleFieldEditor> createState() => _DbcLocaleFieldEditorState();
 
-  /// 弹出 DBC 字段本地化编辑对话框。
+  /// Opens the DBC locale-field edit dialog.
   ///
-  /// 保存成功返回编辑后的 16 行值；取消或加载失败返回 null。
+  /// Returns the edited 16 rows on successful save; null on cancel or
+  /// load failure.
   static Future<List<DbcLocaleFieldValue>?> show(
     BuildContext context, {
     required String title,
@@ -65,7 +68,8 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     try {
       ShadSonner.of(context).show(ShadToast(description: Text(message)));
     } catch (_) {
-      // 测试或无 Sonner 宿主时忽略，避免二次异常掩盖原始错误。
+      // Ignored in tests or without a Sonner host, so a secondary
+      // exception never masks the original error.
     }
   }
 }

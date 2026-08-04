@@ -34,7 +34,8 @@ class DbcSyncUtil {
     }
     if (_operation != DbcSyncOperation.import) return;
 
-    // 持有 job 引用（非瞬时 isolate 快照），spawn 完成后仍可 kill。
+    // Hold the job reference (not a transient isolate snapshot) so it can
+    // still be killed after spawn completes.
     final job = _activeImportJob;
     if (job == null) return;
 
@@ -47,9 +48,10 @@ class DbcSyncUtil {
       return;
     } on TimeoutException {
       job.forceCancelTerminal = true;
-      // spawn 可能刚完成：再读一次 job.isolate
+      // spawn may have just completed: re-read job.isolate
       job.isolate?.kill(priority: Isolate.immediate);
-      // 短暂轮询，覆盖「cancel 时 isolate 尚未赋值」的窗口
+      // Brief polling covers the window where the isolate is not yet
+      // assigned at cancel time
       for (var i = 0; i < 10 && job.isolate == null; i++) {
         await Future<void>.delayed(const Duration(milliseconds: 50));
       }
@@ -321,8 +323,9 @@ class DbcSyncUtil {
 
   Future<void> _cleanupStaging(String jobId) async {
     try {
-      // 同时清理 __staging_ 与 __backup_ 表:强杀窗口期(rename 之后、drop 之前)
-      // 会遗留 backup 表,且会被 checkTables 的 LIKE 'dbc_%' 匹配到。
+      // Clean up both __staging_ and __backup_ tables: a hard-kill window
+      // (after rename, before drop) can leave backup tables behind, which
+      // checkTables' LIKE 'dbc_%' would otherwise match.
       final tables = dbcDefinitions
           .map(
             (definition) => [
@@ -639,7 +642,8 @@ class DbcSyncUtil {
         errorsAreFatal: true,
       );
       job.isolate = isolate;
-      // 若在 spawn 完成前已请求强制取消，立即 kill。
+      // If a forced cancel was requested before spawn completed, kill
+      // immediately.
       if (job.forceCancelTerminal || job.cancelRequested) {
         isolate.kill(priority: Isolate.immediate);
       }
@@ -688,7 +692,8 @@ class DbcSyncUtil {
   }
 }
 
-/// 单次导入任务句柄：cancel 持有同一引用，可在 isolate spawn 完成后仍能 kill。
+/// Handle for a single import task: cancel holds the same reference, so it
+/// can still kill the isolate after spawn completes.
 class _ImportJobHandle {
   final String jobId;
   final Completer<void> done = Completer<void>();

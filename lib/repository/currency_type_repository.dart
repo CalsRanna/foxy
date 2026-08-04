@@ -78,8 +78,9 @@ class CurrencyTypeRepository
     return rows.map((row) => CurrencyTypeEntity.fromJson(row.toMap())).toList();
   }
 
-  // 带 joinLocale 参数的过滤实现；生成版 _applyFilter 由生成器提供
-  //（仅精确匹配），本方法服务于带物品 join 的手写列表/统计查询。
+  // Filter implementation carrying the joinLocale parameter; the generated
+  // _applyFilter (exact match only) comes from the generator, while this
+  // method serves hand-written list/count queries that join items.
   QueryBuilder _applyLocaleFilter(
     QueryBuilder builder,
     CurrencyTypeFilter? filter, {

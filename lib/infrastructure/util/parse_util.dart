@@ -1,18 +1,21 @@
-/// 转义 LIKE 模式中的通配符,使筛选值按字面量匹配。
+/// Escapes wildcards in LIKE patterns so filter values match literally.
 ///
-/// MySQL 默认以 `\` 为转义符(无需 ESCAPE 子句);laconic 只做参数绑定,
-/// 不会替调用方转义 `%`/`_`,用户输入含这些字符(如 `100%`)时会被当作
-/// 通配符,导致筛选命中大量无关记录。
+/// MySQL defaults to `\` as the escape character (no ESCAPE clause
+/// needed); laconic only binds parameters and never escapes `%`/`_` for
+/// callers, so user input containing such characters (e.g. `100%`) would
+/// act as wildcards and match many unrelated records.
 ///
-/// 前置条件:MySQL `NO_BACKSLASH_ESCAPES` 必须为 OFF(默认值)。该模式下
-/// `\%` 会退化为「字面反斜杠 + 通配符 %」,过滤退化为近似匹配(全部值均
-/// 经参数绑定,无注入风险,仅过滤精度受影响)。
+/// Precondition: MySQL `NO_BACKSLASH_ESCAPES` must be OFF (the default).
+/// Under that mode `\%` degrades to "literal backslash + wildcard %" and
+/// the filter falls back to approximate matching (all values are still
+/// parameter-bound, so there is no injection risk — only filter precision
+/// suffers).
 String escapeLike(String value) => value
     .replaceAll('\\', '\\\\')
     .replaceAll('%', '\\%')
     .replaceAll('_', '\\_');
 
-/// 浮点字段解析，语义同 [parseIntField]。
+/// Floating-point field parsing; same semantics as [parseIntField].
 double parseDoubleField(String text, {String field = ''}) {
   final s = text.trim();
   if (s.isEmpty) return 0.0;
@@ -24,10 +27,11 @@ double parseDoubleField(String text, {String field = ''}) {
   return v;
 }
 
-/// 表单数字字段解析。
+/// Form number-field parsing.
 ///
-/// - 空字符串视为 `0`（与游戏数据默认值一致）
-/// - 非法输入（如 `12a`）抛出 [FormatException]，调用方应阻止保存
+/// - An empty string counts as `0` (consistent with game-data defaults)
+/// - Invalid input (e.g. `12a`) throws [FormatException]; callers should
+///   block saving
 int parseIntField(String text, {String field = ''}) {
   final s = text.trim();
   if (s.isEmpty) return 0;

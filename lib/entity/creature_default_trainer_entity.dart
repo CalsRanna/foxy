@@ -2,7 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_default_trainer_entity.g.dart';
 
-/// 生物默认训练师映射 — 对应 creature_default_trainer 表。
+/// Creature default trainer mapping — maps to the creature_default_trainer
+/// table.
 
 @FoxyFullEntity(table: 'creature_default_trainer')
 class CreatureDefaultTrainerEntity with _CreatureDefaultTrainerEntityMixin {

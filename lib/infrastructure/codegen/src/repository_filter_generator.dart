@@ -31,7 +31,8 @@ final class FoxyFilterGenerator extends Generator {
       models.add(await reader.read(element, annotations, buildStep));
     }
     if (models.isEmpty) return null;
-    // 多个 Filter 同为顶层公开 class,按名称排序("Sort Members" 规则)。
+    // Multiple Filters are top-level public classes, sorted by name (the
+    // "Sort Members" rule).
     models.sort(
       (a, b) => a.className.toLowerCase().compareTo(b.className.toLowerCase()),
     );

@@ -6,9 +6,9 @@ import 'entity_model.dart';
 final class EntityEmitter {
   const EntityEmitter();
 
-  /// Brief 类成员顺序遵循 "Sort Members" 规则:
-  /// 字段(保持原序)→ 构造函数(无名 → fromJson)→ hashCode getter
-  /// → key getter → == → toString。
+  /// Brief class member order follows the "Sort Members" rule:
+  /// fields (in original order) → constructors (unnamed → fromJson) →
+  /// hashCode getter → key getter → == → toString.
   String emitBrief(EntityGenerationModel model) {
     final fields = model.briefFields;
     final keyFields = model.keyFields;
@@ -67,8 +67,8 @@ final class EntityEmitter {
     return buffer.toString();
   }
 
-  /// 顶层成员顺序遵循 Dart "Sort Members" 规则:公开 class 按名称
-  /// (Brief 在前),私有 mixin 最后。
+  /// Top-level member order follows the Dart "Sort Members" rule: public
+  /// classes by name (Brief first), private mixin last.
   String emitEntityPart(EntityGenerationModel model) {
     final sections = <String>[
       if (model.generateBrief) emitBrief(model),
@@ -78,9 +78,9 @@ final class EntityEmitter {
     return sections.join('\n\n');
   }
 
-  /// mixin 成员顺序遵循 "Sort Members" 规则:
-  /// 实例 getter(hashCode)→ 实例方法(== → copyWith → toJson → toString)
-  /// → 静态方法(fromJson)。
+  /// mixin member order follows the "Sort Members" rule:
+  /// instance getters (hashCode) → instance methods (== → copyWith → toJson
+  /// → toString) → static methods (fromJson).
   String emitFullMixin(EntityGenerationModel model) {
     final buffer = StringBuffer()..writeln('mixin ${model.mixinName} {');
     _emitMixinHashCode(buffer, model);
@@ -98,9 +98,9 @@ final class EntityEmitter {
     return buffer.toString();
   }
 
-  /// Key 类成员顺序遵循 "Sort Members" 规则:
-  /// 字段(保持原序)→ 构造函数(无名 → fromEntity)→ hashCode getter
-  /// → == → toString。
+  /// Key class member order follows the "Sort Members" rule:
+  /// fields (in original order) → constructors (unnamed → fromEntity) →
+  /// hashCode getter → == → toString.
   String emitKey(EntityGenerationModel model) {
     final fields = model.keyFields;
     final buffer = StringBuffer()
@@ -265,7 +265,8 @@ final class EntityEmitter {
     buffer.writeln('  }');
   }
 
-  /// 无继承 `final class`(Key / Brief)共用的值语义成员。
+  /// Value-semantics members shared by non-inheriting `final class`es
+  /// (Key / Brief).
   void _emitValueHashCode(
     StringBuffer buffer,
     String className,
@@ -304,10 +305,12 @@ final class EntityEmitter {
     final fallback = field.constructorDefaultValue == null
         ? ''
         : ' ?? ${dartLiteral(field.constructorDefaultValue, asType: field.nonNullableType)}';
-    // laconic_mysql 把 tinyint(1) 列解码成 Dart bool（二进制与文本协议都如此），
-    // 而 tinyint(1) 常被声明为 int/bool 字段（如 creature_onkill_reputation）——
-    // 因此 int/bool 的 fromJson 必须双容忍 bool/num 两种形态，否则读真实数据即抛
-    // TypeError（feature_entity.dart 手写代码 `== 1 || == true` 同此考虑）。
+    // laconic_mysql decodes tinyint(1) columns into Dart bool (both binary
+    // and text protocols), while tinyint(1) is often declared as int/bool
+    // fields (e.g. creature_onkill_reputation) — so the int/bool fromJson
+    // must tolerate both bool and num, otherwise reading real data throws a
+    // TypeError (the hand-written feature_entity.dart `== 1 || == true`
+    // follows the same idea).
     return switch (field.nonNullableType) {
       'int' =>
         "json[$key] == true ? 1 : json[$key] == false ? 0 : "

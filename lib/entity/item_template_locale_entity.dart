@@ -2,7 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'item_template_locale_entity.g.dart';
 
-/// item_template_locale 表模型（1:N locale，复合主键 ID + Locale）
+/// item_template_locale table model (1:N locales, composite primary key
+/// ID + Locale)
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'item_template_locale')

@@ -5,8 +5,9 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 final _kCopyColor = ShadOrangeColorScheme.light().primary;
 
-/// 动作图标色取自 shadcn 各色系的 `primary`（light），与 shadcn 调色板保持一致，
-/// 替代原先硬编码的 Material `Colors.green/blue/red/orange`。
+/// Action icon colors come from each shadcn scheme's `primary` (light),
+/// staying consistent with the shadcn palette and replacing the previously
+/// hard-coded Material `Colors.green/blue/red/orange`.
 final _kCreateColor = ShadGreenColorScheme.light().primary;
 
 final _kDeleteColor = ShadRedColorScheme.light().primary;

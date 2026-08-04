@@ -53,8 +53,10 @@ void main() {
           .toList();
       final bindings = queries.single.bindings;
 
-      // 断言列→值映射而不是绑定下标，SET 子句的列顺序由 Entity 字段声明
-      // 顺序决定，不属于写入契约。反引号是保留字列 `Index` 的转义要求。
+      // Assert the column→value mapping rather than bind indices; the SET
+      // clause column order follows the Entity field declaration order and
+      // is not part of the write contract. Backticks are the escaping
+      // requirement of the reserved-word column `Index`.
       expect(Map.fromIterables(setColumns, bindings.take(setColumns.length)), {
         '`CreatureID`': candidate.creatureID,
         '`Index`': candidate.index,

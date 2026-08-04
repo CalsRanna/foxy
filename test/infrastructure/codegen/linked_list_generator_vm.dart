@@ -21,7 +21,7 @@ void main() {
         'foxy|lib/view_model/child_item_editor_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // 字段:repository + 父键/列表状态信号
+                // Fields: repository + parent-key/list state signals
                 contains(
                   'final _repository = '
                   'GetIt.instance.get<ChildItemRepository>();',
@@ -35,13 +35,14 @@ void main() {
                 contains('final loading = signal(false);'),
                 contains('final submitting = signal(false);'),
                 contains('final errorMessage = signal<String?>(null);'),
-                // controller 样板(复用 FormEmitter)
+                // Controller boilerplate (reuses FormEmitter)
                 contains('late final childIdController = '
                     'registerController(IntFieldController());'),
-                // 竞态 token
+                // Race token
                 contains('int _refreshToken = 0;'),
                 contains('int _interactionToken = 0;'),
-                // 公开方法:copy/create/destroy/edit/persist/setLinkKey
+                // Public methods:
+                // copy/create/destroy/edit/persist/setLinkKey
                 contains('Future<void> copy(ChildItemKey key) async {'),
                 contains('await _repository.copyChildItem(key);'),
                 contains('Future<void> create() async {'),
@@ -56,7 +57,7 @@ void main() {
                 contains('Future<void> persist() async {'),
                 contains('Future<void> setLinkKey(int linkKey) async {'),
                 contains('_applyCandidate(ChildItemEntity(parentId: link));'),
-                // 私有:_refresh 走父键计数 + 列表
+                // Private: _refresh goes parent-key count + list
                 contains('await _repository.countChildItems(link);'),
                 contains('await _repository.getBriefChildItems('),
                 contains('max(1, (count / _repository.kPageSize).ceil())'),
@@ -148,7 +149,8 @@ class ChildItemEditorViewModel
     with FieldControllerMixin, _ChildItemEditorViewModelMixin {}
 ''';
 
-/// 直接读取真实注解源码，而不是在测试里维护手抄副本。
+/// Reads the real annotation source directly instead of keeping a
+/// hand-copied duplicate in tests.
 final formAnnotationSource = File(
   'lib/infrastructure/codegen/form_annotations.dart',
 ).readAsStringSync();

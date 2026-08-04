@@ -22,8 +22,9 @@ class MigrationRunner {
     try {
       await _run();
     } catch (error, stackTrace) {
-      // 受限账号(只给世界库读写)在 bootstrap 阶段即失败于建库/建表,
-      // 日志补充权限提示,让用户知道需要 foxy 库的额外授权。
+      // Restricted accounts (world DB read/write only) already fail at
+      // database/table creation during bootstrap; the log adds a permission
+      // hint so users know extra grants on the foxy database are needed.
       LoggerUtil.instance.e(
         '迁移失败:检查数据库账号是否拥有 foxy 库的 CREATE/ALTER/RENAME 权限。'
         '原始错误: $error',
@@ -35,9 +36,11 @@ class MigrationRunner {
   }
 
   Future<void> _run() async {
-    // 引导步骤：确保 foxy 数据库和 migrations 表存在。
-    // 字符集必须显式锁 utf8mb4：老服务器(MySQL 5.x 一键端)默认 latin1,
-    // 不声明则 foxy 库/表继承 latin1,迁移插入的中文即报 1366 无法启动。
+    // Bootstrap: ensure the foxy database and migrations table exist.
+    // The charset must be explicitly pinned to utf8mb4: old servers
+    // (MySQL 5.x one-click packs) default to latin1; without the explicit
+    // declaration the foxy database/tables inherit latin1 and migrations
+    // inserting non-ASCII text fail with 1366, blocking startup.
     await laconic.statement(
       'create database if not exists foxy '
       'character set utf8mb4 collate utf8mb4_unicode_ci',
@@ -48,12 +51,15 @@ class MigrationRunner {
       'applied_at timestamp default current_timestamp'
       ') default charset=utf8mb4 collate=utf8mb4_unicode_ci',
     );
-    // 存量自愈：老库在本次修复前可能已建成 latin1/utf8(非 mb4)。
-    // 必须在跑迁移之前执行——插中文的迁移排在列表最前,latin1 表上
-    // 它们自身就 1366 卡死,放迁移末尾的新迁移根本跑不到。
+    // Legacy self-healing: databases created before this fix may already
+    // be latin1/utf8 (non-mb4). This must run before migrations — the
+    // non-ASCII-inserting migrations come first in the list and would
+    // deadlock with 1366 on latin1 tables, so migrations appended later
+    // would never run.
     await _ensureUtf8mb4();
 
-    // 按顺序运行迁移:一次取回全部已应用迁移,避免每个迁移一条 COUNT 往返。
+    // Run migrations in order: fetch all applied migrations in one query to
+    // avoid one COUNT round-trip per migration.
     final applied = (await laconic.table('foxy.migrations').pluck('name'))
         .cast<String>()
         .toSet();
@@ -77,22 +83,26 @@ class MigrationRunner {
     }
   }
 
-  /// 把 foxy 库及全部表统一到 utf8mb4(幂等,每次启动执行)。
+  /// Unifies the foxy database and all its tables to utf8mb4 (idempotent,
+  /// run on every startup).
   ///
-  /// 安全性:1366 错误保证了非 utf8mb4 列里不可能有非 ASCII 数据
-  /// (中文根本写不进去),因此 `CONVERT TO CHARACTER SET utf8mb4`
-  /// 不会产生双重乱码;utf8(3 字节)列里的中文转换无损。
+  /// Safety: the 1366 error guarantees non-utf8mb4 columns cannot contain
+  /// non-ASCII data (Chinese cannot be written at all), so
+  /// `CONVERT TO CHARACTER SET utf8mb4` cannot produce double mojibake;
+  /// Chinese in utf8 (3-byte) columns converts losslessly.
   ///
-  /// 稳态优化:库默认已是 utf8mb4 则跳过 ALTER DATABASE(不发 DDL),
-  /// 表扫描把过滤下沉到 SQL,无残留表时零往返。
+  /// Steady-state optimization: if the database is already utf8mb4, skip
+  /// ALTER DATABASE (no DDL); table scanning pushes the filter into SQL,
+  /// so zero round-trips when no non-mb4 tables remain.
   Future<void> _ensureUtf8mb4() async {
     final schemaRows = await laconic
         .table('information_schema.schemata')
         .select(['default_collation_name'])
         .where('schema_name', 'foxy')
         .get();
-    // 结果 map 的 key 是服务器返回的声明大小写(information_schema 为大写),
-    // 与查询里的小写标识符无关。
+    // Result map keys use the casing the server returns (uppercase for
+    // information_schema), unrelated to the lowercase identifiers in the
+    // query.
     final dbCollation = schemaRows.isEmpty
         ? null
         : schemaRows.first.toMap()['DEFAULT_COLLATION_NAME'] as String?;

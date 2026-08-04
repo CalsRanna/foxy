@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'dbc_faction_entity.g.dart';
 
-/// DBC 阵营 — 对应 foxy.dbc_faction 表
+/// DBC faction — maps to the foxy.dbc_faction table
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_faction')

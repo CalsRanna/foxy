@@ -1,7 +1,7 @@
-// 物品常量定义
-// 数据来源：AzerothCore SharedDefines.h, ItemDefines.h
+// Item constant definitions
+// Source: AzerothCore SharedDefines.h, ItemDefines.h
 
-/// 物品类别名称
+/// Item class names
 const kItemClasses = [
   '消耗品', // Consumable
   '容器', // Container
@@ -22,7 +22,7 @@ const kItemClasses = [
   '雕文', // Glyph
 ];
 
-/// 物品佩戴位置名称
+/// Inventory-slot names
 const kItemInventoryTypes = [
   '其他', // Non-equippable
   '头部', // Head
@@ -55,9 +55,9 @@ const kItemInventoryTypes = [
   '圣物', // Relic
 ];
 
-/// 物品子类别名称（按类别索引）
+/// Item subclass names (indexed by class)
 const kItemSubclasses = [
-  // 0: 消耗品
+  // 0: Consumable
   [
     '消耗品', // Consumable
     '药水', // Potion
@@ -69,7 +69,7 @@ const kItemSubclasses = [
     '绷带', // Bandage
     '其他', // Other
   ],
-  // 1: 容器
+  // 1: Container
   [
     '背包', // Bag
     '灵魂袋', // Soul Bag
@@ -81,7 +81,7 @@ const kItemSubclasses = [
     '制皮材料包', // Leatherworking Bag
     '铭文包', // Inscription Bag
   ],
-  // 2: 武器
+  // 2: Weapon
   [
     '单手斧', // Axe 1H
     '双手斧', // Axe 2H
@@ -105,7 +105,7 @@ const kItemSubclasses = [
     '魔杖', // Wand
     '钓鱼竿', // Fishing Pole
   ],
-  // 3: 珠宝
+  // 3: Jewelry
   [
     '红色', // Red
     '蓝色', // Blue
@@ -117,7 +117,7 @@ const kItemSubclasses = [
     '简单', // Simple
     '棱彩', // Prismatic
   ],
-  // 4: 护甲
+  // 4: Armor
   [
     '杂项', // Misc
     '布甲', // Cloth
@@ -131,9 +131,9 @@ const kItemSubclasses = [
     '图腾', // Totem
     '魔印', // Sigil
   ],
-  // 5: 药剂
+  // 5: Reagent
   ['药剂'], // Reagent
-  // 6: 弹药
+  // 6: Projectile
   [
     '魔杖-弃用', // Wand
     '闪电-弃用', // Bolt
@@ -141,7 +141,7 @@ const kItemSubclasses = [
     '子弹', // Bullet
     '投掷-弃用', // Thrown
   ],
-  // 7: 贸易品
+  // 7: Trade Goods
   [
     '贸易品', // Trade Goods
     '零件', // Parts
@@ -160,9 +160,9 @@ const kItemSubclasses = [
     '护甲附魔', // Armor Enchant
     '武器附魔', // Weapon Enchant
   ],
-  // 8: 通用-弃用
+  // 8: Generic (obsolete)
   ['通用-弃用'], // Generic
-  // 9: 配方
+  // 9: Recipe
   [
     '书籍', // Book
     '制皮', // Leatherworking
@@ -176,25 +176,25 @@ const kItemSubclasses = [
     '钓鱼', // Fishing
     '珠宝加工', // Jewelcrafting
   ],
-  // 10: 货币
+  // 10: Currency
   ['货币'], // Currency
-  // 11: 箭袋
+  // 11: Quiver
   [
     '箭袋-弃用', // Quiver Obsolete
     '弹药袋-弃用', // Ammo Pouch Obsolete
     '箭袋', // Quiver
     '弹药袋', // Ammo Pouch
   ],
-  // 12: 任务
+  // 12: Quest
   ['任务'], // Quest
-  // 13: 钥匙
+  // 13: Key
   [
     '钥匙', // Key
     '开锁工具', // Lockpick
   ],
-  // 14: 永久的-弃用
+  // 14: Permanent (obsolete)
   ['永久的-弃用'], // Permanent
-  // 15: 杂项
+  // 15: Miscellaneous
   [
     '垃圾', // Junk
     '施法材料', // Reagent
@@ -203,7 +203,7 @@ const kItemSubclasses = [
     '其他', // Other
     '坐骑', // Mount
   ],
-  // 16: 雕文
+  // 16: Glyph
   [
     '无', // None
     '战士', // Warrior

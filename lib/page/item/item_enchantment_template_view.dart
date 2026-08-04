@@ -17,7 +17,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// 物品附魔Tab
+/// Item enchantment tab
 class ItemEnchantmentTemplateView extends StatefulWidget {
   final ItemEnchantmentTemplateLinkKey? linkKey;
 

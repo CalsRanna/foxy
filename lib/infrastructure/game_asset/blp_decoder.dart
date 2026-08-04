@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
-/// 解码 BLP2 图片为 RGBA（仅主 mipmap）。
+/// Decodes a BLP2 image to RGBA (main mipmap only).
 ///
-/// 3.3.5a 客户端图标全部为 BLP2 64×64，编码变体为 DXT1/DXT3/DXT5
-/// （实测分布 DXT1 2210 / DXT3 1922 / DXT5 2175，无 JPEG、无调色板变体）。
-/// 支持压缩纹理与原始 BGRA 两种 encoding；JPEG 变体抛 [BlpFormatException]。
+/// All 3.3.5a client icons are BLP2 64×64, encoded as DXT1/DXT3/DXT5
+/// (measured distribution DXT1 2210 / DXT3 1922 / DXT5 2175; no JPEG, no
+/// palette variants). Supports both compressed-texture and raw-BGRA
+/// encodings; the JPEG variant throws [BlpFormatException].
 BlpImage decodeBlp(Uint8List bytes) {
   if (bytes.length < 84 ||
       bytes[0] != 0x42 ||
@@ -29,8 +30,9 @@ BlpImage decodeBlp(Uint8List bytes) {
   if (width == 0 || height == 0) {
     throw const BlpFormatException('invalid image dimensions');
   }
-  // 文件头声明的宽高不可信(游戏图标恒为 64×64):超大声明会在
-  // `width * height * 4` 分配时撑爆内存,先按合理上限拦截。
+  // The width/height declared in the header is untrustworthy (game icons
+  // are always 64×64): an oversized declaration would blow up memory during
+  // the `width * height * 4` allocation, so cap it at a sane bound first.
   if (width > 4096 || height > 4096) {
     throw const BlpFormatException('image dimensions out of range');
   }
@@ -43,11 +45,12 @@ BlpImage decodeBlp(Uint8List bytes) {
 
   switch (encoding) {
     case 2:
-      // DXT 压缩。alphaDepth<=1 → DXT1；alphaEncoding==7 → DXT5；否则 DXT3。
+      // DXT compression. alphaDepth<=1 → DXT1; alphaEncoding==7 → DXT5;
+      // otherwise DXT3.
       final mode = alphaDepth <= 1 ? 1 : (alphaEncoding == 7 ? 5 : 3);
       _decodeDxt(src, width, height, mode, rgba);
     case 3:
-      // 未压缩 BGRA。
+      // Uncompressed BGRA.
       final expected = width * height * 4;
       if (src.length < expected) {
         throw const BlpFormatException('insufficient uncompressed data');
@@ -64,12 +67,12 @@ BlpImage decodeBlp(Uint8List bytes) {
   return BlpImage(width: width, height: height, rgba: rgba);
 }
 
-/// DXT1/3/5 块解码到 [dst]（RGBA，未预乘 alpha）。
+/// Decodes a DXT1/3/5 block into [dst] (RGBA, non-premultiplied alpha).
 void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
   final blocksX = (w + 3) >> 2;
   final blocksY = (h + 3) >> 2;
   final blockBytes = mode == 1 ? 8 : 16;
-  final colors = Uint8List(16); // 4 个颜色 × RGBA
+  final colors = Uint8List(16); // 4 colors × RGBA
   var p = 0;
   for (var by = 0; by < blocksY; by++) {
     for (var bx = 0; bx < blocksX; bx++) {
@@ -86,7 +89,7 @@ void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
       _unpack565(c0, colors, 0);
       _unpack565(c1, colors, 4);
       if (c0 > c1 || mode != 1) {
-        // 4 色模式（或 DXT3/5 恒为 4 色）。
+        // 4-color mode (DXT3/5 are always 4-color).
         for (var k = 0; k < 3; k++) {
           colors[8 + k] = (2 * colors[k] + colors[4 + k]) ~/ 3;
           colors[12 + k] = (colors[k] + 2 * colors[4 + k]) ~/ 3;
@@ -94,7 +97,7 @@ void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
         colors[11] = 255;
         colors[15] = 255;
       } else {
-        // DXT1 1-bit alpha：c0<c1 时 2/3 色透明。
+        // DXT1 1-bit alpha: colors 2/3 are transparent when c0 < c1.
         for (var k = 0; k < 3; k++) {
           colors[8 + k] = (colors[k] + colors[4 + k]) ~/ 2;
           colors[12 + k] = 0;
@@ -131,7 +134,7 @@ void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
   }
 }
 
-/// DXT5 8 值 alpha 插值查找。
+/// DXT5 8-value alpha interpolation lookup.
 int _dxt5Alpha(Uint8List src, int base, int index) {
   final a0 = src[base], a1 = src[base + 1];
   var bits = 0;
@@ -155,7 +158,7 @@ void _unpack565(int v, Uint8List out, int at) {
   out[at + 3] = 255;
 }
 
-/// BLP 格式不支持或数据损坏。
+/// Unsupported BLP format or corrupted data.
 final class BlpFormatException implements Exception {
   final String message;
   const BlpFormatException(this.message);
@@ -164,7 +167,8 @@ final class BlpFormatException implements Exception {
   String toString() => 'BlpFormatException: $message';
 }
 
-/// BLP2 解码结果：RGBA 像素（每像素 4 字节，未预乘 alpha）。
+/// BLP2 decode result: RGBA pixels (4 bytes per pixel, non-premultiplied
+/// alpha).
 final class BlpImage {
   final int width;
   final int height;

@@ -66,9 +66,11 @@ class GossipMenuDetailViewModel
       if (candidate.textId <= 0) {
         throw ValidationException('invalid NPC text selection');
       }
-      // 新建路径的保留文本行(由 CreateGossipMenuUseCase 补建)不需要
-      // 预存在;其余路径(编辑、或新建后把 textId 改成其他值)必须指向
-      // 真实存在的 npc_text 行,否则落库后 core 加载该菜单时文本为空。
+      // The reserved text row of the create path (backfilled by
+      // CreateGossipMenuUseCase) need not pre-exist; all other paths (edit,
+      // or changing textId to another value after creation) must point at a
+      // real npc_text row, otherwise core loads the menu with empty text
+      // after persisting.
       if (candidate.textId != _reservedTextId) {
         final text = await _npcTextRepository.getNpcText(candidate.textId);
         if (text == null) {

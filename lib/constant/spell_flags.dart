@@ -1,9 +1,9 @@
-// 法术标志位常量定义
-// 数据来源：AzerothCore SharedDefines.h SpellAttr0-7, SpellDefines.h
+// Spell flag constant definitions
+// Source: AzerothCore SharedDefines.h SpellAttr0-7, SpellDefines.h
 
 import 'package:foxy/constant/flag_item.dart';
 
-/// 装备栏位掩码（InventoryType）
+/// Equipment-slot mask (InventoryType)
 const kInventoryTypeOptions = [
   FlagItem(0x00000001, '头部'),
   FlagItem(0x00000002, '颈部'),
@@ -35,7 +35,7 @@ const kInventoryTypeOptions = [
   FlagItem(0x08000000, '圣物'),
 ];
 
-/// 变形掩码（ShapeshiftForm）
+/// Shapeshift mask (ShapeshiftForm)
 const kShapeshiftFormMaskOptions = [
   FlagItem(0x00000001, '猫形态'),
   FlagItem(0x00000002, '树人形态'),
@@ -69,7 +69,7 @@ const kShapeshiftFormMaskOptions = [
   FlagItem(0x80000000, '救赎之魂'),
 ];
 
-/// QuestDef.h QuestStatus 的位掩码，spell_area 保存 1 << QuestStatus。
+/// Bitmask of QuestDef.h QuestStatus; spell_area stores 1 << QuestStatus.
 const kSpellAreaQuestStatusOptions = [
   FlagItem(0x01, '未接取'),
   FlagItem(0x02, '已完成'),
@@ -78,7 +78,7 @@ const kSpellAreaQuestStatusOptions = [
   FlagItem(0x40, '已奖励'),
 ];
 
-/// Attributes (SpellAttr0) — 法术属性标志
+/// Attributes (SpellAttr0) — spell attribute flags
 const kSpellAttr0Options = [
   FlagItem(0x00000001, 'Proc失败消耗次数'),
   FlagItem(0x00000002, '视为远程攻击'),
@@ -113,7 +113,7 @@ const kSpellAttr0Options = [
   FlagItem(0x80000000, '光环不可取消'),
 ];
 
-/// AttributesEx (SpellAttr1) — 法术属性Ex标志
+/// AttributesEx (SpellAttr1) — spell attribute Ex flags
 const kSpellAttr1Options = [
   FlagItem(0x00000001, '先解散宠物'),
   FlagItem(0x00000002, '消耗所有能量'),
@@ -362,7 +362,7 @@ const kSpellAttr7Options = [
   FlagItem(0x80000000, '始终记录施放', '客户端'),
 ];
 
-/// 光环打断标志（SpellAuraInterruptFlags）
+/// Aura interrupt flags (SpellAuraInterruptFlags)
 const kSpellAuraInterruptFlagsOptions = [
   FlagItem(0x00000001, '被负面法术击中'),
   FlagItem(0x00000002, '受到伤害'),
@@ -393,7 +393,7 @@ const kSpellAuraInterruptFlagsOptions = [
   FlagItem(0x80000000, '离开战斗'),
 ];
 
-/// 目标限制标志（SpellCastTargetFlags）
+/// Target-limit flags (SpellCastTargetFlags)
 const kSpellCastTargetFlagsOptions = [
   FlagItem(0x00000002, '单位'),
   FlagItem(0x00000004, '单位(团队)'),
@@ -416,13 +416,13 @@ const kSpellCastTargetFlagsOptions = [
   FlagItem(0x00100000, '载具乘客'),
 ];
 
-/// 引导打断标志（SpellChannelInterruptFlags）
+/// Channel interrupt flags (SpellChannelInterruptFlags)
 const kSpellChannelInterruptFlagsOptions = [
   FlagItem(0x0008, '打断'),
   FlagItem(0x4000, '延迟'),
 ];
 
-/// 分类掩码位（每bit对应法术族内一个具体法术）
+/// Category-mask bits (each bit maps to one spell within the spell family)
 const kSpellClassMaskBits = [
   FlagItem(0x00000001, '位 0'),
   FlagItem(0x00000002, '位 1'),
@@ -458,8 +458,9 @@ const kSpellClassMaskBits = [
   FlagItem(0x80000000, '位 31'),
 ];
 
-/// SpellInfo.h SpellCustomAttributes 的独立物理位。
-/// FORCE_AURA_SAVING(0x20000800) 是两个现有位的组合别名，不重复列为可选位。
+/// Individual physical bits of SpellInfo.h SpellCustomAttributes.
+/// FORCE_AURA_SAVING (0x20000800) is a combined alias of two existing bits;
+/// not listed again as an option.
 const kSpellCustomAttributeOptions = [
   FlagItem(0x00000001, '附魔触发'),
   FlagItem(0x00000002, '背向锥形'),
@@ -495,10 +496,10 @@ const kSpellCustomAttributeOptions = [
   FlagItem(0x80000000, '绕过机制免疫'),
 ];
 
-/// 施法朝向标志（SpellFacingFlags）
+/// Facing flags (SpellFacingFlags)
 const kSpellFacingFlagsOptions = [FlagItem(0x0001, '必须在正面')];
 
-/// 打断标志（SpellInterruptFlags）
+/// Interrupt flags (SpellInterruptFlags)
 const kSpellInterruptFlagsOptions = [
   FlagItem(0x01, '移动打断'),
   FlagItem(0x02, '击退打断'),
@@ -508,7 +509,7 @@ const kSpellInterruptFlagsOptions = [
   FlagItem(0x20, '雕文相关'),
 ];
 
-/// 触发类型掩码（ProcFlags）
+/// Proc flags mask (ProcFlags)
 const kSpellProcFlagsOptions = [
   FlagItem(0x00000001, '击杀目标(被杀)'),
   FlagItem(0x00000002, '击杀目标(获得荣誉/经验)'),
@@ -537,7 +538,7 @@ const kSpellProcFlagsOptions = [
   FlagItem(0x01000000, '死亡'),
 ];
 
-/// 法术类型掩码（SchoolMask）
+/// Spell-school mask (SchoolMask)
 const kSpellSchoolMaskOptions = [
   FlagItem(0x01, '物理', '基础'),
   FlagItem(0x02, '神圣', '基础'),

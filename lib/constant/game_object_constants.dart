@@ -5,7 +5,8 @@ const kGameObjectBooleanOptions = <int, String>{0: '否', 1: '是'};
 
 const kGameObjectChairHeightOptions = <int, String>{0: '低', 1: '中', 2: '高'};
 
-/// `GameObjectData.h::GameObjectTemplate` 联合体按 GameObject type 分组的 schema registry。
+/// Schema registry of the `GameObjectData.h::GameObjectTemplate` union,
+/// grouped by GameObject type.
 const kGameObjectDataSchemas = <int, GameObjectDataSchema>{
   // GameObjectDoor
   0: GameObjectDataSchema({
@@ -449,7 +450,7 @@ const kGameObjectDataSchemas = <int, GameObjectDataSchema>{
     2: IntegerNumberFieldSpec('自动关闭时间'),
   }),
 };
-/// `GameObjectFlags` 中 AzerothCore 实际使用的位。
+/// Bits of `GameObjectFlags` actually used by AzerothCore.
 const kGameObjectFlagItems = <FlagItem>[
   FlagItem(0x00000001, '正在使用'),
   FlagItem(0x00000002, '已锁定'),
@@ -468,7 +469,7 @@ const kGameObjectTrapTypeOptions = <int, String>{
   2: '自动关闭陷阱',
 };
 
-/// `SharedDefines.h::GameobjectTypes`，3.3.5a 共 0..35。
+/// `SharedDefines.h::GameobjectTypes`, 0..35 in 3.3.5a.
 const kGameObjectTypeOptions = <int, String>{
   0: '门',
   1: '按钮',
@@ -511,9 +512,10 @@ const kGameObjectTypeOptions = <int, String>{
 const kUnusedGameObjectDataField =
     IntegerNumberFieldSpec<GameObjectDataReference>('未使用', editable: false);
 
-/// 查询某个 GameObject type 的某个 Data 槽位的编辑规格。
+/// Looks up the edit spec for a Data slot of a GameObject type.
 ///
-/// 缺失槽位统一回落为只读「未使用」。稀疏类型（如 33）无需填充占位。
+/// Missing slots uniformly fall back to a read-only "unused" spec; sparse
+/// types (e.g. 33) need no placeholders.
 IntegerFieldSpec<GameObjectDataReference> gameObjectDataFieldSpec(
   int type,
   int index,
@@ -542,10 +544,12 @@ enum GameObjectDataReference {
   taxiPath,
 }
 
-/// 一个 GameObject type 的 Data0..Data23 编辑规格。
+/// Edit specs for Data0..Data23 of one GameObject type.
 ///
-/// 对应 `GameObjectData.h::GameObjectTemplate` 联合体的一个 struct；
-/// Map 只写实际字段，缺失槽位由 [field] 回落为只读「未使用」。
+/// Corresponds to one struct of the
+/// `GameObjectData.h::GameObjectTemplate` union; the Map only writes actual
+/// fields, missing slots fall back through [field] to a read-only "unused"
+/// spec.
 class GameObjectDataSchema {
   final Map<int, IntegerFieldSpec<GameObjectDataReference>> fields;
 

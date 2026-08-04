@@ -1,36 +1,45 @@
 import 'package:meta/meta_meta.dart';
 
-/// 标注 Detail ViewModel,声明其表单对应的实体与例外字段。
+/// Annotates a Detail ViewModel, declaring the entity its form maps to and
+/// any exception fields.
 ///
-/// 生成器按「默认推断 + 例外驱动」工作:
-/// - 普通字段由 Dart 类型推断 controller:`int → IntFieldController`、
-///   `double → DoubleFieldController`、`String → StringFieldController`、
-///   `bool → SelectFieldController<int>(fallback: 0)`(配合 `collect() == 1` 转换)。
-/// - 例外字段(select/flag/exclude)必须在此显式声明,字段名拼错会在
-///   生成阶段被 validator 拦下。
+/// The generator works on "default inference + exception-driven" rules:
+/// - Ordinary fields infer their controller from the Dart type: `int →
+///   IntFieldController`, `double → DoubleFieldController`, `String →
+///   StringFieldController`,
+///   `bool → SelectFieldController<int>(fallback: 0)` (paired with a
+///   `collect() == 1` conversion).
+/// - Exception fields (select/flag/exclude) must be declared here
+///   explicitly; a misspelled field name is caught by the validator at
+///   generation time.
 @Target({TargetKind.classType})
 class FoxyDetailViewModel {
-  /// 表单对应的 Full Entity 类型。
+  /// The Full Entity type the form maps to.
   final Type entity;
 
-  /// 例外:controller 名 → `SelectFieldController` 的 fallback(int 或 String)。
+  /// Exception: controller name → fallback for `SelectFieldController`
+  /// (int or String).
   final Map<String, Object> selects;
 
-  /// 例外:controller 名 → `FlagFieldController`。
+  /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
 
-  /// 例外:controller 名 → `IntFieldControllerGroup`(动态字段编辑)。
+  /// Exception: controller name → `IntFieldControllerGroup` (dynamic field
+  /// editing).
   final Set<String> groups;
 
-  /// 例外:controller 名 → `NullableStringFieldController`(nullable String)。
+  /// Exception: controller name → `NullableStringFieldController`
+  /// (nullable String).
   final Set<String> nullable;
 
-  /// 不进表单的字段(不生成 controller,也不出现在 collect/apply)。
+  /// Fields excluded from the form (no controller is generated, and they do
+  /// not appear in collect/apply).
   final Set<String> exclude;
 
-  /// 提供 store/update/get/create 的 Repository。声明后才生成行为骨架
-  /// (信号/initSignals/persist/dispose/_logActivity 钩子);只声明实体
-  /// 时仅生成 controller 样板(向后兼容)。
+  /// Repository providing store/update/get/create. The behavior skeleton
+  /// (signals/initSignals/persist/dispose/_logActivity hooks) is only
+  /// generated when this is declared; declaring only the entity generates
+  /// just the controller boilerplate (backward compatible).
   final Type? repository;
 
   const FoxyDetailViewModel({
@@ -44,32 +53,39 @@ class FoxyDetailViewModel {
   });
 }
 
-/// 标注子表 Linked List ViewModel(详情页 Tab 的行编辑列表)。
+/// Annotates a child-table Linked List ViewModel (the row-editing list of a
+/// detail-page tab).
 ///
-/// 生成 controller 样板 + 全套编辑器骨架:关联键子集信号、分页、竞态 token、
-/// copy/create/destroy/edit/persist/setLinkKey/_refresh。Repository 必须
-/// 声明 `@FoxyRepository(..., linkKey: [...])`(构建期校验)。
+/// Generates the controller boilerplate plus the full editor skeleton:
+/// link-key subset signal, pagination, race token,
+/// copy/create/destroy/edit/persist/setLinkKey/_refresh. The Repository
+/// must declare `@FoxyRepository(..., linkKey: [...])` (validated at build
+/// time).
 @Target({TargetKind.classType})
 class FoxyLinkedListViewModel {
-  /// 表单对应的 Full Entity 类型。
+  /// The Full Entity type the form maps to.
   final Type entity;
 
-  /// 提供 getBrief/count/create/copy/store/update 的 Repository 类型。
+  /// Repository type providing getBrief/count/create/copy/store/update.
   final Type repository;
 
-  /// 例外:controller 名 → `SelectFieldController` 的 fallback(int 或 String)。
+  /// Exception: controller name → fallback for `SelectFieldController`
+  /// (int or String).
   final Map<String, Object> selects;
 
-  /// 例外:controller 名 → `FlagFieldController`。
+  /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
 
-  /// 例外:controller 名 → `IntFieldControllerGroup`(动态字段编辑)。
+  /// Exception: controller name → `IntFieldControllerGroup` (dynamic field
+  /// editing).
   final Set<String> groups;
 
-  /// 例外:controller 名 → `NullableStringFieldController`(nullable String)。
+  /// Exception: controller name → `NullableStringFieldController`
+  /// (nullable String).
   final Set<String> nullable;
 
-  /// 不进表单的字段(不生成 controller,也不出现在 collect/apply)。
+  /// Fields excluded from the form (no controller is generated, and they do
+  /// not appear in collect/apply).
   final Set<String> exclude;
 
   const FoxyLinkedListViewModel({
@@ -83,33 +99,40 @@ class FoxyLinkedListViewModel {
   });
 }
 
-/// 标注单行 Linked Detail ViewModel(详情页 Tab 的一对一关联表单)。
+/// Annotates a single-row Linked Detail ViewModel (the one-to-one linked
+/// form of a detail-page tab).
 ///
-/// 生成 controller 样板 + 单行编辑器骨架:关联键/编辑键/entity 信号、
-/// 竞态 token、initSignals/setLinkKey/destroy/persist/_refresh(get-or-create,
-/// 无记录时用仓库的 `create*` 预建默认行)。要求实体恰好一个物理 Key
-/// (关联键即主键);复合键表单保持手写。
+/// Generates the controller boilerplate plus the single-row editor
+/// skeleton: link-key/editing-key/entity signals, race token,
+/// initSignals/setLinkKey/destroy/persist/_refresh (get-or-create: when no
+/// record exists, pre-create a default row via the repository's `create*`).
+/// Requires the entity to have exactly one physical Key (the link key is
+/// the primary key); composite-key forms stay hand-written.
 @Target({TargetKind.classType})
 class FoxyLinkedDetailViewModel {
-  /// 表单对应的 Full Entity 类型。
+  /// The Full Entity type the form maps to.
   final Type entity;
 
-  /// 提供 get/store/update/destroy/create 的 Repository 类型。
+  /// Repository type providing get/store/update/destroy/create.
   final Type repository;
 
-  /// 例外:controller 名 → `SelectFieldController` 的 fallback(int 或 String)。
+  /// Exception: controller name → fallback for `SelectFieldController`
+  /// (int or String).
   final Map<String, Object> selects;
 
-  /// 例外:controller 名 → `FlagFieldController`。
+  /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
 
-  /// 例外:controller 名 → `IntFieldControllerGroup`(动态字段编辑)。
+  /// Exception: controller name → `IntFieldControllerGroup` (dynamic field
+  /// editing).
   final Set<String> groups;
 
-  /// 例外:controller 名 → `NullableStringFieldController`(nullable String)。
+  /// Exception: controller name → `NullableStringFieldController`
+  /// (nullable String).
   final Set<String> nullable;
 
-  /// 不进表单的字段(不生成 controller,也不出现在 collect/apply)。
+  /// Fields excluded from the form (no controller is generated, and they do
+  /// not appear in collect/apply).
   final Set<String> exclude;
 
   const FoxyLinkedDetailViewModel({

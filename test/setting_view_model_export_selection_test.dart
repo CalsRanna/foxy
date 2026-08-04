@@ -2,7 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 
-/// 不依赖 GetIt 的选择逻辑验证：直接构造 items 列表并复用 VM 中的过滤语义。
+/// GetIt-free selection-logic verification: build the items list directly
+/// and reuse the VM's filtering semantics.
 void main() {
   final spellDuration = dbcDefinitionByTable['dbc_spell_duration']!;
   final spellIcon = dbcDefinitionByTable['dbc_spell_icon']!;
@@ -55,7 +56,8 @@ void main() {
   test('导出拦截：已选且计数失败的表应被识别', () {
     final items = [
       DbcExportItem(definition: spellDuration, recordCount: 1, selected: true),
-      // 理论上 UI 不允许，但若状态被污染，导出前仍应拦截。
+      // Theoretically impossible via the UI, but if state gets polluted the
+      // export must still be blocked.
       DbcExportItem(definition: spellIcon, countError: 'boom', selected: true),
     ];
     final invalid = items

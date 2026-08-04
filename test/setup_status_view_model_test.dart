@@ -86,10 +86,10 @@ void main() {
     final vm = buildVm();
 
     await vm.saveClientDir(dir.path);
-    expect(vm.isSetupComplete, isFalse); // 缺服务端 DBC 目录
+    expect(vm.isSetupComplete, isFalse); // server DBC directory missing
 
     await vm.saveDbcPath(dir.path);
-    expect(vm.isSetupComplete, isFalse); // 缺图标提取标记
+    expect(vm.isSetupComplete, isFalse); // icon-extraction marker missing
 
     await configUtil.update({'icons_extracted': true});
     await vm.prepare();
@@ -97,7 +97,8 @@ void main() {
   });
 }
 
-/// 指向临时目录的 ConfigUtil（避免测试污染项目根目录 config.yaml）。
+/// ConfigUtil pointing at a temp directory (so tests never pollute the
+/// project-root config.yaml).
 final class _TempConfigUtil extends ConfigUtil {
   final String _dir;
 

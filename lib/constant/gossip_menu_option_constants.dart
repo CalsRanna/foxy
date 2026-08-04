@@ -1,10 +1,10 @@
-// GossipMenuOption 枚举常量定义
-// 数据来源：AzerothCore GossipDef.h
+// GossipMenuOption enum constant definitions
+// Source: AzerothCore GossipDef.h
 
 const kGossipBooleanOptions = <int, String>{0: '否', 1: '是'};
 
-/// GossipMenuOption 图标名称（OptionIcon 值 → 名称）
-/// 来源：AzerothCore GossipOptionIcon enum
+/// GossipMenuOption icon names (OptionIcon value → name)
+/// Source: AzerothCore GossipOptionIcon enum
 const kGossipOptionIcons = {
   0: '白色气泡', // Chat
   1: '棕色袋', // Vendor
@@ -27,8 +27,8 @@ const kGossipOptionIcons = {
   20: '白色气泡', // Chat
 };
 
-/// GossipMenuOption 类型名称（OptionType 值 → 名称）
-/// 来源：AzerothCore Gossip_Option enum
+/// GossipMenuOption type names (OptionType value → name)
+/// Source: AzerothCore Gossip_Option enum
 const kGossipOptionTypes = {
   0: '无', // None
   1: '对话', // Gossip
@@ -53,8 +53,9 @@ const kGossipOptionTypes = {
   20: '双天赋信息', // DualspecInfo
 };
 
-/// npc_text.lang0..lang7 可存储的服务端语言。
-/// 来源：AzerothCore SharedDefines.h `Language`；LANG_ADDON 超出 tinyint 范围。
+/// Server languages storable in npc_text.lang0..lang7.
+/// Source: AzerothCore SharedDefines.h `Language`; LANG_ADDON exceeds the
+/// tinyint range.
 const kNpcTextLanguages = <int, String>{
   0: '全语言',
   1: '兽人语',

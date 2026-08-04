@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_template_spell_entity.g.dart';
 
-/// 生物模板技能
+/// Creature template spells
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('spellName')

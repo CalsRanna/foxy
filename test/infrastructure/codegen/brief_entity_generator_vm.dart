@@ -23,8 +23,9 @@ void main() {
                 contains("(json['ID'] as num?)?.toInt() ?? 0"),
                 contains('int get key => id;'),
                 predicate<String>((source) {
-                  // Brief 在顶层最前、私有 mixin 在最后(Sort Members 顺序),
-                  // 只截取 Brief 类自身区间。
+                  // Brief sits first at top level and the private mixin
+                  // last (Sort Members order); slice only the Brief class
+                  // range.
                   final briefSource = source.substring(
                     source.indexOf('final class BriefCodegenSampleEntity'),
                     source.indexOf('mixin _CodegenSampleEntityMixin'),
@@ -106,7 +107,8 @@ void main() {
                 contains("json['localeName']?.toString() ?? ''"),
                 contains("(json['quality'] as num?)?.toInt() ?? -1"),
                 predicate<String>((source) {
-                  // 私有 mixin 在顶层最后(Sort Members 顺序),只截取 mixin 区间。
+                  // The private mixin sits last at top level (Sort Members
+                  // order); slice only the mixin range.
                   final fullSource = source.substring(
                     source.indexOf('mixin _CodegenSampleEntityMixin'),
                   );

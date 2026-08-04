@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_linked_spell_entity.g.dart';
 
-/// 法术链接技能
+/// Spell linked spells
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'spell_linked_spell')

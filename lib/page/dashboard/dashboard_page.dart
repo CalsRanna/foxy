@@ -106,7 +106,8 @@ class _DashboardPageRoute extends State<DashboardPage> {
     _checkForUpdate();
   }
 
-  /// 启动静默更新检查(24h 节流):发现新版本时弹更新对话框。
+  /// Kicks off the silent update check (24h throttle); opens the update
+  /// dialog when a new version is found.
   Future<void> _checkForUpdate() async {
     final updateViewModel = GetIt.instance.get<UpdateViewModel>();
     final found = await updateViewModel.checkSilently();

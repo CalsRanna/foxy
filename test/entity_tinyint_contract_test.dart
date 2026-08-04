@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 
-/// H1 回归:laconic_mysql 把 tinyint(1) 列解码成 Dart bool,
-/// 生成实体的 fromJson 必须双容忍 bool/num 两种形态,
-/// 否则读真实数据即抛 TypeError(creature_onkill_reputation 读取即崩)。
+/// H1 regression: laconic_mysql decodes tinyint(1) columns into Dart bool,
+/// so the generated entity's fromJson must tolerate both bool and num;
+/// otherwise reading real data throws TypeError (creature_onkill_reputation
+/// crashes on load).
 void main() {
   group('CreatureOnKillReputationEntity.fromJson tinyint(1) 双容忍', () {
     test('bool 形态(驱动解码 tinyint(1) 的真实形态)不抛 TypeError', () {

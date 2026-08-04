@@ -10,14 +10,15 @@ import 'package:http/testing.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-/// 构造指向 [body] 的 MockClient 响应(UTF-8 编码,清单含中文说明)。
+/// Builds a MockClient response for [body] (UTF-8 encoded; the manifest
+/// carries Chinese notes).
 http.Client _clientReturning(String body, {int status = 200}) {
   return MockClient(
     (request) async => http.Response.bytes(utf8.encode(body), status),
   );
 }
 
-/// 构造一个 release 条目 Map(与生成器输出的字段一致)。
+/// Builds a release-entry Map (fields matching the generator's output).
 Map<String, Object?> _releaseMap({
   String version = '1.1.0',
   String buildNumber = '630',
@@ -35,7 +36,7 @@ Map<String, Object?> _releaseMap({
   };
 }
 
-/// 构造 `latest.yaml` 清单文本(releases 数组,最新在前)。
+/// Builds `latest.yaml` manifest text (releases array, newest first).
 String _manifestYaml({
   String version = '1.1.0',
   String buildNumber = '630',
@@ -71,7 +72,7 @@ String _manifestYaml({
   return buffer.toString();
 }
 
-/// 构造一个包含给定文件的 zip 字节(用 archive 打包)。
+/// Builds zip bytes containing the given files (packed with archive).
 List<int> _zipBytes(Map<String, String> files) {
   final archive = Archive();
   for (final entry in files.entries) {
@@ -241,7 +242,7 @@ void main() {
         installedVersion: '1.0.0',
         installedBuildNumber: '628',
       );
-      expect(result, isA<UpToDate>()); // 首条 1.0.0 与当前相同 → 无更新。
+      expect(result, isA<UpToDate>()); // first 1.0.0 equals current → no update
     });
 
     test('appId 不符 → invalidManifest', () async {
@@ -525,7 +526,7 @@ void main() {
             .existsSync(),
         isTrue,
       );
-      // 解压完成后 zip 被清理。
+      // The zip is cleaned up after extraction.
       expect(
         File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.6.zip'))
             .existsSync(),

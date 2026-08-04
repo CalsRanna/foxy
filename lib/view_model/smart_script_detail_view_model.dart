@@ -39,7 +39,8 @@ class SmartScriptDetailViewModel
     with FieldControllerMixin, _SmartScriptDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  /// 当前选中的四个判别类型，驱动各自参数组的编辑规格
+  /// Currently selected four discriminator types; drive each parameter
+  /// group's edit specs
   final selectedSourceType = signal(0);
   final selectedEventType = signal(0);
   final selectedActionType = signal(0);
@@ -90,7 +91,8 @@ class SmartScriptDetailViewModel
 
   @override
   void _afterApplyCandidate(SmartScriptEntity smartScript) {
-    // 显式刷新一次编辑规格，不依赖类型 controller 监听的回调顺序。
+    // Explicitly refresh the edit specs once, independent of the type
+    // controller listener callback order.
     _refreshParamEditors();
   }
 
@@ -119,7 +121,8 @@ class SmartScriptDetailViewModel
 
   void _onSourceTypeChange() {
     selectedSourceType.value = sourceTypeController.collect();
-    // source type 决定 event type 可选项，刷新事件参数规格以保持联动。
+    // source type decides the event-type options; refresh the event
+    // parameter specs to keep them in sync.
     _refreshEventEditors();
   }
 

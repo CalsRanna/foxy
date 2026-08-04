@@ -2,7 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_equip_template_entity.g.dart';
 
-/// 生物装备模板 — 对应 creature_equip_template 表（复合键: CreatureID + ID）
+/// Creature equip template — maps to the creature_equip_template table
+/// (composite key: CreatureID + ID)
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('name1')

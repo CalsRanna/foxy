@@ -1,10 +1,10 @@
-// Creature Template 枚举常量定义
-// 数据来源：AzerothCore SharedDefines.h, UnitDefines.h
+// Creature Template enum constant definitions
+// Source: AzerothCore SharedDefines.h, UnitDefines.h
 
-/// RacialLeader / RegenHealth 布尔选项
+/// RacialLeader / RegenHealth boolean options
 const kBooleanOptions = {0: '否', 1: '是'}; // No, Yes
 
-/// family 族群选项（用于猎人宠物等）
+/// family options (e.g. for hunter pets)
 const kCreatureFamilyOptions = {
   0: '无', // None
   1: '狼', // Wolf
@@ -50,7 +50,7 @@ const kCreatureFamilyOptions = {
   46: '灵魂兽', // Spirit Beast
 };
 
-/// type 生物类型选项
+/// type options
 const kCreatureTypeOptions = {
   0: '无', // None
   1: '野兽', // Beast
@@ -68,7 +68,7 @@ const kCreatureTypeOptions = {
   13: '气体云', // Gas Cloud
 };
 
-/// dmgschool 伤害类型选项
+/// dmgschool options
 const kDamageSchoolOptions = {
   0: '物理', // Physical
   1: '神圣', // Holy
@@ -79,14 +79,14 @@ const kDamageSchoolOptions = {
   6: '奥术', // Arcane
 };
 
-/// exp 属性扩展选项（资料片）
+/// exp attribute-expansion options (expansions)
 const kExpansionOptions = {
   0: '经典旧世', // Classic
   1: '燃烧的远征', // TBC
   2: '巫妖王之怒', // WotLK
 };
 
-/// MaxStanding 最高声望选项
+/// MaxStanding options
 const kMaxStandingOptions = {
   0: '仇恨', // Hated
   1: '敌对', // Hostile
@@ -98,14 +98,14 @@ const kMaxStandingOptions = {
   7: '崇拜', // Exalted
 };
 
-/// movementType 移动类型选项
+/// movementType options
 const kMovementTypeOptions = {
   0: '静止', // Idle
   1: '随机', // Random
   2: '路径点', // Waypoint
 };
 
-/// rank 稀有程度选项
+/// rank options
 const kRankOptions = {
   0: '普通', // Normal
   1: '精英', // Elite
@@ -115,7 +115,7 @@ const kRankOptions = {
   5: '未知', // Unknown (present on two historical creatures)
 };
 
-/// resistance school 抗性类型选项
+/// resistance school options
 const kResistanceSchoolOptions = {
   0: '物理', // Physical
   1: '神圣', // Holy
@@ -126,7 +126,7 @@ const kResistanceSchoolOptions = {
   6: '奥术', // Arcane
 };
 
-/// trainer_class 训练师职业选项
+/// trainer_class options
 const kTrainerClassOptions = {
   0: '无', // None
   1: '战士', // Warrior
@@ -141,7 +141,7 @@ const kTrainerClassOptions = {
   11: '德鲁伊', // Druid
 };
 
-/// trainer_race 训练师种族选项
+/// trainer_race options
 const kTrainerRaceOptions = {
   0: '无', // None
   1: '人类', // Human
@@ -156,7 +156,7 @@ const kTrainerRaceOptions = {
   11: '德莱尼', // Draenei
 };
 
-/// trainer_type 训练师类型选项
+/// trainer_type options
 const kTrainerTypeOptions = {
   0: '职业训练师', // Class Trainer
   1: '坐骑训练师', // Mount Trainer
@@ -164,7 +164,7 @@ const kTrainerTypeOptions = {
   3: '宠物训练师', // Pet Trainer
 };
 
-/// unit_class 职业选项
+/// unit_class options
 const kUnitClassOptions = {
   1: '战士', // Warrior
   2: '圣骑士', // Paladin

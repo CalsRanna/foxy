@@ -1,18 +1,24 @@
-/// Foxy 更新辅助程序(独立编译,不依赖 Flutter 运行时)。
+/// Foxy update helper (compiled standalone, no Flutter runtime).
 ///
-/// 编译:`dart compile exe tool/updater/updater_main.dart -o <Release>/foxy_updater.exe`
+/// Build:
+/// `dart compile exe tool/updater/updater_main.dart -o <Release>/foxy_updater.exe`
 ///
-/// 执行流程:
-/// 1. 若自身不在 `%TEMP%` 下,先自拷贝到 `%TEMP%` 并以相同参数重启,旧实例退出
-///    (避免替换运行中的自身);
-/// 2. 清理 `%TEMP%` 下历史辅助程序副本;
-/// 3. 轮询等待主程序进程退出(`--wait-pid`,上限 10 分钟,超时则放弃交换直接重启应用);
-/// 4. 用 [UpdateSwapper.applyUpdate] 把新版本镜像到应用目录(保留 config.yaml
-///    与 data/icon/,见 [UpdateSwapper.preservedRelPaths]);
-/// 5. 删除更新临时目录;
-/// 6. 以应用目录为工作目录重启主程序。
+/// Execution flow:
+/// 1. If not already under `%TEMP%`, self-copy to `%TEMP%` and restart
+///    with the same arguments; the old instance exits (so the running
+///    binary is never replaced in place);
+/// 2. Clean up historical helper copies under `%TEMP%`;
+/// 3. Poll-wait for the main process to exit (`--wait-pid`, up to 10
+///    minutes; on timeout, skip the swap and restart the app directly);
+/// 4. Use [UpdateSwapper.applyUpdate] to mirror the new version onto the
+///    app directory (preserving config.yaml and data/icon/, see
+///    [UpdateSwapper.preservedRelPaths]);
+/// 5. Delete the update temp directory;
+/// 6. Restart the main program with the app directory as its working
+///    directory.
 ///
-/// 全程诊断日志写入 `%TEMP%\foxy_updater.log`(英文)。
+/// Diagnostic logs throughout are written to `%TEMP%\foxy_updater.log`
+/// (English).
 library;
 
 import 'dart:io';
@@ -20,11 +26,11 @@ import 'dart:io';
 import 'package:foxy/infrastructure/update/update_swapper.dart';
 import 'package:path/path.dart' as p;
 
-/// 日志路径:`%TEMP%\foxy_updater.log`。
+/// Log path: `%TEMP%\foxy_updater.log`.
 final String updaterLogPath =
     p.join(Directory.systemTemp.path, 'foxy_updater.log');
 
-/// 等待主程序退出的上限。
+/// Cap on waiting for the main process to exit.
 const kWaitTimeout = Duration(minutes: 10);
 
 Future<void> main(List<String> args) async {
@@ -43,7 +49,8 @@ Future<void> main(List<String> args) async {
     exit(2);
   }
 
-  // 1. 自拷贝到 %TEMP% 后重启,避免替换运行中的自身。
+  // 1. Self-copy to %TEMP% and restart, avoiding replacement of the
+  //    running binary.
   final tempDir = Directory.systemTemp;
   if (!_isInDir(Platform.resolvedExecutable, tempDir.path)) {
     final copyPath = p.join(tempDir.path, 'foxy_updater_$pid.exe');
@@ -53,10 +60,10 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  // 2. 清理历史副本(保留自身)。
+  // 2. Clean up historical copies (keeping itself).
   await _cleanupStaleCopies(log);
 
-  // 3. 等待主程序退出。
+  // 3. Wait for the main process to exit.
   log.i('Waiting for main process (pid=$waitPid) to exit');
   final exited = await _waitForProcessExit(waitPid, kWaitTimeout);
   if (!exited) {
@@ -65,7 +72,7 @@ Future<void> main(List<String> args) async {
     exit(3);
   }
 
-  // 4. 镜像替换。
+  // 4. Mirror-replace.
   log.i('Applying update from $updateDir to $appDir');
   final result = await UpdateSwapper.applyUpdate(
     appDir: Directory(appDir),
@@ -78,15 +85,15 @@ Future<void> main(List<String> args) async {
     log.i('Swap completed');
   }
 
-  // 5. 删除更新临时目录。
+  // 5. Delete the update temp directory.
   await _deleteWithRetry(Directory(p.join(appDir, kUpdateTempDirName)), log);
 
-  // 6. 重启主程序。
+  // 6. Restart the main program.
   await _relaunchApp(log, appDir, appExe);
   log.i('Updater finished');
 }
 
-/// 解析 `--key value` 形式参数。
+/// Parses `--key value` style arguments.
 Map<String, String> _parseArgs(List<String> args) {
   final options = <String, String>{};
   for (var index = 0; index < args.length; index += 2) {
@@ -97,14 +104,15 @@ Map<String, String> _parseArgs(List<String> args) {
   return options;
 }
 
-/// [path] 是否位于 [dirPath] 下。
+/// Whether [path] is located under [dirPath].
 bool _isInDir(String path, String dirPath) {
   final normalized = p.normalize(path).toLowerCase();
   final dir = p.normalize(dirPath).toLowerCase();
   return p.dirname(normalized) == dir;
 }
 
-/// 轮询 tasklist 等待进程退出;返回是否在超时前退出。
+/// Polls tasklist waiting for the process to exit; returns whether it
+/// exited before the timeout.
 Future<bool> _waitForProcessExit(int targetPid, Duration timeout) async {
   final deadline = DateTime.now().add(timeout);
   final pidPattern = RegExp('(^|\\s)$targetPid(\\s|\$)');
@@ -118,14 +126,16 @@ Future<bool> _waitForProcessExit(int targetPid, Duration timeout) async {
           result.exitCode == 0 && pidPattern.hasMatch(result.stdout.toString());
       if (!alive) return true;
     } catch (error) {
-      // tasklist 调用失败时保守等待,不提前交换。
+      // On tasklist failure, wait conservatively rather than swapping
+      // early.
     }
     await Future<void>.delayed(const Duration(milliseconds: 500));
   }
   return false;
 }
 
-/// 重启主程序,以应用目录为工作目录。
+/// Restarts the main program with the app directory as its working
+/// directory.
 Future<void> _relaunchApp(_Logger log, String appDir, String appExe) async {
   final exePath = p.join(appDir, appExe);
   log.i('Relaunching $exePath');
@@ -136,7 +146,8 @@ Future<void> _relaunchApp(_Logger log, String appDir, String appExe) async {
   }
 }
 
-/// 清理 `%TEMP%` 下历史 `foxy_updater_*.exe` 副本(保留自身)。
+/// Cleans up historical `foxy_updater_*.exe` copies under `%TEMP%`
+/// (keeping itself).
 Future<void> _cleanupStaleCopies(_Logger log) async {
   final current = Platform.resolvedExecutable;
   try {
@@ -158,7 +169,7 @@ Future<void> _cleanupStaleCopies(_Logger log) async {
   }
 }
 
-/// 删除目录(重试 3 次,间隔 300ms)。
+/// Deletes a directory (3 retries, 300ms apart).
 Future<void> _deleteWithRetry(Directory dir, _Logger log) async {
   for (var attempt = 0; attempt < 3; attempt += 1) {
     try {
@@ -176,7 +187,7 @@ Future<void> _deleteWithRetry(Directory dir, _Logger log) async {
   }
 }
 
-/// 追加写日志。
+/// Appends to the log.
 class _Logger {
   _Logger(this.path);
 
@@ -193,7 +204,7 @@ class _Logger {
         mode: FileMode.append,
       );
     } catch (_) {
-      // 日志失败不影响更新流程。
+      // A logging failure never affects the update flow.
     }
   }
 }

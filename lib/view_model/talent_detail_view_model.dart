@@ -19,9 +19,9 @@ class TalentDetailViewModel
     with FieldControllerMixin, _TalentDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  /// 从所有 Controller 收集数据构建 Talent
+  /// Collects data from all controllers to build the Talent
 
-  /// 退出页面
+  /// Leaves the page
 
   @override
   void _logActivity(ActivityActionType action, TalentEntity talent) {

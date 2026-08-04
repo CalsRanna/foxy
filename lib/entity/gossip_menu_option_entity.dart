@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'gossip_menu_option_entity.g.dart';
 
-/// gossip_menu_option 模型（复合键: MenuID + OptionID）。
+/// gossip_menu_option model (composite key: MenuID + OptionID).
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('localeOptionText')

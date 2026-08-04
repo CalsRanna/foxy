@@ -2,7 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_movement_info_entity.g.dart';
 
-/// DBC 生物移动信息，对应 `foxy.dbc_creature_movement_info` 表。
+/// DBC creature movement info, maps to the `foxy.dbc_creature_movement_info`
+/// table.
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_creature_movement_info')

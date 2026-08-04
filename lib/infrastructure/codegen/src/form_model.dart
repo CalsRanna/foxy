@@ -1,6 +1,6 @@
-/// 表单字段的 controller 意图。
+/// The controller intent of a form field.
 enum FormFieldKind {
-  /// 按字段 Dart 类型推断(Int/Double/String/Bool)。
+  /// Inferred from the field's Dart type (Int/Double/String/Bool).
   plain,
 
   /// `SelectFieldController`。
@@ -9,7 +9,7 @@ enum FormFieldKind {
   /// `FlagFieldController`。
   flag,
 
-  /// `IntFieldControllerGroup`(动态字段编辑)。
+  /// `IntFieldControllerGroup` (dynamic field editing).
   group,
 
   /// `NullableStringFieldController`。
@@ -17,13 +17,14 @@ enum FormFieldKind {
 }
 
 final class FormFieldModel {
-  /// entity 字段名(collect/apply 的命名参数名;也是 controller 名的来源)。
+  /// Entity field name (the named parameter of collect/apply; also the
+  /// source of the controller name).
   final String dartName;
 
   final String dartType;
   final FormFieldKind kind;
 
-  /// `kind == select` 时的 fallback 值(int 或 String)。
+  /// Fallback value when `kind == select` (int or String).
   final Object? selectFallback;
 
   const FormFieldModel({
@@ -35,28 +36,31 @@ final class FormFieldModel {
 }
 
 final class FormGenerationModel {
-  /// 手写 Detail ViewModel 类名,如 `TalentDetailViewModel`。
+  /// Hand-written Detail ViewModel class name, e.g. `TalentDetailViewModel`.
   final String className;
 
-  /// 表单对应的 Full Entity 类名,如 `TalentEntity`。
+  /// Full Entity class name the form maps to, e.g. `TalentEntity`.
   final String entityClassName;
 
-  /// 生成的 part mixin 名,如 `_TalentDetailViewModelMixin`。
+  /// Generated part mixin name, e.g. `_TalentDetailViewModelMixin`.
   final String mixinName;
 
-  /// 按 entity 构造参数顺序排列、已排除 exclude 的字段。
+  /// Fields ordered by the entity's constructor parameters, minus excluded
+  /// ones.
   final List<FormFieldModel> fields;
 
-  /// 是否生成行为骨架(注解声明了 `repository:`)。
+  /// Whether to generate the behavior skeleton (the annotation declared
+  /// `repository:`).
   final bool skeletonEnabled;
 
-  /// 提供 store/update/get/create 的 Repository 类名。
+  /// Repository class name providing store/update/get/create.
   final String repositoryClassName;
 
-  /// 物理 Key 类型:`int` 或复合 `XxxKey`。
+  /// Physical Key type: `int` or composite `XxxKey`.
   final String keyType;
 
-  /// 单 key 字段的 dart 名(复合 key 为 null);persist 用它写回 persistedKey。
+  /// Dart name of the single key field (null for composite keys); persist
+  /// uses it to write back persistedKey.
   final String? singleKeyFieldName;
 
   const FormGenerationModel({
@@ -70,7 +74,8 @@ final class FormGenerationModel {
     required this.singleKeyFieldName,
   });
 
-  /// `TalentEntity` → `talent`(与 Repository 的实体参数命名一致)。
+  /// `TalentEntity` → `talent` (matches the Repository's entity parameter
+  /// naming).
   String get entityCamelName {
     final base = entityClassName.substring(
       0,

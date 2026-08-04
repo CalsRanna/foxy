@@ -84,28 +84,30 @@ void main() {
         'foxy|lib/repository/sample_repository.foxy_repository.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // copy:get + create + copyWith 新 key + store,返回新 key
+                // copy: get + create + copyWith new key + store, returns
+                // the new key
                 contains('Future<int> copySample(int key) async {'),
                 contains('final blank = await createSample();'),
                 contains('final copied = source.copyWith(id: blank.id);'),
                 contains('return copied.id;'),
-                // count:走 _applyFilter
+                // count: goes through _applyFilter
                 contains('Future<int> countSamples({SampleFilter? filter})'),
                 contains(
                   '_applyFilter(laconic.table(\'foxy.sample\'), filter)',
                 ),
-                // create:key 字段 nextMaxPlusOne 预分配
+                // create: key field prefilled via nextMaxPlusOne
                 contains('Future<SampleEntity> createSample() async {'),
                 contains("id: await nextMaxPlusOne('foxy.sample', '`ID`')"),
-                // getBrief:brief 投影列 + orderBy key + 分页
+                // getBrief: brief projection columns + orderBy key +
+                // pagination
                 contains('Future<List<BriefSampleEntity>> getBriefSamples({'),
                 contains("'`ID`',"),
                 contains("'`Name`'"),
                 contains('builder = builder.orderBy(\'`ID`\');'),
                 contains('builder = builder.limit(kPageSize).offset(offset);'),
-                // getXxxs:全量列表
+                // getXxxs: full list
                 contains('Future<List<SampleEntity>> getSamples() async {'),
-                // _applyFilter:text 精确匹配 + column 显式列名
+                // _applyFilter: text exact match + explicit column names
                 contains(
                   'QueryBuilder _applyFilter('
                   'QueryBuilder builder, SampleFilter? filter)',
@@ -185,15 +187,17 @@ void main() {
         'foxy|lib/repository/child_record_repository.foxy_repository.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // count:父键等值,无 filter 参数
+                // count: parent-key equality, no filter parameter
                 contains('Future<int> countChildRecords(int parentId) async {'),
                 contains("where('`ParentID`', parentId)"),
                 isNot(contains('filter')),
-                // getBrief:父键过滤 + 分页
+                // getBrief: parent-key filter + pagination
                 contains('Future<List<BriefChildRecordEntity>>'),
                 contains('getBriefChildRecords('),
                 contains("builder = builder.where('`ParentID`', parentId);"),
-                // create:父键字段用传入值,其余 key 字段 nextMaxPlusOne(where 带父键)
+                // create: parent-key fields use the passed values, other
+                // key fields use nextMaxPlusOne (where carries the parent
+                // key)
                 contains(
                   'Future<ChildRecordEntity> createChildRecord(int parentId) async {',
                 ),
@@ -201,11 +205,11 @@ void main() {
                 contains('childId: await nextMaxPlusOne('),
                 contains("'`ChildID`',"),
                 contains("where: {'ParentID': parentId}"),
-                // copy:create 带父键
+                // copy: create carrying the parent key
                 contains(
                   'final blank = await createChildRecord(source.parentId);',
                 ),
-                // 子表不生成全量列表与 _applyFilter
+                // Child tables generate no full list or _applyFilter
                 isNot(contains('getChildren()')),
                 isNot(contains('_applyFilter')),
               ]),
@@ -393,7 +397,7 @@ const localeRepositoryAsset = 'foxy|lib/repository/locale_repository.dart';
 const propertyListViewModelAsset =
     'foxy|lib/view_model/sample_property_list_view_model.dart';
 
-/// 辅音 + y 结尾的 base name(SampleProperty → SampleProperties)。
+/// Consonant + y base name (SampleProperty → SampleProperties).
 const propertyEntitySource = r'''
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
@@ -449,7 +453,8 @@ class SampleRepository with _SampleRepositoryMixin {
 }
 ''';
 
-/// 带 Brief 投影与 key 的实体,供查询层生成测试使用。
+/// Entity with a Brief projection and key, for query-layer generation
+/// tests.
 const briefEntitySource = r'''
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
@@ -468,7 +473,8 @@ class SampleEntity {
 }
 ''';
 
-/// 声明 text filter(含显式 column)的仓库,供查询层生成测试使用。
+/// Repository declaring a text filter (with explicit column), for
+/// query-layer generation tests.
 const filterRepositorySource = r'''
 import 'package:foxy/entity/sample_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
@@ -483,15 +489,16 @@ class SampleRepository with _SampleRepositoryMixin {
 }
 ''';
 
-/// 列表页存在标记:Repository 生成器只检查文件存在性,不解析内容。
-/// 不用真实 `@FoxyListViewModel` 源码,避免 testBuilder 里 list_annotations
-/// 的 meta 依赖导致注解无法解析、整次构建失败。
+/// List-page presence marker: the Repository generator only checks file
+/// existence, not content. The real `@FoxyListViewModel` source is not
+/// used, so list_annotations' meta dependency in testBuilder cannot make
+/// the annotation unparseable and fail the whole build.
 const listViewModelSource = r'''
-// 仅作为「存在列表页」标记。
+// Merely a "list page exists" marker.
 class SampleListViewModel {}
 ''';
 
-/// 子表实体:父键 ParentID + 自增 ChildID。
+/// Child-table entity: parent key ParentID + auto-increment ChildID.
 const childEntitySource = r'''
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
@@ -514,7 +521,7 @@ class ChildRecordEntity {
 }
 ''';
 
-/// 声明 linkKey 的子表仓库。
+/// Child-table repository declaring linkKey.
 const childRepositorySource = r'''
 import 'package:foxy/entity/child_record_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
@@ -527,7 +534,8 @@ class ChildRecordRepository with _ChildRecordRepositoryMixin {
 }
 ''';
 
-/// 混入 DbcLocaleRepositoryMixin 的仓库(locale helper 生成触发条件)。
+/// Repository mixing in DbcLocaleRepositoryMixin (the locale-helper
+/// generation trigger).
 const localeEntitySource = r'''
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
@@ -570,10 +578,12 @@ final entityAnnotationSource = File(
   'lib/infrastructure/codegen/entity_annotations.dart',
 ).readAsStringSync();
 
-/// 直接读取真实注解源码，而不是在测试里维护手抄副本。
+/// Reads the real annotation source directly instead of keeping a
+/// hand-copied duplicate in tests.
 ///
-/// 副本会在注解新增参数或改默认值后悄悄失真，让测试对着旧定义通过。
-/// 测试从仓库根目录运行（见 AGENTS.md）。
+/// Copies silently drift when annotations gain parameters or change
+/// defaults, letting tests pass against stale definitions. Tests run from
+/// the repository root (see AGENTS.md).
 final repositoryAnnotationSource = File(
   'lib/infrastructure/codegen/repository_annotations.dart',
 ).readAsStringSync();

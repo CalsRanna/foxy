@@ -2,8 +2,10 @@ import 'package:meta/meta_meta.dart';
 
 @Target({TargetKind.classType})
 final class FoxyFilter {
-  /// 物理列名；缺省时由生成器按「filter 名 → 同名实体字段 → 该字段
-  /// `@FoxyFullField` 列名」推断，无法推断时构建期报错。
+  /// Physical column name; when omitted, the generator infers it via
+  /// "filter name → entity field with the same name → that field's
+  /// `@FoxyFullField` column name", and errors at build time if it cannot be
+  /// inferred.
   final String? column;
   final Object defaultValue;
   final String name;
@@ -34,25 +36,32 @@ enum FoxyFilterType { boolean, decimal, integer, text }
 final class FoxyRepository {
   final Type entity;
 
-  /// 关联键字段(实体 dart 名列表)。声明后查询层生成关联键形态:
-  /// `getBrief*`/`count*`/`create*` 以关联键为首个位置参数,列表只查
-  /// 该关联值下的子集合(如「生物详情页的掉落 Tab」)。多数子表一个
-  /// 关联键;player_create_info 系列按 (race, class) 两个关联键。
+  /// Link-key fields (entity dart names). When declared, the query layer is
+  /// generated in the link-key form: `getBrief*`/`count*`/`create*` take the
+  /// link keys as their first positional parameters, and lists only query
+  /// the subset under those link values (e.g. the "Loot" tab of the creature
+  /// detail page). Most child tables have one link key; the
+  /// player_create_info family uses two, (race, class).
   final List<String> linkKey;
 
-  /// store 遇到重复键时自动重分配的主键字段(实体 dart 名)。
+  /// Primary-key field that store automatically reallocates on a duplicate
+  /// key (entity dart name).
   ///
-  /// 复合主键表(如 smart_scripts 的 entryorguid/source_type/id/link)
-  /// 里「粘贴已存在行」会触发 ER_DUP_ENTRY 重试:若不声明,生成代码对
-  /// 全部非 link int 主键取全局 MAX+1,可能静默写入无关垃圾行。声明后
-  /// 重试只重分配本列,并用 [autoIncrementScope] 限定作用域(与手写
-  /// `copySmartScript` 只重算 `id`、scope `entryorguid+source_type` 一致)。
-  /// 未声明且非 link int 主键多于一个时,重试直接抛 [DuplicateKeyException]
-  /// 而不是改写多个键。
+  /// In composite-key tables (e.g. smart_scripts'
+  /// entryorguid/source_type/id/link), "pasting an existing row" triggers an
+  /// ER_DUP_ENTRY retry: if undeclared, the generated code takes a global
+  /// MAX+1 for every non-link int primary key, which can silently write
+  /// unrelated garbage rows. Once declared, the retry only reallocates this
+  /// column, scoped by [autoIncrementScope] (matching the hand-written
+  /// `copySmartScript` which recomputes only `id` with scope
+  /// `entryorguid+source_type`). When undeclared and there is more than one
+  /// non-link int primary key, the retry throws [DuplicateKeyException]
+  /// rather than rewriting several keys.
   final String? autoIncrementKey;
 
-  /// [autoIncrementKey] 重分配时的作用域字段(实体 dart 名,须为 key 字段)。
-  /// 与 [linkKey] 合并为 `nextMaxPlusOne` 的 where 条件。
+  /// Scope fields for the [autoIncrementKey] reallocation (entity dart
+  /// names; must be key fields). Merged with [linkKey] into the where
+  /// condition of `nextMaxPlusOne`.
   final List<String> autoIncrementScope;
 
   const FoxyRepository(

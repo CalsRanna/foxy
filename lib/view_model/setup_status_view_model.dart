@@ -4,15 +4,20 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-/// 目录配置与首次设置完成度的单一来源，供设置页配置项与启动引导共用。
+/// Single source of truth for directory config and first-setup completion,
+/// shared by the settings-page items and the startup wizard.
 ///
-/// - [clientDir]：客户端根目录（图标提取来源，`config.yaml` 的 `client_dir`）
-/// - [dbcPath]：服务端 DBC 目录（DBC 导入/导出来源，`config.yaml` 的 `dbc_path`）
-/// - [iconsExtracted]：图标是否已完整提取（提取任务成功时写入的 `icons_extracted` 标记）
+/// - [clientDir]: client root directory (icon-extraction source; `client_dir`
+///   in `config.yaml`)
+/// - [dbcPath]: server DBC directory (DBC import/export source; `dbc_path`
+///   in `config.yaml`)
+/// - [iconsExtracted]: whether icons were fully extracted (the
+///   `icons_extracted` marker written on successful extraction)
 ///
-/// 配置了路径但目录已不存在的场景（用户移动/删除了目录）：信号仍保留原始
-/// 路径用于界面预填，`*Exists` 信号标记有效性，完成度判定按未完成处理，
-/// 下次启动会重新弹出引导。
+/// When a path is configured but its directory no longer exists (the user
+/// moved/deleted it): signals keep the original path for UI prefill, the
+/// `*Exists` signals mark validity, completion counts as incomplete, and
+/// the wizard reappears on the next startup.
 class SetupStatusViewModel {
   final ConfigUtil _configUtil;
 
@@ -33,14 +38,16 @@ class SetupStatusViewModel {
 
   bool get isDbcPathConfigured => dbcPath.value != null && dbcPathExists.value;
 
-  /// 三步设置是否全部完成（两个目录已配置且存在 + 图标已提取）。
+  /// Whether all three setup steps are complete (both directories
+  /// configured and existing + icons extracted).
   bool get isSetupComplete =>
       isClientDirConfigured && isDbcPathConfigured && iconsExtracted.value;
 
-  /// 从 config 加载目录配置与图标提取标记。
+  /// Loads directory config and the icon-extraction marker from config.
   ///
-  /// 配置了路径但目录已不存在时保留原始路径（用于界面预填），
-  /// 但对应的 `*Exists` 标记置 false，完成度按未完成处理。
+  /// When a path is configured but the directory is gone, the original
+  /// path is kept (for UI prefill) while the corresponding `*Exists` flag
+  /// is set false; completion counts as incomplete.
   Future<void> prepare() async {
     final config = await _configUtil.load();
 
@@ -57,7 +64,8 @@ class SetupStatusViewModel {
     iconsExtracted.value = config['icons_extracted'] == true;
   }
 
-  /// 校验并持久化客户端目录；失败返回 false 并写入 [clientDirError]。
+  /// Validates and persists the client directory; returns false on failure
+  /// and writes [clientDirError].
   Future<bool> saveClientDir(String path) => _savePath(
         clientDir,
         clientDirExists,
@@ -67,7 +75,8 @@ class SetupStatusViewModel {
         path,
       );
 
-  /// 校验并持久化服务端 DBC 目录；失败返回 false 并写入 [dbcPathError]。
+  /// Validates and persists the server DBC directory; returns false on
+  /// failure and writes [dbcPathError].
   Future<bool> saveDbcPath(String path) => _savePath(
         dbcPath,
         dbcPathExists,

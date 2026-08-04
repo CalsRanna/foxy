@@ -67,7 +67,8 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
       try {
         _logActivity(ActivityActionType.copy, key);
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       await _refresh();
     } catch (error) {
@@ -119,7 +120,8 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
       try {
         _logActivity(ActivityActionType.delete, key);
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       await _refresh();
     } catch (error) {
@@ -199,7 +201,8 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
           originalKey ?? GameObjectQuestItemKey.fromEntity(candidate),
         );
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       if (token != _interactionToken || linkKey.value != link) return;
       await _refresh();
@@ -225,7 +228,8 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
-  /// 覆写点:记录子表行新增/更新/复制/删除活动日志。
+  /// Override point: records child-table row add/update/copy/delete
+  /// activity log.
   void _logActivity(ActivityActionType action, GameObjectQuestItemKey key) {}
 
   Future<void> _refresh() async {

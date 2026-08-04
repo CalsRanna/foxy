@@ -1,7 +1,8 @@
 import '../repository_annotations.dart';
 
 final class RepositoryFilterFieldModel {
-  /// 物理列名；生成 `_applyFilter` 时按此列做等值匹配。
+  /// Physical column name; `_applyFilter` does an equality match on this
+  /// column.
   final String column;
   final Object defaultValue;
   final String name;

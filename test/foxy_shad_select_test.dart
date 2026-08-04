@@ -45,7 +45,8 @@ void main() {
       ),
     );
 
-    // 数据库中存在但 options 未收录的未知值：显示原始整数而非回落首项。
+    // An unknown value present in the DB but missing from options: show
+    // the raw integer instead of falling back to the first option.
     expect(find.text('42'), findsOneWidget);
     expect(find.text('选项 A'), findsNothing);
 
@@ -94,7 +95,8 @@ void main() {
     await tester.tap(find.text('选项 0'), warnIfMissed: false);
     await tester.pumpAndSettle();
 
-    // 禁用状态下 popover 不弹出，选项文本不应出现在 overlay 中。
+    // While disabled the popover never opens; option text must not appear
+    // in the overlay.
     expect(find.text('选项 1'), findsNothing);
     expect(controller.collect(), 0);
 

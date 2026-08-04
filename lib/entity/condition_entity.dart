@@ -86,14 +86,16 @@ class ConditionEntity with _ConditionEntityMixin {
 }
 
 extension BriefConditionEntityDisplay on BriefConditionEntity {
-  /// 条件类型标签：非负值映射枚举，负值表示引用。
+  /// Condition-type labels: non-negative values map to enums, negative
+  /// values mean a reference.
   String get conditionTypeLabel {
     final id = conditionTypeOrReference;
     if (id < 0) return '引用 $id';
     return kConditionTypeLabels[id] ?? id.toString();
   }
 
-  /// 来源类型标签：非负值映射枚举，负值表示引用。
+  /// Source-type labels: non-negative values map to enums, negative values
+  /// mean a reference.
   String get sourceTypeLabel {
     final id = sourceTypeOrReferenceId;
     if (id < 0) return '引用 $id';

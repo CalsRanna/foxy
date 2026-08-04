@@ -1,9 +1,10 @@
 import 'package:foxy/entity/dbc_locale.dart';
 
-/// 全部已注册的 DBC 本地化字段编辑器定义。
+/// All registered DBC locale-field editor definitions.
 ///
-/// 创建时通过 Schema 校验 16 个语言列；覆盖完整性由测试保证：
-/// Schema 中出现但未在此注册的本地化前缀会使测试失败。
+/// Creation validates the 16 language columns against the Schema; coverage
+/// completeness is guaranteed by tests: a locale prefix present in the
+/// Schema but unregistered here fails the tests.
 class DbcLocaleFields {
   // --- achievement ---
   static final achievementTitle = DbcLocaleFieldDefinition(
@@ -252,7 +253,7 @@ class DbcLocaleFields {
     label: '图腾类别名称',
   );
 
-  /// 全部已注册字段，供覆盖完整性测试使用。
+  /// All registered fields, used by the coverage-completeness tests.
   static final List<DbcLocaleFieldDefinition> all = [
     achievementTitle,
     achievementDescription,

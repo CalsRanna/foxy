@@ -90,7 +90,7 @@ void main() {
     expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
     expect(find.text('第 2 步：设置服务端 DBC 目录'), findsNothing);
 
-    // 无关闭按钮（closeIcon 隐藏）、PopScope 禁止退出。
+    // No close button (closeIcon hidden); PopScope blocks exit.
     expect(find.byIcon(LucideIcons.x), findsNothing);
     final popScope = tester.widget<PopScope>(
       find.descendant(
@@ -104,7 +104,8 @@ void main() {
   testWidgets('路径校验与步骤导航：无效路径报错，有效路径进入下一步', (tester) async {
     await pumpWizard(tester);
 
-    // 空路径：保存时校验失败，显示错误横幅且停留在当前步骤。
+    // Empty path: validation fails on save, an error banner shows, and the
+    // wizard stays on the current step.
     await tester.runAsync(() async {
       await tester.tap(find.text('下一步'));
       await _waitFor(() => setupVm.clientDirError.value != null);
@@ -113,7 +114,8 @@ void main() {
     expect(find.textContaining('请选择客户端目录'), findsOneWidget);
     expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
 
-    // 无效路径：保存失败，显示错误横幅且停留在当前步骤。
+    // Invalid path: save fails, an error banner shows, and the wizard
+    // stays on the current step.
     await tester.runAsync(() async {
       await tester.enterText(
         find.byType(ShadInput),
@@ -126,7 +128,7 @@ void main() {
     expect(find.textContaining('目录不存在'), findsOneWidget);
     expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
 
-    // 有效路径：进入步骤 2。
+    // Valid path: proceed to step 2.
     await tester.runAsync(() async {
       await tester.enterText(find.byType(ShadInput), clientRoot.path);
       await tester.tap(find.text('下一步'));
@@ -140,7 +142,7 @@ void main() {
   testWidgets('三步全流程：配置目录 → 导入 → 自动提取 → 进入应用', (tester) async {
     await pumpWizard(tester);
 
-    // 步骤 1：客户端目录。
+    // Step 1: client directory.
     await tester.runAsync(() async {
       await tester.enterText(find.byType(ShadInput), clientRoot.path);
       await tester.tap(find.text('下一步'));
@@ -149,7 +151,7 @@ void main() {
     });
     expect(find.text('第 2 步：设置服务端 DBC 目录'), findsOneWidget);
 
-    // 步骤 2：服务端 DBC 目录。
+    // Step 2: server DBC directory.
     await tester.runAsync(() async {
       await tester.enterText(find.byType(ShadInput), dbcDir.path);
       await tester.tap(find.text('下一步'));
@@ -160,7 +162,8 @@ void main() {
     expect(find.text('第 3 步：导入 DBC 数据并提取游戏图标'), findsOneWidget);
     expect(find.text('开始导入'), findsOneWidget);
 
-    // 开始导入 → 假同步工具立即成功 → 自动衔接真实图标提取（2 个图标）。
+    // Start import → the fake sync tool succeeds immediately → seamlessly
+    // continues into the real icon extraction (2 icons).
     await tester.runAsync(() async {
       await tester.tap(find.text('开始导入'));
       await _waitFor(
@@ -175,9 +178,10 @@ void main() {
   });
 
   testWidgets('导入与提取全部完成后，「进入应用」可关闭向导对话框', (tester) async {
-    // 与真实场景一致：向导以对话框路由弹出，外层 PopScope(canPop: false)
-    // 拦截遮罩/Esc 关闭。回归用例：按钮必须走 pop() 而非 maybePop()，
-    // 否则会被 PopScope 拦截，点击后向导关不掉。
+    // Matches the real scenario: the wizard opens as a dialog route with
+    // an outer PopScope(canPop: false) intercepting barrier/Esc closes.
+    // Regression: the button must use pop(), not maybePop() — otherwise
+    // PopScope intercepts it and the wizard cannot be closed.
     configData['client_dir'] = clientRoot.path;
     configData['dbc_path'] = dbcDir.path;
 
@@ -255,7 +259,7 @@ void main() {
   });
 }
 
-/// 用 warcrafty 写一个含 2 个图标的最小 MPQ。
+/// Uses warcrafty to write a minimal MPQ containing 2 icons.
 void _createFakeClientMpq(String localeDataDir) {
   final archive = MpqArchive.create(
     p.join(localeDataDir, 'locale-zhCN.MPQ'),
@@ -282,7 +286,8 @@ Future<void> _waitFor(bool Function() condition) async {
   }
 }
 
-/// 假 DbcSyncUtil：表检查全部就绪，导入立即成功（不触真实 MySQL/isolate）。
+/// Fake DbcSyncUtil: all table checks pass and import succeeds immediately
+/// (no real MySQL/isolate).
 final class _FakeDbcSyncUtil extends DbcSyncUtil {
   @override
   Future<List<DbcTableCheckResult>> checkTables() async => [
@@ -308,7 +313,8 @@ final class _FakeDbcSyncUtil extends DbcSyncUtil {
   }
 }
 
-/// 内存 ConfigUtil：读写都无真实 IO，widget 测试无需 runAsync 也能完成。
+/// In-memory ConfigUtil: no real IO for reads or writes, so widget tests
+/// finish without runAsync.
 final class _MemoryConfigUtil extends ConfigUtil {
   final Map<String, dynamic> data;
 

@@ -111,8 +111,9 @@ final class RepositoryReader {
     final entityParameterName =
         '${baseName[0].toLowerCase()}${baseName.substring(1)}';
 
-    // 查询层(create/copy/getBrief/count/_applyFilter)为两类仓库生成:
-    // 有列表页的主表仓库,以及声明 linkKey 的子表仓库(详情页 Tab)。
+    // The query layer (create/copy/getBrief/count/_applyFilter) is generated
+    // for two kinds of repositories: main-table ones with a list page, and
+    // child-table ones declaring linkKey (detail-page tabs).
     final listViewModelPresent = await buildStep.canRead(
       AssetId(
         buildStep.inputId.package,
@@ -131,7 +132,8 @@ final class RepositoryReader {
 
     final keyFields = <RepositoryKeyFieldModel>[];
     final briefProjectionColumns = <String>[];
-    // filter 名 → 同名实体字段的物理列名。
+    // Filter name → physical column name of the entity field with the same
+    // name.
     final fieldColumnByName = <String, String>{};
     for (final field in entityElement.fields.where(
       (field) => !field.isStatic && !field.isSynthetic,
@@ -216,8 +218,9 @@ final class RepositoryReader {
       element,
       baseName,
       fieldColumnByName,
-      // 子表仓库(声明 linkKey)不生成 _applyFilter,筛选字段允许
-      // 无法推断列名(Filter 类仍生成,仅作查询输入对象)。
+      // Child-table repositories (declaring linkKey) do not generate
+      // _applyFilter; their filter fields may be non-inferable (the Filter
+      // class is still generated, as a query-input object only).
       listViewModelPresent,
     );
 
@@ -242,8 +245,8 @@ final class RepositoryReader {
         '在 Repository imports 后声明生成 part。',
       );
     }
-    // locale helper 委托需要 DbcLocaleRepositoryMixin 的
-    // loadDbcLocaleField/storeDbcLocaleField 与 dbcLocaleTableName。
+    // Locale-helper delegates need DbcLocaleRepositoryMixin's
+    // loadDbcLocaleField/storeDbcLocaleField and dbcLocaleTableName.
     final localeHelpersEnabled =
         RegExp(r'\bDbcLocaleRepositoryMixin\b').hasMatch(source) &&
         RegExp(r'\bdbcLocaleTableName\b').hasMatch(source);
@@ -258,8 +261,9 @@ final class RepositoryReader {
       );
     }
 
-    // autoIncrementKey: 复合主键表声明「重复键重试时只重分配的序号列」;
-    // 校验其必须是 int 类型 key 字段,scope 必须是 key 字段(dart 名)。
+    // autoIncrementKey: composite-key tables declare "the sequence column
+    // that duplicate-key retries reallocate"; it must be an int key field,
+    // and the scope must be key fields (dart names).
     final autoIncrementKey = annotation.peek('autoIncrementKey')?.stringValue;
     String? resolvedAutoIncrementKey;
     if (autoIncrementKey != null && autoIncrementKey.isNotEmpty) {
@@ -320,9 +324,10 @@ final class RepositoryReader {
     );
   }
 
-  /// 字段上是否为物理投影标记 `@FoxyBriefField()`(无 name/type 的
-  /// 默认构造函数;类级 `@FoxyBriefField.text/integer/...` 是投影别名,
-  /// 由查询提供,不映射物理列)。
+  /// Whether the field carries the physical-projection marker
+  /// `@FoxyBriefField()` (the default constructor without name/type;
+  /// class-level `@FoxyBriefField.text/integer/...` are projection aliases
+  /// provided by the query, not physical columns).
   bool _isPhysicalBriefField(FieldElement field) {
     final annotations = _briefFieldChecker.annotationsOf(field).toList();
     if (annotations.length > 1) {
@@ -369,7 +374,8 @@ final class RepositoryReader {
                 "'${field.name}') 显式声明 column: '物理列名'。",
           );
         }
-        // 子表仓库不生成 _applyFilter，不消费列名，允许未声明。
+        // Child-table repositories do not generate _applyFilter, so column
+        // names are not consumed and may be undeclared.
         fields.add(field);
         continue;
       }

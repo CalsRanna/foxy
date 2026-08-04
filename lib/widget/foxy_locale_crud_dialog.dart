@@ -6,13 +6,14 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 兼容旧名称。
+/// Legacy name kept for compatibility.
 typedef FoxyLocaleCrudDialog = DatabaseLocaleEditor;
 
-/// 普通数据库 `*_locale` 分表的动态行编辑器。
+/// Dynamic-row editor for regular database `*_locale` sub-tables.
 ///
-/// 单字段两列表格：第一列语言、第二列该字段的值。支持按实际数据添加和删除
-/// locale 行；`fields` 固定为 `['locale', <字段名>]`。
+/// Single-field two-column table: column 1 is the language, column 2 the
+/// field's value. Locale rows can be added/deleted per actual data;
+/// `fields` is fixed to `['locale', <field name>]`.
 class DatabaseLocaleEditor extends StatefulWidget {
   final String title;
   final int entry;
@@ -41,10 +42,11 @@ class DatabaseLocaleEditor extends StatefulWidget {
   @override
   State<DatabaseLocaleEditor> createState() => _DatabaseLocaleEditorState();
 
-  /// 弹出多语言编辑对话框。
+  /// Opens the multi-language edit dialog.
   ///
-  /// [onLoad] 返回带原始 locale 身份的已有行。
-  /// [onSave] 接收显式行变更，由调用方负责转成领域强类型 Key 并持久化。
+  /// [onLoad] returns existing rows with their original locale identity.
+  /// [onSave] receives the explicit row changes; callers convert them into
+  /// domain strongly-typed Keys and persist.
   static Future<bool?> show(
     BuildContext context, {
     required String title,

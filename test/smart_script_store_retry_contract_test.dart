@@ -5,10 +5,12 @@ import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
-/// H2 回归:生成 store 的重复键重试只重分配声明的 autoIncrementKey(id),
-/// 并按 autoIncrementScope(entryorguid+source_type)限定作用域——
-/// 修复前会把全部 4 个主键列取全局 MAX+1,粘贴已存在的行会静默写入
-/// entryorguid 为全表最大+1 的无关垃圾行。
+/// H2 regression: the generated store's duplicate-key retry only
+/// reallocates the declared autoIncrementKey (id), scoped by
+/// autoIncrementScope (entryorguid+source_type) — before the fix, all 4
+/// primary-key columns took a global MAX+1, and pasting an existing row
+/// silently wrote unrelated garbage rows whose entryorguid was
+/// table-max+1.
 void main() {
   test('store 重复键重试:只重分配 id,作用域 entryorguid+source_type', () async {
     final driver = _DuplicateRetryDriver();
@@ -24,19 +26,21 @@ void main() {
     );
     await repository.storeSmartScript(script);
 
-    // 重试前先取 MAX(id),where 限定 entryorguid=10 + source_type=1
-    // (第三个绑定是 laconic first() 附加的 limit 1)。
+    // Before the retry, take MAX(id) with where scoped to entryorguid=10 +
+    // source_type=1 (the third bind is the limit 1 added by laconic
+    // first()).
     final maxSelect = queries
         .where((q) => q.sql.toLowerCase().contains('max'))
         .single;
     expect(maxSelect.bindings.take(2).toList(), [10, 1]);
 
-    // 两次 insert:第一次命中 ER_DUP_ENTRY,第二次重试成功。
+    // Two inserts: the first hits ER_DUP_ENTRY, the retry succeeds.
     final inserts = queries
         .where((q) => q.sql.toLowerCase().contains('insert'))
         .toList();
     expect(inserts, hasLength(2));
-    // 重试的实体只改 id(MAX+1 = 1000),其余主键列保持原值。
+    // The retried entity only changes id (MAX+1 = 1000); all other
+    // primary-key columns keep their values.
     final retriedBindings = inserts[1].bindings;
     final retriedJson = script.copyWith(id: 1000).toJson();
     expect(retriedBindings, retriedJson.values.toList());
@@ -57,7 +61,7 @@ void main() {
       repository.storeSmartScript(script),
       throwsA(isA<DuplicateKeyException>()),
     );
-    // 重试失败时不再尝试改写其他主键。
+    // When the retry fails, no other primary key is rewritten.
     final inserts = queries
         .where((q) => q.sql.toLowerCase().contains('insert'))
         .toList();
@@ -76,7 +80,7 @@ final class _DuplicateRetryDriver implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
 
-  /// 重试的 insert 是否也命中重复键。
+  /// Whether the retry insert also hits a duplicate key.
   final bool retryAlsoFails;
   var _insertCount = 0;
 
@@ -87,7 +91,8 @@ final class _DuplicateRetryDriver implements DatabaseDriver {
     "'10-1-2-3' for key 'PRIMARY'",
   );
 
-  /// laconic 对无自增列的 insert 走 [statement],两种入口都注入重复键。
+  /// laconic routes inserts without auto-increment columns through
+  /// [statement]; both entry points inject the duplicate key.
   void _maybeDuplicate(String sql) {
     if (sql.toLowerCase().contains('insert')) {
       _insertCount++;
@@ -111,7 +116,7 @@ final class _DuplicateRetryDriver implements DatabaseDriver {
     String sql, [
     List<Object?> params = const [],
   ]) async {
-    // nextMaxPlusOne: SELECT MAX(`id`) AS max_id ... → 返回 999。
+    // nextMaxPlusOne: SELECT MAX(`id`) AS max_id ... → returns 999.
     return [LaconicResult.fromMap({'max_id': 999})];
   }
 

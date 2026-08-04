@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_group_entity.g.dart';
 
-/// 法术技能组
+/// Spell groups
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'spell_group')

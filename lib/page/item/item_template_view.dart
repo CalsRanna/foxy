@@ -52,8 +52,9 @@ const Map<int, String> _kPageMaterialOptions = {
 
 final Map<int, String> _kInventoryTypeOptions = kItemInventoryTypes.asMap();
 
-// 模块级常量选项表：稳定引用，供 FoxyShadSelect 缓存其 ShadOption 列表。
-// （此前这些是每次 build 重建 Map 的 getter，破坏了下拉选项缓存。）
+// Module-level constant option tables: stable references so FoxyShadSelect
+// can cache its ShadOption lists. (They used to be getters rebuilding a Map
+// on every build, which broke the dropdown option cache.)
 final Map<int, String> _kItemClassOptions = kItemClasses.asMap();
 
 class ItemTemplateView extends StatelessWidget {
@@ -86,7 +87,7 @@ class ItemTemplateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// ==================== Card 1: 基本信息 ====================
+    /// ==================== Card 1: Basic info ====================
     final entryInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
@@ -218,7 +219,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 2: 套装/价格/容器/杂项 ====================
+    /// =============== Card 2: Set/price/container/misc ===============
     final itemsetInput = FoxyFormItem(
       label: '套装',
       child: FoxyEntityPicker(
@@ -438,7 +439,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 3: 标识 ====================
+    /// ==================== Card 3: Flags ====================
     final flagsInput = FoxyFormItem(
       label: '物品标识',
       child: FoxyFlagPicker(
@@ -479,7 +480,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 4: 伤害/护甲 ====================
+    /// ==================== Card 4: Damage/armor ====================
     final delayInput = FoxyFormItem(
       label: '攻击延迟',
       child: FoxyNumberInput<int>(
@@ -598,7 +599,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 5: 缩放属性 ====================
+    /// ==================== Card 5: Scaling ====================
     final scalingStatDistributionInput = FoxyFormItem(
       label: '缩放分布',
       child: FoxyEntityPicker(
@@ -629,7 +630,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 7: 抗性 ====================
+    /// ==================== Card 7: Resistances ====================
     final holyResInput = FoxyFormItem(
       label: '神圣抗性',
       child: FoxyNumberInput<int>(
@@ -694,7 +695,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 9: 需求 ====================
+    /// ==================== Card 9: Requirements ====================
     final allowableClassInput = FoxyFormItem(
       label: '允许职业',
       child: FoxyFlagPicker(
@@ -859,7 +860,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 10: 插槽/宝石 ====================
+    /// ============== Card 10: Sockets/gems ==============
     final gemPropertiesInput = FoxyFormItem(
       label: '宝石属性',
       child: FoxyEntityPicker(
@@ -946,7 +947,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// ==================== Card 11: 其他/脚本 ====================
+    /// ============== Card 11: Other/scripts ==============
     final pageTextInput = FoxyFormItem(
       label: '页面文本',
       child: FoxyEntityPicker(
@@ -1134,7 +1135,7 @@ class ItemTemplateView extends StatelessWidget {
           FoxyFormSection(title: '插槽/宝石', children: socketGemRows),
           FoxyFormSection(title: '书本内容', children: pageContentRows),
           FoxyFormSection(title: '脚本', children: scriptRows),
-          // 保存/取消按钮
+          // Save/cancel buttons
           Row(
             children: [
               Watch(

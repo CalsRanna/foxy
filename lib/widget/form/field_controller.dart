@@ -4,12 +4,15 @@ import 'package:foxy/infrastructure/util/format_util.dart';
 import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-// 导出给生成 part:view model 的 .g.dart 是 part of 父库,不能自己 import,
-// 生成代码里的 FoxyException/foxyErrorMessage 靠本文件的 import 作用域解析
-// (AGENTS.md 约定所有生成 VM 的 shell 都混入 FieldControllerMixin)。
+// Exported for generated parts: the view-model .g.dart is `part of` the
+// parent library and cannot import on its own; the generated code's
+// FoxyException/foxyErrorMessage resolve through this file's import scope
+// (AGENTS.md requires every generated-VM shell to mix in
+// FieldControllerMixin).
 export 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 
-/// 浮点字段：空串视为 0.0，非法输入抛 [FormatException]。
+/// Floating-point field: empty string counts as 0.0; invalid input throws
+/// [FormatException].
 class DoubleFieldController extends NumberFieldController<double> {
   @override
   String format(double value) => formatNum(value);
@@ -18,10 +21,12 @@ class DoubleFieldController extends NumberFieldController<double> {
   double parse(String text) => parseDoubleField(text);
 }
 
-/// 详情表单字段控制器：把「字段类型 → 格式化/解析规则」内聚到字段声明处。
+/// Detail-form field controllers: co-locate "field type → format/parse
+/// rules" at the field declaration.
 ///
-/// [FieldControllerMixin] 提供「声明即注册」能力——声明 Controller 时自动入册，
-/// 统一释放，消灭手工列表与漏 dispose 的风险：
+/// [FieldControllerMixin] provides "declare-and-register": controllers
+/// auto-register when declared and are disposed uniformly, eliminating
+/// manual lists and missed-dispose risks:
 ///
 /// ```dart
 /// class MyViewModel with FieldControllerMixin {
@@ -51,24 +56,26 @@ class DoubleFieldController extends NumberFieldController<double> {
 /// }
 /// ```
 sealed class FieldController<T> {
-  /// 监听底层控件变化。
+  /// Listens to the underlying control's changes.
   void addListener(VoidCallback listener);
 
-  /// 从底层控件读取并解析为字段值；非法输入抛 [FormatException]。
+  /// Reads the underlying control and parses it into a field value;
+  /// invalid input throws [FormatException].
   T collect();
 
   void dispose();
 
-  /// 用 entity 值初始化底层控件。
+  /// Initializes the underlying control with an entity value.
   void init(T value);
 
-  /// 移除底层控件监听。
+  /// Removes the underlying control's listener.
   void removeListener(VoidCallback listener);
 }
 
-/// ViewModel 侧 FieldController 生命周期管理。
+/// ViewModel-side FieldController lifecycle management.
 ///
-/// 提供「声明即注册」能力，替代手工 [FieldController] 列表与 dispose 循环：
+/// Provides "declare-and-register", replacing manual [FieldController]
+/// lists and dispose loops:
 ///
 /// ```dart
 /// class MyViewModel with FieldControllerMixin {
@@ -81,12 +88,14 @@ sealed class FieldController<T> {
 mixin FieldControllerMixin {
   final _fieldControllers = <FieldController>[];
 
-  /// 已释放标记:initSignals 的慢查询(冷连接/远程库)在页面销毁后返回时,
-  /// 不能再写已 dispose 的 TextEditingController(debug 下抛 FlutterError),
-  /// 生成与手写 initSignals 在 await 后先检查本标记再写 Controller/信号。
+  /// Disposed flag: when a slow initSignals query (cold connection/remote
+  /// DB) returns after the page is destroyed, writing to a disposed
+  /// TextEditingController throws FlutterError in debug. Both generated and
+  /// hand-written initSignals check this flag after await before touching
+  /// controllers/signals.
   bool _disposed = false;
 
-  /// 是否已释放(disposeControllers 后为 true)。
+  /// Whether already disposed (true after disposeControllers).
   bool get isDisposed => _disposed;
 
   void disposeControllers() {
@@ -102,7 +111,7 @@ mixin FieldControllerMixin {
   }
 }
 
-/// 位标记字段：负责位标记值的显示格式化与解析。
+/// Bit-flag field: formats and parses bit-flag values for display.
 class FlagFieldController extends TextBackedFieldController<int> {
   @override
   String format(int value) => formatFlagValue(value);
@@ -110,19 +119,21 @@ class FlagFieldController extends TextBackedFieldController<int> {
   @override
   int parse(String text) => parseFlagValue(text);
 
-  /// 格式化标志位整数值为显示文本，如 `123 (0x0000007B)`。
+  /// Formats a flag integer as display text, e.g. `123 (0x0000007B)`.
   static String formatFlagValue(int value) {
     final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
     return '$value (0x$hex)';
   }
 
-  /// 将 [formatFlagValue] 产生的显示文本解析回整数值。
+  /// Parses the display text produced by [formatFlagValue] back into an
+  /// integer.
   static int parseFlagValue(String text) {
     return parseIntField(text.split(' ').first);
   }
 }
 
-/// 整数字段：空串视为 0，非法输入抛 [FormatException]。
+/// Integer field: empty string counts as 0; invalid input throws
+/// [FormatException].
 class IntFieldController extends NumberFieldController<int> {
   @override
   String format(int value) => formatNum(value);
@@ -131,13 +142,15 @@ class IntFieldController extends NumberFieldController<int> {
   int parse(String text) => parseIntField(text);
 }
 
-/// 同一物理整数列的 typed controller 组。
+/// A group of typed controllers for one physical integer column.
 ///
-/// 动态字段的编辑语义随判别字段切换（数字/枚举/Flags/引用），单个
-/// [IntFieldController] 无法直接交给 `FoxyShadSelect`/`FoxyFlagPicker`。
-/// 本类持有三个现有 typed controller，按当前 [editor] 转发读写，
-/// 解决「一个物理 int 字段需要多个现有 typed controller」的适配问题；
-/// 不承担 label、options、引用解析或 Widget 构建。
+/// A dynamic field's edit semantics switch with the discriminator field
+/// (number/enum/Flags/reference); a single [IntFieldController] cannot be
+/// handed to `FoxyShadSelect`/`FoxyFlagPicker` directly.
+/// This class holds three existing typed controllers and forwards reads/
+/// writes by the current [editor], solving the "one physical int field
+/// needs several existing typed controllers" adaptation; it takes no part
+/// in labels, options, reference resolution or widget building.
 class IntFieldControllerGroup extends FieldController<int> {
   final IntFieldController numberController = IntFieldController();
   final SelectFieldController<int> selectController =
@@ -172,14 +185,17 @@ class IntFieldControllerGroup extends FieldController<int> {
     };
   }
 
-  /// 切换当前编辑器。
+  /// Switches the current editor.
   ///
-  /// 幂等：editor 未变化时直接返回，不触碰任何文本状态——GameObject 类型
-  /// 切换会对全部 24 个组调用本方法，不能把用户正在输入的其他字段草稿清掉。
+  /// Idempotent: returns immediately when the editor is unchanged, touching
+  /// no text state — a GameObject-type switch calls this on all 24 groups,
+  /// so drafts the user is typing in other fields must not be cleared.
   ///
-  /// editor 真正变化且旧编辑器是数字输入时，若正处于非法临时文本（如裸负号
-  /// `-`），丢弃该草稿并恢复最后一次合法整数。这是唯一可预测的行为，因为
-  /// 非法文本不是可持久化的字段值。
+  /// When the editor truly changes and the old editor was a number input
+  /// holding an invalid transient text (e.g. a bare minus `-`), drop that
+  /// draft and restore the last valid integer. This is the only
+  /// predictable behavior, since invalid text is not a persistable field
+  /// value.
   void configure(IntegerFieldEditor editor) {
     if (editor == _editor) return;
     if (_editor == IntegerFieldEditor.number ||
@@ -227,8 +243,9 @@ class IntFieldControllerGroup extends FieldController<int> {
     if (_syncing) return;
     final text = numberController.controller.text.trim();
     final value = text.isEmpty ? 0 : int.tryParse(text);
-    // 非法非空文本（如 `-`）是编辑草稿，不同步、不通知；保存时 collect()
-    // 仍抛 FormatException 由校验层拦截。
+    // Invalid non-empty text (e.g. `-`) is an edit draft: not synced, not
+    // notified; collect() on save still throws FormatException, caught by
+    // the validation layer.
     if (value == null) return;
     _syncFromValue(value);
   }
@@ -250,8 +267,9 @@ class IntFieldControllerGroup extends FieldController<int> {
     }
   }
 
-  /// 当前可见 controller 的合法变化同步到另外两个 typed controller，
-  /// 并用 `_syncing` 防重入；与最后一次合法整数相同时不产生空通知。
+  /// Syncs the visible controller's valid changes into the other two typed
+  /// controllers, guarded against re-entry with `_syncing`; equal-to-last
+  /// valid integers produce no spurious notifications.
   void _syncFromValue(int value) {
     if (value == _lastValidValue) return;
     _setAll(value);
@@ -259,7 +277,8 @@ class IntFieldControllerGroup extends FieldController<int> {
   }
 }
 
-/// 可空文本字段：通过独立的 NULL 状态保留数据库 `NULL` 与空字符串的区别。
+/// Nullable text field: an explicit NULL state preserves the difference
+/// between database `NULL` and an empty string.
 class NullableStringFieldController extends TextBackedFieldController<String?> {
   final isNull = ValueNotifier(false);
 
@@ -299,13 +318,16 @@ class NullableStringFieldController extends TextBackedFieldController<String?> {
   void setNull(bool value) => isNull.value = value;
 }
 
-/// 整数字段：空串视为 0，非法输入抛 [FormatException]。
+/// Integer field: empty string counts as 0; invalid input throws
+/// [FormatException].
 sealed class NumberFieldController<T extends num>
     extends TextBackedFieldController<T> {}
 
-/// 下拉字段：持有 [ShadSelectController]，未选中时回落 [fallback]。
+/// Dropdown field: holds a [ShadSelectController], falling back to
+/// [fallback] when nothing is selected.
 ///
-/// [fallback] 显式化了此前散落各处的 `?? 0` 语义，每个字段的默认值有据可查。
+/// [fallback] makes the previously scattered `?? 0` semantics explicit, so
+/// every field's default is documented.
 class SelectFieldController<T> extends FieldController<T> {
   final controller = ShadSelectController<T>();
   final T fallback;
@@ -329,7 +351,7 @@ class SelectFieldController<T> extends FieldController<T> {
       controller.removeListener(listener);
 }
 
-/// 纯文本字段：原样透传。
+/// Plain text field: passed through verbatim.
 class StringFieldController extends TextBackedFieldController<String> {
   @override
   String format(String value) => value;
@@ -338,7 +360,8 @@ class StringFieldController extends TextBackedFieldController<String> {
   String parse(String text) => text;
 }
 
-/// 文本框族：持有 [TextEditingController]，负责字符串双向转换。
+/// Text-controller family: holds a [TextEditingController], handling
+/// two-way string conversion.
 sealed class TextBackedFieldController<T> extends FieldController<T> {
   final controller = TextEditingController();
 

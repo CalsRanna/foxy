@@ -1,9 +1,9 @@
-// Creature Template 标志位常量定义
-// 数据来源：AzerothCore SharedDefines.h, UnitDefines.h
+// Creature Template flag constant definitions
+// Source: AzerothCore SharedDefines.h, UnitDefines.h
 
 import 'package:foxy/constant/flag_item.dart';
 
-/// 类型标识选项
+/// Type-flag options
 const kCreatureTypeFlagOptions = [
   FlagItem(0x00000001, '可驯服'), // Tameable
   FlagItem(0x00000002, '死亡玩家可见'), // Visible To Ghosts
@@ -39,7 +39,7 @@ const kCreatureTypeFlagOptions = [
   FlagItem(0x80000000, '任务首领'), // Quest Boss
 ];
 
-/// 动态标识选项
+/// Dynamic-flag options
 const kDynamicFlagOptions = [
   FlagItem(0x00000001, '可拾取'), // Lootable
   FlagItem(0x00000002, '追踪单位'), // Track Unit
@@ -51,7 +51,7 @@ const kDynamicFlagOptions = [
   FlagItem(0x00000080, '被全部仇恨列表标记'), // Tapped By All Threat List
 ];
 
-/// 额外标识选项
+/// Extra-flag options
 const kFlagsExtraOptions = [
   FlagItem(0x00000001, '副本绑定'), // Instance Bind
   FlagItem(0x00000002, '平民'), // Civilian
@@ -81,13 +81,14 @@ const kFlagsExtraOptions = [
   FlagItem(0x02000000, '不呼叫援助'), // Don't Call Assistance
   FlagItem(0x04000000, '忽略所有援助呼叫'), // Ignore All Assistance Calls
   FlagItem(0x08000000, '不覆盖 Entry SmartAI'), // Don't Override Entry SAI
-  // 0x10000000 由服务端动态设置，禁止写入数据库。
+  // 0x10000000 is set dynamically by the server; never write it to the
+  // database.
   FlagItem(0x20000000, '忽略寻路'), // Ignore Pathfinding
   FlagItem(0x40000000, '免疫击退（已弃用）'), // Immunity Knockback
   FlagItem(0x80000000, '强制完全重置'), // Hard Reset
 ];
 
-/// 栖息类型选项
+/// Inhabit-type options
 const kInhabitTypeOptions = [
   FlagItem(0x01, '地面'), // Ground
   FlagItem(0x02, '水中'), // Water
@@ -100,12 +101,13 @@ const kLootModeFlagOptions = [
   FlagItem(0x0004, '困难模式 2'),
   FlagItem(0x0008, '困难模式 3'),
   FlagItem(0x0010, '困难模式 4'),
-  // SharedDefines.h 未命名，但 core base 用于戈多克贡品第 5 档。
+  // Not named in SharedDefines.h, but core base uses it for the 5th tier of
+  // Gordok tribute.
   FlagItem(0x0020, '额外掉落模式 5'),
   FlagItem(0x8000, '垃圾鱼'),
 ];
 
-/// 免疫机制选项
+/// Immunity-mechanic options
 const kMechanicImmuneMaskOptions = [
   FlagItem(0x00000001, '魅惑'), // Charm
   FlagItem(0x00000002, '迷惑'), // Disoriented
@@ -140,7 +142,7 @@ const kMechanicImmuneMaskOptions = [
   FlagItem(0x40000000, '狂怒'), // Enraged
 ];
 
-/// NPC 标识选项
+/// NPC-flag options
 const kNpcFlagOptions = [
   FlagItem(0x00000001, '对话', '基础功能'), // Gossip
   FlagItem(0x00000002, '任务', '基础功能'), // Quest Giver
@@ -171,7 +173,7 @@ const kNpcFlagOptions = [
   FlagItem(0x04000000, '邮箱', '服务'), // Mailbox
 ];
 
-/// 免疫法术类型选项
+/// Immunity-spell-type options
 const kSpellSchoolImmuneMaskOptions = [
   FlagItem(0x01, '物理'), // Physical
   FlagItem(0x02, '神圣'), // Holy
@@ -182,7 +184,7 @@ const kSpellSchoolImmuneMaskOptions = [
   FlagItem(0x40, '奥术'), // Arcane
 ];
 
-/// 单位标识2选项
+/// Unit-flag2 options
 const kUnitFlag2Options = [
   FlagItem(0x00000001, '假死'), // Feign Death
   FlagItem(0x00000002, '隐藏身体'), // Hide Body
@@ -205,7 +207,7 @@ const kUnitFlag2Options = [
   FlagItem(0x01000000, '未使用 6'), // Unused 6
 ];
 
-/// 单位标识选项
+/// Unit-flag options
 const kUnitFlagOptions = [
   FlagItem(0x00000001, '服务器控制'), // Server Controlled
   FlagItem(0x00000002, '不可攻击'), // Non Attackable

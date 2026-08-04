@@ -2,8 +2,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'quest_template_addon_entity.g.dart';
 
-/// QuestTemplateAddon 模型
-/// quest_template_addon 表，1:1 关系与 quest_template，共享 ID 主键。
+/// QuestTemplateAddon model
+/// quest_template_addon table, 1:1 with quest_template, sharing the ID
+/// primary key.
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'quest_template_addon')

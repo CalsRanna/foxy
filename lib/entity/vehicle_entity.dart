@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'vehicle_entity.g.dart';
 
-/// 载具数据
+/// Vehicle data
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_vehicle')

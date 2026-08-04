@@ -55,7 +55,7 @@ void main() {
     vm.setPath(clientRoot.path);
     final startFuture = vm.start();
 
-    // start 不阻塞：轮询等待完成。
+    // start does not block: poll until done.
     await _waitFor(() => vm.status.value == WorkflowStatus.succeeded);
     await startFuture;
     expect(vm.result.value!.extracted, 2);
@@ -70,7 +70,7 @@ void main() {
       File(p.join(outputDir.path, 'ui-glyph-rune-1.blp')).readAsBytesSync(),
       [5, 6, 7, 8],
     );
-    // 配置已持久化。
+    // Config was persisted.
     final config = await configUtil.load();
     expect(config['client_dir'], clientRoot.path);
   });
@@ -95,7 +95,7 @@ void main() {
   test('非客户端目录 start 返回失败结果并提示', () async {
     final vm = buildVm();
     await vm.prepare();
-    vm.setPath(tempDir.path); // 存在但没有 Data 目录
+    vm.setPath(tempDir.path); // exists but has no Data directory
     await vm.start();
     expect(vm.status.value, WorkflowStatus.failed);
     expect(vm.errorMessage.value, contains('客户端目录'));
@@ -112,7 +112,7 @@ void main() {
   });
 }
 
-/// 用 warcrafty 写一个含 2 个图标的最小 MPQ。
+/// Uses warcrafty to write a minimal MPQ containing 2 icons.
 void _createFakeClientMpq(String localeDataDir) {
   final archive = MpqArchive.create(
     p.join(localeDataDir, 'locale-zhCN.MPQ'),
@@ -139,7 +139,8 @@ Future<void> _waitFor(bool Function() condition) async {
   }
 }
 
-/// 指向临时目录的 ConfigUtil（避免测试污染项目根目录 config.yaml）。
+/// ConfigUtil pointing at a temp directory (so tests never pollute the
+/// project-root config.yaml).
 final class _TempConfigUtil extends ConfigUtil {
   final String _dir;
 

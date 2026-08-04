@@ -2,7 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'npc_trainer_entity.g.dart';
 
-/// 训练师技能 — 对应 trainer_spell 表（复合键: TrainerId + SpellId）。
+/// Trainer spells — maps to the trainer_spell table (composite key:
+/// TrainerId + SpellId).
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('spellName')

@@ -36,7 +36,7 @@ void main() {
 
     expect(loaded, isEmpty);
     expect(await File('${configUtil.configPath}.bak').exists(), isTrue);
-    // 自愈后仍可继续保存(应用能恢复)。
+    // After self-healing, saving still works (the app recovers).
     await configUtil.update({'host': '127.0.0.1'});
     expect((await configUtil.load())['host'], '127.0.0.1');
   });
@@ -47,7 +47,8 @@ void main() {
   });
 }
 
-/// 指向临时目录的 ConfigUtil(避免测试污染项目根目录 config.yaml)。
+/// ConfigUtil pointing at a temp directory (so tests never pollute the
+/// project-root config.yaml).
 final class _TempConfigUtil extends ConfigUtil {
   final String _dir;
 

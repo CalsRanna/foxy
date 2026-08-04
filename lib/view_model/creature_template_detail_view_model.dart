@@ -37,9 +37,9 @@ class CreatureTemplateDetailViewModel
     with FieldControllerMixin, _CreatureTemplateDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  /// 从所有字段收集数据构建 CreatureTemplate
+  /// Collects data from all fields to build the CreatureTemplate
 
-  /// 退出页面
+  /// Leaves the page
   @override
   Future<void> persist() async {
     if (submitting.value) throw BusyException('operation already in progress');

@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'game_icon_paths.dart';
 import 'game_mpq_source.dart';
 
-/// 单文件计数进度。
+/// Per-file count progress.
 class GameIconExtractCount extends GameIconExtractProgress {
   final String fileName;
   final int completed;
@@ -18,7 +18,7 @@ class GameIconExtractCount extends GameIconExtractProgress {
   });
 }
 
-/// 提取结果。
+/// Extraction result.
 class GameIconExtractionResult extends GameIconExtractProgress {
   final int extracted;
   final int skipped;
@@ -37,15 +37,20 @@ class GameIconExtractionResult extends GameIconExtractProgress {
   bool get success => !cancelled && failed == 0;
 }
 
-/// 从魔兽客户端 locale MPQ 提取游戏图标到本地缓存目录。
+/// Extracts game icons from the WoW client's locale MPQs into a local
+/// cache directory.
 ///
-/// 图标全部位于 `Data/<locale>/` 的 locale 包（`common.MPQ` 等大包中为 0），
-/// 覆盖优先级链：`locale-<loc>` → `expansion-locale-<loc>` → `lichking-locale-<loc>`
-/// → `patch-<loc>` → `patch-<loc>-2..9`（后打开者覆盖同名文件）。
-/// 收录 `Interface\Icons\*` 与 `Interface\Spellbook\*`（glyph rune），
-/// 以纯文件名扁平落盘，天然消化 `.tga` 残留路径与目录差异。
+/// Icons live only in the locale packs under `Data/<locale>/` (0 in big
+/// packs like `common.MPQ`), with an override-priority chain:
+/// `locale-<loc>` → `expansion-locale-<loc>` → `lichking-locale-<loc>` →
+/// `patch-<loc>` → `patch-<loc>-2..9` (later-opened archives override
+/// same-named files). Collects `Interface\Icons\*` and
+/// `Interface\Spellbook\*` (glyph runes), flattened to bare file names on
+/// disk, which naturally absorbs `.tga` leftovers and directory
+/// differences.
 class GameIconExtractor {
-  /// locale 偏好顺序（依次探测，取第一个含 locale MPQ 的）。
+  /// Locale preference order (probed in sequence; the first one with a
+  /// locale MPQ wins).
   static const localePreference = [
     'zhCN',
     'zhTW',
@@ -60,19 +65,20 @@ class GameIconExtractor {
     'frFR',
   ];
 
-  /// 归档内图标目录前缀。
+  /// Icon directory prefixes inside archives.
   static const _iconPrefixes = [r'interface\icons\', r'interface\spellbook\'];
 
-  /// 单次提取的失败记录上限（防极端情况内存膨胀）。
+  /// Cap on recorded failures per extraction run (guards against memory
+  /// growth in extreme cases).
   static const _maxRecordedErrors = 100;
 
-  /// 归档打开工厂（测试注入内存假源）。
+  /// Archive-opening factory (tests inject an in-memory fake source).
   final GameMpqSource Function(String archivePath) openSource;
 
-  /// 魔兽客户端根目录（含 `Data/<locale>/`）。
+  /// WoW client root directory (contains `Data/<locale>/`).
   final String clientDir;
 
-  /// 提取产物输出目录。
+  /// Output directory for extracted files.
   final String outputDir;
 
   GameIconExtractor({
@@ -81,10 +87,12 @@ class GameIconExtractor {
     required this.outputDir,
   });
 
-  /// 执行提取。
+  /// Runs the extraction.
   ///
-  /// [onProgress] 逐文件回调计数进度；[isCancelled] 每文件前检查，返回 true
-  /// 时提前终止并标记结果 cancelled。已存在产物跳过。
+  /// [onProgress] receives per-file count progress; [isCancelled] is
+  /// checked before each file — when it returns true, extraction stops
+  /// early and the result is marked cancelled. Already-extracted files are
+  /// skipped.
   GameIconExtractionResult extract({
     void Function(GameIconExtractProgress progress)? onProgress,
     bool Function()? isCancelled,
@@ -119,7 +127,8 @@ class GameIconExtractor {
     final errors = <String>[];
     var failed = 0;
 
-    // 纯文件名 → (归档路径, 归档内路径)。后打开的归档覆盖同名条目。
+    // Bare file name → (archive path, in-archive path). Later-opened
+    // archives override same-named entries.
     final index = <String, ({String archivePath, String innerPath})>{};
     for (final archivePath in chain) {
       if (_isCancelled(isCancelled)) {
@@ -210,16 +219,21 @@ class GameIconExtractor {
     );
   }
 
-  /// 归档收集（低 → 高优先级，后打开者覆盖同名文件）。
+  /// Archive collection (low → high priority; later-opened archives
+  /// override same-named files).
   ///
-  /// 扫描 Data 根目录与选定 locale 目录下**全部** MPQ（自定义客户端可能
-  /// 放任意命名的 patch 包覆盖或增加图标）。排序键 `(category, order)`：
-  /// 0 官方大包（根目录 common*/expansion/lichking/alternate/patch*，按
-  ///    AzerothCore 加载顺序，patch-N 高于 patch）
-  /// 1 locale 基础包  2 locale 附加包  3 locale patch（`patch-<loc>-N` 高于 base）
-  /// 4 自定义（其余全部，最后打开覆盖官方同名）。
-  /// 组内其余按文件名排序保证确定性；不匹配 locale 名的 patch（如 patch-Z）
-  /// 归入自定义 → 最后打开。
+  /// Scans **all** MPQs under the Data root and the chosen locale directory
+  /// (custom clients may ship arbitrarily named patch packs that override
+  /// or add icons). Sort key `(category, order)`:
+  /// 0 official big packs (root common*/expansion/lichking/alternate/patch*,
+  ///    in AzerothCore load order; patch-N ranks above patch)
+  /// 1 locale base pack  2 locale extra packs  3 locale patch
+  ///    (`patch-<loc>-N` above base)
+  /// 4 custom (everything else, opened last to override official
+  ///    same-named files).
+  /// Within a group, remaining files sort by name for determinism; patches
+  /// not matching the locale name (e.g. patch-Z) fall into custom →
+  /// opened last.
   static List<String> archiveChain(String dataRoot, String localeDataDir, String locale) {
     final archives = <({String path, int category, int order})>[];
     void collect(String dir) {
@@ -251,8 +265,9 @@ class GameIconExtractor {
     return [for (final archive in archives) archive.path];
   }
 
-  /// 定位 `Data/<locale>/` 目录：偏好顺序中第一个含 MPQ 归档的 locale；
-  /// 无偏好命中时取第一个含 MPQ 的 locale 目录；均无则返回 null。
+  /// Locates the `Data/<locale>/` directory: the first locale in
+  /// preference order containing an MPQ archive; if no preference hits,
+  /// the first locale directory with an MPQ; null if none exist.
   static String? findLocaleDataDir(String clientDir) {
     final dataDir = p.join(clientDir, 'Data');
     final Directory directory;
@@ -278,7 +293,8 @@ class GameIconExtractor {
     return null;
   }
 
-  /// 归档排序键（category 越大优先级越高；order 为类别内加载序号）。
+  /// Archive sort key (higher category = higher priority; order is the
+  /// load sequence within a category).
   static (int, int) _archiveKey(String lowerName, String locale) {
     final localeLower = locale.toLowerCase();
     final base = lowerName.replaceAll('.mpq', '');
@@ -287,7 +303,8 @@ class GameIconExtractor {
       r'^(common(-[0-9]+)?|expansion|lichking|alternate|patch(-[0-9]+)?)$',
     );
     if (officialRoot.hasMatch(base)) {
-      // 与 AzerothCore CONF_mpq_list 加载顺序一致：patch-N 高于 patch。
+      // Matches AzerothCore's CONF_mpq_list load order: patch-N above
+      // patch.
       final order = switch (base) {
         'common' => 0,
         'common-2' => 1,
@@ -312,7 +329,7 @@ class GameIconExtractor {
     if (match != null) {
       return (3, int.tryParse(match.group(1)!) ?? 1);
     }
-    return (4, 0); // 自定义
+    return (4, 0); // custom
   }
 
   static GameIconExtractionResult _cancelled(
@@ -356,12 +373,12 @@ class GameIconExtractor {
   }
 }
 
-/// 提取进度事件。
+/// Extraction progress event.
 sealed class GameIconExtractProgress {
   const GameIconExtractProgress();
 }
 
-/// 阶段状态（扫描 / 准备）。
+/// Phase status (scanning / preparing).
 class GameIconExtractStatus extends GameIconExtractProgress {
   final String message;
 

@@ -79,10 +79,12 @@ class CodegenSampleEntity with _CodegenSampleEntityMixin {
 }
 ''';
 
-/// 直接读取真实注解源码，而不是在测试里维护一份手抄副本。
+/// Reads the real annotation source directly instead of keeping a
+/// hand-copied duplicate in tests.
 ///
-/// 副本会在注解新增参数或改默认值后悄悄失真，让测试对着旧定义通过。
-/// 测试从仓库根目录运行（见 AGENTS.md）。
+/// Copies silently drift when annotations gain parameters or change
+/// defaults, letting tests pass against stale definitions.
+/// Tests run from the repository root (see AGENTS.md).
 final annotationSource = File(
   'lib/infrastructure/codegen/entity_annotations.dart',
 ).readAsStringSync();

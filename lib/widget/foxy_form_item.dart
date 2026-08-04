@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// 表单行：左侧标签 + 右侧输入组件。
+/// Form row: label on the left + input widget on the right.
 ///
-/// 只负责布局，不创建输入框、不持有 Controller。
+/// Layout only: creates no inputs and holds no Controller.
 class FoxyFormItem extends StatelessWidget {
   static const _maxLabelWidth = 12;
 

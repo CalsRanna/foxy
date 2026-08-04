@@ -6,11 +6,12 @@ import 'naming.dart';
 final class LinkedListEmitter {
   const LinkedListEmitter();
 
-  /// 成员顺序遵循 "Sort Members" 规则:字段(_repository → 关联键/列表
-  /// 状态信号 → controller → 私有 token)在前,公开方法按名(copy →
-  /// create → destroy → dispose → edit → initSignals → paginate →
-  /// persist → setLinkKey),私有方法按名(_afterApplyCandidate →
-  /// _applyCandidate → _collectCandidate → _refresh)。
+  /// Member order follows the "Sort Members" rule: fields (_repository →
+  /// link-key/list state signals → controllers → private token) first,
+  /// public methods by name (copy → create → destroy → dispose → edit →
+  /// initSignals → paginate → persist → setLinkKey), private methods by
+  /// name (_afterApplyCandidate → _applyCandidate → _collectCandidate →
+  /// _refresh).
   String emit(LinkedListGenerationModel model) {
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName} on FieldControllerMixin {')
@@ -37,7 +38,8 @@ final class LinkedListEmitter {
       ..writeln('  final errorMessage = signal<String?>(null);')
       ..writeln();
 
-    // controller 样板复用 FormEmitter(关闭行为骨架)。
+    // Controller boilerplate reuses FormEmitter (with the behavior skeleton
+    // disabled).
     final form = FormGenerationModel(
       className: model.className,
       entityClassName: model.entityClassName,
@@ -76,7 +78,10 @@ final class LinkedListEmitter {
       ..writeln('      try {')
       ..writeln('        _logActivity(ActivityActionType.copy, key);')
       ..writeln('      } catch (_) {')
-      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln(
+        '        // Activity log is best-effort; failure (e.g. not registered in\n'
+        '        // tests) must not affect the main flow.',
+      )
       ..writeln('      }')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
@@ -142,7 +147,10 @@ final class LinkedListEmitter {
       ..writeln('      try {')
       ..writeln('        _logActivity(ActivityActionType.delete, key);')
       ..writeln('      } catch (_) {')
-      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln(
+        '        // Activity log is best-effort; failure (e.g. not registered in\n'
+        '        // tests) must not affect the main flow.',
+      )
       ..writeln('      }')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
@@ -240,7 +248,10 @@ final class LinkedListEmitter {
         '${model.singleKeyFieldName != null ? 'originalKey ?? candidate.${model.singleKeyFieldName}' : 'originalKey ?? ${model.baseName}Key.fromEntity(candidate)'});',
       )
       ..writeln('      } catch (_) {')
-      ..writeln('        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。')
+      ..writeln(
+        '        // Activity log is best-effort; failure (e.g. not registered in\n'
+        '        // tests) must not affect the main flow.',
+      )
       ..writeln('      }')
       ..writeln(
         '      if (token != _interactionToken || linkKey.value != link) return;',
@@ -275,7 +286,10 @@ final class LinkedListEmitter {
       ..writeln('    await _refresh();')
       ..writeln('  }')
       ..writeln()
-      ..writeln('  /// 覆写点:记录子表行新增/更新/复制/删除活动日志。')
+      ..writeln(
+        '  /// Override point: records child-table row add/update/copy/delete\n'
+        '  /// activity log.',
+      )
       ..writeln(
         '  void _logActivity(ActivityActionType action, ${model.keyType} key) {}',
       )

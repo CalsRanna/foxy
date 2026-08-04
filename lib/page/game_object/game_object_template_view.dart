@@ -314,8 +314,9 @@ class GameObjectTemplateView extends StatelessWidget {
       GameObjectDataReference.spellFocusObject =>
         FoxyEntityPickerDelegates.spellFocusObject,
       GameObjectDataReference.taxiPath => FoxyEntityPickerDelegates.taxiPath,
-      // sealed spec 保证 reference 分支必然携带真实引用；none 只可能来自
-      // 配置错误，直接暴露而非静默渲染。
+      // The sealed spec guarantees the reference branch always carries a
+      // real reference; none can only come from a config error, so expose
+      // it instead of rendering silently.
       GameObjectDataReference.none => throw ArgumentError(
         '$reference is not a valid reference spec',
       ),

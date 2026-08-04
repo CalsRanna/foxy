@@ -23,7 +23,8 @@ final class LinkedListReader {
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    // controller 样板与 FoxyDetailViewModel 完全同构:复用 FormReader。
+    // Controller boilerplate is fully isomorphic with FoxyDetailViewModel:
+    // reuse FormReader.
     final form = await const FormReader().read(element, annotation, buildStep);
 
     final repositoryType = annotation.read('repository').typeValue;
@@ -80,7 +81,8 @@ final class LinkedListReader {
     }
     final entityElement = entityType.element;
 
-    // 校验 linkKey 字段确实存在于实体且为 int,并推断完整 key 类型。
+    // Validate that the linkKey field actually exists on the entity and is
+    // an int, and infer the full key type.
     final keyFieldTypes = <String>[];
     final keyFieldNames = <String>[];
     String? linkFieldType;

@@ -16,11 +16,11 @@ const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullField',
 );
 
-/// 默认推断支持的字段类型(非 nullable)。
+/// Field types supported by default inference (non-nullable).
 ///
-/// `bool` 没有专用 controller,库中一致做法是
-/// `SelectFieldController<int>(fallback: 0)` + `collect() == 1` 转换,
-/// 见 pickpocketing_loot_template_linked_list_view_model.dart。
+/// `bool` has no dedicated controller; the library-wide convention is
+/// `SelectFieldController<int>(fallback: 0)` plus a `collect() == 1`
+/// conversion, see pickpocketing_loot_template_linked_list_view_model.dart.
 const _supportedPlainTypes = {'int', 'double', 'String', 'bool'};
 
 final class FormReader {
@@ -232,8 +232,9 @@ final class FormReader {
     );
   }
 
-  /// 从 entity 的 `@FoxyFullField(key: true)` 推断 Key:
-  /// 单 key 返回 (字段类型, 字段名),复合 key 返回 (`XxxKey`, null)。
+  /// Infers the Key from the entity's `@FoxyFullField(key: true)`: a single
+  /// key returns (field type, field name), a composite key returns
+  /// (`XxxKey`, null).
   (String, String?) _readEntityKeyField(
     InterfaceElement entityElement,
     Element element,

@@ -1,16 +1,21 @@
 name: Release Windows
 
-# 发布流程(唯一触发方式:推送 tag,如 `git tag v1.1.0 && git push origin v1.1.0`):
-# 1. 发布前手动改 pubspec.yaml 的 version 与 CHANGELOG.md 的 `## vX.Y.Z` 段并提交;
-# 2. 推送 tag 后本 workflow 自动:analyze + test 门禁 → 构建 Release 目录 →
-#    编译更新辅助程序 → 打成 zip → 生成 latest.yaml(含 SHA-256 与更新说明,
-#    releases 数组保留最近 3 版)→ 发布 GitHub Release。
+# Release flow (sole trigger: pushing a tag, e.g.
+# `git tag v1.1.0 && git push origin v1.1.0`):
+# 1. Before releasing, manually bump the `version` in pubspec.yaml and the
+#    `## vX.Y.Z` section in CHANGELOG.md and commit;
+# 2. After the tag push, this workflow automatically runs: analyze + test
+#    gate → build the Release directory → compile the update helper → zip
+#    it → generate latest.yaml (with SHA-256 and update notes; the releases
+#    array keeps the most recent 3) → publish the GitHub Release.
 #
-# 应用更新入口固定为 `releases/latest/download/latest.yaml`,附件必须同名。
+# The app's update entry point is fixed at
+# `releases/latest/download/latest.yaml`; the asset must keep that name.
 #
-# 预发布 tag(如 `v1.1.0-beta`):zip 与清单 zipUrl 按主版本命名(`foxy-1.1.0.zip`),
-# GitHub Release 标记 prerelease,不顶掉 `releases/latest`(规则与
-# tool/release/make_update_manifest.dart 的 _stripPrereleaseSuffix 一致)。
+# Prerelease tags (e.g. `v1.1.0-beta`): the zip and the manifest's zipUrl
+# use the major version (`foxy-1.1.0.zip`), the GitHub Release is marked
+# prerelease without displacing `releases/latest` (rule consistent with
+# _stripPrereleaseSuffix in tool/release/make_update_manifest.dart).
 
 on:
   push:
@@ -38,7 +43,8 @@ jobs:
       - name: Test
         run: flutter test
 
-      # 生成器测试依赖 dart:mirrors,flutter test VM 不提供,需用 dart test 跑。
+      # Generator tests depend on dart:mirrors, which the flutter test VM
+      # does not provide; they must run with dart test.
       - name: Test (codegen)
         run: dart test test/infrastructure/codegen/
 
@@ -61,9 +67,11 @@ jobs:
         run: |
           $tag = '${{ github.ref_name }}'
           $version = $tag.TrimStart('v')
-          # 预发布后缀处理(与 make_update_manifest.dart 的 _stripPrereleaseSuffix
-          # 一致):zip 文件名与清单 zipUrl 用去掉后缀的主版本,Release 标记
-          # prerelease 并保留后缀标题(如 "Foxy 1.1.0-beta")。
+          # Prerelease-suffix handling (consistent with
+          # _stripPrereleaseSuffix in make_update_manifest.dart): the zip
+          # file name and manifest zipUrl use the suffix-stripped major
+          # version; the Release is marked prerelease while keeping the
+          # suffixed title (e.g. "Foxy 1.1.0-beta").
           $mainTag = $tag
           $dashIndex = $tag.IndexOf('-')
           if ($dashIndex -ge 0 -and $tag.Substring($dashIndex + 1) -match '^[A-Za-z0-9.\-]+$') {

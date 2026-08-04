@@ -38,9 +38,9 @@ class ItemSetDetailViewModel
     entity.value = _collectCandidate();
   }
 
-  /// 从所有 Controller 收集数据构建 ItemSetEntity
+  /// Collects data from all controllers to build the ItemSetEntity
 
-  /// 退出页面
+  /// Leaves the page
 
   @override
   void _logActivity(ActivityActionType action, ItemSetEntity itemSet) {

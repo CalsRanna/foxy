@@ -2,7 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'npc_vendor_entity.g.dart';
 
-/// NPC商人物品 — 对应 npc_vendor 表（复合键: entry + item + ExtendedCost）
+/// NPC vendor items — maps to the npc_vendor table (composite key: entry +
+/// item + ExtendedCost)
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('itemName')

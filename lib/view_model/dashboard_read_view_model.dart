@@ -44,8 +44,9 @@ class DashboardReadViewModel {
 
   Future<void> refresh() => _refresh();
 
-  /// 收到新活动日志事件时将其前插到最近活动列表（与 DB 的 id desc 顺序一致），
-  /// 使仪表盘「动态」模块即时更新，无需等待重新加载。
+  /// On a new activity-log event, prepends it to the recent-activity list
+  /// (matching the DB's id-desc order), so the dashboard's "Activity"
+  /// module updates instantly without a reload.
   void _onActivityLogged(ActivityLogEntity log) {
     final updated = [log, ...recentActivities.value];
     if (updated.length > 20) updated.removeRange(20, updated.length);

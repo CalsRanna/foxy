@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_template_resistance_entity.g.dart';
 
-/// 生物模板抗性
+/// Creature template resistances
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'creature_template_resistance')

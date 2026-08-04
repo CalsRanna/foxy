@@ -16,7 +16,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// 抗性Tab
+/// Resistance tab
 class CreatureTemplateResistanceView extends StatefulWidget {
   final int creatureId;
 
@@ -59,7 +59,7 @@ class _CreatureTemplateResistanceViewState
     viewModel.initSignals(linkKey: widget.creatureId);
   }
 
-  /// 对话框表单（垂直布局）
+  /// Dialog form (vertical layout)
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editingKey.value != null;
 
@@ -69,7 +69,7 @@ class _CreatureTemplateResistanceViewState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 生物ID
+          // Creature ID
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
@@ -78,7 +78,7 @@ class _CreatureTemplateResistanceViewState
             ),
           ),
           SizedBox(height: 16),
-          // 抗性类型
+          // Resistance type
           FoxyFormItem(
             label: '抗性类型',
             child: FoxyShadSelect<int>(
@@ -88,7 +88,7 @@ class _CreatureTemplateResistanceViewState
             ),
           ),
           SizedBox(height: 16),
-          // 抗性值
+          // Resistance value
           FoxyFormItem(
             label: '抗性值',
             child: FoxyNumberInput<int>(
@@ -106,7 +106,7 @@ class _CreatureTemplateResistanceViewState
             ),
           ),
           SizedBox(height: 24),
-          // 按钮行
+          // Button row
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -145,13 +145,13 @@ class _CreatureTemplateResistanceViewState
   }
 
   Widget _buildTable() {
-    // 新增按钮
+    // Add button
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
       child: Text('新增'),
     );
 
-    // 工具栏
+    // Toolbar
     final toolbar = Row(
       children: [
         createButton,
@@ -293,7 +293,7 @@ class _CreatureTemplateResistanceViewState
     }
   }
 
-  /// 显示新增对话框
+  /// Shows the add dialog
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create();
@@ -313,7 +313,7 @@ class _CreatureTemplateResistanceViewState
     );
   }
 
-  /// 显示编辑对话框
+  /// Shows the edit dialog
   void _showEditDialog(BuildContext context) {
     showFoxyDialog(
       context: context,

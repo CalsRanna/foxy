@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_area_entity.g.dart';
 
-/// 法术区域技能
+/// Spell-area spells
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'spell_area')

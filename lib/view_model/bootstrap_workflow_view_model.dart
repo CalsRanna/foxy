@@ -108,8 +108,9 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
     errorMessage.value = null;
     result.value = null;
     try {
-      // useSsl 不开放给普通用户:UI 无开关,由 use case 从 config.yaml
-      // 的 use_ssl 键读取(远程主机缺省建议开启)。
+      // useSsl is not exposed to regular users: the UI has no switch, and
+      // the use case reads the use_ssl key from config.yaml (recommended
+      // for remote hosts).
       final nextResult = await _useCase.execute(
         BootstrapApplicationInput(
           host: hostController.collect(),

@@ -15,8 +15,10 @@ final class ExtractGameIconsInput {
   const ExtractGameIconsInput({required this.clientDir, this.onProgress});
 }
 
-/// 从客户端 MPQ 提取游戏图标：校验客户端目录、持久化 `client_dir` 配置、
-/// 在后台 isolate 执行提取（进度经 SendPort 回报），支持取消。
+/// Extracts game icons from the client MPQs: validates the client
+/// directory, persists the `client_dir` config, runs the extraction on a
+/// background isolate (progress reported via SendPort), and supports
+/// cancellation.
 final class ExtractGameIconsUseCase {
   static final GameIconExtractionResult _cancelledResult =
       GameIconExtractionResult(
@@ -29,7 +31,8 @@ final class ExtractGameIconsUseCase {
 
   final ConfigUtil _configUtil;
 
-  /// 提取产物输出目录（测试注入临时目录；默认运行时当前目录下 data/icon）。
+  /// Output directory for extracted files (tests inject a temp directory;
+  /// default is data/icon under the runtime working directory).
   final String outputDir;
   var _cancelGeneration = 0;
   var _executing = false;
@@ -47,8 +50,9 @@ final class ExtractGameIconsUseCase {
   Future<void> cancel() async {
     _cancelGeneration++;
     _controlPort?.send('cancel');
-    // 优雅取消：worker 每文件检查标志后自行终止。5 秒兜底强制终止，
-    // 覆盖 worker 卡死（如归档损坏导致长时间挂起）的极端情况。
+    // Graceful cancel: the worker checks a flag per file and terminates
+    // itself. A 5-second fallback force-kills, covering extremes where the
+    // worker hangs (e.g. a corrupted archive stalling for a long time).
     final completer = _activeCompleter;
     if (completer != null && !completer.isCompleted) {
       Future.delayed(const Duration(seconds: 5), () {
@@ -88,7 +92,8 @@ final class ExtractGameIconsUseCase {
         cancelGeneration,
       );
       if (result.success && !result.cancelled) {
-        // 完整提取成功标记，供首次设置引导判定「提取图标」步骤完成。
+        // Full-extraction success marker, letting the first-setup wizard
+        // decide the "extract icons" step is complete.
         await _configUtil.update({'icons_extracted': true});
       }
       return result;
@@ -145,7 +150,8 @@ final class ExtractGameIconsUseCase {
           settle(result);
       }
     });
-    // 端口必须挂监听才能消费消息；worker 异常走 onError。
+    // The port needs a listener to consume messages; worker errors go
+    // through onError.
     errorPort.listen((error) {
       settle(
         GameIconExtractionResult(

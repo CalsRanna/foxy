@@ -11,7 +11,8 @@ part 'player_create_info_repository.g.dart';
 @FoxyFilter.text('class_')
 class PlayerCreateInfoRepository
     with RepositoryMixin, _PlayerCreateInfoRepositoryMixin {
-  // 生成版查询层内联表名字面量（mixin 无法访问类静态成员），此处仅作契约校验。
+  // The generated query layer inlines the table-name literal (mixins cannot
+  // access class statics); this only serves as a contract check.
   // ignore: unused_field
   static const _table = 'playercreateinfo';
 

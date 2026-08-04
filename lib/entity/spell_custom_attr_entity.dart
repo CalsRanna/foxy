@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_custom_attr_entity.g.dart';
 
-/// 法术自定义属性
+/// Spell custom attributes
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'spell_custom_attr')

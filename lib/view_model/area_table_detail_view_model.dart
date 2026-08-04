@@ -59,7 +59,8 @@ class AreaTableDetailViewModel with FieldControllerMixin {
   late final liquidTypeId2Controller = registerController(IntFieldController());
   late final liquidTypeId3Controller = registerController(IntFieldController());
 
-  /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
+  /// After the dialog saves the area-name localization, merges it back
+  /// into the current Entity and syncs the main-language input.
   void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
     entity.value = entity.value!.copyWith(
       areaNameLangEnUS: values.valueOf('enUS'),
@@ -86,7 +87,7 @@ class AreaTableDetailViewModel with FieldControllerMixin {
     disposeControllers();
   }
 
-  /// 从所有 Controller 收集数据构建 AreaTable
+  /// Collects data from all controllers to build the AreaTable
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
@@ -117,7 +118,7 @@ class AreaTableDetailViewModel with FieldControllerMixin {
     }
   }
 
-  /// 退出页面
+  /// Leaves the page
   Future<void> persist() async {
     if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
@@ -173,7 +174,8 @@ class AreaTableDetailViewModel with FieldControllerMixin {
   }
 
   AreaTableEntity _collectCandidate() {
-    // 基于已加载实体覆盖 UI 字段，避免清空未展示的多语言等列。
+    // Overlay UI fields from the loaded entity, so hidden columns such as
+    // multi-language ones are never cleared.
     return entity.value!.copyWith(
       id: idController.collect(),
       areaNameLangZhCN: nameController.collect(),

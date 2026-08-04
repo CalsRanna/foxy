@@ -91,8 +91,9 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
 
       final tableShort = file.tableName.substring('foxy.'.length);
       final targetExists = existingTables.contains(tableShort);
-      // 导入语义：DBC 为权威来源，始终用 DBC 内容替换正式表（含非空表）。
-      // 用户若需保留库内数据，应自行备份。
+      // Import semantics: the DBC is the authoritative source, and its
+      // content always replaces the live table (even non-empty ones). Users
+      // who need to keep database data should back it up themselves.
       var compatible = false;
       if (targetExists) {
         try {
@@ -105,7 +106,8 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           await connection.close();
           connection = createConnection();
           laconic = connection;
-          // 探测失败时按不兼容处理，用 schema 建 staging，避免 LIKE 坏表。
+          // On probe failure treat the table as incompatible and build
+          // staging from the schema, avoiding LIKE on a broken table.
           compatible = false;
         }
       }
@@ -124,8 +126,8 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           '正在准备 ${file.name}.dbc 导入表...',
           '${file.name}.dbc',
         );
-        // 兼容且已存在：LIKE 保留索引/约束/排序规则。
-        // 不存在或不兼容：按 DBC schema 推导 DDL。
+        // Compatible and existing: LIKE preserves indexes/constraints/collation.
+        // Missing or incompatible: derive DDL from the DBC schema.
         if (targetExists && compatible) {
           await connection.statement(
             'create table $staging like ${file.tableName}',
@@ -201,7 +203,8 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           try {
             await connection.statement('drop table if exists $backup');
           } catch (_) {
-            // 正式表已成功替换，backup 清理失败不应反向标记导入失败。
+            // The live table was replaced successfully; a failed backup
+            // cleanup must not mark the import as failed.
           }
         } else {
           await connection.statement(
@@ -228,7 +231,8 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           try {
             await connection.statement('drop table if exists $staging');
           } catch (_) {
-            // 保留原始错误；残留 staging 带有任务 ID，不会覆盖正式表。
+            // Keep the original error; leftover staging carries the task ID
+            // and cannot overwrite the live table.
           }
         }
       }
@@ -289,8 +293,9 @@ String _escapeString(String value) {
     return "'$value'";
   }
 
-  // 特殊字符串使用 UTF-8 十六进制字面量，避免依赖 MySQL session 的
-  // NO_BACKSLASH_ESCAPES 设置，同时保持多行批量 INSERT 的吞吐。
+  // Special strings use UTF-8 hex literals, avoiding any dependency on the
+  // MySQL session's NO_BACKSLASH_ESCAPES setting while keeping multi-row
+  // batch INSERT throughput.
   final hex = StringBuffer();
   for (final byte in utf8.encode(value)) {
     hex.write(byte.toRadixString(16).padLeft(2, '0'));
@@ -361,12 +366,13 @@ String _readAndEscape(dynamic record, int index, String type) {
     'string' => _escapeString(record.getString(index) as String),
     'float' => record.getFloat(index).toString(),
     'int32' || 'id' => record.getInt(index).toString(),
-    // uint32 按无符号读:getInt 会把 ≥2^31 的 flags 变成负数,
-    // 存入 UNSIGNED 列前必须还原为正数。
+    // uint32 read as unsigned: getInt turns flags ≥2^31 negative, so they
+    // must be restored to positive before storing into an UNSIGNED column.
     'uint32' => record.getUint(index).toString(),
     'int64' => record.getInt64(index).toString(),
-    // uint64 高位(≥2^63)超出 Dart int 范围,存 BIGINT UNSIGNED 时
-    // 驱动回读为 BigInt;写入侧 warcrafty 仍按 int64 读,保持原样。
+    // uint64 high bits (≥2^63) exceed Dart's int range; when stored in
+    // BIGINT UNSIGNED the driver reads them back as BigInt. The write side
+    // (warcrafty) still reads as int64, so keep as-is.
     'uint64' => record.getInt64(index).toString(),
     'int16' || 'uint16' => record.getInt16(index).toString(),
     'int8' => record.getInt8(index).toString(),
@@ -377,8 +383,9 @@ String _readAndEscape(dynamic record, int index, String type) {
   };
 }
 
-// warcrafty 1.0.2 的公共入口未实际导出 DbcRecord；这里保留 dynamic，
-// 避免依赖 package:warcrafty/src 下的私有实现路径。
+// warcrafty 1.0.2's public entry point does not actually export DbcRecord;
+// keep dynamic here to avoid depending on private paths under
+// package:warcrafty/src.
 String _recordSql(dynamic record, List<_FieldDef> fields) {
   final values = <String>[];
   for (final field in fields) {
@@ -468,8 +475,10 @@ String _sqlType(FieldType type) {
   return switch (type) {
     FieldType.id => 'int not null primary key',
     FieldType.int32 => 'int',
-    // 无符号字段必须建 UNSIGNED 列:flags 类字段高位置位(≥2^31)按
-    // 有符号存会变负数,UI 显示负值、按 wowhead 正值编辑会报 1264。
+    // Unsigned fields must create UNSIGNED columns: flags-like fields with
+    // the high bit set (≥2^31) become negative when stored signed, the UI
+    // shows negative values, and editing wowhead-style positive values fails
+    // with 1264.
     FieldType.uint32 => 'int unsigned',
     FieldType.int64 => 'bigint',
     FieldType.uint64 => 'bigint unsigned',
@@ -483,7 +492,8 @@ String _sqlType(FieldType type) {
   };
 }
 
-/// 检查正式表是否包含当前 DBC schema 所需的全部列（大小写不敏感）。
+/// Checks that the live table has all columns the current DBC schema
+/// requires (case-insensitive).
 Future<bool> _tableMatchesSchema(
   Laconic connection,
   String tableShort,

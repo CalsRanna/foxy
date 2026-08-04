@@ -24,7 +24,7 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
-/// 设置分组：上分割线 + 标题 + 下分割线 + 条目列表。
+/// Settings group: top divider + title + bottom divider + item list.
 class _SettingSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -56,7 +56,8 @@ class _SettingSection extends StatelessWidget {
   }
 }
 
-/// 设置页的单行条目：标题 + 描述 + 右侧操作，无边框。
+/// Single-row settings item: title + description + right-side action,
+/// borderless.
 class _SettingItem extends StatelessWidget {
   final String title;
   final String description;
@@ -291,7 +292,8 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  /// 先触发手动检查(信号同步进入「检查中」),再打开随状态实时刷新的对话框。
+  /// Triggers the manual check first (the signal enters "checking" state
+  /// synchronously), then opens a dialog that live-updates with the state.
   void _showUpdateDialog() {
     updateViewModel.checkManually();
     showFoxyDialog(

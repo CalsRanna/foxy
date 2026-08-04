@@ -1,17 +1,18 @@
 import 'dart:async';
 
-/// 标准事件总线：发布/订阅式的跨模块通信。
+/// Standard event bus: publish/subscribe cross-module communication.
 ///
-/// 生产者通过 [fire] 发布事件，消费者通过 [on] 订阅指定类型的事件。
-/// 内部为 broadcast 流，同一事件类型可被多个消费者同时订阅。
+/// Producers publish via [fire]; consumers subscribe to a given event type
+/// via [on]. Internally a broadcast stream, so multiple consumers can
+/// subscribe to the same event type concurrently.
 ///
-/// 典型用法：
+/// Typical usage:
 ///
 /// ```dart
 /// final bus = GetIt.instance.get<EventBus>();
 /// final sub = bus.on<ActivityLoggedEvent>().listen((e) => handle(e.log));
-/// bus.fire(ActivityLoggedEvent(log)); // 任意位置发布
-/// sub.cancel(); // 消费者销毁时取消订阅
+/// bus.fire(ActivityLoggedEvent(log)); // publish from anywhere
+/// sub.cancel(); // cancel subscription when the consumer is destroyed
 /// ```
 class EventBus {
   final StreamController<dynamic> _controller;
@@ -19,13 +20,14 @@ class EventBus {
   EventBus({bool sync = false})
     : _controller = StreamController<dynamic>.broadcast(sync: sync);
 
-  /// 关闭总线（通常仅应用退出时调用）。
+  /// Shuts the bus down (usually only called on app exit).
   void destroy() => _controller.close();
 
-  /// 发布一个事件，所有订阅该事件类型的监听者都会收到。
+  /// Publishes an event; every listener subscribed to that event type
+  /// receives it.
   void fire<T>(T event) => _controller.add(event);
 
-  /// 返回类型为 [T] 的事件流。
+  /// Returns the stream of events of type [T].
   Stream<T> on<T>() =>
       _controller.stream.where((event) => event is T).cast<T>();
 }

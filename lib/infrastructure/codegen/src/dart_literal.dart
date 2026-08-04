@@ -1,15 +1,17 @@
-/// 生成 Dart 源码字面量的共享工具。
+/// Shared utilities for generating Dart source literals.
 ///
-/// Entity、Repository 和 Filter 三个 emitter 都要把常量值写回 Dart 源码，
-/// 统一放在这里，避免各自维护一套转义规则。
+/// The Entity, Repository and Filter emitters all write constant values back
+/// into Dart source; kept here in one place so each emitter does not maintain
+/// its own escaping rules.
 library;
 
 import 'package:source_gen/source_gen.dart';
 
-/// 把常量 [value] 写成 Dart 字面量。
+/// Writes the constant [value] as a Dart literal.
 ///
-/// [asType] 为目标字段类型：`'double'` 时整数常量补成 `1.0` 形式，
-/// 使 `double` 字段的默认值不会退化成 `int` 字面量。
+/// [asType] is the target field type: when `'double'`, integer constants are
+/// completed as `1.0` so a `double` field's default never degrades to an int
+/// literal.
 String dartLiteral(Object? value, {String? asType}) {
   if (value == null) return 'null';
   if (value is String) return dartStringLiteral(value);
@@ -17,7 +19,8 @@ String dartLiteral(Object? value, {String? asType}) {
   if (value is int) return asType == 'double' ? '$value.0' : '$value';
   if (value is double && value.isFinite) {
     final text = value.toString();
-    // `1e-7`、`1e+21` 本身就是合法 double 字面量，只有纯整数形式需要补小数点。
+    // `1e-7` / `1e+21` are already valid double literals; only pure integer
+    // forms need a decimal point.
     return RegExp(r'^-?\d+$').hasMatch(text) ? '$text.0' : text;
   }
   throw InvalidGenerationSourceError(
@@ -25,9 +28,10 @@ String dartLiteral(Object? value, {String? asType}) {
   );
 }
 
-/// 把 [value] 写成单引号 Dart 字符串字面量（含引号）。
+/// Writes [value] as a single-quoted Dart string literal (quotes included).
 ///
-/// 同时转义 `$`，否则表名或列名里的 `$` 会在生成代码里变成字符串插值。
+/// Also escapes `$`, otherwise `$` in table or column names would become
+/// string interpolation in the generated code.
 String dartStringLiteral(String value) {
   final escaped = value
       .replaceAll(r'\', r'\\')

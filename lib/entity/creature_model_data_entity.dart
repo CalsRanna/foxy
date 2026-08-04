@@ -2,7 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_model_data_entity.g.dart';
 
-/// DBC 生物模型数据 — 对应 foxy.dbc_creature_model_data 表。
+/// DBC creature model data — maps to the foxy.dbc_creature_model_data
+/// table.
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_creature_model_data')

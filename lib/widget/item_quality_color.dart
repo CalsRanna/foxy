@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// 物品品质的展示颜色。
+/// Display colors for item quality.
 ///
-/// 普通品质的客户端原色为白色。应用使用浅色背景，因此以黑色展示，避免
-/// 文本不可见。
+/// The client's native color for common quality is white. The app uses a
+/// light background, so it renders black to keep the text visible.
 const kItemQualityColors = <int, Color>{
   0: Color(0xFF9D9D9D),
   1: Color(0xFF000000),

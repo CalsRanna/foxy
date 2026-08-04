@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_rank_entity.g.dart';
 
-/// 法术技能排行
+/// Spell ranks
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('firstSpellName')

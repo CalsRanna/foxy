@@ -1,16 +1,19 @@
 import 'package:foxy/constant/flag_item.dart';
 
-/// 一个整数物理列当前应使用的编辑器种类。
+/// The kind of editor an integer physical column should currently use.
 ///
-/// 四种状态互斥，由 [IntegerFieldSpec] 的具体子类型唯一决定，
-/// 取代旧的 `reference/options/flags` nullable 组合推断。
+/// The four states are mutually exclusive, decided uniquely by the concrete
+/// subtype of [IntegerFieldSpec], replacing the old nullable
+/// `reference/options/flags` combination inference.
 enum IntegerFieldEditor { number, select, flags, reference }
 
-/// 动态整数字段的编辑规格：描述一个整数列「用什么既有组件编辑」。
+/// Edit spec of a dynamic integer field: describes "which existing
+/// component edits this integer column".
 ///
-/// [R] 是引用枚举（如 [GameObjectDataReference]），仅 reference 子类真正使用。
-/// 这是纯数据类，不依赖 Flutter，由 View 的 exhaustive switch 渲染为
-/// 对应的既有组件。
+/// [R] is the reference enum (e.g. [GameObjectDataReference]); only the
+/// reference subtype actually uses it.
+/// This is a pure data class with no Flutter dependency; the View's
+/// exhaustive switch renders it as the corresponding existing component.
 sealed class IntegerFieldSpec<R> {
   final String label;
   final bool editable;
@@ -20,11 +23,12 @@ sealed class IntegerFieldSpec<R> {
   IntegerFieldEditor get editor;
 }
 
-/// 位标记选择器（[FoxyFlagPicker]）。
+/// Bit-flag picker ([FoxyFlagPicker]).
 ///
-/// 当前所有 Flags 字段都可编辑，因此不开放 `editable: false`；
-/// 若未来出现只读 Flags，应先为 [FoxyFlagPicker] 增加统一的禁用能力，
-/// 再扩展此规格，不能让配置声明出 Widget 无法兑现的状态。
+/// Every Flags field is currently editable, so `editable: false` is not
+/// exposed; if read-only flags ever appear, add a uniform disable capability
+/// to [FoxyFlagPicker] first, then extend this spec — a config must never
+/// declare a state the widget cannot honor.
 final class IntegerFlagsFieldSpec<R> extends IntegerFieldSpec<R> {
   final List<FlagItem> flags;
 
@@ -34,7 +38,7 @@ final class IntegerFlagsFieldSpec<R> extends IntegerFieldSpec<R> {
   IntegerFieldEditor get editor => IntegerFieldEditor.flags;
 }
 
-/// 普通整数输入框（[FoxyNumberInput]）。
+/// Plain integer input ([FoxyNumberInput]).
 final class IntegerNumberFieldSpec<R> extends IntegerFieldSpec<R> {
   const IntegerNumberFieldSpec(super.label, {super.editable});
 
@@ -42,7 +46,7 @@ final class IntegerNumberFieldSpec<R> extends IntegerFieldSpec<R> {
   IntegerFieldEditor get editor => IntegerFieldEditor.number;
 }
 
-/// 实体引用选择器（[FoxyEntityPicker]）。
+/// Entity-reference picker ([FoxyEntityPicker]).
 final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
   final R reference;
 
@@ -56,7 +60,7 @@ final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
   IntegerFieldEditor get editor => IntegerFieldEditor.reference;
 }
 
-/// 严格枚举下拉（[FoxyShadSelect]）。
+/// Strict enum dropdown ([FoxyShadSelect]).
 final class IntegerSelectFieldSpec<R> extends IntegerFieldSpec<R> {
   final Map<int, String> options;
 

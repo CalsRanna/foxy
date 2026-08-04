@@ -134,7 +134,8 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       try {
         _logActivity(ActivityActionType.delete, key);
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       editingKey.value = null;
       await _refresh();
@@ -185,7 +186,8 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       try {
         _logActivity(action, originalKey ?? candidate.id);
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       await _refresh();
     } catch (error) {
@@ -207,7 +209,8 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
-  /// 覆写点:记录子表单行新增/更新/删除活动日志。
+  /// Override point: records child-table row add/update/delete activity
+  /// log.
   void _logActivity(ActivityActionType action, int key) {}
 
   Future<void> _refresh() async {

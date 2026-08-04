@@ -17,7 +17,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// 装备模板Tab
+/// Equip-template tab
 class CreatureEquipTemplateView extends StatefulWidget {
   final int creatureId;
 
@@ -59,7 +59,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
     viewModel.initSignals(linkKey: widget.creatureId);
   }
 
-  /// 对话框表单（垂直布局）
+  /// Dialog form (vertical layout)
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editingKey.value != null;
 
@@ -69,7 +69,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 生物ID
+          // Creature ID
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
@@ -78,7 +78,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 模板ID（主键序号）
+          // Template ID (primary-key index)
           FoxyFormItem(
             label: '模板ID',
             child: FoxyNumberInput<int>(
@@ -87,7 +87,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 主手武器
+          // Main-hand weapon
           FoxyFormItem(
             label: '主手武器',
             child: FoxyEntityPicker(
@@ -97,7 +97,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 副手武器
+          // Off-hand weapon
           FoxyFormItem(
             label: '副手武器',
             child: FoxyEntityPicker(
@@ -107,7 +107,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 远程武器
+          // Ranged weapon
           FoxyFormItem(
             label: '远程武器',
             child: FoxyEntityPicker(
@@ -126,7 +126,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             ),
           ),
           SizedBox(height: 24),
-          // 按钮行
+          // Button row
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -165,13 +165,13 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   }
 
   Widget _buildTable() {
-    // 新增按钮
+    // Add button
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
       child: Text('新增'),
     );
 
-    // 工具栏
+    // Toolbar
     final toolbar = Row(
       children: [
         createButton,
@@ -329,7 +329,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
     }
   }
 
-  /// 显示新增对话框
+  /// Shows the add dialog
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create();
@@ -349,7 +349,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
     );
   }
 
-  /// 显示编辑对话框
+  /// Shows the edit dialog
   void _showEditDialog(BuildContext context) {
     showFoxyDialog(
       context: context,

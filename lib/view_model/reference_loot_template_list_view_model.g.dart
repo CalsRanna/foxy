@@ -97,7 +97,7 @@ mixin _ReferenceLootTemplateListViewModelMixin
     );
   }
 
-  /// 覆写点:记录复制/删除活动日志,entityName 各页不同。
+  /// Override point: records copy/delete activity log; entityName differs per page.
   void _logActivity(ActivityActionType action, ReferenceLootTemplateKey key) {}
 
   Future<void> _refresh() async {

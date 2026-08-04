@@ -5,37 +5,39 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/router/router_node.dart';
 import 'package:signals/signals.dart';
 
-/// 路由门面，为复杂的路由子系统提供简单统一的接口
+/// Routing facade: a simple, uniform interface over the complex routing
+/// subsystem
 ///
-/// 隐藏的复杂性：
-/// - Signal 状态管理
-/// - AutoRoute 路由操作
-/// - 路径计算逻辑
-/// - 节点创建逻辑
+/// Hidden complexity:
+/// - Signal state management
+/// - AutoRoute routing operations
+/// - Path-computation logic
+/// - Node-creation logic
 class RouterFacade {
-  /// 当前导航路径
+  /// Current navigation path
   final path = signal<List<RouterNode>>([RouterMenu.dashboard.toNode()]);
 
-  /// 获取当前激活的菜单（用于侧边栏高亮）
+  /// Returns the currently active menu (for sidebar highlighting)
   RouterMenu get activeMenu {
     final nodes = path.value;
-    // 从后向前查找第一个有 parentMenu 的节点，或返回节点自身 menu
+    // Walk backward to the first node with a parentMenu, or fall back to
+    // the node's own menu
     for (var i = nodes.length - 1; i >= 0; i--) {
       final parent = nodes[i].parentMenu;
       if (parent != null) return parent;
-      // 如果是顶级菜单，返回其 menu
+      // For a top-level menu, return its own menu
       final menu = nodes[i].menu;
       if (menu != null) return menu;
     }
     return RouterMenu.dashboard;
   }
 
-  /// 获取 Scaffold 内部的路由器
+  /// Returns the router inside the Scaffold
   StackRouter? get _router {
     return router.innerRouterOf<StackRouter>(ScaffoldRoute.name);
   }
 
-  /// 返回上一页
+  /// Goes back one page
   void goBack() {
     if (path.value.length <= 1) return;
 
@@ -44,36 +46,41 @@ class RouterFacade {
     _router?.maybePop();
   }
 
-  /// 点击面包屑跳转
+  /// Jumps on breadcrumb click
   void navigateToBreadcrumb(int index) {
     final currentPath = path.value;
     if (index >= currentPath.length) return;
-    if (index == currentPath.length - 1) return; // 点击当前页面，不做任何操作
+    if (index == currentPath.length - 1) return; // clicking the current page is a no-op
 
     final targetNode = currentPath[index];
 
-    // 截取路径到目标节点
+    // Truncate the path at the target node
     final newNodes = currentPath.take(index + 1).toList();
     path.value = newNodes;
 
-    // 直接导航到目标路由，navigate 会自动处理路由栈
+    // Navigate straight to the target route; navigate manages the stack
+    // automatically
     _router?.navigate(targetNode.route);
   }
 
-  /// 导航到详情页面（列表页跳转）
+  /// Navigates to a detail page (from a list page)
   ///
-  /// 详情页面包屑文案统一为“XXX详情”，由父菜单文案自动生成。
+  /// Detail-page breadcrumb labels are uniformly "XXX details", generated
+  /// from the parent menu label.
   void navigateToDetail({
     required PageRouteInfo route,
     required RouterMenu parentMenu,
   }) {
     final currentPath = path.value;
 
-    // 父级为路径中最后一个列表页节点，面包屑与高亮跟随实际导航栈
-    // （列表页可经侧边栏或“更多”进入，硬编码父菜单会导致面包屑与路由错位）
+    // The parent is the last list-page node in the path, so breadcrumbs and
+    // highlighting follow the actual navigation stack (list pages can be
+    // reached via the sidebar or "More"; a hard-coded parent would misalign
+    // breadcrumbs with the route)
     final parentIndex = currentPath.lastIndexWhere((n) => n.menu != null);
 
-    // 继承列表页的高亮父级：固定模块为 null，未固定模块为“更多”
+    // Inherit the list page's highlight parent: null for pinned modules,
+    // "More" for unpinned ones
     final detailNode = RouterNode(
       label: _detailLabel(parentMenu),
       route: route,
@@ -84,10 +91,10 @@ class RouterFacade {
 
     List<RouterNode> newNodes;
     if (parentIndex >= 0) {
-      // 截取到列表页，然后添加详情页
+      // Truncate to the list page, then append the detail page
       newNodes = [...currentPath.take(parentIndex + 1), detailNode];
     } else {
-      // 路径中没有列表页，构建完整路径
+      // No list page in the path; build the full path
       newNodes = [
         RouterMenu.dashboard.toNode(),
         parentMenu.toNode(),
@@ -99,7 +106,7 @@ class RouterFacade {
     _router?.push(route);
   }
 
-  /// 导航到顶级菜单页面（侧边栏点击）
+  /// Navigates to a top-level menu page (sidebar click)
   void navigateToMenu(RouterMenu menu, {RouterMenu? parentMenu}) {
     final node = parentMenu != null
         ? RouterNode(
@@ -110,7 +117,7 @@ class RouterFacade {
           )
         : menu.toNode();
 
-    // 构建路径：dashboard + [父级菜单] + 当前菜单
+    // Build the path: dashboard + [parent menu] + current menu
     final List<RouterNode> nodes;
     if (menu == RouterMenu.dashboard) {
       nodes = [node];
@@ -124,7 +131,8 @@ class RouterFacade {
     _router?.navigate(node.route);
   }
 
-  /// 生成详情页面包屑文案：模块“XXX列表” → “XXX详情”
+  /// Generates the detail-page breadcrumb label: "XXX list" → "XXX
+  /// details"
   static String _detailLabel(RouterMenu menu) {
     final label = menu.label;
     return label.endsWith('列表')

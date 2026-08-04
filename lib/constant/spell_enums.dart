@@ -1,10 +1,10 @@
-// 法术枚举常量定义
-// 数据来源：AzerothCore SharedDefines.h, SpellDefines.h, SpellAuraDefines.h
+// Spell enum constant definitions
+// Source: AzerothCore SharedDefines.h, SpellDefines.h, SpellAuraDefines.h
 
-/// 攻击强度类型（MiscValue when Effect=6, Aura=99 MOD_ATTACK_POWER）
+/// Attack-power type (MiscValue when Effect=6, Aura=99 MOD_ATTACK_POWER)
 const kAttackPowerTypeOptions = {1: '远程攻击强度', 2: '近战攻击强度'};
 
-/// AuraStateType（施法者/目标状态）
+/// AuraStateType (caster/target state)
 const kAuraStateTypeOptions = {
   0: '无',
   1: '防御姿态',
@@ -26,8 +26,8 @@ const kAuraStateTypeOptions = {
   23: '生命高于75%',
 };
 
-/// 能量类型（MiscValue when Effect=30 ENERGIZE）
-/// 复用 kSpellPowerTypeOptions，另补充
+/// Power type (MiscValue when Effect=30 ENERGIZE)
+/// Reuses kSpellPowerTypeOptions, plus:
 const kEnergizePowerTypeOptions = {
   0: '法力',
   1: '怒气',
@@ -38,7 +38,7 @@ const kEnergizePowerTypeOptions = {
   6: '符能',
 };
 
-/// 变形形态（MiscValue when Effect=6, Aura=36 MOD_SHAPESHIFT）
+/// Shapeshift form (MiscValue when Effect=6, Aura=36 MOD_SHAPESHIFT)
 const kShapeshiftFormOptions = {
   0: '人形态',
   1: '熊形态',
@@ -52,13 +52,13 @@ const kShapeshiftFormOptions = {
   31: '树人形态(带技能)',
 };
 
-/// 速度类型（MiscValue when Effect=6, Aura=31 MOD_INCREASE_SPEED）
+/// Speed type (MiscValue when Effect=6, Aura=31 MOD_INCREASE_SPEED)
 const kSpeedTypeOptions = {0: '步行', 1: '跑步', 2: '游泳', 3: '飞行'};
 
-/// SharedDefines.h Gender，spell_area.gender 仅接受 0、1、2。
+/// SharedDefines.h Gender; spell_area.gender only accepts 0, 1, 2.
 const kSpellAreaGenderOptions = {0: '男性', 1: '女性', 2: '不限'};
 
-/// AuraType 光环类型选项（来源: SpellAuraDefines.h enum AuraType, 0-316）
+/// AuraType options (source: SpellAuraDefines.h enum AuraType, 0-316)
 const kSpellAuraTypeOptions = {
   0: '无',
   1: '绑定视野',
@@ -379,7 +379,7 @@ const kSpellAuraTypeOptions = {
   316: '周期性急速',
 };
 
-/// DispelType 驱散类型选项（来源: SharedDefines.h enum DispelType）
+/// DispelType options (source: SharedDefines.h enum DispelType)
 const kSpellDispelTypeOptions = {
   0: '无',
   1: '魔法',
@@ -394,10 +394,10 @@ const kSpellDispelTypeOptions = {
   10: 'ZG硬币',
 };
 
-/// SpellDmgClass 伤害类型选项（来源: SharedDefines.h enum SpellDmgClass）
+/// SpellDmgClass options (source: SharedDefines.h enum SpellDmgClass)
 const kSpellDmgClassOptions = {0: '无', 1: '魔法', 2: '近战', 3: '远程'};
 
-/// SpellEffects 法术效果类型选项（来源: SharedDefines.h enum SpellEffects, 1-164）
+/// SpellEffects options (source: SharedDefines.h enum SpellEffects, 1-164)
 const kSpellEffectOptions = {
   0: '无',
   1: '即死',
@@ -566,7 +566,7 @@ const kSpellEffectOptions = {
   164: '移除光环',
 };
 
-/// SpellFamilyNames 法术族选项（来源: SharedDefines.h enum SpellFamilyNames）
+/// SpellFamilyNames options (source: SharedDefines.h enum SpellFamilyNames)
 const kSpellFamilyNameOptions = {
   0: '通用',
   1: '事件/节日',
@@ -585,7 +585,8 @@ const kSpellFamilyNameOptions = {
   17: '宠物',
 };
 
-/// Targets 隐式目标类型选项（来源: SharedDefines.h enum Targets, 1-110）
+/// Targets implicit-target options (source: SharedDefines.h enum Targets,
+/// 1-110)
 const kSpellImplicitTargetOptions = {
   1: '施法者',
   2: '附近敌人',
@@ -693,7 +694,7 @@ const kSpellImplicitTargetOptions = {
   110: '目标未知110',
 };
 
-/// ItemClass 物品类别选项（来源: SharedDefines.h, -1表示无限制）
+/// ItemClass options (source: SharedDefines.h; -1 means unrestricted)
 const kSpellItemClassOptions = {
   -1: '无限制',
   0: '消耗品',
@@ -715,10 +716,11 @@ const kSpellItemClassOptions = {
   16: '雕文',
 };
 
-/// SpellMgr.h SpellLinkedType；数据库保存未乘 SPELL_LINKED_MAX_SPELLS 的序号。
+/// SpellMgr.h SpellLinkedType; the database stores the index without
+/// multiplying by SPELL_LINKED_MAX_SPELLS.
 const kSpellLinkedTypeOptions = {0: '施放', 1: '命中', 2: '光环'};
 
-/// Mechanics 机制类型选项（来源: SharedDefines.h enum Mechanics）
+/// Mechanics options (source: SharedDefines.h enum Mechanics)
 const kSpellMechanicOptions = {
   0: '无',
   1: '魅惑',
@@ -792,7 +794,7 @@ const kSpellModOpOptions = {
   30: '失败退还消耗',
 };
 
-/// Powers 能量类型选项（来源: SharedDefines.h enum Powers）
+/// Powers options (source: SharedDefines.h enum Powers)
 const kSpellPowerTypeOptions = {
   0: '法力',
   1: '怒气',
@@ -805,10 +807,11 @@ const kSpellPowerTypeOptions = {
   0xFFFFFFFE: '生命值',
 };
 
-/// SpellPreventionType 防止类型选项（来源: SharedDefines.h enum SpellPreventionType）
+/// SpellPreventionType options (source: SharedDefines.h enum
+/// SpellPreventionType)
 const kSpellPreventionTypeOptions = {0: '无', 1: '沉默', 2: '平静'};
 
-/// ReputationRank 声望等级选项（来源: SharedDefines.h ReputationRank）
+/// ReputationRank options (source: SharedDefines.h ReputationRank)
 const kSpellReputationRankOptions = {
   0: '仇恨',
   1: '敌对',
@@ -820,10 +823,12 @@ const kSpellReputationRankOptions = {
   7: '崇拜',
 };
 
-/// Stats 枚举（MiscValue when Effect=6, Aura=174/175 直接使用 AC Stats 枚举值）
+/// Stats enum (MiscValue when Effect=6, Aura=174/175 uses the AC Stats enum
+/// values directly)
 const kStatsEnumOptions = {0: '力量', 1: '敏捷', 2: '耐力', 3: '智力', 4: '精神'};
 
-/// 属性类型（MiscValue when Effect=6, Aura=29 MOD_STAT — 注意：这是 MOD_STAT 专用映射，和 Stats 枚举不同！）
+/// Attribute type (MiscValue when Effect=6, Aura=29 MOD_STAT — note: this
+/// is the MOD_STAT-specific mapping, different from the Stats enum!)
 const kStatTypeOptions = {
   -1: '全部属性',
   0: '法力值',

@@ -299,7 +299,7 @@ class TalentView extends StatelessWidget {
               ),
             ],
           ),
-          // 保存 + 取消按钮
+          // Save + cancel buttons
           Row(
             children: [
               Watch(

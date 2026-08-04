@@ -22,7 +22,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// 击杀掉落Tab
+/// Kill-loot tab
 class CreatureLootTemplateView extends StatefulWidget {
   final int linkKey;
 
@@ -56,7 +56,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
     viewModel.initSignals(linkKey: widget.linkKey);
   }
 
-  /// 对话框表单（垂直布局）
+  /// Dialog form (vertical layout)
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editingKey.value != null;
 
@@ -74,7 +74,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 物品ID
+          // Item ID
           FoxyFormItem(
             label: '物品ID',
             child: FoxyEntityPicker(
@@ -84,7 +84,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 关联ID
+          // Reference ID
           FoxyFormItem(
             label: '关联ID',
             child: FoxyEntityPicker(
@@ -94,7 +94,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 掉落几率
+          // Drop chance
           FoxyFormItem(
             label: '掉落几率',
             child: FoxyNumberInput<double>(
@@ -103,7 +103,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 需要任务
+          // Required quest
           FoxyFormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
@@ -113,7 +113,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 掉落模式
+          // Loot mode
           FoxyFormItem(
             label: '掉落模式',
             child: FoxyFlagPicker(
@@ -124,7 +124,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 组ID
+          // Group ID
           FoxyFormItem(
             label: '组ID',
             child: FoxyNumberInput<int>(
@@ -133,7 +133,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 数量范围
+          // Quantity range
           Row(
             spacing: 16,
             children: [
@@ -160,7 +160,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ],
           ),
           SizedBox(height: 16),
-          // 备注
+          // Comment
           FoxyFormItem(
             label: '备注',
             child: FoxyStringInput(
@@ -169,7 +169,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             ),
           ),
           SizedBox(height: 24),
-          // 按钮行
+          // Button row
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -208,13 +208,13 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
   }
 
   Widget _buildTable() {
-    // 新增按钮
+    // Add button
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
       child: Text('新增'),
     );
 
-    // 工具栏
+    // Toolbar
     final toolbar = Row(
       children: [
         createButton,
@@ -361,7 +361,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
     }
   }
 
-  /// 显示新增对话框
+  /// Shows the add dialog
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create();
@@ -381,7 +381,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
     );
   }
 
-  /// 显示编辑对话框
+  /// Shows the edit dialog
   void _showEditDialog() {
     showFoxyDialog(
       context: context,

@@ -2,8 +2,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'quest_request_items_entity.g.dart';
 
-/// QuestRequestItems 模型
-/// quest_request_items 表，1:1 关系与 quest_template，共享 ID 主键。
+/// QuestRequestItems model
+/// quest_request_items table, 1:1 with quest_template, sharing the ID
+/// primary key.
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'quest_request_items')

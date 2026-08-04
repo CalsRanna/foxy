@@ -8,8 +8,10 @@ import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 通过值查库挑记录的表单字段：ShadInput + 搜索按钮，点击打开分页查询弹窗，
-/// 双击行或确定回填选中 id。状态完全由弹窗内部 setState 管理，无 signals。
+/// Form field that queries the database by value to pick a record:
+/// ShadInput + search button; clicking opens a paginated query dialog, and
+/// double-clicking a row (or pressing confirm) backfills the selected id.
+/// State is fully managed by the dialog's internal setState, no signals.
 class FoxyEntityPicker<T> extends StatefulWidget {
   final IntFieldController controller;
   final FoxyEntityPickerDelegate<T> delegate;
@@ -28,8 +30,10 @@ class FoxyEntityPicker<T> extends StatefulWidget {
   State<FoxyEntityPicker<T>> createState() => _FoxyEntityPickerState<T>();
 }
 
-/// 表格的一列。[width] 为 null 表示弹性列（与其他弹性列均分剩余宽度）。
-/// 普通列用 [text]；需要自定义样式（如带颜色）的列用 [cell]，二者提供其一。
+/// One column of the table. A null [width] means a flexible column
+/// (sharing the remaining width with other flexible columns). Use [text]
+/// for plain columns or [cell] for custom-styled ones (e.g. colored);
+/// provide exactly one of the two.
 class FoxyEntityPickerColumn<T> {
   final String header;
   final String Function(T)? text;
@@ -43,8 +47,9 @@ class FoxyEntityPickerColumn<T> {
   }) : assert(text != null || cell != null, 'text 或 cell 至少提供一个');
 }
 
-/// 每个实体提供的查询/渲染配置。纯数据 + 闭包，不持有可变状态，
-/// 因此同一实例可被多个 [FoxyEntityPicker] 共享。
+/// Query/render config provided per entity. Pure data + closures, holding
+/// no mutable state, so one instance can be shared by multiple
+/// [FoxyEntityPicker]s.
 class FoxyEntityPickerDelegate<T> {
   final String title;
   final String errorLabel;
@@ -67,7 +72,7 @@ class FoxyEntityPickerDelegate<T> {
   });
 }
 
-/// 一个筛选输入框（输入编号）。
+/// A filter input (for the ID).
 class FoxyEntityPickerFilter {
   final String placeholder;
   const FoxyEntityPickerFilter(this.placeholder);
@@ -96,11 +101,13 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   int? _selectedId;
   String? _errorMessage;
 
-  /// 是否用户主动点击过行。预选值(打开时输入框已有 ID)不染色,
-  /// 与其他表格保持一致;只有用户点击过的行才有选中底色反馈。
+  /// Whether the user actively clicked a row. Preselected values (an ID
+  /// already in the input on open) are not highlighted, consistent with
+  /// other tables; only user-clicked rows get the selected background.
   bool _userSelected = false;
 
-  /// 请求序号:并发搜索时只接受最新一次的结果,防止慢请求覆盖快请求。
+  /// Request sequence: under concurrent searches only the latest result is
+  /// accepted, so a slow request never overwrites a fast one.
   int _searchSeq = 0;
 
   List<String> get _filterValues =>
@@ -313,12 +320,13 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       setState(() {
         _items = result;
         _total = count;
-        _errorMessage = null; // 成功搜索清除上一次失败的错误提示
+        _errorMessage = null; // a successful search clears the previous error
       });
     } catch (e) {
       LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
-      // UI 只展示 foxyErrorMessage 映射后的用户文案,原始异常串进日志。
+      // The UI only shows user copy mapped by foxyErrorMessage; raw
+      // exception strings go to the log.
       setState(
         () => _errorMessage =
             '${widget.delegate.errorLabel}: ${foxyErrorMessage(e)}',
@@ -330,7 +338,8 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
 class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
   @override
   Widget build(BuildContext context) {
-    // 可编辑时用户可手改 ID；只读时为纯展示（无搜索按钮）。
+    // Editable: the user may type an ID; read-only: pure display (no
+    // search button).
     final readonly = FoxyReadonlyInput.resolve(
       context,
       readOnly: widget.readOnly,
@@ -359,8 +368,9 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
 
   Future<void> _openDialog() async {
     if (widget.readOnly) return;
-    // 输入框可自由输入,非法文本会让 collect() 抛 FormatException;
-    // 捕获后提示用户而不是让搜索按钮静默失效。
+    // The input accepts free text; invalid text makes collect() throw
+    // FormatException. Catch it and prompt the user instead of letting the
+    // search button silently fail.
     final int currentId;
     try {
       currentId = widget.controller.collect();

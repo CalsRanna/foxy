@@ -1,6 +1,7 @@
 import 'package:foxy/entity/waypoint_data_key.dart';
 
-/// 路径点选择器按 path `id` 聚合展示，`points` 是该路径的点位数量。
+/// The waypoint picker displays waypoints aggregated by path `id`;
+/// `points` is the number of points on that path.
 class BriefWaypointDataEntity {
   final int id;
   final int points;

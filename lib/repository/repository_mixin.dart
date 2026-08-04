@@ -4,17 +4,19 @@ import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 
-// 导出给生成 part:仓储的 .g.dart 是 part of 父库,不能自己 import,
-// 生成代码里的 FoxyException 抛掷点靠本文件的 import 作用域解析。
+// Exported for generated parts: the repository .g.dart is `part of` the
+// parent library and cannot import on its own; the generated code's
+// FoxyException throw sites resolve through this file's import scope.
 export 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 
 mixin RepositoryMixin {
   final kPageSize = 50;
   Laconic get laconic => Database.instance.laconic;
 
-  /// 是否 JOIN `*_locale` 表显示本地化名称。
+  /// Whether to JOIN the `*_locale` tables to show localized names.
   ///
-  /// 读取基础设施层的 locale 查询设置；DI 未就绪时默认启用。
+  /// Reads the infrastructure layer's locale-query setting; defaults to
+  /// enabled when DI is not ready.
   bool get localeEnabled {
     try {
       return GetIt.instance.get<LocaleQuerySettings>().localeEnabled;
@@ -23,17 +25,22 @@ mixin RepositoryMixin {
     }
   }
 
-  /// 主键下一序号：`MAX(column) + 1`，空表默认从 `1`。
+  /// Next primary-key sequence number: `MAX(column) + 1`, starting at `1`
+  /// for empty tables.
   ///
-  /// [table] 为表名（DBC 可用 `foxy.dbc_*` 全名）。
-  /// [column] 为主键列名（如 `ID` / `entry`）。
-  /// [where] 可选范围条件，用于「父键下子序号」：
+  /// [table] is the table name (DBC may use the full `foxy.dbc_*` name).
+  /// [column] is the primary-key column name (e.g. `ID` / `entry`).
+  /// [where] is an optional scope condition for "child sequence under a
+  /// parent key":
   /// `nextMaxPlusOne(_table, 'ID', where: {'CreatureID': creatureId})`。
-  /// [firstValue] 为当前范围没有记录时返回的起始值。
+  /// [firstValue] is the starting value returned when the scope has no
+  /// records.
   ///
-  /// 约定：
-  /// - [create*] 调用本方法预填只读主键，**不落库**；
-  /// - [store*] 若实体主键 `> 0` 则沿用，否则再取下一号。
+  /// Conventions:
+  /// - [create*] calls this to prefill a read-only primary key, **without
+  ///   persisting**;
+  /// - [store*] keeps the entity's key when `> 0`, otherwise takes the next
+  ///   number.
   Future<int> nextMaxPlusOne(
     String table,
     String column, {
@@ -53,17 +60,20 @@ mixin RepositoryMixin {
         ? raw.toInt()
         : (int.tryParse(raw.toString()) ?? 0);
     if (current >= 2147483647) {
-      // INT 上限处 MAX+1 溢出,落库报 1264 且无法被重复键重试逻辑区分;
-      // 显式抛 IdExhaustedException 让调用方得到可映射的用户文案。
+      // MAX+1 overflows at the INT limit: persisting fails with 1264,
+      // indistinguishable from the duplicate-key retry path; throw
+      // IdExhaustedException explicitly so callers get a mappable message.
       throw IdExhaustedException('primary key exhausted: $table.$column');
     }
     return current + 1;
   }
 
-  /// 把 Entity `toJson()` 的物理列名包装成反引号标识符，用于写入语句。
+  /// Wraps the physical column names from Entity `toJson()` in backtick
+  /// identifiers for write statements.
   ///
-  /// laconic 不转义标识符，列名会原样拼进 SQL。统一加反引号后，
-  /// `index`、`rank` 这类 MySQL 保留字列不需要逐个登记白名单。
+  /// laconic does not escape identifiers; column names are spliced into SQL
+  /// verbatim. With backticks added uniformly, MySQL reserved words like
+  /// `index` and `rank` need no per-column whitelist.
   Map<String, dynamic> prepareWriteJson(Map<String, dynamic> json) {
     return {for (final entry in json.entries) '`${entry.key}`': entry.value};
   }

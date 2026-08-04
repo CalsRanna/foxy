@@ -8,14 +8,16 @@ import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 
-/// MySQL / 文件系统相关的安全验收桩。
+/// Safety acceptance stub for MySQL / filesystem concerns.
 ///
-/// DBC worker 目前硬编码 `foxy` schema，完整 worker 集成测需后续支持可配置 schema。
-/// 本文件**故意不**调用 import worker，也不 DROP 默认 `foxy.*` 表。
+/// The DBC worker currently hard-codes the `foxy` schema; full worker
+/// integration tests need configurable schemas later.
+/// This file **deliberately** never calls the import worker and never
+/// DROPs the default `foxy.*` tables.
 ///
-/// 启用条件（全部满足才跑，否则 skip）：
+/// Enable conditions (run only when all hold, otherwise skip):
 /// - `FOXY_TEST_MYSQL=1`
-/// - `FOXY_TEST_MYSQL_FOXY_SCHEMA` 已设置且 **不等于** `foxy`
+/// - `FOXY_TEST_MYSQL_FOXY_SCHEMA` is set and is **not** `foxy`
 ///
 void main() {
   final enabled = Platform.environment['FOXY_TEST_MYSQL'] == '1';

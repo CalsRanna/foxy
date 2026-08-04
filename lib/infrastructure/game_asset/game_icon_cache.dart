@@ -5,10 +5,12 @@ import 'dart:ui' as ui;
 
 import 'blp_decoder.dart';
 
-/// BLP 游戏图标的内存缓存：文件 → 解码 → `ui.Image` 复用。
+/// In-memory cache for BLP game icons: file → decode → `ui.Image` reuse.
 ///
-/// 图标为 64×64，解码亚毫秒级；缓存避免列表滚动时同一图标反复解码。
-/// 采用 LRU（访问即置顶），超限时淘汰最久未用条目。
+/// Icons are 64×64 and decode in under a millisecond; the cache avoids
+/// re-decoding the same icon during list scrolls. Uses LRU (access
+/// promotes to front); over-limit entries evict the least-recently-used
+/// one.
 class GameIconCache {
   static final GameIconCache instance = GameIconCache();
 
@@ -16,18 +18,21 @@ class GameIconCache {
 
   final LinkedHashMap<String, ui.Image> _images = LinkedHashMap();
 
-  /// 确定性缺失（文件不存在）的负缓存：默认状态下大量图标未提取，
-  /// 每个新可见行都重新 File.exists() 是纯浪费的 IO 往返。
+  /// Negative cache for definite misses (file absent): by default most
+  /// icons are not extracted, and a File.exists() per newly visible row is
+  /// pure wasted IO round-trips.
   final Set<String> _missing = {};
 
-  /// 清空/版本协调：clear() 后 in-flight 解码结果一律丢弃，
-  /// 避免已 dispose 的旧纹理被重新写回缓存或继续绘制。
+  /// Clear/version coordination: after clear(), all in-flight decode
+  /// results are discarded, so disposed old textures are never written
+  /// back into the cache or drawn again.
   int _generation = 0;
 
   final Map<String, Future<ui.Image?>> _pending = {};
   GameIconCache({int maxEntries = 256}) : _maxEntries = maxEntries;
 
-  /// 清空缓存（提取完成后调用，避免引用已删除的旧图标）。
+  /// Empties the cache (called after extraction, so deleted old icons are
+  /// never referenced).
   void clear() {
     _generation++;
     for (final image in _images.values) {
@@ -37,15 +42,16 @@ class GameIconCache {
     _missing.clear();
   }
 
-  /// 是否已缓存（供测试与诊断）。
+  /// Whether the path is cached (for tests and diagnostics).
   bool contains(String path) => _images.containsKey(path);
 
-  /// 加载并解码 BLP 文件；文件缺失或解码失败返回 null。
+  /// Loads and decodes a BLP file; returns null if the file is missing or
+  /// decoding fails.
   Future<ui.Image?> load(String path) async {
     if (_missing.contains(path)) return null;
     final cached = _images.remove(path);
     if (cached != null) {
-      _images[path] = cached; // 置顶
+      _images[path] = cached; // promote to front
       return cached;
     }
     final inFlight = _pending[path];
@@ -58,12 +64,14 @@ class GameIconCache {
           _images.remove(path);
           _images[path] = image;
           while (_images.length > _maxEntries) {
-            // 淘汰最久未用条目并显式释放其 GPU 纹理。
+            // Evict the least-recently-used entry and explicitly release
+            // its GPU texture.
             final evicted = _images.remove(_images.keys.first);
             evicted?.dispose();
           }
         } else if (image != null) {
-          // clear() 期间完成的解码:缓存已清空,丢弃并释放纹理。
+          // Decodes completing during clear(): the cache is empty, so drop
+          // and release the texture.
           image.dispose();
           return null;
         }
@@ -71,8 +79,9 @@ class GameIconCache {
         return image;
       },
       onError: (Object _) {
-        // 解码/IO 失败不残留失败的 in-flight future:
-        // 后续 load() 应重新尝试而不是永远拿到同一个失败。
+        // Decode/IO failures must not leave a failed in-flight future:
+        // later load() calls should retry instead of always getting the
+        // same failure.
         _pending.remove(path);
         return null;
       },
@@ -93,7 +102,7 @@ class GameIconCache {
       try {
         decoded = decodeBlp(bytes);
       } on Object {
-        return null; // 损坏/不支持的 BLP 按缺失处理，显示占位。
+        return null; // treat corrupt/unsupported BLP as missing, show placeholder
       }
       final completer = Completer<ui.Image>();
       ui.decodeImageFromPixels(
@@ -105,7 +114,8 @@ class GameIconCache {
       );
       return completer.future;
     } on Object {
-      // 读文件 IO 异常(文件在 exists 与 readAsBytes 之间被删等)按缺失处理。
+      // File-read IO errors (e.g. the file is deleted between exists and
+      // readAsBytes) are treated as missing.
       return null;
     }
   }

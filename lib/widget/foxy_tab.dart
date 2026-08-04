@@ -111,15 +111,15 @@ class _FoxyTabState extends State<FoxyTab> {
 
     _isAnimating = true;
 
-    // 1. 淡出
+    // 1. Fade out
     setState(() => _opacity = 0.0);
     await Future.delayed(Duration(milliseconds: 150));
     if (!mounted) return;
 
-    // 2. 切换 Tab
+    // 2. Switch tab
     setState(() => index = targetIndex);
 
-    // 3. 淡入
+    // 3. Fade in
     setState(() => _opacity = 1.0);
     await Future.delayed(Duration(milliseconds: 150));
     if (!mounted) return;
@@ -133,15 +133,17 @@ class _FoxyTabState extends State<FoxyTab> {
     keys = widget.tabs.map((e) => GlobalKey()).toList();
     width = List.generate(widget.tabs.length, (index) => 0.0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 首帧完成前组件可能已被移除(如详情页快速 pop),dispose 后再
-      // setState 会在 debug 下抛断言。
+      // The widget may already be removed before the first frame renders
+      // (e.g. a quick pop from the detail page); setState after dispose
+      // throws an assertion in debug mode.
       if (!mounted) return;
       for (var i = 0; i < keys.length; i++) {
         final key = keys[i];
         final context = key.currentContext;
         if (context == null) continue;
-        // 窄窗口下横向 ListView 视口外的页签不会 build,currentContext 为 null,
-        // 不能强转,否则抛 TypeError。
+        // In narrow windows, tabs outside the horizontal ListView viewport
+        // are never built and currentContext is null; a hard cast would
+        // throw TypeError.
         final renderBox = context.findRenderObject() as RenderBox?;
         width[i] = renderBox?.size.width ?? 0;
       }

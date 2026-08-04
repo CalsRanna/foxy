@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_bonus_data_entity.g.dart';
 
-/// 法术奖励系数
+/// Spell bonus data
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'spell_bonus_data')

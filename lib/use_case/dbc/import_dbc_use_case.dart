@@ -81,7 +81,8 @@ final class ImportDbcUseCase {
         database: config['database']?.toString() ?? 'acore_world',
         username: config['username']?.toString() ?? 'acore',
         password: config['password']?.toString() ?? 'acore',
-        // TLS 开关跟随引导页配置;远程主机建议开启(数据面加密)。
+        // The TLS switch follows the bootstrap-page config; recommended for
+        // remote hosts (data-plane encryption).
         useSsl: config['use_ssl'] == true,
       );
 

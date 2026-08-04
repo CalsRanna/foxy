@@ -23,8 +23,9 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 三个动态整数字段的渲染行为：sealed spec 驱动四种既有组件，
-/// 不再出现 FoxyIntEnumInput 的 list icon。
+/// Rendering behavior of three dynamic integer fields: the sealed spec
+/// drives the four existing components, and FoxyIntEnumInput's list icon
+/// no longer appears.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -60,10 +61,10 @@ void main() {
     await tester.pump();
 
     expect(tester.takeException(), isNull);
-    // Data4 = 陷阱类型（select），值为 0 显示「非炸弹陷阱」。
+    // Data4 = trap type (select); value 0 shows "not a bomb trap".
     expect(find.text('陷阱类型'), findsOneWidget);
     expect(find.text('非炸弹陷阱'), findsOneWidget);
-    // 整页不存在旧 list icon。
+    // No legacy list icon anywhere on the page.
     expect(find.byIcon(LucideIcons.list), findsNothing);
 
     await tester.pumpWidget(const SizedBox());
@@ -88,7 +89,7 @@ void main() {
     await tester.pump();
 
     expect(tester.takeException(), isNull);
-    // Data0 = 锁 ID（引用），Data2 = 自动关闭时间（数字）。
+    // Data0 = lock ID (reference), Data2 = auto-close time (number).
     expect(find.text('锁 ID'), findsOneWidget);
     expect(find.bySubtype<FoxyEntityPicker>(), findsWidgets);
     expect(find.byType(FoxyNumberInput<int>), findsWidgets);
@@ -114,7 +115,8 @@ void main() {
     await tester.pump();
 
     expect(tester.takeException(), isNull);
-    // Value3 = 包含银行（select），值为 1 显示「是」；其他 select 值为 0。
+    // Value3 = contains bank (select); value 1 shows "Yes"; other selects
+    // are 0.
     expect(find.text('包含银行'), findsOneWidget);
     expect(find.text('是'), findsOneWidget);
     expect(find.byIcon(LucideIcons.list), findsNothing);
@@ -139,10 +141,10 @@ void main() {
     await tester.pump();
 
     expect(tester.takeException(), isNull);
-    // param6 = 存活状态（select），值为 0 显示「ANY」。
+    // param6 = alive state (select); value 0 shows "ANY".
     expect(find.text('存活状态'), findsOneWidget);
     expect(find.text('ANY'), findsOneWidget);
-    // 事件阶段掩码与事件标志仍是 FlagPicker。
+    // The event-phase mask and event flags remain FlagPickers.
     expect(find.byType(FoxyFlagPicker), findsWidgets);
     expect(find.byIcon(LucideIcons.list), findsNothing);
 

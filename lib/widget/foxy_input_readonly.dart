@@ -1,16 +1,18 @@
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// Foxy 表单输入框的统一只读样式 / 鼠标策略。
+/// Unified read-only styling / mouse strategy for Foxy form inputs.
 ///
-/// 可编辑时所有 getter 返回 `null`，让 [ShadInput] 走主题默认值。
+/// When editable, all getters return `null` so [ShadInput] falls back to
+/// theme defaults.
 ///
-/// ## 为什么必须用 [wrap] 包一层 [MouseRegion]
+/// ## Why [wrap] must add a [MouseRegion]
 ///
-/// `ShadInput` 在 `readOnly: true` 时会对内部 `EditableText` 使用
-/// `AbsorbPointer(absorbing: true)`，指针事件到不了 `EditableText`，
-/// 因此传给 `ShadInput.mouseCursor` 的光标**不会生效**。
-/// 必须在 `ShadInput` **外侧**用 [MouseRegion] 设置光标。
+/// With `readOnly: true`, `ShadInput` wraps its inner `EditableText` in
+/// `AbsorbPointer(absorbing: true)`, so pointer events never reach
+/// `EditableText` and the cursor passed to `ShadInput.mouseCursor` does
+/// **not** take effect. The cursor must be set with a [MouseRegion]
+/// **outside** the `ShadInput`.
 class FoxyReadonlyInput {
   final bool readOnly;
 
@@ -19,9 +21,9 @@ class FoxyReadonlyInput {
   final ShadDecoration? decoration;
   final MouseCursor? mouseCursor;
   final bool? showCursor;
-  /// 根据 [readOnly] 与 [role] 解析样式。
+  /// Resolves the style from [readOnly] and [role].
   ///
-  /// [readOnly] 为 false 时返回空配置（全部为 null）。
+  /// Returns an empty config (all null) when [readOnly] is false.
   factory FoxyReadonlyInput.resolve(
     BuildContext context, {
     required bool readOnly,
@@ -47,7 +49,8 @@ class FoxyReadonlyInput {
       mouseCursor: role == FoxyReadonlyInputRole.interactive
           ? SystemMouseCursors.click
           : SystemMouseCursors.forbidden,
-      // 只读不显示闪烁插入符；null 交给 Flutter 默认（可编辑时）
+      // Read-only hides the blinking caret; null defers to Flutter's
+      // default (when editable)
       showCursor: false,
     );
   }
@@ -61,9 +64,11 @@ class FoxyReadonlyInput {
     required this.showCursor,
   });
 
-  /// 将只读鼠标光标应用到 [child]（通常是 [ShadInput]）外侧。
+  /// Applies the read-only mouse cursor outside [child] (usually a
+  /// [ShadInput]).
   ///
-  /// 可编辑时原样返回；只读时包一层 [MouseRegion]。
+  /// Returns [child] unchanged when editable; wraps it in a [MouseRegion]
+  /// when read-only.
   Widget wrap(Widget child) {
     final cursor = mouseCursor;
     if (!readOnly || cursor == null) return child;
@@ -71,17 +76,19 @@ class FoxyReadonlyInput {
   }
 }
 
-/// [ShadInput] 只读态的交互角色。
+/// Interaction roles for the [ShadInput] read-only state.
 ///
-/// `shadcn_ui` 的 `readOnly` 只禁止编辑，不会自动改外观或鼠标；
-/// Foxy 通过本工具统一补齐。
+/// `shadcn_ui`'s `readOnly` only blocks editing; it does not change the
+/// look or cursor. Foxy fills the gap uniformly through this utility.
 enum FoxyReadonlyInputRole {
-  /// 纯展示（如主键 ID）：muted 外观 + 禁用光标。
+  /// Pure display (e.g. primary-key ID): muted look + disabled cursor.
   display,
 
-  /// 文本不可手改，但整框可点开（若业务仍要用 muted 外观 + 手型）。
+  /// Text is not hand-editable, but the whole box opens on click (when the
+  /// business still wants muted look + hand cursor).
   ///
-  /// 标志位选择器 [FoxyFlagPicker] 不走此角色：它是正常编辑入口，
-  /// 外观与可编辑输入一致，仅用 `readOnly` 禁止手改格式串。
+  /// The flag picker [FoxyFlagPicker] does not use this role: it is a
+  /// normal edit entry whose look matches editable inputs; `readOnly` only
+  /// prevents hand-editing the format string.
   interactive,
 }

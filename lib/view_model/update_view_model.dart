@@ -1,7 +1,10 @@
-/// 更新视图模型:检查 → 下载 → 重启 三阶段状态机。
+/// Update view model: a three-stage state machine of check → download →
+/// restart.
 ///
-/// 供更新对话框([UpdateDialog])与启动自动检查([DashboardPage])共用。
-/// 失败信息经 [foxyErrorMessage] 映射为中文文案写入 [errorMessage]。
+/// Shared by the update dialog ([UpdateDialog]) and the startup auto-check
+/// ([DashboardPage]).
+/// Failure messages are mapped to Chinese copy via [foxyErrorMessage] and
+/// written into [errorMessage].
 library;
 
 import 'dart:io';
@@ -20,7 +23,7 @@ class UpdateViewModel {
       : _service = service ?? UpdateService(),
         _preferences = preferences ?? SharedPreferencesUtil.instance;
 
-  /// 静默检查节流间隔:启动时 24h 内最多检查一次。
+  /// Silent-check throttle: at most one check per 24h at startup.
   static const silentCheckInterval = Duration(hours: 24);
 
   final UpdateService _service;
@@ -28,31 +31,35 @@ class UpdateViewModel {
 
   UpdateCancelToken _cancelToken = UpdateCancelToken();
 
-  /// 当前安装版本(格式 `1.0.0+628`,加载自 package_info_plus)。
+  /// Currently installed version (format `1.0.0+628`, loaded from
+  /// package_info_plus).
   final currentVersion = signal<String?>(null);
 
-  /// 是否正在检查更新。
+  /// Whether an update check is in progress.
   final checking = signal<bool>(false);
 
-  /// 检查发现的新版本;null = 未发现。
+  /// New version found by the check; null = none found.
   final availableUpdate = signal<UpdateManifestInfo?>(null);
 
-  /// 最近一次检查确认「已是最新」。
+  /// The last check confirmed "up to date".
   final upToDate = signal<bool>(false);
 
-  /// 下载进度 0..1;null = 未在下载。
+  /// Download progress 0..1; null = not downloading.
   final downloadProgress = signal<double?>(null);
 
-  /// 新版本已下载并解压,等待重启完成更新。
+  /// New version downloaded and extracted; a restart completes the update.
   final readyToRestart = signal<bool>(false);
 
-  /// 失败信息(已经 [foxyErrorMessage] 映射的中文文案)。
+  /// Failure message (Chinese copy already mapped via
+  /// [foxyErrorMessage]).
   final errorMessage = signal<String?>(null);
 
-  /// 已解压的新版本 payload 根目录(重启时传给辅助程序)。
+  /// Extracted new-version payload root (passed to the helper program on
+  /// restart).
   Directory? _payloadRoot;
 
-  /// 加载当前版本信息(设置页与更新对话框展示用,只加载一次)。
+  /// Loads the current version info (for the settings page and update
+  /// dialog; loaded once).
   Future<void> prepare() async {
     if (currentVersion.value != null) return;
     try {
@@ -63,7 +70,8 @@ class UpdateViewModel {
     }
   }
 
-  /// 启动静默检查:24h 节流,失败仅记日志。返回是否发现新版本。
+  /// Runs the silent startup check: 24h throttle, failures only logged.
+  /// Returns whether a new version was found.
   Future<bool> checkSilently() async {
     final last = await _preferences.getLastUpdateCheckAt();
     if (last != null &&
@@ -73,7 +81,8 @@ class UpdateViewModel {
     return _check(manual: false);
   }
 
-  /// 设置页手动检查:任何结果都反馈到信号。
+  /// Manual check from the settings page: every outcome feeds back into
+  /// the signals.
   Future<bool> checkManually() => _check(manual: true);
 
   Future<bool> _check({required bool manual}) async {
@@ -106,7 +115,8 @@ class UpdateViewModel {
     }
   }
 
-  /// 下载并解压新版本,进度写 [downloadProgress]。返回是否成功。
+  /// Downloads and extracts the new version, writing progress to
+  /// [downloadProgress]. Returns whether it succeeded.
   Future<bool> downloadAndPrepare() async {
     final update = availableUpdate.value;
     if (update == null || downloadProgress.value != null) return false;
@@ -131,12 +141,14 @@ class UpdateViewModel {
     }
   }
 
-  /// 取消进行中的下载。
+  /// Cancels an in-progress download.
   void cancelDownload() => _cancelToken.cancel();
 
-  /// 启动更新辅助程序并退出应用,由辅助程序完成文件交换后重启。
+  /// Launches the update helper and exits the app; the helper completes
+  /// the file swap and restarts.
   ///
-  /// 辅助程序缺失或启动失败时写入 [errorMessage] 并保持应用运行。
+  /// When the helper is missing or fails to launch, writes
+  /// [errorMessage] and keeps the app running.
   Future<void> restartToApply() async {
     final appDir = Directory.current;
     final updaterExe = File(p.join(appDir.path, kUpdaterExeName));

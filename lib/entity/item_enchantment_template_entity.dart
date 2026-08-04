@@ -4,7 +4,8 @@ part 'item_enchantment_template_entity.g.dart';
 
 enum ItemEnchantmentKind { randomProperty, randomSuffix }
 
-/// 物品附魔模板 — 对应 item_enchantment_template 表（复合键: entry + ench）
+/// Item enchantment template — maps to the item_enchantment_template table
+/// (composite key: entry + ench)
 
 @FoxyFullEntity(table: 'item_enchantment_template')
 class ItemEnchantmentTemplateEntity with _ItemEnchantmentTemplateEntityMixin {

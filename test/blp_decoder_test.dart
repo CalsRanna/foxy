@@ -11,7 +11,7 @@ void main() {
   group('合成 BLP2（确定性像素断言）', () {
     // 64×64 = 16×16 blocks
     test('DXT1 4 色模式：全部像素为 c0 色', () {
-      final block = dxtColorBlock(255, 0, 0, 0); // c0=红, 全取索引 0
+      final block = dxtColorBlock(255, 0, 0, 0); // c0=red, all pixels use index 0
       final blp = buildBlp2(tile(block, 256));
       final image = decodeBlp(blp);
       expect(image.width, 64);
@@ -57,9 +57,10 @@ void main() {
 
     test('DXT5：a0=0/a1=255 的 6/7 特例（透明/不透明）', () {
       final color = dxtColorBlock(255, 255, 255, 0);
-      final alpha0 = dxt5AlphaBlock(0, 255, 6); // 特例 → 0（透明）
-      final alpha7 = dxt5AlphaBlock(0, 255, 7); // 特例 → 255
-      // 用两个 2×1 block 拼一个 8×1 场景过于繁琐；直接验证 6/7 各一次：
+      final alpha0 = dxt5AlphaBlock(0, 255, 6); // special case → 0 (transparent)
+      final alpha7 = dxt5AlphaBlock(0, 255, 7); // special case → 255
+      // Assembling an 8×1 scene from two 2×1 blocks is overkill; just
+      // verify 6/7 once each:
       final blp6 = buildBlp2(
         tile(Uint8List.fromList([...alpha0, ...color]), 256),
         alphaDepth: 8,
@@ -80,7 +81,7 @@ void main() {
         throwsA(isA<BlpFormatException>()),
       );
       expect(
-        () => decodeBlp(Uint8List.fromList('nonsense'.codeUnits)), // 头部不足
+        () => decodeBlp(Uint8List.fromList('nonsense'.codeUnits)), // header too short
         throwsA(isA<BlpFormatException>()),
       );
     });
@@ -120,8 +121,10 @@ void main() {
             expected[i + 2],
             reason: 'B 像素 $i 不一致（$variant）',
           );
-          // 旧 PNG 为全不透明（alpha 被原提取工具剥掉）；BLP 保留真实
-          // alpha（透明背景），此处只断言取值范围，精确 alpha 由合成测试覆盖。
+          // Old PNGs are fully opaque (alpha stripped by the original
+          // extraction tool); BLP keeps real alpha (transparent
+          // backgrounds). Only assert the value range here; exact alpha is
+          // covered by the compositing tests.
           expect(image.rgba[i + 3], inInclusiveRange(0, 255));
         }
       });
@@ -129,12 +132,12 @@ void main() {
   });
 }
 
-/// 组装完整 BLP2 文件（64×64，单 block 平铺，无 mipmap）。
+/// Assembles a full BLP2 file (64×64, single-block tiling, no mipmaps).
 Uint8List buildBlp2(Uint8List mip0, {int alphaDepth = 0, int alphaEncoding = 0}) {
   const width = 64, height = 64;
   final header = BytesBuilder();
   header.add('BLP2'.codeUnits);
-  header.add([1, 0, 0, 0]); // type=1（非 JPEG）
+  header.add([1, 0, 0, 0]); // type=1 (non-JPEG)
   header.addByte(2); // encoding=DXT
   header.addByte(alphaDepth);
   header.addByte(alphaEncoding);
@@ -143,7 +146,7 @@ Uint8List buildBlp2(Uint8List mip0, {int alphaDepth = 0, int alphaEncoding = 0})
   dims.setUint32(0, width, Endian.little);
   dims.setUint32(4, height, Endian.little);
   header.add(dims.buffer.asUint8List());
-  // mipOffsets[16]：mip0 偏移 = 20（头部）+ 16×4×2 = 148
+  // mipOffsets[16]: mip0 offset = 20 (header) + 16×4×2 = 148
   final offsets = ByteData(64);
   offsets.setUint32(0, 148, Endian.little);
   header.add(offsets.buffer.asUint8List());
@@ -153,13 +156,13 @@ Uint8List buildBlp2(Uint8List mip0, {int alphaDepth = 0, int alphaEncoding = 0})
   return Uint8List.fromList([...header.toBytes(), ...mip0]);
 }
 
-/// DXT3 alpha 半字节（全部同一值 [nibble]）。
+/// DXT3 alpha nibbles (all the same value [nibble]).
 Uint8List dxt3AlphaBlock(int nibble) {
   final byte = (nibble & 0xF) | ((nibble & 0xF) << 4);
   return Uint8List.fromList(List.filled(8, byte));
 }
 
-/// DXT5 alpha：a0/a1 与全部索引 [code]。
+/// DXT5 alpha: a0/a1 plus all indices [code].
 Uint8List dxt5AlphaBlock(int a0, int a1, int code) {
   final out = BytesBuilder();
   out.addByte(a0);
@@ -174,8 +177,9 @@ Uint8List dxt5AlphaBlock(int a0, int a1, int code) {
   return out.toBytes();
 }
 
-/// 合成 DXT block 的最小编码器（测试专用，输出已知内容）。
-/// 每 block 4×4 像素，全部取同一个颜色索引 [index]，颜色为 [r]/[g]/[b]。
+/// Minimal DXT-block encoder for tests (produces known content).
+/// Each 4×4-pixel block uses the single color index [index] with color
+/// [r]/[g]/[b].
 Uint8List dxtColorBlock(int r, int g, int b, int index) {
   int pack565(int v, int bits, int shift) {
     final max = (1 << bits) - 1;
@@ -184,7 +188,7 @@ Uint8List dxtColorBlock(int r, int g, int b, int index) {
   }
 
   final c0 = pack565(r, 5, 11) | pack565(g, 6, 5) | pack565(b, 5, 0);
-  final c1 = 0; // 与 c0 不同即可；4 色模式要求 c0 > c1
+  final c1 = 0; // just needs to differ from c0; 4-color mode requires c0 > c1
   var bits = 0;
   for (var i = 0; i < 16; i++) {
     bits |= index << (2 * i);
@@ -201,7 +205,7 @@ Uint8List dxtColorBlock(int r, int g, int b, int index) {
   return out.toBytes();
 }
 
-/// 重复 [block] 平铺成 64×64 的 mip0 数据。
+/// Tiles [block] repeatedly into 64×64 mip0 data.
 Uint8List tile(Uint8List block, int blockCount) {
   return Uint8List.fromList([for (var i = 0; i < blockCount; i++) ...block]);
 }

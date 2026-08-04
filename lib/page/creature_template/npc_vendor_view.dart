@@ -16,7 +16,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-/// NPC 商人 Tab
+/// NPC vendor tab
 class NpcVendorView extends StatefulWidget {
   final int creatureId;
 

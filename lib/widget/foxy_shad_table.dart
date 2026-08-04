@@ -4,160 +4,163 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 扩展的 ShadTable 组件，支持双击和右键点击带详情的回调
+/// Extended ShadTable component with double-click and right-click
+/// callbacks carrying details
 class FoxyShadTable extends StatefulWidget {
-  /// 构建单元格的回调
+  /// Cell builder callback
   final ShadTableCellBuilder builder;
 
-  /// 列数
+  /// Column count
   final int columnCount;
 
-  /// 行数
+  /// Row count
   final int rowCount;
 
-  /// 构建表头的回调
+  /// Header builder callback
   final ShadTableCell Function(BuildContext context, int column)? header;
 
-  /// 构建表尾的回调
+  /// Footer builder callback
   final ShadTableCell Function(BuildContext context, int column)? footer;
 
-  /// 是否根据内容自适应高度
-  /// 当为 true 时，表格高度将根据行数自动计算，不再需要外部约束
-  /// 同时会禁用垂直滚动
+  /// Whether the height adapts to the content
+  /// When true, the table height is computed from the row count and needs
+  /// no external constraints; vertical scrolling is disabled
   final bool shrinkWrap;
 
-  /// 行高，用于 shrinkWrap 时计算总高度
-  /// 默认为 48（与 ShadTable 默认行高一致）
+  /// Row height, used to compute the total height under shrinkWrap
+  /// Defaults to 48 (matching ShadTable's default row height)
   final double rowHeight;
 
-  /// 是否正在加载
-  /// 当为 true 时，显示表头和加载指示器
+  /// Whether loading
+  /// When true, shows the header and a loading indicator
   final bool loading;
 
-  /// 列构建器
+  /// Column builder
   final TableSpanBuilder? columnBuilder;
 
-  /// 行构建器
+  /// Row builder
   final TableSpanBuilder? rowBuilder;
 
-  /// 行高度
+  /// Row height
   final TableSpanExtent? Function(int row)? rowSpanExtent;
 
-  /// 列宽度
+  /// Column width
   final TableSpanExtent? Function(int column)? columnSpanExtent;
 
-  /// 行背景装饰
+  /// Row background decoration
   final TableSpanDecoration? Function(int row)? rowSpanBackgroundDecoration;
 
-  /// 行前景装饰
+  /// Row foreground decoration
   final TableSpanDecoration? Function(int row)? rowSpanForegroundDecoration;
 
-  /// 列背景装饰
+  /// Column background decoration
   final TableSpanDecoration? Function(int column)?
   columnSpanBackgroundDecoration;
 
-  /// 列前景装饰
+  /// Column foreground decoration
   final TableSpanDecoration? Function(int column)?
   columnSpanForegroundDecoration;
 
-  /// 悬停行索引变化回调
+  /// Hovered-row index change callback
   final ValueChanged<int?>? onHoveredRowIndex;
 
-  /// 水平滚动控制器
+  /// Horizontal scroll controller
   final ScrollController? horizontalScrollController;
 
-  /// 垂直滚动控制器
+  /// Vertical scroll controller
   final ScrollController? verticalScrollController;
 
-  /// 固定行数
+  /// Fixed row count
   final int? pinnedRowCount;
 
-  /// 固定列数
+  /// Fixed column count
   final int? pinnedColumnCount;
 
-  /// 分页浏览基线版本。
+  /// Pagination browse baseline version.
   ///
-  /// 该值变化（翻页 / 搜索 / 重置 / 删除导致页码缩减）时，垂直滚动
-  /// 自动回到第一行；页内数据变化（删除、复制、编辑保存）保持位置。
-  /// 为 null 时不触发回顶（详情页 shrinkWrap 表格等场景）。
+  /// When this changes (page turn / search / reset / delete shrinking the
+  /// page count), the vertical scroll returns to the first row; in-page
+  /// data changes (delete, copy, edit-save) keep the position. When null,
+  /// no scroll-to-top is triggered (e.g. shrinkWrap tables on detail
+  /// pages).
   final int? queryVersion;
 
-  /// 是否为主滚动视图
+  /// Whether this is the primary scroll view
   final bool? primary;
 
-  /// 对角拖动行为
+  /// Diagonal drag behavior
   final DiagonalDragBehavior? diagonalDragBehavior;
 
-  /// 拖动开始行为
+  /// Drag-start behavior
   final DragStartBehavior? dragStartBehavior;
 
-  /// 键盘关闭行为
+  /// Keyboard dismiss behavior
   final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
-  /// 垂直滚动物理特性
+  /// Vertical scroll physics
   final ScrollPhysics? verticalScrollPhysics;
 
-  /// 水平滚动物理特性
+  /// Horizontal scroll physics
   final ScrollPhysics? horizontalScrollPhysics;
 
-  /// 支持的设备类型
+  /// Supported device kinds
   final Set<PointerDeviceKind>? supportedDevices;
 
-  // ============ 原始 ShadTable 回调 ============
+  // ============ Raw ShadTable callbacks ============
 
-  /// 行点击回调
+  /// Row tap callback
   final void Function(int row)? onRowTap;
 
-  /// 行按下回调
+  /// Row press callback
   final void Function(int row)? onRowTapDown;
 
-  /// 行抬起回调
+  /// Row release callback
   final void Function(int row)? onRowTapUp;
 
-  /// 行点击取消回调
+  /// Row tap-cancel callback
   final void Function(int row)? onRowTapCancel;
 
-  /// 行右键点击回调
+  /// Row right-click callback
   final void Function(int row)? onRowSecondaryTap;
 
-  /// 行右键抬起回调
+  /// Row right-release callback
   final void Function(int row)? onRowSecondaryTapUp;
 
-  /// 行右键取消回调
+  /// Row right-cancel callback
   final void Function(int row)? onRowSecondaryTapCancel;
 
-  /// 列点击回调
+  /// Column tap callback
   final void Function(int column)? onColumnTap;
 
-  /// 列按下回调
+  /// Column press callback
   final void Function(int column)? onColumnTapDown;
 
-  /// 列抬起回调
+  /// Column release callback
   final void Function(int column)? onColumnTapUp;
 
-  /// 列点击取消回调
+  /// Column tap-cancel callback
   final void Function(int column)? onColumnTapCancel;
 
-  /// 列右键点击回调
+  /// Column right-click callback
   final void Function(int column)? onColumnSecondaryTap;
 
-  /// 列右键按下回调
+  /// Column right-press callback
   final void Function(int column)? onColumnSecondaryTapDown;
 
-  /// 列右键抬起回调
+  /// Column right-release callback
   final void Function(int column)? onColumnSecondaryTapUp;
 
-  /// 列右键取消回调
+  /// Column right-cancel callback
   final void Function(int column)? onColumnSecondaryTapCancel;
 
-  // ============ 扩展回调 ============
+  // ============ Extended callbacks ============
 
-  /// 行双击回调
+  /// Row double-tap callback
   final void Function(int row)? onRowDoubleTap;
 
-  /// 行右键按下回调（带详情）
-  /// [row] - 行索引（数据行，不包含 header）
-  /// [details] - 点击详情，包含 globalPosition 等信息
+  /// Row right-press callback (with details)
+  /// [row] - row index (data rows, header excluded)
+  /// [details] - click details, including globalPosition etc.
   final void Function(int row, TapDownDetails details)?
   onRowSecondaryTapDownWithDetails;
 
@@ -217,20 +220,22 @@ class FoxyShadTable extends StatefulWidget {
 
 class _FoxyShadTableState extends State<FoxyShadTable> {
   static const _doubleTapTimeout = Duration(milliseconds: 300);
-  // 用于双击检测
+  // For double-tap detection
   int? _lastTappedRow;
   Timer? _doubleTapTimer;
 
-  // 用于右键点击位置捕获
+  // For right-click position capture
   Offset? _lastSecondaryTapPosition;
 
-  // 垂直滚动控制器：外部传入时复用，否则内部创建，用于版本变化时回到第一行
+  // Vertical scroll controller: reused when provided externally, created
+  // internally otherwise; used to return to the first row on version
+  // changes
   late final ScrollController _verticalScrollController =
       widget.verticalScrollController ?? ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    // 计算 shrinkWrap 时的高度
+    // Compute the height under shrinkWrap
     double? calculatedHeight;
     if (widget.shrinkWrap) {
       int totalRows = widget.rowCount;
@@ -239,7 +244,7 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       calculatedHeight = totalRows * widget.rowHeight;
     }
 
-    // shrinkWrap 时禁用垂直滚动
+    // Disable vertical scrolling under shrinkWrap
     final effectiveVerticalScrollPhysics = widget.shrinkWrap
         ? const NeverScrollableScrollPhysics()
         : widget.verticalScrollPhysics;
@@ -270,13 +275,13 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       verticalScrollPhysics: effectiveVerticalScrollPhysics,
       horizontalScrollPhysics: widget.horizontalScrollPhysics,
       supportedDevices: widget.supportedDevices,
-      // 行点击使用自定义处理（支持双击检测）
+      // Row taps use custom handling (supports double-tap detection)
       onRowTap: _handleRowTap,
       onRowTapDown: widget.onRowTapDown,
       onRowTapUp: widget.onRowTapUp,
       onRowTapCancel: widget.onRowTapCancel,
       onRowSecondaryTap: widget.onRowSecondaryTap,
-      // 行右键按下使用自定义处理（提供详情）
+      // Row right-press uses custom handling (provides details)
       onRowSecondaryTapDown: _handleRowSecondaryTapDown,
       onRowSecondaryTapUp: widget.onRowSecondaryTapUp,
       onRowSecondaryTapCancel: widget.onRowSecondaryTapCancel,
@@ -311,12 +316,12 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       );
     }
 
-    // 使用 Listener 捕获右键点击位置
+    // Use a Listener to capture right-click positions
     if (widget.onRowSecondaryTapDownWithDetails != null) {
       table = Listener(onPointerDown: _handlePointerDown, child: table);
     }
 
-    // shrinkWrap 时用 SizedBox 包裹
+    // Wrap in a SizedBox under shrinkWrap
     if (widget.shrinkWrap && calculatedHeight != null) {
       table = SizedBox(height: calculatedHeight, child: table);
     }
@@ -327,9 +332,12 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
   @override
   void didUpdateWidget(FoxyShadTable oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // 浏览基线变化（翻页/搜索/重置/删除导致页码缩减）时垂直滚动回到第一行。
-    // 此刻旧 TableView 的 ScrollPosition 仍 attach，jumpTo 立即生效；
-    // 若已卸载（无 position）则静默无操作，重挂载后 PageStorage 恢复的也是 0。
+    // When the browse baseline changes (page turn/search/reset/delete
+    // shrinking the page count), scroll vertically back to the first row.
+    // At this moment the old TableView's ScrollPosition is still attached,
+    // so jumpTo takes effect immediately; if already unmounted (no
+    // position) it silently no-ops, and after remount PageStorage also
+    // restores 0.
     if (widget.queryVersion != oldWidget.queryVersion) {
       _verticalScrollController.jumpTo(0);
     }
@@ -338,7 +346,8 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
   @override
   void dispose() {
     _doubleTapTimer?.cancel();
-    // 仅释放内部创建的控制器；外部传入的由调用方负责
+    // Only release internally created controllers; externally provided ones
+    // are the caller's responsibility
     if (widget.verticalScrollController == null) {
       _verticalScrollController.dispose();
     }
@@ -346,20 +355,20 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
   }
 
   void _handlePointerDown(PointerDownEvent event) {
-    // 捕获右键点击的位置
+    // Capture the right-click position
     if (event.buttons == kSecondaryMouseButton) {
       _lastSecondaryTapPosition = event.position;
     }
   }
 
   void _handleRowSecondaryTapDown(int row) {
-    // ShadTable 返回的 row 包含 header，需要调整
+    // ShadTable's row includes the header; adjust for it
     final dataRow = widget.header != null ? row - 1 : row;
 
-    // 忽略 header 行的点击
+    // Ignore clicks on the header row
     if (dataRow < 0) return;
 
-    // 组合行索引和之前捕获的位置
+    // Combine the row index with the previously captured position
     if (widget.onRowSecondaryTapDownWithDetails != null &&
         _lastSecondaryTapPosition != null) {
       final details = TapDownDetails(
@@ -371,23 +380,23 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
   }
 
   void _handleRowTap(int row) {
-    // ShadTable 返回的 row 包含 header，需要调整
+    // ShadTable's row includes the header; adjust for it
     final dataRow = widget.header != null ? row - 1 : row;
 
-    // 忽略 header 行的点击
+    // Ignore clicks on the header row
     if (dataRow < 0) return;
 
-    // 先处理双击检测
+    // Handle double-tap detection first
     if (widget.onRowDoubleTap != null) {
       if (_lastTappedRow == dataRow && _doubleTapTimer?.isActive == true) {
-        // 双击触发
+        // Double-tap fired
         _doubleTapTimer?.cancel();
         _lastTappedRow = null;
         widget.onRowDoubleTap!(dataRow);
         return;
       }
 
-      // 开始新的双击检测周期
+      // Start a new double-tap detection window
       _lastTappedRow = dataRow;
       _doubleTapTimer?.cancel();
       _doubleTapTimer = Timer(_doubleTapTimeout, () {
@@ -395,7 +404,7 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       });
     }
 
-    // 触发原始的 onRowTap
+    // Fire the original onRowTap
     widget.onRowTap?.call(dataRow);
   }
 }

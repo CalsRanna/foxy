@@ -9,11 +9,12 @@ import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 
-/// 桩服务:控制检查结果与准备动作。
+/// Stub service: controls the check result and prepare actions.
 class _StubUpdateService extends UpdateService {
   _StubUpdateService({this.onCheck, this.prepareShouldFail = false});
 
-  /// 检查回调;null 表示未调用(节流断言用)。
+  /// Check callback; null means it was not called (for throttle
+  /// assertions).
   Future<UpdateCheckResult> Function()? onCheck;
   int checkCalls = 0;
   final bool prepareShouldFail;
@@ -38,7 +39,7 @@ class _StubUpdateService extends UpdateService {
     void Function(double fraction)? onProgress,
     UpdateCancelToken? cancelToken,
   }) async {
-    // 模拟下载耗时:期间可被取消。
+    // Simulate download latency: cancellable in between.
     await Future<void>.delayed(const Duration(milliseconds: 20));
     if (cancelToken?.isCanceled ?? false) {
       throw const UpdateException(
@@ -70,7 +71,8 @@ UpdateManifestInfo _update() => UpdateManifestInfo(
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
-    // 清掉包内静态缓存,让每个用例重新读取 mock 数据。
+    // Clear the package's static cache so each case re-reads the mock
+    // data.
     SharedPreferences.resetStatic();
     PackageInfo.setMockInitialValues(
       appName: 'foxy',
@@ -82,7 +84,8 @@ void main() {
   });
 
   tearDown(() {
-    // 清理 VM 以 Directory.current(仓库根)为应用目录产生的临时目录。
+    // Clean up the temp directory the VM created with Directory.current
+    // (repo root) as the app directory.
     final updateTemp = Directory(p.join(Directory.current.path, '.update_tmp'));
     if (updateTemp.existsSync()) {
       updateTemp.deleteSync(recursive: true);
@@ -156,7 +159,7 @@ void main() {
       final found = await vm.checkSilently();
       expect(found, isTrue);
       expect(service.checkCalls, 1);
-      // 检查后写入节流时间。
+      // Write the throttle timestamp after the check.
       final last = await SharedPreferences.getInstance()
           .then((prefs) => prefs.getString('last_update_check_at'));
       expect(last, isNotNull);
@@ -237,7 +240,8 @@ void main() {
       expect(vm.errorMessage.value, '更新已取消');
       expect(vm.readyToRestart.value, isFalse);
 
-      // 重试:VM 为每次下载创建新令牌,取消状态不残留。
+      // Retry: the VM creates a new token per download, so cancellation
+      // state does not linger.
       final ok2 = await vm.downloadAndPrepare();
       expect(ok2, isTrue);
       expect(vm.readyToRestart.value, isTrue);
@@ -254,7 +258,7 @@ void main() {
       await vm.downloadAndPrepare();
 
       await vm.restartToApply();
-      // 测试工作目录(仓库根)不存在 foxy_updater.exe。
+      // The test working directory (repo root) has no foxy_updater.exe.
       expect(vm.errorMessage.value, '更新程序文件缺失，请重新下载完整版本');
     });
   });

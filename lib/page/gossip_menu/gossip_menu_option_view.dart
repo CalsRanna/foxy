@@ -21,7 +21,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-/// Tab 3：gossip_menu_option 双态（列表 / 表单）
+/// Tab 3: gossip_menu_option dual-mode (list / form)
 class GossipMenuOptionView extends StatefulWidget {
   final int menuId;
 

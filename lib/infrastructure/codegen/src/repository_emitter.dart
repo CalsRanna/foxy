@@ -6,10 +6,10 @@ import 'repository_model.dart';
 final class RepositoryEmitter {
   const RepositoryEmitter();
 
-  /// 成员顺序遵循 "Sort Members" 规则:公开方法按名(copy → count →
-  /// create → destroy → getBrief → get → getXxxs → getXxxLocales →
-  /// saveXxxLocales → store → update),私有方法按名
-  /// (_applyFilter → _before* → _whereKey)。
+  /// Member order follows the "Sort Members" rule: public methods by name
+  /// (copy → count → create → destroy → getBrief → get → getXxxs →
+  /// getXxxLocales → saveXxxLocales → store → update), private methods by
+  /// name (_applyFilter → _before* → _whereKey).
   String emit(RepositoryGenerationModel model) {
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName} on ${_onClause(model)} {');
@@ -23,7 +23,8 @@ final class RepositoryEmitter {
     if (model.queryLayerEnabled) {
       _emitGetBrief(buffer, model);
     }
-    // 全量列表只为主表仓库生成(子表无 DBC export 等全量消费方)。
+    // Full-list queries are generated only for main-table repositories
+    // (child tables have no full consumers such as DBC export).
     if (model.listViewModelPresent) {
       _emitGetAll(buffer, model);
     }
@@ -42,9 +43,9 @@ final class RepositoryEmitter {
     return buffer.toString();
   }
 
-  /// locale helper 委托调用 DbcLocaleRepositoryMixin 的
-  /// loadDbcLocaleField/storeDbcLocaleField,生成 mixin 的 on 子句
-  /// 必须扩宽到该 mixin(仓库类本身已混入)。
+  /// Locale helpers delegate to DbcLocaleRepositoryMixin's
+  /// loadDbcLocaleField/storeDbcLocaleField; the generated mixin's on clause
+  /// must be widened to that mixin (the repository class already mixes it in).
   String _onClause(RepositoryGenerationModel model) =>
       model.localeHelpersEnabled
       ? 'RepositoryMixin, DbcLocaleRepositoryMixin'
@@ -71,10 +72,12 @@ final class RepositoryEmitter {
       ..writeln();
   }
 
-  /// 物理列名一律用反引号包裹后写成 Dart 字符串字面量。
+  /// Physical column names are always wrapped in backticks and written as
+  /// Dart string literals.
   ///
-  /// laconic 不转义标识符，列名会原样拼进 SQL。无条件加反引号后，
-  /// `index`、`rank` 这类 MySQL 保留字列不需要逐个登记白名单。
+  /// laconic does not escape identifiers; column names are spliced into SQL
+  /// verbatim. With unconditional backticks, MySQL reserved words such as
+  /// `index` and `rank` need no whitelist.
   String _column(String columnName) => dartStringLiteral('`$columnName`');
 
   void _emitApplyFilter(StringBuffer buffer, RepositoryGenerationModel model) {
@@ -344,10 +347,13 @@ final class RepositoryEmitter {
         )
         ..writeln('    }');
     }
-    // 重复键重试只重分配「序号列」:声明 autoIncrementKey 时只重分配它;
-    // 未声明时仅当非 link int 主键恰有一个才重试(MAX+1 竞态只发生在数值
-    // 主键);否则宁抛 DuplicateKeyException,也不改写多个主键——粘贴已存在
-    // 的复合键行时,多键同时取全局 MAX+1 会静默写入无关垃圾行。
+    // Duplicate-key retry only reallocates the "sequence column": when
+    // autoIncrementKey is declared only it is reallocated; otherwise retry
+    // happens only when exactly one non-link int primary key exists (the
+    // MAX+1 race only affects numeric primary keys); otherwise throw
+    // DuplicateKeyException rather than rewriting multiple keys — pasting an
+    // existing composite-key row with all keys taking a global MAX+1 would
+    // silently write unrelated garbage rows.
     final retriedKeys = model.autoIncrementKey != null
         ? [model.autoIncrementKey!]
         : model.keyFields
@@ -382,8 +388,10 @@ final class RepositoryEmitter {
         (field) => field.dartName == retriedKey,
       );
       buffer
-        // TOCTOU 兜底:并发 create 取到同一 MAX+1 时,自动重新分配序号列重试一次。
-        // 已知边界:重试成功后调用方持有的 key 不更新,刷新列表可见新行。
+        // TOCTOU fallback: when concurrent creates obtain the same MAX+1,
+        // reallocate the sequence column and retry once.
+        // Known boundary: after a successful retry the caller's key is not
+        // updated; refreshing the list reveals the new row.
         ..writeln('      final retried = $parameter.copyWith(')
         ..writeln('        $retriedKey: await nextMaxPlusOne(')
         ..writeln(
@@ -439,8 +447,9 @@ final class RepositoryEmitter {
       ..writeln('      }')
       ..writeln('      rethrow;')
       ..writeln('    }')
-      // 「未命中」是业务结果而不是驱动异常，必须留在 try 之外，
-      // 否则会被上面的 duplicate-entry 翻译分支重新检查一遍。
+      // "No match" is a business result, not a driver exception; it must stay
+      // outside the try block, otherwise the duplicate-entry branch above
+      // would re-check it.
       ..writeln('    if (matchedRows == 0) {')
       ..writeln(
         "      throw RecordNotFoundException('${model.table} record not found');",
@@ -489,22 +498,24 @@ final class RepositoryEmitter {
       ..writeln();
   }
 
-  /// 关联键参数列表:`int race, int class_`(空列表返回空串)。
+  /// Link-key parameter list: `int race, int class_` (empty list → empty string).
   String _linkParams(List<RepositoryKeyFieldModel> links) =>
       links.map((p) => '${p.dartType} ${p.dartName}').join(', ');
 
-  /// 关联键 where 链:`where('`race`', race).where('`class`', class_)`。
+  /// Link-key where chain: `where('`race`', race).where('`class`', class_)`.
   String _linkWheres(List<RepositoryKeyFieldModel> links) => links
       .map((p) => '.where(${_column(p.columnName)}, ${p.dartName})')
       .join();
 
-  /// 关联键 where 映射字面量:`'`race`': race, '`class`': class_`。
+  /// Link-key where map literal: `'`race`': race, '`class`': class_`.
   String _linkWhereMap(List<RepositoryKeyFieldModel> links) =>
       links.map((p) => "'${p.columnName}': ${p.dartName}").join(', ');
 
-  /// 重试路径的序号列 where 映射:以实体参数引用,如
-  /// `'CreatureID': loot.CreatureID`(_column 已返回带引号字面量)。
-  /// [scopeNames] 为 linkKey 与 autoIncrementScope 合并后的字段 dart 名。
+  /// Sequence-column where map for the retry path, referenced via the entity
+  /// parameter, e.g. `'CreatureID': loot.CreatureID` (_column already returns
+  /// a quoted literal).
+  /// [scopeNames] are the field dart names after merging linkKey with
+  /// autoIncrementScope.
   String _retryWhereMap(
     RepositoryGenerationModel model,
     String parameter,
@@ -518,7 +529,8 @@ final class RepositoryEmitter {
           )
           .join(', ');
 
-  /// `.orderBy('`ID`')` 或复合 key 的链式 `.orderBy(...).orderBy(...)`。
+  /// `.orderBy('`ID`')`, or a chained `.orderBy(...).orderBy(...)` for
+  /// composite keys.
   String _orderByClause(RepositoryGenerationModel model) {
     final buffer = StringBuffer();
     for (final field in model.keyFields) {
@@ -527,11 +539,12 @@ final class RepositoryEmitter {
     return buffer.toString();
   }
 
-  /// 物理表名写成 Dart 字符串字面量。
+  /// Physical table name written as a Dart string literal.
   ///
-  /// 混入方类里声明的是 `static const _table`，mixin 实例方法无法按裸名
-  /// 访问静态成员，所以这里直接内联字面量；`_table` 声明本身仍由
-  /// RepositoryReader 校验与注解一致。
+  /// The mixing-in class declares `static const _table`, but mixin instance
+  /// methods cannot access static members by bare name, so the literal is
+  /// inlined here; RepositoryReader still validates that `_table` matches
+  /// the annotation.
   String _table(RepositoryGenerationModel model) =>
       dartStringLiteral(model.table);
 }

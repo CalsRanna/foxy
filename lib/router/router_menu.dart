@@ -4,7 +4,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_node.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-/// 顶级菜单枚举
+/// Top-level menu enum
 enum RouterMenu {
   dashboard(label: '工作台', icon: LucideIcons.layoutDashboard),
   creatureTemplate(label: '生物列表', icon: LucideIcons.pawPrint),
@@ -41,7 +41,7 @@ enum RouterMenu {
 
   const RouterMenu({required this.label, required this.icon});
 
-  /// 获取菜单对应的路由
+  /// Returns the route for this menu
   PageRouteInfo get route {
     return switch (this) {
       RouterMenu.dashboard => const DashboardRoute(),
@@ -52,7 +52,7 @@ enum RouterMenu {
       RouterMenu.gossipMenu => const GossipMenuListRoute(),
       RouterMenu.smartScript => const SmartScriptListRoute(),
       RouterMenu.setting => const SettingRoute(),
-      // 以下菜单暂未实现路由
+      // These menus have no route implemented yet
       RouterMenu.spell => const SpellListRoute(),
       RouterMenu.more => const MoreRoute(),
       RouterMenu.referenceLootTemplate =>
@@ -79,7 +79,7 @@ enum RouterMenu {
     };
   }
 
-  /// 创建导航节点
+  /// Creates a navigation node
   RouterNode toNode() {
     return RouterNode(menu: this, label: label, route: route);
   }

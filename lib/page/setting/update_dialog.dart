@@ -1,8 +1,9 @@
-/// 更新对话框:随 [UpdateViewModel] 状态实时展示。
+/// Update dialog: live-renders the [UpdateViewModel] state.
 ///
-/// 状态流转:检查中 → 发现新版本(可下载)→ 下载中(可取消)→ 已就绪
-/// (重启完成更新);检查失败 / 已是最新独立成态。对话框不主动发起检查,
-/// 由调用方先触发 `checkManually` / `checkSilently` 再打开本对话框。
+/// State flow: checking → new version found (downloadable) → downloading
+/// (cancellable) → ready (restart to finish); check-failed / up-to-date
+/// are standalone states. The dialog never initiates a check itself —
+/// callers trigger `checkManually` / `checkSilently` first, then open it.
 library;
 
 import 'package:flutter/material.dart';
@@ -22,8 +23,10 @@ class UpdateDialog extends StatefulWidget {
 }
 
 class _UpdateDialogState extends State<UpdateDialog> {
-  /// 当前版本展示用 signal：Watch 直接订阅,避免父级 setState 重建 Watch
-  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
+  /// The current-version display uses a signal: Watch subscribes directly,
+  /// avoiding a parent setState rebuilding the Watch and triggering
+  /// signals_flutter's didUpdateWidget→recompute chain that would break the
+  /// subscription.
   final _currentVersion = signal<String?>(null);
 
   UpdateViewModel get _vm => widget.vm;
@@ -217,7 +220,8 @@ class _UpdateDialogState extends State<UpdateDialog> {
           );
         }
 
-        // 兜底：理论不可达（检查尚未触发或状态被重置）。
+        // Fallback: theoretically unreachable (check not triggered yet or
+        // state was reset).
         return SettingDialogShell(
           title: settingDialogTitleRow(LucideIcons.refreshCw, '检查更新'),
           child: const SizedBox(height: 120),
@@ -243,7 +247,8 @@ class _UpdateDialogState extends State<UpdateDialog> {
       if (!mounted) return;
       _currentVersion.value = '${info.version}+${info.buildNumber}';
     } catch (_) {
-      // 展示层拿不到版本号时仅省略「当前版本」行。
+      // When the view layer has no version number, only the "current
+      // version" row is omitted.
     }
   }
 
@@ -251,7 +256,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
     try {
       await _vm.downloadAndPrepare();
     } catch (_) {
-      // 失败经 errorMessage 信号反馈。
+      // Failures are reported through the errorMessage signal.
     }
   }
 
@@ -259,7 +264,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
     try {
       await _vm.checkManually();
     } catch (_) {
-      // 失败经 errorMessage 信号反馈。
+      // Failures are reported through the errorMessage signal.
     }
   }
 
@@ -274,7 +279,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
   }
 }
 
-/// 更新说明展示块:固定高度区域内滚动。
+/// Update-notes display block: scrollable within a fixed-height area.
 class _ReleaseNotes extends StatelessWidget {
   final String notes;
 

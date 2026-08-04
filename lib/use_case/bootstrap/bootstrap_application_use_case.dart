@@ -16,7 +16,8 @@ final class BootstrapApplicationInput {
   final String username;
   final String password;
 
-  /// 是否启用 TLS(引导页开关);null 时沿用已保存配置。
+  /// Whether TLS is enabled (bootstrap-page switch); null keeps the saved
+  /// config.
   final bool? useSsl;
 
   const BootstrapApplicationInput({
@@ -62,8 +63,9 @@ final class BootstrapApplicationUseCase {
   Future<BootstrapApplicationResult> execute(
     BootstrapApplicationInput input,
   ) async {
-    // 先读本地配置(无网络依赖),TLS 开关缺省沿用已保存值;
-    // 首次引导且 host 为远程地址时建议开启(数据面加密)。
+    // Read local config first (no network dependency); the TLS switch
+    // defaults to the saved value; on first-time bootstrap with a remote
+    // host, recommend enabling it (data-plane encryption).
     final savedConfig = await _configUtil.load();
     final useSsl =
         input.useSsl ??
@@ -120,7 +122,8 @@ final class BootstrapApplicationUseCase {
     );
   }
 
-  /// 非本机回环地址视为远程主机(远程连接建议启用 TLS)。
+  /// Any address other than the local loopback counts as a remote host
+  /// (TLS recommended for remote connections).
   static bool _isRemoteHost(String host) {
     final normalized = host.trim().toLowerCase();
     return normalized != 'localhost' &&

@@ -10,9 +10,9 @@ import 'package:signals/signals_flutter.dart';
 
 const _kDialogWidth = kFoxyDialogMaxWidth;
 
-// ─── 公共壳 ───────────────────────────────────────────────────────────────
+// ─── Common shell ──────────────────────────────────────────────────────────
 
-/// 结果横幅（成功/错误/警告，带颜色与图标）。
+/// Result banner (success/error/warning, with color and icon).
 Widget settingDialogBanner(
   BuildContext context, {
   required String text,
@@ -43,13 +43,13 @@ Widget settingDialogBanner(
   );
 }
 
-/// 弱化提示文本。
+/// Muted hint text.
 Widget settingDialogMutedHint(BuildContext context, String text) {
   final theme = ShadTheme.of(context);
   return Text(text, style: theme.textTheme.muted.copyWith(fontSize: 13));
 }
 
-/// 路径输入行（输入框 + 浏览按钮）。
+/// Path input row (input box + browse button).
 Widget settingDialogPathField({
   required StringFieldController controller,
   required String placeholder,
@@ -87,7 +87,7 @@ Widget settingDialogPathField({
   );
 }
 
-/// 进度面板（比例条或加载指示 + 标签 + 详情）。
+/// Progress panel (ratio bar or spinner + label + details).
 Widget settingDialogProgressPanel(
   BuildContext context, {
   required double? ratio,
@@ -138,7 +138,8 @@ Widget settingDialogProgressPanel(
   );
 }
 
-/// 只读路径展示框（目录配置来自设置页，动作对话框不再直接编辑）。
+/// Read-only path display box (directory config comes from the settings
+/// page; action dialogs no longer edit it directly).
 Widget settingDialogReadonlyPath(BuildContext context, String path) {
   final theme = ShadTheme.of(context);
   return Container(
@@ -164,7 +165,7 @@ Widget settingDialogReadonlyPath(BuildContext context, String path) {
   );
 }
 
-/// 对话框标题行（图标 + 文本）。
+/// Dialog title row (icon + text).
 Widget settingDialogTitleRow(IconData icon, String text, {Color? iconColor}) {
   return Row(
     spacing: 10,
@@ -175,7 +176,7 @@ Widget settingDialogTitleRow(IconData icon, String text, {Color? iconColor}) {
   );
 }
 
-// ─── 导出对话框 ───────────────────────────────────────────────────────────
+// ─── Export dialog ─────────────────────────────────────────────────────────
 
 class DbcExportDialog extends StatefulWidget {
   final DbcExportWorkflowViewModel vm;
@@ -185,7 +186,7 @@ class DbcExportDialog extends StatefulWidget {
   State<DbcExportDialog> createState() => _DbcExportDialogState();
 }
 
-// ─── 导入对话框 ───────────────────────────────────────────────────────────
+// ─── Import dialog ─────────────────────────────────────────────────────────
 
 class DbcImportDialog extends StatefulWidget {
   final DbcImportWorkflowViewModel vm;
@@ -195,7 +196,7 @@ class DbcImportDialog extends StatefulWidget {
   State<DbcImportDialog> createState() => _DbcImportDialogState();
 }
 
-/// 设置相关对话框的公共壳（标题 + 内容 + 操作区）。
+/// Common shell for settings-related dialogs (title + content + actions).
 class SettingDialogShell extends StatelessWidget {
   final Widget title;
   final Widget child;
@@ -225,8 +226,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   final _dirController = StringFieldController();
   final _searchController = StringFieldController();
 
-  /// 以下状态用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
-  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
+  /// The following states use signals: Watch subscribes directly, avoiding
+  /// a parent setState rebuilding the Watch and triggering signals_flutter's
+  /// didUpdateWidget→recompute chain that would break the subscription.
   final _outputDir = signal<String?>(null);
   final _loaded = signal(false);
   final _query = signal('');
@@ -237,7 +239,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
     return SizedBox(
       width: _kDialogWidth,
       child: Watch((_) {
-        // 显式订阅列表信号，保证全选/取消全选时整表刷新。
+        // Explicitly subscribe to the list signal so select-all/deselect
+        // refreshes the whole table.
         final allItems = _vm.items.value;
         final workflowStatus = _vm.status.value;
         final exporting =
@@ -580,8 +583,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
 }
 
 class _DbcImportDialogState extends State<DbcImportDialog> {
-  /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
-  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
+  /// The ready flag uses a signal: Watch subscribes directly, avoiding a
+  /// parent setState rebuilding the Watch and triggering signals_flutter's
+  /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
 
   DbcImportWorkflowViewModel get _vm => widget.vm;
@@ -764,7 +768,8 @@ class _ExportTableRow extends StatelessWidget {
         ? material.colorScheme.onSurface.withValues(alpha: 0.55)
         : material.colorScheme.onSurface;
 
-    // 使用受控 Checkbox，避免 shadcn 组件内部状态与外部 selected 脱节。
+    // Use a controlled Checkbox so the shadcn component's internal state
+    // never drifts from the external `selected`.
     final checkbox = Checkbox(
       value: item.selected,
       onChanged: item.canSelect ? (value) => onChanged(value ?? false) : null,

@@ -36,10 +36,12 @@ import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:get_it/get_it.dart';
 
-/// 多语言 picker delegate 注册表，集中各模块的加载/保存配置。
+/// Registry of locale-picker delegates, centralizing each module's
+/// load/save config.
 ///
-/// 对齐 [EntityPickerDelegates] 范式：每个实体一个 `static final` delegate，
-/// 纯数据 + 闭包，不持有可变状态，可被多个 [FoxyLocalePicker] 共享。
+/// Follows the [EntityPickerDelegates] pattern: one `static final`
+/// delegate per entity, pure data + closures, no mutable state, shareable
+/// by multiple [FoxyLocalePicker]s.
 class FoxyLocalePickerDelegates {
   static final creatureTemplateName = _creatureTemplateField('name', '名称');
   static final creatureTemplateTitle = _creatureTemplateField('title', '称号');
@@ -366,7 +368,7 @@ class FoxyLocalePickerDelegates {
   );
 
   // ---------------------------------------------------------------------------
-  // DBC 宽表本地化字段（每个字段独立 Delegate）
+  // DBC wide-table locale fields (one independent Delegate per field)
   // ---------------------------------------------------------------------------
 
   static final dbcAchievementTitle = _dbc(
@@ -799,10 +801,13 @@ class FoxyLocalePickerDelegates {
     );
   }
 
-  /// quest_template_locale 单字段 delegate：编辑器只读写 [field] 一列。
+  /// quest_template_locale single-field delegate: the editor only reads
+  /// and writes the [field] column.
   ///
-  /// 更新分支必须只把目标列传给 copyWith（未传列保留原值），不能复用旧的
-  /// 全列 onSave——它对缺失列填 '' 会清掉其它字段。
+  /// The update branch must pass only the target column to copyWith
+  /// (omitted columns keep their values); the old all-column onSave must
+  /// not be reused — it fills missing columns with '' and would wipe other
+  /// fields.
   static DatabaseLocaleEditorDelegate _questTemplateField(
     String field,
     String label,
@@ -882,7 +887,8 @@ class FoxyLocalePickerDelegates {
     };
   }
 
-  /// creature_template_locale 单字段 delegate：编辑器只读写 [field] 一列。
+  /// creature_template_locale single-field delegate: the editor only reads
+  /// and writes the [field] column.
   static DatabaseLocaleEditorDelegate _creatureTemplateField(
     String field,
     String label,

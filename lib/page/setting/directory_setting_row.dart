@@ -7,10 +7,11 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-/// 目录配置目标：客户端目录 / 服务端 DBC 目录。
+/// Directory-config targets: client directory / server DBC directory.
 ///
-/// 集中两个配置项与 [SetupStatusViewModel] 的映射（路径/完成度/错误/保存），
-/// 设置页配置行与启动引导步骤 1/2 共用。
+/// Centralizes the mapping of both config items to
+/// [SetupStatusViewModel] (path/completeness/error/save), shared by the
+/// settings-page config rows and setup-wizard steps 1/2.
 enum DirectoryConfigTarget {
   clientDir(
     title: '客户端目录',
@@ -56,7 +57,8 @@ enum DirectoryConfigTarget {
       this == clientDir ? vm.saveClientDir(path) : vm.saveDbcPath(path);
 }
 
-/// 单个目录的配置对话框：基于 [DirectoryPathForm]，带「取消 / 保存」。
+/// Config dialog for a single directory: based on [DirectoryPathForm],
+/// with "Cancel / Save".
 class DirectoryPathConfigDialog extends StatefulWidget {
   final SetupStatusViewModel vm;
   final DirectoryConfigTarget target;
@@ -72,10 +74,12 @@ class DirectoryPathConfigDialog extends StatefulWidget {
       _DirectoryPathConfigDialogState();
 }
 
-/// 内联目录路径表单：路径输入/浏览 + 存在性校验错误横幅。
+/// Inline directory-path form: path input/browse plus an
+/// existence-validation error banner.
 ///
-/// 供目录配置对话框与引导步骤 1/2 复用；保存逻辑走 [SetupStatusViewModel]
-/// 的校验与持久化，错误经目标的 error 信号展示。
+/// Reused by the directory-config dialog and wizard steps 1/2; saving goes
+/// through [SetupStatusViewModel]'s validation and persistence, with errors
+/// surfaced via the target's error signal.
 class DirectoryPathForm extends StatefulWidget {
   final SetupStatusViewModel vm;
   final DirectoryConfigTarget target;
@@ -132,13 +136,14 @@ class DirectoryPathFormState extends State<DirectoryPathForm> {
   @override
   void initState() {
     super.initState();
-    // 清除上一次的校验错误，避免重新打开时残留。
+    // Clear the previous validation error so none lingers on reopen.
     target.clearError(widget.vm);
     final path = target.pathOf(widget.vm);
     if (path != null) controller.init(path);
   }
 
-  /// 校验并保存目录配置；成功返回 true，失败时错误显示在横幅。
+  /// Validates and saves the directory config; returns true on success,
+  /// errors show in the banner.
   Future<bool> save() => target.save(widget.vm, controller.collect());
 
   Future<void> _browse() async {
@@ -148,7 +153,8 @@ class DirectoryPathFormState extends State<DirectoryPathForm> {
   }
 }
 
-/// 设置页的目录配置项：标题 + 描述 + 当前路径 + 「修改」按钮。
+/// Directory-config item on the settings page: title + description +
+/// current path + "Modify" button.
 class DirectorySettingRow extends StatelessWidget {
   final SetupStatusViewModel vm;
   final DirectoryConfigTarget target;

@@ -16,7 +16,7 @@ class ScalingStatValueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 分组1: 基础信息
+    // Group 1: basic info
     final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
@@ -32,7 +32,7 @@ class ScalingStatValueView extends StatelessWidget {
       ),
     );
 
-    // 分组2: 预算值
+    // Group 2: budget values
     final shoulderBudgetInput = FoxyFormItem(
       label: '肩部预算',
       child: FoxyNumberInput<int>(
@@ -83,7 +83,7 @@ class ScalingStatValueView extends StatelessWidget {
       ),
     );
 
-    // 分组3: 护甲值
+    // Group 3: armor values
     final clothShoulderArmorInput = FoxyFormItem(
       label: '布甲肩部',
       child: FoxyNumberInput<int>(
@@ -148,7 +148,7 @@ class ScalingStatValueView extends StatelessWidget {
       ),
     );
 
-    // 分组4: DPS值
+    // Group 4: DPS values
     final weaponDPS1HInput = FoxyFormItem(
       label: '单手DPS',
       child: FoxyNumberInput<int>(

@@ -6,16 +6,18 @@ import 'form_model.dart';
 final class FormEmitter {
   const FormEmitter();
 
-  /// controller 标识:`class_` → `class`(保留字转义),其余原样。
+  /// Controller identifier: `class_` → `class` (reserved-word escape);
+  /// everything else stays as-is.
   String controllerName(FormFieldModel field) {
     final name = field.dartName;
     return name.endsWith('_') ? name.substring(0, name.length - 1) : name;
   }
 
-  /// 成员顺序遵循 "Sort Members" 规则:字段(repository → 状态信号 →
-  /// controller,保持原序)在前,公开方法按名(dispose → initSignals →
-  /// persist),私有方法按名(_afterApplyCandidate → _applyCandidate
-  /// → _collectCandidate → _logActivity)。
+  /// Member order follows the "Sort Members" rule: fields (repository →
+  /// state signals → controllers, in original order) first, public methods
+  /// by name (dispose → initSignals → persist), private methods by name
+  /// (_afterApplyCandidate → _applyCandidate → _collectCandidate →
+  /// _logActivity).
   String emit(FormGenerationModel model) {
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName} on FieldControllerMixin {');
@@ -82,8 +84,9 @@ final class FormEmitter {
       ..writeln(
         '        final blank = await _repository.create${model.baseName}();',
       )
-      // 慢查询返回时页面可能已销毁(disposeControllers),再写
-      // TextEditingController 会在 debug 下抛 FlutterError。
+      // When a slow query returns, the page may already be disposed
+      // (disposeControllers); writing to a TextEditingController then throws
+      // a FlutterError in debug mode.
       ..writeln('        if (isDisposed) return;')
       ..writeln('        entity.value = blank;')
       ..writeln('        _applyCandidate(blank);')
@@ -156,8 +159,8 @@ final class FormEmitter {
     );
   }
 
-  /// 与手写风格对齐:`SelectFieldController` 一族用换行形式,
-  /// 其余单行。
+  /// Aligned with hand-written style: the `SelectFieldController` family
+  /// uses the multi-line form, everything else single-line.
   String _controllerDeclaration(FormFieldModel field) {
     final controller = controllerName(field);
     final expression = switch ((field.kind, field.dartType)) {
@@ -202,7 +205,8 @@ final class FormEmitter {
           : '${controller}Controller.init($parameter.${field.dartName})';
       buffer.writeln('    $init;');
     }
-    // 加载实体后的语义钩子(如联动刷新编辑规格),手写侧覆写。
+    // Semantic hook after loading the entity (e.g. cascade-refresh of edit
+    // specs); overridden on the hand-written side.
     buffer
       ..writeln('    _afterApplyCandidate($parameter);')
       ..writeln('  }');
@@ -225,7 +229,8 @@ final class FormEmitter {
       ..writeln('  }');
   }
 
-  /// `TalentEntity` → `talent`(与 Repository 的实体参数命名一致)。
+  /// `TalentEntity` → `talent` (matches the Repository's entity parameter
+  /// naming).
   String _entityParameterName(String entityClassName) {
     final baseName = entityClassName.substring(
       0,
@@ -234,7 +239,8 @@ final class FormEmitter {
     return '${baseName[0].toLowerCase()}${baseName.substring(1)}';
   }
 
-  /// `SelectFieldController` 表达式:fallback 类型决定泛型与字面量。
+  /// `SelectFieldController` expression: the fallback type decides the
+  /// generic type and the literal.
   String _selectExpression(FormFieldModel field) {
     final fallback = field.selectFallback;
     if (fallback is String) {

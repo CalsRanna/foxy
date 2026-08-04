@@ -139,7 +139,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
   QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('`ID`', int.tryParse(filter.id) ?? 0);
+      builder = builder.where('`ID`', filter.id);
     }
     if (filter.text.isNotEmpty) {
       builder = builder.where('`Text`', filter.text);

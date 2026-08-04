@@ -96,7 +96,7 @@ mixin _SpellListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     );
   }
 
-  /// 覆写点:记录复制/删除活动日志,entityName 各页不同。
+  /// Override point: records copy/delete activity log; entityName differs per page.
   void _logActivity(ActivityActionType action, int key) {}
 
   Future<void> _refresh() async {

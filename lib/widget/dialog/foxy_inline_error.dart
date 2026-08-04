@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 对话框内联错误提示，替代 [DialogUtil.error] 在对话框内的使用。
+/// Inline dialog error notice, replacing [DialogUtil.error] inside
+/// dialogs.
 ///
-/// 对话框内操作（保存、查询等）失败时用内联错误展示，
-/// 保留对话框状态（输入、筛选、分页），不关闭自身。
-/// [message] 为 null 时渲染空占位，调用方无需判空。
+/// When an in-dialog operation (save, query, etc.) fails, show an inline
+/// error, keeping the dialog state (inputs, filters, pagination) and not
+/// closing itself. A null [message] renders an empty placeholder, so
+/// callers need no null checks.
 class FoxyInlineError extends StatelessWidget {
   final String? message;
 

@@ -8,7 +8,7 @@ String _appendDisplayItem(String current, int itemId, int count) {
   return current.isEmpty ? value : '$current, $value';
 }
 
-/// 扩展价格
+/// Extended cost
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_item_extended_cost')

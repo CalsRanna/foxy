@@ -1,4 +1,4 @@
-/// 可由 Flags 选择器展示的独立位。
+/// An individual bit displayable by the Flags picker.
 class FlagItem {
   final int value;
   final String label;

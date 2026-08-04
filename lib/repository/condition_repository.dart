@@ -10,11 +10,12 @@ part 'condition_repository.g.dart';
 @FoxyFilter.text('sourceTypeOrReferenceId')
 @FoxyFilter.text('sourceEntry')
 class ConditionRepository with RepositoryMixin, _ConditionRepositoryMixin {
-  // 生成版查询层内联表名字面量（mixin 无法访问类静态成员），此处仅作契约校验。
+  // The generated query layer inlines the table-name literal (mixins cannot
+  // access class statics); this only serves as a contract check.
   // ignore: unused_field
   static const _table = 'conditions';
 
-  /// acore_world.conditions 完整 10 列主键
+  /// Full 10-column primary key of acore_world.conditions
   static const pkColumns = [
     'SourceTypeOrReferenceId',
     'SourceGroup',

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 可明确切换数据库 `NULL` 与普通文本（包括空字符串）的输入框。
+/// Input that can explicitly switch between database `NULL` and plain
+/// text (including empty strings).
 class FoxyNullableStringInput extends StatelessWidget {
   final NullableStringFieldController controller;
   final String? placeholder;

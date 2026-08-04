@@ -1,9 +1,9 @@
-// Item Template 标志位常量定义
-// 数据来源：AzerothCore SharedDefines.h, ItemDefines.h
+// Item Template flag constant definitions
+// Source: AzerothCore SharedDefines.h, ItemDefines.h
 
 import 'package:foxy/constant/flag_item.dart';
 
-/// AllowableClass 职业标识选项
+/// AllowableClass class-mask options
 const kAllowableClassOptions = [
   FlagItem(1, '战士'), // Warrior
   FlagItem(2, '圣骑士'), // Paladin
@@ -17,7 +17,7 @@ const kAllowableClassOptions = [
   FlagItem(1024, '德鲁伊'), // Druid
 ];
 
-/// AllowableRace 种族标识选项
+/// AllowableRace race-mask options
 const kAllowableRaceOptions = [
   FlagItem(1, '人类'), // Human
   FlagItem(2, '矮人'), // Dwarf
@@ -31,7 +31,7 @@ const kAllowableRaceOptions = [
   FlagItem(1024, '德莱尼'), // Draenei
 ];
 
-/// BagFamily 背包类别标识选项
+/// BagFamily bag-type-mask options
 const kItemBagFamilyOptions = [
   FlagItem(1, '箭袋'), // Quiver
   FlagItem(2, '弹药袋'), // Ammo Pouch
@@ -50,7 +50,7 @@ const kItemBagFamilyOptions = [
   FlagItem(16384, '任务物品'), // Quest
 ];
 
-/// Item Flags 物品标识选项
+/// Item Flags options
 const kItemFlagOptions = [
   FlagItem(1, '不可拾取'),
   FlagItem(2, '魔法制造'), // Conjured
@@ -86,14 +86,14 @@ const kItemFlagOptions = [
   FlagItem(2147483648, '禁用渐进掉落'),
 ];
 
-/// Item flagsCustom 自定义标识选项
+/// Item flagsCustom options
 const kItemFlagsCustomOptions = [
   FlagItem(1, '玩家下线也计时'), // Duration Real Time
   FlagItem(2, '掉落时不检测任务状态'), // Ignore Quest Status
   FlagItem(4, '点贪婪前遵守掉落规则'), // No Loot Animation
 ];
 
-/// Item FlagsExtra 额外标识选项
+/// Item FlagsExtra options
 const kItemFlagsExtraOptions = [
   FlagItem(1, '部落'), // Horde
   FlagItem(2, '联盟'), // Alliance
@@ -129,7 +129,7 @@ const kItemFlagsExtraOptions = [
   FlagItem(2147483648, '用于专业技能'),
 ];
 
-/// ScalingStatValue 缩放属性标识选项
+/// ScalingStatValue scaling-stat-mask options
 const kItemScalingStatValueOptions = [
   FlagItem(0x00000001, '肩部预算'),
   FlagItem(0x00000002, '饰品预算'),
@@ -155,7 +155,8 @@ const kItemScalingStatValueOptions = [
   FlagItem(0x00800000, '板甲胸部护甲'),
 ];
 
-/// SocketColor 是位掩码，服务端允许四种颜色的任意组合。
+/// SocketColor is a bitmask; the server allows any combination of the four
+/// colors.
 const kItemSocketColorFlagOptions = [
   FlagItem(1, '多彩'),
   FlagItem(2, '红色'),

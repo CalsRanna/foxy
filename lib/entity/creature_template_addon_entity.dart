@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_template_addon_entity.g.dart';
 
-/// 生物模板附加数据
+/// Creature template addon data
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'creature_template_addon')

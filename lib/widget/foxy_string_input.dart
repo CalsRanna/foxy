@@ -3,15 +3,17 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 字符串输入框。
+/// String input.
 class FoxyStringInput extends StatelessWidget {
   final StringFieldController controller;
   final String? placeholder;
   final bool readOnly;
   final bool obscureText;
 
-  /// 输入长度上限(与目标列宽对齐);null = 不限。
-  /// MySQL 非严格模式会静默截断超长值写坏数据,长文本字段应按列宽设置。
+  /// Maximum input length (aligned with the target column width); null =
+  /// unlimited.
+  /// MySQL non-strict mode silently truncates overlong values and corrupts
+  /// data; long text fields should set this to the column width.
   final int? maxLength;
 
   const FoxyStringInput({

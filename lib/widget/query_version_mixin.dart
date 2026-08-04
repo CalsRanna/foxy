@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:signals/signals.dart';
 
-/// 分页浏览版本管理 mixin。
+/// Pagination browse-version management mixin.
 ///
-/// 提供「浏览基线版本」[queryVersion]：整页级内容变化（翻页、搜索、重置、
-/// 删除导致页码缩减）时递增，页面将其传给 FoxyShadTable，使表格垂直滚动
-/// 回到第一行。页内数据变化（删除、复制、编辑保存）不递增，保持浏览位置。
+/// Provides the "browse baseline version" [queryVersion]: incremented on
+/// whole-page content changes (page turn, search, reset, delete shrinking
+/// the page count); pages pass it to FoxyShadTable so the table scrolls
+/// back to the first row. In-page data changes (delete, copy, edit-save)
+/// do not increment, keeping the browse position.
 ///
 /// ```dart
 /// class MyListViewModel with FieldControllerMixin, QueryVersionMixin {
@@ -27,23 +29,28 @@ import 'package:signals/signals.dart';
 /// }
 /// ```
 mixin QueryVersionMixin {
-  /// 分页浏览基线版本：变化即代表表格内容整页切换，应回到第一行。
+  /// Pagination browse baseline: a change means the table content switched
+  /// wholesale and should return to the first row.
   final queryVersion = signal(0);
 
-  /// 当前分页页码（混入的 ViewModel 已声明 `final page = signal(1)`，天然满足）。
+  /// Current page number (the mixing-in ViewModel already declares
+  /// `final page = signal(1)`, satisfying this naturally).
   Signal<int> get page;
 
-  /// 每页行数（项目所有分页统一为 50）。
+  /// Rows per page (all pagination in the project uses 50).
   int get pageSize => 50;
 
-  /// 标记一次整页级变化（翻页 / 搜索 / 重置）。
+  /// Marks a whole-page change (page turn / search / reset).
   void markQueryVersion() => queryVersion.value++;
 
-  /// 删除后修正浏览基线：总行数缩减导致当前页超界时，
-  /// 回退到最后一页并标记版本变化（表格回顶）；否则保持当前浏览位置。
+  /// Corrects the browse baseline after a delete: when the reduced row
+  /// count makes the current page out of range, step back to the last page
+  /// and mark a version change (table scrolls to top); otherwise keep the
+  /// current browse position.
   ///
-  /// [totalAfterDelete] 为删除后的总行数（调用处可用删除前的
-  /// `total.value - 1` 传入，过滤条件未变时即删除后总数）。
+  /// [totalAfterDelete] is the post-delete row count (callers can pass
+  /// `total.value - 1` from before the delete; with unchanged filters that
+  /// is the post-delete total).
   void normalizePageAfterDelete(int totalAfterDelete) {
     final pageCount = max(1, (totalAfterDelete / pageSize).ceil());
     if (page.value > pageCount) {

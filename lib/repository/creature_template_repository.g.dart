@@ -169,7 +169,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
-      builder = builder.where('`entry`', int.tryParse(filter.entry) ?? 0);
+      builder = builder.where('`entry`', filter.entry);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where('`name`', filter.name);

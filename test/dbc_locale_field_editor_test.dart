@@ -38,7 +38,8 @@ void main() {
     expect(find.byType(DatabaseLocaleEditor), findsOneWidget);
     expect(find.text('添加'), findsOneWidget);
     expect(find.byIcon(LucideIcons.trash), findsOneWidget);
-    // 两列表格：一行 = 语言列 + 该字段的值列
+    // Two-column table: one row = language column + the field's value
+    // column
     final inputs = find.descendant(
       of: find.byType(DatabaseLocaleEditor),
       matching: find.byType(ShadInput),
@@ -131,7 +132,8 @@ void main() {
       onSave: (entry, values) async {},
     );
 
-    // 16 行固定编辑器需全量可见,放大视口使 0.8 屏高度容纳所有行
+    // The fixed 16-row editor must be fully visible; enlarge the viewport
+    // so 0.8×screen height fits all rows
     tester.view.physicalSize = const Size(1200, 1100);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -198,7 +200,8 @@ void main() {
       onSave: (entry, values) async {},
     );
 
-    // 16 行固定编辑器需全量可见,放大视口使 0.8 屏高度容纳所有行
+    // The fixed 16-row editor must be fully visible; enlarge the viewport
+    // so 0.8×screen height fits all rows
     tester.view.physicalSize = const Size(1200, 1100);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -282,7 +285,8 @@ void main() {
     await tester.tap(find.text('保存'));
     await tester.pumpAndSettle();
 
-    // 弹窗仍在，错误信息可见（弹窗内 banner + 可能的 Toast 各一份）
+    // Dialog still open with the error visible (in-dialog banner + a
+    // possible Toast)
     expect(find.byType(DbcLocaleFieldEditor), findsOneWidget);
     expect(find.textContaining('保存失败'), findsAtLeastNWidgets(1));
   });
@@ -291,7 +295,7 @@ void main() {
     List<DbcLocaleFieldValue>? persisted;
     final field = DbcLocaleFields.spellName;
 
-    // 数据库里的旧值
+    // Old value in the database
     final fromDb = [
       for (final locale in DbcLocale.values)
         DbcLocaleFieldValue(
@@ -310,7 +314,8 @@ void main() {
 
     final controller = StringFieldController()..init('主框草稿');
 
-    // 16 行固定编辑器需全量可见,放大视口使 0.8 屏高度容纳所有行
+    // The fixed 16-row editor must be fully visible; enlarge the viewport
+    // so 0.8×screen height fits all rows
     tester.view.physicalSize = const Size(1200, 1100);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -332,7 +337,8 @@ void main() {
     await tester.tap(find.byIcon(LucideIcons.globe));
     await tester.pumpAndSettle();
 
-    // 弹窗 zhCN 行应显示主框草稿，而非库中旧值
+    // The dialog's zhCN row should show the main-box draft, not the old
+    // DB value
     final inputs = find.descendant(
       of: find.byType(DbcLocaleFieldEditor),
       matching: find.byType(ShadInput),
@@ -341,7 +347,7 @@ void main() {
     final zhCnInput = tester.widget<ShadInput>(inputs.at(4));
     expect(zhCnInput.controller?.text, '主框草稿');
 
-    // 只改 enUS，保存
+    // Change only enUS and save
     await tester.enterText(inputs.at(0), 'Fireball');
     await tester.tap(find.text('保存'));
     await tester.pumpAndSettle();
@@ -349,7 +355,7 @@ void main() {
     expect(persisted, isNotNull);
     expect(persisted!.zhCN, '主框草稿');
     expect(persisted!.valueOf('enUS'), 'Fireball');
-    // 主输入框保持草稿，未被库中旧值冲掉
+    // The main input keeps its draft, not overwritten by the old DB value
     expect(controller.collect(), '主框草稿');
   });
 }

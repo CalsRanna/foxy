@@ -1,8 +1,9 @@
-// Condition Source Type 枚举常量定义
-// 数据来源：AzerothCore ConditionMgr.h - ConditionSourceType
+// Condition Source Type enum constant definitions
+// Source: AzerothCore ConditionMgr.h - ConditionSourceType
 
-/// SourceTypeOrReferenceId 来源类型标签
-/// 非负值对应来源类型；负值表示引用另一组条件
+/// SourceTypeOrReferenceId source-type labels
+/// Non-negative values map to source types; negative values reference
+/// another condition group
 const kConditionSourceTypeLabels = <int, String>{
   1: '生物掉落', // CONDITION_SOURCE_TYPE_CREATURE_LOOT_TEMPLATE
   2: '分解掉落', // CONDITION_SOURCE_TYPE_DISENCHANT_LOOT_TEMPLATE

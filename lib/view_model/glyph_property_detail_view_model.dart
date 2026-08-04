@@ -19,9 +19,9 @@ class GlyphPropertyDetailViewModel
     with FieldControllerMixin, _GlyphPropertyDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  /// 从所有 Controller 收集数据构建 GlyphProperty
+  /// Collects data from all controllers to build the GlyphProperty
 
-  /// 退出页面
+  /// Leaves the page
 
   @override
   void _logActivity(

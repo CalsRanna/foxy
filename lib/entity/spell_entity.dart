@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_entity.g.dart';
 
-/// 法术（技能）完整模型 - 对应 foxy.dbc_spell 表
+/// Full spell model - maps to the foxy.dbc_spell table
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('name')

@@ -12,11 +12,13 @@ import 'package:signals/signals_flutter.dart';
 
 const _kWizardWidth = 640.0;
 
-/// 首次设置引导：不可关闭的三步向导。
+/// First-setup wizard: a non-dismissable three-step guide.
 ///
-/// 步骤 1/2 配置两个目录（客户端目录、服务端 DBC 目录），步骤 3 顺序执行
-/// DBC 导入与图标提取。打开时按完成度跳过已完成步骤，全部完成前对话框
-/// 不可关闭（遮罩、关闭按钮、Esc 均无效），唯一出口是「进入应用」。
+/// Steps 1/2 configure the two directories (client directory, server DBC
+/// directory); step 3 runs DBC import and icon extraction in order. On
+/// open, completed steps are skipped by completion state; until everything
+/// is done the dialog cannot be dismissed (barrier, close button and Esc
+/// all no-op), and the only exit is "Enter app".
 class SetupWizardDialog extends StatefulWidget {
   final SetupStatusViewModel setupVm;
   final DbcImportWorkflowViewModel importVm;
@@ -37,7 +39,8 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   final _step = signal(0);
   final _checked = signal(false);
 
-  /// 打开时 checkTables 的快照结果；步骤 3 的实时状态直接读工作流 VM。
+  /// Snapshot of checkTables at open time; step 3's live state is read
+  /// directly from the workflow VM.
   bool _importDoneAtCheck = false;
 
   final _step1FormKey = GlobalKey<DirectoryPathFormState>();
@@ -45,7 +48,8 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   final _step2FormKey = GlobalKey<DirectoryPathFormState>();
   IconExtractWorkflowViewModel get _iconVm => widget.iconVm;
 
-  /// 导入子任务是否已完成：库内表已就绪（快照）或本次会话导入成功。
+  /// Whether the import subtask is done: tables ready in the DB (snapshot)
+  /// or a successful import this session.
   bool get _importCompleted =>
       _importDoneAtCheck || _importVm.status.value == WorkflowStatus.succeeded;
   DbcImportWorkflowViewModel get _importVm => widget.importVm;
@@ -127,12 +131,14 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
         ),
       ];
     }
-    // 步骤 3：任务运行中只展示取消按钮，不允许上一步/退出。
+    // Step 3: while a task is running, only the cancel button shows; no
+    // going back or exiting.
     if (importRunning || iconRunning) return const [];
     if (_importCompleted && iconStatus == WorkflowStatus.succeeded) {
       return [
-        // 本按钮是向导的唯一合法出口：不能走 maybePop，
-        // 否则会被外层 PopScope(canPop: false) 拦截而毫无反应。
+        // This button is the wizard's only legal exit: it must not use
+        // maybePop, which the outer PopScope(canPop: false) would intercept
+        // and swallow.
         ShadButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('进入应用'),
@@ -389,12 +395,14 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     );
   }
 
-  /// 加载配置并判定各步骤完成度，定位到第一个未完成步骤。
+  /// Loads the config, determines each step's completion, and locates the
+  /// first incomplete step.
   Future<void> _check() async {
     try {
       await _setupVm.prepare();
     } catch (_) {
-      // 配置读取失败按未配置处理，引导从头开始。
+      // A config read failure counts as unconfigured; the wizard starts
+      // from the beginning.
     }
     await _importVm.checkTables();
     if (!mounted) return;
@@ -405,7 +413,8 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
         ? 1
         : 2;
     _checked.value = true;
-    // 目录已就绪且 DBC 已导入、仅缺图标 → 直接衔接提取。
+    // Directories ready and DBC imported, only icons missing → jump
+    // straight to extraction.
     if (_step.value == 2 && _importDoneAtCheck) {
       await _startIconExtract();
     }

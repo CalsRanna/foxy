@@ -15,7 +15,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-/// 生物模板附加数据Tab
+/// Creature-template addon tab
 class CreatureTemplateAddonView extends StatefulWidget {
   final int creatureId;
 

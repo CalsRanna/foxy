@@ -1,18 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:foxy/router/router_menu.dart';
 
-/// 导航节点，表示面包屑中的一个层级
+/// Navigation node, representing one level in the breadcrumb
 class RouterNode {
-  /// 关联的菜单（顶级菜单使用）
+  /// Associated menu (used by top-level menus)
   final RouterMenu? menu;
 
-  /// 显示名称（面包屑中显示的文字）
+  /// Display name (the text shown in the breadcrumb)
   final String label;
 
-  /// 对应的 auto_route 路由
+  /// Corresponding auto_route route
   final PageRouteInfo route;
 
-  /// 父级菜单（用于侧边栏高亮）
+  /// Parent menu (used for sidebar highlighting)
   final RouterMenu? parentMenu;
 
   const RouterNode({

@@ -46,8 +46,10 @@ void main() {
     });
 
     test('反斜杠先转义,与 %/_ 组合不二次转义', () {
-      // 转义顺序:先 \\ 后 %/_——若顺序相反,\% 中的反斜杠会被再次转义。
-      // 输入 `100\%` → `\`→`\\` 得 `100\\%`,再 `%`→`\%` 得 `100\\\%`。
+      // Escape order: \\ first, then %/_ — in reverse order, the backslash
+      // in \% would be re-escaped.
+      // Input `100\%` → `\`→`\\` gives `100\\%`, then `%`→`\%` gives
+      // `100\\\%`.
       expect(escapeLike(r'100\%'), r'100\\\%');
       expect(escapeLike(r'\'), r'\\');
       expect(escapeLike(r'\%_'), r'\\\%\_');

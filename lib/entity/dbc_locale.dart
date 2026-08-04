@@ -1,9 +1,11 @@
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:warcrafty/warcrafty.dart';
 
-/// 从 [DbcSchema] 中发现全部本地化字段前缀（如 `Name_lang`）。
+/// Discovers all locale-field prefixes (e.g. `Name_lang`) from
+/// [DbcSchema].
 ///
-/// 通过匹配 `*_lang_enUS` 字符串列推断，用于覆盖完整性测试。
+/// Inferred by matching `*_lang_enUS` string columns; used by the
+/// coverage-completeness tests.
 Set<String> discoverDbcLocaleColumnPrefixes(DbcSchema schema) {
   final prefixes = <String>{};
   for (final field in schema.fields) {
@@ -21,7 +23,7 @@ Set<String> discoverDbcLocaleColumnPrefixes(DbcSchema schema) {
   return prefixes;
 }
 
-/// DBC 固定语言槽位（与 warcrafty `localeNames` 顺序一致）。
+/// DBC fixed language slots (matching warcrafty's `localeNames` order).
 class DbcLocale {
   static const enUS = DbcLocale(index: 0, code: 'enUS', label: '美式英语');
   static const koKR = DbcLocale(index: 1, code: 'koKR', label: '韩语');
@@ -42,7 +44,7 @@ class DbcLocale {
   static const unk2 = DbcLocale(index: 14, code: 'unk2', label: '未知语言 2');
   static const unk3 = DbcLocale(index: 15, code: 'unk3', label: '未知语言 3');
 
-  /// 固定 16 个语言槽位，顺序不可变。
+  /// Fixed 16 language slots; the order is immutable.
   static const List<DbcLocale> values = [
     enUS,
     koKR,
@@ -75,18 +77,22 @@ class DbcLocale {
   String toString() => 'DbcLocale($index, $code)';
 }
 
-/// 单个可本地化字段组的定义（对应宽表中的 16 个语言列）。
+/// Definition of a single localizable field group (the 16 language
+/// columns of the wide table).
 class DbcLocaleFieldDefinition {
-  /// DBC 镜像表名，如 `dbc_spell`（不含 `foxy.` 前缀）。
+  /// DBC mirror table name, e.g. `dbc_spell` (without the `foxy.`
+  /// prefix).
   final String tableName;
 
-  /// 列名前缀，如 `Name_lang`，用于生成 `Name_lang_enUS` 等。
+  /// Column-name prefix, e.g. `Name_lang`, used to produce `Name_lang_enUS`
+  /// etc.
   final String columnPrefix;
 
-  /// 业务显示名称，用作弹窗第二列表头。
+  /// Business display name, used as the dialog's second-column header.
   final String label;
 
-  /// 创建并校验字段定义：确保 Schema 中存在全部 16 个字符串语言列。
+  /// Creates and validates the field definition: ensures all 16 string
+  /// language columns exist in the Schema.
   factory DbcLocaleFieldDefinition({
     required String tableName,
     required String columnPrefix,
@@ -125,12 +131,13 @@ class DbcLocaleFieldDefinition {
     required this.label,
   });
 
-  /// 16 个语言列的物理列名（不含 Flags）。
+  /// Physical column names of the 16 language columns (without Flags).
   List<String> get columnNames => [
     for (final locale in DbcLocale.values) columnFor(locale),
   ];
 
-  /// Flags 列名（本编辑器不读写，仅供引用）。
+  /// Flags column name (this editor neither reads nor writes it; reference
+  /// only).
   String get flagsColumn => '${columnPrefix}_Flags';
 
   String columnFor(DbcLocale locale) => '${columnPrefix}_${locale.code}';
@@ -140,7 +147,7 @@ class DbcLocaleFieldDefinition {
       'DbcLocaleFieldDefinition($tableName.$columnPrefix, $label)';
 }
 
-/// 单个字段在一种语言下的值。
+/// Value of a single field in one language.
 class DbcLocaleFieldValue {
   final DbcLocale locale;
   final String value;
@@ -168,7 +175,7 @@ class DbcLocaleFieldValue {
   String toString() => 'DbcLocaleFieldValue(${locale.code}: $value)';
 }
 
-/// 从 16 行值中按语言代码取值。
+/// Looks up a value from the 16 rows by language code.
 extension DbcLocaleFieldValueListX on List<DbcLocaleFieldValue> {
   String get zhCN => valueOf('zhCN');
 
@@ -179,10 +186,12 @@ extension DbcLocaleFieldValueListX on List<DbcLocaleFieldValue> {
     return '';
   }
 
-  /// 用主语言草稿覆盖对应槽位（默认 [zhCN]）。
+  /// Overrides the matching slot with the main-language draft (default
+  /// [zhCN]).
   ///
-  /// 打开 DBC 弹窗时，主输入框可能已有未落库的编辑内容；
-  /// 若直接使用数据库加载结果，保存会把草稿冲掉。
+  /// When the DBC dialog opens, the main input may already hold unsaved
+  /// edits; using the database-loaded result directly would wipe that
+  /// draft on save.
   List<DbcLocaleFieldValue> withPrimaryDraft(
     String draft, {
     String primaryCode = 'zhCN',

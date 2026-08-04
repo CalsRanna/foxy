@@ -3,12 +3,14 @@ import 'dart:isolate';
 import 'game_icon_extractor.dart';
 import 'game_mpq_source.dart';
 
-/// 后台 isolate 入口：执行图标提取并通过 [GameIconExtractWorkerArgs.sendPort]
-/// 回报进度与结果。消息协议：
+/// Background-isolate entry point: runs the icon extraction and reports
+/// progress/results via [GameIconExtractWorkerArgs.sendPort]. Message
+/// protocol:
 ///
-/// - `('control', SendPort)` → 取消端口（收到 `'cancel'` 后逐文件提前终止）
-/// - `('progress', GameIconExtractProgress)` → 进度事件
-/// - `('result', GameIconExtractionResult)` → 最终结果
+/// - `('control', SendPort)` → cancel port (terminates early per file after
+///   receiving `'cancel'`)
+/// - `('progress', GameIconExtractProgress)` → progress events
+/// - `('result', GameIconExtractionResult)` → final result
 Future<void> runGameIconExtractWorker(GameIconExtractWorkerArgs args) async {
   final (sendPort: sendPort, clientDir: clientDir, outputDir: outputDir) = args;
   final cancelPort = ReceivePort();

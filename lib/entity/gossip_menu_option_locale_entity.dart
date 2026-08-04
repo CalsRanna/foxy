@@ -2,8 +2,8 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'gossip_menu_option_locale_entity.g.dart';
 
-/// gossip_menu_option_locale 本地化模型
-/// 复合键: MenuID + OptionID + Locale
+/// gossip_menu_option_locale localization model
+/// Composite key: MenuID + OptionID + Locale
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'gossip_menu_option_locale')

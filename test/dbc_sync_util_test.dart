@@ -123,7 +123,7 @@ void main() {
                 },
               ];
             }
-            // 缺少 TextureFilename → 导出失败
+            // Missing TextureFilename → export fails
             return [
               {'ID': 1},
             ];
@@ -243,7 +243,8 @@ void main() {
 
       final result = events.whereType<DbcSyncResult>().single;
       final text = result.errors.map((e) => e.message).join('\n');
-      // 扫描成功后才会进入数据库连接；不应仍是「未找到 DBC 文件」。
+      // DB connection only happens after a successful scan; the state must
+      // no longer be "no DBC files found".
       expect(text, isNot(contains('未在目录中找到需要的 DBC 文件')));
     },
     skip: Platform.isWindows

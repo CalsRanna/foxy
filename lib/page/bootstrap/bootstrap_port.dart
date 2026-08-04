@@ -1,6 +1,7 @@
-/// Bootstrap 端口解析与校验（与 UI / Dialog 解耦，便于单测）。
+/// Bootstrap port parsing and validation (decoupled from UI/Dialog for
+/// easy unit testing).
 ///
-/// 合法端口：整数 `1..65535`。非法输入返回 `null`。
+/// Valid ports: integers `1..65535`. Invalid input returns `null`.
 int? parseMysqlPort(String raw) {
   final port = int.tryParse(raw.trim());
   if (port == null || port < 1 || port > 65535) return null;

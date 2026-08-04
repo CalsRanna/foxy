@@ -4,12 +4,14 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 数字输入框。
+/// Number input.
 ///
-/// 传入 ViewModel 持有的 [NumberFieldController]。类型参数 [T] 标识字段数值类型。
+/// Takes the [NumberFieldController] held by the ViewModel. Type parameter
+/// [T] identifies the field's numeric type.
 class FoxyNumberInput<T extends num> extends StatelessWidget {
-  // RegExp 构造即编译,详情大表单(如 spell 67 个、creature 50 个输入框)
-  // 每帧 build 重建会重复编译,提取为 static final 复用。
+  // RegExp construction compiles; big detail forms (e.g. spell with 67,
+  // creature with 50 inputs) rebuild every frame, so hoisted to static
+  // final for reuse.
   static final _floatRegExp = RegExp(r'[0-9.\-]');
   static final _intRegExp = RegExp(r'[0-9\-]');
   static final _floatFormatter =

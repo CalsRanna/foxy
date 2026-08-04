@@ -26,15 +26,18 @@ class ActivityLogRepository with RepositoryMixin {
     return rows.map((row) => ActivityLogEntity.fromJson(row.toMap())).toList();
   }
 
-  /// 严格写入；失败会抛出，供需要确认落库的调用方使用。
+  /// Strict write; failures throw, for callers that need confirmation the
+  /// log was persisted.
   Future<void> storeActivityLog(ActivityLogEntity log) async {
     await laconic.table(_table).insert([log.toJson()]);
     _eventBus.fire(ActivityLoggedEvent(log));
   }
 
-  /// Best-effort 活动日志：异步写入，失败只记日志，不影响主业务成功结果。
+  /// Best-effort activity log: written asynchronously; failures are only
+  /// logged and never affect the main business result.
   ///
-  /// 业务操作成功后记录活动轨迹时使用本方法，避免 fire-and-forget 无错误归宿。
+  /// Use this when recording activity trails after a successful business
+  /// operation, so fire-and-forget calls still have an error home.
   void storeActivityLogBestEffort(ActivityLogEntity log) {
     unawaited(_storeActivityLogSafe(log));
   }

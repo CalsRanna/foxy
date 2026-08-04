@@ -4,13 +4,18 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 标志位选择器：显示已格式化的值，点击输入框或尾部按钮打开编辑弹窗。
+/// Flag picker: shows the formatted value; clicking the input or the
+/// trailing button opens the edit dialog.
 ///
-/// 这是可交互的编辑入口，**不**使用 [FoxyReadonlyInput] 的 muted/禁用外观。
-/// `ShadInput.readOnly` 仅用于禁止手改 `"123 (0x…)"` 格式串，编辑一律走弹窗。
+/// This is an interactive edit entry and does **not** use
+/// [FoxyReadonlyInput]'s muted/disabled look. `ShadInput.readOnly` only
+/// prevents hand-editing the `"123 (0x…)"` format string; all editing goes
+/// through the dialog.
 ///
-/// [controller] 由 ViewModel 初始化（[FlagFieldController.init]）；
-/// 弹窗确认后写回格式化文本。VM 在 save 时用 [FlagFieldController.collect] 读取。
+/// [controller] is initialized by the ViewModel
+/// ([FlagFieldController.init]); after the dialog confirms, the formatted
+/// text is written back. The VM reads it with
+/// [FlagFieldController.collect] on save.
 class FoxyFlagPicker extends StatefulWidget {
   final TextBackedFieldController<int> controller;
   final List<FlagItem> flags;
@@ -88,7 +93,8 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
       child: Flexible(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // 弹性列宽算法:固定列 120+160,剩余宽度给名称列。
+            // Flexible column-width scheme: fixed columns 120+160, the
+            // remaining width goes to the name column.
             const fixedWidthSum = 120.0 + 160.0;
             var flexWidth = constraints.maxWidth - fixedWidthSum;
             if (flexWidth < 0) flexWidth = 0;
@@ -182,8 +188,9 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
 
   @override
   Widget build(BuildContext context) {
-    // 外观与可编辑输入框一致；外侧 MouseRegion 保证手型光标
-    // （readOnly 时 ShadInput 内部 AbsorbPointer 会使 mouseCursor 失效）。
+    // Look matches the editable input; the outer MouseRegion guarantees the
+    // hand cursor (with readOnly, ShadInput's internal AbsorbPointer kills
+    // mouseCursor).
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: ShadInput(

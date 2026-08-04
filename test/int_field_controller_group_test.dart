@@ -165,7 +165,8 @@ void main() {
       var notified = 0;
       group.addListener(() => notified++);
 
-      // 三个子 controller 各释放一次，不抛异常（防重复 dispose）。
+      // Each of the three child controllers disposes exactly once without
+      // throwing (guards against double dispose).
       group.dispose();
 
       expect(notified, 0);
@@ -173,14 +174,14 @@ void main() {
 
     test('通过 FieldControllerMixin 注册时统一释放且不双重 dispose', () {
       final host = _GroupHost()..group.init(5);
-      // disposeControllers 调用 group.dispose()；子 controller 只释放一次，
-      // 不抛异常即证明无重复 dispose。
+      // disposeControllers calls group.dispose(); child controllers dispose
+      // exactly once — no throw proves there is no double dispose.
       host.disposeControllers();
     });
   });
 }
 
-/// 模拟 ViewModel 的「声明即注册」用法。
+/// Simulates a ViewModel's "declare-and-register" usage.
 class _GroupHost with FieldControllerMixin {
   late final group = registerController(IntFieldControllerGroup());
 }

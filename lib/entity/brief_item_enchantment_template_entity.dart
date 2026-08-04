@@ -1,6 +1,7 @@
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 
-/// 物品附魔模板列表展示模型（含关联 DBC 的附魔名）。
+/// Item-enchantment-template list display model (includes the enchantment
+/// name from the linked DBC).
 class BriefItemEnchantmentTemplateEntity {
   final int entry;
   final int ench;

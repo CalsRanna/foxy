@@ -3,10 +3,11 @@ import 'list_model.dart';
 final class ListEmitter {
   const ListEmitter();
 
-  /// 成员顺序遵循 "Sort Members" 规则:字段(保持原序,状态信号 → 筛选
-  /// controller → 私有 token)在前,公开方法按名(copy → destroy → dispose
-  /// → initSignals → paginate → reset → search),私有方法按名
-  /// (_collectFilter → _logActivity → _refresh)。
+  /// Member order follows the "Sort Members" rule: fields (in original
+  /// order: state signals → filter controllers → private token) first,
+  /// public methods by name (copy → destroy → dispose → initSignals →
+  /// paginate → reset → search), private methods by name
+  /// (_collectFilter → _logActivity → _refresh).
   String emit(ListGenerationModel model) {
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName}')
@@ -77,7 +78,9 @@ final class ListEmitter {
       ..writeln('    );')
       ..writeln('  }')
       ..writeln()
-      ..writeln('  /// 覆写点:记录复制/删除活动日志,entityName 各页不同。')
+      ..writeln(
+        '  /// Override point: records copy/delete activity log; entityName differs per page.',
+      )
       ..writeln(
         '  void _logActivity(ActivityActionType action, ${model.keyParameter}) {}',
       )

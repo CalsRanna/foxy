@@ -88,7 +88,8 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       try {
         _logActivity(ActivityActionType.copy, key);
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       await _refresh();
     } catch (error) {
@@ -143,7 +144,8 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       try {
         _logActivity(ActivityActionType.delete, key);
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       await _refresh();
     } catch (error) {
@@ -243,7 +245,8 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
           originalKey ?? GossipMenuOptionKey.fromEntity(candidate),
         );
       } catch (_) {
-        // 活动日志 best-effort,失败(如测试环境未注册)不影响主流程。
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
       }
       await _refresh();
     } catch (error) {

@@ -7,14 +7,17 @@ const _code = LintCode(
   problemMessage: 'throw 表达式禁止中文字符串字面量；用户文案统一经 foxyErrorMessage 按类型映射',
 );
 
-/// 覆盖 CJK 统一表意文字(U+3400-9FFF,含扩展 A)与全角标点(U+FF00-FFEF)。
+/// Covers CJK Unified Ideographs (U+3400-9FFF, incl. Extension A) and
+/// full-width punctuation (U+FF00-FFEF).
 final _cjk = RegExp(r'[㐀-鿿＀-￯]');
 
-/// throw 表达式中的字符串字面量禁止包含中文字符。
+/// String literals inside throw expressions must not contain Chinese
+/// characters.
 ///
-/// 异常只承载类型 + 英文诊断信息（供日志），面向用户的中文文案一律经
-/// `lib/infrastructure/errors/foxy_exceptions.dart` 的 `foxyErrorMessage`
-/// 按类型映射，防止异常消息再次散落各处。
+/// Exceptions carry only a type plus English diagnostic info (for logs);
+/// user-facing Chinese copy is always mapped by type through
+/// `foxyErrorMessage` in `lib/infrastructure/errors/foxy_exceptions.dart`,
+/// so exception messages never scatter again.
 class NoChineseThrow extends DartLintRule {
   const NoChineseThrow() : super(code: _code);
 
@@ -25,8 +28,10 @@ class NoChineseThrow extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addStringLiteral((node) {
-      // addStringLiteral 同时派发 SimpleStringLiteral 与 StringInterpolation；
-      // 插值字符串(throw '...$id 中文')是漏报高发形态,必须覆盖。
+      // addStringLiteral dispatches both SimpleStringLiteral and
+      // StringInterpolation; interpolated strings (e.g. a throw with Chinese
+      // text after an `$id` segment) are a frequent miss-report shape and
+      // must be covered.
       final text = switch (node) {
         SimpleStringLiteral simple => simple.value,
         StringInterpolation interpolation => interpolation.elements

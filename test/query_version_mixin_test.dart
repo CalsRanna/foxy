@@ -37,7 +37,8 @@ void main() {
       });
 
       test('删除后当前页仍合法时不修正页码', () {
-        // total=101 → 2 页，page=2 删 1 条后 total=100 仍 2 页
+        // total=101 → 2 pages; after deleting 1 row on page=2, total=100
+        // still 2 pages
         final vm = _FakeVm()..page.value = 2;
         vm.normalizePageAfterDelete(100);
         expect(vm.page.value, 2);
@@ -54,7 +55,7 @@ void main() {
   });
 }
 
-/// 假 ViewModel：仅提供 mixin 要求的 page 信号。
+/// Fake ViewModel: only provides the page signal the mixin requires.
 class _FakeVm with QueryVersionMixin {
   @override
   final page = signal(1);

@@ -2,20 +2,24 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
-/// 游戏图标缓存目录与名称规范化的集中定义。
+/// Central definitions for the game-icon cache directory and name
+/// normalization.
 class GameIconPaths {
-  /// 图标缓存目录（运行时当前目录下的 `data/icon/`，与 config.yaml 位置一致）。
+  /// Icon cache directory (`data/icon/` under the runtime working
+  /// directory, same location as config.yaml).
   static String get iconDir => p.join(Directory.current.path, 'data', 'icon');
 
   GameIconPaths._();
 
-  /// 纯文件名 → 提取产物路径。
+  /// Bare file name → extracted-file path.
   static String blpPath(String name) => p.join(iconDir, '$name.blp');
 
-  /// 将 DBC 原始图标路径规范化为小写纯文件名（去目录、去扩展名）。
+  /// Normalizes a raw DBC icon path to a lowercase bare file name
+  /// (directory and extension stripped).
   ///
-  /// 例如 `Interface\Icons\INV_Misc_Foo`、`inv_shoulder_94.tga` 都归一到
-  /// 纯名（`inv_misc_foo` / `inv_shoulder_94`），与提取产物扁平布局对应。
+  /// E.g. both `Interface\Icons\INV_Misc_Foo` and `inv_shoulder_94.tga`
+  /// normalize to bare names (`inv_misc_foo` / `inv_shoulder_94`),
+  /// matching the flat layout of extracted files.
   static String normalizeIconName(String rawPath) {
     var name = rawPath.toLowerCase().replaceAll('\\', '/');
     final slash = name.lastIndexOf('/');

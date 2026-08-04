@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'creature_spell_data_entity.g.dart';
 
-/// 宠物技能数据 — 对应 foxy.dbc_creature_spell_data 表
+/// Pet spell data — maps to the foxy.dbc_creature_spell_data table
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('spellName1')

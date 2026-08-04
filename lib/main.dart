@@ -18,11 +18,13 @@ void main() async {
   runApp(FoxyApp());
 }
 
-/// 清理上次更新中断遗留的 `.update_tmp/` 目录(不阻塞启动)。
+/// Cleans up a leftover `.update_tmp/` directory from an interrupted
+/// update (does not block startup).
 ///
-/// 更新流程:下载解压到 `.update_tmp/` → 重启后由 `foxy_updater.exe` 完成
-/// 交换并删除;若交换前应用被强杀,这里兜底清理,下次更新检查会重新发现
-/// 新版本。
+/// Update flow: download and extract into `.update_tmp/` → after restart
+/// `foxy_updater.exe` swaps and deletes it; if the app is force-killed
+/// before the swap, this cleanup covers the leftovers and the next update
+/// check rediscovers the new version.
 void _cleanupStaleUpdateTemp() {
   final dir = Directory(p.join(Directory.current.path, kUpdateTempDirName));
   if (!dir.existsSync()) return;

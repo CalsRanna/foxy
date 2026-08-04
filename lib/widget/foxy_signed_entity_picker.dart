@@ -15,11 +15,13 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 符号路由选择器：单输入框 + 搜索按钮，弹窗按输入框值正负路由到对应数据源。
+/// Signed-route picker: single input + search button; the dialog routes by
+/// the sign of the input value to the matching data source.
 ///
-/// 编码约定：正数 → [positiveSource]（如生物），负数 → [negativeSource]
-/// （如游戏对象）。弹窗为标准分页表格，无类型切换。输入框显示编码值本身
-/// （含符号）。
+/// Encoding convention: positive → [positiveSource] (e.g. creatures),
+/// negative → [negativeSource] (e.g. game objects). The dialog is a
+/// standard paginated table with no type switching. The input shows the
+/// encoded value itself (sign included).
 class FoxySignedEntityPicker extends StatefulWidget {
   final IntFieldController controller;
   final SignedEntitySource positiveSource;
@@ -58,8 +60,9 @@ class _FoxySignedEntityPickerState extends State<FoxySignedEntityPicker> {
   }
 
   Future<void> _openDialog() async {
-    // 输入框可自由输入,非法文本会让 collect() 抛 FormatException;
-    // 捕获后提示用户而不是让搜索按钮静默失效。
+    // The input accepts free text; invalid text makes collect() throw
+    // FormatException. Catch it and prompt the user instead of letting the
+    // search button silently fail.
     final int currentValue;
     try {
       currentValue = widget.controller.collect();
@@ -83,7 +86,7 @@ class _FoxySignedEntityPickerState extends State<FoxySignedEntityPicker> {
   }
 }
 
-/// 分页行记录。
+/// A paginated row record.
 class SignedEntityBrief {
   final int id;
   final String name;
@@ -91,7 +94,8 @@ class SignedEntityBrief {
   const SignedEntityBrief({required this.id, required this.name});
 }
 
-/// 符号路由选择器的一侧数据源：纯数据 + 查询闭包，可被多个 picker 共享。
+/// One side's data source for the signed-route picker: pure data + query
+/// closures, shareable by multiple pickers.
 class SignedEntitySource {
   final String title;
   final String errorLabel;
@@ -111,7 +115,8 @@ class SignedEntitySource {
   });
 }
 
-/// 内置数据源：生物 / 游戏对象 / 任务分类 / 任务区域。
+/// Built-in data sources: creatures / game objects / quest sorts / quest
+/// areas.
 class SignedEntitySources {
   static final creature = SignedEntitySource(
     title: '生物模板',
@@ -210,7 +215,8 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
   late final TextEditingController _idController;
   late final TextEditingController _nameController;
 
-  /// 当前数据源与其编码方向；正数源编码正、负数源编码负。
+  /// Current data source and its encoding direction; positive sources
+  /// encode positive, negative sources negative.
   late SignedEntitySource _source;
   late bool _isPositive;
   int _page = 1;
@@ -219,11 +225,14 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
   int _total = 0;
   int? _selectedId;
 
-  /// 是否用户主动点击过行。预选值(打开时输入框已有 ID)不染色,
-  /// 与 FoxyEntityPicker 及其他表格一致;只有用户点击过的行才有选中底色。
+  /// Whether the user actively clicked a row. Preselected values (an ID
+  /// already in the input on open) are not highlighted, consistent with
+  /// FoxyEntityPicker and other tables; only user-clicked rows get the
+  /// selected background.
   bool _userSelected = false;
 
-  /// 请求序号:并发搜索时只接受最新一次的结果,防止慢请求覆盖快请求。
+  /// Request sequence: under concurrent searches only the latest result is
+  /// accepted, so a slow request never overwrites a fast one.
   int _searchSeq = 0;
   String? _errorMessage;
 
@@ -290,7 +299,8 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
     _search();
   }
 
-  /// 确认时的编码值：正数源回填正 ID，负数源回填负 ID。
+  /// Encoded value on confirm: positive sources backfill a positive ID,
+  /// negative sources a negative ID.
   int? _confirmValue() {
     final id = _selectedId;
     if (id == null) return null;

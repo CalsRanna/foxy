@@ -13,18 +13,21 @@ void main() {
         driver.sqlLog,
         contains(contains('create database if not exists')),
       );
-      // 建库必须显式锁 utf8mb4,否则老服务器默认 latin1 导致迁移插中文 1366。
+      // Database creation must explicitly pin utf8mb4, otherwise old
+      // servers default to latin1 and migrations inserting non-ASCII text
+      // fail with 1366.
       expect(
         driver.sqlLog.firstWhere((sql) => sql.contains('create database')),
         contains('character set utf8mb4'),
       );
-      // 新建库默认为 utf8mb4,自愈跳过 ALTER DATABASE(不发 DDL)。
+      // New databases default to utf8mb4; self-healing skips ALTER
+      // DATABASE (no DDL).
       expect(
         driver.sqlLog.where((sql) => sql.contains('alter database')),
         isEmpty,
       );
       expect(driver.sqlLog, contains(contains('create table if not exists')));
-      // 7 个迁移全部执行并写入 foxy.migrations 记录。
+      // All 7 migrations run and are recorded in foxy.migrations.
       expect(driver.appliedMigrations, hasLength(7));
       expect(
         driver.appliedMigrations,
@@ -35,8 +38,9 @@ void main() {
           'migration_202608030000',
         ]),
       );
-      // information_schema 空表驱动下,202607190000 走「列不存在跳过」分支,
-      // 不产生 DROP COLUMN;202608030000 对未导入的 DBC 表跳过 ALTER。
+      // With an empty information_schema driver, 202607190000 takes the
+      // "column missing → skip" branch and produces no DROP COLUMN;
+      // 202608030000 skips ALTER for never-imported DBC tables.
       expect(
         driver.sqlLog.where((sql) => sql.contains('drop column')),
         isEmpty,
@@ -45,7 +49,7 @@ void main() {
         driver.sqlLog.where((sql) => sql.contains('alter table')),
         isEmpty,
       );
-      // 记录顺序 = 建库 → 建表 → 迁移。
+      // Record order = create database → create table → migrations.
       final createDatabaseIndex = driver.sqlLog.indexWhere(
         (sql) => sql.contains('create database'),
       );
@@ -68,7 +72,7 @@ void main() {
       final insertCountAfterSecondRun = driver.sqlLog
           .where((sql) => sql.toLowerCase().contains('insert'))
           .length;
-      // 第二次运行不产生任何 INSERT(全部跳过)。
+      // A second run produces no INSERTs (all skipped).
       expect(insertCountAfterSecondRun, insertCountAfterFirstRun);
       expect(driver.appliedMigrations, hasLength(7));
     });
@@ -77,8 +81,8 @@ void main() {
       final driver = _FakeDriver(latin1Tables: ['features', 'activity_log']);
       await MigrationRunner(Laconic(driver)).run();
 
-      // 存量 latin1 库触发 ALTER DATABASE,每个 latin1 存量表产生一条
-      // CONVERT 语句,utf8mb4 表不产生。
+      // A legacy latin1 database triggers ALTER DATABASE, one CONVERT
+      // statement per latin1 legacy table, and none for utf8mb4 tables.
       expect(
         driver.sqlLog,
         contains(contains('alter database foxy character set utf8mb4')),
@@ -89,13 +93,15 @@ void main() {
       expect(converts, hasLength(2));
       expect(converts.first, contains('`features`'));
       expect(converts.last, contains('`activity_log`'));
-      // 存量表存在不影响迁移执行。
+      // Existing legacy tables do not affect migration execution.
       expect(driver.appliedMigrations, hasLength(7));
     });
 
     test('迁移执行失败时不记录版本,后续迁移不执行', () async {
-      // 'drop column' 只出现在 202607190000(activity_log 迁移)中;
-      // 模拟 entity_id 列存在,使该迁移真正执行 DDL,失败点落在第 6 个迁移。
+      // 'drop column' only appears in 202607190000 (the activity_log
+      // migration); simulate the entity_id column existing so that
+      // migration really executes DDL and the failure lands on the 6th
+      // migration.
       final driver = _FakeDriver(
         failOnSql: 'drop column',
         hasEntityIdColumn: true,
@@ -104,8 +110,9 @@ void main() {
         MigrationRunner(Laconic(driver)).run(),
         throwsA(isA<StateError>()),
       );
-      // 失败迁移之前的 5 个已执行并记录;失败迁移本身与后续迁移
-      // (202608030000)都不记录。
+      // The 5 migrations before the failing one ran and were recorded;
+      // neither the failing migration nor the following one
+      // (202608030000) is recorded.
       expect(driver.appliedMigrations, hasLength(5));
       expect(
         driver.appliedMigrations,
@@ -119,21 +126,24 @@ void main() {
   });
 }
 
-/// 模拟 foxy.migrations 表状态的内存驱动:
-/// - 记录全部 SQL;
-/// - `insert` 解析参数维护已应用版本集合;
-/// - `count` 查询按该集合返回(重复 run 可跳过);
-/// - information_schema 查询返回空(表/列不存在的分支)。
+/// In-memory driver simulating the foxy.migrations table state:
+/// - records all SQL;
+/// - `insert` parses params to maintain the applied-version set;
+/// - `count` queries return from that set (repeated runs are skipped);
+/// - information_schema queries return empty (table/column-missing
+///   branches).
 final class _FakeDriver implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
 
   final String? failOnSql;
 
-  /// 模拟 202607190000 探测的 activity_log.entity_id 列是否存在。
+  /// Simulates whether 202607190000's probed activity_log.entity_id column
+  /// exists.
   final bool hasEntityIdColumn;
 
-  /// 模拟引导段 _ensureUtf8mb4 扫描到的存量非 utf8mb4 表清单。
+  /// Simulates the legacy non-utf8mb4 table list scanned by the bootstrap
+  /// _ensureUtf8mb4.
   final List<String> latin1Tables;
   final sqlLog = <String>[];
   final appliedMigrations = <String>{};
@@ -161,7 +171,8 @@ final class _FakeDriver implements DatabaseDriver {
     return 1;
   }
 
-  /// laconic 对无自增列的 insert 走 [statement],两者都记录。
+  /// laconic routes inserts without auto-increment columns through
+  /// [statement]; both paths are recorded.
   void _recordInsert(String sql, List<Object?> params) {
     if (sql.toLowerCase().contains('migrations') &&
         sql.toLowerCase().contains('insert')) {
@@ -190,7 +201,7 @@ final class _FakeDriver implements DatabaseDriver {
     sqlLog.add(sql);
     _maybeFail(sql);
     if (sql.contains('migrations')) {
-      // 已应用迁移清单:pluck 一次取回全部 name。
+      // Applied-migration list: pluck fetches all names in one call.
       return [
         for (final name in appliedMigrations)
           LaconicResult.fromMap({'name': name}),
@@ -198,8 +209,9 @@ final class _FakeDriver implements DatabaseDriver {
     }
     if (sql.contains('information_schema')) {
       if (sql.contains('schemata')) {
-        // SCHEMATA 探测:存在存量非 utf8mb4 表视为库默认仍是 latin1,
-        // 否则已修复为 utf8mb4。结果 key 是声明大小写(信息架构为大写)。
+        // SCHEMATA probe: legacy non-utf8mb4 tables mean the database still
+        // defaults to latin1; otherwise it is already utf8mb4. Result keys
+        // use declared casing (uppercase from information_schema).
         return [
           LaconicResult.fromMap({
             'DEFAULT_COLLATION_NAME': latin1Tables.isEmpty
@@ -209,15 +221,16 @@ final class _FakeDriver implements DatabaseDriver {
         ];
       }
       if (sql.contains('table_collation')) {
-        // 引导段 _ensureUtf8mb4 的表扫描(过滤已下沉到 SQL):只返回
-        // 存量非 utf8mb4 表。
+        // The bootstrap _ensureUtf8mb4 table scan (filter pushed into SQL):
+        // only legacy non-utf8mb4 tables are returned.
         return [
           for (final table in latin1Tables)
             LaconicResult.fromMap({'TABLE_NAME': table}),
         ];
       }
-      // columns 探测(202607190000)按配置;tables 探测(202608030000)
-      // 一律返回「表不存在」→ 迁移空转。
+      // The columns probe (202607190000) follows config; the tables probe
+      // (202608030000) always returns "table missing" → the migration
+      // idles.
       final count = sql.contains('columns') && hasEntityIdColumn ? 1 : 0;
       return [
         LaconicResult.fromMap({'aggregate': count}),

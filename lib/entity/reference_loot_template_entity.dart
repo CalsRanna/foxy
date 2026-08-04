@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'reference_loot_template_entity.g.dart';
 
-/// 掉落模板 — 对应 *_loot_template 表
+/// Loot template — maps to a *_loot_template table
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('itemName')

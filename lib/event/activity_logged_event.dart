@@ -1,9 +1,11 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 
-/// 一条活动日志被写入数据库后产生的领域事件。
+/// Domain event fired after an activity log entry is written to the
+/// database.
 ///
-/// 由 [ActivityLogRepository.storeActivityLog] 在写库成功后发布，
-/// 供仪表盘等模块订阅以实时刷新。
+/// Published by [ActivityLogRepository.storeActivityLog] after a successful
+/// write, so modules like the dashboard can subscribe and refresh in real
+/// time.
 class ActivityLoggedEvent {
   final ActivityLogEntity log;
   const ActivityLoggedEvent(this.log);

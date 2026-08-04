@@ -7,21 +7,24 @@ import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 兼容旧名称。
+/// Legacy name kept for compatibility.
 typedef FoxyLocalePickerDelegate = DatabaseLocaleEditorDelegate;
 
-/// 普通数据库 `*_locale` 分表编辑契约：动态语言行，可添加/删除。
+/// Edit contract for regular database `*_locale` sub-tables: dynamic
+/// language rows, addable/deletable.
 final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
-  /// 多语言表的字段名（对应 entity 列），首项约定为 'locale'。
+  /// Field names of the locale table (entity columns); the first is
+  /// conventionally 'locale'.
   final List<String> fields;
 
-  /// 字段在弹窗表头中的显示文案，长度与 [fields] 一致。
+  /// Display labels for the dialog's column headers; length matches
+  /// [fields].
   final List<String> fieldLabels;
 
-  /// 加载指定 entry 的多语言数据。
+  /// Loads the locale data of the given entry.
   final Future<List<DatabaseLocaleRow>> Function(int entry) onLoad;
 
-  /// 保存指定 entry 的多语言变更。
+  /// Saves the locale changes of the given entry.
   final Future<void> Function(int entry, DatabaseLocaleChanges changes) onSave;
 
   const DatabaseLocaleEditorDelegate({
@@ -35,7 +38,8 @@ final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
        );
 }
 
-/// DBC 宽表单字段本地化编辑契约：固定 16 行，局部更新主记录。
+/// Edit contract for DBC wide-table locale fields: fixed 16 rows,
+/// partially updating the main record.
 final class DbcLocaleFieldEditorDelegate extends FoxyLocaleEditorDelegate {
   final DbcLocaleFieldDefinition field;
   final Future<List<DbcLocaleFieldValue>> Function(int entry) onLoad;
@@ -49,40 +53,45 @@ final class DbcLocaleFieldEditorDelegate extends FoxyLocaleEditorDelegate {
   });
 }
 
-/// 多语言编辑器入口的共同抽象。
+/// Common abstraction for the locale-editor entry points.
 ///
-/// 普通数据库 locale 分表与 DBC locstring 共用输入框 + 地球按钮入口，
-/// 但使用独立的强类型 Delegate 与编辑器主体，不在同一主体内堆叠条件分支。
+/// Regular database locale sub-tables and DBC locstrings share the input +
+/// globe-button entry, but use separate strongly-typed Delegates and editor
+/// bodies, never stacking conditional branches inside one body.
 sealed class FoxyLocaleEditorDelegate {
   const FoxyLocaleEditorDelegate();
 }
 
-/// 多语言字段选择器：ShadInput + 地球按钮。
+/// Locale-field picker: ShadInput + globe button.
 ///
-/// 根据 [delegate] 类型分派到 [DatabaseLocaleEditor] 或 [DbcLocaleFieldEditor]。
-/// 新建记录 [entry] 为 null 时禁用地球按钮。
+/// Dispatches by [delegate] type to [DatabaseLocaleEditor] or
+/// [DbcLocaleFieldEditor]. The globe button is disabled for new records
+/// (null [entry]).
 class FoxyLocalePicker extends StatefulWidget {
-  /// 所属记录的主键。为 null 时禁用地球按钮。
+  /// Primary key of the owning record; disables the globe button when
+  /// null.
   final int? entry;
 
-  /// 主输入框的 controller（由 ViewModel 持有，回填主语言值）。
+  /// Controller of the main input (held by the ViewModel; backfills the
+  /// main-language value).
   final StringFieldController controller;
 
-  /// 多语言编辑弹窗的标题。
+  /// Title of the locale-edit dialog.
   final String title;
 
-  /// 主输入框的 placeholder。
+  /// Placeholder of the main input.
   final String? placeholder;
 
-  /// 主输入框是否只读。
+  /// Whether the main input is read-only.
   final bool readOnly;
 
-  /// 数据/持久化配置。
+  /// Data/persistence config.
   final FoxyLocaleEditorDelegate delegate;
 
-  /// DBC 字段保存成功后回调，用于同步 ViewModel Entity 与主语言 Controller。
+  /// Callback after a successful DBC-field save, syncing the ViewModel
+  /// Entity with the main-language Controller.
   ///
-  /// 仅在 [DbcLocaleFieldEditorDelegate] 保存成功时调用。
+  /// Only called when [DbcLocaleFieldEditorDelegate] saves successfully.
   final void Function(List<DbcLocaleFieldValue> values)? onSaved;
 
   const FoxyLocalePicker({
@@ -104,7 +113,8 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
   @override
   Widget build(BuildContext context) {
     final canOpen = widget.entry != null;
-    // 主语言可编辑时走默认样式；只读时用 display 外观（地球按钮仍可打开多语言）。
+    // Editable main language uses the default look; read-only uses the
+    // display look (the globe button still opens the locale editor).
     final readonly = FoxyReadonlyInput.resolve(
       context,
       readOnly: widget.readOnly,
@@ -160,8 +170,9 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
           title: widget.title,
           entry: entry,
           field: field,
-          // 合并主输入框草稿：避免「主框改了未保存 → 弹窗只改其它语言
-          // → 把库里旧 zhCN 写回并冲掉主框」的丢失。
+          // Merge the main-input draft: avoids "main box edited but not
+          // saved → dialog only changes other languages → old zhCN from the
+          // DB is written back and wipes the main box".
           onLoad: () async {
             final loaded = await onLoad(entry);
             return loaded.withPrimaryDraft(widget.controller.collect());

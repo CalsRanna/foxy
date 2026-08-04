@@ -173,7 +173,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('`ID`', int.tryParse(filter.id) ?? 0);
+      builder = builder.where('`ID`', filter.id);
     }
     return builder;
   }

@@ -1,28 +1,31 @@
 import 'form_model.dart';
 
 final class LinkedDetailGenerationModel {
-  /// 手写 Linked Detail ViewModel 类名,如
-  /// `CreatureTemplateAddonLinkedDetailViewModel`。
+  /// Hand-written Linked Detail ViewModel class name, e.g.
+  /// `CreatureTemplateAddonLinkedDetailViewModel`.
   final String className;
 
-  /// 表单对应的 Full Entity 类名,如 `CreatureTemplateAddonEntity`。
+  /// Full Entity class name the form maps to, e.g.
+  /// `CreatureTemplateAddonEntity`.
   final String entityClassName;
 
-  /// 生成的 part mixin 名,如
-  /// `_CreatureTemplateAddonLinkedDetailViewModelMixin`。
+  /// Generated part mixin name, e.g.
+  /// `_CreatureTemplateAddonLinkedDetailViewModelMixin`.
   final String mixinName;
 
-  /// 按 entity 构造参数顺序排列、已排除 exclude 的字段。
+  /// Fields ordered by the entity's constructor parameters, minus excluded
+  /// ones.
   final List<FormFieldModel> fields;
 
-  /// 提供 get/store/update/destroy/create 的 Repository 类名。
+  /// Repository class name providing get/store/update/destroy/create.
   final String repositoryClassName;
 
-  /// 物理 Key 类型(单关联键形态恒为 int)。
+  /// Physical Key type (always int in the single-link-key form).
   final String keyType;
 
-  /// 单 key 字段的 dart 名;persist 用它写回 editingKey,`_refresh` 的
-  /// get-or-create 以关联键(即主键)加载。
+  /// Dart name of the single key field; persist writes editingKey back with
+  /// it, and _refresh's get-or-create loads by the link key (i.e. the primary
+  /// key).
   final String singleKeyFieldName;
 
   const LinkedDetailGenerationModel({

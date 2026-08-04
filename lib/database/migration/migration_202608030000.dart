@@ -3,9 +3,12 @@ import 'package:foxy/database/migration_runner.dart';
 import 'package:laconic/laconic.dart';
 import 'package:warcrafty/warcrafty.dart';
 
-/// 存量 DBC 表的无符号字段此前按有符号列建表(见 dbc_import_worker 的
-/// `_sqlType`):uint32 flags 高位置位(≥2^31)被存成负数,UI 显示负值、
-/// 按 wowhead 正值编辑报 1264。本迁移逐表还原数据并把列改为 UNSIGNED。
+/// Legacy DBC tables previously created unsigned fields as signed columns
+/// (see `_sqlType` in dbc_import_worker): uint32 flags with the high bit
+/// set (≥2^31) were stored as negative numbers, the UI showed negative
+/// values, and editing wowhead-style positive values failed with 1264. This
+/// migration restores the data table by table and alters the columns to
+/// UNSIGNED.
 class Migration202608030000 implements Migration {
   @override
   String get name => 'migration_202608030000';
@@ -26,7 +29,7 @@ class Migration202608030000 implements Migration {
           .where('table_schema', 'foxy')
           .where('table_name', definition.tableName)
           .count();
-      if (tableCount == 0) continue; // 未导入过的 DBC 表跳过
+      if (tableCount == 0) continue; // skip DBC tables never imported
 
       for (final column in unsignedColumns) {
         final columnCount = await laconic
@@ -37,7 +40,8 @@ class Migration202608030000 implements Migration {
             .count();
         if (columnCount == 0) continue;
         if (column.type == FieldType.uint32) {
-          // 必须先还原数据再 ALTER:负数写入 UNSIGNED 列会直接报 1264。
+          // Data must be restored before ALTER: writing negatives into an
+          // UNSIGNED column fails immediately with 1264.
           await laconic.statement(
             'update foxy.`${definition.tableName}` set '
             '`${column.name}` = `${column.name}` + 4294967296 '
@@ -48,7 +52,8 @@ class Migration202608030000 implements Migration {
             'modify `${column.name}` int unsigned',
           );
         } else {
-          // uint64 由 int64 读出,存量不可能有负数;直接扩列型。
+          // uint64 is read back as int64, so legacy data cannot hold
+          // negatives; just widen the column type.
           await laconic.statement(
             'alter table foxy.`${definition.tableName}` '
             'modify `${column.name}` bigint unsigned',

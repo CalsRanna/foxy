@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_loot_template_entity.g.dart';
 
-/// 法术掉落模板
+/// Spell loot template
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('itemName')

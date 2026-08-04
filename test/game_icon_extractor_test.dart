@@ -69,7 +69,7 @@ void main() {
           'patch-zhCN-2.MPQ': {},
           'patch-zhCN.MPQ': {},
           'locale-zhCN.MPQ': {},
-          'patch-Z.MPQ': {}, // 自定义名 patch
+          'patch-Z.MPQ': {}, // custom-named patch
           'zzz_custom.MPQ': {},
         },
       );
@@ -79,10 +79,10 @@ void main() {
         'zhCN',
       );
       expect(chain.map(p.basename).toList(), [
-        'locale-zhCN.MPQ', // 1 locale 基础
+        'locale-zhCN.MPQ', // 1 locale base
         'patch-zhCN.MPQ', // 3 locale patch
         'patch-zhCN-2.MPQ',
-        'patch-Z.MPQ', // 4 自定义
+        'patch-Z.MPQ', // 4 custom
         'zzz_custom.MPQ',
       ]);
     });
@@ -94,7 +94,7 @@ void main() {
         archives: {'locale-zhCN.MPQ': {}},
       );
       final dataDir = Directory(p.join(clientRoot.path, 'Data'));
-      // 根目录放官方大包
+      // Official big packs live in the root
       for (final name in ['common.MPQ', 'patch.MPQ', 'patch-2.MPQ']) {
         File(p.join(dataDir.path, name)).writeAsBytesSync([0]);
       }
@@ -138,7 +138,7 @@ void main() {
         archives: {
           'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
           'patch-zhCN.MPQ': {
-            r'Interface\Icons\Inv_Foo.blp': content(2), // 大小写不同
+            r'Interface\Icons\Inv_Foo.blp': content(2), // different case
           },
         },
       );
@@ -151,7 +151,7 @@ void main() {
       expect(result.extracted, 1);
       final dest = File(p.join(outputDir.path, 'inv_foo.blp'));
       expect(dest.existsSync(), isTrue);
-      expect(dest.readAsBytesSync(), content(2)); // 高优先级胜出
+      expect(dest.readAsBytesSync(), content(2)); // higher priority wins
     });
 
     test('收录 Spellbook 并以纯名扁平落盘（含 .tga 路径归一）', () {
@@ -173,7 +173,7 @@ void main() {
 
       expect(result.success, isTrue);
       expect(result.extracted, 2);
-      // DBC 里的 .tga 残留路径归一到同一纯名
+      // .tga leftover paths from the DBC normalize to the same bare name
       expect(
         GameIconPaths.normalizeIconName(r'Interface\Icons\INV_Shoulder_94.tga'),
         'inv_shoulder_94',
@@ -220,7 +220,7 @@ void main() {
       );
       final result = _extractor(clientRoot, outputDir, {
         'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
-        // patch-zhCN.MPQ 缺失 → openSource 抛错
+        // patch-zhCN.MPQ missing → openSource throws
       }).extract();
 
       expect(result.extracted, 1);
@@ -240,7 +240,8 @@ void main() {
           },
         },
       );
-      // 扫描阶段调用 1 次 + 每文件 1 次；在第 2 个文件处触发取消。
+      // Called once for the scan phase + once per file; cancel triggers on
+      // the 2nd file.
       var cancelledAfter = 2;
       final result = _extractor(clientRoot, outputDir, {
         'locale-zhCN.MPQ': {
@@ -266,7 +267,7 @@ void main() {
           'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
         },
       );
-      // 根目录自定义 patch（自定义客户端最常见形态）
+      // Root-level custom patch (the most common custom-client shape)
       final dataDir = Directory(p.join(clientRoot.path, 'Data'));
       final customArchives = <String, Map<String, List<int>>>{
         'zzz_custom.MPQ': {
@@ -284,12 +285,12 @@ void main() {
 
       expect(result.success, isTrue);
       expect(result.extracted, 2);
-      // 官方图标被自定义包覆盖
+      // Official icon overridden by a custom pack
       expect(
         File(p.join(outputDir.path, 'inv_foo.blp')).readAsBytesSync(),
         content(9),
       );
-      // 自定义包新增图标被收录
+      // New icons from a custom pack are collected
       expect(
         File(p.join(outputDir.path, 'inv_custom_only.blp')).existsSync(),
         isTrue,
@@ -305,7 +306,8 @@ void main() {
   });
 }
 
-/// 在临时目录中搭建伪客户端结构：`client/Data/<locale>/<归档>.MPQ`。
+/// Builds a fake client structure in a temp dir:
+/// `client/Data/<locale>/<archive>.MPQ`.
 Directory _buildFakeClient(
   Directory root, {
   String locale = 'zhCN',
@@ -319,7 +321,8 @@ Directory _buildFakeClient(
   return dataDir;
 }
 
-/// 构造提取器：openSource 按归档名返回内存假源。
+/// Builds the extractor: openSource returns an in-memory fake by archive
+/// name.
 GameIconExtractor _extractor(
   Directory clientRoot,
   Directory outputDir,
@@ -331,7 +334,7 @@ GameIconExtractor _extractor(
       final name = p.basename(archivePath);
       final files = archives[name];
       if (files == null) {
-        // 模拟真实环境下归档损坏/无法打开。
+        // Simulate a corrupted/unopenable archive in a real environment.
         throw StateError('cannot open archive: $name');
       }
       final source = _FakeMpqSource(files);
@@ -343,9 +346,10 @@ GameIconExtractor _extractor(
   );
 }
 
-/// 内存 MPQ 假源。
+/// In-memory fake MPQ source.
 final class _FakeMpqSource implements GameMpqSource {
-  /// 归档内路径（`\` 分隔）→ 内容字节。内容首字节 = 标记值，用于验证覆盖。
+  /// In-archive path (`\`-separated) → content bytes. The content's first
+  /// byte is a marker value for verifying overrides.
   final Map<String, List<int>> _files;
 
   bool closed = false;

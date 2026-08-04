@@ -19,9 +19,9 @@ class ItemExtendedCostDetailViewModel
     with FieldControllerMixin, _ItemExtendedCostDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  /// 从所有 Controller 收集数据构建 ItemExtendedCost
+  /// Collects data from all controllers to build the ItemExtendedCost
 
-  /// 退出页面
+  /// Leaves the page
 
   @override
   void _logActivity(

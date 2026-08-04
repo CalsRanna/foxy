@@ -198,7 +198,7 @@ class AreaTableView extends StatelessWidget {
       ),
     );
 
-    /// 1. 基本信息
+    /// 1. Basic info
     final basicRows = [
       Row(
         spacing: 8,
@@ -229,7 +229,7 @@ class AreaTableView extends StatelessWidget {
       ),
     ];
 
-    /// 2. 环境与音效
+    /// 2. Environment & sound
     final soundRows = [
       Row(
         spacing: 8,
@@ -251,7 +251,7 @@ class AreaTableView extends StatelessWidget {
       ),
     ];
 
-    /// 3. 液体类型
+    /// 3. Liquid types
     final liquidRows = [
       Row(
         spacing: 8,

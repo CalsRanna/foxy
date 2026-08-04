@@ -5,18 +5,23 @@ import 'package:foxy/infrastructure/game_asset/game_icon_cache.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 游戏图标（物品/法术）统一渲染组件。
+/// Unified rendering component for game icons (items/spells).
 ///
-/// 输入是 DBC 里的原始图标路径（如 `Interface\Icons\INV_Misc_Foo`），
-/// 规范化为小写纯文件名后从运行时当前目录的 `data/icon/<纯名>.blp` 加载。
+/// Input is the raw icon path from the DBC (e.g.
+/// `Interface\Icons\INV_Misc_Foo`), normalized to a lowercase bare file
+/// name and loaded from `data/icon/<bare name>.blp` under the runtime
+/// working directory.
 ///
-/// 图标由用户在设置页从客户端 MPQ 提取（BLP 原始格式），应用不内置图标；
-/// 未提取或客户端不存在的图标显示占位符。解码结果经 [GameIconCache] 缓存复用。
+/// Icons are extracted by the user from the client MPQs on the settings
+/// page (raw BLP format); the app ships no icons. Missing or
+/// client-nonexistent icons show a placeholder. Decoded results are cached
+/// and reused via [GameIconCache].
 class FoxyGameAssetIcon extends StatefulWidget {
-  /// DBC 原始图标路径（反斜杠、大小写不敏感，可含 `interface/icons` 前缀）。
+  /// Raw DBC icon path (backslashes, case-insensitive; may carry an
+  /// `interface/icons` prefix).
   final String rawPath;
 
-  /// 显示边长（正方形）。
+  /// Display edge length (square).
   final double size;
 
   const FoxyGameAssetIcon({super.key, required this.rawPath, this.size = 40});
@@ -29,8 +34,9 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
   ui.Image? _image;
   bool _loading = true;
 
-  /// 本次请求的规范化路径;加载完成时与当前 widget 比对,
-  /// 防止旧路径的慢加载覆盖新路径的图标。
+  /// Normalized path of this request; compared against the current widget
+  /// when loading finishes, so a slow old-path load never overwrites the
+  /// new-path icon.
   String? _requestedPath;
 
   @override
@@ -58,7 +64,8 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
   void didUpdateWidget(covariant FoxyGameAssetIcon oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.rawPath != widget.rawPath) {
-      // 换图时立即重置状态:清旧图、回到 loading,再发起新加载。
+      // On icon change, reset state immediately: clear the old image, go
+      // back to loading, then start the new load.
       _image = null;
       _loading = true;
       _load();
@@ -80,7 +87,8 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
     try {
       image = await GameIconCache.instance.load(path);
     } catch (_) {
-      // 缓存层解码失败应返回 null;此处兜底 IO/解码异常,按缺失处理。
+      // The cache layer should return null on decode failure; here IO/decode
+      // exceptions are caught as a fallback and treated as missing.
       image = null;
     }
     if (!mounted || path != _requestedPath) return;

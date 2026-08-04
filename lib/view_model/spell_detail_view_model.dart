@@ -17,22 +17,25 @@ class SpellDetailViewModel with FieldControllerMixin {
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-  // === 联动信号：跟踪当前选择的枚举值，用于控制子字段 readonly/enabled ===
+  // === Linkage signals: track the currently selected enum values to
+  // control sub-field readonly/enabled ===
   final effect0Signal = signal<int>(0);
   final effect1Signal = signal<int>(0);
   final effect2Signal = signal<int>(0);
   final effectAura0Signal = signal<int>(0);
   final effectAura1Signal = signal<int>(0);
   final effectAura2Signal = signal<int>(0);
-  // ChainTarget 联动:输入 > 0 时解锁「效果伤害倍率」的可编辑状态。
+  // ChainTarget linkage: input > 0 unlocks the editable state of "effect
+  // damage multiplier".
   final effectChainTargets0Signal = signal<int>(0);
   final effectChainTargets1Signal = signal<int>(0);
   final effectChainTargets2Signal = signal<int>(0);
   final spellClassSetSignal = signal<int>(0);
 
-  /// 主键；新建时由 [createSpell] 预填 MAX+1，之后仍可编辑。
+  /// Primary key; prefilled with MAX+1 by [createSpell] on create, still
+  /// editable afterwards.
   late final idController = registerController(IntFieldController());
-  // === 基础文本 ===
+  // === Basic text ===
   late final nameLangZhCNController = registerController(
     StringFieldController(),
   );
@@ -55,7 +58,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final auraDescriptionLangFlagsController = registerController(
     IntFieldController(),
   );
-  // === 图标/视觉 ===
+  // === Icon/visual ===
   late final spellIconIDController = registerController(IntFieldController());
   late final activeIconIDController = registerController(IntFieldController());
   late final spellVisualID0Controller = registerController(
@@ -64,7 +67,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final spellVisualID1Controller = registerController(
     IntFieldController(),
   );
-  // === 分类/类型 ===
+  // === Category/type ===
   late final categoryController = registerController(IntFieldController());
   late final schoolMaskFlagController = registerController(
     FlagFieldController(),
@@ -81,7 +84,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final preventionTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  // === 施法参数 ===
+  // === Casting params ===
   late final castingTimeIndexController = registerController(
     IntFieldController(),
   );
@@ -90,14 +93,14 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final spellDescriptionVariableIDController = registerController(
     IntFieldController(),
   );
-  // === 等级 ===
+  // === Ranks ===
   late final baseLevelController = registerController(IntFieldController());
   late final spellLevelController = registerController(IntFieldController());
   late final maxLevelController = registerController(IntFieldController());
   late final spellDifficultyIDController = registerController(
     IntFieldController(),
   );
-  // === 冷却/恢复 ===
+  // === Cooldown/recovery ===
   late final startRecoveryCategoryController = registerController(
     IntFieldController(),
   );
@@ -108,7 +111,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final categoryRecoveryTimeController = registerController(
     IntFieldController(),
   );
-  // === 目标 ===
+  // === Targets ===
   late final targetCreatureTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -117,7 +120,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final maxTargetLevelController = registerController(
     IntFieldController(),
   );
-  // === 状态 ===
+  // === States ===
   late final casterAuraStateController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -128,7 +131,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final speedController = registerController(DoubleFieldController());
-  // === 需求 ===
+  // === Requirements ===
   late final requiredAreasIDController = registerController(
     IntFieldController(),
   );
@@ -138,7 +141,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final facingCasterFlagsController = registerController(
     FlagFieldController(),
   );
-  // === 能量消耗 ===
+  // === Power cost ===
   late final powerDisplayIDController = registerController(
     IntFieldController(),
   );
@@ -155,7 +158,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final manaPerSecondPerLevelController = registerController(
     IntFieldController(),
   );
-  // === 标志位 ===
+  // === Flags ===
   late final interruptFlagsController = registerController(
     FlagFieldController(),
   );
@@ -185,11 +188,11 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final attributesExGController = registerController(
     FlagFieldController(),
   );
-  // === 触发 ===
+  // === Procs ===
   late final procTypeMaskController = registerController(FlagFieldController());
   late final procChanceController = registerController(IntFieldController());
   late final procChargesController = registerController(IntFieldController());
-  // === 法术分类 ===
+  // === Spell family ===
   late final spellClassSetController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -202,7 +205,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final spellClassMask2Controller = registerController(
     FlagFieldController(),
   );
-  // === 效果0 ===
+  // === Effect 0 ===
   late final effect0Controller = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -269,7 +272,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final effectSpellClassMaskC0Controller = registerController(
     FlagFieldController(),
   );
-  // === 效果1 ===
+  // === Effect 1 ===
   late final effect1Controller = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -336,7 +339,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final effectSpellClassMaskC1Controller = registerController(
     FlagFieldController(),
   );
-  // === 效果2 ===
+  // === Effect 2 ===
   late final effect2Controller = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -403,7 +406,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final effectSpellClassMaskC2Controller = registerController(
     FlagFieldController(),
   );
-  // === 装备限制 ===
+  // === Equip restrictions ===
   late final equippedItemClassController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -413,7 +416,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final equippedItemInvTypesController = registerController(
     FlagFieldController(),
   );
-  // === 图腾/施法材料 ===
+  // === Totems/casting materials ===
   late final requiredTotemCategoryID0Controller = registerController(
     IntFieldController(),
   );
@@ -438,7 +441,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final reagentCount5Controller = registerController(IntFieldController());
   late final reagentCount6Controller = registerController(IntFieldController());
   late final reagentCount7Controller = registerController(IntFieldController());
-  // === 其他高级属性 ===
+  // === Other advanced props ===
   late final casterAuraSpellController = registerController(
     IntFieldController(),
   );
@@ -640,7 +643,7 @@ class SpellDetailViewModel with FieldControllerMixin {
 
   void _applyCandidate(SpellEntity template) {
     idController.init(template.id);
-    // === 基础文本 ===
+    // === Basic text ===
     nameLangZhCNController.init(template.nameLangZhCN);
     nameSubtextLangZhCNController.init(template.nameSubtextLangZhCN);
     descriptionLangZhCNController.init(template.descriptionLangZhCN);
@@ -650,13 +653,13 @@ class SpellDetailViewModel with FieldControllerMixin {
     descriptionLangFlagsController.init(template.descriptionLangFlags);
     auraDescriptionLangFlagsController.init(template.auraDescriptionLangFlags);
 
-    // === 图标/视觉 ===
+    // === Icon/visual ===
     spellIconIDController.init(template.spellIconID);
     activeIconIDController.init(template.activeIconID);
     spellVisualID0Controller.init(template.spellVisualID0);
     spellVisualID1Controller.init(template.spellVisualID1);
 
-    // === 分类/类型 ===
+    // === Category/type ===
     categoryController.init(template.category);
     schoolMaskFlagController.init(template.schoolMask);
     mechanicController.init(template.mechanic);
@@ -664,7 +667,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     dispelTypeController.init(template.dispelType);
     preventionTypeController.init(template.preventionType);
 
-    // === 施法参数 ===
+    // === Casting params ===
     castingTimeIndexController.init(template.castingTimeIndex);
     durationIndexController.init(template.durationIndex);
     rangeIndexController.init(template.rangeIndex);
@@ -672,36 +675,36 @@ class SpellDetailViewModel with FieldControllerMixin {
       template.spellDescriptionVariableID,
     );
 
-    // === 等级 ===
+    // === Ranks ===
     baseLevelController.init(template.baseLevel);
     spellLevelController.init(template.spellLevel);
     maxLevelController.init(template.maxLevel);
     spellDifficultyIDController.init(template.spellDifficultyID);
 
-    // === 冷却/恢复 ===
+    // === Cooldown/recovery ===
     startRecoveryCategoryController.init(template.startRecoveryCategory);
     startRecoveryTimeController.init(template.startRecoveryTime);
     recoveryTimeController.init(template.recoveryTime);
     categoryRecoveryTimeController.init(template.categoryRecoveryTime);
 
-    // === 目标 ===
+    // === Targets ===
     targetCreatureTypeController.init(template.targetCreatureType);
     targetsController.init(template.targets);
     maxTargetsController.init(template.maxTargets);
     maxTargetLevelController.init(template.maxTargetLevel);
 
-    // === 状态 ===
+    // === States ===
     casterAuraStateController.init(template.casterAuraState);
     targetAuraStateController.init(template.targetAuraState);
     spellMissileIDController.init(template.spellMissileID);
     speedController.init(template.speed);
 
-    // === 需求 ===
+    // === Requirements ===
     requiredAreasIDController.init(template.requiredAreasID);
     requiresSpellFocusController.init(template.requiresSpellFocus);
     facingCasterFlagsController.init(template.facingCasterFlags);
 
-    // === 能量消耗 ===
+    // === Power cost ===
     powerDisplayIDController.init(template.powerDisplayID);
     powerTypeController.init(template.powerType);
     runeCostIDController.init(template.runeCostID);
@@ -711,7 +714,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     manaPerSecondController.init(template.manaPerSecond);
     manaPerSecondPerLevelController.init(template.manaPerSecondPerLevel);
 
-    // === 标志位 ===
+    // === Flags ===
     interruptFlagsController.init(template.interruptFlags);
     auraInterruptFlagsController.init(template.auraInterruptFlags);
     channelInterruptFlagsController.init(template.channelInterruptFlags);
@@ -724,18 +727,18 @@ class SpellDetailViewModel with FieldControllerMixin {
     attributesExFController.init(template.attributesExF);
     attributesExGController.init(template.attributesExG);
 
-    // === 触发 ===
+    // === Procs ===
     procTypeMaskController.init(template.procTypeMask);
     procChanceController.init(template.procChance);
     procChargesController.init(template.procCharges);
 
-    // === 法术分类 ===
+    // === Spell family ===
     spellClassSetController.init(template.spellClassSet);
     spellClassMask0Controller.init(template.spellClassMask0);
     spellClassMask1Controller.init(template.spellClassMask1);
     spellClassMask2Controller.init(template.spellClassMask2);
 
-    // === 效果0 ===
+    // === Effect 0 ===
     effect0Controller.init(template.effect0);
     effectBasePoints0Controller.init(template.effectBasePoints0);
     effectDieSides0Controller.init(template.effectDieSides0);
@@ -761,7 +764,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     effectSpellClassMaskB0Controller.init(template.effectSpellClassMaskB0);
     effectSpellClassMaskC0Controller.init(template.effectSpellClassMaskC0);
 
-    // === 效果1 ===
+    // === Effect 1 ===
     effect1Controller.init(template.effect1);
     effectBasePoints1Controller.init(template.effectBasePoints1);
     effectDieSides1Controller.init(template.effectDieSides1);
@@ -787,7 +790,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     effectSpellClassMaskB1Controller.init(template.effectSpellClassMaskB1);
     effectSpellClassMaskC1Controller.init(template.effectSpellClassMaskC1);
 
-    // === 效果2 ===
+    // === Effect 2 ===
     effect2Controller.init(template.effect2);
     effectBasePoints2Controller.init(template.effectBasePoints2);
     effectDieSides2Controller.init(template.effectDieSides2);
@@ -813,12 +816,12 @@ class SpellDetailViewModel with FieldControllerMixin {
     effectSpellClassMaskB2Controller.init(template.effectSpellClassMaskB2);
     effectSpellClassMaskC2Controller.init(template.effectSpellClassMaskC2);
 
-    // === 装备限制 ===
+    // === Equip restrictions ===
     equippedItemClassController.init(template.equippedItemClass);
     equippedItemSubclassController.init(template.equippedItemSubclass);
     equippedItemInvTypesController.init(template.equippedItemInvTypes);
 
-    // === 图腾/施法材料 ===
+    // === Totems/casting materials ===
     requiredTotemCategoryID0Controller.init(template.requiredTotemCategoryID0);
     totem0Controller.init(template.totem0);
     requiredTotemCategoryID1Controller.init(template.requiredTotemCategoryID1);
@@ -840,7 +843,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     reagentCount6Controller.init(template.reagentCount6);
     reagentCount7Controller.init(template.reagentCount7);
 
-    // === 其他高级属性 ===
+    // === Other advanced props ===
     casterAuraSpellController.init(template.casterAuraSpell);
     cumulativeAuraController.init(template.cumulativeAura);
     minFactionIDController.init(template.minFactionID);
@@ -861,10 +864,11 @@ class SpellDetailViewModel with FieldControllerMixin {
   }
 
   SpellEntity _collectCandidate() {
-    // 基于已加载实体覆盖 UI 字段，避免把未展示的多语言/扩展字段写成默认空值。
+    // Overlay UI fields from the loaded entity, so hidden multi-language
+    // and extension fields are never written as default empty values.
     return entity.value!.copyWith(
       id: idController.collect(),
-      // === 基础文本 ===
+      // === Basic text ===
       nameLangZhCN: nameLangZhCNController.collect(),
       nameSubtextLangZhCN: nameSubtextLangZhCNController.collect(),
       descriptionLangZhCN: descriptionLangZhCNController.collect(),
@@ -874,58 +878,59 @@ class SpellDetailViewModel with FieldControllerMixin {
       descriptionLangFlags: descriptionLangFlagsController.collect(),
       auraDescriptionLangFlags: auraDescriptionLangFlagsController.collect(),
 
-      // === 图标/视觉 ===
+      // === Icon/visual ===
       spellIconID: spellIconIDController.collect(),
       activeIconID: activeIconIDController.collect(),
       spellVisualID0: spellVisualID0Controller.collect(),
       spellVisualID1: spellVisualID1Controller.collect(),
 
-      // === 分类/类型 ===
+      // === Category/type ===
       category: categoryController.collect(),
-      // schoolMask 以 Flag UI 为准（schoolMaskController 仅冗余保留）
+      // schoolMask follows the Flag UI (schoolMaskController is kept only
+      // for redundancy)
       schoolMask: schoolMaskFlagController.collect(),
       mechanic: mechanicController.collect(),
       defenseType: defenseTypeController.collect(),
       dispelType: dispelTypeController.collect(),
       preventionType: preventionTypeController.collect(),
 
-      // === 施法参数 ===
+      // === Casting params ===
       castingTimeIndex: castingTimeIndexController.collect(),
       durationIndex: durationIndexController.collect(),
       rangeIndex: rangeIndexController.collect(),
       spellDescriptionVariableID: spellDescriptionVariableIDController
           .collect(),
 
-      // === 等级 ===
+      // === Ranks ===
       baseLevel: baseLevelController.collect(),
       spellLevel: spellLevelController.collect(),
       maxLevel: maxLevelController.collect(),
       spellDifficultyID: spellDifficultyIDController.collect(),
 
-      // === 冷却/恢复 ===
+      // === Cooldown/recovery ===
       startRecoveryCategory: startRecoveryCategoryController.collect(),
       startRecoveryTime: startRecoveryTimeController.collect(),
       recoveryTime: recoveryTimeController.collect(),
       categoryRecoveryTime: categoryRecoveryTimeController.collect(),
 
-      // === 目标 ===
+      // === Targets ===
       targetCreatureType: targetCreatureTypeController.collect(),
       targets: targetsController.collect(),
       maxTargets: maxTargetsController.collect(),
       maxTargetLevel: maxTargetLevelController.collect(),
 
-      // === 状态 ===
+      // === States ===
       casterAuraState: casterAuraStateController.collect(),
       targetAuraState: targetAuraStateController.collect(),
       spellMissileID: spellMissileIDController.collect(),
       speed: speedController.collect(),
 
-      // === 需求 ===
+      // === Requirements ===
       requiredAreasID: requiredAreasIDController.collect(),
       requiresSpellFocus: requiresSpellFocusController.collect(),
       facingCasterFlags: facingCasterFlagsController.collect(),
 
-      // === 能量消耗 ===
+      // === Power cost ===
       powerDisplayID: powerDisplayIDController.collect(),
       powerType: powerTypeController.collect(),
       runeCostID: runeCostIDController.collect(),
@@ -935,7 +940,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       manaPerSecond: manaPerSecondController.collect(),
       manaPerSecondPerLevel: manaPerSecondPerLevelController.collect(),
 
-      // === 标志位 ===
+      // === Flags ===
       interruptFlags: interruptFlagsController.collect(),
       auraInterruptFlags: auraInterruptFlagsController.collect(),
       channelInterruptFlags: channelInterruptFlagsController.collect(),
@@ -948,18 +953,18 @@ class SpellDetailViewModel with FieldControllerMixin {
       attributesExF: attributesExFController.collect(),
       attributesExG: attributesExGController.collect(),
 
-      // === 触发 ===
+      // === Procs ===
       procTypeMask: procTypeMaskController.collect(),
       procChance: procChanceController.collect(),
       procCharges: procChargesController.collect(),
 
-      // === 法术分类 ===
+      // === Spell family ===
       spellClassSet: spellClassSetController.collect(),
       spellClassMask0: spellClassMask0Controller.collect(),
       spellClassMask1: spellClassMask1Controller.collect(),
       spellClassMask2: spellClassMask2Controller.collect(),
 
-      // === 效果0 ===
+      // === Effect 0 ===
       effect0: effect0Controller.collect(),
       effectBasePoints0: effectBasePoints0Controller.collect(),
       effectDieSides0: effectDieSides0Controller.collect(),
@@ -983,7 +988,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       effectSpellClassMaskB0: effectSpellClassMaskB0Controller.collect(),
       effectSpellClassMaskC0: effectSpellClassMaskC0Controller.collect(),
 
-      // === 效果1 ===
+      // === Effect 1 ===
       effect1: effect1Controller.collect(),
       effectBasePoints1: effectBasePoints1Controller.collect(),
       effectDieSides1: effectDieSides1Controller.collect(),
@@ -1007,7 +1012,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       effectSpellClassMaskB1: effectSpellClassMaskB1Controller.collect(),
       effectSpellClassMaskC1: effectSpellClassMaskC1Controller.collect(),
 
-      // === 效果2 ===
+      // === Effect 2 ===
       effect2: effect2Controller.collect(),
       effectBasePoints2: effectBasePoints2Controller.collect(),
       effectDieSides2: effectDieSides2Controller.collect(),
@@ -1031,12 +1036,12 @@ class SpellDetailViewModel with FieldControllerMixin {
       effectSpellClassMaskB2: effectSpellClassMaskB2Controller.collect(),
       effectSpellClassMaskC2: effectSpellClassMaskC2Controller.collect(),
 
-      // === 装备限制 ===
+      // === Equip restrictions ===
       equippedItemClass: equippedItemClassController.collect(),
       equippedItemSubclass: equippedItemSubclassController.collect(),
       equippedItemInvTypes: equippedItemInvTypesController.collect(),
 
-      // === 图腾/施法材料 ===
+      // === Totems/casting materials ===
       requiredTotemCategoryID0: requiredTotemCategoryID0Controller.collect(),
       totem0: totem0Controller.collect(),
       requiredTotemCategoryID1: requiredTotemCategoryID1Controller.collect(),
@@ -1058,7 +1063,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       reagentCount6: reagentCount6Controller.collect(),
       reagentCount7: reagentCount7Controller.collect(),
 
-      // === 其他高级属性 ===
+      // === Other advanced props ===
       casterAuraSpell: casterAuraSpellController.collect(),
       cumulativeAura: cumulativeAuraController.collect(),
       minFactionID: minFactionIDController.collect(),
@@ -1089,9 +1094,9 @@ class SpellDetailViewModel with FieldControllerMixin {
     _activityLogService.recordBestEffort(log);
   }
 
-  /// 监听 SelectFieldController 变化，同步到 signal。
+  /// Listens to SelectFieldController changes and syncs them to a signal.
   ///
-  /// 使用 [SelectFieldController.addListener] 监听联动变化。
+  /// Uses [SelectFieldController.addListener] to observe linkage changes.
   void _wireEffectSignals() {
     if (_effectSignalsWired) return;
     _effectSignalsWired = true;

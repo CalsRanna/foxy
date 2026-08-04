@@ -28,7 +28,7 @@ class QuestTemplateView extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = viewModel;
 
-    /// 1. 基础信息
+    /// 1. Basic info
     final basicRows = [
       Row(
         spacing: 8,
@@ -75,7 +75,8 @@ class QuestTemplateView extends StatelessWidget {
           Expanded(
             child: FoxyFormItem(
               label: '任务分类',
-              // AzerothCore 约定：QuestSortID 正数=区域(AreaTable)、负数=任务排序(QuestSort)。
+              // AzerothCore convention: QuestSortID positive = area
+              // (AreaTable), negative = quest sort (QuestSort).
               child: FoxySignedEntityPicker(
                 controller: vm.questSortIdController,
                 placeholder: 'QuestSortID',
@@ -118,7 +119,7 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 1b. 接取条件
+    /// 1b. Accept conditions
     final acceptConditionRows = [
       Row(
         spacing: 8,
@@ -165,7 +166,7 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 2. 任务目标
+    /// 2. Quest objectives
     final objectiveRows = [
       Row(
         spacing: 8,
@@ -405,7 +406,7 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 3. 基础奖励
+    /// 3. Base rewards
     final basicRewardRows = [
       Row(
         spacing: 8,
@@ -548,7 +549,7 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 4. 奖励物品
+    /// 4. Reward items
     final rewardItemRows = [
       Row(
         spacing: 8,
@@ -853,7 +854,7 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 5. 奖励声望
+    /// 5. Reward reputation
     final rewardFactionRows = [
       Row(
         spacing: 8,
@@ -1027,7 +1028,7 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 6. 任务文本
+    /// 6. Quest text
     final textRows = [
       Row(
         spacing: 8,
@@ -1166,7 +1167,7 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 7. 位置与其他
+    /// 7. Location & misc
     final miscRows = [
       Row(
         spacing: 8,

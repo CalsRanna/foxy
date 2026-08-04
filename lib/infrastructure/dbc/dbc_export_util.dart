@@ -8,7 +8,8 @@ import 'package:warcrafty/warcrafty.dart';
 enum DbcExportPhase { writing, validating, committing }
 
 class DbcExportUtil {
-  /// 供单元测试校验类型规范化规则（uint8 / bool / 字符串等）。
+  /// For unit tests validating the type-normalization rules (uint8 / bool /
+  /// strings, etc.).
   @visibleForTesting
   dynamic normalizeValueForTest(
     Object? value, {
@@ -82,7 +83,8 @@ class DbcExportUtil {
     required int recordIndex,
   }) {
     Never invalid(String expected) {
-      // 异常消息保持英文诊断(no_chinese_throw);用户文案经 foxyErrorMessage 映射。
+      // Exception messages stay English diagnostics (no_chinese_throw);
+      // user-facing text is mapped through foxyErrorMessage.
       throw FormatException(
         '$schemaName record ${recordIndex + 1} field $fieldName '
         'expected $expected, got ${value.runtimeType}: $value',
@@ -162,7 +164,8 @@ class DbcExportUtil {
       try {
         await backupFile.delete();
       } catch (_) {
-        // 目标文件已安全替换，残留 backup 不影响导出结果。
+        // The target file has been safely replaced; a leftover backup does
+        // not affect the export result.
       }
     }
   }

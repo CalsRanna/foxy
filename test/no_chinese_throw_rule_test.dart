@@ -4,14 +4,17 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:test/test.dart';
 
-/// no_chinese_throw 规则核心逻辑的回归测试。
+/// Regression tests for the core logic of the no_chinese_throw rule.
 ///
-/// 用 analyzer 直接解析源码并复现规则的检测逻辑(字符串字面量含 CJK 且
-/// 处于 throw 表达式子树内即违规),锁死两类回归:
-/// - 只匹配 `SimpleStringLiteral` 导致插值字符串漏报(H2 修复点);
-/// - CJK 正则范围回退(扩展 A / 全角标点漏报)。
+/// Uses the analyzer to parse source directly and reproduce the rule's
+/// detection logic (a string literal containing CJK inside a throw
+/// expression subtree is a violation), locking down two regressions:
+/// - matching only `SimpleStringLiteral` misses interpolated strings (the
+///   H2 fix point);
+/// - CJK regex range fallback (Extension A / full-width punctuation
+///   misses).
 void main() {
-  // 与 lib/lint/rules/no_chinese_throw.dart 保持一致的正则。
+  // The regex kept in sync with lib/lint/rules/no_chinese_throw.dart.
   final cjk = RegExp(r'[㐀-鿿＀-￯]');
 
   String? findViolation(String source) {

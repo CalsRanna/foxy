@@ -46,7 +46,8 @@ class GameObjectTemplateDetailViewModel
     with FieldControllerMixin, _GameObjectTemplateDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  /// 当前选中的 GameObject 类型，驱动 Data0..Data23 的编辑规格
+  /// Currently selected GameObject type; drives the Data0..Data23 edit
+  /// specs
   final selectedType = signal(0);
 
   @override

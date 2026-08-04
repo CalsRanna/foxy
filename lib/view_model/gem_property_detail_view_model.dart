@@ -19,9 +19,9 @@ class GemPropertyDetailViewModel
     with FieldControllerMixin, _GemPropertyDetailViewModelMixin {
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  /// 从所有 Controller 收集数据构建 GemProperty
+  /// Collects data from all controllers to build the GemProperty
 
-  /// 退出页面
+  /// Leaves the page
 
   @override
   void _logActivity(ActivityActionType action, GemPropertyEntity gemProperty) {

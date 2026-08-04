@@ -17,13 +17,15 @@ void main() {
     });
 
     test('preserves scientific notation exponents', () {
-      // 使用 Dart double.toString() 本身会输出科学计数法的量级，
-      // 避免断言依赖当前 VM 的具体指数写法之外的表示。
+      // Use magnitudes where Dart's double.toString() itself outputs
+      // scientific notation, so the assertions do not depend on the VM's
+      // specific exponent rendering.
       expect(formatNum(1.5e-10), '1.5e-10');
       expect(formatNum(1.5e+30), '1.5e+30');
       expect(formatNum(-1.5e-10), '-1.5e-10');
       expect(formatNum(-1.5e+30), '-1.5e+30');
-      // 回归：旧实现对含 e 的串从末尾裁 0，会把 e-10 / e+30 裁坏
+      // Regression: the old implementation trimmed trailing zeros from
+      // strings containing e, mangling e-10 / e+30
       expect(formatNum(1.5e-10), isNot('1.5e-1'));
       expect(formatNum(1.5e+30), isNot('1.5e+3'));
     });

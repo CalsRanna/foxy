@@ -155,7 +155,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 1. 基础信息
+    /// 1. Basic info
     final basicRows = [
       Row(
         spacing: 8,
@@ -186,7 +186,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 类型阵营输入
+    /// Type/faction inputs
     final expInput = FoxyFormItem(
       label: '属性资料片',
       child: FoxyShadSelect<int>(
@@ -196,7 +196,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 2. 类型与阵营
+    /// 2. Type & faction
     final typeRows = [
       Row(
         spacing: 8,
@@ -375,7 +375,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 4. 战斗属性 (11个字段)
+    /// 4. Combat stats (11 fields)
     final combatRows = [
       Row(
         spacing: 8,
@@ -446,7 +446,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 移动属性输入
+    /// Movement-stat inputs
     final movementIdInput = FoxyFormItem(
       label: '生物移动信息',
       child: FoxyEntityPicker(
@@ -478,7 +478,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 5. 移动属性
+    /// 5. Movement
     final movementRows = [
       Row(
         spacing: 8,
@@ -500,7 +500,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 免疫输入
+    /// Immunity inputs
     final creatureImmunitiesIdInput = FoxyFormItem(
       label: '生物免疫配置',
       child: FoxyEntityPicker(
@@ -510,7 +510,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 6. 标识免疫
+    /// 6. Flags & immunities
     final flagImmuneRows = [
       Row(
         spacing: 8,
@@ -532,7 +532,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 难度与脚本输入
+    /// Difficulty/script inputs
     final killCredit1Input = FoxyFormItem(
       label: '击杀目标 1',
       child: FoxyEntityPicker(
@@ -595,7 +595,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 7. 掉落
+    /// 7. Loot
     final lootRows = [
       Row(
         spacing: 8,
@@ -617,7 +617,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     ];
 
-    /// 8. 难度与脚本
+    /// 8. Difficulty & scripts
     final difficultyScriptRows = [
       Row(
         spacing: 8,

@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'gossip_menu_entity.g.dart';
 
-/// gossip_menu 主表模型（复合键: MenuID + TextID）。
+/// gossip_menu main-table model (composite key: MenuID + TextID).
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('text00')

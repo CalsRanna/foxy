@@ -2,18 +2,19 @@ import 'dart:typed_data';
 
 import 'package:warcrafty/warcrafty.dart';
 
-/// MPQ 归档的只读抽象，供图标提取器注入（测试可替换为内存假实现）。
+/// Read-only abstraction over an MPQ archive, injected into the icon
+/// extractor (tests substitute an in-memory fake).
 abstract interface class GameMpqSource {
-  /// 归档内全部文件路径（`\` 分隔）。
+  /// All file paths inside the archive (`\`-separated).
   List<String> get files;
 
   void close();
 
-  /// 提取归档内文件为内存字节。
+  /// Extracts an in-archive file as in-memory bytes.
   Uint8List extract(String name);
 }
 
-/// 基于 warcrafty（纯 Dart MPQ）的实现。
+/// Implementation based on warcrafty (pure-Dart MPQ).
 final class WarcraftyMpqSource implements GameMpqSource {
   final MpqArchive _archive;
 

@@ -1,18 +1,20 @@
-/// Foxy 业务异常体系。
+/// Foxy business-exception system.
 ///
-/// 历史教训:项目曾用 `StateError('中文消息')` 承载所有业务错误,151 种
-/// 中文消息散布在 327 个文件里,调用方只能靠字符串判断语义。本文件把
-/// 异常收敛为 sealed 语义类型 + 英文诊断信息,中文文案统一经
-/// [foxyErrorMessage] 按类型映射——异常内禁止中文。
+/// Historical lesson: the project once carried every business error via
+/// `StateError('Chinese message')`, with 151 distinct Chinese messages
+/// scattered across 327 files and callers relying on string matching to
+/// infer semantics. This file converges exceptions into sealed semantic
+/// types plus English diagnostics; Chinese copy is mapped by type through
+/// [foxyErrorMessage] — Chinese is forbidden inside exceptions.
 library;
 
 import 'dart:io';
 
-/// Foxy 业务异常基类。
+/// Base class of Foxy business exceptions.
 ///
-/// [message] 为英文诊断信息,仅供日志定位;面向用户的中文文案一律经
-/// [foxyErrorMessage] 映射。implements(而非 extends)Exception,避免
-/// `Exception: ` 前缀污染 UI 展示。
+/// [message] is an English diagnostic for log tracing only; user-facing
+/// Chinese copy always goes through [foxyErrorMessage]. implements (not
+/// extends) Exception so the `Exception: ` prefix never pollutes the UI.
 sealed class FoxyException implements Exception {
   const FoxyException(this.message);
 
@@ -22,82 +24,92 @@ sealed class FoxyException implements Exception {
   String toString() => '$runtimeType: $message';
 }
 
-/// 记录不存在:查询未命中、并发下被其他操作修改或删除。
+/// Record not found: query missed, or modified/deleted concurrently by
+/// another operation.
 final class RecordNotFoundException extends FoxyException {
   const RecordNotFoundException(super.message);
 }
 
-/// 主键重复:MySQL duplicate entry,或手写重复性校验。
+/// Duplicate primary key: a MySQL duplicate entry, or a hand-written
+/// uniqueness check.
 final class DuplicateKeyException extends FoxyException {
   const DuplicateKeyException(super.message);
 }
 
-/// 主键未在新建时显式分配。
+/// Primary key was not explicitly assigned on create.
 final class InvalidPrimaryKeyException extends FoxyException {
   const InvalidPrimaryKeyException(super.message);
 }
 
-/// 同一操作正在进行中(提交/保存/导入/导出等互斥操作)。
+/// The same operation is already in progress (mutually exclusive
+/// operations such as commit/save/import/export).
 final class BusyException extends FoxyException {
   const BusyException(super.message);
 }
 
-/// 关联记录尚未加载(关联编辑器在关联键就绪前被调用)。
+/// Linked record not loaded yet (a linked editor was invoked before its
+/// link key was ready).
 final class LinkNotLoadedException extends FoxyException {
   const LinkNotLoadedException(super.message);
 }
 
-/// DBC/自增 ID 已耗尽或超出可引用范围。
+/// DBC/auto-increment IDs exhausted or beyond the referenceable range.
 final class IdExhaustedException extends FoxyException {
   const IdExhaustedException(super.message);
 }
 
-/// 输入或业务规则校验拒绝。
+/// Rejected by input or business-rule validation.
 final class ValidationException extends FoxyException {
   const ValidationException(super.message);
 }
 
-/// 该表不支持自动复制(一对一关系/无自增主键等)。
+/// This table does not support automatic copy (one-to-one relations, no
+/// auto-increment primary key, etc.).
 final class CopyNotSupportedException extends FoxyException {
   const CopyNotSupportedException(super.message);
 }
 
-/// 数据库尚未连接。
+/// The database is not connected yet.
 final class DatabaseNotConnectedException extends FoxyException {
   const DatabaseNotConnectedException(super.message);
 }
 
-/// 更新流程失败:检查、下载、校验或解压阶段的任何失败。
+/// Update flow failed: any failure in the check, download, verify or
+/// extract stage.
 final class UpdateException extends FoxyException {
   const UpdateException(this.code, super.message);
 
-  /// 失败类别,用于文案映射与诊断。
+  /// Failure category, used for copy mapping and diagnostics.
   final UpdateErrorKind code;
 }
 
-/// 更新失败类别。
+/// Update failure categories.
 enum UpdateErrorKind {
-  /// 网络请求失败(超时、连接失败、非 200 响应)。
+  /// Network request failed (timeout, connection failure, non-200
+  /// response).
   network,
 
-  /// 清单内容无效(字段缺失、格式错误、版本不可解析)。
+  /// Manifest content invalid (missing fields, malformed format,
+  /// unparseable version).
   invalidManifest,
 
-  /// 下载文件校验失败(SHA-256 或大小不符)。
+  /// Downloaded file failed verification (SHA-256 or size mismatch).
   verification,
 
-  /// 解压或写盘失败。
+  /// Extraction or disk write failed.
   fileSystem,
 
-  /// 更新被用户取消。
+  /// Update cancelled by the user.
   canceled,
 }
 
-/// 异常 → 面向用户的中文文案。UI 展示错误的唯一入口。
+/// Exception → user-facing Chinese copy. The single entry point for UI
+/// error display.
 ///
-/// 新增 [FoxyException] 子类时必须同步补充映射;未知/驱动异常原样
-/// 展示 `$error`(与历史行为一致)。仅进日志的诊断信息请直接用
-/// `error.toString()`(英文),不要经过本函数。
+/// Adding a [FoxyException] subclass requires a matching mapping entry;
+/// unknown/driver exceptions display `$error` verbatim (matching legacy
+/// behavior). Diagnostic info destined only for logs should use
+/// `error.toString()` (English) directly, not this function.
 String foxyErrorMessage(Object error) => switch (error) {
   RecordNotFoundException() => '记录不存在，可能已被其他操作修改或删除',
   DuplicateKeyException() => '相同主键的记录已存在',
@@ -115,7 +127,8 @@ String foxyErrorMessage(Object error) => switch (error) {
     UpdateErrorKind.fileSystem => '更新文件写入失败，请检查磁盘空间后重试',
     UpdateErrorKind.canceled => '更新已取消',
   },
-  // 内部编解码/参数错误与不变量违背:语义正确的 Dart 核心类型。
+  // Internal encode/decode or argument errors and invariant violations:
+  // semantically correct Dart core types.
   ArgumentError() => '输入或参数不合法，请检查后重试',
   StateError() => '内部状态异常，请重试',
   FormatException() => '输入格式不正确，请检查后重试',
