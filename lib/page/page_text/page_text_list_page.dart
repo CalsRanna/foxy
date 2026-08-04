@@ -234,7 +234,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
       label: name,
       route: RouteTextDetailRoute(pageTextKey: key),
-      parentMenu: RouterMenu.more,
+      parentMenu: RouterMenu.pageText,
     );
   }
 }

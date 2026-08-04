@@ -67,21 +67,26 @@ class RouterFacade {
     required RouterMenu parentMenu,
   }) {
     final currentPath = path.value;
+
+    // 父级为路径中最后一个列表页节点，面包屑与高亮跟随实际导航栈
+    // （列表页可经侧边栏或“更多”进入，硬编码父菜单会导致面包屑与路由错位）
+    final parentIndex = currentPath.lastIndexWhere((n) => n.menu != null);
+
+    // 继承列表页的高亮父级：固定模块为 null，未固定模块为“更多”
     final detailNode = RouterNode(
       label: label,
       route: route,
-      parentMenu: parentMenu,
+      parentMenu: parentIndex >= 0
+          ? currentPath[parentIndex].parentMenu
+          : parentMenu,
     );
-
-    // 查找父级菜单在路径中的位置
-    final parentIndex = currentPath.indexWhere((n) => n.menu == parentMenu);
 
     List<RouterNode> newNodes;
     if (parentIndex >= 0) {
-      // 截取到父级，然后添加详情页
+      // 截取到列表页，然后添加详情页
       newNodes = [...currentPath.take(parentIndex + 1), detailNode];
     } else {
-      // 父级不在路径中，构建完整路径
+      // 路径中没有列表页，构建完整路径
       newNodes = [
         RouterMenu.dashboard.toNode(),
         parentMenu.toNode(),

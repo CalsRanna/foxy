@@ -246,7 +246,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
       label: label,
       route: ConditionDetailRoute(conditionKey: condition?.key),
-      parentMenu: RouterMenu.more,
+      parentMenu: RouterMenu.condition,
     );
   }
 }

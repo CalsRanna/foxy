@@ -238,7 +238,7 @@ class _ReferenceLootTemplateListPageState
     GetIt.instance.get<RouterFacade>().navigateToDetail(
       label: name,
       route: ReferenceLootTemplateDetailRoute(referenceLootTemplateKey: key),
-      parentMenu: RouterMenu.more,
+      parentMenu: RouterMenu.referenceLootTemplate,
     );
   }
 }

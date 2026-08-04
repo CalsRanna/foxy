@@ -216,7 +216,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
       label: label,
       route: PlayerCreateInfoDetailRoute(playerCreateInfoKey: info?.key),
-      parentMenu: RouterMenu.more,
+      parentMenu: RouterMenu.playerCreateInfo,
     );
   }
 }
