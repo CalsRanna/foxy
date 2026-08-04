@@ -18,9 +18,10 @@ void main() {
         driver.sqlLog.firstWhere((sql) => sql.contains('create database')),
         contains('character set utf8mb4'),
       );
+      // 新建库默认为 utf8mb4,自愈跳过 ALTER DATABASE(不发 DDL)。
       expect(
-        driver.sqlLog,
-        contains(contains('alter database foxy character set utf8mb4')),
+        driver.sqlLog.where((sql) => sql.contains('alter database')),
+        isEmpty,
       );
       expect(driver.sqlLog, contains(contains('create table if not exists')));
       // 7 个迁移全部执行并写入 foxy.migrations 记录。
@@ -76,7 +77,12 @@ void main() {
       final driver = _FakeDriver(latin1Tables: ['features', 'activity_log']);
       await MigrationRunner(Laconic(driver)).run();
 
-      // 每个 latin1 存量表产生一条 CONVERT 语句,utf8mb4 表不产生。
+      // 存量 latin1 库触发 ALTER DATABASE,每个 latin1 存量表产生一条
+      // CONVERT 语句,utf8mb4 表不产生。
+      expect(
+        driver.sqlLog,
+        contains(contains('alter database foxy character set utf8mb4')),
+      );
       final converts = driver.sqlLog.where(
         (sql) => sql.contains('convert to character set utf8mb4'),
       );
@@ -183,25 +189,31 @@ final class _FakeDriver implements DatabaseDriver {
   ]) async {
     sqlLog.add(sql);
     _maybeFail(sql);
-    if (sql.contains('migrations') && sql.contains('COUNT(*)')) {
-      final name = params.isNotEmpty ? params.first.toString() : null;
-      final count = name == null
-          ? appliedMigrations.length
-          : (appliedMigrations.contains(name) ? 1 : 0);
+    if (sql.contains('migrations')) {
+      // 已应用迁移清单:pluck 一次取回全部 name。
       return [
-        LaconicResult.fromMap({'aggregate': count}),
+        for (final name in appliedMigrations)
+          LaconicResult.fromMap({'name': name}),
       ];
     }
     if (sql.contains('information_schema')) {
+      if (sql.contains('schemata')) {
+        // SCHEMATA 探测:存在存量非 utf8mb4 表视为库默认仍是 latin1,
+        // 否则已修复为 utf8mb4。结果 key 是声明大小写(信息架构为大写)。
+        return [
+          LaconicResult.fromMap({
+            'DEFAULT_COLLATION_NAME': latin1Tables.isEmpty
+                ? 'utf8mb4_unicode_ci'
+                : 'latin1_swedish_ci',
+          }),
+        ];
+      }
       if (sql.contains('table_collation')) {
-        // 引导段 _ensureUtf8mb4 的表清单查询:按配置返回存量表。
-        // 结果 key 是服务器返回的声明大小写(information_schema 为大写)。
+        // 引导段 _ensureUtf8mb4 的表扫描(过滤已下沉到 SQL):只返回
+        // 存量非 utf8mb4 表。
         return [
           for (final table in latin1Tables)
-            LaconicResult.fromMap({
-              'TABLE_NAME': table,
-              'TABLE_COLLATION': 'latin1_swedish_ci',
-            }),
+            LaconicResult.fromMap({'TABLE_NAME': table}),
         ];
       }
       // columns 探测(202607190000)按配置;tables 探测(202608030000)

@@ -53,7 +53,10 @@ class MigrationRunner {
     // 它们自身就 1366 卡死,放迁移末尾的新迁移根本跑不到。
     await _ensureUtf8mb4();
 
-    // 按顺序运行迁移
+    // 按顺序运行迁移:一次取回全部已应用迁移,避免每个迁移一条 COUNT 往返。
+    final applied = (await laconic.table('foxy.migrations').pluck('name'))
+        .cast<String>()
+        .toSet();
     final List<Migration> migrations = [
       Migration202604260000(),
       Migration202604260001(),
@@ -65,12 +68,7 @@ class MigrationRunner {
     ];
 
     for (final migration in migrations) {
-      final count = await laconic
-          .table('foxy.migrations')
-          .where('name', migration.name)
-          .count();
-
-      if (count > 0) continue;
+      if (applied.contains(migration.name)) continue;
 
       await migration.migrate(laconic);
       await laconic.table('foxy.migrations').insert([
@@ -84,20 +82,32 @@ class MigrationRunner {
   /// 安全性:1366 错误保证了非 utf8mb4 列里不可能有非 ASCII 数据
   /// (中文根本写不进去),因此 `CONVERT TO CHARACTER SET utf8mb4`
   /// 不会产生双重乱码;utf8(3 字节)列里的中文转换无损。
+  ///
+  /// 稳态优化:库默认已是 utf8mb4 则跳过 ALTER DATABASE(不发 DDL),
+  /// 表扫描把过滤下沉到 SQL,无残留表时零往返。
   Future<void> _ensureUtf8mb4() async {
-    await laconic.statement(
-      'alter database foxy character set utf8mb4 collate utf8mb4_unicode_ci',
-    );
+    final schemaRows = await laconic
+        .table('information_schema.schemata')
+        .select(['default_collation_name'])
+        .where('schema_name', 'foxy')
+        .get();
+    // 结果 map 的 key 是服务器返回的声明大小写(information_schema 为大写),
+    // 与查询里的小写标识符无关。
+    final dbCollation = schemaRows.isEmpty
+        ? null
+        : schemaRows.first.toMap()['DEFAULT_COLLATION_NAME'] as String?;
+    if (dbCollation == null || !dbCollation.startsWith('utf8mb4')) {
+      await laconic.statement(
+        'alter database foxy character set utf8mb4 collate utf8mb4_unicode_ci',
+      );
+    }
     final rows = await laconic
         .table('information_schema.tables')
-        .select(['table_name', 'table_collation'])
+        .select(['table_name'])
         .where('table_schema', 'foxy')
+        .whereRaw('table_collation not like ?', ['utf8mb4%'])
         .get();
     for (final row in rows) {
-      // 结果 map 的 key 是服务器返回的声明大小写(information_schema 为大写),
-      // 与查询里的小写标识符无关。
-      final collation = row.toMap()['TABLE_COLLATION'] as String?;
-      if (collation != null && collation.startsWith('utf8mb4')) continue;
       final tableName = row.toMap()['TABLE_NAME'] as String;
       await laconic.statement(
         'alter table foxy.`$tableName` '
