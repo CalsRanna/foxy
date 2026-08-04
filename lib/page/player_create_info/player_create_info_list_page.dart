@@ -185,7 +185,8 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       child: Column(
         spacing: 16,
         children: [
-          Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)),
+          if (viewModel.errorMessage.value != null)
+            FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
           Expanded(child: layoutBuilder),
         ],

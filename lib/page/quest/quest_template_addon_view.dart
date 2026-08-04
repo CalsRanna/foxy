@@ -240,33 +240,34 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          Watch(
-            (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-          ),
-          FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '任务链', children: chainRows),
-          FoxyFormSection(title: '接取条件', children: requirementRows),
-          FoxyFormSection(title: '奖励与特殊', children: rewardRows),
-          Row(
-            spacing: 8,
-            children: [
-              Watch(
-                (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(),
-                  child: Text('保存'),
+    return Watch(
+      (_) => SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            if (viewModel.errorMessage.value != null)
+              FoxyInlineError(message: viewModel.errorMessage.value),
+            FoxyFormSection(title: '基本信息', children: basicRows),
+            FoxyFormSection(title: '任务链', children: chainRows),
+            FoxyFormSection(title: '接取条件', children: requirementRows),
+            FoxyFormSection(title: '奖励与特殊', children: rewardRows),
+            Row(
+              spacing: 8,
+              children: [
+                Watch(
+                  (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(),
+                    child: Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: () => _goBack(), child: Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: () => _goBack(), child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -193,7 +193,12 @@ class _ReferenceLootTemplateListPageState
       },
     );
 
-    var children = [Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)), toolbar, Expanded(child: layoutBuilder)];
+    var children = [
+      if (viewModel.errorMessage.value != null)
+        FoxyInlineError(message: viewModel.errorMessage.value),
+      toolbar,
+      Expanded(child: layoutBuilder),
+    ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

@@ -31,109 +31,119 @@ class _GameObjectTemplateAddonViewState
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          Watch(
-            (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-          ),
-          FoxyFormSection(
-            title: '基础信息',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '编号',
-                      child: FoxyNumberInput<int>(
-                        placeholder: 'entry',
-                        controller: viewModel.entryController,
+    return Watch(
+      (_) => SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            if (viewModel.errorMessage.value != null)
+              FoxyInlineError(message: viewModel.errorMessage.value),
+            FoxyFormSection(
+              title: '基础信息',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '编号',
+                        child: FoxyNumberInput<int>(
+                          placeholder: 'entry',
+                          controller: viewModel.entryController,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '阵营模板',
-                      child: FoxyEntityPicker(
-                        delegate: FoxyEntityPickerDelegates.dbcFactionTemplate,
-                        controller: viewModel.factionController,
-                        placeholder: 'faction',
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '阵营模板',
+                        child: FoxyEntityPicker(
+                          delegate:
+                              FoxyEntityPickerDelegates.dbcFactionTemplate,
+                          controller: viewModel.factionController,
+                          placeholder: 'faction',
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '标志位',
-                      child: FoxyFlagPicker(
-                        controller: viewModel.flagsController,
-                        flags: kGameObjectFlagItems,
-                        title: '游戏对象标志位',
-                        placeholder: 'flags',
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '标志位',
+                        child: FoxyFlagPicker(
+                          controller: viewModel.flagsController,
+                          flags: kGameObjectFlagItems,
+                          title: '游戏对象标志位',
+                          placeholder: 'flags',
+                        ),
                       ),
                     ),
-                  ),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '金币与装饰',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '最小金币',
-                      child: FoxyNumberInput<int>(
-                        placeholder: 'mingold',
-                        controller: viewModel.minGoldController,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '最大金币',
-                      child: FoxyNumberInput<int>(
-                        placeholder: 'maxgold',
-                        controller: viewModel.maxGoldController,
-                      ),
-                    ),
-                  ),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: _artKitInput(0, viewModel.artkit0Controller)),
-                  Expanded(child: _artKitInput(1, viewModel.artkit1Controller)),
-                  Expanded(child: _artKitInput(2, viewModel.artkit2Controller)),
-                  Expanded(child: _artKitInput(3, viewModel.artkit3Controller)),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Watch(
-                (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(),
-                  child: const Text('保存'),
+                    const Expanded(child: SizedBox()),
+                  ],
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
-            ],
-          ),
-        ],
+              ],
+            ),
+            FoxyFormSection(
+              title: '金币与装饰',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '最小金币',
+                        child: FoxyNumberInput<int>(
+                          placeholder: 'mingold',
+                          controller: viewModel.minGoldController,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '最大金币',
+                        child: FoxyNumberInput<int>(
+                          placeholder: 'maxgold',
+                          controller: viewModel.maxGoldController,
+                        ),
+                      ),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: _artKitInput(0, viewModel.artkit0Controller),
+                    ),
+                    Expanded(
+                      child: _artKitInput(1, viewModel.artkit1Controller),
+                    ),
+                    Expanded(
+                      child: _artKitInput(2, viewModel.artkit2Controller),
+                    ),
+                    Expanded(
+                      child: _artKitInput(3, viewModel.artkit3Controller),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Watch(
+                  (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(),
+                    child: const Text('保存'),
+                  ),
+                ),
+                ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

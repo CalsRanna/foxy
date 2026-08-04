@@ -137,10 +137,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
               if (configured)
                 settingDialogReadonlyPath(context, path)
               else
-                settingDialogMutedHint(
-                  context,
-                  '尚未配置客户端目录，请先前往设置页「目录设置」中配置。',
-                ),
+                settingDialogMutedHint(context, '尚未配置客户端目录，请先前往设置页「目录设置」中配置。'),
               if (error != null)
                 settingDialogBanner(
                   context,

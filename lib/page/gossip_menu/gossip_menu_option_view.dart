@@ -32,8 +32,7 @@ class GossipMenuOptionView extends StatefulWidget {
 }
 
 class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
-  final viewModel = GetIt.instance
-      .get<GossipMenuOptionLinkedListViewModel>();
+  final viewModel = GetIt.instance.get<GossipMenuOptionLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -377,9 +376,8 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
         child: Column(
           spacing: 16,
           children: [
-            Watch(
-              (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-            ),
+            if (viewModel.errorMessage.value != null)
+              FoxyInlineError(message: viewModel.errorMessage.value),
             toolbar,
             table,
           ],

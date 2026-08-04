@@ -182,10 +182,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
-                  children: [
-                    Icon(LucideIcons.rotateCw, size: 15),
-                    Text('重试'),
-                  ],
+                  children: [Icon(LucideIcons.rotateCw, size: 15), Text('重试')],
                 ),
               ),
             ],

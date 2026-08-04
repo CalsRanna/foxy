@@ -20,7 +20,8 @@ enum DirectoryConfigTarget {
   dbcPath(
     title: '服务端 DBC 目录',
     icon: LucideIcons.hardDrive,
-    description: '包含 Spell.dbc、Faction.dbc 等 .dbc 文件的目录，'
+    description:
+        '包含 Spell.dbc、Faction.dbc 等 .dbc 文件的目录，'
         '用于导入 DBC 数据到 foxy 库（以 DBC 为准覆盖对应表）。',
   );
 
@@ -79,11 +80,7 @@ class DirectoryPathForm extends StatefulWidget {
   final SetupStatusViewModel vm;
   final DirectoryConfigTarget target;
 
-  const DirectoryPathForm({
-    super.key,
-    required this.vm,
-    required this.target,
-  });
+  const DirectoryPathForm({super.key, required this.vm, required this.target});
 
   @override
   State<DirectoryPathForm> createState() => DirectoryPathFormState();
@@ -224,10 +221,7 @@ class DirectorySettingRow extends StatelessWidget {
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               spacing: 6,
-              children: [
-                Icon(LucideIcons.pencil, size: 15),
-                Text('修改'),
-              ],
+              children: [Icon(LucideIcons.pencil, size: 15), Text('修改')],
             ),
           ),
         ],

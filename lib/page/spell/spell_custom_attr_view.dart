@@ -36,9 +36,8 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            Watch(
-              (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-            ),
+            if (viewModel.errorMessage.value != null)
+              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(
               title: '自定义属性',
               children: [

@@ -47,8 +47,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
 
   /// 导入子任务是否已完成：库内表已就绪（快照）或本次会话导入成功。
   bool get _importCompleted =>
-      _importDoneAtCheck ||
-      _importVm.status.value == WorkflowStatus.succeeded;
+      _importDoneAtCheck || _importVm.status.value == WorkflowStatus.succeeded;
   DbcImportWorkflowViewModel get _importVm => widget.importVm;
   SetupStatusViewModel get _setupVm => widget.setupVm;
 
@@ -142,14 +141,8 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     }
     if (importStatus == WorkflowStatus.failed) {
       return [
-        ShadButton.outline(
-          onPressed: _retryImport,
-          child: const Text('重试'),
-        ),
-        ShadButton.destructive(
-          onPressed: _exitApp,
-          child: const Text('退出应用'),
-        ),
+        ShadButton.outline(onPressed: _retryImport, child: const Text('重试')),
+        ShadButton.destructive(onPressed: _exitApp, child: const Text('退出应用')),
       ];
     }
     if (iconStatus == WorkflowStatus.failed) {
@@ -158,10 +151,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           onPressed: _retryIconExtract,
           child: const Text('重试'),
         ),
-        ShadButton.destructive(
-          onPressed: _exitApp,
-          child: const Text('退出应用'),
-        ),
+        ShadButton.destructive(onPressed: _exitApp, child: const Text('退出应用')),
       ];
     }
     return [
@@ -181,10 +171,9 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   }
 
   Widget _buildDirectoryStep(int stepIndex) {
-    final target =
-        stepIndex == 0
-            ? DirectoryConfigTarget.clientDir
-            : DirectoryConfigTarget.dbcPath;
+    final target = stepIndex == 0
+        ? DirectoryConfigTarget.clientDir
+        : DirectoryConfigTarget.dbcPath;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -216,43 +205,43 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       title: '提取游戏图标',
       child: switch ((running, iconSucceeded, failed)) {
         (true, _, _) => settingDialogProgressPanel(
-            context,
-            ratio: _iconVm.progress.value,
-            label: _iconVm.progressLabel.value,
-            detail: _iconVm.progressDetail.value,
-            trailing: ShadButton.outline(
-              size: ShadButtonSize.sm,
-              onPressed: cancelling ? null : _iconVm.cancel,
-              child: Text(cancelling ? '正在取消…' : '取消提取'),
-            ),
+          context,
+          ratio: _iconVm.progress.value,
+          label: _iconVm.progressLabel.value,
+          detail: _iconVm.progressDetail.value,
+          trailing: ShadButton.outline(
+            size: ShadButtonSize.sm,
+            onPressed: cancelling ? null : _iconVm.cancel,
+            child: Text(cancelling ? '正在取消…' : '取消提取'),
           ),
+        ),
         (_, true, _) => settingDialogBanner(
-            context,
-            text: '提取完成：图标已缓存到应用数据目录，直接显示在列表页。',
-            color: theme.colorScheme.primary,
-            icon: LucideIcons.circleCheck,
-          ),
+          context,
+          text: '提取完成：图标已缓存到应用数据目录，直接显示在列表页。',
+          color: theme.colorScheme.primary,
+          icon: LucideIcons.circleCheck,
+        ),
         (_, _, true) => settingDialogBanner(
-            context,
-            text: error ?? '提取失败',
-            color: theme.colorScheme.destructive,
-            icon: LucideIcons.triangleAlert,
-          ),
+          context,
+          text: error ?? '提取失败',
+          color: theme.colorScheme.destructive,
+          icon: LucideIcons.triangleAlert,
+        ),
         _ => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 8,
-            children: [
-              settingDialogMutedHint(
-                context,
-                _importCompleted
-                    ? '自动开始提取图标（约 6300 个，BLP 原始格式），完成后显示在列表页。'
-                    : '导入完成后自动开始提取图标。',
-              ),
-              if (clientDir != null)
-                settingDialogMutedHint(context, '客户端目录：$clientDir'),
-            ],
-          ),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 8,
+          children: [
+            settingDialogMutedHint(
+              context,
+              _importCompleted
+                  ? '自动开始提取图标（约 6300 个，BLP 原始格式），完成后显示在列表页。'
+                  : '导入完成后自动开始提取图标。',
+            ),
+            if (clientDir != null)
+              settingDialogMutedHint(context, '客户端目录：$clientDir'),
+          ],
+        ),
       },
     );
   }
@@ -270,54 +259,54 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       title: '导入 DBC 数据',
       child: switch ((running, _importCompleted, failed)) {
         (true, _, _) => settingDialogProgressPanel(
-            context,
-            ratio: _importVm.progress.value,
-            label: _importVm.progressLabel.value,
-            detail: _importVm.progressDetail.value,
-            trailing: ShadButton.outline(
-              size: ShadButtonSize.sm,
-              onPressed: cancelling ? null : _importVm.cancel,
-              child: Text(cancelling ? '正在取消…' : '取消导入'),
-            ),
+          context,
+          ratio: _importVm.progress.value,
+          label: _importVm.progressLabel.value,
+          detail: _importVm.progressDetail.value,
+          trailing: ShadButton.outline(
+            size: ShadButtonSize.sm,
+            onPressed: cancelling ? null : _importVm.cancel,
+            child: Text(cancelling ? '正在取消…' : '取消导入'),
           ),
+        ),
         (_, true, _) => settingDialogBanner(
-            context,
-            text:
-                '导入完成：写入 ${_importVm.result.value?.completed ?? 0} 个文件'
-                '${(_importVm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_importVm.result.value!.skipped} 个' : ''}。',
-            color: theme.colorScheme.primary,
-            icon: LucideIcons.circleCheck,
-          ),
+          context,
+          text:
+              '导入完成：写入 ${_importVm.result.value?.completed ?? 0} 个文件'
+              '${(_importVm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_importVm.result.value!.skipped} 个' : ''}。',
+          color: theme.colorScheme.primary,
+          icon: LucideIcons.circleCheck,
+        ),
         (_, _, true) => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 8,
-            children: [
-              settingDialogBanner(
-                context,
-                text: error ?? '导入失败',
-                color: theme.colorScheme.destructive,
-                icon: LucideIcons.triangleAlert,
-              ),
-              settingDialogMutedHint(
-                context,
-                '导入以 DBC 为准，将覆盖 foxy 库中对应表的数据。可重试。',
-              ),
-            ],
-          ),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 8,
+          children: [
+            settingDialogBanner(
+              context,
+              text: error ?? '导入失败',
+              color: theme.colorScheme.destructive,
+              icon: LucideIcons.triangleAlert,
+            ),
+            settingDialogMutedHint(
+              context,
+              '导入以 DBC 为准，将覆盖 foxy 库中对应表的数据。可重试。',
+            ),
+          ],
+        ),
         _ => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 8,
-            children: [
-              settingDialogMutedHint(
-                context,
-                '导入以 DBC 为准：将覆盖 foxy 库中对应表的数据；若需保留库内数据请先自行备份。',
-              ),
-              if (dbcPath != null)
-                settingDialogMutedHint(context, '服务端 DBC 目录：$dbcPath'),
-            ],
-          ),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 8,
+          children: [
+            settingDialogMutedHint(
+              context,
+              '导入以 DBC 为准：将覆盖 foxy 库中对应表的数据；若需保留库内数据请先自行备份。',
+            ),
+            if (dbcPath != null)
+              settingDialogMutedHint(context, '服务端 DBC 目录：$dbcPath'),
+          ],
+        ),
       },
     );
   }
@@ -386,7 +375,11 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           Row(
             spacing: 8,
             children: [
-              Icon(icon, size: 16, color: colorScheme.onSurface.withValues(alpha: 0.75)),
+              Icon(
+                icon,
+                size: 16,
+                color: colorScheme.onSurface.withValues(alpha: 0.75),
+              ),
               Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
             ],
           ),
@@ -421,10 +414,10 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   void _exitApp() => exit(0);
 
   bool _isStepDone(int index) => switch (index) {
-        0 => _setupVm.isClientDirConfigured,
-        1 => _setupVm.isDbcPathConfigured,
-        _ => _importCompleted && _iconVm.status.value == WorkflowStatus.succeeded,
-      };
+    0 => _setupVm.isClientDirConfigured,
+    1 => _setupVm.isDbcPathConfigured,
+    _ => _importCompleted && _iconVm.status.value == WorkflowStatus.succeeded,
+  };
 
   Future<void> _retryIconExtract() async {
     try {

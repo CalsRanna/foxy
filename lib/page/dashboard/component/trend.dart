@@ -12,6 +12,7 @@ final _kCreateColor = ShadGreenColorScheme.light().primary;
 final _kDeleteColor = ShadRedColorScheme.light().primary;
 
 final _kUpdateColor = ShadBlueColorScheme.light().primary;
+
 class Trend extends StatelessWidget {
   final List<ActivityLogEntity> activities;
 
@@ -52,6 +53,7 @@ class Trend extends StatelessWidget {
     );
   }
 }
+
 class _Divider extends StatelessWidget {
   const _Divider();
 
@@ -66,6 +68,7 @@ class _Divider extends StatelessWidget {
     );
   }
 }
+
 class _TrendItem extends StatelessWidget {
   final ActivityLogEntity activity;
 

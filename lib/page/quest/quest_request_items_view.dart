@@ -99,31 +99,32 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          Watch(
-            (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-          ),
-          FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '表情与完成文本', children: emoteTextRows),
-          Row(
-            spacing: 8,
-            children: [
-              Watch(
-                (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(),
-                  child: Text('保存'),
+    return Watch(
+      (_) => SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            if (viewModel.errorMessage.value != null)
+              FoxyInlineError(message: viewModel.errorMessage.value),
+            FoxyFormSection(title: '基本信息', children: basicRows),
+            FoxyFormSection(title: '表情与完成文本', children: emoteTextRows),
+            Row(
+              spacing: 8,
+              children: [
+                Watch(
+                  (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(),
+                    child: Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: () => _goBack(), child: Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: () => _goBack(), child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -35,9 +35,8 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            Watch(
-              (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-            ),
+            if (viewModel.errorMessage.value != null)
+              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(
               title: '法术加成',
               children: [

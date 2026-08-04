@@ -197,7 +197,7 @@ class _PlayerCreateInfoCastSpellViewState
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
           children: [
-            FoxyInlineError(message: _errorMessage),
+            if (_errorMessage != null) FoxyInlineError(message: _errorMessage),
             Row(
               spacing: 8,
               children: [

@@ -242,7 +242,10 @@ class _SettingPageState extends State<SettingPage> {
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
-                children: [Icon(LucideIcons.externalLink, size: 15), Text('打开')],
+                children: [
+                  Icon(LucideIcons.externalLink, size: 15),
+                  Text('打开'),
+                ],
               ),
             ),
           ),

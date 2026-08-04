@@ -38,9 +38,8 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
         child: Column(
           spacing: 16,
           children: [
-            Watch(
-              (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-            ),
+            if (viewModel.errorMessage.value != null)
+              FoxyInlineError(message: viewModel.errorMessage.value),
             Row(
               children: [
                 ShadButton(

@@ -310,12 +310,11 @@ class _DisenchantLootTemplateViewState
     );
 
     var children = [
-        Watch(
-          (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-        ),
-        toolbar,
-        layoutBuilder,
-      ];
+      if (viewModel.errorMessage.value != null)
+        FoxyInlineError(message: viewModel.errorMessage.value),
+      toolbar,
+      layoutBuilder,
+    ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

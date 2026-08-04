@@ -168,8 +168,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () =>
-                      _navigateToDetail(key: item.key),
+                  onPressed: () => _navigateToDetail(key: item.key),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
@@ -196,7 +195,8 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
       child: Column(
         spacing: 16,
         children: [
-          Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)),
+          if (viewModel.errorMessage.value != null)
+            FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
           Expanded(child: table),
         ],
