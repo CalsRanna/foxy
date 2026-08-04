@@ -44,9 +44,9 @@ class QuestTemplateRepository
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS qt');
+    var builder = laconic.table('$_table as qt');
     builder = builder.leftJoin(
-      'quest_template_locale AS qtl',
+      'quest_template_locale as qtl',
       (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
@@ -64,13 +64,13 @@ class QuestTemplateRepository
     QuestTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS qt');
+    var builder = laconic.table('$_table as qt');
     final fields = <String>[
       'qt.ID',
       'qt.LogTitle',
-      if (localeEnabled) 'qtl.Title AS localeTitle',
+      if (localeEnabled) 'qtl.Title as localeTitle',
       'qt.QuestDescription',
-      if (localeEnabled) 'qtl.Details AS localeDetails',
+      if (localeEnabled) 'qtl.Details as localeDetails',
       'qt.QuestType',
       'qt.QuestLevel',
       'qt.MinLevel',
@@ -78,7 +78,7 @@ class QuestTemplateRepository
     builder = builder.select(fields);
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'quest_template_locale AS qtl',
+        'quest_template_locale as qtl',
         (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
       );
     }

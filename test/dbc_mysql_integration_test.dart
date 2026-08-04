@@ -86,19 +86,19 @@ void main() {
           ),
           listen: queries.add,
         );
-        await laconic.statement('DROP TABLE IF EXISTS `$writeResultTable`');
+        await laconic.statement('drop table if exists `$writeResultTable`');
         await laconic.statement(
-          'CREATE TABLE `$writeResultTable` ('
-          '`id` INT NOT NULL, '
-          '`value` VARCHAR(32) NOT NULL, '
-          'PRIMARY KEY (`id`)'
-          ') ENGINE=InnoDB',
+          'create table `$writeResultTable` ('
+          '`id` int not null, '
+          '`value` varchar(32) not null, '
+          'primary key (`id`)'
+          ') engine=innodb',
         );
       });
 
       setUp(() async {
         queries.clear();
-        await laconic.statement('DELETE FROM `$writeResultTable`');
+        await laconic.statement('delete from `$writeResultTable`');
         await laconic.table(writeResultTable).insert([
           {'id': 1, 'value': 'alpha'},
           {'id': 2, 'value': 'beta'},
@@ -107,7 +107,7 @@ void main() {
       });
 
       tearDownAll(() async {
-        await laconic.statement('DROP TABLE IF EXISTS `$writeResultTable`');
+        await laconic.statement('drop table if exists `$writeResultTable`');
         await laconic.close();
       });
 
@@ -157,12 +157,12 @@ void main() {
 
       test('参数化 LIMIT 1 写入返回结果并通知 listener', () async {
         final matchedRows = await laconic.affectingStatement(
-          'UPDATE `$writeResultTable` SET `value` = ? '
-          'WHERE `value` = ? ORDER BY `id` LIMIT 1',
+          'update `$writeResultTable` set `value` = ? '
+          'where `value` = ? order by `id` limit 1',
           ['updated', 'alpha'],
         );
         final deletedRows = await laconic.affectingStatement(
-          'DELETE FROM `$writeResultTable` WHERE `value` = ? LIMIT 1',
+          'delete from `$writeResultTable` where `value` = ? limit 1',
           ['updated'],
         );
 

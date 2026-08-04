@@ -26,7 +26,7 @@ class PointOfInterestRepository
   }
 
   Future<int> countPointsOfInterest({PointOfInterestFilter? filter}) async {
-    var builder = laconic.table('$_table AS poi');
+    var builder = laconic.table('$_table as poi');
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
@@ -39,14 +39,14 @@ class PointOfInterestRepository
     int page = 1,
     PointOfInterestFilter? filter,
   }) async {
-    var builder = laconic.table('$_table AS poi').select([
+    var builder = laconic.table('$_table as poi').select([
       'poi.ID',
       'poi.Name',
-      if (localeEnabled) 'poil.Name AS localeName',
+      if (localeEnabled) 'poil.Name as localeName',
     ]);
     if (localeEnabled) {
       builder = builder.leftJoin(
-        '$_localeTable AS poil',
+        '$_localeTable as poil',
         (join) => join.on('poi.ID', 'poil.ID').where('poil.locale', 'zhCN'),
       );
     }

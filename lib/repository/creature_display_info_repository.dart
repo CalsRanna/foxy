@@ -36,7 +36,7 @@ class CreatureDisplayInfoRepository
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS cdi');
+    var builder = laconic.table('$_table as cdi');
     builder = _joinModelData(builder);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -51,14 +51,14 @@ class CreatureDisplayInfoRepository
     CreatureDisplayInfoFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS cdi');
+    var builder = laconic.table('$_table as cdi');
     builder = builder.select([
       'cdi.ID',
       'cdi.ModelID',
       'cdi.CreatureModelScale',
       'cdi.SizeClass',
       'cdi.BloodID',
-      'cmd.ModelName AS modelName',
+      'cmd.ModelName as modelName',
     ]);
     builder = _joinModelData(builder);
     builder = _applyFilter(builder, filter);
@@ -97,7 +97,7 @@ class CreatureDisplayInfoRepository
 
   QueryBuilder _joinModelData(QueryBuilder builder) {
     return builder.leftJoin(
-      '$_modelDataTable AS cmd',
+      '$_modelDataTable as cmd',
       (join) => join.on('cdi.ModelID', 'cmd.ID'),
     );
   }

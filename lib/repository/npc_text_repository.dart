@@ -39,8 +39,8 @@ class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
-      'text0_0 AS text0',
-      'text0_1 AS text1',
+      'text0_0 as text0',
+      'text0_1 as text1',
     ]);
     builder = _applyFilter(builder, filter);
     final results = await builder

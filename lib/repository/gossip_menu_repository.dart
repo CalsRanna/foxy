@@ -34,14 +34,14 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS gm');
+    var builder = laconic.table('$_table as gm');
     builder = builder.leftJoin(
-      'npc_text AS nt',
+      'npc_text as nt',
       (join) => join.on('gm.TextID', 'nt.ID'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'npc_text_locale AS ntl',
+        'npc_text_locale as ntl',
         (join) => join.on('gm.TextID', 'ntl.ID').where('ntl.Locale', 'zhCN'),
       );
     }
@@ -59,25 +59,25 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
     int page = 1,
     GossipMenuFilter? filter,
   }) async {
-    var builder = laconic.table('$_table AS gm');
+    var builder = laconic.table('$_table as gm');
     final fields = <String>[
       'gm.MenuID',
       'gm.TextID',
-      'nt.text0_0 AS text00',
-      'nt.text0_1 AS text01',
+      'nt.text0_0 as text00',
+      'nt.text0_1 as text01',
       if (localeEnabled) ...[
-        'ntl.Text0_0 AS textLocale00',
-        'ntl.Text0_1 AS textLocale01',
+        'ntl.Text0_0 as textLocale00',
+        'ntl.Text0_1 as textLocale01',
       ],
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'npc_text AS nt',
+      'npc_text as nt',
       (join) => join.on('gm.TextID', 'nt.ID'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'npc_text_locale AS ntl',
+        'npc_text_locale as ntl',
         (join) => join.on('gm.TextID', 'ntl.ID').where('ntl.Locale', 'zhCN'),
       );
     }

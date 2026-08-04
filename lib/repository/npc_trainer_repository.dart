@@ -26,7 +26,7 @@ class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
     int trainerId, {
     int page = 1,
   }) async {
-    var builder = laconic.table('$_table AS ts');
+    var builder = laconic.table('$_table as ts');
     builder = builder.select([
       'ts.TrainerId',
       'ts.SpellId',
@@ -37,7 +37,7 @@ class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
       'ds.NameSubtext_lang_zhCN as spellSubtext',
     ]);
     builder = builder.leftJoin(
-      'foxy.dbc_spell AS ds',
+      'foxy.dbc_spell as ds',
       (join) => join.on('ts.SpellId', 'ds.ID'),
     );
     builder = builder.where('ts.TrainerId', trainerId);

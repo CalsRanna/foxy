@@ -33,17 +33,17 @@ class CreatureQuestStarterRepository
       'cqs.id',
       'cqs.quest',
       'ct.name',
-      if (localeEnabled) 'ctl.Name AS localeName',
+      if (localeEnabled) 'ctl.Name as localeName',
     ];
-    var builder = laconic.table('$_table AS cqs');
+    var builder = laconic.table('$_table as cqs');
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'creature_template AS ct',
+      'creature_template as ct',
       (join) => join.on('cqs.id', 'ct.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'creature_template_locale AS ctl',
+        'creature_template_locale as ctl',
         (join) => join.on('cqs.id', 'ctl.entry').where('ctl.locale', 'zhCN'),
       );
     }

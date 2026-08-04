@@ -15,7 +15,7 @@ class WaypointDataRepository with RepositoryMixin {
   Future<int> countWaypointDatas({WaypointDataFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
-    builder = builder.select(['id', 'COUNT(point) as points']);
+    builder = builder.select(['id', 'count(point) as points']);
     builder = builder.groupBy('id');
     return builder.count();
   }
@@ -26,7 +26,7 @@ class WaypointDataRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
-    builder = builder.select(['id', 'COUNT(point) as points']);
+    builder = builder.select(['id', 'count(point) as points']);
     builder = builder.groupBy('id');
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('id');

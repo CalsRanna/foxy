@@ -27,7 +27,7 @@ void main() {
     // 重试前先取 MAX(id),where 限定 entryorguid=10 + source_type=1
     // (第三个绑定是 laconic first() 附加的 limit 1)。
     final maxSelect = queries
-        .where((q) => q.sql.contains('MAX'))
+        .where((q) => q.sql.toLowerCase().contains('max'))
         .single;
     expect(maxSelect.bindings.take(2).toList(), [10, 1]);
 

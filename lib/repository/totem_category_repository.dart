@@ -28,7 +28,7 @@ class TotemCategoryRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     builder = builder
         .select([
           'ID',
-          'Name_lang_zhCN AS name',
+          'Name_lang_zhCN as name',
           'TotemCategoryType',
           'TotemCategoryMask',
         ])

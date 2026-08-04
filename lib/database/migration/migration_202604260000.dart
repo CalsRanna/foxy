@@ -8,19 +8,19 @@ class Migration202604260000 implements Migration {
   @override
   Future<void> migrate(Laconic laconic) async {
     await laconic.statement('''
-      CREATE TABLE IF NOT EXISTS foxy.features (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL COMMENT '功能名称',
-        description VARCHAR(255) NOT NULL COMMENT '功能描述',
-        icon VARCHAR(50) NOT NULL COMMENT 'LucideIcons 图标标识',
-        router_menu VARCHAR(50) NOT NULL COMMENT 'RouterMenu 枚举值',
-        category VARCHAR(20) NOT NULL DEFAULT 'database' COMMENT '分类: database/dbc',
-        is_pinned TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否钉到侧边栏',
-        is_favorite TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否收藏到首页常用功能',
-        sort_order INT NOT NULL DEFAULT 0 COMMENT '排序号',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-      ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+      create table if not exists foxy.features (
+        id int auto_increment primary key,
+        name varchar(100) not null comment '功能名称',
+        description varchar(255) not null comment '功能描述',
+        icon varchar(50) not null comment 'LucideIcons 图标标识',
+        router_menu varchar(50) not null comment 'RouterMenu 枚举值',
+        category varchar(20) not null default 'database' comment '分类: database/dbc',
+        is_pinned tinyint(1) not null default 0 comment '是否钉到侧边栏',
+        is_favorite tinyint(1) not null default 0 comment '是否收藏到首页常用功能',
+        sort_order int not null default 0 comment '排序号',
+        created_at timestamp default current_timestamp,
+        updated_at timestamp default current_timestamp on update current_timestamp
+      ) default charset=utf8mb4 collate=utf8mb4_unicode_ci
     ''');
   }
 }

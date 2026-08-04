@@ -58,9 +58,9 @@ class ItemTemplateRepository
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS it');
+    var builder = laconic.table('$_table as it');
     builder = builder.leftJoin(
-      '$_localeTable AS itl',
+      '$_localeTable as itl',
       (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
@@ -78,7 +78,7 @@ class ItemTemplateRepository
     ItemTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS it');
+    var builder = laconic.table('$_table as it');
     final fields = <String>[
       'it.entry',
       'it.name',
@@ -87,19 +87,19 @@ class ItemTemplateRepository
       'it.InventoryType',
       'it.ItemLevel',
       'it.RequiredLevel',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'it.class AS classId',
-      'didi.InventoryIcon0 AS inventoryIcon',
+      if (localeEnabled) 'itl.Name as localeName',
+      'it.class as classId',
+      'didi.InventoryIcon0 as inventoryIcon',
     ];
     builder = builder.select(fields);
     if (localeEnabled) {
       builder = builder.leftJoin(
-        '$_localeTable AS itl',
+        '$_localeTable as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
+      'foxy.dbc_item_display_info as didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = _applyFilter(builder, filter);

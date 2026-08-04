@@ -202,13 +202,13 @@ void main() {
       final laconic = Laconic(driver, listen: queries.add);
 
       final affectedRows = await laconic.affectingStatement(
-        'UPDATE conditions SET Comment = ? WHERE SourceEntry = ? LIMIT 1',
+        'update conditions set Comment = ? where SourceEntry = ? limit 1',
         ['value', 42],
       );
 
       expect(affectedRows, 1);
       expect(queries.single.bindings, ['value', 42]);
-      expect(queries.single.sql, contains('LIMIT 1'));
+      expect(queries.single.sql, contains('limit 1'));
     });
   });
 

@@ -36,7 +36,7 @@ class SpellLootTemplateRepository
     int entry, {
     int page = 1,
   }) async {
-    var builder = laconic.table('$_table AS slt');
+    var builder = laconic.table('$_table as slt');
     final fields = <String>[
       'slt.Entry',
       'slt.Item',
@@ -48,24 +48,24 @@ class SpellLootTemplateRepository
       'slt.MinCount',
       'slt.MaxCount',
       'slt.Comment',
-      'it.name AS itemName',
+      'it.name as itemName',
       if (localeEnabled) 'itl.Name as localeName',
-      'it.Quality AS quality',
-      'didi.InventoryIcon0 AS icon',
+      'it.Quality as quality',
+      'didi.InventoryIcon0 as icon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('slt.Item', 'it.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
+      'foxy.dbc_item_display_info as didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = builder.where('slt.Entry', entry);

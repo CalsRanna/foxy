@@ -32,7 +32,7 @@ class SpellRepository
 
   @override
   Future<int> countSpells({SpellFilter? filter}) async {
-    var builder = laconic.table('$_table AS ds');
+    var builder = laconic.table('$_table as ds');
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
@@ -48,26 +48,26 @@ class SpellRepository
     SpellFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS ds');
+    var builder = laconic.table('$_table as ds');
     const fields = [
       'ds.ID',
-      'ds.Name_lang_enUS AS name',
-      'ds.NameSubtext_lang_enUS AS subtext',
-      'ds.Name_lang_zhCN AS localeName',
-      'ds.NameSubtext_lang_zhCN AS localeSubtext',
-      'ds.Description_lang_enUS AS description',
-      'ds.Description_lang_zhCN AS localeDescription',
-      'ds.AuraDescription_lang_enUS AS auraDescription',
-      'ds.AuraDescription_lang_zhCN AS localeAuraDescription',
-      'dsi.TextureFilename AS textureFilename',
+      'ds.Name_lang_enUS as name',
+      'ds.NameSubtext_lang_enUS as subtext',
+      'ds.Name_lang_zhCN as localeName',
+      'ds.NameSubtext_lang_zhCN as localeSubtext',
+      'ds.Description_lang_enUS as description',
+      'ds.Description_lang_zhCN as localeDescription',
+      'ds.AuraDescription_lang_enUS as auraDescription',
+      'ds.AuraDescription_lang_zhCN as localeAuraDescription',
+      'dsi.TextureFilename as textureFilename',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'foxy.dbc_spell_duration AS dsd',
+      'foxy.dbc_spell_duration as dsd',
       (join) => join.on('ds.DurationIndex', 'dsd.ID'),
     );
     builder = builder.leftJoin(
-      'foxy.dbc_spell_icon AS dsi',
+      'foxy.dbc_spell_icon as dsi',
       (join) => join.on('ds.SpellIconID', 'dsi.ID'),
     );
     builder = _applyFilter(builder, filter);

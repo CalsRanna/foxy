@@ -43,7 +43,7 @@ class BroadcastTextRepository
     builder = builder.select([
       'ID',
       'LanguageID',
-      "COALESCE(NULLIF(MaleText, ''), FemaleText) as display_text",
+      "coalesce(nullif(MaleText, ''), FemaleText) as display_text",
     ]);
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('ID');

@@ -51,9 +51,9 @@ class CreatureTemplateRepository
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS ct');
+    var builder = laconic.table('$_table as ct');
     builder = builder.leftJoin(
-      'creature_template_locale AS ctl',
+      'creature_template_locale as ctl',
       (join) => join.on('ct.entry', 'ctl.entry').where('ctl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
@@ -71,7 +71,7 @@ class CreatureTemplateRepository
     CreatureTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS ct');
+    var builder = laconic.table('$_table as ct');
     final fields = <String>[
       'ct.entry',
       'ct.name',
@@ -79,14 +79,14 @@ class CreatureTemplateRepository
       'ct.minlevel',
       'ct.maxlevel',
       if (localeEnabled) ...[
-        'ctl.Name AS localeName',
-        'ctl.Title AS localeSubName',
+        'ctl.Name as localeName',
+        'ctl.Title as localeSubName',
       ],
     ];
     builder = builder.select(fields);
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'creature_template_locale AS ctl',
+        'creature_template_locale as ctl',
         (join) => join.on('ct.entry', 'ctl.entry').where('ctl.locale', 'zhCN'),
       );
     }

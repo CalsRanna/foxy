@@ -49,30 +49,30 @@ class GameObjectQuestItemRepository
     int gameObjectEntry, {
     int page = 1,
   }) async {
-    var builder = laconic.table('$_table AS gq');
+    var builder = laconic.table('$_table as gq');
     final fields = <String>[
       'gq.GameObjectEntry',
       'gq.Idx',
       'gq.ItemId',
       'gq.VerifiedBuild',
-      'it.name AS itemName',
-      if (localeEnabled) 'itl.Name AS itemLocaleName',
-      'it.Quality AS itemQuality',
-      'didi.InventoryIcon0 AS itemIcon',
+      'it.name as itemName',
+      if (localeEnabled) 'itl.Name as itemLocaleName',
+      'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('gq.ItemId', 'it.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
+      'foxy.dbc_item_display_info as didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = builder.where('gq.GameObjectEntry', gameObjectEntry);

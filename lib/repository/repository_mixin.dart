@@ -40,7 +40,7 @@ mixin RepositoryMixin {
     Map<String, Object?> where = const {},
     int firstValue = 1,
   }) async {
-    var builder = laconic.table(table).select(['MAX(`$column`) AS max_id']);
+    var builder = laconic.table(table).select(['max(`$column`) as max_id']);
     for (final entry in where.entries) {
       builder = builder.where(entry.key, entry.value);
     }

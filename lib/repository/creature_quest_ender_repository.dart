@@ -31,17 +31,17 @@ class CreatureQuestEnderRepository
       'cqe.id',
       'cqe.quest',
       'ct.name',
-      if (localeEnabled) 'ctl.Name AS localeName',
+      if (localeEnabled) 'ctl.Name as localeName',
     ];
-    var builder = laconic.table('$_table AS cqe');
+    var builder = laconic.table('$_table as cqe');
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'creature_template AS ct',
+      'creature_template as ct',
       (join) => join.on('cqe.id', 'ct.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'creature_template_locale AS ctl',
+        'creature_template_locale as ctl',
         (join) => join.on('cqe.id', 'ctl.entry').where('ctl.locale', 'zhCN'),
       );
     }

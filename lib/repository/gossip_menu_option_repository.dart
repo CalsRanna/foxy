@@ -51,12 +51,12 @@ class GossipMenuOptionRepository
       'gmo.OptionType',
       'gmo.OptionNpcFlag',
       'gmo.ActionMenuID',
-      if (localeEnabled) 'gmol.OptionText AS localeOptionText',
+      if (localeEnabled) 'gmol.OptionText as localeOptionText',
     ];
-    var builder = laconic.table('$_table AS gmo').select(fields);
+    var builder = laconic.table('$_table as gmo').select(fields);
     if (localeEnabled) {
       builder = builder.leftJoin(
-        '$_localeTable AS gmol',
+        '$_localeTable as gmol',
         (join) => join
             .on('gmo.MenuID', 'gmol.MenuID')
             .on('gmo.OptionID', 'gmol.OptionID')

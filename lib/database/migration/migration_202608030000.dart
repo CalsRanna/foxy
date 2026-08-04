@@ -22,36 +22,36 @@ class Migration202608030000 implements Migration {
           .toList();
       if (unsignedColumns.isEmpty) continue;
       final tableCount = await laconic
-          .table('information_schema.TABLES')
-          .where('TABLE_SCHEMA', 'foxy')
-          .where('TABLE_NAME', definition.tableName)
+          .table('information_schema.tables')
+          .where('table_schema', 'foxy')
+          .where('table_name', definition.tableName)
           .count();
       if (tableCount == 0) continue; // 未导入过的 DBC 表跳过
 
       for (final column in unsignedColumns) {
         final columnCount = await laconic
-            .table('information_schema.COLUMNS')
-            .where('TABLE_SCHEMA', 'foxy')
-            .where('TABLE_NAME', definition.tableName)
-            .where('COLUMN_NAME', column.name)
+            .table('information_schema.columns')
+            .where('table_schema', 'foxy')
+            .where('table_name', definition.tableName)
+            .where('column_name', column.name)
             .count();
         if (columnCount == 0) continue;
         if (column.type == FieldType.uint32) {
           // 必须先还原数据再 ALTER:负数写入 UNSIGNED 列会直接报 1264。
           await laconic.statement(
-            'UPDATE foxy.`${definition.tableName}` SET '
+            'update foxy.`${definition.tableName}` set '
             '`${column.name}` = `${column.name}` + 4294967296 '
-            'WHERE `${column.name}` < 0',
+            'where `${column.name}` < 0',
           );
           await laconic.statement(
-            'ALTER TABLE foxy.`${definition.tableName}` '
-            'MODIFY `${column.name}` INT UNSIGNED',
+            'alter table foxy.`${definition.tableName}` '
+            'modify `${column.name}` int unsigned',
           );
         } else {
           // uint64 由 int64 读出,存量不可能有负数;直接扩列型。
           await laconic.statement(
-            'ALTER TABLE foxy.`${definition.tableName}` '
-            'MODIFY `${column.name}` BIGINT UNSIGNED',
+            'alter table foxy.`${definition.tableName}` '
+            'modify `${column.name}` bigint unsigned',
           );
         }
       }

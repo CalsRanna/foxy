@@ -27,7 +27,7 @@ class ItemLimitCategoryRepository
   }) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     builder = builder
-        .select(['ID', 'Name_lang_zhCN AS name', 'Quantity', 'Flags'])
+        .select(['ID', 'Name_lang_zhCN as name', 'Quantity', 'Flags'])
         .orderBy('ID')
         .limit(kPageSize)
         .offset((page - 1) * kPageSize);

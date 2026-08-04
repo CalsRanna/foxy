@@ -39,15 +39,15 @@ class MigrationRunner {
     // 字符集必须显式锁 utf8mb4：老服务器(MySQL 5.x 一键端)默认 latin1,
     // 不声明则 foxy 库/表继承 latin1,迁移插入的中文即报 1366 无法启动。
     await laconic.statement(
-      'CREATE DATABASE IF NOT EXISTS foxy '
-      'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+      'create database if not exists foxy '
+      'character set utf8mb4 collate utf8mb4_unicode_ci',
     );
-    await laconic.statement('''
-      CREATE TABLE IF NOT EXISTS foxy.migrations (
-        name VARCHAR(200) NOT NULL PRIMARY KEY,
-        applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-    ''');
+    await laconic.statement(
+      'create table if not exists foxy.migrations ('
+      'name varchar(200) not null primary key, '
+      'applied_at timestamp default current_timestamp'
+      ') default charset=utf8mb4 collate=utf8mb4_unicode_ci',
+    );
     // 存量自愈：老库在本次修复前可能已建成 latin1/utf8(非 mb4)。
     // 必须在跑迁移之前执行——插中文的迁移排在列表最前,latin1 表上
     // 它们自身就 1366 卡死,放迁移末尾的新迁移根本跑不到。
@@ -86,20 +86,22 @@ class MigrationRunner {
   /// 不会产生双重乱码;utf8(3 字节)列里的中文转换无损。
   Future<void> _ensureUtf8mb4() async {
     await laconic.statement(
-      'ALTER DATABASE foxy CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+      'alter database foxy character set utf8mb4 collate utf8mb4_unicode_ci',
     );
     final rows = await laconic
-        .table('information_schema.TABLES')
-        .select(['TABLE_NAME', 'TABLE_COLLATION'])
-        .where('TABLE_SCHEMA', 'foxy')
+        .table('information_schema.tables')
+        .select(['table_name', 'table_collation'])
+        .where('table_schema', 'foxy')
         .get();
     for (final row in rows) {
+      // 结果 map 的 key 是服务器返回的声明大小写(information_schema 为大写),
+      // 与查询里的小写标识符无关。
       final collation = row.toMap()['TABLE_COLLATION'] as String?;
       if (collation != null && collation.startsWith('utf8mb4')) continue;
       final tableName = row.toMap()['TABLE_NAME'] as String;
       await laconic.statement(
-        'ALTER TABLE foxy.`$tableName` '
-        'CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+        'alter table foxy.`$tableName` '
+        'convert to character set utf8mb4 collate utf8mb4_unicode_ci',
       );
     }
   }

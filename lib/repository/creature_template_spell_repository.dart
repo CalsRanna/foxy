@@ -49,17 +49,17 @@ class CreatureTemplateSpellRepository
     int page = 1,
   }) async {
     final results = await laconic
-        .table('$_table AS cts')
+        .table('$_table as cts')
         .select([
           'cts.CreatureID',
           'cts.`Index`',
           'cts.Spell',
           'cts.VerifiedBuild',
-          'ds.Name_lang_zhCN AS spellName',
-          'ds.NameSubtext_lang_zhCN AS spellSubtext',
+          'ds.Name_lang_zhCN as spellName',
+          'ds.NameSubtext_lang_zhCN as spellSubtext',
         ])
         .leftJoin(
-          'foxy.dbc_spell AS ds',
+          'foxy.dbc_spell as ds',
           (join) => join.on('cts.Spell', 'ds.ID'),
         )
         .where('cts.CreatureID', creatureID)

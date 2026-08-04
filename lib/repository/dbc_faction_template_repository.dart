@@ -32,7 +32,7 @@ class DbcFactionTemplateRepository
   Future<int> countDbcFactionTemplates({
     DbcFactionTemplateFilter? filter,
   }) async {
-    var builder = laconic.table('$_table AS dft');
+    var builder = laconic.table('$_table as dft');
     if (filter != null && filter.name.isNotEmpty) {
       builder = _joinFaction(builder);
     }
@@ -49,7 +49,7 @@ class DbcFactionTemplateRepository
     DbcFactionTemplateFilter? filter,
   }) async {
     final offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS dft');
+    var builder = laconic.table('$_table as dft');
     builder = builder.select([
       'dft.ID',
       'dft.Faction',
@@ -57,8 +57,8 @@ class DbcFactionTemplateRepository
       'dft.FactionGroup',
       'dft.FriendGroup',
       'dft.EnemyGroup',
-      'df.Name_lang_zhCN AS factionNameZhCN',
-      'df.Name_lang_enUS AS factionNameEnUS',
+      'df.Name_lang_zhCN as factionNameZhCN',
+      'df.Name_lang_enUS as factionNameEnUS',
     ]);
     builder = _joinFaction(builder);
     builder = _applyFilter(builder, filter);
@@ -100,7 +100,7 @@ class DbcFactionTemplateRepository
 
   QueryBuilder _joinFaction(QueryBuilder builder) {
     return builder.leftJoin(
-      '$_factionTable AS df',
+      '$_factionTable as df',
       (join) => join.on('dft.Faction', 'df.ID'),
     );
   }

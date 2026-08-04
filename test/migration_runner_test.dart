@@ -11,18 +11,18 @@ void main() {
 
       expect(
         driver.sqlLog,
-        contains(contains('CREATE DATABASE IF NOT EXISTS')),
+        contains(contains('create database if not exists')),
       );
       // 建库必须显式锁 utf8mb4,否则老服务器默认 latin1 导致迁移插中文 1366。
       expect(
-        driver.sqlLog.firstWhere((sql) => sql.contains('CREATE DATABASE')),
-        contains('CHARACTER SET utf8mb4'),
+        driver.sqlLog.firstWhere((sql) => sql.contains('create database')),
+        contains('character set utf8mb4'),
       );
       expect(
         driver.sqlLog,
-        contains(contains('ALTER DATABASE foxy CHARACTER SET utf8mb4')),
+        contains(contains('alter database foxy character set utf8mb4')),
       );
-      expect(driver.sqlLog, contains(contains('CREATE TABLE IF NOT EXISTS')));
+      expect(driver.sqlLog, contains(contains('create table if not exists')));
       // 7 个迁移全部执行并写入 foxy.migrations 记录。
       expect(driver.appliedMigrations, hasLength(7));
       expect(
@@ -37,19 +37,19 @@ void main() {
       // information_schema 空表驱动下,202607190000 走「列不存在跳过」分支,
       // 不产生 DROP COLUMN;202608030000 对未导入的 DBC 表跳过 ALTER。
       expect(
-        driver.sqlLog.where((sql) => sql.contains('DROP COLUMN')),
+        driver.sqlLog.where((sql) => sql.contains('drop column')),
         isEmpty,
       );
       expect(
-        driver.sqlLog.where((sql) => sql.contains('ALTER TABLE')),
+        driver.sqlLog.where((sql) => sql.contains('alter table')),
         isEmpty,
       );
       // 记录顺序 = 建库 → 建表 → 迁移。
       final createDatabaseIndex = driver.sqlLog.indexWhere(
-        (sql) => sql.contains('CREATE DATABASE'),
+        (sql) => sql.contains('create database'),
       );
       final createTableIndex = driver.sqlLog.indexWhere(
-        (sql) => sql.contains('CREATE TABLE'),
+        (sql) => sql.contains('create table'),
       );
       expect(createDatabaseIndex, lessThan(createTableIndex));
     });
@@ -78,7 +78,7 @@ void main() {
 
       // 每个 latin1 存量表产生一条 CONVERT 语句,utf8mb4 表不产生。
       final converts = driver.sqlLog.where(
-        (sql) => sql.contains('CONVERT TO CHARACTER SET utf8mb4'),
+        (sql) => sql.contains('convert to character set utf8mb4'),
       );
       expect(converts, hasLength(2));
       expect(converts.first, contains('`features`'));
@@ -88,10 +88,10 @@ void main() {
     });
 
     test('迁移执行失败时不记录版本,后续迁移不执行', () async {
-      // 'DROP COLUMN' 只出现在 202607190000(activity_log 迁移)中;
+      // 'drop column' 只出现在 202607190000(activity_log 迁移)中;
       // 模拟 entity_id 列存在,使该迁移真正执行 DDL,失败点落在第 6 个迁移。
       final driver = _FakeDriver(
-        failOnSql: 'DROP COLUMN',
+        failOnSql: 'drop column',
         hasEntityIdColumn: true,
       );
       await expectLater(
@@ -193,8 +193,9 @@ final class _FakeDriver implements DatabaseDriver {
       ];
     }
     if (sql.contains('information_schema')) {
-      if (sql.contains('TABLE_COLLATION')) {
+      if (sql.contains('table_collation')) {
         // 引导段 _ensureUtf8mb4 的表清单查询:按配置返回存量表。
+        // 结果 key 是服务器返回的声明大小写(information_schema 为大写)。
         return [
           for (final table in latin1Tables)
             LaconicResult.fromMap({
@@ -203,9 +204,9 @@ final class _FakeDriver implements DatabaseDriver {
             }),
         ];
       }
-      // COLUMNS 探测(202607190000)按配置;TABLES 探测(202608030000)
+      // columns 探测(202607190000)按配置;tables 探测(202608030000)
       // 一律返回「表不存在」→ 迁移空转。
-      final count = sql.contains('COLUMNS') && hasEntityIdColumn ? 1 : 0;
+      final count = sql.contains('columns') && hasEntityIdColumn ? 1 : 0;
       return [
         LaconicResult.fromMap({'aggregate': count}),
       ];

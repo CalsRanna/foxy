@@ -33,17 +33,17 @@ class GameObjectQuestEnderRepository
       'goe.id',
       'goe.quest',
       'got.name',
-      if (localeEnabled) 'gotl.name AS localeName',
+      if (localeEnabled) 'gotl.name as localeName',
     ];
-    var builder = laconic.table('$_table AS goe');
+    var builder = laconic.table('$_table as goe');
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'gameobject_template AS got',
+      'gameobject_template as got',
       (join) => join.on('goe.id', 'got.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'gameobject_template_locale AS gotl',
+        'gameobject_template_locale as gotl',
         (join) =>
             join.on('got.entry', 'gotl.entry').where('gotl.locale', 'zhCN'),
       );

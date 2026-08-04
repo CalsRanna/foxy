@@ -43,9 +43,9 @@ class GameObjectTemplateRepository
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS gt');
+    var builder = laconic.table('$_table as gt');
     builder = builder.leftJoin(
-      'gameobject_template_locale AS gtl',
+      'gameobject_template_locale as gtl',
       (join) => join.on('gt.entry', 'gtl.entry').where('gtl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
@@ -64,18 +64,18 @@ class GameObjectTemplateRepository
     int page = 1,
     GameObjectTemplateFilter? filter,
   }) async {
-    var builder = laconic.table('$_table AS gt');
+    var builder = laconic.table('$_table as gt');
     final fields = <String>[
       'gt.entry',
       'gt.name',
       'gt.type',
       'gt.size',
-      if (localeEnabled) 'gtl.name AS localeName',
+      if (localeEnabled) 'gtl.name as localeName',
     ];
     builder = builder.select(fields);
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'gameobject_template_locale AS gtl',
+        'gameobject_template_locale as gtl',
         (join) => join.on('gt.entry', 'gtl.entry').where('gtl.locale', 'zhCN'),
       );
     }

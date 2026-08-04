@@ -45,22 +45,22 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
     if (resolved == null) return [];
 
     final results = await laconic
-        .table('$_table AS sr')
+        .table('$_table as sr')
         .select([
           'sr.first_spell_id',
           'sr.spell_id',
-          'sr.`rank` AS rank',
-          'fds.Name_lang_zhCN AS firstSpellName',
-          'fds.NameSubtext_lang_zhCN AS firstSpellSubtext',
-          'ds.Name_lang_zhCN AS spellName',
-          'ds.NameSubtext_lang_zhCN AS spellSubtext',
+          'sr.`rank` as rank',
+          'fds.Name_lang_zhCN as firstSpellName',
+          'fds.NameSubtext_lang_zhCN as firstSpellSubtext',
+          'ds.Name_lang_zhCN as spellName',
+          'ds.NameSubtext_lang_zhCN as spellSubtext',
         ])
         .leftJoin(
-          'foxy.dbc_spell AS fds',
+          'foxy.dbc_spell as fds',
           (join) => join.on('sr.first_spell_id', 'fds.ID'),
         )
         .leftJoin(
-          'foxy.dbc_spell AS ds',
+          'foxy.dbc_spell as ds',
           (join) => join.on('sr.spell_id', 'ds.ID'),
         )
         .where('sr.first_spell_id', firstSpellId)

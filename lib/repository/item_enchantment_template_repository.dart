@@ -27,10 +27,10 @@ class ItemEnchantmentTemplateRepository
     ItemEnchantmentTemplateFilter? filter,
   }) async {
     final dbcTable = dbcTableFor(kind);
-    var builder = laconic.table('$_table AS iet');
+    var builder = laconic.table('$_table as iet');
     builder = builder.select(['iet.entry']);
     builder = builder.leftJoin(
-      '$dbcTable AS random_ench',
+      '$dbcTable as random_ench',
       (join) => join.on('iet.ench', 'random_ench.ID'),
     );
     builder = builder.whereNotNull('random_ench.ID');
@@ -42,10 +42,10 @@ class ItemEnchantmentTemplateRepository
     ItemEnchantmentTemplateFilter? filter,
     ItemEnchantmentKind kind = ItemEnchantmentKind.randomProperty,
   }) async {
-    var builder = laconic.table('$_table AS iet');
+    var builder = laconic.table('$_table as iet');
     final dbcTable = dbcTableFor(kind);
     builder = builder.leftJoin(
-      '$dbcTable AS random_ench',
+      '$dbcTable as random_ench',
       (join) => join.on('iet.ench', 'random_ench.ID'),
     );
     builder = builder.whereNotNull('random_ench.ID');
@@ -74,14 +74,14 @@ class ItemEnchantmentTemplateRepository
     int page = 1,
   }) async {
     final dbcTable = dbcTableFor(kind);
-    var builder = laconic.table('$_table AS iet');
+    var builder = laconic.table('$_table as iet');
     builder = builder.select([
       'iet.entry',
-      'COUNT(*) AS ItemCount',
-      "'${kind.name}' AS kind",
+      'count(*) as ItemCount',
+      "'${kind.name}' as kind",
     ]);
     builder = builder.leftJoin(
-      '$dbcTable AS random_ench',
+      '$dbcTable as random_ench',
       (join) => join.on('iet.ench', 'random_ench.ID'),
     );
     builder = builder.whereNotNull('random_ench.ID');
@@ -144,41 +144,41 @@ class ItemEnchantmentTemplateRepository
   }
 
   QueryBuilder _briefBuilder(ItemEnchantmentKind kind) {
-    var builder = laconic.table('$_table AS iet');
+    var builder = laconic.table('$_table as iet');
     final dbcTable = dbcTableFor(kind);
     builder = builder.select([
       'iet.entry',
       'iet.ench',
       'iet.chance',
-      'random_ench.Name_lang_zhCN AS name',
-      'dsie_1.Name_lang_zhCN AS Enchantment_1',
-      'dsie_2.Name_lang_zhCN AS Enchantment_2',
-      'dsie_3.Name_lang_zhCN AS Enchantment_3',
-      'dsie_4.Name_lang_zhCN AS Enchantment_4',
-      'dsie_5.Name_lang_zhCN AS Enchantment_5',
+      'random_ench.Name_lang_zhCN as name',
+      'dsie_1.Name_lang_zhCN as Enchantment_1',
+      'dsie_2.Name_lang_zhCN as Enchantment_2',
+      'dsie_3.Name_lang_zhCN as Enchantment_3',
+      'dsie_4.Name_lang_zhCN as Enchantment_4',
+      'dsie_5.Name_lang_zhCN as Enchantment_5',
     ]);
     builder = builder.leftJoin(
-      '$dbcTable AS random_ench',
+      '$dbcTable as random_ench',
       (join) => join.on('iet.ench', 'random_ench.ID'),
     );
     builder = builder.leftJoin(
-      'foxy.dbc_spell_item_enchantment AS dsie_1',
+      'foxy.dbc_spell_item_enchantment as dsie_1',
       (join) => join.on('random_ench.Enchantment_1', 'dsie_1.ID'),
     );
     builder = builder.leftJoin(
-      'foxy.dbc_spell_item_enchantment AS dsie_2',
+      'foxy.dbc_spell_item_enchantment as dsie_2',
       (join) => join.on('random_ench.Enchantment_2', 'dsie_2.ID'),
     );
     builder = builder.leftJoin(
-      'foxy.dbc_spell_item_enchantment AS dsie_3',
+      'foxy.dbc_spell_item_enchantment as dsie_3',
       (join) => join.on('random_ench.Enchantment_3', 'dsie_3.ID'),
     );
     builder = builder.leftJoin(
-      'foxy.dbc_spell_item_enchantment AS dsie_4',
+      'foxy.dbc_spell_item_enchantment as dsie_4',
       (join) => join.on('random_ench.Enchantment_4', 'dsie_4.ID'),
     );
     builder = builder.leftJoin(
-      'foxy.dbc_spell_item_enchantment AS dsie_5',
+      'foxy.dbc_spell_item_enchantment as dsie_5',
       (join) => join.on('random_ench.Enchantment_5', 'dsie_5.ID'),
     );
     builder = builder.whereNotNull('random_ench.ID');

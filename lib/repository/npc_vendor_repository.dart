@@ -32,7 +32,7 @@ class NpcVendorRepository with RepositoryMixin, _NpcVendorRepositoryMixin {
     int entry, {
     int page = 1,
   }) async {
-    var builder = laconic.table('$_table AS nv');
+    var builder = laconic.table('$_table as nv');
     final fields = <String>[
       'nv.entry',
       'nv.slot',
@@ -40,18 +40,18 @@ class NpcVendorRepository with RepositoryMixin, _NpcVendorRepositoryMixin {
       'nv.maxcount',
       'nv.incrtime',
       'nv.ExtendedCost',
-      'it.name AS itemName',
-      if (localeEnabled) 'itl.Name AS itemLocaleName',
-      'it.Quality AS itemQuality',
+      'it.name as itemName',
+      if (localeEnabled) 'itl.Name as itemLocaleName',
+      'it.Quality as itemQuality',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('nv.item', 'it.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }

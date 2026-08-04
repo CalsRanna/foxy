@@ -18,14 +18,14 @@ class CurrencyTypeRepository
   Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) {
     final joinLocale = localeEnabled;
     var builder = laconic
-        .table('$_table AS ct')
+        .table('$_table as ct')
         .leftJoin(
-          'item_template AS it',
+          'item_template as it',
           (join) => join.on('ct.ItemID', 'it.entry'),
         );
     if (joinLocale) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
@@ -43,21 +43,21 @@ class CurrencyTypeRepository
     CurrencyTypeFilter? filter,
   }) async {
     final joinLocale = localeEnabled;
-    var builder = laconic.table('$_table AS ct').select([
+    var builder = laconic.table('$_table as ct').select([
       'ct.ID',
       'ct.ItemID',
       'ct.CategoryID',
       'ct.BitIndex',
-      'it.name AS itemName',
-      if (joinLocale) 'itl.Name AS localeItemName',
+      'it.name as itemName',
+      if (joinLocale) 'itl.Name as localeItemName',
     ]);
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('ct.ItemID', 'it.entry'),
     );
     if (joinLocale) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }

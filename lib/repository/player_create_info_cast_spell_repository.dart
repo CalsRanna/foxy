@@ -35,9 +35,9 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
     PlayerCreateInfoCastSpellKey key,
   ) async {
     const sql =
-        'DELETE FROM `playercreateinfo_cast_spell` '
-        'WHERE `raceMask` = ? AND `classMask` = ? AND `spell` = ? '
-        'AND BINARY `note` <=> BINARY ? LIMIT 1';
+        'delete from `playercreateinfo_cast_spell` '
+        'where `raceMask` = ? and `classMask` = ? and `spell` = ? '
+        'and binary `note` <=> binary ? limit 1';
     final deletedRows = await laconic.affectingStatement(sql, [
       key.raceMask,
       key.classMask,
@@ -84,7 +84,7 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
         .where('raceMask', key.raceMask)
         .where('classMask', key.classMask)
         .where('spell', key.spell)
-        .whereRaw('BINARY `note` <=> BINARY ?', [key.note])
+        .whereRaw('binary `note` <=> binary ?', [key.note])
         .limit(1)
         .get();
     return rows.isEmpty
@@ -103,10 +103,10 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
     PlayerCreateInfoCastSpellEntity entity,
   ) async {
     const sql =
-        'UPDATE `playercreateinfo_cast_spell` '
-        'SET `raceMask` = ?, `classMask` = ?, `spell` = ?, `note` = ? '
-        'WHERE `raceMask` = ? AND `classMask` = ? AND `spell` = ? '
-        'AND BINARY `note` <=> BINARY ? LIMIT 1';
+        'update `playercreateinfo_cast_spell` '
+        'set `raceMask` = ?, `classMask` = ?, `spell` = ?, `note` = ? '
+        'where `raceMask` = ? and `classMask` = ? and `spell` = ? '
+        'and binary `note` <=> binary ? limit 1';
     final matchedRows = await laconic.affectingStatement(sql, [
       entity.raceMask,
       entity.classMask,

@@ -46,7 +46,7 @@ class CreatureEquipTemplateRepository
     int creatureID, {
     int page = 1,
   }) async {
-    var builder = laconic.table('$_table AS cet');
+    var builder = laconic.table('$_table as cet');
     final fields = <String>[
       'cet.CreatureID',
       'cet.ID',
@@ -54,63 +54,63 @@ class CreatureEquipTemplateRepository
       'cet.ItemID2',
       'cet.ItemID3',
       'cet.VerifiedBuild',
-      'it1.name AS name1',
-      if (localeEnabled) 'itl1.Name AS localeName1',
-      'it1.Quality AS quality1',
-      'didi1.InventoryIcon0 AS icon1',
-      'it2.name AS name2',
-      if (localeEnabled) 'itl2.Name AS localeName2',
-      'it2.Quality AS quality2',
-      'didi2.InventoryIcon0 AS icon2',
-      'it3.name AS name3',
-      if (localeEnabled) 'itl3.Name AS localeName3',
-      'it3.Quality AS quality3',
-      'didi3.InventoryIcon0 AS icon3',
+      'it1.name as name1',
+      if (localeEnabled) 'itl1.Name as localeName1',
+      'it1.Quality as quality1',
+      'didi1.InventoryIcon0 as icon1',
+      'it2.name as name2',
+      if (localeEnabled) 'itl2.Name as localeName2',
+      'it2.Quality as quality2',
+      'didi2.InventoryIcon0 as icon2',
+      'it3.name as name3',
+      if (localeEnabled) 'itl3.Name as localeName3',
+      'it3.Quality as quality3',
+      'didi3.InventoryIcon0 as icon3',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'item_template AS it1',
+      'item_template as it1',
       (join) => join.on('cet.ItemID1', 'it1.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl1',
+        'item_template_locale as itl1',
         (join) =>
             join.on('cet.ItemID1', 'itl1.ID').where('itl1.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi1',
+      'foxy.dbc_item_display_info as didi1',
       (join) => join.on('it1.displayid', 'didi1.ID'),
     );
     builder = builder.leftJoin(
-      'item_template AS it2',
+      'item_template as it2',
       (join) => join.on('cet.ItemID2', 'it2.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl2',
+        'item_template_locale as itl2',
         (join) =>
             join.on('cet.ItemID2', 'itl2.ID').where('itl2.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi2',
+      'foxy.dbc_item_display_info as didi2',
       (join) => join.on('it2.displayid', 'didi2.ID'),
     );
     builder = builder.leftJoin(
-      'item_template AS it3',
+      'item_template as it3',
       (join) => join.on('cet.ItemID3', 'it3.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl3',
+        'item_template_locale as itl3',
         (join) =>
             join.on('cet.ItemID3', 'itl3.ID').where('itl3.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi3',
+      'foxy.dbc_item_display_info as didi3',
       (join) => join.on('it3.displayid', 'didi3.ID'),
     );
     builder = builder.where('cet.CreatureID', creatureID);

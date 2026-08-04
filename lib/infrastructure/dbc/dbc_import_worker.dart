@@ -72,8 +72,8 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
     laconic = connection;
 
     final existingRows = await connection.select(
-      "SELECT TABLE_NAME FROM information_schema.TABLES "
-      "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME LIKE 'dbc_%'",
+      "select table_name from information_schema.tables "
+      "where table_schema = 'foxy' and table_name like 'dbc_%'",
     );
     final existingTables = {
       for (final row in existingRows) row['TABLE_NAME'] as String,
@@ -128,7 +128,7 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
         // 不存在或不兼容：按 DBC schema 推导 DDL。
         if (targetExists && compatible) {
           await connection.statement(
-            'CREATE TABLE $staging LIKE ${file.tableName}',
+            'create table $staging like ${file.tableName}',
           );
         } else {
           await _createTable(connection, staging, file.fields);
@@ -175,8 +175,8 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           );
         }
         final idRows = await connection.select(
-          'SELECT COUNT(*) AS total_rows, '
-          'COUNT(DISTINCT `ID`) AS distinct_ids FROM $staging',
+          'select count(*) as total_rows, '
+          'count(distinct `ID`) as distinct_ids from $staging',
         );
         if (idRows.isEmpty ||
             _asInt(idRows.first['total_rows']) !=
@@ -194,18 +194,18 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
         );
         if (targetExists) {
           await connection.statement(
-            'RENAME TABLE ${file.tableName} TO $backup, $staging TO ${file.tableName}',
+            'rename table ${file.tableName} to $backup, $staging to ${file.tableName}',
           );
           stagingExists = false;
           committed = true;
           try {
-            await connection.statement('DROP TABLE IF EXISTS $backup');
+            await connection.statement('drop table if exists $backup');
           } catch (_) {
             // 正式表已成功替换，backup 清理失败不应反向标记导入失败。
           }
         } else {
           await connection.statement(
-            'RENAME TABLE $staging TO ${file.tableName}',
+            'rename table $staging to ${file.tableName}',
           );
           stagingExists = false;
           committed = true;
@@ -226,7 +226,7 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
       } finally {
         if (!committed && stagingExists) {
           try {
-            await connection.statement('DROP TABLE IF EXISTS $staging');
+            await connection.statement('drop table if exists $staging');
           } catch (_) {
             // 保留原始错误；残留 staging 带有任务 ID，不会覆盖正式表。
           }
@@ -274,8 +274,8 @@ Future<void> _createTable(
     throw ValidationException('$table has no importable fields');
   }
   await laconic.statement(
-    'CREATE TABLE $table (\n  $columns\n) '
-    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4',
+    'create table $table (\n  $columns\n) '
+    'engine=innodb default charset=utf8mb4',
   );
 }
 
@@ -295,7 +295,7 @@ String _escapeString(String value) {
   for (final byte in utf8.encode(value)) {
     hex.write(byte.toRadixString(16).padLeft(2, '0'));
   }
-  return "CONVERT(X'$hex' USING utf8mb4)";
+  return "convert(X'$hex' using utf8mb4)";
 }
 
 Future<int> _importFile(
@@ -313,7 +313,7 @@ Future<int> _importFile(
 
   const maxBatchBytes = 1 << 20;
   final columns = file.fields.map((field) => '`${field.name}`').join(', ');
-  final sqlPrefix = 'INSERT INTO $table ($columns) VALUES ';
+  final sqlPrefix = 'insert into $table ($columns) values ';
   final prefixBytes = utf8.encode(sqlPrefix).length;
   final rows = <String>[];
   var batchBytes = prefixBytes;
@@ -466,20 +466,20 @@ void _sendStatus(
 
 String _sqlType(FieldType type) {
   return switch (type) {
-    FieldType.id => 'INT NOT NULL PRIMARY KEY',
-    FieldType.int32 => 'INT',
+    FieldType.id => 'int not null primary key',
+    FieldType.int32 => 'int',
     // 无符号字段必须建 UNSIGNED 列:flags 类字段高位置位(≥2^31)按
     // 有符号存会变负数,UI 显示负值、按 wowhead 正值编辑会报 1264。
-    FieldType.uint32 => 'INT UNSIGNED',
-    FieldType.int64 => 'BIGINT',
-    FieldType.uint64 => 'BIGINT UNSIGNED',
-    FieldType.int16 || FieldType.uint16 => 'SMALLINT',
-    FieldType.int8 || FieldType.uint8 => 'TINYINT UNSIGNED',
-    FieldType.float => 'FLOAT',
-    FieldType.string => 'TEXT',
-    FieldType.boolean => 'TINYINT(1)',
-    FieldType.sort => 'INT',
-    FieldType.unused || FieldType.unusedByte => 'INT',
+    FieldType.uint32 => 'int unsigned',
+    FieldType.int64 => 'bigint',
+    FieldType.uint64 => 'bigint unsigned',
+    FieldType.int16 || FieldType.uint16 => 'smallint',
+    FieldType.int8 || FieldType.uint8 => 'tinyint unsigned',
+    FieldType.float => 'float',
+    FieldType.string => 'text',
+    FieldType.boolean => 'tinyint(1)',
+    FieldType.sort => 'int',
+    FieldType.unused || FieldType.unusedByte => 'int',
   };
 }
 
@@ -490,8 +490,8 @@ Future<bool> _tableMatchesSchema(
   List<_FieldDef> fields,
 ) async {
   final rows = await connection.select(
-    "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
-    "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME = '$tableShort'",
+    "select column_name from information_schema.columns "
+    "where table_schema = 'foxy' and table_name = '$tableShort'",
   );
   final actual = {
     for (final row in rows) (row['COLUMN_NAME'] as String).toLowerCase(),

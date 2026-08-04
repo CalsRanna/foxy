@@ -39,14 +39,14 @@ class DisenchantLootTemplateRepository
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS lt');
+    var builder = laconic.table('$_table as lt');
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('lt.Item', 'it.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
@@ -71,27 +71,27 @@ class DisenchantLootTemplateRepository
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS lt');
+    var builder = laconic.table('$_table as lt');
     final fields = <String>[
       ..._briefFields('lt'),
-      'it.name AS itemName',
-      if (localeEnabled) 'itl.Name AS itemLocaleName',
-      'it.Quality AS itemQuality',
-      'didi.InventoryIcon0 AS itemIcon',
+      'it.name as itemName',
+      if (localeEnabled) 'itl.Name as itemLocaleName',
+      'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('lt.Item', 'it.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
+      'foxy.dbc_item_display_info as didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = _applyRowFilter(builder, filter);
@@ -106,27 +106,27 @@ class DisenchantLootTemplateRepository
   @override
   Future<List<BriefDisenchantLootTemplateEntity>>
   getBriefDisenchantLootTemplates(int entry, {int page = 1}) async {
-    var builder = laconic.table('$_table AS lt');
+    var builder = laconic.table('$_table as lt');
     final fields = <String>[
       ..._briefFields('lt'),
-      'it.name AS itemName',
-      if (localeEnabled) 'itl.Name AS itemLocaleName',
-      'it.Quality AS itemQuality',
-      'didi.InventoryIcon0 AS itemIcon',
+      'it.name as itemName',
+      if (localeEnabled) 'itl.Name as itemLocaleName',
+      'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('lt.Item', 'it.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
+      'foxy.dbc_item_display_info as didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = builder.where('lt.Entry', entry);

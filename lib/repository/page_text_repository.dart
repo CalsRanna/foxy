@@ -43,9 +43,9 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS pt');
+    var builder = laconic.table('$_table as pt');
     builder = builder.leftJoin(
-      '$_localeTable AS ptl',
+      '$_localeTable as ptl',
       (join) => join.on('pt.ID', 'ptl.ID').where('ptl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
@@ -63,17 +63,17 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     PageTextFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS pt');
+    var builder = laconic.table('$_table as pt');
     final fields = <String>[
       'pt.ID',
       'pt.Text',
-      if (localeEnabled) 'ptl.Text AS localeText',
+      if (localeEnabled) 'ptl.Text as localeText',
       'pt.NextPageID',
     ];
     builder = builder.select(fields);
     if (localeEnabled) {
       builder = builder.leftJoin(
-        '$_localeTable AS ptl',
+        '$_localeTable as ptl',
         (join) => join.on('pt.ID', 'ptl.ID').where('ptl.locale', 'zhCN'),
       );
     }

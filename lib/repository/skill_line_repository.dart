@@ -39,7 +39,7 @@ class SkillLineRepository with RepositoryMixin, _SkillLineRepositoryMixin {
     var builder = laconic.table(_table).select([
       'ID',
       'CategoryID',
-      'DisplayName_lang_zhCN AS displayNameZhCN',
+      'DisplayName_lang_zhCN as displayNameZhCN',
     ]);
     builder = _applyFilter(builder, filter).orderBy('ID');
     final rows = await builder

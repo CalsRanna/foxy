@@ -102,8 +102,8 @@ class DbcSyncUtil {
 
     try {
       final rows = await laconic.select(
-        "SELECT TABLE_NAME FROM information_schema.TABLES "
-        "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME LIKE 'dbc_%'",
+        "select table_name from information_schema.tables "
+        "where table_schema = 'foxy' and table_name like 'dbc_%'",
       );
       existing.addAll(rows.map((row) => row['TABLE_NAME'] as String));
     } catch (error) {
@@ -137,8 +137,8 @@ class DbcSyncUtil {
     final compatible = <String>[];
     try {
       final columnRows = await laconic.select(
-        "SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS "
-        "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME LIKE 'dbc_%'",
+        "select table_name, column_name from information_schema.columns "
+        "where table_schema = 'foxy' and table_name like 'dbc_%'",
       );
       final columnsByTable = <String, Set<String>>{};
       for (final row in columnRows) {
@@ -189,10 +189,10 @@ class DbcSyncUtil {
       final union = compatible
           .map(
             (table) =>
-                "SELECT '$table' AS t, "
-                "EXISTS(SELECT 1 FROM foxy.$table) AS has_rows",
+                "select '$table' as t, "
+                "exists(select 1 from foxy.$table) as has_rows",
           )
-          .join(' UNION ALL ');
+          .join(' union all ');
       final rows = await laconic.select(union);
       final rowState = {
         for (final row in rows) row['t'] as String: _truthy(row['has_rows']),
@@ -332,7 +332,7 @@ class DbcSyncUtil {
           )
           .expand((t) => t)
           .join(', ');
-      await Database.instance.laconic.statement('DROP TABLE IF EXISTS $tables');
+      await Database.instance.laconic.statement('drop table if exists $tables');
     } catch (error) {
       LoggerUtil.instance.w('DBC 取消后清理 staging/backup 表失败: $error');
     }

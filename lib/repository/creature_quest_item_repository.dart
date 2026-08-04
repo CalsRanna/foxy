@@ -46,30 +46,30 @@ class CreatureQuestItemRepository
     int creatureEntry, {
     int page = 1,
   }) async {
-    var builder = laconic.table('$_table AS cq');
+    var builder = laconic.table('$_table as cq');
     final fields = <String>[
       'cq.CreatureEntry',
       'cq.Idx',
       'cq.ItemId',
       'cq.VerifiedBuild',
-      'it.name AS itemName',
-      if (localeEnabled) 'itl.Name AS itemLocaleName',
-      'it.Quality AS itemQuality',
-      'didi.InventoryIcon0 AS itemIcon',
+      'it.name as itemName',
+      if (localeEnabled) 'itl.Name as itemLocaleName',
+      'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'item_template AS it',
+      'item_template as it',
       (join) => join.on('cq.ItemId', 'it.entry'),
     );
     if (localeEnabled) {
       builder = builder.leftJoin(
-        'item_template_locale AS itl',
+        'item_template_locale as itl',
         (join) => join.on('cq.ItemId', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
+      'foxy.dbc_item_display_info as didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     final results = await builder

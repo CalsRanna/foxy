@@ -34,7 +34,7 @@ class CreatureSpellDataRepository
       }
       return builder.count();
     }
-    var builder = laconic.table('$_table AS dcsd');
+    var builder = laconic.table('$_table as dcsd');
     builder = _joinSpells(builder);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -59,12 +59,12 @@ class CreatureSpellDataRepository
       'dcsd.Availability1',
       'dcsd.Availability2',
       'dcsd.Availability3',
-      'ds_1.Name_lang_zhCN AS spellName1',
-      'ds_2.Name_lang_zhCN AS spellName2',
-      'ds_3.Name_lang_zhCN AS spellName3',
-      'ds_4.Name_lang_zhCN AS spellName4',
+      'ds_1.Name_lang_zhCN as spellName1',
+      'ds_2.Name_lang_zhCN as spellName2',
+      'ds_3.Name_lang_zhCN as spellName3',
+      'ds_4.Name_lang_zhCN as spellName4',
     ];
-    var builder = laconic.table('$_table AS dcsd');
+    var builder = laconic.table('$_table as dcsd');
     builder = builder.select(fields);
     builder = _joinSpells(builder);
     builder = _applyFilter(builder, filter);
@@ -108,19 +108,19 @@ class CreatureSpellDataRepository
 
   QueryBuilder _joinSpells(QueryBuilder builder) {
     builder = builder.leftJoin(
-      '$_spellTable AS ds_1',
+      '$_spellTable as ds_1',
       (join) => join.on('dcsd.Spells0', 'ds_1.ID'),
     );
     builder = builder.leftJoin(
-      '$_spellTable AS ds_2',
+      '$_spellTable as ds_2',
       (join) => join.on('dcsd.Spells1', 'ds_2.ID'),
     );
     builder = builder.leftJoin(
-      '$_spellTable AS ds_3',
+      '$_spellTable as ds_3',
       (join) => join.on('dcsd.Spells2', 'ds_3.ID'),
     );
     builder = builder.leftJoin(
-      '$_spellTable AS ds_4',
+      '$_spellTable as ds_4',
       (join) => join.on('dcsd.Spells3', 'ds_4.ID'),
     );
     return builder;
