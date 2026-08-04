@@ -130,10 +130,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _navigateToDetail(
-              key: infos[row].key,
-              name: infos[row].infoNameLangZhCN,
-            );
+            _navigateToDetail(key: infos[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -143,10 +140,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _navigateToDetail(
-                      key: infos[row].key,
-                      name: infos[row].infoNameLangZhCN,
-                    );
+                    _navigateToDetail(key: infos[row].key);
                   },
                   child: Text('编辑'),
                 ),
@@ -215,10 +209,8 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
     }
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = name?.isNotEmpty == true ? name! : '新建任务信息';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: QuestInfoDetailRoute(questInfoKey: key),
       parentMenu: RouterMenu.questInfo,
     );

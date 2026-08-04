@@ -146,10 +146,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _navigateToDetail(
-              key: templates[row].key,
-              name: templates[row].displayName,
-            );
+            _navigateToDetail(key: templates[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -159,10 +156,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _navigateToDetail(
-                      key: templates[row].key,
-                      name: templates[row].displayName,
-                    );
+                    _navigateToDetail(key: templates[row].key);
                   },
                   child: Text('编辑'),
                 ),
@@ -231,14 +225,8 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     }
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = key == null
-        ? '新建生物'
-        : name?.isNotEmpty == true
-        ? name!
-        : '生物 #$key';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: CreatureTemplateDetailRoute(creatureTemplateKey: key),
       parentMenu: RouterMenu.creatureTemplate,
     );

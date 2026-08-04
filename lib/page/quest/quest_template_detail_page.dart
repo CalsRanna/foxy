@@ -31,27 +31,16 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch 拆分为标题区与页签区:编辑保存只更新标题,不重建
-    // ~1200 行的 quest_template_view 及已访问页签(页签仅依赖 persistedKey)。
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          final template = viewModel.entity.value;
-          final name = key == null
-              ? '新建任务'
-              : template?.logTitle.isNotEmpty == true
-              ? template?.logTitle ?? ''
-              : '任务 #$key';
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          );
-        }),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '任务详情',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ),
         Watch((_) {
           final key = viewModel.persistedKey.value;
           final questId = key ?? 0;

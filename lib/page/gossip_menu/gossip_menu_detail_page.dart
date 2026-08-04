@@ -28,16 +28,13 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final label = key == null
-          ? '新建对话'
-          : '对话 ${key.menuId} / 文本 ${key.textId}';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
-              label,
+              '对话详情',
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),

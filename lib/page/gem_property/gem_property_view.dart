@@ -113,9 +113,6 @@ class GemPropertyView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '宝石属性 ${viewModel.persistedKey.value}',
-      );
       ShadSonner.of(
         context,
       ).show(const ShadToast(description: Text('宝石属性数据已保存')));

@@ -158,7 +158,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
           },
           onRowDoubleTap: (row) {
             final item = templates[row];
-            _navigateToDetail(key: item.key, name: item.displayTitle);
+            _navigateToDetail(key: item.key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final item = templates[row];
@@ -169,7 +169,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () =>
-                      _navigateToDetail(key: item.key, name: item.displayTitle),
+                      _navigateToDetail(key: item.key),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
@@ -239,14 +239,8 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
     }
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = key == null
-        ? '新建任务'
-        : name?.isNotEmpty == true
-        ? name!
-        : '任务 #$key';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: QuestTemplateDetailRoute(questTemplateKey: key),
       parentMenu: RouterMenu.questTemplate,
     );

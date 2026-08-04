@@ -174,9 +174,6 @@ class QuestFactionRewardView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '任务声望 ${viewModel.persistedKey.value}',
-      );
       ShadSonner.of(
         context,
       ).show(const ShadToast(description: Text('任务声望数据已保存')));

@@ -216,9 +216,7 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '套装 #$key' : '新建套装';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: ItemSetDetailRoute(itemSetKey: key),
       parentMenu: RouterMenu.itemSet,
     );

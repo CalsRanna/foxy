@@ -205,9 +205,7 @@ class _QuestFactionRewardListPageState
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '#$key' : '新建任务声望';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: QuestFactionRewardDetailRoute(questFactionRewardKey: key),
       parentMenu: RouterMenu.questFactionReward,
     );

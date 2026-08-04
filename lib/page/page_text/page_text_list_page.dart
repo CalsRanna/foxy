@@ -142,10 +142,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _navigateToDetail(
-              key: pages[row].key,
-              label: pages[row].displayText,
-            );
+            _navigateToDetail(key: pages[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -155,9 +152,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () => _navigateToDetail(
-                    key: pages[row].key,
-                    label: pages[row].displayText,
-                  ),
+                    key: pages[row].key),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
@@ -229,10 +224,8 @@ class _PageTextListPageState extends State<PageTextListPage> {
     }
   }
 
-  void _navigateToDetail({int? key, String? label}) {
-    final name = label?.isNotEmpty == true ? label! : '新建页面文本';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: name,
       route: RouteTextDetailRoute(pageTextKey: key),
       parentMenu: RouterMenu.pageText,
     );

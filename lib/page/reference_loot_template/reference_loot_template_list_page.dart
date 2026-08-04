@@ -234,9 +234,7 @@ class _ReferenceLootTemplateListPageState
   }
 
   void _navigateToDetail({ReferenceLootTemplateKey? key}) {
-    final name = key == null ? '新建关联掉落' : '关联掉落 ${key.entry}-${key.item}';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: name,
       route: ReferenceLootTemplateDetailRoute(referenceLootTemplateKey: key),
       parentMenu: RouterMenu.referenceLootTemplate,
     );

@@ -80,9 +80,6 @@ class GossipMenuView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '对话菜单 ${viewModel.persistedKey.value}',
-      );
       ShadSonner.of(
         context,
       ).show(const ShadToast(description: Text('对话菜单数据已保存')));

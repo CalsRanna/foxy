@@ -7,7 +7,6 @@ import 'package:foxy/view_model/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ReferenceLootTemplateDetailPage extends StatefulWidget {
@@ -29,26 +28,22 @@ class _ReferenceLootTemplateDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final label = key == null ? '新建关联掉落' : '关联掉落 ${key.entry}-${key.item}';
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '关联掉落详情',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          FoxyTab(
-            tabs: const [Text('关联掉落')],
-            contents: [ReferenceLootTemplateView(viewModel: viewModel)],
-          ),
-        ],
-      );
-    });
+        ),
+        FoxyTab(
+          tabs: const [Text('关联掉落')],
+          contents: [ReferenceLootTemplateView(viewModel: viewModel)],
+        ),
+      ],
+    );
   }
 
   @override

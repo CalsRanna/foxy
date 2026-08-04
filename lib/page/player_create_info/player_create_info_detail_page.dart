@@ -32,14 +32,13 @@ class _PlayerCreateInfoDetailPageState
   @override
   Widget build(BuildContext context) => Watch((_) {
     final key = viewModel.persistedKey.value;
-    final label = key == null ? '新建出生信息' : '种族${key.race}-职业${key.class_}';
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
-            label,
+            '出生信息详情',
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),

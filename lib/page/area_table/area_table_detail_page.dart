@@ -6,7 +6,6 @@ import 'package:foxy/view_model/area_table_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class AreaTableDetailPage extends StatefulWidget {
@@ -23,31 +22,22 @@ class _AreaTableDetailPageState extends State<AreaTableDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final entity = viewModel.entity.value;
-      final name = key == null
-          ? '新建区域'
-          : entity?.areaNameLangZhCN.isNotEmpty == true
-          ? entity?.areaNameLangZhCN ?? ''
-          : '区域 #$key';
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '区域详情',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          FoxyTab(
-            tabs: const [Text('区域')],
-            contents: [AreaTableView(viewModel: viewModel)],
-          ),
-        ],
-      );
-    });
+        ),
+        FoxyTab(
+          tabs: const [Text('区域')],
+          contents: [AreaTableView(viewModel: viewModel)],
+        ),
+      ],
+    );
   }
 
   @override

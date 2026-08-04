@@ -331,9 +331,6 @@ class TalentView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '天赋 ${viewModel.persistedKey.value}',
-      );
       ShadSonner.of(
         context,
       ).show(const ShadToast(description: Text('天赋数据已保存')));

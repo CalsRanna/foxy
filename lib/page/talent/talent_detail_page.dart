@@ -6,7 +6,6 @@ import 'package:foxy/view_model/talent_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class TalentDetailPage extends StatefulWidget {
@@ -23,26 +22,22 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建天赋' : '天赋 #$key';
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '天赋详情',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          FoxyTab(
-            tabs: const [Text('天赋')],
-            contents: [TalentView(viewModel: viewModel)],
-          ),
-        ],
-      );
-    });
+        ),
+        FoxyTab(
+          tabs: const [Text('天赋')],
+          contents: [TalentView(viewModel: viewModel)],
+        ),
+      ],
+    );
   }
 
   @override

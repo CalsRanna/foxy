@@ -237,14 +237,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
   }
 
   void _navigateToDetail({BriefConditionEntity? condition}) {
-    final label = condition != null
-        ? (condition.comment.isNotEmpty
-              ? condition.comment
-              : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
-        : '新建条件';
-
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: ConditionDetailRoute(conditionKey: condition?.key),
       parentMenu: RouterMenu.condition,
     );

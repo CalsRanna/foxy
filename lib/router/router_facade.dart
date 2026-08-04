@@ -61,8 +61,9 @@ class RouterFacade {
   }
 
   /// 导航到详情页面（列表页跳转）
+  ///
+  /// 详情页面包屑文案统一为“XXX详情”，由父菜单文案自动生成。
   void navigateToDetail({
-    required String label,
     required PageRouteInfo route,
     required RouterMenu parentMenu,
   }) {
@@ -74,7 +75,7 @@ class RouterFacade {
 
     // 继承列表页的高亮父级：固定模块为 null，未固定模块为“更多”
     final detailNode = RouterNode(
-      label: label,
+      label: _detailLabel(parentMenu),
       route: route,
       parentMenu: parentIndex >= 0
           ? currentPath[parentIndex].parentMenu
@@ -123,15 +124,11 @@ class RouterFacade {
     _router?.navigate(node.route);
   }
 
-  /// 更新当前详情页名称（用于异步加载数据后更新）
-  void updateCurrentLabel(String newLabel) {
-    final currentPath = path.value;
-    if (currentPath.isEmpty) return;
-
-    final newNodes = [...currentPath];
-    final lastNode = newNodes.last;
-    newNodes[newNodes.length - 1] = lastNode.copyWith(label: newLabel);
-
-    path.value = newNodes;
+  /// 生成详情页面包屑文案：模块“XXX列表” → “XXX详情”
+  static String _detailLabel(RouterMenu menu) {
+    final label = menu.label;
+    return label.endsWith('列表')
+        ? '${label.substring(0, label.length - 2)}详情'
+        : '$label详情';
   }
 }

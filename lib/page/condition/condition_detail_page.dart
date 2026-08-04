@@ -7,7 +7,6 @@ import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class ConditionDetailPage extends StatefulWidget {
@@ -24,25 +23,22 @@ class _ConditionDetailPageState extends State<ConditionDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final isNew = viewModel.persistedKey.value == null;
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              isNew ? '新建条件' : '条件详情',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '条件详情',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          FoxyTab(
-            tabs: const [Text('条件')],
-            contents: [ConditionView(viewModel: viewModel)],
-          ),
-        ],
-      );
-    });
+        ),
+        FoxyTab(
+          tabs: const [Text('条件')],
+          contents: [ConditionView(viewModel: viewModel)],
+        ),
+      ],
+    );
   }
 
   @override

@@ -130,10 +130,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _navigateToDetail(
-              key: sorts[row].key,
-              name: sorts[row].sortNameLangZhCN,
-            );
+            _navigateToDetail(key: sorts[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -143,10 +140,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _navigateToDetail(
-                      key: sorts[row].key,
-                      name: sorts[row].sortNameLangZhCN,
-                    );
+                    _navigateToDetail(key: sorts[row].key);
                   },
                   child: Text('编辑'),
                 ),
@@ -215,10 +209,8 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
     }
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = name?.isNotEmpty == true ? name! : '新建任务排序';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: QuestSortDetailRoute(questSortKey: key),
       parentMenu: RouterMenu.questSort,
     );

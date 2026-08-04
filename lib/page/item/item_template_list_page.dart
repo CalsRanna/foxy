@@ -181,10 +181,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _navigateToDetail(
-              key: templates[row].key,
-              name: templates[row].displayName,
-            );
+            _navigateToDetail(key: templates[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -194,10 +191,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _navigateToDetail(
-                      key: templates[row].key,
-                      name: templates[row].displayName,
-                    );
+                    _navigateToDetail(key: templates[row].key);
                   },
                   child: Text('编辑'),
                 ),
@@ -266,14 +260,8 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     }
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = key == null
-        ? '新建物品'
-        : name?.isNotEmpty == true
-        ? name!
-        : '物品 #$key';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: ItemTemplateDetailRoute(itemTemplateKey: key),
       parentMenu: RouterMenu.itemTemplate,
     );

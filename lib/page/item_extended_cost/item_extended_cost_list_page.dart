@@ -217,9 +217,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '扩展价格 #$key' : '新建扩展价格';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: ItemExtendedCostDetailRoute(itemExtendedCostKey: key),
       parentMenu: RouterMenu.itemExtendedCost,
     );

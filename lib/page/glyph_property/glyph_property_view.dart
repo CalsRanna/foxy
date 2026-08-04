@@ -101,9 +101,6 @@ class GlyphPropertyView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '雕文属性 ${viewModel.persistedKey.value}',
-      );
       ShadSonner.of(
         context,
       ).show(const ShadToast(description: Text('雕文属性数据已保存')));

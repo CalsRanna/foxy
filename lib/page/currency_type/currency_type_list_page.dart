@@ -193,9 +193,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '货币 #$key' : '新建货币';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: CurrencyTypeDetailRoute(currencyTypeKey: key),
       parentMenu: RouterMenu.currencyType,
     );

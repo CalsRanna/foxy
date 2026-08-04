@@ -218,9 +218,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '宝石属性 #$key' : '新建宝石属性';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: GemPropertyDetailRoute(gemPropertyKey: key),
       parentMenu: RouterMenu.gemProperty,
     );

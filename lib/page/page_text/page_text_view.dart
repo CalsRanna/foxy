@@ -102,9 +102,6 @@ class _PageTextViewState extends State<PageTextView> {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '页面文本 ${viewModel.persistedKey.value}',
-      );
       ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
     } catch (error) {
       if (!context.mounted) return;

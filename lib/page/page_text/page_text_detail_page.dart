@@ -26,14 +26,13 @@ class _PageTextDetailPageState extends State<PageTextDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建页面文本' : '页面文本 $key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
-              name,
+              '页面文本详情',
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),

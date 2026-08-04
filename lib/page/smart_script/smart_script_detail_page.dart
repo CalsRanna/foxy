@@ -7,7 +7,6 @@ import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class SmartScriptDetailPage extends StatefulWidget {
@@ -47,15 +46,9 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
   }
 
   Widget _buildHeader() {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final label = key == null
-          ? '新建脚本'
-          : '脚本 ${key.entryOrGuid}/${key.sourceType}/${key.id}/${key.link}';
-      var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-      var text = Text(label, style: textStyle);
-      return Padding(padding: EdgeInsets.only(bottom: 12), child: text);
-    });
+    var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+    var text = Text('脚本详情', style: textStyle);
+    return Padding(padding: EdgeInsets.only(bottom: 12), child: text);
   }
 
   Future<void> _initialize() async {

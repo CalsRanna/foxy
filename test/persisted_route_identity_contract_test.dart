@@ -20,7 +20,7 @@ void main() {
     expect(renamed.parentMenu, RouterMenu.condition);
   });
 
-  test('更新面包屑标签不会替换详情路由或改变路由参数', () {
+  test('详情面包屑文案统一为“XXX详情”且保留详情路由与参数', () {
     const key = ConditionKey(
       sourceTypeOrReferenceId: 17, sourceGroup: 1, sourceEntry: 2, sourceId: 3,
       elseGroup: 4, conditionTypeOrReference: 5, conditionTarget: 6,
@@ -29,15 +29,11 @@ void main() {
     final detailRoute = ConditionDetailRoute(conditionKey: key);
     final facade = RouterFacade();
 
-    facade.navigateToDetail(
-      label: '旧标签', route: detailRoute, parentMenu: RouterMenu.condition,
-    );
-    final routeBeforeRename = facade.path.value.last.route;
-    facade.updateCurrentLabel('新标签');
+    facade.navigateToDetail(route: detailRoute, parentMenu: RouterMenu.condition);
+    final lastNode = facade.path.value.last;
 
-    expect(facade.path.value.last.label, '新标签');
-    expect(identical(facade.path.value.last.route, routeBeforeRename), isTrue);
-    expect(identical(routeBeforeRename, detailRoute), isTrue);
+    expect(lastNode.label, '条件详情');
+    expect(identical(lastNode.route, detailRoute), isTrue);
     expect(detailRoute.args!.conditionKey, key);
   });
 }

@@ -132,7 +132,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _navigateToDetail(key: emotes[row].key, name: emotes[row].name);
+            _navigateToDetail(key: emotes[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -142,10 +142,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _navigateToDetail(
-                      key: emotes[row].key,
-                      name: emotes[row].name,
-                    );
+                    _navigateToDetail(key: emotes[row].key);
                   },
                   child: Text('编辑'),
                 ),
@@ -214,10 +211,8 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
     }
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = name?.isNotEmpty == true ? name! : '新建表情文本';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: EmoteTextDetailRoute(emoteTextKey: key),
       parentMenu: RouterMenu.emoteText,
     );

@@ -140,10 +140,7 @@ class _SpellItemEnchantmentListPageState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _navigateToDetail(
-              key: items[row].key,
-              name: items[row].nameLangZhCN,
-            );
+            _navigateToDetail(key: items[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -153,10 +150,7 @@ class _SpellItemEnchantmentListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _navigateToDetail(
-                      key: items[row].key,
-                      name: items[row].nameLangZhCN,
-                    );
+                    _navigateToDetail(key: items[row].key);
                   },
                   child: Text('编辑'),
                 ),
@@ -225,10 +219,8 @@ class _SpellItemEnchantmentListPageState
     }
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = name?.isNotEmpty == true ? name! : '新建法术附魔';
+  void _navigateToDetail({int? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: SpellItemEnchantmentDetailRoute(spellItemEnchantmentKey: key),
       parentMenu: RouterMenu.spellItemEnchantment,
     );

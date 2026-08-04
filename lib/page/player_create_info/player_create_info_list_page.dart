@@ -37,7 +37,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FoxyHeader('玩家出生信息列表'),
+          FoxyHeader('出生信息列表'),
           _buildFilter(),
           Expanded(child: Watch((_) => _buildTable())),
         ],
@@ -212,9 +212,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
   }
 
   void _navigateToDetail({BriefPlayerCreateInfoEntity? info}) {
-    final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: PlayerCreateInfoDetailRoute(playerCreateInfoKey: info?.key),
       parentMenu: RouterMenu.playerCreateInfo,
     );

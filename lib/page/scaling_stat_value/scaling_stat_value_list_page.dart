@@ -225,9 +225,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '缩放属性值 #$key' : '新建缩放属性值';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: ScalingStatValueDetailRoute(scalingStatValueKey: key),
       parentMenu: RouterMenu.scalingStatValue,
     );

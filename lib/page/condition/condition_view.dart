@@ -266,9 +266,6 @@ class ConditionView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '条件 ${viewModel.persistedKey.value}',
-      );
       ShadSonner.of(context).show(const ShadToast(description: Text('条件已保存')));
     } catch (error) {
       if (!context.mounted) return;

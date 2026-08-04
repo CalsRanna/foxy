@@ -227,7 +227,6 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
 
   void _navigateToDetail({GossipMenuKey? key}) {
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: key != null ? '对话 ${key.menuId}' : '新建对话',
       route: GossipMenuDetailRoute(gossipMenuKey: key),
       parentMenu: RouterMenu.gossipMenu,
     );

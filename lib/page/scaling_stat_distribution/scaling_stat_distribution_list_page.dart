@@ -214,9 +214,7 @@ class _ScalingStatDistributionListPageState
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '属性缩放分布 #$key' : '新建属性缩放分布';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: ScalingStatDistributionDetailRoute(
         scalingStatDistributionKey: key,
       ),

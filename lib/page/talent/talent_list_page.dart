@@ -217,9 +217,7 @@ class _TalentListPageState extends State<TalentListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '天赋 #$key' : '新建天赋';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: TalentDetailRoute(talentKey: key),
       parentMenu: RouterMenu.talent,
     );

@@ -232,9 +232,7 @@ class _AchievementListPageState extends State<AchievementListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '成就 #$key' : '新建成就';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: AchievementDetailRoute(achievementKey: key),
       parentMenu: RouterMenu.achievement,
     );

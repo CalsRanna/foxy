@@ -249,11 +249,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
   }
 
   void _navigateToDetail({SmartScriptKey? key}) {
-    final label = key == null
-        ? '新建脚本'
-        : '脚本 ${key.entryOrGuid}/${key.sourceType}/${key.id}/${key.link}';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: SmartScriptDetailRoute(scriptKey: key),
       parentMenu: RouterMenu.smartScript,
     );

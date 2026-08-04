@@ -30,27 +30,16 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch 拆分为标题区与页签区:编辑保存只更新标题;页签区仅在
-    // persistedKey/附魔与分解 linkKey 变化时重建(主表单带 ValueKey 复用)。
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          final template = viewModel.entity.value;
-          final name = key == null
-              ? '新建物品'
-              : template?.name.isNotEmpty == true
-              ? template?.name ?? ''
-              : '物品 #$key';
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          );
-        }),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '物品详情',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ),
         Watch((_) {
           final key = viewModel.persistedKey.value;
           final template = viewModel.entity.value;

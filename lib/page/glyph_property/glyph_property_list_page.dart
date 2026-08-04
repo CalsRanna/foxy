@@ -215,9 +215,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
   }
 
   void _navigateToDetail({int? key}) {
-    final label = key != null ? '雕文属性 #$key' : '新建雕文属性';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
       route: GlyphPropertyDetailRoute(glyphPropertyKey: key),
       parentMenu: RouterMenu.glyphProperty,
     );

@@ -6,7 +6,6 @@ import 'package:foxy/view_model/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class QuestFactionRewardDetailPage extends StatefulWidget {
@@ -25,26 +24,22 @@ class _QuestFactionRewardDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建任务声望' : '任务声望 #$key';
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '任务声望详情',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          FoxyTab(
-            tabs: const [Text('任务声望')],
-            contents: [QuestFactionRewardView(viewModel: viewModel)],
-          ),
-        ],
-      );
-    });
+        ),
+        FoxyTab(
+          tabs: const [Text('任务声望')],
+          contents: [QuestFactionRewardView(viewModel: viewModel)],
+        ),
+      ],
+    );
   }
 
   @override
