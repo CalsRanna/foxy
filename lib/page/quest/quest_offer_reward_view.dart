@@ -30,7 +30,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
   Widget build(BuildContext context) {
     final vm = viewModel;
 
-    final rows = [
+    final basicRows = [
       Row(
         spacing: 8,
         children: [
@@ -49,10 +49,13 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
+    ];
+
+    final emoteRows = [
       Row(
         spacing: 8,
         children: [
@@ -156,9 +159,9 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -172,7 +175,8 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Watch(
             (_) => FoxyInlineError(message: viewModel.errorMessage.value),
           ),
-          FoxyFormSection(title: '基本信息', children: rows),
+          FoxyFormSection(title: '基本信息', children: basicRows),
+          FoxyFormSection(title: '表情与奖励文本', children: emoteRows),
           Row(
             spacing: 8,
             children: [

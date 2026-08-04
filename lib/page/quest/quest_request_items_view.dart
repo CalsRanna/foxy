@@ -31,7 +31,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
   Widget build(BuildContext context) {
     final vm = viewModel;
 
-    final rows = [
+    final basicRows = [
       Row(
         spacing: 8,
         children: [
@@ -41,6 +41,25 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
               child: FoxyNumberInput<int>(controller: vm.idController),
             ),
           ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '验证版本',
+              child: FoxyNumberInput<int>(
+                controller: vm.verifiedBuildController,
+                placeholder: 'VerifiedBuild',
+              ),
+            ),
+          ),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
+
+    final emoteTextRows = [
+      Row(
+        spacing: 8,
+        children: [
           Expanded(
             child: FoxyFormItem(
               label: '完成表情',
@@ -63,20 +82,6 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
           ),
           Expanded(
             child: FoxyFormItem(
-              label: '验证版本',
-              child: FoxyNumberInput<int>(
-                controller: vm.verifiedBuildController,
-                placeholder: 'VerifiedBuild',
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
               label: '完成文本',
               child: Watch(
                 (_) => FoxyLocalePicker(
@@ -89,9 +94,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -105,7 +108,8 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
           Watch(
             (_) => FoxyInlineError(message: viewModel.errorMessage.value),
           ),
-          FoxyFormSection(title: '基本信息', children: rows),
+          FoxyFormSection(title: '基本信息', children: basicRows),
+          FoxyFormSection(title: '表情与完成文本', children: emoteTextRows),
           Row(
             spacing: 8,
             children: [

@@ -59,96 +59,97 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     final selectedKey = viewModel.selectedKey.value;
     final headers = ['索引', '物品名称', '验证版本'];
 
-    return Column(
-      spacing: 16,
-      children: [
-        Watch(
-          (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-        ),
-        Row(
-          spacing: 8,
-          children: [
-            ShadButton(
-              leading: Icon(LucideIcons.plus, size: 16),
-              onPressed: _showCreateDialog,
-              size: ShadButtonSize.sm,
-              child: Text('新增'),
-            ),
-            ShadButton.ghost(
-              leading: Icon(LucideIcons.squarePen, size: 16),
-              onPressed: selectedKey != null ? _showEditDialog : null,
-              size: ShadButtonSize.sm,
-              child: Text('编辑'),
-            ),
-            ShadButton.ghost(
-              leading: Icon(LucideIcons.copy, size: 16),
-              onPressed: selectedKey != null
-                  ? () => _copy(viewModel.selectedKey.value!)
-                  : null,
-              size: ShadButtonSize.sm,
-              child: Text('复制'),
-            ),
-            const Spacer(),
-            FoxyPagination(
-              page: viewModel.page.value,
-              pageSize: 50,
-              total: viewModel.total.value,
-              onChange: viewModel.paginate,
-            ),
-            ShadButton.destructive(
-              leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: selectedKey != null
-                  ? () => _destroy(viewModel.selectedKey.value!)
-                  : null,
-              size: ShadButtonSize.sm,
-              child: Text('删除'),
-            ),
-          ],
-        ),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            var width = constraints.maxWidth - 240;
-            return FoxyShadTable(
-              shrinkWrap: true,
-              builder: (context, vicinity) {
-                final item = items[vicinity.row];
-                final nameStyle = TextStyle(
-                  color: _getQualityColor(item.itemQuality),
-                );
-                return switch (vicinity.column) {
-                  0 => ShadTableCell(child: Text(item.idx.toString())),
-                  1 => ShadTableCell(
-                    child: Text(item.displayName, style: nameStyle),
-                  ),
-                  2 => ShadTableCell(
-                    child: Text(item.verifiedBuild.toString()),
-                  ),
-                  _ => ShadTableCell(child: SizedBox()),
-                };
-              },
-              columnCount: headers.length,
-              columnSpanExtent: (index) {
-                return switch (index) {
-                  0 => FixedTableSpanExtent(120),
-                  1 => FixedTableSpanExtent(width),
-                  2 => FixedTableSpanExtent(120),
-                  _ => null,
-                };
-              },
-              header: (context, index) {
-                return ShadTableCell.header(child: Text(headers[index]));
-              },
-              onRowTap: (row) => viewModel.selectedKey.value = items[row].key,
-              onRowDoubleTap: (row) async {
-                viewModel.selectedKey.value = items[row].key;
-                await _showEditDialog();
-              },
-              pinnedRowCount: 1,
-              rowCount: items.length,
-            );
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        spacing: 16,
+        children: [
+          Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)),
+          Row(
+            spacing: 8,
+            children: [
+              ShadButton(
+                leading: Icon(LucideIcons.plus, size: 16),
+                onPressed: _showCreateDialog,
+                size: ShadButtonSize.sm,
+                child: Text('新增'),
+              ),
+              ShadButton.ghost(
+                leading: Icon(LucideIcons.squarePen, size: 16),
+                onPressed: selectedKey != null ? _showEditDialog : null,
+                size: ShadButtonSize.sm,
+                child: Text('编辑'),
+              ),
+              ShadButton.ghost(
+                leading: Icon(LucideIcons.copy, size: 16),
+                onPressed: selectedKey != null
+                    ? () => _copy(viewModel.selectedKey.value!)
+                    : null,
+                size: ShadButtonSize.sm,
+                child: Text('复制'),
+              ),
+              const Spacer(),
+              FoxyPagination(
+                page: viewModel.page.value,
+                pageSize: 50,
+                total: viewModel.total.value,
+                onChange: viewModel.paginate,
+              ),
+              ShadButton.destructive(
+                leading: Icon(LucideIcons.trash, size: 16),
+                onPressed: selectedKey != null
+                    ? () => _destroy(viewModel.selectedKey.value!)
+                    : null,
+                size: ShadButtonSize.sm,
+                child: Text('删除'),
+              ),
+            ],
+          ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              var width = constraints.maxWidth - 240;
+              return FoxyShadTable(
+                shrinkWrap: true,
+                builder: (context, vicinity) {
+                  final item = items[vicinity.row];
+                  final nameStyle = TextStyle(
+                    color: _getQualityColor(item.itemQuality),
+                  );
+                  return switch (vicinity.column) {
+                    0 => ShadTableCell(child: Text(item.idx.toString())),
+                    1 => ShadTableCell(
+                      child: Text(item.displayName, style: nameStyle),
+                    ),
+                    2 => ShadTableCell(
+                      child: Text(item.verifiedBuild.toString()),
+                    ),
+                    _ => ShadTableCell(child: SizedBox()),
+                  };
+                },
+                columnCount: headers.length,
+                columnSpanExtent: (index) {
+                  return switch (index) {
+                    0 => FixedTableSpanExtent(120),
+                    1 => FixedTableSpanExtent(width),
+                    2 => FixedTableSpanExtent(120),
+                    _ => null,
+                  };
+                },
+                header: (context, index) {
+                  return ShadTableCell.header(child: Text(headers[index]));
+                },
+                onRowTap: (row) => viewModel.selectedKey.value = items[row].key,
+                onRowDoubleTap: (row) async {
+                  viewModel.selectedKey.value = items[row].key;
+                  await _showEditDialog();
+                },
+                pinnedRowCount: 1,
+                rowCount: items.length,
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 

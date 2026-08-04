@@ -55,101 +55,102 @@ class _GameObjectLootTemplateViewState
     final selectedKey = viewModel.selectedKey.value;
     final headers = ['物品ID', '物品名称', '几率', '数量', '任务', '组'];
 
-    return Column(
-      spacing: 16,
-      children: [
-        Watch(
-          (_) => FoxyInlineError(message: viewModel.errorMessage.value),
-        ),
-        Row(
-          spacing: 8,
-          children: [
-            ShadButton(
-              leading: Icon(LucideIcons.plus, size: 16),
-              onPressed: _showCreateDialog,
-              size: ShadButtonSize.sm,
-              child: Text('新增'),
-            ),
-            ShadButton.ghost(
-              leading: Icon(LucideIcons.squarePen, size: 16),
-              onPressed: selectedKey != null ? _showEditDialog : null,
-              size: ShadButtonSize.sm,
-              child: Text('编辑'),
-            ),
-            const Spacer(),
-            FoxyPagination(
-              page: viewModel.page.value,
-              pageSize: 50,
-              total: viewModel.total.value,
-              onChange: viewModel.paginate,
-            ),
-            ShadButton.destructive(
-              leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: selectedKey != null
-                  ? () => _destroy(viewModel.selectedKey.value!)
-                  : null,
-              size: ShadButtonSize.sm,
-              child: Text('删除'),
-            ),
-          ],
-        ),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            var width = constraints.maxWidth - 600;
-            return FoxyShadTable(
-              shrinkWrap: true,
-              builder: (context, vicinity) {
-                final item = items[vicinity.row];
-                final nameStyle = TextStyle(
-                  color: _getQualityColor(item.itemQuality),
-                );
-                return switch (vicinity.column) {
-                  0 => ShadTableCell(child: Text(item.item.toString())),
-                  1 => ShadTableCell(
-                    child: Text(
-                      item.reference != 0
-                          ? '[${item.displayName}]'
-                          : item.displayName,
-                      style: nameStyle,
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        spacing: 16,
+        children: [
+          Watch((_) => FoxyInlineError(message: viewModel.errorMessage.value)),
+          Row(
+            spacing: 8,
+            children: [
+              ShadButton(
+                leading: Icon(LucideIcons.plus, size: 16),
+                onPressed: _showCreateDialog,
+                size: ShadButtonSize.sm,
+                child: Text('新增'),
+              ),
+              ShadButton.ghost(
+                leading: Icon(LucideIcons.squarePen, size: 16),
+                onPressed: selectedKey != null ? _showEditDialog : null,
+                size: ShadButtonSize.sm,
+                child: Text('编辑'),
+              ),
+              const Spacer(),
+              FoxyPagination(
+                page: viewModel.page.value,
+                pageSize: 50,
+                total: viewModel.total.value,
+                onChange: viewModel.paginate,
+              ),
+              ShadButton.destructive(
+                leading: Icon(LucideIcons.trash, size: 16),
+                onPressed: selectedKey != null
+                    ? () => _destroy(viewModel.selectedKey.value!)
+                    : null,
+                size: ShadButtonSize.sm,
+                child: Text('删除'),
+              ),
+            ],
+          ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              var width = constraints.maxWidth - 600;
+              return FoxyShadTable(
+                shrinkWrap: true,
+                builder: (context, vicinity) {
+                  final item = items[vicinity.row];
+                  final nameStyle = TextStyle(
+                    color: _getQualityColor(item.itemQuality),
+                  );
+                  return switch (vicinity.column) {
+                    0 => ShadTableCell(child: Text(item.item.toString())),
+                    1 => ShadTableCell(
+                      child: Text(
+                        item.reference != 0
+                            ? '[${item.displayName}]'
+                            : item.displayName,
+                        style: nameStyle,
+                      ),
                     ),
-                  ),
-                  2 => ShadTableCell(child: Text(item.chance.toString())),
-                  3 => ShadTableCell(
-                    child: Text('${item.minCount}-${item.maxCount}'),
-                  ),
-                  4 => ShadTableCell(
-                    child: Text(item.questRequired ? '是' : '否'),
-                  ),
-                  5 => ShadTableCell(child: Text(item.groupId.toString())),
-                  _ => ShadTableCell(child: SizedBox()),
-                };
-              },
-              columnCount: headers.length,
-              columnSpanExtent: (index) {
-                return switch (index) {
-                  0 => FixedTableSpanExtent(120),
-                  1 => FixedTableSpanExtent(width),
-                  2 => FixedTableSpanExtent(120),
-                  3 => FixedTableSpanExtent(120),
-                  4 => FixedTableSpanExtent(120),
-                  5 => FixedTableSpanExtent(120),
-                  _ => null,
-                };
-              },
-              header: (context, index) {
-                return ShadTableCell.header(child: Text(headers[index]));
-              },
-              onRowTap: (row) => viewModel.selectedKey.value = items[row].key,
-              onRowDoubleTap: (row) async {
-                viewModel.selectedKey.value = items[row].key;
-                await _showEditDialog();
-              },
-              pinnedRowCount: 1,
-              rowCount: items.length,
-            );
-          },
-        ),
-      ],
+                    2 => ShadTableCell(child: Text(item.chance.toString())),
+                    3 => ShadTableCell(
+                      child: Text('${item.minCount}-${item.maxCount}'),
+                    ),
+                    4 => ShadTableCell(
+                      child: Text(item.questRequired ? '是' : '否'),
+                    ),
+                    5 => ShadTableCell(child: Text(item.groupId.toString())),
+                    _ => ShadTableCell(child: SizedBox()),
+                  };
+                },
+                columnCount: headers.length,
+                columnSpanExtent: (index) {
+                  return switch (index) {
+                    0 => FixedTableSpanExtent(120),
+                    1 => FixedTableSpanExtent(width),
+                    2 => FixedTableSpanExtent(120),
+                    3 => FixedTableSpanExtent(120),
+                    4 => FixedTableSpanExtent(120),
+                    5 => FixedTableSpanExtent(120),
+                    _ => null,
+                  };
+                },
+                header: (context, index) {
+                  return ShadTableCell.header(child: Text(headers[index]));
+                },
+                onRowTap: (row) => viewModel.selectedKey.value = items[row].key,
+                onRowDoubleTap: (row) async {
+                  viewModel.selectedKey.value = items[row].key;
+                  await _showEditDialog();
+                },
+                pinnedRowCount: 1,
+                rowCount: items.length,
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 

@@ -26,70 +26,70 @@ class QuestFactionRewardView extends StatelessWidget {
     );
 
     final difficulty0Input = FoxyFormItem(
-      label: '索引 0 声望值',
+      label: '难度 0 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty0',
         controller: viewModel.difficulty0Controller,
       ),
     );
     final difficulty1Input = FoxyFormItem(
-      label: '索引 1 声望值',
+      label: '难度 1 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty1',
         controller: viewModel.difficulty1Controller,
       ),
     );
     final difficulty2Input = FoxyFormItem(
-      label: '索引 2 声望值',
+      label: '难度 2 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty2',
         controller: viewModel.difficulty2Controller,
       ),
     );
     final difficulty3Input = FoxyFormItem(
-      label: '索引 3 声望值',
+      label: '难度 3 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty3',
         controller: viewModel.difficulty3Controller,
       ),
     );
     final difficulty4Input = FoxyFormItem(
-      label: '索引 4 声望值',
+      label: '难度 4 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty4',
         controller: viewModel.difficulty4Controller,
       ),
     );
     final difficulty5Input = FoxyFormItem(
-      label: '索引 5 声望值',
+      label: '难度 5 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty5',
         controller: viewModel.difficulty5Controller,
       ),
     );
     final difficulty6Input = FoxyFormItem(
-      label: '索引 6 声望值',
+      label: '难度 6 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty6',
         controller: viewModel.difficulty6Controller,
       ),
     );
     final difficulty7Input = FoxyFormItem(
-      label: '索引 7 声望值',
+      label: '难度 7 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty7',
         controller: viewModel.difficulty7Controller,
       ),
     );
     final difficulty8Input = FoxyFormItem(
-      label: '索引 8 声望值',
+      label: '难度 8 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty8',
         controller: viewModel.difficulty8Controller,
       ),
     );
     final difficulty9Input = FoxyFormItem(
-      label: '索引 9 声望值',
+      label: '难度 9 声望值',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty9',
         controller: viewModel.difficulty9Controller,

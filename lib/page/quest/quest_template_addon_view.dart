@@ -31,7 +31,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
   Widget build(BuildContext context) {
     final vm = viewModel;
 
-    final rows = [
+    final basicRows = [
       Row(
         spacing: 8,
         children: [
@@ -73,6 +73,9 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           ),
         ],
       ),
+    ];
+
+    final chainRows = [
       Row(
         spacing: 8,
         children: [
@@ -116,6 +119,81 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           ),
         ],
       ),
+    ];
+
+    final requirementRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FoxyFormItem(
+              label: '需要技能',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.skillLine,
+                controller: vm.requiredSkillIdController,
+                placeholder: 'RequiredSkillId',
+              ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '需要技能点数',
+              child: FoxyNumberInput<int>(
+                controller: vm.requiredSkillPointsController,
+                placeholder: 'RequiredSkillPoints',
+              ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '最低声望阵营',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
+                controller: vm.requiredMinRepFactionController,
+                placeholder: 'RequiredMinRepFaction',
+              ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '最低声望值',
+              child: FoxyNumberInput<int>(
+                controller: vm.requiredMinRepValueController,
+                placeholder: 'RequiredMinRepValue',
+              ),
+            ),
+          ),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FoxyFormItem(
+              label: '最高声望阵营',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
+                controller: vm.requiredMaxRepFactionController,
+                placeholder: 'RequiredMaxRepFaction',
+              ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '最高声望值',
+              child: FoxyNumberInput<int>(
+                controller: vm.requiredMaxRepValueController,
+                placeholder: 'RequiredMaxRepValue',
+              ),
+            ),
+          ),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
+
+    final rewardRows = [
       Row(
         spacing: 8,
         children: [
@@ -140,73 +218,6 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           ),
           Expanded(
             child: FoxyFormItem(
-              label: '需要技能',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.skillLine,
-                controller: vm.requiredSkillIdController,
-                placeholder: 'RequiredSkillId',
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '需要技能点数',
-              child: FoxyNumberInput<int>(
-                controller: vm.requiredSkillPointsController,
-                placeholder: 'RequiredSkillPoints',
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '最低声望阵营',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.dbcFaction,
-                controller: vm.requiredMinRepFactionController,
-                placeholder: 'RequiredMinRepFaction',
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '最高声望阵营',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.dbcFaction,
-                controller: vm.requiredMaxRepFactionController,
-                placeholder: 'RequiredMaxRepFaction',
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '最低声望值',
-              child: FoxyNumberInput<int>(
-                controller: vm.requiredMinRepValueController,
-                placeholder: 'RequiredMinRepValue',
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '最高声望值',
-              child: FoxyNumberInput<int>(
-                controller: vm.requiredMaxRepValueController,
-                placeholder: 'RequiredMaxRepValue',
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
               label: '提供物品数量',
               child: FoxyNumberInput<int>(
                 controller: vm.providedItemCountController,
@@ -225,8 +236,6 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -240,7 +249,10 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Watch(
             (_) => FoxyInlineError(message: viewModel.errorMessage.value),
           ),
-          FoxyFormSection(title: '基本信息', children: rows),
+          FoxyFormSection(title: '基本信息', children: basicRows),
+          FoxyFormSection(title: '任务链', children: chainRows),
+          FoxyFormSection(title: '接取条件', children: requirementRows),
+          FoxyFormSection(title: '奖励与特殊', children: rewardRows),
           Row(
             spacing: 8,
             children: [

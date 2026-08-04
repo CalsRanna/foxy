@@ -965,10 +965,51 @@ class SpellView extends StatelessWidget {
         children: [
           Expanded(child: dispelTypeInput),
           Expanded(child: preventionTypeInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          Expanded(child: spellClassSetInput),
+          const Expanded(child: SizedBox()),
         ],
       ),
+      Watch((_) {
+        return Row(
+          spacing: 8,
+          children: [
+            Expanded(
+              child: FoxyFormItem(
+                label: '分类掩码1',
+                child: FoxyFlagPicker(
+                  controller: vm.spellClassMask0Controller,
+                  flags: kSpellClassMaskBits,
+                  title: '分类掩码1',
+                  placeholder: 'SpellClassMask0',
+                ),
+              ),
+            ),
+            Expanded(
+              child: FoxyFormItem(
+                label: '分类掩码2',
+                child: FoxyFlagPicker(
+                  controller: vm.spellClassMask1Controller,
+                  flags: kSpellClassMaskBits,
+                  title: '分类掩码2',
+                  placeholder: 'SpellClassMask1',
+                ),
+              ),
+            ),
+            Expanded(
+              child: FoxyFormItem(
+                label: '分类掩码3',
+                child: FoxyFlagPicker(
+                  controller: vm.spellClassMask2Controller,
+                  flags: kSpellClassMaskBits,
+                  title: '分类掩码3',
+                  placeholder: 'SpellClassMask2',
+                ),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+          ],
+        );
+      }),
     ];
 
     final castingRows = [
@@ -1231,52 +1272,6 @@ class SpellView extends StatelessWidget {
           FoxyFormSection(title: '能量消耗', children: powerRows),
           FoxyFormSection(title: '标志位', children: attributeFlagRows),
           FoxyFormSection(title: '触发', children: procRows),
-          Watch((_) {
-            return FoxyFormSection(
-              title: '法术分类掩码',
-              children: [
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: spellClassSetInput),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '分类掩码1',
-                        child: FoxyFlagPicker(
-                          controller: vm.spellClassMask0Controller,
-                          flags: kSpellClassMaskBits,
-                          title: '分类掩码1',
-                          placeholder: 'SpellClassMask0',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '分类掩码2',
-                        child: FoxyFlagPicker(
-                          controller: vm.spellClassMask1Controller,
-                          flags: kSpellClassMaskBits,
-                          title: '分类掩码2',
-                          placeholder: 'SpellClassMask1',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '分类掩码3',
-                        child: FoxyFlagPicker(
-                          controller: vm.spellClassMask2Controller,
-                          flags: kSpellClassMaskBits,
-                          title: '分类掩码3',
-                          placeholder: 'SpellClassMask2',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }),
           _buildEffectSection('效果1', 0),
           _buildEffectSection('效果2', 1),
           _buildEffectSection('效果3', 2),

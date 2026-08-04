@@ -116,6 +116,10 @@ class QuestTemplateView extends StatelessWidget {
           ),
         ],
       ),
+    ];
+
+    /// 1b. 接取条件
+    final acceptConditionRows = [
       Row(
         spacing: 8,
         children: [
@@ -131,20 +135,20 @@ class QuestTemplateView extends StatelessWidget {
           ),
           Expanded(
             child: FoxyFormItem(
-              label: '需要阵营2',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.dbcFaction,
-                placeholder: 'RequiredFactionId2',
-                controller: vm.requiredFactionId2Controller,
+              label: '阵营值1',
+              child: FoxyNumberInput<int>(
+                placeholder: 'RequiredFactionValue1',
+                controller: vm.requiredFactionValue1Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
-              label: '阵营值1',
-              child: FoxyNumberInput<int>(
-                placeholder: 'RequiredFactionValue1',
-                controller: vm.requiredFactionValue1Controller,
+              label: '需要阵营2',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
+                placeholder: 'RequiredFactionId2',
+                controller: vm.requiredFactionId2Controller,
               ),
             ),
           ),
@@ -387,16 +391,6 @@ class QuestTemplateView extends StatelessWidget {
         children: [
           Expanded(
             child: FoxyFormItem(
-              label: '起始物品',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.itemTemplate,
-                placeholder: 'StartItem',
-                controller: vm.startItemController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
               label: '需要击杀',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredPlayerKills',
@@ -404,8 +398,9 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -530,7 +525,25 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FoxyFormItem(
+              label: '起始物品',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
+                placeholder: 'StartItem',
+                controller: vm.startItemController,
+              ),
+            ),
+          ),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -1249,6 +1262,7 @@ class QuestTemplateView extends StatelessWidget {
         spacing: 16,
         children: [
           FoxyFormSection(title: '基础信息', children: basicRows),
+          FoxyFormSection(title: '接取条件', children: acceptConditionRows),
           FoxyFormSection(title: '任务目标', children: objectiveRows),
           FoxyFormSection(title: '基础奖励', children: basicRewardRows),
           FoxyFormSection(title: '奖励物品', children: rewardItemRows),

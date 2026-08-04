@@ -158,7 +158,7 @@ class ItemExtendedCostView extends StatelessWidget {
       ),
     ];
 
-    /// 2. 物品与计数
+    /// 2. 所需物品
     final itemRows = [
       Row(
         spacing: 8,
@@ -189,13 +189,26 @@ class ItemExtendedCostView extends StatelessWidget {
       ),
     ];
 
-    /// 3. 其他
-    final otherRows = [
+    /// 3. 评分需求
+    final ratingRows = [
       Row(
         spacing: 8,
         children: [
           Expanded(child: requiredArenaRatingInput),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
+
+    /// 4. 购买组
+    final purchaseGroupRows = [
+      Row(
+        spacing: 8,
+        children: [
           Expanded(child: itemPurchaseGroupInput),
+          const Expanded(child: SizedBox()),
           const Expanded(child: SizedBox()),
           const Expanded(child: SizedBox()),
         ],
@@ -209,8 +222,9 @@ class ItemExtendedCostView extends StatelessWidget {
         spacing: 16,
         children: [
           FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '物品与计数', children: itemRows),
-          FoxyFormSection(title: '其他', children: otherRows),
+          FoxyFormSection(title: '所需物品', children: itemRows),
+          FoxyFormSection(title: '评分需求', children: ratingRows),
+          FoxyFormSection(title: '购买组', children: purchaseGroupRows),
           Row(
             children: [
               Watch(

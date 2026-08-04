@@ -7,6 +7,7 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -40,145 +41,142 @@ class _CreatureOnKillReputationViewState
           Watch(
             (_) => FoxyInlineError(message: viewModel.errorMessage.value),
           ),
-          ShadCard(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              spacing: 16,
-              children: [
-                Row(
-                  spacing: 16,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '编号',
-                        child: FoxyNumberInput<int>(
-                          controller: viewModel.creatureIDController,
-                          placeholder: 'creature_id',
-                        ),
+          FoxyFormSection(
+            title: '击杀声望',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '编号',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.creatureIDController,
+                        placeholder: 'creature_id',
                       ),
                     ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '区分阵营',
-                        child: FoxyShadSelect<int>(
-                          controller: viewModel.teamDependentController,
-                          options: kBooleanOptions,
-                          placeholder: Text('TeamDependent'),
-                        ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '区分阵营',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.teamDependentController,
+                        options: kBooleanOptions,
+                        placeholder: Text('TeamDependent'),
                       ),
                     ),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-                Row(
-                  spacing: 16,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '阵营1',
-                        child: FoxyEntityPicker(
-                          delegate: FoxyEntityPickerDelegates.dbcFaction,
-                          controller: viewModel.rewOnKillRepFaction1Controller,
-                          placeholder: 'RewOnKillRepFaction1',
-                        ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '阵营1',
+                      child: FoxyEntityPicker(
+                        delegate: FoxyEntityPickerDelegates.dbcFaction,
+                        controller: viewModel.rewOnKillRepFaction1Controller,
+                        placeholder: 'RewOnKillRepFaction1',
                       ),
                     ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '阵营2',
-                        child: FoxyEntityPicker(
-                          delegate: FoxyEntityPickerDelegates.dbcFaction,
-                          controller: viewModel.rewOnKillRepFaction2Controller,
-                          placeholder: 'RewOnKillRepFaction2',
-                        ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '阵营2',
+                      child: FoxyEntityPicker(
+                        delegate: FoxyEntityPickerDelegates.dbcFaction,
+                        controller: viewModel.rewOnKillRepFaction2Controller,
+                        placeholder: 'RewOnKillRepFaction2',
                       ),
                     ),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-                Row(
-                  spacing: 16,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '声望值1',
-                        child: FoxyNumberInput<double>(
-                          controller: viewModel.rewOnKillRepValue1Controller,
-                          placeholder: 'RewOnKillRepValue1',
-                        ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '声望值1',
+                      child: FoxyNumberInput<double>(
+                        controller: viewModel.rewOnKillRepValue1Controller,
+                        placeholder: 'RewOnKillRepValue1',
                       ),
                     ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '声望值2',
-                        child: FoxyNumberInput<double>(
-                          controller: viewModel.rewOnKillRepValue2Controller,
-                          placeholder: 'RewOnKillRepValue2',
-                        ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '声望值2',
+                      child: FoxyNumberInput<double>(
+                        controller: viewModel.rewOnKillRepValue2Controller,
+                        placeholder: 'RewOnKillRepValue2',
                       ),
                     ),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-                Row(
-                  spacing: 16,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '最高声望1',
-                        child: FoxyShadSelect<int>(
-                          controller: viewModel.maxStanding1Controller,
-                          options: kMaxStandingOptions,
-                          placeholder: Text('MaxStanding1'),
-                        ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '最高声望1',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.maxStanding1Controller,
+                        options: kMaxStandingOptions,
+                        placeholder: Text('MaxStanding1'),
                       ),
                     ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '最高声望2',
-                        child: FoxyShadSelect<int>(
-                          controller: viewModel.maxStanding2Controller,
-                          options: kMaxStandingOptions,
-                          placeholder: Text('MaxStanding2'),
-                        ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '最高声望2',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.maxStanding2Controller,
+                        options: kMaxStandingOptions,
+                        placeholder: Text('MaxStanding2'),
                       ),
                     ),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-                Row(
-                  spacing: 16,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '包括声望组1',
-                        child: FoxyShadSelect<int>(
-                          controller: viewModel.isTeamAward1Controller,
-                          options: kBooleanOptions,
-                          placeholder: Text('IsTeamAward1'),
-                        ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '包括声望组1',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.isTeamAward1Controller,
+                        options: kBooleanOptions,
+                        placeholder: Text('IsTeamAward1'),
                       ),
                     ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '包括声望组2',
-                        child: FoxyShadSelect<int>(
-                          controller: viewModel.isTeamAward2Controller,
-                          options: kBooleanOptions,
-                          placeholder: Text('IsTeamAward2'),
-                        ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '包括声望组2',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.isTeamAward2Controller,
+                        options: kBooleanOptions,
+                        placeholder: Text('IsTeamAward2'),
                       ),
                     ),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
           ),
           Row(
             spacing: 8,

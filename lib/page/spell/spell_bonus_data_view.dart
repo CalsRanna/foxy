@@ -4,6 +4,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_bonus_data_linked_detail_view_model.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
@@ -37,79 +38,76 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
             Watch(
               (_) => FoxyInlineError(message: viewModel.errorMessage.value),
             ),
-            ShadCard(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                spacing: 16,
-                children: [
-                  Row(
-                    spacing: 16,
-                    children: [
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '编号',
-                          child: FoxyNumberInput<int>(
-                            controller: viewModel.entryController,
-                            placeholder: 'entry',
-                          ),
+            FoxyFormSection(
+              title: '法术加成',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '编号',
+                        child: FoxyNumberInput<int>(
+                          controller: viewModel.entryController,
+                          placeholder: 'entry',
                         ),
                       ),
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '备注',
-                          child: FoxyStringInput(
-                            controller: viewModel.commentsController,
-                            placeholder: 'comments',
-                          ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '备注',
+                        child: FoxyStringInput(
+                          controller: viewModel.commentsController,
+                          placeholder: 'comments',
                         ),
                       ),
-                      Expanded(child: SizedBox()),
-                      Expanded(child: SizedBox()),
-                    ],
-                  ),
-                  Row(
-                    spacing: 16,
-                    children: [
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '法术强度',
-                          child: FoxyNumberInput<double>(
-                            controller: viewModel.directBonusController,
-                            placeholder: 'direct_bonus',
-                          ),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '法术强度',
+                        child: FoxyNumberInput<double>(
+                          controller: viewModel.directBonusController,
+                          placeholder: 'direct_bonus',
                         ),
                       ),
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '法强（DOT）',
-                          child: FoxyNumberInput<double>(
-                            controller: viewModel.dotBonusController,
-                            placeholder: 'dot_bonus',
-                          ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '法强（DOT）',
+                        child: FoxyNumberInput<double>(
+                          controller: viewModel.dotBonusController,
+                          placeholder: 'dot_bonus',
                         ),
                       ),
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '攻击强度',
-                          child: FoxyNumberInput<double>(
-                            controller: viewModel.apBonusController,
-                            placeholder: 'ap_bonus',
-                          ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '攻击强度',
+                        child: FoxyNumberInput<double>(
+                          controller: viewModel.apBonusController,
+                          placeholder: 'ap_bonus',
                         ),
                       ),
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '攻强（DOT）',
-                          child: FoxyNumberInput<double>(
-                            controller: viewModel.apDotBonusController,
-                            placeholder: 'ap_dot_bonus',
-                          ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '攻强（DOT）',
+                        child: FoxyNumberInput<double>(
+                          controller: viewModel.apDotBonusController,
+                          placeholder: 'ap_dot_bonus',
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             Row(
               spacing: 8,

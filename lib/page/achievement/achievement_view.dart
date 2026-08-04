@@ -30,9 +30,7 @@ class AchievementView extends StatelessWidget {
         spacing: 16,
         children: [
           _buildBasicInfoCard(),
-          _buildTitleCard(),
-          _buildDescriptionCard(),
-          _buildRewardCard(),
+          _buildLocaleTextCard(),
           _buildOtherCard(),
           _buildActions(context),
         ],
@@ -105,13 +103,29 @@ class AchievementView extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionCard() {
+  Widget _buildLocaleTextCard() {
     return FoxyFormSection(
-      title: '描述文本',
+      title: '本地化文本',
       children: [
         Row(
           spacing: 8,
           children: [
+            Expanded(
+              child: FoxyFormItem(
+                label: '标题',
+                child: Watch((_) {
+                  final id = viewModel.persistedKey.value;
+                  return FoxyLocalePicker(
+                    entry: id,
+                    controller: viewModel.titleLangZhCNController,
+                    title: '标题本地化',
+                    placeholder: 'Title_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
+                    onSaved: viewModel.applyTitleLocales,
+                  );
+                }),
+              ),
+            ),
             Expanded(
               child: FoxyFormItem(
                 label: '描述',
@@ -129,8 +143,22 @@ class AchievementView extends StatelessWidget {
                 }),
               ),
             ),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
+            Expanded(
+              child: FoxyFormItem(
+                label: '奖励',
+                child: Watch((_) {
+                  final id = viewModel.persistedKey.value;
+                  return FoxyLocalePicker(
+                    entry: id,
+                    controller: viewModel.rewardLangZhCNController,
+                    title: '奖励文本本地化',
+                    placeholder: 'Reward_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
+                    onSaved: viewModel.applyRewardLocales,
+                  );
+                }),
+              ),
+            ),
             const Expanded(child: SizedBox()),
           ],
         ),
@@ -213,70 +241,6 @@ class AchievementView extends StatelessWidget {
             Expanded(child: minimumCriteriaInput),
             Expanded(child: sharesCriteriaInput),
             Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRewardCard() {
-    return FoxyFormSection(
-      title: '奖励文本',
-      children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '奖励',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.rewardLangZhCNController,
-                    title: '奖励文本本地化',
-                    placeholder: 'Reward_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
-                    onSaved: viewModel.applyRewardLocales,
-                  );
-                }),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTitleCard() {
-    return FoxyFormSection(
-      title: '标题文本',
-      children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '标题',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.titleLangZhCNController,
-                    title: '标题本地化',
-                    placeholder: 'Title_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
-                    onSaved: viewModel.applyTitleLocales,
-                  );
-                }),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
           ],
         ),
       ],

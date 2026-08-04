@@ -6,6 +6,7 @@ import 'package:foxy/view_model/spell_custom_attr_linked_detail_view_model.dart'
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -38,40 +39,37 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
             Watch(
               (_) => FoxyInlineError(message: viewModel.errorMessage.value),
             ),
-            ShadCard(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                spacing: 16,
-                children: [
-                  Row(
-                    spacing: 16,
-                    children: [
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '编号',
-                          child: FoxyNumberInput<int>(
-                            controller: viewModel.spellIdController,
-                            placeholder: 'spell_id',
-                          ),
+            FoxyFormSection(
+              title: '自定义属性',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '编号',
+                        child: FoxyNumberInput<int>(
+                          controller: viewModel.spellIdController,
+                          placeholder: 'spell_id',
                         ),
                       ),
-                      Expanded(
-                        child: FoxyFormItem(
-                          label: '属性',
-                          child: FoxyFlagPicker(
-                            controller: viewModel.attributesController,
-                            flags: kSpellCustomAttributeOptions,
-                            title: '自定义属性',
-                            placeholder: 'attributes',
-                          ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '属性',
+                        child: FoxyFlagPicker(
+                          controller: viewModel.attributesController,
+                          flags: kSpellCustomAttributeOptions,
+                          title: '自定义属性',
+                          placeholder: 'attributes',
                         ),
                       ),
-                      Expanded(child: SizedBox()),
-                      Expanded(child: SizedBox()),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
             ),
             Row(
               spacing: 8,

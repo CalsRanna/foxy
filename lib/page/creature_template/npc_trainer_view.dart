@@ -95,7 +95,15 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
                 placeholder: 'MoneyCost',
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Text(
+                '需求条件',
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            const SizedBox(height: 8),
             // 需要技能线
             FoxyFormItem(
               label: '需要技能线',

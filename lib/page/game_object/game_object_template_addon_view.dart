@@ -41,7 +41,7 @@ class _GameObjectTemplateAddonViewState
             (_) => FoxyInlineError(message: viewModel.errorMessage.value),
           ),
           FoxyFormSection(
-            title: '模板补充',
+            title: '基础信息',
             children: [
               Row(
                 spacing: 8,
@@ -76,6 +76,17 @@ class _GameObjectTemplateAddonViewState
                       ),
                     ),
                   ),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+          FoxyFormSection(
+            title: '金币与装饰',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
                   Expanded(
                     child: FoxyFormItem(
                       label: '最小金币',
@@ -85,11 +96,6 @@ class _GameObjectTemplateAddonViewState
                       ),
                     ),
                   ),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
                   Expanded(
                     child: FoxyFormItem(
                       label: '最大金币',
@@ -99,18 +105,17 @@ class _GameObjectTemplateAddonViewState
                       ),
                     ),
                   ),
-                  Expanded(child: _artKitInput(0, viewModel.artkit0Controller)),
-                  Expanded(child: _artKitInput(1, viewModel.artkit1Controller)),
-                  Expanded(child: _artKitInput(2, viewModel.artkit2Controller)),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
               Row(
                 spacing: 8,
                 children: [
+                  Expanded(child: _artKitInput(0, viewModel.artkit0Controller)),
+                  Expanded(child: _artKitInput(1, viewModel.artkit1Controller)),
+                  Expanded(child: _artKitInput(2, viewModel.artkit2Controller)),
                   Expanded(child: _artKitInput(3, viewModel.artkit3Controller)),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
                 ],
               ),
             ],

@@ -363,16 +363,19 @@ class ItemTemplateView extends StatelessWidget {
       ),
     );
 
-    final setPricingRows = [
+    final setRows = [
       Row(
         spacing: 8,
         children: [
           Expanded(child: itemsetInput),
           Expanded(child: randomPropertyInput),
           Expanded(child: randomSuffixInput),
-          Expanded(child: maxDurabilityInput),
+          const Expanded(child: SizedBox()),
         ],
       ),
+    ];
+
+    final pricingRows = [
       Row(
         spacing: 8,
         children: [
@@ -386,27 +389,51 @@ class ItemTemplateView extends StatelessWidget {
         spacing: 8,
         children: [
           Expanded(child: stackableInput),
-          Expanded(child: totemCategoryInput),
-          Expanded(child: foodTypeInput),
-          Expanded(child: bagFamilyInput),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
+    ];
+
+    final containerRows = [
       Row(
         spacing: 8,
         children: [
           Expanded(child: containerSlotsInput),
+          Expanded(child: bagFamilyInput),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
+
+    final miscRows2 = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: maxDurabilityInput),
+          Expanded(child: totemCategoryInput),
+          Expanded(child: foodTypeInput),
           Expanded(child: itemLimitCategoryInput),
-          Expanded(child: startquestInput),
-          Expanded(child: durationInput),
         ],
       ),
       Row(
         spacing: 8,
         children: [
+          Expanded(child: startquestInput),
+          Expanded(child: durationInput),
           Expanded(child: disenchantIdInput),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
           Expanded(child: minMoneyLootInput),
           Expanded(child: maxMoneyLootInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -959,23 +986,26 @@ class ItemTemplateView extends StatelessWidget {
       ),
     );
 
-    final miscRows = [
+    final pageContentRows = [
       Row(
         spacing: 8,
         children: [
           Expanded(child: pageTextInput),
           Expanded(child: pageMaterialInput),
           Expanded(child: languageIdInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
+    ];
+
+    final scriptRows = [
       Row(
         spacing: 8,
         children: [
           Expanded(child: scriptNameInput),
           Expanded(child: verifiedBuildInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -987,7 +1017,10 @@ class ItemTemplateView extends StatelessWidget {
         spacing: 16,
         children: [
           FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '套装/价格/容器/杂项', children: setPricingRows),
+          FoxyFormSection(title: '套装与随机', children: setRows),
+          FoxyFormSection(title: '价格与数量', children: pricingRows),
+          FoxyFormSection(title: '容器', children: containerRows),
+          FoxyFormSection(title: '杂项', children: miscRows2),
           FoxyFormSection(title: '标识', children: flagsRows),
           FoxyFormSection(title: '伤害/护甲', children: damageArmorRows),
           FoxyFormSection(title: '缩放属性', children: scalingRows),
@@ -1040,7 +1073,7 @@ class ItemTemplateView extends StatelessWidget {
           FoxyFormSection(
             title: '法术',
             children: [
-              _buildSpellCard(
+              ..._buildSpellRows(
                 number: 1,
                 idController: viewModel.spellId1Controller,
                 triggerController: viewModel.spellTrigger1Controller,
@@ -1051,7 +1084,7 @@ class ItemTemplateView extends StatelessWidget {
                 categoryCooldownController:
                     viewModel.spellCategoryCooldown1Controller,
               ),
-              _buildSpellCard(
+              ..._buildSpellRows(
                 number: 2,
                 idController: viewModel.spellId2Controller,
                 triggerController: viewModel.spellTrigger2Controller,
@@ -1062,7 +1095,7 @@ class ItemTemplateView extends StatelessWidget {
                 categoryCooldownController:
                     viewModel.spellCategoryCooldown2Controller,
               ),
-              _buildSpellCard(
+              ..._buildSpellRows(
                 number: 3,
                 idController: viewModel.spellId3Controller,
                 triggerController: viewModel.spellTrigger3Controller,
@@ -1073,7 +1106,7 @@ class ItemTemplateView extends StatelessWidget {
                 categoryCooldownController:
                     viewModel.spellCategoryCooldown3Controller,
               ),
-              _buildSpellCard(
+              ..._buildSpellRows(
                 number: 4,
                 idController: viewModel.spellId4Controller,
                 triggerController: viewModel.spellTrigger4Controller,
@@ -1084,7 +1117,7 @@ class ItemTemplateView extends StatelessWidget {
                 categoryCooldownController:
                     viewModel.spellCategoryCooldown4Controller,
               ),
-              _buildSpellCard(
+              ..._buildSpellRows(
                 number: 5,
                 idController: viewModel.spellId5Controller,
                 triggerController: viewModel.spellTrigger5Controller,
@@ -1099,7 +1132,8 @@ class ItemTemplateView extends StatelessWidget {
           ),
           FoxyFormSection(title: '需求', children: requirementRows),
           FoxyFormSection(title: '插槽/宝石', children: socketGemRows),
-          FoxyFormSection(title: '其他/脚本', children: miscRows),
+          FoxyFormSection(title: '书本内容', children: pageContentRows),
+          FoxyFormSection(title: '脚本', children: scriptRows),
           // 保存/取消按钮
           Row(
             children: [
@@ -1119,7 +1153,7 @@ class ItemTemplateView extends StatelessWidget {
     );
   }
 
-  Widget _buildSpellCard({
+  List<Widget> _buildSpellRows({
     required int number,
     required IntFieldController idController,
     required SelectFieldController<int> triggerController,
@@ -1129,90 +1163,84 @@ class ItemTemplateView extends StatelessWidget {
     required IntFieldController categoryController,
     required IntFieldController categoryCooldownController,
   }) {
-    return ShadCard(
-      padding: const EdgeInsets.all(12),
-      child: Column(
+    return [
+      Row(
         spacing: 8,
         children: [
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '法术$number',
-                  child: FoxyEntityPicker(
-                    delegate: FoxyEntityPickerDelegates.spell,
-                    controller: idController,
-                    placeholder: 'spellid_$number',
-                  ),
-                ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '法术$number',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.spell,
+                controller: idController,
+                placeholder: 'spellid_$number',
               ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '触发类型',
-                  child: FoxyShadSelect<int>(
-                    controller: triggerController,
-                    options: kItemSpellTriggerOptions,
-                    placeholder: Text('spelltrigger_$number'),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '充能',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcharges_$number',
-                    controller: chargesController,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: 'PPM率',
-                  child: FoxyNumberInput<double>(
-                    placeholder: 'spellppmRate_$number',
-                    controller: ppmRateController,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '冷却',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcooldown_$number',
-                    controller: cooldownController,
-                  ),
-                ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '触发类型',
+              child: FoxyShadSelect<int>(
+                controller: triggerController,
+                options: kItemSpellTriggerOptions,
+                placeholder: Text('spelltrigger_$number'),
               ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '类别',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcategory_$number',
-                    controller: categoryController,
-                  ),
-                ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '充能',
+              child: FoxyNumberInput<int>(
+                placeholder: 'spellcharges_$number',
+                controller: chargesController,
               ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '类别冷却',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcategorycooldown_$number',
-                    controller: categoryCooldownController,
-                  ),
-                ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: 'PPM率',
+              child: FoxyNumberInput<double>(
+                placeholder: 'spellppmRate_$number',
+                controller: ppmRateController,
               ),
-              const Expanded(child: SizedBox()),
-            ],
+            ),
           ),
         ],
       ),
-    );
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FoxyFormItem(
+              label: '冷却',
+              child: FoxyNumberInput<int>(
+                placeholder: 'spellcooldown_$number',
+                controller: cooldownController,
+              ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '类别',
+              child: FoxyNumberInput<int>(
+                placeholder: 'spellcategory_$number',
+                controller: categoryController,
+              ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '类别冷却',
+              child: FoxyNumberInput<int>(
+                placeholder: 'spellcategorycooldown_$number',
+                controller: categoryCooldownController,
+              ),
+            ),
+          ),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
   }
 
   Widget _buildStatRow({

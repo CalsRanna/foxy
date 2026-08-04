@@ -155,7 +155,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 1. 基础信息 (8个字段)
+    /// 1. 基础信息
     final basicRows = [
       Row(
         spacing: 8,
@@ -175,6 +175,15 @@ class CreatureTemplateView extends StatelessWidget {
           Expanded(child: rankInput),
         ],
       ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: gossipMenuIdInput),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
     ];
 
     /// 类型阵营输入
@@ -187,7 +196,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 2. 类型阵营 (7个字段)
+    /// 2. 类型与阵营
     final typeRows = [
       Row(
         spacing: 8,
@@ -201,9 +210,9 @@ class CreatureTemplateView extends StatelessWidget {
       Row(
         spacing: 8,
         children: [
-          Expanded(child: regenerateHealthInput),
           Expanded(child: expInput),
-          Expanded(child: gossipMenuIdInput),
+          Expanded(child: petSpellDataIdInput),
+          Expanded(child: vehicleIdInput),
           Expanded(child: SizedBox()),
         ],
       ),
@@ -391,7 +400,7 @@ class CreatureTemplateView extends StatelessWidget {
         children: [
           Expanded(child: rangeAttackTimeInput),
           Expanded(child: rangeVarianceInput),
-          Expanded(child: petSpellDataIdInput),
+          Expanded(child: regenerateHealthInput),
           Expanded(child: SizedBox()),
         ],
       ),
@@ -487,15 +496,6 @@ class CreatureTemplateView extends StatelessWidget {
           Expanded(child: speedFlightInput),
           Expanded(child: detectionRangeInput),
           Expanded(child: hoverHeightInput),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: vehicleIdInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -595,8 +595,8 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
 
-    /// 7. 掉落难度与脚本 (13个字段)
-    final lootDifficultyScriptRows = [
+    /// 7. 掉落
+    final lootRows = [
       Row(
         spacing: 8,
         children: [
@@ -610,27 +610,31 @@ class CreatureTemplateView extends StatelessWidget {
         spacing: 8,
         children: [
           Expanded(child: skinLootInput),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
+
+    /// 8. 难度与脚本
+    final difficultyScriptRows = [
+      Row(
+        spacing: 8,
+        children: [
           Expanded(child: killCredit1Input),
           Expanded(child: killCredit2input),
           Expanded(child: difficultyEntry1Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
           Expanded(child: difficultyEntry2Input),
-          Expanded(child: difficultyEntry3Input),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
         ],
       ),
       Row(
         spacing: 8,
         children: [
+          Expanded(child: difficultyEntry3Input),
           Expanded(child: aiNameInput),
           Expanded(child: scriptNameInput),
           Expanded(child: verifiedBuildInput),
-          Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -642,11 +646,12 @@ class CreatureTemplateView extends StatelessWidget {
         spacing: 16,
         children: [
           FoxyFormSection(title: '基础信息', children: basicRows),
-          FoxyFormSection(title: '类型阵营', children: typeRows),
+          FoxyFormSection(title: '类型与阵营', children: typeRows),
           FoxyFormSection(title: '战斗属性', children: combatRows),
           FoxyFormSection(title: '移动属性', children: movementRows),
-          FoxyFormSection(title: '标识免疫', children: flagImmuneRows),
-          FoxyFormSection(title: '掉落难度与脚本', children: lootDifficultyScriptRows),
+          FoxyFormSection(title: '标志与免疫', children: flagImmuneRows),
+          FoxyFormSection(title: '掉落', children: lootRows),
+          FoxyFormSection(title: '难度与脚本', children: difficultyScriptRows),
           Row(
             children: [
               Watch(

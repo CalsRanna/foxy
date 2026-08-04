@@ -263,29 +263,24 @@ class TalentView extends StatelessWidget {
             ],
           ),
           FoxyFormSection(
-            title: '前置天赋',
+            title: '前置条件',
             children: [
               Row(
                 spacing: 8,
                 children: [
                   Expanded(child: prereqTalent0Input),
+                  Expanded(child: prereqRank0Input),
                   Expanded(child: prereqTalent1Input),
-                  Expanded(child: prereqTalent2Input),
-                  Expanded(child: SizedBox()),
+                  Expanded(child: prereqRank1Input),
                 ],
               ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '前置等级',
-            children: [
               Row(
                 spacing: 8,
                 children: [
-                  Expanded(child: prereqRank0Input),
-                  Expanded(child: prereqRank1Input),
+                  Expanded(child: prereqTalent2Input),
                   Expanded(child: prereqRank2Input),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
             ],
