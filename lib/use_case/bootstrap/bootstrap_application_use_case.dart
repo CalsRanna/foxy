@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:foxy/database/database.dart';
 import 'package:foxy/database/migration_runner.dart';
 import 'package:foxy/entity/feature_entity.dart';
@@ -64,9 +65,9 @@ final class BootstrapApplicationUseCase {
     // 先读本地配置(无网络依赖),TLS 开关缺省沿用已保存值;
     // 首次引导且 host 为远程地址时建议开启(数据面加密)。
     final savedConfig = await _configUtil.load();
-    final useSsl = input.useSsl ??
-        savedConfig['use_ssl'] == true ||
-            _isRemoteHost(input.host);
+    final useSsl =
+        input.useSsl ??
+        savedConfig['use_ssl'] == true || _isRemoteHost(input.host);
     final config = MysqlConfig(
       host: input.host,
       port: input.port,
@@ -77,7 +78,10 @@ final class BootstrapApplicationUseCase {
     );
     await Database.instance.connect(
       config,
-      onQuery: (query) => LoggerUtil.instance.d(query.sql),
+      onQuery: (query) {
+        if (!kDebugMode) return;
+        LoggerUtil.instance.d(query.sql);
+      },
     );
     await _versionRepository.connect();
 
