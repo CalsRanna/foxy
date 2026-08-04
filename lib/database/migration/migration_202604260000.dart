@@ -20,7 +20,7 @@ class Migration202604260000 implements Migration {
         sort_order INT NOT NULL DEFAULT 0 COMMENT '排序号',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-      )
+      ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ''');
   }
 }

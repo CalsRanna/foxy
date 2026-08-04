@@ -15,7 +15,7 @@ class Migration202604280000 implements Migration {
         entity_id INT NOT NULL COMMENT '被操作实体的ID',
         entity_name VARCHAR(255) DEFAULT '' COMMENT '实体可读名称',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
+      ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ''');
   }
 }
