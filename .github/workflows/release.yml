@@ -7,6 +7,10 @@ name: Release Windows
 #    releases 数组保留最近 3 版)→ 发布 GitHub Release。
 #
 # 应用更新入口固定为 `releases/latest/download/latest.yaml`,附件必须同名。
+#
+# 预发布 tag(如 `v1.1.0-beta`):zip 与清单 zipUrl 按主版本命名(`foxy-1.1.0.zip`),
+# GitHub Release 标记 prerelease,不顶掉 `releases/latest`(规则与
+# tool/release/make_update_manifest.dart 的 _stripPrereleaseSuffix 一致)。
 
 on:
   push:
@@ -57,8 +61,19 @@ jobs:
         run: |
           $tag = '${{ github.ref_name }}'
           $version = $tag.TrimStart('v')
+          # 预发布后缀处理(与 make_update_manifest.dart 的 _stripPrereleaseSuffix
+          # 一致):zip 文件名与清单 zipUrl 用去掉后缀的主版本,Release 标记
+          # prerelease 并保留后缀标题(如 "Foxy 1.1.0-beta")。
+          $mainTag = $tag
+          $dashIndex = $tag.IndexOf('-')
+          if ($dashIndex -ge 0 -and $tag.Substring($dashIndex + 1) -match '^[A-Za-z0-9.\-]+$') {
+            $mainTag = $tag.Substring(0, $dashIndex)
+          }
+          $zipVersion = $mainTag.TrimStart('v')
           Write-Output "tag=$tag" >> $env:GITHUB_OUTPUT
           Write-Output "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Output "zip-version=$zipVersion" >> $env:GITHUB_OUTPUT
+          Write-Output "is-prerelease=$($mainTag -ne $tag)" >> $env:GITHUB_OUTPUT
 
       - name: Build Windows release
         run: flutter build windows --release
@@ -73,7 +88,7 @@ jobs:
         run: >-
           Compress-Archive
           -Path build/windows/x64/runner/Release/*
-          -DestinationPath foxy-${{ steps.version.outputs.version }}.zip
+          -DestinationPath foxy-${{ steps.version.outputs.zip-version }}.zip
           -CompressionLevel Optimal
 
       - name: Fetch previous manifest (for release history)
@@ -90,7 +105,7 @@ jobs:
         shell: pwsh
         run: >-
           dart run tool/release/make_update_manifest.dart
-          --zip foxy-${{ steps.version.outputs.version }}.zip
+          --zip foxy-${{ steps.version.outputs.zip-version }}.zip
           --tag ${{ steps.version.outputs.tag }}
           --out latest.yaml
           --notes-out release_notes.md
@@ -102,6 +117,7 @@ jobs:
         shell: pwsh
         run: >-
           gh release create ${{ steps.version.outputs.tag }}
-          foxy-${{ steps.version.outputs.version }}.zip latest.yaml
+          foxy-${{ steps.version.outputs.zip-version }}.zip latest.yaml
           --title "Foxy ${{ steps.version.outputs.version }}"
           --notes-file release_notes.md
+          $(if (${{ steps.version.outputs.is-prerelease }} -eq 'true') { '--prerelease' })
