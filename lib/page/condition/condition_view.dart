@@ -305,15 +305,15 @@ class ConditionView extends StatelessWidget {
       _ => null,
     };
     final label = switch (sourceType) {
-      >= 1 && <= 12 || 28 => '物品 / 引用条目',
+      >= 1 && <= 12 || 28 => '物品/引用',
       13 || 17 || 18 || 21 || 24 => '法术 ID',
       14 => 'NPC 文本 ID',
       15 => '选项 ID',
       16 || 20 || 29 => '生物 Entry',
       19 => '任务 ID',
-      22 => 'SmartAI Entry / GUID',
+      22 => 'SmartAI/GUID',
       23 => '物品 ID',
-      30 => sourceGroup == 0 ? '生物 Entry' : '游戏对象 Entry',
+      30 => sourceGroup == 0 ? '生物 Entry' : '游戏对象',
       _ => '来源条目',
     };
     if (delegate != null) {
@@ -350,14 +350,14 @@ class ConditionView extends StatelessWidget {
       );
     }
     final label = switch (sourceType) {
-      >= 1 && <= 12 || 28 => '掉落模板 Entry',
+      >= 1 && <= 12 || 28 => '掉落模板',
       13 => '效果掩码',
       14 => '对话菜单 ID',
       15 => '对话菜单 ID',
       18 || 21 => '生物 Entry',
       20 => '对话菜单 ID',
-      22 => 'SmartAI 事件 ID',
-      23 => '商人生物 Entry',
+      22 => 'SmartAI 事件',
+      23 => '商人生物',
       _ => '来源组',
     };
     final canEdit = kConditionSourceTypesWithGroup.contains(sourceType);
