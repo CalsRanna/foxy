@@ -41,55 +41,8 @@ import 'package:get_it/get_it.dart';
 /// 对齐 [EntityPickerDelegates] 范式：每个实体一个 `static final` delegate，
 /// 纯数据 + 闭包，不持有可变状态，可被多个 [FoxyLocalePicker] 共享。
 class FoxyLocalePickerDelegates {
-  static final creatureTemplateName = DatabaseLocaleEditorDelegate(
-    fields: ['locale', 'name', 'title'],
-    fieldLabels: ['语言', '名称', '称号'],
-    onLoad: _loadCreatureTemplateLocaleRows,
-    onSave: (entry, changes) async {
-      final repo = GetIt.instance.get<CreatureTemplateLocaleRepository>();
-      final creations = <CreatureTemplateLocaleEntity>[];
-      final updates =
-          <CreatureTemplateLocaleKey, CreatureTemplateLocaleEntity>{};
-      for (final row in changes.rows) {
-        final d = row.values;
-        final originalLocale = row.originalLocale;
-        if (originalLocale == null) {
-          creations.add(
-            CreatureTemplateLocaleEntity(
-              entry: entry,
-              locale: d['locale'] ?? '',
-              name: d['name'] ?? '',
-              title: d['title'] ?? '',
-            ),
-          );
-          continue;
-        }
-        final originalKey = CreatureTemplateLocaleKey(
-          entry: entry,
-          locale: originalLocale,
-        );
-        final existing = await repo.getCreatureTemplateLocale(originalKey);
-        if (existing == null) {
-          throw RecordNotFoundException('record not found');
-        }
-        updates[originalKey] = existing.copyWith(
-          locale: d['locale'] ?? '',
-          name: d['name'] ?? '',
-          title: d['title'] ?? '',
-        );
-      }
-      await repo.applyCreatureTemplateLocaleChanges(
-        creations: creations,
-        deletions: changes.deletedLocales
-            .map(
-              (locale) =>
-                  CreatureTemplateLocaleKey(entry: entry, locale: locale),
-            )
-            .toList(),
-        updates: updates,
-      );
-    },
-  );
+  static final creatureTemplateName = _creatureTemplateField('name', '名称');
+  static final creatureTemplateTitle = _creatureTemplateField('title', '称号');
 
   static final gameObjectName = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'name'],
@@ -290,72 +243,32 @@ class FoxyLocalePickerDelegates {
     },
   );
 
-  static final questTemplate = DatabaseLocaleEditorDelegate(
-    fields: [
-      'locale',
-      'title',
-      'details',
-      'objectives',
-      'endText',
-      'completedText',
-      'objectiveText1',
-      'objectiveText2',
-      'objectiveText3',
-      'objectiveText4',
-    ],
-    fieldLabels: [
-      '语言',
-      '标题',
-      '详情',
-      '目标',
-      '结束文本',
-      '完成文本',
-      '目标文本1',
-      '目标文本2',
-      '目标文本3',
-      '目标文本4',
-    ],
-    onLoad: _loadQuestTemplateLocaleRows,
-    onSave: (entry, changes) async {
-      final repo = GetIt.instance.get<QuestTemplateLocaleRepository>();
-      final creations = <QuestTemplateLocaleEntity>[];
-      final updates = <QuestTemplateLocaleKey, QuestTemplateLocaleEntity>{};
-      for (final row in changes.rows) {
-        final d = row.values;
-        final originalLocale = row.originalLocale;
-        if (originalLocale == null) {
-          creations.add(_questTemplateLocaleFromValues(entry, d));
-          continue;
-        }
-        final originalKey = QuestTemplateLocaleKey(
-          id: entry,
-          locale: originalLocale,
-        );
-        final existing = await repo.getQuestTemplateLocale(originalKey);
-        if (existing == null) {
-          throw RecordNotFoundException('record not found');
-        }
-        updates[originalKey] = existing.copyWith(
-          locale: d['locale'] ?? '',
-          title: d['title'] ?? '',
-          details: d['details'] ?? '',
-          objectives: d['objectives'] ?? '',
-          endText: d['endText'] ?? '',
-          completedText: d['completedText'] ?? '',
-          objectiveText1: d['objectiveText1'] ?? '',
-          objectiveText2: d['objectiveText2'] ?? '',
-          objectiveText3: d['objectiveText3'] ?? '',
-          objectiveText4: d['objectiveText4'] ?? '',
-        );
-      }
-      await repo.applyQuestTemplateLocaleChanges(
-        creations: creations,
-        deletions: changes.deletedLocales
-            .map((locale) => QuestTemplateLocaleKey(id: entry, locale: locale))
-            .toList(),
-        updates: updates,
-      );
-    },
+  static final questTemplateTitle = _questTemplateField('title', '标题');
+  static final questTemplateDetails = _questTemplateField('details', '详情');
+  static final questTemplateObjectives = _questTemplateField(
+    'objectives',
+    '目标',
+  );
+  static final questTemplateEndText = _questTemplateField('endText', '结束文本');
+  static final questTemplateCompletedText = _questTemplateField(
+    'completedText',
+    '完成文本',
+  );
+  static final questTemplateObjectiveText1 = _questTemplateField(
+    'objectiveText1',
+    '目标文本1',
+  );
+  static final questTemplateObjectiveText2 = _questTemplateField(
+    'objectiveText2',
+    '目标文本2',
+  );
+  static final questTemplateObjectiveText3 = _questTemplateField(
+    'objectiveText3',
+    '目标文本3',
+  );
+  static final questTemplateObjectiveText4 = _questTemplateField(
+    'objectiveText4',
+    '目标文本4',
   );
 
   static final questOfferReward = DatabaseLocaleEditorDelegate(
@@ -884,5 +797,158 @@ class FoxyLocalePickerDelegates {
       objectiveText3: values['objectiveText3'] ?? '',
       objectiveText4: values['objectiveText4'] ?? '',
     );
+  }
+
+  /// quest_template_locale 单字段 delegate：编辑器只读写 [field] 一列。
+  ///
+  /// 更新分支必须只把目标列传给 copyWith（未传列保留原值），不能复用旧的
+  /// 全列 onSave——它对缺失列填 '' 会清掉其它字段。
+  static DatabaseLocaleEditorDelegate _questTemplateField(
+    String field,
+    String label,
+  ) {
+    return DatabaseLocaleEditorDelegate(
+      fields: ['locale', field],
+      fieldLabels: ['语言', label],
+      onLoad: _loadQuestTemplateLocaleRows,
+      onSave: (entry, changes) async {
+        final repo = GetIt.instance.get<QuestTemplateLocaleRepository>();
+        final creations = <QuestTemplateLocaleEntity>[];
+        final updates = <QuestTemplateLocaleKey, QuestTemplateLocaleEntity>{};
+        for (final row in changes.rows) {
+          final d = row.values;
+          final originalLocale = row.originalLocale;
+          if (originalLocale == null) {
+            creations.add(_questTemplateLocaleFromValues(entry, d));
+            continue;
+          }
+          final originalKey = QuestTemplateLocaleKey(
+            id: entry,
+            locale: originalLocale,
+          );
+          final existing = await repo.getQuestTemplateLocale(originalKey);
+          if (existing == null) {
+            throw RecordNotFoundException('record not found');
+          }
+          updates[originalKey] = _questTemplateLocaleCopyWith(
+            existing,
+            field,
+            d[field] ?? '',
+            d['locale'] ?? '',
+          );
+        }
+        await repo.applyQuestTemplateLocaleChanges(
+          creations: creations,
+          deletions: changes.deletedLocales
+              .map(
+                (locale) => QuestTemplateLocaleKey(id: entry, locale: locale),
+              )
+              .toList(),
+          updates: updates,
+        );
+      },
+    );
+  }
+
+  static QuestTemplateLocaleEntity _questTemplateLocaleCopyWith(
+    QuestTemplateLocaleEntity entity,
+    String field,
+    String value,
+    String locale,
+  ) {
+    return switch (field) {
+      'title' => entity.copyWith(locale: locale, title: value),
+      'details' => entity.copyWith(locale: locale, details: value),
+      'objectives' => entity.copyWith(locale: locale, objectives: value),
+      'endText' => entity.copyWith(locale: locale, endText: value),
+      'completedText' => entity.copyWith(locale: locale, completedText: value),
+      'objectiveText1' => entity.copyWith(
+        locale: locale,
+        objectiveText1: value,
+      ),
+      'objectiveText2' => entity.copyWith(
+        locale: locale,
+        objectiveText2: value,
+      ),
+      'objectiveText3' => entity.copyWith(
+        locale: locale,
+        objectiveText3: value,
+      ),
+      'objectiveText4' => entity.copyWith(
+        locale: locale,
+        objectiveText4: value,
+      ),
+      _ => throw ArgumentError('unknown quest locale field: $field'),
+    };
+  }
+
+  /// creature_template_locale 单字段 delegate：编辑器只读写 [field] 一列。
+  static DatabaseLocaleEditorDelegate _creatureTemplateField(
+    String field,
+    String label,
+  ) {
+    return DatabaseLocaleEditorDelegate(
+      fields: ['locale', field],
+      fieldLabels: ['语言', label],
+      onLoad: _loadCreatureTemplateLocaleRows,
+      onSave: (entry, changes) async {
+        final repo = GetIt.instance.get<CreatureTemplateLocaleRepository>();
+        final creations = <CreatureTemplateLocaleEntity>[];
+        final updates =
+            <CreatureTemplateLocaleKey, CreatureTemplateLocaleEntity>{};
+        for (final row in changes.rows) {
+          final d = row.values;
+          final originalLocale = row.originalLocale;
+          if (originalLocale == null) {
+            creations.add(
+              CreatureTemplateLocaleEntity(
+                entry: entry,
+                locale: d['locale'] ?? '',
+                name: field == 'name' ? (d['name'] ?? '') : '',
+                title: field == 'title' ? (d['title'] ?? '') : '',
+              ),
+            );
+            continue;
+          }
+          final originalKey = CreatureTemplateLocaleKey(
+            entry: entry,
+            locale: originalLocale,
+          );
+          final existing = await repo.getCreatureTemplateLocale(originalKey);
+          if (existing == null) {
+            throw RecordNotFoundException('record not found');
+          }
+          updates[originalKey] = _creatureTemplateLocaleCopyWith(
+            existing,
+            field,
+            d[field] ?? '',
+            d['locale'] ?? '',
+          );
+        }
+        await repo.applyCreatureTemplateLocaleChanges(
+          creations: creations,
+          deletions: changes.deletedLocales
+              .map(
+                (locale) =>
+                    CreatureTemplateLocaleKey(entry: entry, locale: locale),
+              )
+              .toList(),
+          updates: updates,
+        );
+      },
+    );
+  }
+
+  static CreatureTemplateLocaleEntity _creatureTemplateLocaleCopyWith(
+    CreatureTemplateLocaleEntity entity,
+    String field,
+    String value,
+    String locale,
+  ) {
+    return switch (field) {
+      'name' => entity.copyWith(locale: locale, name: value),
+      'title' => entity.copyWith(locale: locale, title: value),
+      _ => throw ArgumentError('unknown creature locale field: $field'),
+    };
   }
 }

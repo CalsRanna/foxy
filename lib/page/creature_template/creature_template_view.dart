@@ -48,7 +48,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyLocalePicker(
         entry: viewModel.persistedKey.value,
         controller: viewModel.subNameController,
-        delegate: FoxyLocalePickerDelegates.creatureTemplateName,
+        delegate: FoxyLocalePickerDelegates.creatureTemplateTitle,
         placeholder: 'subname',
         title: '称号',
       ),

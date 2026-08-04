@@ -11,7 +11,8 @@ typedef FoxyLocaleCrudDialog = DatabaseLocaleEditor;
 
 /// 普通数据库 `*_locale` 分表的动态行编辑器。
 ///
-/// 支持按实际数据添加和删除 locale 行。
+/// 单字段两列表格：第一列语言、第二列该字段的值。支持按实际数据添加和删除
+/// locale 行；`fields` 固定为 `['locale', <字段名>]`。
 class DatabaseLocaleEditor extends StatefulWidget {
   final String title;
   final int entry;
@@ -28,7 +29,14 @@ class DatabaseLocaleEditor extends StatefulWidget {
     required this.fieldLabels,
     required this.initialRows,
     required this.onSave,
-  });
+  }) : assert(
+         fields.length == fieldLabels.length,
+         'fields 与 fieldLabels 长度必须一致',
+       ),
+       assert(
+         fields.length == 2,
+         'DatabaseLocaleEditor 仅支持两列：语言 + 单字段',
+       );
 
   @override
   State<DatabaseLocaleEditor> createState() => _DatabaseLocaleEditorState();

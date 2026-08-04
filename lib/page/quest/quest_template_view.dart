@@ -3,8 +3,6 @@ import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/quest_enums.dart';
 import 'package:foxy/constant/quest_flags.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
-import 'package:foxy/page/quest/quest_objective_target_picker.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/quest_template_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -16,6 +14,7 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_signed_entity_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -76,10 +75,12 @@ class QuestTemplateView extends StatelessWidget {
           Expanded(
             child: FoxyFormItem(
               label: '任务分类',
-              child: AreaTableOrQuestSortSelector(
+              // AzerothCore 约定：QuestSortID 正数=区域(AreaTable)、负数=任务排序(QuestSort)。
+              child: FoxySignedEntityPicker(
                 controller: vm.questSortIdController,
                 placeholder: 'QuestSortID',
-                mode: 'QuestSort',
+                positiveSource: SignedEntitySources.areaTable,
+                negativeSource: SignedEntitySources.questSort,
               ),
             ),
           ),
@@ -168,36 +169,44 @@ class QuestTemplateView extends StatelessWidget {
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO1',
-              child: QuestObjectiveTargetPicker(
-                placeholder: 'RequiredNpcOrGo1',
+              child: FoxySignedEntityPicker(
                 controller: vm.requiredNpcOrGo1Controller,
+                placeholder: 'RequiredNpcOrGo1',
+                positiveSource: SignedEntitySources.creature,
+                negativeSource: SignedEntitySources.gameObject,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO2',
-              child: QuestObjectiveTargetPicker(
-                placeholder: 'RequiredNpcOrGo2',
+              child: FoxySignedEntityPicker(
                 controller: vm.requiredNpcOrGo2Controller,
+                placeholder: 'RequiredNpcOrGo2',
+                positiveSource: SignedEntitySources.creature,
+                negativeSource: SignedEntitySources.gameObject,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO3',
-              child: QuestObjectiveTargetPicker(
-                placeholder: 'RequiredNpcOrGo3',
+              child: FoxySignedEntityPicker(
                 controller: vm.requiredNpcOrGo3Controller,
+                placeholder: 'RequiredNpcOrGo3',
+                positiveSource: SignedEntitySources.creature,
+                negativeSource: SignedEntitySources.gameObject,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO4',
-              child: QuestObjectiveTargetPicker(
-                placeholder: 'RequiredNpcOrGo4',
+              child: FoxySignedEntityPicker(
                 controller: vm.requiredNpcOrGo4Controller,
+                placeholder: 'RequiredNpcOrGo4',
+                positiveSource: SignedEntitySources.creature,
+                negativeSource: SignedEntitySources.gameObject,
               ),
             ),
           ),
@@ -1016,7 +1025,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.logTitleController,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateTitle,
                 placeholder: 'LogTitle',
                 title: '日志标题',
               ),
@@ -1028,7 +1037,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.logDescriptionController,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateDetails,
                 placeholder: 'LogDescription',
                 title: '日志描述',
               ),
@@ -1047,7 +1056,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.questDescriptionController,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateObjectives,
                 placeholder: 'QuestDescription',
                 title: '任务描述',
               ),
@@ -1059,7 +1068,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.areaDescriptionController,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateEndText,
                 placeholder: 'AreaDescription',
                 title: '区域描述',
               ),
@@ -1078,7 +1087,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.questCompletionLogController,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateCompletedText,
                 placeholder: 'QuestCompletionLog',
                 title: '完成日志',
               ),
@@ -1098,7 +1107,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText1Controller,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateObjectiveText1,
                 placeholder: 'ObjectiveText1',
                 title: '目标文本1',
               ),
@@ -1110,7 +1119,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText2Controller,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateObjectiveText2,
                 placeholder: 'ObjectiveText2',
                 title: '目标文本2',
               ),
@@ -1122,7 +1131,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText3Controller,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateObjectiveText3,
                 placeholder: 'ObjectiveText3',
                 title: '目标文本3',
               ),
@@ -1134,7 +1143,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyLocalePicker(
                 entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText4Controller,
-                delegate: FoxyLocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplateObjectiveText4,
                 placeholder: 'ObjectiveText4',
                 title: '目标文本4',
               ),

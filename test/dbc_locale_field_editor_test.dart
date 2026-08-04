@@ -38,6 +38,20 @@ void main() {
     expect(find.byType(DatabaseLocaleEditor), findsOneWidget);
     expect(find.text('添加'), findsOneWidget);
     expect(find.byIcon(LucideIcons.trash), findsOneWidget);
+    // 两列表格：一行 = 语言列 + 该字段的值列
+    final inputs = find.descendant(
+      of: find.byType(DatabaseLocaleEditor),
+      matching: find.byType(ShadInput),
+    );
+    expect(inputs, findsNWidgets(2));
+    expect(find.text('语言'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(DatabaseLocaleEditor),
+        matching: find.text('测试'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('普通数据库编辑行修改 locale 后保留原始身份', (tester) async {
