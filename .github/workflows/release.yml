@@ -110,8 +110,10 @@ jobs:
             # First CI release: latest.yaml does not exist yet. The manifest
             # script tolerates a missing existing.yaml (see
             # make_update_manifest.dart), so only create an empty placeholder
-            # for the --existing flag.
-            New-Item -ItemType File -Path existing.yaml | Out-Null
+            # for the --existing flag. -Force: curl -o may have created an
+            # empty existing.yaml before failing, and New-Item errors when
+            # the file already exists.
+            New-Item -ItemType File -Path existing.yaml -Force | Out-Null
           }
           # curl failing leaves $LASTEXITCODE non-zero, which fails the step
           # even though the branch handled it; reset to 0 so a missing
