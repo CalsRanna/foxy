@@ -113,6 +113,10 @@ jobs:
             # for the --existing flag.
             New-Item -ItemType File -Path existing.yaml | Out-Null
           }
+          # curl failing leaves $LASTEXITCODE non-zero, which fails the step
+          # even though the branch handled it; reset to 0 so a missing
+          # previous manifest is a non-fatal first-release condition.
+          $global:LASTEXITCODE = 0
 
       - name: Generate update manifest
         shell: pwsh
