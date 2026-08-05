@@ -239,82 +239,40 @@ void main() {
       await GetIt.instance.reset();
     });
 
-    test('编辑后 base 与 locale 分别用各自旧 key 更新', () async {
+    test('编辑 base 用旧 key 更新且不触碰 locale 行', () async {
       final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.setLinkKey(10);
       await viewModel.edit(viewModel.items.value.single.key);
       const baseKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
-      const localeKey = GossipMenuOptionLocaleKey(
-        menuId: 10,
-        optionId: 2,
-        locale: 'zhCN',
-      );
 
       expect(viewModel.editingKey.value, baseKey);
-      expect(viewModel.localeEditingKey.value, localeKey);
       viewModel.menuIdController.init(11);
       viewModel.optionIdController.init(3);
-      viewModel.localeOptionTextController.init('新文本');
       await viewModel.persist();
 
       expect(baseRepository.updateKeys, [baseKey]);
-      expect(localeRepository.updateKeys, [localeKey]);
-      expect(localeRepository.rows.single.menuId, 11);
-      expect(localeRepository.rows.single.optionId, 3);
+      expect(localeRepository.updateKeys, isEmpty);
+      expect(localeRepository.destroyKeys, isEmpty);
+      expect(localeRepository.rows.single.menuId, 10);
+      expect(localeRepository.rows.single.optionId, 2);
       expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.localeEditingKey.value, isNull);
     });
 
-    test('locale 失败后回滚并保留旧 base/locale key，重试仍定位原记录', () async {
+    test('保存 base 时不清空已有 locale 行', () async {
       final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.setLinkKey(10);
       await viewModel.edit(viewModel.items.value.single.key);
-      const oldBaseKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
-      const oldLocaleKey = GossipMenuOptionLocaleKey(
-        menuId: 10,
-        optionId: 2,
-        locale: 'zhCN',
-      );
       viewModel.menuIdController.init(11);
       viewModel.optionIdController.init(3);
-      viewModel.localeOptionTextController.init('新文本');
-      localeRepository.failUpdates = true;
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldBaseKey);
-      expect(viewModel.localeEditingKey.value, oldLocaleKey);
-      expect(viewModel.formVisible.value, isTrue);
-      expect(baseRepository.rows.single.menuId, 10);
+      await viewModel.persist();
+
+      expect(localeRepository.destroyKeys, isEmpty);
+      expect(localeRepository.rows, hasLength(1));
       expect(localeRepository.rows.single.menuId, 10);
-
-      localeRepository.failUpdates = false;
-      await viewModel.persist();
-      expect(baseRepository.updateKeys, [oldBaseKey, oldBaseKey]);
-      expect(localeRepository.updateKeys, [oldLocaleKey, oldLocaleKey]);
-    });
-
-    test('清空 locale 字段时使用原 locale key 删除，不使用已改 base key', () async {
-      final viewModel = GossipMenuOptionLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.setLinkKey(10);
-      await viewModel.edit(viewModel.items.value.single.key);
-      const oldLocaleKey = GossipMenuOptionLocaleKey(
-        menuId: 10,
-        optionId: 2,
-        locale: 'zhCN',
-      );
-      viewModel.menuIdController.init(11);
-      viewModel.optionIdController.init(3);
-      viewModel.localeOptionTextController.init('');
-      viewModel.localeBoxTextController.init('');
-
-      await viewModel.persist();
-
-      expect(localeRepository.destroyKeys, [oldLocaleKey]);
-      expect(localeRepository.rows, isEmpty);
     });
 
     test('父范围变化和新建都会清空 persisted row identity', () async {
@@ -326,11 +284,9 @@ void main() {
 
       await viewModel.setLinkKey(12);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.localeEditingKey.value, isNull);
 
       await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.localeEditingKey.value, isNull);
       expect(viewModel.menuIdController.collect(), 12);
     });
 

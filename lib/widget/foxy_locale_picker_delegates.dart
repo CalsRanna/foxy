@@ -2,7 +2,10 @@ import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
+import 'package:foxy/entity/gossip_menu_option_entity.dart';
+import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
+import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_locale_entity.dart';
 import 'package:foxy/entity/quest_request_items_locale_entity.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
@@ -17,12 +20,14 @@ import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/repository/game_object_template_locale_repository.dart';
+import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
+import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_request_items_locale_repository.dart';
@@ -95,6 +100,48 @@ class FoxyLocalePickerDelegates {
         updates: updates,
       );
     },
+  );
+
+  static final npcTextText00 = _npcTextField('text00', '文本0-0');
+  static final npcTextText01 = _npcTextField('text01', '文本0-1');
+  static final npcTextText10 = _npcTextField('text10', '文本1-0');
+  static final npcTextText11 = _npcTextField('text11', '文本1-1');
+  static final npcTextText20 = _npcTextField('text20', '文本2-0');
+  static final npcTextText21 = _npcTextField('text21', '文本2-1');
+  static final npcTextText30 = _npcTextField('text30', '文本3-0');
+  static final npcTextText31 = _npcTextField('text31', '文本3-1');
+  static final npcTextText40 = _npcTextField('text40', '文本4-0');
+  static final npcTextText41 = _npcTextField('text41', '文本4-1');
+  static final npcTextText50 = _npcTextField('text50', '文本5-0');
+  static final npcTextText51 = _npcTextField('text51', '文本5-1');
+  static final npcTextText60 = _npcTextField('text60', '文本6-0');
+  static final npcTextText61 = _npcTextField('text61', '文本6-1');
+  static final npcTextText70 = _npcTextField('text70', '文本7-0');
+  static final npcTextText71 = _npcTextField('text71', '文本7-1');
+
+  static final gossipMenuOptionOptionText = CompositeKeyLocaleEditorDelegate(
+    fields: ['locale', 'optionText'],
+    fieldLabels: ['语言', '选项文本'],
+    onLoad: (key) => _loadGossipMenuOptionLocaleRows(
+      key as GossipMenuOptionKey,
+    ),
+    onSave: (key, changes) => _saveGossipMenuOptionLocaleField(
+      key as GossipMenuOptionKey,
+      changes,
+      'optionText',
+    ),
+  );
+  static final gossipMenuOptionBoxText = CompositeKeyLocaleEditorDelegate(
+    fields: ['locale', 'boxText'],
+    fieldLabels: ['语言', '确认文本'],
+    onLoad: (key) => _loadGossipMenuOptionLocaleRows(
+      key as GossipMenuOptionKey,
+    ),
+    onSave: (key, changes) => _saveGossipMenuOptionLocaleField(
+      key as GossipMenuOptionKey,
+      changes,
+      'boxText',
+    ),
   );
 
   static final gameObjectCaption = DatabaseLocaleEditorDelegate(
@@ -614,6 +661,144 @@ class FoxyLocalePickerDelegates {
     );
   }
 
+  static Future<List<DatabaseLocaleRow>> _loadGossipMenuOptionLocaleRows(
+    GossipMenuOptionKey key,
+  ) async {
+    final repo = GetIt.instance.get<GossipMenuOptionLocaleRepository>();
+    final locale = await repo.getGossipMenuOptionLocale(
+      GossipMenuOptionLocaleKey(
+        menuId: key.menuId,
+        optionId: key.optionId,
+        locale: 'zhCN',
+      ),
+    );
+    if (locale == null) {
+      // No zhCN row yet: an empty editor with a placeholder new row is the
+      // natural entry point.
+      return const [];
+    }
+    return [
+      DatabaseLocaleRow.persisted({
+        'locale': locale.locale,
+        'optionText': locale.optionText,
+        'boxText': locale.boxText,
+      }),
+    ];
+  }
+
+  /// Saves a single locale [field] column of a gossip_menu_option_locale
+  /// row, leaving other columns untouched.
+  static Future<void> _saveGossipMenuOptionLocaleField(
+    GossipMenuOptionKey key,
+    DatabaseLocaleChanges changes,
+    String field,
+  ) async {
+    final repo = GetIt.instance.get<GossipMenuOptionLocaleRepository>();
+    final creations = <GossipMenuOptionLocaleEntity>[];
+    final updates = <GossipMenuOptionLocaleKey, GossipMenuOptionLocaleEntity>{};
+    for (final row in changes.rows) {
+      final d = row.values;
+      final originalLocale = row.originalLocale;
+      if (originalLocale == null) {
+        creations.add(
+          GossipMenuOptionLocaleEntity(
+            menuId: key.menuId,
+            optionId: key.optionId,
+            locale: d['locale'] ?? '',
+            optionText: field == 'optionText' ? (d['optionText'] ?? '') : '',
+            boxText: field == 'boxText' ? (d['boxText'] ?? '') : '',
+          ),
+        );
+        continue;
+      }
+      final originalKey = GossipMenuOptionLocaleKey(
+        menuId: key.menuId,
+        optionId: key.optionId,
+        locale: originalLocale,
+      );
+      final existing = await repo.getGossipMenuOptionLocale(originalKey);
+      if (existing == null) {
+        throw RecordNotFoundException('record not found');
+      }
+      updates[originalKey] = _gossipMenuOptionLocaleCopyWith(
+        existing,
+        field,
+        d[field] ?? '',
+        d['locale'] ?? '',
+      );
+    }
+    await repo.applyGossipMenuOptionLocaleChanges(
+      creations: creations,
+      deletions: changes.deletedLocales
+          .map(
+            (locale) => GossipMenuOptionLocaleKey(
+              menuId: key.menuId,
+              optionId: key.optionId,
+              locale: locale,
+            ),
+          )
+          .toList(),
+      updates: updates,
+    );
+  }
+
+  static GossipMenuOptionLocaleEntity _gossipMenuOptionLocaleCopyWith(
+    GossipMenuOptionLocaleEntity entity,
+    String field,
+    String value,
+    String locale,
+  ) {
+    return switch (field) {
+      'optionText' => entity.copyWith(locale: locale, optionText: value),
+      'boxText' => entity.copyWith(locale: locale, boxText: value),
+      _ => throw ArgumentError(
+        'unknown gossip_menu_option locale field: $field',
+      ),
+    };
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadNpcTextLocaleRows(
+    int entry,
+  ) async {
+    final repo = GetIt.instance.get<NpcTextLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefNpcTextLocales(id: entry),
+      repo.countNpcTextLocales(id: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getNpcTextLocale(brief.key);
+        if (locale == null) {
+          throw RecordNotFoundException('record not found');
+        }
+        return DatabaseLocaleRow.persisted({
+          'locale': locale.locale,
+          'text00': locale.text00,
+          'text01': locale.text01,
+          'text10': locale.text10,
+          'text11': locale.text11,
+          'text20': locale.text20,
+          'text21': locale.text21,
+          'text30': locale.text30,
+          'text31': locale.text31,
+          'text40': locale.text40,
+          'text41': locale.text41,
+          'text50': locale.text50,
+          'text51': locale.text51,
+          'text60': locale.text60,
+          'text61': locale.text61,
+          'text70': locale.text70,
+          'text71': locale.text71,
+        });
+      }),
+    );
+  }
+
   static Future<List<DatabaseLocaleRow>> _loadCreatureTemplateLocaleRows(
     int entry,
   ) async {
@@ -853,6 +1038,106 @@ class FoxyLocalePickerDelegates {
         );
       },
     );
+  }
+
+  /// npc_text_locale single-field delegate: the editor only reads and
+  /// writes the [field] column.
+  static DatabaseLocaleEditorDelegate _npcTextField(
+    String field,
+    String label,
+  ) {
+    return DatabaseLocaleEditorDelegate(
+      fields: ['locale', field],
+      fieldLabels: ['语言', label],
+      onLoad: _loadNpcTextLocaleRows,
+      onSave: (entry, changes) async {
+        final repo = GetIt.instance.get<NpcTextLocaleRepository>();
+        final creations = <NpcTextLocaleEntity>[];
+        final updates = <NpcTextLocaleKey, NpcTextLocaleEntity>{};
+        for (final row in changes.rows) {
+          final d = row.values;
+          final originalLocale = row.originalLocale;
+          if (originalLocale == null) {
+            creations.add(_npcTextLocaleFromValues(entry, d));
+            continue;
+          }
+          final originalKey = NpcTextLocaleKey(
+            id: entry,
+            locale: originalLocale,
+          );
+          final existing = await repo.getNpcTextLocale(originalKey);
+          if (existing == null) {
+            throw RecordNotFoundException('record not found');
+          }
+          updates[originalKey] = _npcTextLocaleCopyWith(
+            existing,
+            field,
+            d[field] ?? '',
+            d['locale'] ?? '',
+          );
+        }
+        await repo.applyNpcTextLocaleChanges(
+          creations: creations,
+          deletions: changes.deletedLocales
+              .map((locale) => NpcTextLocaleKey(id: entry, locale: locale))
+              .toList(),
+          updates: updates,
+        );
+      },
+    );
+  }
+
+  static NpcTextLocaleEntity _npcTextLocaleFromValues(
+    int entry,
+    Map<String, String> values,
+  ) {
+    return NpcTextLocaleEntity(
+      id: entry,
+      locale: values['locale'] ?? '',
+      text00: values['text00'] ?? '',
+      text01: values['text01'] ?? '',
+      text10: values['text10'] ?? '',
+      text11: values['text11'] ?? '',
+      text20: values['text20'] ?? '',
+      text21: values['text21'] ?? '',
+      text30: values['text30'] ?? '',
+      text31: values['text31'] ?? '',
+      text40: values['text40'] ?? '',
+      text41: values['text41'] ?? '',
+      text50: values['text50'] ?? '',
+      text51: values['text51'] ?? '',
+      text60: values['text60'] ?? '',
+      text61: values['text61'] ?? '',
+      text70: values['text70'] ?? '',
+      text71: values['text71'] ?? '',
+    );
+  }
+
+  static NpcTextLocaleEntity _npcTextLocaleCopyWith(
+    NpcTextLocaleEntity entity,
+    String field,
+    String value,
+    String locale,
+  ) {
+    return switch (field) {
+      'text00' => entity.copyWith(locale: locale, text00: value),
+      'text01' => entity.copyWith(locale: locale, text01: value),
+      'text10' => entity.copyWith(locale: locale, text10: value),
+      'text11' => entity.copyWith(locale: locale, text11: value),
+      'text20' => entity.copyWith(locale: locale, text20: value),
+      'text21' => entity.copyWith(locale: locale, text21: value),
+      'text30' => entity.copyWith(locale: locale, text30: value),
+      'text31' => entity.copyWith(locale: locale, text31: value),
+      'text40' => entity.copyWith(locale: locale, text40: value),
+      'text41' => entity.copyWith(locale: locale, text41: value),
+      'text50' => entity.copyWith(locale: locale, text50: value),
+      'text51' => entity.copyWith(locale: locale, text51: value),
+      'text60' => entity.copyWith(locale: locale, text60: value),
+      'text61' => entity.copyWith(locale: locale, text61: value),
+      'text70' => entity.copyWith(locale: locale, text70: value),
+      'text71' => entity.copyWith(locale: locale, text71: value),
+      _ => throw ArgumentError('unknown npc_text locale field: $field'),
+    };
   }
 
   static QuestTemplateLocaleEntity _questTemplateLocaleCopyWith(

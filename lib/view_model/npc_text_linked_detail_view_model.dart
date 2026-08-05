@@ -1,7 +1,5 @@
 import 'package:foxy/entity/npc_text_entity.dart';
-import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_npc_text_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_npc_text_use_case.dart';
@@ -11,7 +9,6 @@ import 'package:signals/signals.dart';
 
 class NpcTextLinkedDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<NpcTextRepository>();
-  final _localeRepository = GetIt.instance.get<NpcTextLocaleRepository>();
   final _persistUseCase = GetIt.instance.get<SaveNpcTextUseCase>();
   final _destroyUseCase = GetIt.instance.get<DestroyNpcTextUseCase>();
 
@@ -21,7 +18,6 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-  final localeEditingKey = signal<NpcTextLocaleKey?>(null);
 
   late final idController = registerController(IntFieldController());
   late final text00Controller = registerController(StringFieldController());
@@ -161,54 +157,6 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
   late final em74Controller = registerController(IntFieldController());
   late final em75Controller = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
-  late final localeText00Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText01Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText10Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText11Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText20Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText21Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText30Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText31Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText40Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText41Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText50Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText51Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText60Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText61Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText70Controller = registerController(
-    StringFieldController(),
-  );
-  late final localeText71Controller = registerController(
-    StringFieldController(),
-  );
 
   int _refreshToken = 0;
   int _linkToken = 0;
@@ -223,13 +171,12 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     errorMessage.value = null;
     try {
       await _destroyUseCase.execute(
-        DestroyNpcTextInput(key: key, localeKey: localeEditingKey.value),
+        DestroyNpcTextInput(key: key, localeKey: null),
       );
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
         return;
       }
       editingKey.value = null;
-      localeEditingKey.value = null;
       await _refresh();
     } catch (error) {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
@@ -261,10 +208,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
         'save the gossip menu and select a valid text first',
       );
     }
-    final locale = _collectLocale(candidate.id);
-    final localeCandidate = _localeHasText(locale) ? locale : null;
     final originalKey = editingKey.value;
-    final originalLocaleKey = localeEditingKey.value;
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -272,8 +216,8 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
         SaveNpcTextInput(
           originalKey: originalKey,
           candidate: candidate,
-          originalLocaleKey: originalLocaleKey,
-          localeCandidate: localeCandidate,
+          originalLocaleKey: null,
+          localeCandidate: null,
         ),
       );
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
@@ -281,7 +225,6 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
       }
       entity.value = candidate;
       editingKey.value = result.persistedKey;
-      localeEditingKey.value = result.localeKey;
       await _refresh();
     } catch (error) {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
@@ -299,7 +242,6 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     _linkToken++;
     this.linkKey.value = linkKey;
     editingKey.value = null;
-    localeEditingKey.value = null;
     await _refresh();
   }
 
@@ -394,25 +336,6 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     em74Controller.init(entity.em74);
     em75Controller.init(entity.em75);
     verifiedBuildController.init(entity.verifiedBuild);
-  }
-
-  void _applyLocale(NpcTextLocaleEntity entity) {
-    localeText00Controller.init(entity.text00);
-    localeText01Controller.init(entity.text01);
-    localeText10Controller.init(entity.text10);
-    localeText11Controller.init(entity.text11);
-    localeText20Controller.init(entity.text20);
-    localeText21Controller.init(entity.text21);
-    localeText30Controller.init(entity.text30);
-    localeText31Controller.init(entity.text31);
-    localeText40Controller.init(entity.text40);
-    localeText41Controller.init(entity.text41);
-    localeText50Controller.init(entity.text50);
-    localeText51Controller.init(entity.text51);
-    localeText60Controller.init(entity.text60);
-    localeText61Controller.init(entity.text61);
-    localeText70Controller.init(entity.text70);
-    localeText71Controller.init(entity.text71);
   }
 
   NpcTextEntity _collectCandidate() {
@@ -510,54 +433,12 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     );
   }
 
-  NpcTextLocaleEntity _collectLocale(int id) {
-    return NpcTextLocaleEntity(
-      id: id,
-      text00: localeText00Controller.collect(),
-      text01: localeText01Controller.collect(),
-      text10: localeText10Controller.collect(),
-      text11: localeText11Controller.collect(),
-      text20: localeText20Controller.collect(),
-      text21: localeText21Controller.collect(),
-      text30: localeText30Controller.collect(),
-      text31: localeText31Controller.collect(),
-      text40: localeText40Controller.collect(),
-      text41: localeText41Controller.collect(),
-      text50: localeText50Controller.collect(),
-      text51: localeText51Controller.collect(),
-      text60: localeText60Controller.collect(),
-      text61: localeText61Controller.collect(),
-      text70: localeText70Controller.collect(),
-      text71: localeText71Controller.collect(),
-    );
-  }
-
-  bool _localeHasText(NpcTextLocaleEntity entity) {
-    return entity.text00.isNotEmpty ||
-        entity.text01.isNotEmpty ||
-        entity.text10.isNotEmpty ||
-        entity.text11.isNotEmpty ||
-        entity.text20.isNotEmpty ||
-        entity.text21.isNotEmpty ||
-        entity.text30.isNotEmpty ||
-        entity.text31.isNotEmpty ||
-        entity.text40.isNotEmpty ||
-        entity.text41.isNotEmpty ||
-        entity.text50.isNotEmpty ||
-        entity.text51.isNotEmpty ||
-        entity.text60.isNotEmpty ||
-        entity.text61.isNotEmpty ||
-        entity.text70.isNotEmpty ||
-        entity.text71.isNotEmpty;
-  }
-
   Future<void> _refresh() async {
     final token = ++_refreshToken;
     final linkSnapshot = linkKey.value;
     if (linkSnapshot == null || linkSnapshot <= 0) {
       entity.value = null;
       editingKey.value = null;
-      localeEditingKey.value = null;
       return;
     }
     loading.value = true;
@@ -567,14 +448,9 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
       if (token != _refreshToken || isDisposed) return;
       final candidate = main ?? await _repository.createNpcText(linkSnapshot);
       if (token != _refreshToken || isDisposed) return;
-      final localeKey = NpcTextLocaleKey(id: linkSnapshot, locale: 'zhCN');
-      final locale = await _localeRepository.getNpcTextLocale(localeKey);
-      if (token != _refreshToken || isDisposed) return;
       entity.value = candidate;
       editingKey.value = main == null ? null : linkSnapshot;
-      localeEditingKey.value = locale == null ? null : localeKey;
       _applyCandidate(candidate);
-      _applyLocale(locale ?? NpcTextLocaleEntity(id: linkSnapshot));
     } catch (error, stackTrace) {
       if (token != _refreshToken) return;
       errorMessage.value = foxyErrorMessage(error);

@@ -12,11 +12,12 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -171,18 +172,14 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: '选项文本',
-                      child: FoxyStringInput(
+                      child: FoxyLocalePicker(
+                        entry: viewModel.selectedKey.value?.menuId,
+                        ownerKey: viewModel.selectedKey.value,
                         controller: viewModel.optionTextController,
+                        delegate:
+                            FoxyLocalePickerDelegates.gossipMenuOptionOptionText,
                         placeholder: 'OptionText',
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '选项中文',
-                      child: FoxyStringInput(
-                        controller: viewModel.localeOptionTextController,
-                        placeholder: 'zhCN OptionText',
+                        title: '选项文本',
                       ),
                     ),
                   ),
@@ -213,18 +210,14 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: '确认文本',
-                      child: FoxyStringInput(
+                      child: FoxyLocalePicker(
+                        entry: viewModel.selectedKey.value?.menuId,
+                        ownerKey: viewModel.selectedKey.value,
                         controller: viewModel.boxTextController,
+                        delegate:
+                            FoxyLocalePickerDelegates.gossipMenuOptionBoxText,
                         placeholder: 'BoxText',
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '确认中文',
-                      child: FoxyStringInput(
-                        controller: viewModel.localeBoxTextController,
-                        placeholder: 'zhCN BoxText',
+                        title: '确认文本',
                       ),
                     ),
                   ),

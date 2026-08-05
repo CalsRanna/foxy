@@ -13,6 +13,28 @@ class GossipMenuOptionLocaleRepository
   static const _table = 'gossip_menu_option_locale';
   static const primaryKeyColumns = {'MenuID', 'OptionID', 'Locale'};
 
+  /// Applies locale-editor changes atomically: deletions, then updates, then
+  /// creations (deletion must run before store, since an update may change
+  /// the locale back to a deleted one).
+  Future<void> applyGossipMenuOptionLocaleChanges({
+    required List<GossipMenuOptionLocaleEntity> creations,
+    required List<GossipMenuOptionLocaleKey> deletions,
+    required Map<GossipMenuOptionLocaleKey, GossipMenuOptionLocaleEntity>
+    updates,
+  }) async {
+    await laconic.transaction(() async {
+      for (final key in deletions) {
+        await destroyGossipMenuOptionLocale(key);
+      }
+      for (final update in updates.entries) {
+        await updateGossipMenuOptionLocale(update.key, update.value);
+      }
+      for (final locale in creations) {
+        await storeGossipMenuOptionLocale(locale);
+      }
+    });
+  }
+
   Future<void> copyGossipMenuOptionLocales(
     GossipMenuOptionKey sourceKey,
     GossipMenuOptionKey targetKey,
@@ -41,8 +63,11 @@ class GossipMenuOptionLocaleRepository
     }
   }
 
-  Future<int> countGossipMenuOptionLocales() {
-    return laconic.table(_table).count();
+  Future<int> countGossipMenuOptionLocales({int menuId = 0}) {
+    final query = menuId == 0
+        ? laconic.table(_table)
+        : laconic.table(_table).where('MenuID', menuId);
+    return query.count();
   }
 
   Future<GossipMenuOptionLocaleEntity> createGossipMenuOptionLocale({
@@ -58,10 +83,16 @@ class GossipMenuOptionLocaleRepository
   }
 
   Future<List<BriefGossipMenuOptionLocaleEntity>>
-  getBriefGossipMenuOptionLocales({int page = 1}) async {
-    final results = await laconic
-        .table(_table)
-        .select(['MenuID', 'OptionID', 'Locale', 'OptionText'])
+  getBriefGossipMenuOptionLocales({int menuId = 0, int page = 1}) async {
+    final query = menuId == 0
+        ? laconic.table(_table).select(
+            ['MenuID', 'OptionID', 'Locale', 'OptionText'],
+          )
+        : laconic
+              .table(_table)
+              .select(['MenuID', 'OptionID', 'Locale', 'OptionText'])
+              .where('MenuID', menuId);
+    final results = await query
         .orderBy('MenuID')
         .orderBy('OptionID')
         .orderBy('Locale')

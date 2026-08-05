@@ -2,10 +2,8 @@ import 'dart:math';
 
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
-import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
@@ -16,8 +14,6 @@ import 'package:signals/signals.dart';
 
 class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GossipMenuOptionRepository>();
-  final _localeRepository = GetIt.instance
-      .get<GossipMenuOptionLocaleRepository>();
   final _saveUseCase = GetIt.instance.get<SaveGossipMenuOptionUseCase>();
   final _copyUseCase = GetIt.instance.get<CopyGossipMenuOptionUseCase>();
   final _destroyUseCase = GetIt.instance.get<DestroyGossipMenuOptionUseCase>();
@@ -32,7 +28,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
 
-  final localeEditingKey = signal<GossipMenuOptionLocaleKey?>(null);
   final formVisible = signal(false);
 
   late final menuIdController = registerController(IntFieldController());
@@ -61,12 +56,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final verifiedBuildController = registerController(IntFieldController());
-  late final localeOptionTextController = registerController(
-    StringFieldController(),
-  );
-  late final localeBoxTextController = registerController(
-    StringFieldController(),
-  );
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -116,9 +105,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) return;
       editingKey.value = null;
       selectedKey.value = null;
-      localeEditingKey.value = null;
       _applyCandidate(candidate);
-      _applyLocaleCandidate(null);
       formVisible.value = true;
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -178,18 +165,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       if (candidate == null) {
         throw RecordNotFoundException('record not found');
       }
-      final localeKey = GossipMenuOptionLocaleKey(
-        menuId: key.menuId,
-        optionId: key.optionId,
-        locale: 'zhCN',
-      );
-      final locale = await _localeRepository.getGossipMenuOptionLocale(
-        localeKey,
-      );
-      if (token != _interactionToken || linkKey.value != link) return;
       _applyCandidate(candidate);
-      _applyLocaleCandidate(locale);
-      localeEditingKey.value = locale == null ? null : localeKey;
       formVisible.value = true;
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -219,10 +195,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     }
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
-    final originalLocaleKey = localeEditingKey.value;
-    final localeCandidate = _collectLocaleCandidate(
-      GossipMenuOptionKey.fromEntity(candidate),
-    );
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -231,8 +203,8 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
         SaveGossipMenuOptionInput(
           originalKey: originalKey,
           candidate: candidate,
-          originalLocaleKey: originalLocaleKey,
-          localeCandidate: localeCandidate,
+          originalLocaleKey: null,
+          localeCandidate: null,
         ),
       );
       if (token != _interactionToken || linkKey.value != link) return;
@@ -266,7 +238,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     this.linkKey.value = linkKey;
     _clearEditingState();
     _applyCandidate(GossipMenuOptionEntity(menuId: linkKey));
-    _applyLocaleCandidate(null);
     await _refresh();
   }
 
@@ -287,15 +258,9 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     verifiedBuildController.init(candidate.verifiedBuild);
   }
 
-  void _applyLocaleCandidate(GossipMenuOptionLocaleEntity? candidate) {
-    localeOptionTextController.init(candidate?.optionText ?? '');
-    localeBoxTextController.init(candidate?.boxText ?? '');
-  }
-
   void _clearEditingState() {
     editingKey.value = null;
     selectedKey.value = null;
-    localeEditingKey.value = null;
     formVisible.value = false;
   }
 
@@ -315,21 +280,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       boxText: boxTextController.collect(),
       boxBroadcastTextId: boxBroadcastTextIdController.collect(),
       verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  GossipMenuOptionLocaleEntity? _collectLocaleCandidate(
-    GossipMenuOptionKey candidateKey,
-  ) {
-    final optionText = localeOptionTextController.collect();
-    final boxText = localeBoxTextController.collect();
-    if (optionText.isEmpty && boxText.isEmpty) return null;
-    return GossipMenuOptionLocaleEntity(
-      menuId: candidateKey.menuId,
-      optionId: candidateKey.optionId,
-      locale: 'zhCN',
-      optionText: optionText,
-      boxText: boxText,
     );
   }
 

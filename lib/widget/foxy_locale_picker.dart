@@ -38,6 +38,38 @@ final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
        );
 }
 
+/// Locale editor for sub-tables keyed by a composite primary key (more than
+/// one column besides `locale`).
+///
+/// Unlike [DatabaseLocaleEditorDelegate], the load/save closures receive the
+/// full owning-record key instead of a single int, so the editor can target
+/// rows such as `gossip_menu_option_locale` (MenuID + OptionID + Locale).
+final class CompositeKeyLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
+  /// Field names of the locale table (entity columns); the first is
+  /// conventionally 'locale'.
+  final List<String> fields;
+
+  /// Display labels for the dialog's column headers; length matches
+  /// [fields].
+  final List<String> fieldLabels;
+
+  /// Loads the locale data of the given owning record.
+  final Future<List<DatabaseLocaleRow>> Function(Object key) onLoad;
+
+  /// Saves the locale changes of the given owning record.
+  final Future<void> Function(Object key, DatabaseLocaleChanges changes) onSave;
+
+  const CompositeKeyLocaleEditorDelegate({
+    required this.fields,
+    required this.fieldLabels,
+    required this.onLoad,
+    required this.onSave,
+  }) : assert(
+         fields.length == fieldLabels.length,
+         'fields 与 fieldLabels 长度必须一致',
+       );
+}
+
 /// Edit contract for DBC wide-table locale fields: fixed 16 rows,
 /// partially updating the main record.
 final class DbcLocaleFieldEditorDelegate extends FoxyLocaleEditorDelegate {
@@ -72,6 +104,13 @@ class FoxyLocalePicker extends StatefulWidget {
   /// null.
   final int? entry;
 
+  /// Composite primary key of the owning record, for delegates keyed by
+  /// more than one column ([CompositeKeyLocaleEditorDelegate]).
+  ///
+  /// When provided, the globe button is enabled even if [entry] is null,
+  /// and the composite key (instead of [entry]) is passed to the delegate.
+  final Object? ownerKey;
+
   /// Controller of the main input (held by the ViewModel; backfills the
   /// main-language value).
   final StringFieldController controller;
@@ -100,6 +139,7 @@ class FoxyLocalePicker extends StatefulWidget {
     required this.controller,
     required this.title,
     required this.delegate,
+    this.ownerKey,
     this.placeholder,
     this.readOnly = false,
     this.onSaved,
@@ -112,7 +152,7 @@ class FoxyLocalePicker extends StatefulWidget {
 class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
   @override
   Widget build(BuildContext context) {
-    final canOpen = widget.entry != null;
+    final canOpen = widget.entry != null || widget.ownerKey != null;
     // Editable main language uses the default look; read-only uses the
     // display look (the globe button still opens the locale editor).
     final readonly = FoxyReadonlyInput.resolve(
@@ -142,15 +182,34 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
 
   Future<void> _openLocaleDialog() async {
     final entry = widget.entry;
-    if (entry == null) return;
+    final ownerKey = widget.ownerKey;
+    if (entry == null && ownerKey == null) return;
 
     switch (widget.delegate) {
+      case CompositeKeyLocaleEditorDelegate(
+        :final fields,
+        :final fieldLabels,
+        :final onLoad,
+        :final onSave,
+      ):
+        final owningKey = ownerKey;
+        if (owningKey == null) return;
+        await DatabaseLocaleEditor.show(
+          context,
+          title: widget.title,
+          entry: 0,
+          fields: fields,
+          fieldLabels: fieldLabels,
+          onLoad: () => onLoad(owningKey),
+          onSave: (changes) => onSave(owningKey, changes),
+        );
       case DatabaseLocaleEditorDelegate(
         :final fields,
         :final fieldLabels,
         :final onLoad,
         :final onSave,
       ):
+        if (entry == null) return;
         await DatabaseLocaleEditor.show(
           context,
           title: widget.title,
@@ -165,6 +224,7 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
         :final onLoad,
         :final onSave,
       ):
+        if (entry == null) return;
         final saved = await DbcLocaleFieldEditor.show(
           context,
           title: widget.title,

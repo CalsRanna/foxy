@@ -12,6 +12,27 @@ class NpcTextLocaleRepository
   static const _table = 'npc_text_locale';
   static const primaryKeyColumns = {'ID', 'Locale'};
 
+  /// Applies locale-editor changes atomically: deletions, then updates, then
+  /// creations (deletion must run before store, since an update may change
+  /// the locale back to a deleted one).
+  Future<void> applyNpcTextLocaleChanges({
+    required List<NpcTextLocaleEntity> creations,
+    required List<NpcTextLocaleKey> deletions,
+    required Map<NpcTextLocaleKey, NpcTextLocaleEntity> updates,
+  }) async {
+    await laconic.transaction(() async {
+      for (final key in deletions) {
+        await destroyNpcTextLocale(key);
+      }
+      for (final update in updates.entries) {
+        await updateNpcTextLocale(update.key, update.value);
+      }
+      for (final locale in creations) {
+        await storeNpcTextLocale(locale);
+      }
+    });
+  }
+
   Future<int> countNpcTextLocales({required int id}) async {
     return laconic.table(_table).where('ID', id).count();
   }

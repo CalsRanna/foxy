@@ -7,10 +7,11 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -41,10 +42,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             _buildMetaSection(),
             _buildEntrySection(
               index: 0,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text00Controller,
               text1Controller: viewModel.text01Controller,
-              localeText0Controller: viewModel.localeText00Controller,
-              localeText1Controller: viewModel.localeText01Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText00,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText01,
               broadcastController: viewModel.broadcastTextId0Controller,
               languageController: viewModel.lang0Controller,
               probabilityController: viewModel.probability0Controller,
@@ -57,10 +59,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             _buildEntrySection(
               index: 1,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text10Controller,
               text1Controller: viewModel.text11Controller,
-              localeText0Controller: viewModel.localeText10Controller,
-              localeText1Controller: viewModel.localeText11Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText10,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText11,
               broadcastController: viewModel.broadcastTextId1Controller,
               languageController: viewModel.lang1Controller,
               probabilityController: viewModel.probability1Controller,
@@ -73,10 +76,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             _buildEntrySection(
               index: 2,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text20Controller,
               text1Controller: viewModel.text21Controller,
-              localeText0Controller: viewModel.localeText20Controller,
-              localeText1Controller: viewModel.localeText21Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText20,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText21,
               broadcastController: viewModel.broadcastTextId2Controller,
               languageController: viewModel.lang2Controller,
               probabilityController: viewModel.probability2Controller,
@@ -89,10 +93,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             _buildEntrySection(
               index: 3,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text30Controller,
               text1Controller: viewModel.text31Controller,
-              localeText0Controller: viewModel.localeText30Controller,
-              localeText1Controller: viewModel.localeText31Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText30,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText31,
               broadcastController: viewModel.broadcastTextId3Controller,
               languageController: viewModel.lang3Controller,
               probabilityController: viewModel.probability3Controller,
@@ -105,10 +110,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             _buildEntrySection(
               index: 4,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text40Controller,
               text1Controller: viewModel.text41Controller,
-              localeText0Controller: viewModel.localeText40Controller,
-              localeText1Controller: viewModel.localeText41Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText40,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText41,
               broadcastController: viewModel.broadcastTextId4Controller,
               languageController: viewModel.lang4Controller,
               probabilityController: viewModel.probability4Controller,
@@ -121,10 +127,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             _buildEntrySection(
               index: 5,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text50Controller,
               text1Controller: viewModel.text51Controller,
-              localeText0Controller: viewModel.localeText50Controller,
-              localeText1Controller: viewModel.localeText51Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText50,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText51,
               broadcastController: viewModel.broadcastTextId5Controller,
               languageController: viewModel.lang5Controller,
               probabilityController: viewModel.probability5Controller,
@@ -137,10 +144,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             _buildEntrySection(
               index: 6,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text60Controller,
               text1Controller: viewModel.text61Controller,
-              localeText0Controller: viewModel.localeText60Controller,
-              localeText1Controller: viewModel.localeText61Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText60,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText61,
               broadcastController: viewModel.broadcastTextId6Controller,
               languageController: viewModel.lang6Controller,
               probabilityController: viewModel.probability6Controller,
@@ -153,10 +161,11 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             _buildEntrySection(
               index: 7,
+              entry: viewModel.editingKey.value,
               text0Controller: viewModel.text70Controller,
               text1Controller: viewModel.text71Controller,
-              localeText0Controller: viewModel.localeText70Controller,
-              localeText1Controller: viewModel.localeText71Controller,
+              text0Delegate: FoxyLocalePickerDelegates.npcTextText70,
+              text1Delegate: FoxyLocalePickerDelegates.npcTextText71,
               broadcastController: viewModel.broadcastTextId7Controller,
               languageController: viewModel.lang7Controller,
               probabilityController: viewModel.probability7Controller,
@@ -212,10 +221,11 @@ class _NpcTextViewState extends State<NpcTextView> {
 
   Widget _buildEntrySection({
     required int index,
+    required int? entry,
     required StringFieldController text0Controller,
     required StringFieldController text1Controller,
-    required StringFieldController localeText0Controller,
-    required StringFieldController localeText1Controller,
+    required DatabaseLocaleEditorDelegate text0Delegate,
+    required DatabaseLocaleEditorDelegate text1Delegate,
     required IntFieldController broadcastController,
     required SelectFieldController<int> languageController,
     required DoubleFieldController probabilityController,
@@ -263,12 +273,15 @@ class _NpcTextViewState extends State<NpcTextView> {
               ),
             ),
             Expanded(
-              child: _localizedTextField(
+              child: FoxyFormItem(
                 label: '文本 0',
-                mainController: text0Controller,
-                localeController: localeText0Controller,
-                mainPlaceholder: 'text${index}_0',
-                localePlaceholder: 'zhCN Text${index}_0',
+                child: FoxyLocalePicker(
+                  entry: entry,
+                  controller: text0Controller,
+                  delegate: text0Delegate,
+                  placeholder: 'text${index}_0',
+                  title: '文本 $index-0',
+                ),
               ),
             ),
           ],
@@ -278,12 +291,15 @@ class _NpcTextViewState extends State<NpcTextView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: _localizedTextField(
+              child: FoxyFormItem(
                 label: '文本 1',
-                mainController: text1Controller,
-                localeController: localeText1Controller,
-                mainPlaceholder: 'text${index}_1',
-                localePlaceholder: 'zhCN Text${index}_1',
+                child: FoxyLocalePicker(
+                  entry: entry,
+                  controller: text1Controller,
+                  delegate: text1Delegate,
+                  placeholder: 'text${index}_1',
+                  title: '文本 $index-1',
+                ),
               ),
             ),
             Expanded(
@@ -391,31 +407,6 @@ class _NpcTextViewState extends State<NpcTextView> {
         context,
       ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
-  }
-
-  Widget _localizedTextField({
-    required String label,
-    required StringFieldController mainController,
-    required StringFieldController localeController,
-    required String mainPlaceholder,
-    required String localePlaceholder,
-  }) {
-    return FoxyFormItem(
-      label: label,
-      child: Column(
-        spacing: 6,
-        children: [
-          FoxyStringInput(
-            controller: mainController,
-            placeholder: mainPlaceholder,
-          ),
-          FoxyStringInput(
-            controller: localeController,
-            placeholder: localePlaceholder,
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _persist() async {
