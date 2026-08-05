@@ -378,10 +378,9 @@ final class RepositoryEmitter {
       ..writeln('    } catch (error) {')
       ..writeln('      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;');
     if (retriedKeys.length != 1) {
-      buffer
-        ..writeln(
-          "      throw DuplicateKeyException('duplicate key in ${model.table}');",
-        );
+      buffer.writeln(
+        "      throw DuplicateKeyException('duplicate key in ${model.table}');",
+      );
     } else {
       final retriedKey = retriedKeys.single;
       final retriedField = model.keyFields.firstWhere(

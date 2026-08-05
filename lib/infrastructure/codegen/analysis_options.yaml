@@ -1,0 +1,6 @@
+# The code generators intentionally import the build-time package
+# source_gen, which is a dev dependency; the depend_on_referenced_packages
+# rule does not apply here.
+analyzer:
+  errors:
+    depend_on_referenced_packages: ignore

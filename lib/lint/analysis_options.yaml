@@ -1,0 +1,6 @@
+# The lint plugin intentionally imports build-time packages
+# (custom_lint_builder, analyzer) that are dev dependencies; the
+# depend_on_referenced_packages rule does not apply here.
+analyzer:
+  errors:
+    depend_on_referenced_packages: ignore
