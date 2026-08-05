@@ -12,6 +12,7 @@
 library;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
@@ -164,7 +165,11 @@ class UpdateService {
           'Update manifest fetch failed: HTTP ${response.statusCode}',
         );
       }
-      final update = _parseManifest(response.body);
+      // Decode the body as UTF-8 explicitly: `response.body` falls back to
+      // latin-1 when the Content-Type header carries no charset (GitHub
+      // serves release assets as application/octet-stream), which garbles
+      // the Chinese notes.
+      final update = _parseManifest(utf8.decode(response.bodyBytes));
 
       String currentVersion;
       String currentBuild;

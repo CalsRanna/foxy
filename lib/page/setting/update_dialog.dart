@@ -91,36 +91,48 @@ class _UpdateDialogState extends State<UpdateDialog> {
         }
 
         if (readyToRestart) {
+          // A restart failure (e.g. missing foxy_updater.exe) is reported
+          // through errorMessage while readyToRestart stays set; surface it
+          // here instead of silently keeping the "ready" view.
+          final restartFailed = error != null;
           return SettingDialogShell(
             title: settingDialogTitleRow(
-              LucideIcons.circleCheck,
-              '更新已就绪',
-              iconColor: theme.colorScheme.primary,
+              restartFailed ? LucideIcons.triangleAlert : LucideIcons.circleCheck,
+              restartFailed ? '重启更新失败' : '更新已就绪',
+              iconColor: restartFailed
+                  ? theme.colorScheme.destructive
+                  : theme.colorScheme.primary,
             ),
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
                 child: const Text('稍后'),
               ),
-              ShadButton(
-                onPressed: _confirmRestart,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Icon(LucideIcons.refreshCw, size: 15),
-                    Text('立即重启'),
-                  ],
+              if (!restartFailed)
+                ShadButton(
+                  onPressed: _confirmRestart,
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 6,
+                    children: [
+                      Icon(LucideIcons.refreshCw, size: 15),
+                      Text('立即重启'),
+                    ],
+                  ),
                 ),
-              ),
             ],
             child: settingDialogBanner(
               context,
-              text:
-                  '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
-                  '点击「立即重启」将关闭 Foxy 并自动完成更新，重启后即为新版本。',
-              color: theme.colorScheme.primary,
-              icon: LucideIcons.circleCheck,
+              text: restartFailed
+                  ? error
+                  : '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
+                        '点击「立即重启」将关闭 Foxy 并自动完成更新，重启后即为新版本。',
+              color: restartFailed
+                  ? theme.colorScheme.destructive
+                  : theme.colorScheme.primary,
+              icon: restartFailed
+                  ? LucideIcons.triangleAlert
+                  : LucideIcons.circleCheck,
             ),
           );
         }

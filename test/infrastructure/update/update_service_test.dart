@@ -24,6 +24,7 @@ Map<String, Object?> _releaseMap({
   String buildNumber = '630',
   bool? isPrerelease,
   int sizeBytes = 42,
+  String notes = '更新说明',
 }) {
   return {
     'version': version,
@@ -32,7 +33,7 @@ Map<String, Object?> _releaseMap({
     'zipUrl': 'https://example.com/foxy-$version.zip',
     'sizeBytes': sizeBytes,
     'sha256': 'a' * 64,
-    'notes': '更新说明',
+    'notes': notes,
   };
 }
 
@@ -135,6 +136,24 @@ void main() {
       expect(result, isA<UpdateAvailable>());
       final update = (result as UpdateAvailable).update;
       expect(update.version, '1.1.0');
+    });
+
+    test('无 charset 响应头时中文更新日志仍按 UTF-8 解码', () async {
+      // GitHub serves release assets as `application/octet-stream` (no
+      // charset); the http package would fall back to latin-1 and garble
+      // the Chinese notes if bodyBytes were not decoded as UTF-8.
+      final service = UpdateService(
+        client: _clientReturning(
+          _manifestYaml(releases: [_releaseMap(notes: '新增自动更新功能')]),
+        ),
+      );
+      final result = await service.checkForUpdates(
+        installedVersion: '1.0.0',
+        installedBuildNumber: '628',
+      );
+      expect(result, isA<UpdateAvailable>());
+      final update = (result as UpdateAvailable).update;
+      expect(update.notes, '新增自动更新功能');
     });
 
     test('版本相同但 build 号更高 → UpdateAvailable', () async {
