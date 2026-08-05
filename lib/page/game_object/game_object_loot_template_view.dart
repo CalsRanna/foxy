@@ -11,13 +11,12 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class GameObjectLootTemplateView extends StatefulWidget {
   final int linkKey;
@@ -54,7 +53,6 @@ class _GameObjectLootTemplateViewState
   Widget _buildContent(BuildContext context) {
     final items = viewModel.items.value;
     final selectedKey = viewModel.selectedKey.value;
-    final headers = ['物品ID', '物品名称', '几率', '数量', '任务', '组'];
 
     return Padding(
       padding: const EdgeInsets.only(top: 16),
@@ -95,61 +93,51 @@ class _GameObjectLootTemplateViewState
               ),
             ],
           ),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              var width = flexColumnWidth(constraints.maxWidth, 600);
-              return FoxyShadTable(
-                shrinkWrap: true,
-                builder: (context, vicinity) {
-                  final item = items[vicinity.row];
-                  final nameStyle = TextStyle(
-                    color: _getQualityColor(item.itemQuality),
-                  );
-                  return switch (vicinity.column) {
-                    0 => ShadTableCell(child: Text(item.item.toString())),
-                    1 => ShadTableCell(
-                      child: Text(
-                        item.reference != 0
-                            ? '[${item.displayName}]'
-                            : item.displayName,
-                        style: nameStyle,
-                      ),
-                    ),
-                    2 => ShadTableCell(child: Text(item.chance.toString())),
-                    3 => ShadTableCell(
-                      child: Text('${item.minCount}-${item.maxCount}'),
-                    ),
-                    4 => ShadTableCell(
-                      child: Text(item.questRequired ? '是' : '否'),
-                    ),
-                    5 => ShadTableCell(child: Text(item.groupId.toString())),
-                    _ => ShadTableCell(child: SizedBox()),
-                  };
-                },
-                columnCount: headers.length,
-                columnSpanExtent: (index) {
-                  return switch (index) {
-                    0 => FixedTableSpanExtent(120),
-                    1 => FixedTableSpanExtent(width),
-                    2 => FixedTableSpanExtent(120),
-                    3 => FixedTableSpanExtent(120),
-                    4 => FixedTableSpanExtent(120),
-                    5 => FixedTableSpanExtent(120),
-                    _ => null,
-                  };
-                },
-                header: (context, index) {
-                  return ShadTableCell.header(child: Text(headers[index]));
-                },
-                onRowTap: (row) => viewModel.selectedKey.value = items[row].key,
-                onRowDoubleTap: (row) async {
-                  viewModel.selectedKey.value = items[row].key;
-                  await _showEditDialog();
-                },
-                pinnedRowCount: 1,
-                rowCount: items.length,
-              );
+          FoxyDataTable<BriefGameObjectLootTemplateEntity>(
+            shrinkWrap: true,
+            pinnedRowCount: 1,
+            rows: items,
+            keyOf: (item) => item.key,
+            selectedKey: selectedKey,
+            onRowTap: (item) => viewModel.selectedKey.value = item.key,
+            onRowDoubleTap: (item) async {
+              viewModel.selectedKey.value = item.key;
+              await _showEditDialog();
             },
+            columns: [
+              FoxyTableColumn.fixed(
+                label: '物品ID',
+                width: 120,
+                cell: (_, item) => Text(item.item.toString()),
+              ),
+              FoxyTableColumn.flex(
+                label: '物品名称',
+                cell: (_, item) => Text(
+                  item.reference != 0 ? '[${item.displayName}]' : item.displayName,
+                  style: TextStyle(color: _getQualityColor(item.itemQuality)),
+                ),
+              ),
+              FoxyTableColumn.fixed(
+                label: '几率',
+                width: 120,
+                cell: (_, item) => Text(item.chance.toString()),
+              ),
+              FoxyTableColumn.fixed(
+                label: '数量',
+                width: 120,
+                cell: (_, item) => Text('${item.minCount}-${item.maxCount}'),
+              ),
+              FoxyTableColumn.fixed(
+                label: '任务',
+                width: 120,
+                cell: (_, item) => Text(item.questRequired ? '是' : '否'),
+              ),
+              FoxyTableColumn.fixed(
+                label: '组',
+                width: 120,
+                cell: (_, item) => Text(item.groupId.toString()),
+              ),
+            ],
           ),
         ],
       ),

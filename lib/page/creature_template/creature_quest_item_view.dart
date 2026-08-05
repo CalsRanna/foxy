@@ -5,18 +5,16 @@ import 'package:foxy/view_model/creature_quest_item_linked_list_view_model.dart'
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Quest-item tab
 class CreatureQuestItemView extends StatefulWidget {
@@ -165,82 +163,63 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
     );
 
     final items = viewModel.items.value;
-    final headers = ['索引', '物品名称', '验证版本'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var width = flexColumnWidth(maxWidth, 240);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final questItem = items[vicinity.row];
-            final qualityColor = getItemQualityColor(questItem.itemQuality);
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(questItem.idx.toString())),
-              1 => ShadTableCell(
-                child: Text(
-                  questItem.displayName,
-                  style: TextStyle(color: qualityColor),
-                ),
-              ),
-              2 => ShadTableCell(
-                child: Text(questItem.verifiedBuild.toString()),
-              ),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    viewModel.selectedKey.value = items[row].key;
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (!context.mounted) return;
-                    _showEditDialog(context);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    viewModel.selectedKey.value = items[row].key;
-                    _copy(viewModel.selectedKey.value!);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    viewModel.selectedKey.value = items[row].key;
-                    _destroy(viewModel.selectedKey.value!);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          // pinnedRowCount: 1,
-          rowCount: items.length,
-          shrinkWrap: true,
+    final table = FoxyDataTable<BriefCreatureQuestItemEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '索引',
+          width: 120,
+          cell: (_, questItem) => Text(questItem.idx.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '物品名称',
+          cell: (_, questItem) => Text(
+            questItem.displayName,
+            style: TextStyle(
+              color: getItemQualityColor(questItem.itemQuality),
+            ),
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '验证版本',
+          width: 120,
+          cell: (_, questItem) => Text(questItem.verifiedBuild.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (questItem, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                viewModel.selectedKey.value = questItem.key;
+                if (!await _load(viewModel.selectedKey.value!)) return;
+                if (!mounted) return;
+                _showEditDialog(context);
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () {
+                viewModel.selectedKey.value = questItem.key;
+                _copy(viewModel.selectedKey.value!);
+              },
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () {
+                viewModel.selectedKey.value = questItem.key;
+                _destroy(viewModel.selectedKey.value!);
+              },
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -249,7 +228,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);

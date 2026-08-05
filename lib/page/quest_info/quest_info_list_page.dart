@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:foxy/entity/quest_info_entity.dart';
+
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -10,12 +12,11 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class QuestInfoListPage extends StatefulWidget {
@@ -104,68 +105,46 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称'];
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var width = flexColumnWidth(constraints.maxWidth, 120);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            final item = infos[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.infoNameLangZhCN)),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowDoubleTap: (row) {
-            _navigateToDetail(key: infos[row].key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    _navigateToDetail(key: infos[row].key);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    _copy(infos[row].key);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    _destroy(infos[row].key);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: infos.length,
+    final table = FoxyDataTable<BriefQuestInfoEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: infos,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, item) => Text(item.id.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '名称',
+          cell: (_, item) => Text(item.infoNameLangZhCN),
+        ),
+      ],
+      onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: item.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(item.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -174,7 +153,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      Expanded(child: layoutBuilder),
+      Expanded(child: table),
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);

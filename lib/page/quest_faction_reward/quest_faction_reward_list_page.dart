@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -10,12 +11,11 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class QuestFactionRewardListPage extends StatefulWidget {
@@ -104,80 +104,76 @@ class _QuestFactionRewardListPageState
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = [
-      '编号',
-      '索引 0 声望值',
-      '索引 1 声望值',
-      '索引 2 声望值',
-      '索引 3 声望值',
-      '索引 4 声望值',
-      '索引 5 声望值',
-      '索引 6 声望值',
-      '索引 7 声望值',
-      '索引 8 声望值',
-      '索引 9 声望值',
-    ];
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var width = flexColumnWidth(constraints.maxWidth, 120);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            final item = rewards[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.difficulty0.toString())),
-              2 => ShadTableCell(child: Text(item.difficulty1.toString())),
-              3 => ShadTableCell(child: Text(item.difficulty2.toString())),
-              4 => ShadTableCell(child: Text(item.difficulty3.toString())),
-              5 => ShadTableCell(child: Text(item.difficulty4.toString())),
-              6 => ShadTableCell(child: Text(item.difficulty5.toString())),
-              7 => ShadTableCell(child: Text(item.difficulty6.toString())),
-              8 => ShadTableCell(child: Text(item.difficulty7.toString())),
-              9 => ShadTableCell(child: Text(item.difficulty8.toString())),
-              10 => ShadTableCell(child: Text(item.difficulty9.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              _ => FixedTableSpanExtent(width / 10),
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowDoubleTap: (row) {
-            _navigateToDetail(key: rewards[row].key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    _navigateToDetail(key: rewards[row].key);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    _destroy(rewards[row].key);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: rewards.length,
+    final table = FoxyDataTable<BriefQuestFactionRewardEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: rewards,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, item) => Text(item.id.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 0 声望值',
+          cell: (_, item) => Text(item.difficulty0.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 1 声望值',
+          cell: (_, item) => Text(item.difficulty1.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 2 声望值',
+          cell: (_, item) => Text(item.difficulty2.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 3 声望值',
+          cell: (_, item) => Text(item.difficulty3.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 4 声望值',
+          cell: (_, item) => Text(item.difficulty4.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 5 声望值',
+          cell: (_, item) => Text(item.difficulty5.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 6 声望值',
+          cell: (_, item) => Text(item.difficulty6.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 7 声望值',
+          cell: (_, item) => Text(item.difficulty7.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 8 声望值',
+          cell: (_, item) => Text(item.difficulty8.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '索引 9 声望值',
+          cell: (_, item) => Text(item.difficulty9.toString()),
+        ),
+      ],
+      onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: item.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -186,7 +182,7 @@ class _QuestFactionRewardListPageState
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      Expanded(child: layoutBuilder),
+      Expanded(child: table),
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);

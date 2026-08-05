@@ -11,12 +11,11 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class PlayerCreateInfoListPage extends StatefulWidget {
@@ -116,67 +115,60 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
     );
     final toolbar = Row(children: [createButton, const Spacer(), pagination]);
 
-    final headers = ['种族', '职业', '地图', '区域', '坐标'];
-
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            final info = infos[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(info.race.toString())),
-              1 => ShadTableCell(child: Text(info.class_.toString())),
-              2 => ShadTableCell(child: Text(info.map.toString())),
-              3 => ShadTableCell(child: Text(info.zone.toString())),
-              4 => ShadTableCell(
-                child: Text(
-                  '${info.positionX.toStringAsFixed(2)}, '
-                  '${info.positionY.toStringAsFixed(2)}, '
-                  '${info.positionZ.toStringAsFixed(2)}, '
-                  '${info.orientation.toStringAsFixed(2)}',
-                ),
-              ),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            var flexWidth = flexColumnWidth(constraints.maxWidth, 480);
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(flexWidth),
-              _ => null,
-            };
-          },
-          header: (context, index) =>
-              ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) => _navigateToDetail(info: infos[row]),
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _navigateToDetail(info: infos[row]),
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(infos[row].key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: infos.length,
+    final table = FoxyDataTable<BriefPlayerCreateInfoEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: infos,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '种族',
+          width: 120,
+          cell: (_, info) => Text(info.race.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '职业',
+          width: 120,
+          cell: (_, info) => Text(info.class_.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '地图',
+          width: 120,
+          cell: (_, info) => Text(info.map.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '区域',
+          width: 120,
+          cell: (_, info) => Text(info.zone.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '坐标',
+          cell: (_, info) => Text(
+            '${info.positionX.toStringAsFixed(2)}, '
+            '${info.positionY.toStringAsFixed(2)}, '
+            '${info.positionZ.toStringAsFixed(2)}, '
+            '${info.orientation.toStringAsFixed(2)}',
+          ),
+        ),
+      ],
+      onRowDoubleTap: (info) => _navigateToDetail(info: info),
+      onRowSecondaryTapDownWithDetails: (info, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(info: info),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(info.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -189,7 +181,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
           if (viewModel.errorMessage.value != null)
             FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
-          Expanded(child: layoutBuilder),
+          Expanded(child: table),
         ],
       ),
     );

@@ -11,12 +11,11 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class GossipMenuListPage extends StatefulWidget {
@@ -105,75 +104,55 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
     );
     final toolbar = Row(children: [createBtn, const Spacer(), pagination]);
 
-    final headers = ['编号', '文本编号', '文本'];
-    final table = LayoutBuilder(
-      builder: (context, constraints) {
-        final width = flexColumnWidth(constraints.maxWidth, 240);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          columnCount: headers.length,
-          rowCount: templates.length,
-          pinnedRowCount: 1,
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              2 => FixedTableSpanExtent(width),
-              _ => null,
-            };
-          },
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= templates.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = templates[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.menuId.toString())),
-              1 => ShadTableCell(child: Text(item.textId.toString())),
-              2 => ShadTableCell(
-                child: Text(
-                  item.text,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          onRowDoubleTap: (row) {
-            final item = templates[row];
-            _navigateToDetail(key: item.key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            final item = templates[row];
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _navigateToDetail(key: item.key),
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(item.key),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(item.key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
+    final table = FoxyDataTable<BriefGossipMenuEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: templates,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, item) => Text(item.menuId.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '文本编号',
+          width: 120,
+          cell: (_, item) => Text(item.textId.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '文本',
+          cell: (_, item) => Text(
+            item.text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+      onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: item.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(item.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );

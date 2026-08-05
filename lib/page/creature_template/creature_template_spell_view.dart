@@ -7,15 +7,14 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Spells tab
 class CreatureTemplateSpellView extends StatefulWidget {
@@ -166,67 +165,52 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
     );
 
     final items = viewModel.items.value;
-    final headers = ['索引', '技能名称', '验证版本'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var width = flexColumnWidth(maxWidth, 240);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final spell = items[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(spell.index.toString())),
-              1 => ShadTableCell(child: Text(spell.displayName)),
-              2 => ShadTableCell(child: Text(spell.verifiedBuild.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectedKey.value = items[row].key;
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (!context.mounted) return;
-                    _showEditDialog(context);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(viewModel.selectedKey.value!),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+    final table = FoxyDataTable<BriefCreatureTemplateSpellEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '索引',
+          width: 120,
+          cell: (_, spell) => Text(spell.index.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '技能名称',
+          cell: (_, spell) => Text(spell.displayName),
+        ),
+        FoxyTableColumn.fixed(
+          label: '验证版本',
+          width: 120,
+          cell: (_, spell) => Text(spell.verifiedBuild.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (spell, details) {
+        viewModel.selectedKey.value = spell.key;
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                if (!await _load(viewModel.selectedKey.value!)) return;
+                if (!mounted) return;
+                _showEditDialog(context);
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(viewModel.selectedKey.value!),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(viewModel.selectedKey.value!),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -235,7 +219,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);

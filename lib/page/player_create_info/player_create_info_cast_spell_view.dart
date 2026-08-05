@@ -13,7 +13,7 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_nullable_string_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -100,24 +100,31 @@ class _PlayerCreateInfoCastSpellViewState
 
   Widget _buildTable() {
     final rows = viewModel.items.value;
-    const headers = ['种族掩码', '职业掩码', '法术', '备注'];
-    return FoxyShadTable(
-      builder: (context, vicinity) {
-        final row = rows[vicinity.row];
-        return ShadTableCell(
-          child: Text(switch (vicinity.column) {
-            0 => row.raceMask.toString(),
-            1 => row.classMask.toString(),
-            2 => row.spell.toString(),
-            3 => row.note ?? 'NULL',
-            _ => '',
-          }),
-        );
-      },
-      columnCount: headers.length,
-      columnSpanExtent: (index) => FixedTableSpanExtent(index == 3 ? 360 : 180),
-      header: (context, index) =>
-          ShadTableCell.header(child: Text(headers[index])),
+    return FoxyDataTable<BriefPlayerCreateInfoCastSpellEntity>(
+      shrinkWrap: true,
+      rows: rows,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '种族掩码',
+          width: 180,
+          cell: (_, row) => Text(row.raceMask.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '职业掩码',
+          width: 180,
+          cell: (_, row) => Text(row.classMask.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '法术',
+          width: 180,
+          cell: (_, row) => Text(row.spell.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '备注',
+          width: 360,
+          cell: (_, row) => Text(row.note ?? 'NULL'),
+        ),
+      ],
       onRowSecondaryTapDownWithDetails: (row, details) {
         showFoxyContextMenu(
           context: context,
@@ -126,23 +133,20 @@ class _PlayerCreateInfoCastSpellViewState
             ShadContextMenuItem(
               leading: const Icon(LucideIcons.squarePen, size: 16),
               onPressed: () async {
-                if (!await _load(rows[row].key)) return;
-                if (context.mounted) {
-                  _showDialog('编辑登录施法');
-                }
+                if (!await _load(row.key)) return;
+                if (!mounted) return;
+                _showDialog('编辑登录施法');
               },
               child: const Text('编辑'),
             ),
             ShadContextMenuItem(
               leading: const Icon(LucideIcons.trash, size: 16),
-              onPressed: () => _destroy(rows[row].key),
+              onPressed: () => _destroy(row.key),
               child: const Text('删除'),
             ),
           ],
         );
       },
-      rowCount: rows.length,
-      shrinkWrap: true,
     );
   }
 

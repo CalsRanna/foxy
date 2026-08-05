@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
@@ -11,7 +11,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Scroll down a bit
-    await tester.drag(find.byType(FoxyShadTable), const Offset(0, -800));
+    await tester.drag(find.byType(ShadTable), const Offset(0, -800));
     await tester.pumpAndSettle();
     expect(controller.offset, greaterThan(0));
 
@@ -27,7 +27,7 @@ void main() {
     await tester.pumpWidget(buildScrollableTable(0, controller));
     await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(FoxyShadTable), const Offset(0, -800));
+    await tester.drag(find.byType(ShadTable), const Offset(0, -800));
     await tester.pumpAndSettle();
     expect(controller.offset, greaterThan(0));
 
@@ -53,17 +53,17 @@ Widget buildScrollableTable(int queryVersion, ScrollController controller) {
       body: Center(
         child: SizedBox(
           height: 200,
-          child: FoxyShadTable(
+          child: FoxyDataTable<int>(
             queryVersion: queryVersion,
             verticalScrollController: controller,
-            columnCount: 1,
-            rowCount: 100,
-            header: (context, column) {
-              return ShadTableCell.header(child: Text('编号'));
-            },
-            builder: (context, vicinity) {
-              return ShadTableCell(child: Text('行${vicinity.row}'));
-            },
+            rows: List.generate(100, (i) => i),
+            columns: [
+              FoxyTableColumn.fixed(
+                label: '编号',
+                width: 120,
+                cell: (_, value) => Text('行$value'),
+              ),
+            ],
           ),
         ),
       ),
@@ -77,17 +77,17 @@ Widget buildShrinkWrapTable(int queryVersion) {
   return ShadApp(
     home: Scaffold(
       body: Center(
-        child: FoxyShadTable(
+        child: FoxyDataTable<int>(
           queryVersion: queryVersion,
           shrinkWrap: true,
-          columnCount: 1,
-          rowCount: 3,
-          header: (context, column) {
-            return ShadTableCell.header(child: Text('编号'));
-          },
-          builder: (context, vicinity) {
-            return ShadTableCell(child: Text('行${vicinity.row}'));
-          },
+          rows: List.generate(3, (i) => i),
+          columns: [
+            FoxyTableColumn.fixed(
+              label: '编号',
+              width: 120,
+              cell: (_, value) => Text('行$value'),
+            ),
+          ],
         ),
       ),
     ),

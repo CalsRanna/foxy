@@ -15,12 +15,11 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Tab 3: gossip_menu_option dual-mode (list / form)
 class GossipMenuOptionView extends StatefulWidget {
@@ -290,82 +289,70 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     );
 
     final options = viewModel.items.value;
-    final headers = ['编号', '图标', '文本', '类型', 'NPC标识', '子选项'];
-    final table = LayoutBuilder(
-      builder: (context, constraints) {
-        final width = flexColumnWidth(constraints.maxWidth, 600);
-        return FoxyShadTable(
-          shrinkWrap: true,
-          columnCount: headers.length,
-          rowCount: options.length,
-          pinnedRowCount: 1,
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              2 => FixedTableSpanExtent(width),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= options.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final o = options[vicinity.row];
-            final iconName =
-                kGossipOptionIcons[o.optionIcon] ?? o.optionIcon.toString();
-            final typeName =
-                kGossipOptionTypes[o.optionType] ?? o.optionType.toString();
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(o.optionId.toString())),
-              1 => ShadTableCell(child: Text(iconName)),
-              2 => ShadTableCell(
-                child: Text(
-                  o.displayText,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              3 => ShadTableCell(child: Text(typeName)),
-              4 => ShadTableCell(child: Text(o.optionNpcFlag.toString())),
-              5 => ShadTableCell(child: Text(o.actionMenuId.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          onRowDoubleTap: (row) {
-            final o = options[row];
-            _edit(o.key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            final o = options[row];
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _edit(o.key),
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(o.key),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(o.key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
+
+    final table = FoxyDataTable<BriefGossipMenuOptionEntity>(
+      shrinkWrap: true,
+      pinnedRowCount: 1,
+      rows: options,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, o) => Text(o.optionId.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '图标',
+          width: 120,
+          cell: (_, o) =>
+              Text(kGossipOptionIcons[o.optionIcon] ?? o.optionIcon.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '文本',
+          cell: (_, o) => Text(
+            o.displayText,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '类型',
+          width: 120,
+          cell: (_, o) =>
+              Text(kGossipOptionTypes[o.optionType] ?? o.optionType.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: 'NPC标识',
+          width: 120,
+          cell: (_, o) => Text(o.optionNpcFlag.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '子选项',
+          width: 120,
+          cell: (_, o) => Text(o.actionMenuId.toString()),
+        ),
+      ],
+      onRowDoubleTap: (o) => _edit(o.key),
+      onRowSecondaryTapDownWithDetails: (o, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _edit(o.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(o.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(o.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );

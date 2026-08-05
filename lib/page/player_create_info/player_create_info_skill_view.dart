@@ -13,7 +13,7 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -100,25 +100,36 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
 
   Widget _buildTable() {
     final rows = viewModel.items.value;
-    const headers = ['种族掩码', '职业掩码', '技能', '阶数', '备注'];
-    return FoxyShadTable(
-      builder: (context, vicinity) {
-        final row = rows[vicinity.row];
-        return ShadTableCell(
-          child: Text(switch (vicinity.column) {
-            0 => row.raceMask.toString(),
-            1 => row.classMask.toString(),
-            2 => row.skill.toString(),
-            3 => row.rank.toString(),
-            4 => row.comment,
-            _ => '',
-          }),
-        );
-      },
-      columnCount: headers.length,
-      columnSpanExtent: (index) => FixedTableSpanExtent(index == 4 ? 280 : 150),
-      header: (context, index) =>
-          ShadTableCell.header(child: Text(headers[index])),
+    return FoxyDataTable<BriefPlayerCreateInfoSkillEntity>(
+      shrinkWrap: true,
+      rows: rows,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '种族掩码',
+          width: 150,
+          cell: (_, row) => Text(row.raceMask.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '职业掩码',
+          width: 150,
+          cell: (_, row) => Text(row.classMask.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '技能',
+          width: 150,
+          cell: (_, row) => Text(row.skill.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '阶数',
+          width: 150,
+          cell: (_, row) => Text(row.rank.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '备注',
+          width: 280,
+          cell: (_, row) => Text(row.comment),
+        ),
+      ],
       onRowSecondaryTapDownWithDetails: (row, details) {
         showFoxyContextMenu(
           context: context,
@@ -126,19 +137,17 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
           items: [
             ShadContextMenuItem(
               leading: const Icon(LucideIcons.squarePen, size: 16),
-              onPressed: () => _showEditDialog(rows[row]),
+              onPressed: () => _showEditDialog(row),
               child: const Text('编辑'),
             ),
             ShadContextMenuItem(
               leading: const Icon(LucideIcons.trash, size: 16),
-              onPressed: () => _destroy(rows[row].key),
+              onPressed: () => _destroy(row.key),
               child: const Text('删除'),
             ),
           ],
         );
       },
-      rowCount: rows.length,
-      shrinkWrap: true,
     );
   }
 

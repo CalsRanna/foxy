@@ -9,14 +9,13 @@ import 'package:foxy/view_model/quest_template_list_view_model.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class QuestTemplateListPage extends StatefulWidget {
@@ -105,88 +104,73 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
     );
     final toolbar = Row(children: [createBtn, const Spacer(), pagination]);
 
-    final headers = ['编号', '标题', '描述', '类型', '等级', '最低等级'];
-
-    final table = LayoutBuilder(
-      builder: (context, constraints) {
-        final flexWidth = flexColumnWidth(constraints.maxWidth, 480);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          columnCount: headers.length,
-          rowCount: templates.length,
-          pinnedRowCount: 1,
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(flexWidth / 2),
-              2 => FixedTableSpanExtent(flexWidth / 2),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= templates.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = templates[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(
-                child: Text(
-                  item.displayTitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              2 => ShadTableCell(
-                child: Text(
-                  item.displayDescription,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              3 => ShadTableCell(child: Text(item.questType.toString())),
-              4 => ShadTableCell(child: Text(item.questLevel.toString())),
-              5 => ShadTableCell(child: Text(item.minLevel.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          onRowDoubleTap: (row) {
-            final item = templates[row];
-            _navigateToDetail(key: item.key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            final item = templates[row];
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _navigateToDetail(key: item.key),
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(item.key),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(item.key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
+    final table = FoxyDataTable<BriefQuestTemplateEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: templates,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, item) => Text(item.id.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '标题',
+          cell: (_, item) => Text(
+            item.displayTitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.flex(
+          label: '描述',
+          cell: (_, item) => Text(
+            item.displayDescription,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '类型',
+          width: 120,
+          cell: (_, item) => Text(item.questType.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '等级',
+          width: 120,
+          cell: (_, item) => Text(item.questLevel.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '最低等级',
+          width: 120,
+          cell: (_, item) => Text(item.minLevel.toString()),
+        ),
+      ],
+      onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: item.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(item.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );

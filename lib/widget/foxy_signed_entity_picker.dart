@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -10,9 +9,9 @@ import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -349,7 +348,6 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
   }
 
   Widget _buildTable() {
-    final theme = ShadTheme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final tableMaxHeight = screenHeight * 0.5;
     if (_items.isEmpty) {
@@ -362,59 +360,35 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
     }
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: tableMaxHeight),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final nameWidth = flexColumnWidth(constraints.maxWidth, 120);
-          return FoxyShadTable(
-            queryVersion: _queryVersion,
-            columnCount: 2,
-            rowCount: _items.length,
-            pinnedRowCount: 1,
-            header: (context, column) =>
-                ShadTableCell.header(child: Text(column == 0 ? '编号' : '名称')),
-            columnSpanExtent: (column) => column == 0
-                ? FixedTableSpanExtent(120)
-                : FixedTableSpanExtent(nameWidth),
-            rowSpanBackgroundDecoration: (row) {
-              final dataRow = row - 1;
-              if (dataRow < 0 || dataRow >= _items.length) return null;
-              if (_userSelected && _items[dataRow].id == _selectedId) {
-                return TableSpanDecoration(color: theme.colorScheme.accent);
-              }
-              return null;
-            },
-            onRowTap: (row) {
-              if (row >= 0 && row < _items.length) {
-                setState(() {
-                  _selectedId = _items[row].id;
-                  _userSelected = true;
-                });
-              }
-            },
-            onRowDoubleTap: (row) {
-              if (row >= 0 && row < _items.length) {
-                Navigator.of(
-                  context,
-                ).pop(_isPositive ? _items[row].id : -_items[row].id);
-              }
-            },
-            builder: (context, vicinity) {
-              if (vicinity.row < 0 || vicinity.row >= _items.length) {
-                return ShadTableCell(child: SizedBox());
-              }
-              final item = _items[vicinity.row];
-              return ShadTableCell(
-                child: vicinity.column == 0
-                    ? Text(item.id.toString())
-                    : Text(
-                        item.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-              );
-            },
-          );
+      child: FoxyDataTable<SignedEntityBrief>(
+        queryVersion: _queryVersion,
+        pinnedRowCount: 1,
+        rows: _items,
+        keyOf: (row) => row.id,
+        selectedKey: _userSelected ? _selectedId : null,
+        onRowTap: (row) {
+          setState(() {
+            _selectedId = row.id;
+            _userSelected = true;
+          });
         },
+        onRowDoubleTap: (row) =>
+            Navigator.of(context).pop(_isPositive ? row.id : -row.id),
+        columns: [
+          FoxyTableColumn.fixed(
+            label: '编号',
+            width: 120,
+            cell: (_, row) => Text(row.id.toString()),
+          ),
+          FoxyTableColumn.flex(
+            label: '名称',
+            cell: (_, row) => Text(
+              row.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

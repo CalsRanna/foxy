@@ -12,13 +12,12 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class PlayerCreateInfoItemView extends StatefulWidget {
   final int? race;
@@ -98,52 +97,51 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
 
   Widget _buildTable() {
     final items = viewModel.items.value;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final flexWidth = flexColumnWidth(constraints.maxWidth, 480);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            final item = items[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.race.toString())),
-              1 => ShadTableCell(child: Text(item.class_.toString())),
-              2 => ShadTableCell(child: Text(item.itemId.toString())),
-              3 => ShadTableCell(child: Text(item.amount.toString())),
-              4 => ShadTableCell(child: Text(item.note)),
-              _ => const ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: 5,
-          columnSpanExtent: (index) => switch (index) {
-            0 => const FixedTableSpanExtent(120),
-            1 => const FixedTableSpanExtent(120),
-            2 => const FixedTableSpanExtent(120),
-            3 => const FixedTableSpanExtent(120),
-            _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
-          },
-          header: (context, index) => ShadTableCell.header(
-            child: Text(['种族', '职业', '物品ID', '数量', '备注'][index]),
-          ),
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: const Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _showEditDialog(items[row]),
-                  child: const Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: const Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(items[row].key),
-                  child: const Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+    return FoxyDataTable<BriefPlayerCreateInfoItemEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '种族',
+          width: 120,
+          cell: (_, item) => Text(item.race.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '职业',
+          width: 120,
+          cell: (_, item) => Text(item.class_.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '物品ID',
+          width: 120,
+          cell: (_, item) => Text(item.itemId.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '数量',
+          width: 120,
+          cell: (_, item) => Text(item.amount.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '备注',
+          cell: (_, item) => Text(item.note),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: const Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _showEditDialog(item),
+              child: const Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: const Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: const Text('删除'),
+            ),
+          ],
         );
       },
     );

@@ -11,12 +11,11 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class PageTextListPage extends StatefulWidget {
@@ -107,71 +106,55 @@ class _PageTextListPageState extends State<PageTextListPage> {
       onChange: viewModel.paginate,
     );
     final toolbar = Row(children: [createButton, const Spacer(), pagination]);
-    final headers = ['编号', '文本', '下一页编号'];
-
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var width = flexColumnWidth(constraints.maxWidth, 240);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            final pageText = pages[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(pageText.id.toString())),
-              1 => ShadTableCell(
-                child: Text(
-                  pageText.displayText,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              2 => ShadTableCell(child: Text(pageText.nextPageId.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowDoubleTap: (row) {
-            _navigateToDetail(key: pages[row].key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _navigateToDetail(key: pages[row].key),
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(pages[row].key),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(pages[row].key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: pages.length,
+    final table = FoxyDataTable<BriefPageTextEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: pages,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, pageText) => Text(pageText.id.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '文本',
+          cell: (_, pageText) => Text(
+            pageText.displayText,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '下一页编号',
+          width: 120,
+          cell: (_, pageText) => Text(pageText.nextPageId.toString()),
+        ),
+      ],
+      onRowDoubleTap: (pageText) => _navigateToDetail(key: pageText.key),
+      onRowSecondaryTapDownWithDetails: (pageText, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: pageText.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(pageText.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(pageText.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -184,7 +167,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
           if (viewModel.errorMessage.value != null)
             FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
-          Expanded(child: layoutBuilder),
+          Expanded(child: table),
         ],
       ),
     );

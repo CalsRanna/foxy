@@ -11,12 +11,11 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class ConditionListPage extends StatefulWidget {
@@ -115,76 +114,62 @@ class _ConditionListPageState extends State<ConditionListPage> {
     );
     final toolbar = Row(children: [createButton, const Spacer(), pagination]);
 
-    final headers = ['来源条目', '来源类型', '条件类型', '参数1', '说明'];
-
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var flexWidth = flexColumnWidth(constraints.maxWidth, 120);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            final condition = conditions[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(condition.sourceEntry.toString())),
-              1 => ShadTableCell(child: Text(condition.sourceTypeLabel)),
-              2 => ShadTableCell(child: Text(condition.conditionTypeLabel)),
-              3 => ShadTableCell(
-                child: Text(condition.conditionValue1.toString()),
-              ),
-              4 => ShadTableCell(
-                child: Text(
-                  condition.comment,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(flexWidth / 4),
-              2 => FixedTableSpanExtent(flexWidth / 4),
-              3 => FixedTableSpanExtent(flexWidth / 4),
-              4 => FixedTableSpanExtent(flexWidth / 4),
-              _ => null,
-            };
-          },
-          header: (context, index) =>
-              ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) =>
-              _navigateToDetail(condition: conditions[row]),
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () =>
-                      _navigateToDetail(condition: conditions[row]),
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(conditions[row].key),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(conditions[row].key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: conditions.length,
+    final table = FoxyDataTable<BriefConditionEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: conditions,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '来源条目',
+          width: 120,
+          cell: (_, condition) => Text(condition.sourceEntry.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '来源类型',
+          cell: (_, condition) => Text(condition.sourceTypeLabel),
+        ),
+        FoxyTableColumn.flex(
+          label: '条件类型',
+          cell: (_, condition) => Text(condition.conditionTypeLabel),
+        ),
+        FoxyTableColumn.flex(
+          label: '参数1',
+          cell: (_, condition) => Text(condition.conditionValue1.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '说明',
+          cell: (_, condition) => Text(
+            condition.comment,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+      onRowDoubleTap: (condition) => _navigateToDetail(condition: condition),
+      onRowSecondaryTapDownWithDetails: (condition, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(condition: condition),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(condition.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(condition.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -197,7 +182,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
           if (viewModel.errorMessage.value != null)
             FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
-          Expanded(child: layoutBuilder),
+          Expanded(child: table),
         ],
       ),
     );

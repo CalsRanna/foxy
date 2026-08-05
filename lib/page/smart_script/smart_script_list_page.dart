@@ -12,12 +12,11 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class SmartScriptListPage extends StatefulWidget {
@@ -106,105 +105,82 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', 'ID', '事件类型', '动作类型', '目标类型', '备注'];
-
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var commentWidth = flexColumnWidth(constraints.maxWidth, 600);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            final script = templates[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(script.entryOrGuid.toString())),
-              1 => ShadTableCell(child: Text(script.id.toString())),
-              2 => ShadTableCell(
-                child: Text(
-                  kEventTypes[script.eventType] ?? script.eventType.toString(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              3 => ShadTableCell(
-                child: Text(
-                  kActionTypes[script.actionType] ??
-                      script.actionType.toString(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              4 => ShadTableCell(
-                child: Text(
-                  kTargetTypes[script.targetType] ??
-                      script.targetType.toString(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              5 => ShadTableCell(
-                child: Text(
-                  script.comment,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(commentWidth),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowDoubleTap: (row) {
-            final s = templates[row];
-            _navigateToDetail(key: s.key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            final s = templates[row];
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    _navigateToDetail(key: s.key);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    _copy(s.key);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    _destroy(s.key);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: templates.length,
+    final table = FoxyDataTable<BriefSmartScriptEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: templates,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, script) => Text(script.entryOrGuid.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: 'ID',
+          width: 120,
+          cell: (_, script) => Text(script.id.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '事件类型',
+          width: 120,
+          cell: (_, script) => Text(
+            kEventTypes[script.eventType] ?? script.eventType.toString(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '动作类型',
+          width: 120,
+          cell: (_, script) => Text(
+            kActionTypes[script.actionType] ?? script.actionType.toString(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '目标类型',
+          width: 120,
+          cell: (_, script) => Text(
+            kTargetTypes[script.targetType] ?? script.targetType.toString(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.flex(
+          label: '备注',
+          cell: (_, script) => Text(
+            script.comment,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+      onRowDoubleTap: (script) => _navigateToDetail(key: script.key),
+      onRowSecondaryTapDownWithDetails: (script, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: script.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(script.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(script.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -213,7 +189,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      Expanded(child: layoutBuilder),
+      Expanded(child: table),
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);

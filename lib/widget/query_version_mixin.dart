@@ -6,7 +6,7 @@ import 'package:signals/signals.dart';
 ///
 /// Provides the "browse baseline version" [queryVersion]: incremented on
 /// whole-page content changes (page turn, search, reset, delete shrinking
-/// the page count); pages pass it to FoxyShadTable so the table scrolls
+/// the page count); pages pass it to FoxyDataTable so the table scrolls
 /// back to the first row. In-page data changes (delete, copy, edit-save)
 /// do not increment, keeping the browse position.
 ///

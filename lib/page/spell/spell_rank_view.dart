@@ -10,12 +10,11 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class SpellRankView extends StatefulWidget {
   final int spellId;
@@ -158,69 +157,56 @@ class _SpellRankViewState extends State<SpellRankView> {
     );
 
     final items = viewModel.items.value;
-    final headers = ['起始技能', '技能', '排行'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var flexWidth = flexColumnWidth(maxWidth, 120);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = items[vicinity.row];
+    final table = FoxyDataTable<BriefSpellRankEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.flex(
+          label: '起始技能',
+          cell: (_, item) {
             final firstDisplay = item.firstSpellSubtext.isNotEmpty
                 ? '${item.firstSpellName} - ${item.firstSpellSubtext}'
                 : item.firstSpellName;
+            return Text(firstDisplay);
+          },
+        ),
+        FoxyTableColumn.flex(
+          label: '技能',
+          cell: (_, item) {
             final spellDisplay = item.spellSubtext.isNotEmpty
                 ? '${item.spellName} - ${item.spellSubtext}'
                 : item.spellName;
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(firstDisplay)),
-              1 => ShadTableCell(child: Text(spellDisplay)),
-              2 => ShadTableCell(child: Text(item.rank.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
+            return Text(spellDisplay);
           },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(flexWidth * 0.5),
-              1 => FixedTableSpanExtent(flexWidth * 0.5),
-              2 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectedKey.value = items[row].key;
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (context.mounted) {
-                      _showEditDialog(context);
-                    }
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+        ),
+        FoxyTableColumn.fixed(
+          label: '排行',
+          width: 120,
+          cell: (_, item) => Text(item.rank.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        viewModel.selectedKey.value = item.key;
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                if (!await _load(viewModel.selectedKey.value!)) return;
+                if (!mounted) return;
+                _showEditDialog(context);
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(viewModel.selectedKey.value!),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -229,7 +215,7 @@ class _SpellRankViewState extends State<SpellRankView> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);

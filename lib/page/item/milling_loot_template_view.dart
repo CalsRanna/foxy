@@ -14,14 +14,13 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Milling loot tab
 class MillingLootTemplateView extends StatefulWidget {
@@ -218,93 +217,76 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
     );
 
     final items = viewModel.items.value;
-    final headers = ['物品ID', '物品名称', '几率', '数量', '任务', '组'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var width = flexColumnWidth(maxWidth, 600);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final loot = items[vicinity.row];
-            final qualityColor =
-                kItemQualityColors[loot.itemQuality] ?? Colors.white;
-
-            return switch (vicinity.column) {
-              0 => ShadTableCell(
-                child: Text(
-                  loot.reference != 0
-                      ? '${loot.item} (R)'
-                      : loot.item.toString(),
-                ),
-              ),
-              1 => ShadTableCell(
-                child: loot.reference != 0
-                    ? Text(
-                        '关联掉落',
-                        style: TextStyle(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.5),
-                        ),
-                      )
-                    : Text(
-                        loot.displayName,
-                        style: TextStyle(color: qualityColor),
-                      ),
-              ),
-              2 => ShadTableCell(child: Text('${loot.chance}%')),
-              3 => ShadTableCell(
-                child: Text('${loot.minCount}-${loot.maxCount}'),
-              ),
-              4 => ShadTableCell(child: Text(loot.questRequired ? '是' : '否')),
-              5 => ShadTableCell(child: Text(loot.groupId.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
+    final table = FoxyDataTable<BriefMillingLootTemplateEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '物品ID',
+          width: 120,
+          cell: (_, loot) => Text(
+            loot.reference != 0 ? '${loot.item} (R)' : loot.item.toString(),
+          ),
+        ),
+        FoxyTableColumn.flex(
+          label: '物品名称',
+          cell: (context, loot) {
+            final qualityColor = getItemQualityColor(loot.itemQuality);
+            return loot.reference != 0
+                ? Text(
+                    '关联掉落',
+                    style: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  )
+                : Text(loot.displayName, style: TextStyle(color: qualityColor));
           },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    viewModel.selectedKey.value = items[row].key;
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (!mounted) return;
-                    _showEditDialog();
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+        ),
+        FoxyTableColumn.fixed(
+          label: '几率',
+          width: 120,
+          cell: (_, loot) => Text('${loot.chance}%'),
+        ),
+        FoxyTableColumn.fixed(
+          label: '数量',
+          width: 120,
+          cell: (_, loot) => Text('${loot.minCount}-${loot.maxCount}'),
+        ),
+        FoxyTableColumn.fixed(
+          label: '任务',
+          width: 120,
+          cell: (_, loot) => Text(loot.questRequired ? '是' : '否'),
+        ),
+        FoxyTableColumn.fixed(
+          label: '组',
+          width: 120,
+          cell: (_, loot) => Text(loot.groupId.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (loot, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                viewModel.selectedKey.value = loot.key;
+                if (!await _load(viewModel.selectedKey.value!)) return;
+                if (!mounted) return;
+                _showEditDialog();
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(viewModel.selectedKey.value!),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -313,7 +295,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);

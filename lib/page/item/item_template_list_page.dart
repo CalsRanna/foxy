@@ -7,19 +7,18 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/item_template_list_view_model.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class ItemTemplateListPage extends StatefulWidget {
@@ -136,87 +135,75 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称', '类别', '子类别', '佩戴位置', '物品等级', '需求等级'];
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var width = flexColumnWidth(constraints.maxWidth, 720);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= templates.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = templates[vicinity.row];
+    final table = FoxyDataTable<BriefItemTemplateEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: templates,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, item) => Text(item.entry.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '名称',
+          cell: (context, item) {
             final qualityColor =
                 kItemQualityColors[item.quality] ?? Colors.black;
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.entry.toString())),
-              1 => ShadTableCell(child: _buildIconAndName(item, qualityColor)),
-              2 => ShadTableCell(child: Text(getItemClassName(item.classId))),
-              3 => ShadTableCell(
-                child: Text(getItemSubclassName(item.classId, item.subclass)),
-              ),
-              4 => ShadTableCell(
-                child: Text(getItemInventoryTypeName(item.inventoryType)),
-              ),
-              5 => ShadTableCell(child: Text(item.itemLevel.toString())),
-              6 => ShadTableCell(child: Text(item.requiredLevel.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
+            return _buildIconAndName(item, qualityColor);
           },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              6 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowDoubleTap: (row) {
-            _navigateToDetail(key: templates[row].key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    _navigateToDetail(key: templates[row].key);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    _copy(templates[row].key);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    _destroy(templates[row].key);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: templates.length,
+        ),
+        FoxyTableColumn.fixed(
+          label: '类别',
+          width: 120,
+          cell: (_, item) => Text(getItemClassName(item.classId)),
+        ),
+        FoxyTableColumn.fixed(
+          label: '子类别',
+          width: 120,
+          cell: (_, item) => Text(getItemSubclassName(item.classId, item.subclass)),
+        ),
+        FoxyTableColumn.fixed(
+          label: '佩戴位置',
+          width: 120,
+          cell: (_, item) => Text(getItemInventoryTypeName(item.inventoryType)),
+        ),
+        FoxyTableColumn.fixed(
+          label: '物品等级',
+          width: 120,
+          cell: (_, item) => Text(item.itemLevel.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '需求等级',
+          width: 120,
+          cell: (_, item) => Text(item.requiredLevel.toString()),
+        ),
+      ],
+      onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: item.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(item.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -225,7 +212,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      Expanded(child: layoutBuilder),
+      Expanded(child: table),
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);

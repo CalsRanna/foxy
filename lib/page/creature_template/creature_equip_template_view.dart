@@ -5,18 +5,16 @@ import 'package:foxy/view_model/creature_equip_template_linked_list_view_model.d
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Equip-template tab
 class CreatureEquipTemplateView extends StatefulWidget {
@@ -187,96 +185,75 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
     );
 
     final items = viewModel.items.value;
-    final headers = ['ID', '主手武器', '副手武器', '远程武器', '验证版本'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var width = flexColumnWidth(maxWidth, 240);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final equip = items[vicinity.row];
-            final qualityColor1 = getItemQualityColor(equip.quality1);
-            final qualityColor2 = getItemQualityColor(equip.quality2);
-            final qualityColor3 = getItemQualityColor(equip.quality3);
-
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(equip.id.toString())),
-              1 => ShadTableCell(
-                child: Text(
-                  equip.displayName1,
-                  style: TextStyle(color: qualityColor1),
-                ),
-              ),
-              2 => ShadTableCell(
-                child: Text(
-                  equip.displayName2,
-                  style: TextStyle(color: qualityColor2),
-                ),
-              ),
-              3 => ShadTableCell(
-                child: Text(
-                  equip.displayName3,
-                  style: TextStyle(color: qualityColor3),
-                ),
-              ),
-              4 => ShadTableCell(child: Text(equip.verifiedBuild.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 3),
-              2 => FixedTableSpanExtent(width / 3),
-              3 => FixedTableSpanExtent(width / 3),
-              4 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    viewModel.selectedKey.value = items[row].key;
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (!context.mounted) return;
-                    _showEditDialog(context);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    viewModel.selectedKey.value = items[row].key;
-                    _copy(viewModel.selectedKey.value!);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    viewModel.selectedKey.value = items[row].key;
-                    _destroy(viewModel.selectedKey.value!);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+    final table = FoxyDataTable<BriefCreatureEquipTemplateEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: 'ID',
+          width: 120,
+          cell: (_, equip) => Text(equip.id.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '主手武器',
+          cell: (_, equip) => Text(
+            equip.displayName1,
+            style: TextStyle(color: getItemQualityColor(equip.quality1)),
+          ),
+        ),
+        FoxyTableColumn.flex(
+          label: '副手武器',
+          cell: (_, equip) => Text(
+            equip.displayName2,
+            style: TextStyle(color: getItemQualityColor(equip.quality2)),
+          ),
+        ),
+        FoxyTableColumn.flex(
+          label: '远程武器',
+          cell: (_, equip) => Text(
+            equip.displayName3,
+            style: TextStyle(color: getItemQualityColor(equip.quality3)),
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '验证版本',
+          width: 120,
+          cell: (_, equip) => Text(equip.verifiedBuild.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (equip, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                viewModel.selectedKey.value = equip.key;
+                if (!await _load(viewModel.selectedKey.value!)) return;
+                if (!mounted) return;
+                _showEditDialog(context);
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () {
+                viewModel.selectedKey.value = equip.key;
+                _copy(viewModel.selectedKey.value!);
+              },
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () {
+                viewModel.selectedKey.value = equip.key;
+                _destroy(viewModel.selectedKey.value!);
+              },
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -285,7 +262,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);

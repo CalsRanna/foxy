@@ -6,17 +6,16 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/creature_template_list_view_model.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class CreatureTemplateListPage extends StatefulWidget {
@@ -111,77 +110,60 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '姓名', '称号', '最低等级', '最高等级'];
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var width = flexColumnWidth(constraints.maxWidth, 360);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= templates.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final template = templates[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(template.entry.toString())),
-              1 => ShadTableCell(child: Text(template.displayName)),
-              2 => ShadTableCell(child: Text(template.displaySubName)),
-              3 => ShadTableCell(child: Text(template.minLevel.toString())),
-              4 => ShadTableCell(child: Text(template.maxLevel.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 2),
-              2 => FixedTableSpanExtent(width / 2),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowDoubleTap: (row) {
-            _navigateToDetail(key: templates[row].key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    _navigateToDetail(key: templates[row].key);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    _copy(templates[row].key);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    _destroy(templates[row].key);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: templates.length,
+    final table = FoxyDataTable<BriefCreatureTemplateEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: templates,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, template) => Text(template.entry.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '姓名',
+          cell: (_, template) => Text(template.displayName),
+        ),
+        FoxyTableColumn.flex(
+          label: '称号',
+          cell: (_, template) => Text(template.displaySubName),
+        ),
+        FoxyTableColumn.fixed(
+          label: '最低等级',
+          width: 120,
+          cell: (_, template) => Text(template.minLevel.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '最高等级',
+          width: 120,
+          cell: (_, template) => Text(template.maxLevel.toString()),
+        ),
+      ],
+      onRowDoubleTap: (template) => _navigateToDetail(key: template.key),
+      onRowSecondaryTapDownWithDetails: (template, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: template.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(template.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(template.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -190,7 +172,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      Expanded(child: layoutBuilder),
+      Expanded(child: table),
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);

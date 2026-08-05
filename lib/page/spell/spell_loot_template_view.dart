@@ -10,13 +10,12 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class SpellLootTemplateView extends StatefulWidget {
   final int spellId;
@@ -234,76 +233,75 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
     );
 
     final items = viewModel.items.value;
-    final headers = ['编号', '名称', '关联', '几率', '需要任务', '最小数量', '最大数量'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var flexWidth = flexColumnWidth(maxWidth, 600);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = items[vicinity.row];
+    final table = FoxyDataTable<BriefSpellLootTemplateEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 80,
+          cell: (_, item) => Text(item.item.toString()),
+        ),
+        // Previously `flexWidth * 0.4` (a leftover approximation that left
+        // the table under-full); now the name column fills the remaining
+        // width like other loot tables.
+        FoxyTableColumn.flex(
+          label: '名称',
+          cell: (_, item) {
             final displayName = item.localeName.isNotEmpty
                 ? item.localeName
                 : item.itemName;
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.item.toString())),
-              1 => ShadTableCell(child: Text(displayName)),
-              2 => ShadTableCell(child: Text(item.reference.toString())),
-              3 => ShadTableCell(child: Text('${item.chance.toString()}%')),
-              4 => ShadTableCell(
-                child: Text(item.questRequired == 1 ? '需要' : '不需要'),
-              ),
-              5 => ShadTableCell(child: Text(item.minCount.toString())),
-              6 => ShadTableCell(child: Text(item.maxCount.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
+            return Text(displayName);
           },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(80),
-              1 => FixedTableSpanExtent(flexWidth * 0.4),
-              2 => FixedTableSpanExtent(80),
-              3 => FixedTableSpanExtent(100),
-              4 => FixedTableSpanExtent(100),
-              5 => FixedTableSpanExtent(80),
-              6 => FixedTableSpanExtent(80),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectedKey.value = items[row].key;
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (context.mounted) {
-                      _showEditDialog(context);
-                    }
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+        ),
+        FoxyTableColumn.fixed(
+          label: '关联',
+          width: 80,
+          cell: (_, item) => Text(item.reference.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '几率',
+          width: 100,
+          cell: (_, item) => Text('${item.chance.toString()}%'),
+        ),
+        FoxyTableColumn.fixed(
+          label: '需要任务',
+          width: 100,
+          cell: (_, item) => Text(item.questRequired == 1 ? '需要' : '不需要'),
+        ),
+        FoxyTableColumn.fixed(
+          label: '最小数量',
+          width: 80,
+          cell: (_, item) => Text(item.minCount.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '最大数量',
+          width: 80,
+          cell: (_, item) => Text(item.maxCount.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        viewModel.selectedKey.value = item.key;
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                if (!await _load(viewModel.selectedKey.value!)) return;
+                if (!mounted) return;
+                _showEditDialog(context);
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(viewModel.selectedKey.value!),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -312,7 +310,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);

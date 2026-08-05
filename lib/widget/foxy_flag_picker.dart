@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/flag_item.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Flag picker: shows the formatted value; clicking the input or the
@@ -92,64 +92,31 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
         ),
       ],
       child: Flexible(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Flexible column-width scheme: fixed columns 120+160, the
-            // remaining width goes to the name column.
-            const fixedWidthSum = 120.0 + 160.0;
-            final flexWidth = flexColumnWidth(
-              constraints.maxWidth,
-              fixedWidthSum,
-            );
-            return ShadTable(
-              columnCount: 3,
-              rowCount: flags.length,
-              pinnedRowCount: 1,
-              header: (context, column) {
-                return switch (column) {
-                  0 => ShadTableCell.header(child: SizedBox()),
-                  1 => ShadTableCell.header(child: Text('标志值')),
-                  2 => ShadTableCell.header(child: Text('名称')),
-                  _ => ShadTableCell.header(child: SizedBox()),
-                };
-              },
-              columnSpanExtent: (column) {
-                return switch (column) {
-                  0 => FixedTableSpanExtent(120),
-                  1 => FixedTableSpanExtent(160),
-                  2 => FixedTableSpanExtent(flexWidth),
-                  _ => null,
-                };
-              },
-              onRowTap: (row) {
-                final dataRow = row - 1;
-                if (dataRow >= 0 && dataRow < flags.length) {
-                  _toggleFlag(flags[dataRow].value);
-                }
-              },
-              builder: (context, vicinity) {
-                if (vicinity.row < 0 || vicinity.row >= flags.length) {
-                  return ShadTableCell(child: SizedBox());
-                }
-                final flag = flags[vicinity.row];
-                final isSelected = (_currentValue & flag.value) != 0;
-                final hexValue =
-                    '0x${flag.value.toRadixString(16).toUpperCase().padLeft(8, '0')}';
-
-                return switch (vicinity.column) {
-                  0 => ShadTableCell(
-                    child: ShadCheckbox(
-                      value: isSelected,
-                      onChanged: (_) => _toggleFlag(flag.value),
-                    ),
-                  ),
-                  1 => ShadTableCell(child: Text(hexValue)),
-                  2 => ShadTableCell(child: Text(flag.label)),
-                  _ => ShadTableCell(child: SizedBox()),
-                };
-              },
-            );
-          },
+        child: FoxyDataTable<FlagItem>(
+          pinnedRowCount: 1,
+          rows: flags,
+          onRowTap: (flag) => _toggleFlag(flag.value),
+          columns: [
+            FoxyTableColumn.fixed(
+              label: '',
+              width: 120,
+              cell: (_, flag) => ShadCheckbox(
+                value: (_currentValue & flag.value) != 0,
+                onChanged: (_) => _toggleFlag(flag.value),
+              ),
+            ),
+            FoxyTableColumn.fixed(
+              label: '标志值',
+              width: 160,
+              cell: (_, flag) => Text(
+                '0x${flag.value.toRadixString(16).toUpperCase().padLeft(8, '0')}',
+              ),
+            ),
+            FoxyTableColumn.flex(
+              label: '名称',
+              cell: (_, flag) => Text(flag.label),
+            ),
+          ],
         ),
       ),
     );

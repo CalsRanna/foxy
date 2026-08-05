@@ -12,12 +12,11 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class SpellListPage extends StatefulWidget {
@@ -123,89 +122,67 @@ class _SpellListPageState extends State<SpellListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称', '子名称', '描述', 'Buff描述'];
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var flexWidth = flexColumnWidth(constraints.maxWidth, 360);
-        return FoxyShadTable(
-          queryVersion: viewModel.queryVersion.value,
-          loading: viewModel.loading.value,
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= templates.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final spell = templates[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(spell.id.toString())),
-              1 => ShadTableCell(child: _buildIconAndName(spell)),
-              2 => ShadTableCell(child: Text(spell.displaySubtext)),
-              3 => ShadTableCell(
-                child: Text(
-                  spell.displayDescription,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              4 => ShadTableCell(
-                child: Text(
-                  spell.displayAuraDescription,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(flexWidth / 3),
-              2 => FixedTableSpanExtent(240),
-              3 => FixedTableSpanExtent(flexWidth / 3),
-              4 => FixedTableSpanExtent(flexWidth / 3),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowDoubleTap: (row) {
-            _navigateToDetail(key: templates[row].key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    _navigateToDetail(key: templates[row].key);
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    _copy(templates[row].key);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  enabled: !viewModel.submitting.value,
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    _destroy(templates[row].key);
-                  },
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          pinnedRowCount: 1,
-          rowCount: templates.length,
+    final table = FoxyDataTable<BriefSpellEntity>(
+      queryVersion: viewModel.queryVersion.value,
+      loading: viewModel.loading.value,
+      pinnedRowCount: 1,
+      rows: templates,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '编号',
+          width: 120,
+          cell: (_, spell) => Text(spell.id.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '名称',
+          cell: (_, spell) => _buildIconAndName(spell),
+        ),
+        FoxyTableColumn.fixed(
+          label: '子名称',
+          width: 240,
+          cell: (_, spell) => Text(spell.displaySubtext),
+        ),
+        FoxyTableColumn.flex(
+          label: '描述',
+          cell: (_, spell) => Text(
+            spell.displayDescription,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        FoxyTableColumn.flex(
+          label: 'Buff描述',
+          cell: (_, spell) => Text(
+            spell.displayAuraDescription,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+      onRowDoubleTap: (spell) => _navigateToDetail(key: spell.key),
+      onRowSecondaryTapDownWithDetails: (spell, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _navigateToDetail(key: spell.key),
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(spell.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(spell.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -214,7 +191,7 @@ class _SpellListPageState extends State<SpellListPage> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      Expanded(child: layoutBuilder),
+      Expanded(child: table),
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);

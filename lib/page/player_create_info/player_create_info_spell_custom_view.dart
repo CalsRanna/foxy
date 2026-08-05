@@ -12,13 +12,12 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class PlayerCreateInfoSpellCustomView extends StatefulWidget {
   final int? race;
@@ -105,50 +104,46 @@ class _PlayerCreateInfoSpellCustomViewState
 
   Widget _buildTable() {
     final spells = viewModel.items.value;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final flexWidth = flexColumnWidth(constraints.maxWidth, 360);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            final item = spells[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.raceMask.toString())),
-              1 => ShadTableCell(child: Text(item.classMask.toString())),
-              2 => ShadTableCell(child: Text(item.spell.toString())),
-              3 => ShadTableCell(child: Text(item.note)),
-              _ => const ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: 4,
-          columnSpanExtent: (index) => switch (index) {
-            0 => const FixedTableSpanExtent(120),
-            1 => const FixedTableSpanExtent(120),
-            2 => const FixedTableSpanExtent(120),
-            _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
-          },
-          header: (context, index) => ShadTableCell.header(
-            child: Text(['种族掩码', '职业掩码', '法术', '备注'][index]),
-          ),
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: const Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _showEditDialog(spells[row]),
-                  child: const Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: const Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(spells[row].key),
-                  child: const Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: spells.length,
-          shrinkWrap: true,
+    return FoxyDataTable<BriefPlayerCreateInfoSpellCustomEntity>(
+      shrinkWrap: true,
+      rows: spells,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '种族掩码',
+          width: 120,
+          cell: (_, item) => Text(item.raceMask.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '职业掩码',
+          width: 120,
+          cell: (_, item) => Text(item.classMask.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '法术',
+          width: 120,
+          cell: (_, item) => Text(item.spell.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '备注',
+          cell: (_, item) => Text(item.note),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: const Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () => _showEditDialog(item),
+              child: const Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: const Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: const Text('删除'),
+            ),
+          ],
         );
       },
     );

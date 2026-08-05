@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Form field that queries the database by value to pick a record:
@@ -214,79 +213,52 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   }
 
   Widget _buildTable() {
-    final theme = ShadTheme.of(context);
     final columns = widget.delegate.columns;
-    final flexCount = columns.where((c) => c.width == null).length;
-    final fixedWidthSum = columns
-        .where((c) => c.width != null)
-        .fold<double>(0, (sum, c) => sum + c.width!);
-
     if (_items.isEmpty && widget.delegate.emptyText != null) {
       return Center(child: Text(widget.delegate.emptyText!));
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        var flexWidth = flexCount > 0
-            ? flexColumnWidth(constraints.maxWidth, fixedWidthSum)
-            : 0.0;
-        return FoxyShadTable(
-          queryVersion: _queryVersion,
-          columnCount: columns.length,
-          rowCount: _items.length,
-          pinnedRowCount: 1,
-          header: (context, column) =>
-              ShadTableCell.header(child: Text(columns[column].header)),
-          columnSpanExtent: (column) {
-            final w = columns[column].width;
-            return FixedTableSpanExtent(w ?? flexWidth);
-          },
-          rowSpanBackgroundDecoration: (row) {
-            final dataRow = row - 1;
-            if (dataRow < 0 || dataRow >= _items.length) return null;
-            if (_userSelected &&
-                widget.delegate.idOf(_items[dataRow]) == _selectedId) {
-              return TableSpanDecoration(color: theme.colorScheme.accent);
-            }
-            return null;
-          },
-          onRowTap: (row) {
-            if (row >= 0 && row < _items.length) {
-              setState(() {
-                _selectedId = widget.delegate.idOf(_items[row]);
-                _userSelected = true;
-              });
-            }
-          },
-          onRowDoubleTap: (row) {
-            if (row >= 0 && row < _items.length) {
-              Navigator.of(context).pop(widget.delegate.idOf(_items[row]));
-            }
-          },
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= _items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = _items[vicinity.row];
-            final col = columns[vicinity.column];
-            final isFlex = col.width == null;
-            Widget cellWidget;
-            if (col.cell != null) {
-              cellWidget = col.cell!(item);
-            } else if (isFlex) {
-              cellWidget = Text(
-                col.text!(item),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              );
-            } else {
-              cellWidget = Text(col.text!(item));
-            }
-            return ShadTableCell(child: cellWidget);
-          },
-        );
+    return FoxyDataTable<T>(
+      queryVersion: _queryVersion,
+      pinnedRowCount: 1,
+      rows: _items,
+      keyOf: widget.delegate.idOf,
+      selectedKey: _userSelected ? _selectedId : null,
+      onRowTap: (item) {
+        setState(() {
+          _selectedId = widget.delegate.idOf(item);
+          _userSelected = true;
+        });
       },
+      onRowDoubleTap: (item) =>
+          Navigator.of(context).pop(widget.delegate.idOf(item)),
+      columns: [
+        for (final col in columns)
+          if (col.width != null)
+            FoxyTableColumn<T>.fixed(
+              label: col.header,
+              width: col.width!,
+              cell: (context, item) => _columnCell(col, item, flex: false),
+            )
+          else
+            FoxyTableColumn<T>.flex(
+              label: col.header,
+              cell: (context, item) => _columnCell(col, item, flex: true),
+            ),
+      ],
     );
+  }
+
+  Widget _columnCell(
+    FoxyEntityPickerColumn<T> col,
+    T item, {
+    required bool flex,
+  }) {
+    if (col.cell != null) return col.cell!(item);
+    final text = col.text!(item);
+    return flex
+        ? Text(text, maxLines: 1, overflow: TextOverflow.ellipsis)
+        : Text(text);
   }
 
   void _doSearch() {

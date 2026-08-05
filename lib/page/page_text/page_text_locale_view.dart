@@ -10,7 +10,7 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -56,49 +56,40 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                 ),
               ],
             ),
-            FoxyShadTable(
+            FoxyDataTable<BriefPageTextLocaleEntity>(
               shrinkWrap: true,
               pinnedRowCount: 1,
-              columnCount: 4,
-              rowCount: items.length,
-              header: (context, index) => ShadTableCell.header(
-                child: Text(['编号', '语言', '文本', 'VerifiedBuild'][index]),
-              ),
-              columnSpanExtent: (index) => switch (index) {
-                0 => const FixedTableSpanExtent(120),
-                1 => const FixedTableSpanExtent(120),
-                2 => const FixedTableSpanExtent(360),
-                3 => const FixedTableSpanExtent(140),
-                _ => null,
-              },
-              builder: (context, vicinity) {
-                if (vicinity.row < 0 || vicinity.row >= items.length) {
-                  return const ShadTableCell(child: SizedBox());
-                }
-                final item = items[vicinity.row];
-                return switch (vicinity.column) {
-                  0 => ShadTableCell(child: Text(item.id.toString())),
-                  1 => ShadTableCell(
-                    child: Text(
-                      kPageTextLocaleOptions[item.locale] ?? item.locale,
-                    ),
+              rows: items,
+              columns: [
+                FoxyTableColumn.fixed(
+                  label: '编号',
+                  width: 120,
+                  cell: (_, item) => Text(item.id.toString()),
+                ),
+                FoxyTableColumn.fixed(
+                  label: '语言',
+                  width: 120,
+                  cell: (_, item) =>
+                      Text(kPageTextLocaleOptions[item.locale] ?? item.locale),
+                ),
+                FoxyTableColumn.fixed(
+                  label: '文本',
+                  width: 360,
+                  cell: (_, item) => Text(
+                    item.text,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  2 => ShadTableCell(
-                    child: Text(
-                      item.text,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  3 => ShadTableCell(
-                    child: Text(item.verifiedBuild.toString()),
-                  ),
-                  _ => const ShadTableCell(child: SizedBox()),
-                };
-              },
-              onRowDoubleTap: (row) => _edit(items[row].key),
-              onRowSecondaryTapDownWithDetails: (row, details) {
-                final key = items[row].key;
+                ),
+                FoxyTableColumn.fixed(
+                  label: 'VerifiedBuild',
+                  width: 140,
+                  cell: (_, item) => Text(item.verifiedBuild.toString()),
+                ),
+              ],
+              onRowDoubleTap: (item) => _edit(item.key),
+              onRowSecondaryTapDownWithDetails: (item, details) {
+                final key = item.key;
                 showFoxyContextMenu(
                   context: context,
                   position: details.globalPosition,

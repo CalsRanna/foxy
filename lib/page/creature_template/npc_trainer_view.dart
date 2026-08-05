@@ -11,12 +11,11 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Trainer tab
 class NpcTrainerView extends StatefulWidget {
@@ -221,69 +220,62 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
     );
 
     final items = viewModel.items.value;
-    final headers = ['技能ID', '技能名称', '金币花费', '技能线', '等级要求'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var width = flexColumnWidth(maxWidth, 480);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final trainer = items[vicinity.row];
+    final table = FoxyDataTable<BriefNpcTrainerEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '技能ID',
+          width: 120,
+          cell: (_, trainer) => Text(trainer.spellId.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '技能名称',
+          cell: (_, trainer) {
             final displayName = trainer.spellSubtext.isNotEmpty
                 ? '${trainer.spellName} - ${trainer.spellSubtext}'
                 : trainer.spellName;
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(trainer.spellId.toString())),
-              1 => ShadTableCell(child: Text(displayName)),
-              2 => ShadTableCell(child: Text(trainer.moneyCost.toString())),
-              3 => ShadTableCell(child: Text(trainer.reqSkillLine.toString())),
-              4 => ShadTableCell(child: Text(trainer.reqLevel.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
+            return Text(displayName);
           },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectedKey.value = items[row].key;
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(items[row].key)) return;
-                    if (!mounted) return;
-                    _showEditDialog();
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(items[row].key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+        ),
+        FoxyTableColumn.fixed(
+          label: '金币花费',
+          width: 120,
+          cell: (_, trainer) => Text(trainer.moneyCost.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '技能线',
+          width: 120,
+          cell: (_, trainer) => Text(trainer.reqSkillLine.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '等级要求',
+          width: 120,
+          cell: (_, trainer) => Text(trainer.reqLevel.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (trainer, details) {
+        viewModel.selectedKey.value = trainer.key;
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                if (!await _load(trainer.key)) return;
+                if (!mounted) return;
+                _showEditDialog();
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(trainer.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -292,7 +284,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);

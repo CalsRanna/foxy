@@ -12,12 +12,11 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class PlayerCreateInfoActionView extends StatefulWidget {
   final int? race;
@@ -223,54 +222,46 @@ class _PlayerCreateInfoActionViewState
 
   Widget _buildTable() {
     final actions = viewModel.items.value;
-    final headers = ['按钮', '动作', '类型'];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        var flexWidth = flexColumnWidth(constraints.maxWidth, 240);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            final item = actions[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.button.toString())),
-              1 => ShadTableCell(child: Text(item.action.toString())),
-              2 => ShadTableCell(child: Text(item.type.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) => switch (index) {
-            0 => FixedTableSpanExtent(120),
-            1 => FixedTableSpanExtent(120),
-            _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
-          },
-          header: (context, index) =>
-              ShadTableCell.header(child: Text(headers[index])),
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(actions[row].key)) return;
-                    if (context.mounted) {
-                      _showDialog(isEditing: true);
-                    }
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(actions[row].key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: actions.length,
-          shrinkWrap: true,
+    return FoxyDataTable<BriefPlayerCreateInfoActionEntity>(
+      shrinkWrap: true,
+      rows: actions,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '按钮',
+          width: 120,
+          cell: (_, item) => Text(item.button.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '动作',
+          width: 120,
+          cell: (_, item) => Text(item.action.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '类型',
+          cell: (_, item) => Text(item.type.toString()),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (item, details) {
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                if (!await _load(item.key)) return;
+                if (!mounted) return;
+                _showDialog(isEditing: true);
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(item.key),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );

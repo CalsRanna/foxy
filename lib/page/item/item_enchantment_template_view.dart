@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_link_key.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
@@ -11,12 +12,11 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Item enchantment tab
 class ItemEnchantmentTemplateView extends StatefulWidget {
@@ -162,70 +162,48 @@ class _ItemEnchantmentTemplateViewState
     );
 
     final items = viewModel.items.value;
-    final headers = ['附魔ID', '名称', '几率'];
 
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var nameWidth = flexColumnWidth(maxWidth, 240);
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final ench = items[vicinity.row];
-
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(ench.ench.toString())),
-              1 => ShadTableCell(
-                child: Text(
-                  ench.name.isNotEmpty ? ench.name : '-',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              2 => ShadTableCell(child: Text('${ench.chance}%')),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(nameWidth),
-              2 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectedKey.value = items[row].key;
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(items[row].key)) return;
-                    if (context.mounted) {
-                      _showEditDialog(context);
-                    }
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(items[row].key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
+    final table = FoxyDataTable<BriefItemEnchantmentTemplateEntity>(
+      shrinkWrap: true,
+      rows: items,
+      columns: [
+        FoxyTableColumn.fixed(
+          label: '附魔ID',
+          width: 120,
+          cell: (_, ench) => Text(ench.ench.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '名称',
+          cell: (_, ench) => Text(ench.name.isNotEmpty ? ench.name : '-'),
+        ),
+        FoxyTableColumn.fixed(
+          label: '几率',
+          width: 120,
+          cell: (_, ench) => Text('${ench.chance}%'),
+        ),
+      ],
+      onRowSecondaryTapDownWithDetails: (ench, details) {
+        final key = ench.key;
+        showFoxyContextMenu(
+          context: context,
+          position: details.globalPosition,
+          items: [
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.squarePen, size: 16),
+              onPressed: () async {
+                viewModel.selectedKey.value = key;
+                if (!await _load(key)) return;
+                if (!mounted) return;
+                _showEditDialog(context);
+              },
+              child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              leading: Icon(LucideIcons.trash, size: 16),
+              onPressed: () => _destroy(viewModel.selectedKey.value!),
+              child: Text('删除'),
+            ),
+          ],
         );
       },
     );
@@ -234,7 +212,7 @@ class _ItemEnchantmentTemplateViewState
       if (viewModel.errorMessage.value != null)
         FoxyInlineError(message: viewModel.errorMessage.value),
       toolbar,
-      layoutBuilder,
+      table,
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
