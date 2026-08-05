@@ -3,6 +3,11 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   plugins:
     - custom_lint
+  errors:
+    # codegen and lint plugin directories import build-time packages
+    # (source_gen, custom_lint_builder, analyzer) from dev_dependencies
+    # by design; they are not runtime dependencies.
+    depend_on_referenced_packages: ignore
 
 custom_lint:
   rules:
