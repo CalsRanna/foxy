@@ -15,6 +15,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// NPC vendor tab
 class NpcVendorView extends StatefulWidget {
@@ -174,7 +175,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
     const headers = ['插槽', '物品名称', '最大数量', '补货时间', '扩展价格'];
     final table = LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.maxWidth - 480;
+        final width = flexColumnWidth(constraints.maxWidth, 480);
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= items.length) {

@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class ScalingStatDistributionListPage extends StatefulWidget {
@@ -104,7 +105,7 @@ class _ScalingStatDistributionListPageState
     final headers = ['编号', '属性分布'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 120;
+        var width = flexColumnWidth(constraints.maxWidth, 120);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

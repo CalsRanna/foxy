@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -227,9 +228,8 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
     return LayoutBuilder(
       builder: (context, constraints) {
         var flexWidth = flexCount > 0
-            ? (constraints.maxWidth - fixedWidthSum) / flexCount
+            ? flexColumnWidth(constraints.maxWidth, fixedWidthSum)
             : 0.0;
-        if (flexWidth < 0) flexWidth = 0;
         return FoxyShadTable(
           queryVersion: _queryVersion,
           columnCount: columns.length,

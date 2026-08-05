@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class QuestTemplateListPage extends StatefulWidget {
@@ -108,7 +109,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
 
     final table = LayoutBuilder(
       builder: (context, constraints) {
-        final flexWidth = constraints.maxWidth - 480;
+        final flexWidth = flexColumnWidth(constraints.maxWidth, 480);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

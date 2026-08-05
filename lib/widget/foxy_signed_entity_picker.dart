@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -363,7 +364,7 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
       constraints: BoxConstraints(maxHeight: tableMaxHeight),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final nameWidth = constraints.maxWidth - 120;
+          final nameWidth = flexColumnWidth(constraints.maxWidth, 120);
           return FoxyShadTable(
             queryVersion: _queryVersion,
             columnCount: 2,

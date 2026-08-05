@@ -15,6 +15,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class SpellItemEnchantmentListPage extends StatefulWidget {
@@ -108,7 +109,7 @@ class _SpellItemEnchantmentListPageState
     final headers = ['编号', '名称', '充能', '效果0', '效果1', '效果2'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 600;
+        var width = flexColumnWidth(constraints.maxWidth, 600);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

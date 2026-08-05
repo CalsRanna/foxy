@@ -17,6 +17,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class PlayerCreateInfoActionView extends StatefulWidget {
   final int? race;
@@ -226,7 +227,7 @@ class _PlayerCreateInfoActionViewState
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        var flexWidth = constraints.maxWidth - 240;
+        var flexWidth = flexColumnWidth(constraints.maxWidth, 240);
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = actions[vicinity.row];

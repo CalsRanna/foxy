@@ -15,6 +15,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class CreatureQuestStarterView extends StatefulWidget {
   final int questId;
@@ -139,7 +140,7 @@ class _CreatureQuestStarterViewState extends State<CreatureQuestStarterView> {
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 120;
+        var width = flexColumnWidth(constraints.maxWidth, 120);
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= items.length) {

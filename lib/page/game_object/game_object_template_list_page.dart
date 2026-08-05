@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class GameObjectTemplateListPage extends StatefulWidget {
@@ -109,7 +110,7 @@ class _GameObjectTemplateListPageState
     final headers = ['编号', '名称', '类型', '尺寸'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = flexColumnWidth(constraints.maxWidth, 360);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

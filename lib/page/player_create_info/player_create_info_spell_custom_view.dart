@@ -18,6 +18,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class PlayerCreateInfoSpellCustomView extends StatefulWidget {
   final int? race;
@@ -106,7 +107,7 @@ class _PlayerCreateInfoSpellCustomViewState
     final spells = viewModel.items.value;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final flexWidth = constraints.maxWidth - 360;
+        final flexWidth = flexColumnWidth(constraints.maxWidth, 360);
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = spells[vicinity.row];

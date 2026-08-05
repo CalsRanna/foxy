@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class ItemExtendedCostListPage extends StatefulWidget {
@@ -103,7 +104,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
     final headers = ['编号', '荣誉点数', '竞技场点数', '物品列表'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = flexColumnWidth(constraints.maxWidth, 360);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

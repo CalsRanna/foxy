@@ -15,6 +15,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class TalentListPage extends StatefulWidget {
@@ -107,7 +108,7 @@ class _TalentListPageState extends State<TalentListPage> {
     final headers = ['编号', '天赋页', '层', '列', '第 1 级法术'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 480;
+        var width = flexColumnWidth(constraints.maxWidth, 480);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

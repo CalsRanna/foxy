@@ -19,6 +19,7 @@ import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class ItemTemplateListPage extends StatefulWidget {
@@ -138,7 +139,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     final headers = ['编号', '名称', '类别', '子类别', '佩戴位置', '物品等级', '需求等级'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 720;
+        var width = flexColumnWidth(constraints.maxWidth, 720);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

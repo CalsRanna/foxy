@@ -15,6 +15,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 class SpellRankView extends StatefulWidget {
   final int spellId;
@@ -162,7 +163,7 @@ class _SpellRankViewState extends State<SpellRankView> {
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var maxWidth = constraints.maxWidth;
-        var flexWidth = maxWidth - 120;
+        var flexWidth = flexColumnWidth(maxWidth, 120);
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= items.length) {

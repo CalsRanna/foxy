@@ -20,6 +20,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Tab 3: gossip_menu_option dual-mode (list / form)
 class GossipMenuOptionView extends StatefulWidget {
@@ -292,7 +293,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     final headers = ['编号', '图标', '文本', '类型', 'NPC标识', '子选项'];
     final table = LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.maxWidth - 600;
+        final width = flexColumnWidth(constraints.maxWidth, 600);
         return FoxyShadTable(
           shrinkWrap: true,
           columnCount: headers.length,

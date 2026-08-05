@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -96,8 +97,10 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
             // Flexible column-width scheme: fixed columns 120+160, the
             // remaining width goes to the name column.
             const fixedWidthSum = 120.0 + 160.0;
-            var flexWidth = constraints.maxWidth - fixedWidthSum;
-            if (flexWidth < 0) flexWidth = 0;
+            final flexWidth = flexColumnWidth(
+              constraints.maxWidth,
+              fixedWidthSum,
+            );
             return ShadTable(
               columnCount: 3,
               rowCount: flags.length,

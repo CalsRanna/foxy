@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class GlyphPropertyListPage extends StatefulWidget {
@@ -102,7 +103,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
     final headers = ['编号', '法术', '雕文类型', '法术图标'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 120;
+        var width = flexColumnWidth(constraints.maxWidth, 120);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

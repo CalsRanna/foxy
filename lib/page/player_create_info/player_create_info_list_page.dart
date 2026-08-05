@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class PlayerCreateInfoListPage extends StatefulWidget {
@@ -142,7 +143,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
-            var flexWidth = constraints.maxWidth - 480;
+            var flexWidth = flexColumnWidth(constraints.maxWidth, 480);
             return switch (index) {
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(120),

@@ -16,6 +16,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 /// Item enchantment tab
 class ItemEnchantmentTemplateView extends StatefulWidget {
@@ -166,7 +167,7 @@ class _ItemEnchantmentTemplateViewState
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var maxWidth = constraints.maxWidth;
-        var nameWidth = maxWidth - 240;
+        var nameWidth = flexColumnWidth(maxWidth, 240);
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= items.length) {

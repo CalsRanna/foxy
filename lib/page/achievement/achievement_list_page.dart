@@ -15,6 +15,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class AchievementListPage extends StatefulWidget {
@@ -106,7 +107,7 @@ class _AchievementListPageState extends State<AchievementListPage> {
     final headers = ['编号', '标题', '描述', '奖励'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 120;
+        var width = flexColumnWidth(constraints.maxWidth, 120);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,

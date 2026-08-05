@@ -17,6 +17,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:foxy/infrastructure/util/table_layout_util.dart';
 
 @RoutePage()
 class SmartScriptListPage extends StatefulWidget {
@@ -109,7 +110,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var commentWidth = constraints.maxWidth - 600;
+        var commentWidth = flexColumnWidth(constraints.maxWidth, 600);
         return FoxyShadTable(
           queryVersion: viewModel.queryVersion.value,
           loading: viewModel.loading.value,
