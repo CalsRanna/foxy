@@ -107,6 +107,11 @@ jobs:
             Write-Output "fetched previous manifest"
           } else {
             Write-Output "no previous manifest (first release)"
+            # First CI release: latest.yaml does not exist yet. The manifest
+            # script tolerates a missing existing.yaml (see
+            # make_update_manifest.dart), so only create an empty placeholder
+            # for the --existing flag.
+            New-Item -ItemType File -Path existing.yaml | Out-Null
           }
 
       - name: Generate update manifest
