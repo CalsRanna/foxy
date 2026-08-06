@@ -143,11 +143,12 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 ## Testing
 
-- **Contract tests** (`*_contract_test.dart`, one per module): verify generated code matches annotation declarations (entities, filters, repositories, locales).
-- **Database editing contract tests** (`*_database_editing_contract_test.dart`): run against a real MySQL; **auto-skip when the DB isn't configured** (e.g. `dbc_mysql_integration_test.dart`).
+- **Game data tests** (`test/game_data/*_game_data_test.dart`, one per module): verify in-app game-data definitions (enums, flags, column layouts, defaults) match the real AzerothCore 3.3.5 definitions.
+- **Database editing tests** (`test/database_editing/*_database_editing_test.dart`): editing behavior (store/update/destroy + exception translation) against a real MySQL; **auto-skip when the DB isn't configured**.
+- **Identity tests** (`test/identity/*_identity_test.dart`): identity/state-preservation semantics (activity-log row IDs, locale draft vs original, route breadcrumbs).
 - **Codegen tests**: `packages/foxy_generator/test/` — generator unit tests (`dart test` from that package, no Flutter runtime needed); build in-memory sources with `build_test`'s `testBuilder`.
 - **Other**: DBC codec/import/export, BLP decoder + MPQ extraction (fixtures in `test/fixture/icons/`), form controllers, widget behavior, use-case tests.
-- New annotations/generators **require** contract tests (see `doc/codegen/extending.md` §d).
+- New annotations/generators **require** codegen tests (see `doc/codegen/extending.md` §d).
 
 ## Working Here — Practical Tips
 

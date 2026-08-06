@@ -110,7 +110,7 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 ### d. 测试与契约测试
 
 - 至少一个手写样例文件 + 断言生成代码形状的测试(参考 `test/` 下现有生成器测试);
-- 若有「注解声明 ↔ 生成代码」一致性契约(如现有各模块的 `*_contract_test.dart`),把新生成器的声明纳入。
+- 注解声明 ↔ 生成代码的一致性由 `packages/foxy_generator/test/` 的生成器单测承担,新增生成器时把新声明纳入。
 
 ## 3. 复用模式(重要)
 
@@ -148,10 +148,11 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 
 ## 5. 测试与回归
 
-- 跑全部测试:`flutter test`(含契约测试、生成代码行为测试、数据库集成测试,未配置环境自动跳过);
+- 跑全部测试:`flutter test`(含游戏数据对照、生成代码行为、数据库集成测试,未配置环境自动跳过);
 - 关键回归点:
-  - 所有 `*_contract_test.dart`(注解声明 ↔ 生成代码一致性);
-  - `*_database_editing_contract_test.dart`(真实 MySQL 上的编辑行为,覆盖 store/update/destroy 的异常翻译);
+  - `test/game_data/*_game_data_test.dart`(项目内游戏数据定义与 AzerothCore 3.3.5 的一致性);
+  - `test/database_editing/*_database_editing_test.dart`(真实 MySQL 上的编辑行为,覆盖 store/update/destroy 的异常翻译);
+  - `packages/foxy_generator/test/`(生成器单测,注解声明 ↔ 生成代码一致性);
   - 直接调用生成方法的手写覆写(`@override`)是否仍编译。
 - 生成器自身没有独立单元测试,验证方式 = 全量重生成 + 全量测试。
 
