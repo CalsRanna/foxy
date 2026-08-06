@@ -14,7 +14,7 @@ import 'package:test/test.dart';
 /// - CJK regex range fallback (Extension A / full-width punctuation
 ///   misses).
 void main() {
-  // The regex kept in sync with lib/lint/rules/no_chinese_throw.dart.
+  // The regex kept in sync with packages/foxy_lint/lib/rules/no_chinese_throw.dart.
   final cjk = RegExp(r'[㐀-鿿＀-￯]');
 
   String? findViolation(String source) {

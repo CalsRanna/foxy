@@ -1,0 +1,17 @@
+name: foxy_lint
+description: "Foxy 的 custom_lint 插件 — 项目专属 lint 规则。"
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  # <8.4.0: 与 foxy_generator 保持一致(source_gen 3.1.0 不兼容 analyzer 8.4+)
+  analyzer: ">=8.1.1 <8.4.0"
+  custom_lint_builder: ^0.8.1
+  path: ^1.9.1
+
+dev_dependencies:
+  test: ^1.30.0
