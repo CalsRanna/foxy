@@ -5,10 +5,10 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'naming.dart';
-import 'repository_filter_model.dart';
-import 'repository_filter_reader.dart';
-import 'repository_model.dart';
+import 'package:foxy_generator/src/naming.dart';
+import 'package:foxy_generator/src/repository_filter_model.dart';
+import 'package:foxy_generator/src/repository_filter_reader.dart';
+import 'package:foxy_generator/src/repository_model.dart';
 
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyBriefEntity',

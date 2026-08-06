@@ -2,7 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
-import 'file_scopes.dart';
+import 'package:foxy_lint/rules/file_scopes.dart';
 
 const _flexCode = LintCode(
   name: 'no_flex_in_view',

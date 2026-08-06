@@ -1,4 +1,4 @@
-import 'list_model.dart';
+import 'package:foxy_generator/src/list_model.dart';
 
 final class ListEmitter {
   const ListEmitter();

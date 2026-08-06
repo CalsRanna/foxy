@@ -1,7 +1,7 @@
 import 'package:source_gen/source_gen.dart';
 
-import 'dart_literal.dart';
-import 'entity_model.dart';
+import 'package:foxy_generator/src/dart_literal.dart';
+import 'package:foxy_generator/src/entity_model.dart';
 
 final class EntityEmitter {
   const EntityEmitter();

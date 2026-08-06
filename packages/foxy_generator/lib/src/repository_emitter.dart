@@ -1,7 +1,7 @@
 import 'package:foxy_annotation/repository_annotations.dart';
-import 'dart_literal.dart';
-import 'naming.dart';
-import 'repository_model.dart';
+import 'package:foxy_generator/src/dart_literal.dart';
+import 'package:foxy_generator/src/naming.dart';
+import 'package:foxy_generator/src/repository_model.dart';
 
 final class RepositoryEmitter {
   const RepositoryEmitter();

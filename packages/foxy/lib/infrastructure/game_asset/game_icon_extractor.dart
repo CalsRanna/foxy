@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
-import 'game_icon_paths.dart';
-import 'game_mpq_source.dart';
+import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
+import 'package:foxy/infrastructure/game_asset/game_mpq_source.dart';
 
 /// Per-file count progress.
 class GameIconExtractCount extends GameIconExtractProgress {

@@ -1,4 +1,4 @@
-import 'repository_filter_model.dart';
+import 'package:foxy_generator/src/repository_filter_model.dart';
 
 final class RepositoryGenerationModel {
   final String entityClassName;

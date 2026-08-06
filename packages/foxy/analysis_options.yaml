@@ -16,4 +16,6 @@ custom_lint:
     - no_chinese_throw: true
 
 linter:
-  rules: {}
+  rules:
+    # 统一使用包绝对路径导入(package:...),禁止相对路径导入
+    always_use_package_imports: true

@@ -1,5 +1,5 @@
-import 'dart_literal.dart';
-import 'repository_filter_model.dart';
+import 'package:foxy_generator/src/dart_literal.dart';
+import 'package:foxy_generator/src/repository_filter_model.dart';
 
 final class RepositoryFilterEmitter {
   const RepositoryFilterEmitter();

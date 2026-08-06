@@ -6,9 +6,9 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:foxy_annotation/entity_annotations.dart';
-import 'entity_model.dart';
-import 'entity_validator.dart';
-import 'naming.dart';
+import 'package:foxy_generator/src/entity_model.dart';
+import 'package:foxy_generator/src/entity_validator.dart';
+import 'package:foxy_generator/src/naming.dart';
 
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyBriefEntity',

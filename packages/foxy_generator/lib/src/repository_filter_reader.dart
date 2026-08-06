@@ -6,8 +6,8 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:foxy_annotation/repository_annotations.dart';
-import 'naming.dart';
-import 'repository_filter_model.dart';
+import 'package:foxy_generator/src/naming.dart';
+import 'package:foxy_generator/src/repository_filter_model.dart';
 
 final class RepositoryFilterReader {
   const RepositoryFilterReader();

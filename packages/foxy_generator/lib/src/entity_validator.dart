@@ -3,7 +3,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'entity_model.dart';
+import 'package:foxy_generator/src/entity_model.dart';
 
 final class EntityValidator {
   const EntityValidator();

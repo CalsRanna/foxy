@@ -1,7 +1,7 @@
 import 'package:source_gen/source_gen.dart';
 
-import 'dart_literal.dart';
-import 'form_model.dart';
+import 'package:foxy_generator/src/dart_literal.dart';
+import 'package:foxy_generator/src/form_model.dart';
 
 final class FormEmitter {
   const FormEmitter();

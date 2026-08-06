@@ -5,8 +5,8 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:foxy_annotation/list_annotations.dart';
-import 'list_emitter.dart';
-import 'list_reader.dart';
+import 'package:foxy_generator/src/list_emitter.dart';
+import 'package:foxy_generator/src/list_reader.dart';
 
 final class FoxyListViewModelGenerator
     extends GeneratorForAnnotation<FoxyListViewModel> {

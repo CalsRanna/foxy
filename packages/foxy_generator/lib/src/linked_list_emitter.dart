@@ -1,7 +1,7 @@
-import 'form_emitter.dart';
-import 'form_model.dart';
-import 'linked_list_model.dart';
-import 'naming.dart';
+import 'package:foxy_generator/src/form_emitter.dart';
+import 'package:foxy_generator/src/form_model.dart';
+import 'package:foxy_generator/src/linked_list_model.dart';
+import 'package:foxy_generator/src/naming.dart';
 
 final class LinkedListEmitter {
   const LinkedListEmitter();

@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'blp_decoder.dart';
+import 'package:foxy/infrastructure/game_asset/blp_decoder.dart';
 
 /// In-memory cache for BLP game icons: file → decode → `ui.Image` reuse.
 ///

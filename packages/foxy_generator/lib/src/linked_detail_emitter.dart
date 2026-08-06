@@ -1,6 +1,6 @@
-import 'form_emitter.dart';
-import 'form_model.dart';
-import 'linked_detail_model.dart';
+import 'package:foxy_generator/src/form_emitter.dart';
+import 'package:foxy_generator/src/form_model.dart';
+import 'package:foxy_generator/src/linked_detail_model.dart';
 
 final class LinkedDetailEmitter {
   const LinkedDetailEmitter();

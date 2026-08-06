@@ -5,8 +5,8 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'form_reader.dart';
-import 'linked_list_model.dart';
+import 'package:foxy_generator/src/form_reader.dart';
+import 'package:foxy_generator/src/linked_list_model.dart';
 
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',

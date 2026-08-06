@@ -5,8 +5,8 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:foxy_annotation/form_annotations.dart';
-import 'linked_list_emitter.dart';
-import 'linked_list_reader.dart';
+import 'package:foxy_generator/src/linked_list_emitter.dart';
+import 'package:foxy_generator/src/linked_list_reader.dart';
 
 final class FoxyLinkedListViewModelGenerator
     extends GeneratorForAnnotation<FoxyLinkedListViewModel> {

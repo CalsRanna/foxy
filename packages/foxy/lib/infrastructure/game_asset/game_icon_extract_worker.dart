@@ -1,7 +1,7 @@
 import 'dart:isolate';
 
-import 'game_icon_extractor.dart';
-import 'game_mpq_source.dart';
+import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
+import 'package:foxy/infrastructure/game_asset/game_mpq_source.dart';
 
 /// Background-isolate entry point: runs the icon extraction and reports
 /// progress/results via [GameIconExtractWorkerArgs.sendPort]. Message

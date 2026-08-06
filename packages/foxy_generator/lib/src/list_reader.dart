@@ -6,8 +6,8 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:foxy_annotation/repository_annotations.dart';
-import 'list_model.dart';
-import 'naming.dart';
+import 'package:foxy_generator/src/list_model.dart';
+import 'package:foxy_generator/src/naming.dart';
 
 const _fullEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullEntity',

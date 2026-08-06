@@ -1,4 +1,4 @@
-import 'form_model.dart';
+import 'package:foxy_generator/src/form_model.dart';
 
 final class LinkedDetailGenerationModel {
   /// Hand-written Linked Detail ViewModel class name, e.g.

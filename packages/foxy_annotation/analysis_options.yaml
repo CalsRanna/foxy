@@ -1,1 +1,6 @@
 include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    # 统一使用包绝对路径导入(package:...),禁止相对路径导入
+    always_use_package_imports: true

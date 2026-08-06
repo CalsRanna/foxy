@@ -5,8 +5,8 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'form_reader.dart';
-import 'linked_detail_model.dart';
+import 'package:foxy_generator/src/form_reader.dart';
+import 'package:foxy_generator/src/linked_detail_model.dart';
 
 const _repositoryChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/repository_annotations.dart#FoxyRepository',
