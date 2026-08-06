@@ -1,5 +1,0 @@
-import 'linked_list_generator_vm.dart'
-    if (dart.library.ui) 'generator_flutter_skip.dart'
-    as suite;
-
-void main() => suite.main();

@@ -1,0 +1,11 @@
+name: foxy_annotation
+description: "Foxy 代码生成的注解定义(Entity / Repository / ViewModel)。"
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  meta: ^1.17.0
