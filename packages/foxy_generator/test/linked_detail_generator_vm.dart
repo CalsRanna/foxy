@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:foxy_generator/builder.dart';
 import 'package:test/test.dart';
+
+import 'generator_test_support.dart';
 
 void main() {
   test('FoxyLinkedDetailViewModel 生成单行关联编辑器骨架', () async {
@@ -194,14 +194,8 @@ class CompositeLinkedDetailViewModel
 
 /// Reads the real annotation source directly instead of keeping a
 /// hand-copied duplicate in tests.
-final formAnnotationSource = File(
-  '../foxy_annotation/lib/form_annotations.dart',
-).readAsStringSync();
+final formAnnotationSource = foxyAnnotationSource('form_annotations.dart');
 
-final entityAnnotationSource = File(
-  '../foxy_annotation/lib/entity_annotations.dart',
-).readAsStringSync();
+final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
-final repositoryAnnotationSource = File(
-  '../foxy_annotation/lib/repository_annotations.dart',
-).readAsStringSync();
+final repositoryAnnotationSource = foxyAnnotationSource('repository_annotations.dart');

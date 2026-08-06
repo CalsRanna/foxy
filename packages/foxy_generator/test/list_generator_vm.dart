@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:foxy_generator/builder.dart';
 import 'package:test/test.dart';
+
+import 'generator_test_support.dart';
 
 void main() {
   test('FoxyListViewModel 生成标准列表样板(单 key int + copy)', () async {
@@ -416,14 +416,8 @@ class SampleListViewModel
 /// Copies silently drift when annotations gain parameters or change
 /// defaults, letting tests pass against stale definitions. Tests run from
 /// the repository root (see AGENTS.md).
-final entityAnnotationSource = File(
-  '../foxy_annotation/lib/entity_annotations.dart',
-).readAsStringSync();
+final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
-final listAnnotationSource = File(
-  '../foxy_annotation/lib/list_annotations.dart',
-).readAsStringSync();
+final listAnnotationSource = foxyAnnotationSource('list_annotations.dart');
 
-final repositoryAnnotationSource = File(
-  '../foxy_annotation/lib/repository_annotations.dart',
-).readAsStringSync();
+final repositoryAnnotationSource = foxyAnnotationSource('repository_annotations.dart');

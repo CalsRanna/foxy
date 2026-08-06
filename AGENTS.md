@@ -145,7 +145,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 - **Contract tests** (`*_contract_test.dart`, one per module): verify generated code matches annotation declarations (entities, filters, repositories, locales).
 - **Database editing contract tests** (`*_database_editing_contract_test.dart`): run against a real MySQL; **auto-skip when the DB isn't configured** (e.g. `dbc_mysql_integration_test.dart`).
-- **Codegen tests**: `packages/foxy_generator/test/` — generator unit tests (`dart test` from that package, no Flutter runtime needed); use `test/support/local_dart_library_source.dart` to build in-memory sources.
+- **Codegen tests**: `packages/foxy_generator/test/` — generator unit tests (`dart test` from that package, no Flutter runtime needed); build in-memory sources with `build_test`'s `testBuilder`.
 - **Other**: DBC codec/import/export, BLP decoder + MPQ extraction (fixtures in `test/fixture/icons/`), form controllers, widget behavior, use-case tests.
 - New annotations/generators **require** contract tests (see `doc/codegen/extending.md` §d).
 

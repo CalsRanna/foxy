@@ -101,7 +101,7 @@ void main() {
                 contains(
                   "active: json['active'] == null\n"
                   "          ? false\n"
-                  "          : (json['active'] as num).toInt() == 1",
+                  "          : (json['active'] == true || json['active'] == 1)",
                 ),
                 contains("(json['score'] as num?)?.toDouble() ?? 0.0"),
                 contains("json['localeName']?.toString() ?? ''"),

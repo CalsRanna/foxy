@@ -48,10 +48,15 @@ jobs:
         working-directory: packages/foxy
         run: flutter test
 
-      # NOTE: codegen tests (test/infrastructure/codegen/) are currently
-      # excluded from the release gate: they fail on pre-existing
-      # FoxyBriefField projection bugs. Tracked separately; re-enable once
-      # the generators are fixed.
+      # Workspace members: generator and lint plugin tests run as plain
+      # Dart (no Flutter runtime), so they have their own gate steps.
+      - name: Test generator package
+        working-directory: packages/foxy_generator
+        run: dart test
+
+      - name: Test lint package
+        working-directory: packages/foxy_lint
+        run: dart test
 
   release-windows:
     needs: check
@@ -99,13 +104,15 @@ jobs:
           dart compile exe tool/updater/updater_main.dart
           -o build/windows/x64/runner/Release/foxy_updater.exe
 
+      # 后续步骤(Package zip / Fetch previous manifest / Generate update
+      # manifest)统一在 packages/foxy 下运行:zip、latest.yaml、notes 都
+      # 落在此目录,由 Publish release 从同一目录读取。
       - name: Package zip
-        # zip 输出到仓库根(供 Publish release 步骤使用);build 产物在
-        # packages/foxy 下。
+        working-directory: packages/foxy
         shell: pwsh
         run: >-
           Compress-Archive
-          -Path packages/foxy/build/windows/x64/runner/Release/*
+          -Path build/windows/x64/runner/Release/*
           -DestinationPath foxy-${{ steps.version.outputs.zip-version }}.zip
           -CompressionLevel Optimal
 
@@ -143,6 +150,7 @@ jobs:
           --existing existing.yaml
 
       - name: Publish release
+        working-directory: packages/foxy
         env:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh

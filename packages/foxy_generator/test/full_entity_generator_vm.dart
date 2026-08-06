@@ -25,7 +25,7 @@ void main() {
                 contains(
                   "json['Enabled'] == null\n"
                   '          ? false\n'
-                  "          : (json['Enabled'] as num).toInt() == 1",
+                  "          : (json['Enabled'] == true || json['Enabled'] == 1)",
                 ),
                 contains('String? description'),
                 contains('CodegenSampleEntity copyWith'),

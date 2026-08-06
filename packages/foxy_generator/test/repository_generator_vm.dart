@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:foxy_generator/builder.dart';
 import 'package:test/test.dart';
+
+import 'generator_test_support.dart';
 
 void main() {
   test('FoxyRepository 生成标准公有 CRUD 与标量物理 Key 定位', () async {
@@ -566,17 +566,11 @@ class LocaleRepository
 }
 ''';
 
-final repositoryMixinSource = File(
-  '../foxy/lib/repository/repository_mixin.dart',
-).readAsStringSync();
+final repositoryMixinSource = foxyAppSource('repository/repository_mixin.dart');
 
-final dbcLocaleMixinSource = File(
-  '../foxy/lib/repository/dbc_locale_repository_mixin.dart',
-).readAsStringSync();
+final dbcLocaleMixinSource = foxyAppSource('repository/dbc_locale_repository_mixin.dart');
 
-final entityAnnotationSource = File(
-  '../foxy_annotation/lib/entity_annotations.dart',
-).readAsStringSync();
+final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 /// Reads the real annotation source directly instead of keeping a
 /// hand-copied duplicate in tests.
@@ -584,6 +578,4 @@ final entityAnnotationSource = File(
 /// Copies silently drift when annotations gain parameters or change
 /// defaults, letting tests pass against stale definitions. Tests run from
 /// the repository root (see AGENTS.md).
-final repositoryAnnotationSource = File(
-  '../foxy_annotation/lib/repository_annotations.dart',
-).readAsStringSync();
+final repositoryAnnotationSource = foxyAnnotationSource('repository_annotations.dart');
