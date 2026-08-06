@@ -1,3 +1,5 @@
+import 'package:foxy_generator/src/naming.dart';
+
 /// The controller intent of a form field.
 enum FormFieldKind {
   /// Inferred from the field's Dart type (Int/Double/String/Bool).
@@ -75,14 +77,8 @@ final class FormGenerationModel {
   });
 
   /// `TalentEntity` → `talent` (matches the Repository's entity parameter
-  /// naming).
-  String get entityCamelName {
-    final base = entityClassName.substring(
-      0,
-      entityClassName.length - 'Entity'.length,
-    );
-    return '${base[0].toLowerCase()}${base.substring(1)}';
-  }
+  /// naming; reserved words get a trailing underscore).
+  String get entityCamelName => entityParameterName(entityClassName);
 
   String get baseName =>
       entityClassName.substring(0, entityClassName.length - 'Entity'.length);

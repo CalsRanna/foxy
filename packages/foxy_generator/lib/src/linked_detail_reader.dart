@@ -60,6 +60,50 @@ final class LinkedDetailReader {
       );
     }
 
+    // Handshake with the bound Repository: the get-or-create skeleton calls
+    // `getXxx(linkKey)` (by primary key) and `createXxx(linkKey)`. When the
+    // repository declares linkKey it must be exactly the entity's single key
+    // field — otherwise the generated code would query by the wrong column
+    // and silently mismatch. When it declares *no* linkKey, the repository
+    // supplies its own hand-written create (a compile-time contract), which
+    // is the safe fallback.
+    final repositoryAnnotation = ConstantReader(repositoryAnnotations.single);
+    final declaredLinkKeys = <String>[];
+    final linkKeyReader = repositoryAnnotation.peek('linkKey');
+    if (linkKeyReader != null && !linkKeyReader.isNull) {
+      // `isList` guards the type before `listValue` (which throws a raw
+      // StateError on a non-List like `linkKey: 'entry'`). An unset
+      // optional list field surfaces as an *empty* list.
+      final list = linkKeyReader.isList ? linkKeyReader.listValue : null;
+      if (list == null || list.any((value) => value.toStringValue() == null)) {
+        _fail(
+          '$repositoryClassName 的 @FoxyRepository linkKey 必须是 '
+              'String 列表。',
+          repositoryElement,
+          'linkKey 使用字符串字面量列表，例如 linkKey: [\'entry\']。',
+        );
+      }
+      declaredLinkKeys.addAll(list.map((value) => value.toStringValue()!));
+    }
+    if (declaredLinkKeys.length > 1) {
+      _fail(
+        '$repositoryClassName 声明了多个 linkKey（$declaredLinkKeys），'
+            'Linked Detail 只支持单一 linkKey。',
+        repositoryElement,
+        'Linked Detail 绑定单主键实体，linkKey 只声明一个。',
+      );
+    }
+    if (declaredLinkKeys.length == 1 &&
+        declaredLinkKeys.single != singleKeyFieldName) {
+      _fail(
+        '$repositoryClassName 的 linkKey（${declaredLinkKeys.single}）'
+            '必须等于实体主键 $singleKeyFieldName。',
+        repositoryElement,
+        '给 @FoxyRepository 声明 linkKey: [\'$singleKeyFieldName\']，'
+            '或移除 linkKey 并手写 create 方法。',
+      );
+    }
+
     return LinkedDetailGenerationModel(
       className: form.className,
       entityClassName: form.entityClassName,

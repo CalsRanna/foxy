@@ -101,7 +101,7 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeQuestInfo(QuestInfoEntity questInfo) async {
+  Future<int> storeQuestInfo(QuestInfoEntity questInfo) async {
     if (questInfo.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -120,7 +120,7 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         await laconic.table('foxy.dbc_quest_info').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_quest_info');
@@ -128,6 +128,7 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         rethrow;
       }
     }
+    return questInfo.id;
   }
 
   Future<void> updateQuestInfo(

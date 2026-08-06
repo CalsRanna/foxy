@@ -31,7 +31,7 @@ mixin _CreatureQuestStarterRepositoryMixin on RepositoryMixin {
       id: await nextMaxPlusOne(
         'creature_queststarter',
         '`id`',
-        where: {'quest': quest},
+        where: {'`quest`': quest},
       ),
     );
   }

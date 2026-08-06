@@ -62,7 +62,7 @@ mixin _AchievementCategoryRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeAchievementCategory(
+  Future<int> storeAchievementCategory(
     AchievementCategoryEntity achievementCategory,
   ) async {
     if (achievementCategory.id <= 0) {
@@ -83,7 +83,7 @@ mixin _AchievementCategoryRepositoryMixin
         await laconic.table('foxy.dbc_achievement_category').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -93,6 +93,7 @@ mixin _AchievementCategoryRepositoryMixin
         rethrow;
       }
     }
+    return achievementCategory.id;
   }
 
   Future<void> updateAchievementCategory(

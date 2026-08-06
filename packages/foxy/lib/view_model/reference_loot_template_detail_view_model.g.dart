@@ -74,11 +74,12 @@ mixin _ReferenceLootTemplateDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeReferenceLootTemplate(candidate);
+        final _ = await _repository.storeReferenceLootTemplate(candidate);
+        persistedKey.value = ReferenceLootTemplateKey.fromEntity(candidate);
       } else {
         await _repository.updateReferenceLootTemplate(originalKey, candidate);
+        persistedKey.value = ReferenceLootTemplateKey.fromEntity(candidate);
       }
-      persistedKey.value = ReferenceLootTemplateKey.fromEntity(candidate);
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

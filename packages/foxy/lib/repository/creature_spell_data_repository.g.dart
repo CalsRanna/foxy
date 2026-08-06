@@ -50,7 +50,7 @@ mixin _CreatureSpellDataRepositoryMixin on RepositoryMixin {
     return CreatureSpellDataEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeCreatureSpellData(
+  Future<int> storeCreatureSpellData(
     CreatureSpellDataEntity creatureSpellData,
   ) async {
     if (creatureSpellData.id <= 0) {
@@ -71,7 +71,7 @@ mixin _CreatureSpellDataRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_creature_spell_data').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -81,6 +81,7 @@ mixin _CreatureSpellDataRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return creatureSpellData.id;
   }
 
   Future<void> updateCreatureSpellData(

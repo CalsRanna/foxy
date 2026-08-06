@@ -34,6 +34,15 @@ final class ExtractGameIconsUseCase {
   /// Output directory for extracted files (tests inject a temp directory;
   /// default is data/icon under the runtime working directory).
   final String outputDir;
+
+  /// Grace period after a cancel request before the worker isolate is
+  /// force-killed. Injectable so tests can exercise the fallback quickly.
+  final Duration cancelGraceMs;
+
+  /// Isolate entry point; injectable so tests can script worker timing
+  /// deterministically instead of racing real extraction speed.
+  final GameIconExtractWorkerEntry workerEntry;
+
   var _cancelGeneration = 0;
   var _executing = false;
   Isolate? _activeIsolate;
@@ -41,9 +50,14 @@ final class ExtractGameIconsUseCase {
 
   Completer<GameIconExtractionResult>? _activeCompleter;
 
-  ExtractGameIconsUseCase({required ConfigUtil configUtil, String? outputDir})
-    : _configUtil = configUtil,
-      outputDir = outputDir ?? GameIconPaths.iconDir;
+  ExtractGameIconsUseCase({
+    required ConfigUtil configUtil,
+    String? outputDir,
+    this.cancelGraceMs = const Duration(milliseconds: 5000),
+    GameIconExtractWorkerEntry? workerEntry,
+  }) : _configUtil = configUtil,
+       outputDir = outputDir ?? GameIconPaths.iconDir,
+       workerEntry = workerEntry ?? runGameIconExtractWorker;
 
   bool get isRunning => _executing;
 
@@ -51,14 +65,20 @@ final class ExtractGameIconsUseCase {
     _cancelGeneration++;
     _controlPort?.send('cancel');
     // Graceful cancel: the worker checks a flag per file and terminates
-    // itself. A 5-second fallback force-kills, covering extremes where the
-    // worker hangs (e.g. a corrupted archive stalling for a long time).
+    // itself. A fallback force-kills, covering extremes where the worker
+    // hangs (e.g. a corrupted archive stalling for a long time).
+    // The isolate is snapshotted: the fallback must never kill a *newer*
+    // task started within the grace window (cancel → retry is a natural
+    // user sequence).
     final completer = _activeCompleter;
+    final isolateToKill = _activeIsolate;
     if (completer != null && !completer.isCompleted) {
-      Future.delayed(const Duration(seconds: 5), () {
-        _activeIsolate?.kill(priority: Isolate.immediate);
-        _activeIsolate = null;
-        _controlPort = null;
+      Future.delayed(cancelGraceMs, () {
+        if (identical(isolateToKill, _activeIsolate)) {
+          isolateToKill?.kill(priority: Isolate.immediate);
+          _activeIsolate = null;
+          _controlPort = null;
+        }
         if (!completer.isCompleted) completer.complete(_cancelledResult);
       });
     }
@@ -114,7 +134,7 @@ final class ExtractGameIconsUseCase {
     _activeCompleter = completer;
 
     final isolate = await Isolate.spawn(
-      runGameIconExtractWorker,
+      workerEntry,
       (
         sendPort: receivePort.sendPort,
         clientDir: clientDir,
@@ -163,7 +183,19 @@ final class ExtractGameIconsUseCase {
         ),
       );
     });
-    exitPort.listen((_) {});
+    // Fallback settle: a force-killed isolate never delivers a result
+    // message, so the exit notification guarantees every death has a
+    // terminal state. No-op when the result already settled.
+    // The window matters: a healthy worker sends `result` just before
+    // exiting, and the two ports race — without the delay a fast exit
+    // message would overwrite a successful result with the cancelled one.
+    exitPort.listen((_) {
+      Future<void>.delayed(const Duration(milliseconds: 100), () {
+        if (!completer.isCompleted) {
+          completer.complete(_cancelledResult);
+        }
+      });
+    });
 
     final result = await completer.future;
     await messageSubscription.cancel();
@@ -178,3 +210,9 @@ final class ExtractGameIconsUseCase {
     return result;
   }
 }
+
+/// Isolate entry point for [ExtractGameIconsUseCase]; defaults to the real
+/// [runGameIconExtractWorker]. Injectable for deterministic tests.
+typedef GameIconExtractWorkerEntry = Future<void> Function(
+  GameIconExtractWorkerArgs args,
+);

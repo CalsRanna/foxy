@@ -52,7 +52,7 @@ mixin _SoundProviderPreferencesRepositoryMixin on RepositoryMixin {
     return SoundProviderPreferencesEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSoundProviderPreferences(
+  Future<int> storeSoundProviderPreferences(
     SoundProviderPreferencesEntity soundProviderPreferences,
   ) async {
     if (soundProviderPreferences.id <= 0) {
@@ -73,7 +73,7 @@ mixin _SoundProviderPreferencesRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_sound_provider_preferences').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -83,6 +83,7 @@ mixin _SoundProviderPreferencesRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return soundProviderPreferences.id;
   }
 
   Future<void> updateSoundProviderPreferences(

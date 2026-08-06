@@ -94,7 +94,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> storeQuestTemplate(QuestTemplateEntity questTemplate) async {
+  Future<int> storeQuestTemplate(QuestTemplateEntity questTemplate) async {
     if (questTemplate.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -113,7 +113,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
         await laconic.table('quest_template').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in quest_template');
@@ -121,6 +121,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return questTemplate.id;
   }
 
   Future<void> updateQuestTemplate(

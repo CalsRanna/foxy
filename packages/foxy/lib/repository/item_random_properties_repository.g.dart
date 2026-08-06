@@ -62,7 +62,7 @@ mixin _ItemRandomPropertiesRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeItemRandomProperties(
+  Future<int> storeItemRandomProperties(
     ItemRandomPropertiesEntity itemRandomProperties,
   ) async {
     if (itemRandomProperties.id <= 0) {
@@ -83,7 +83,7 @@ mixin _ItemRandomPropertiesRepositoryMixin
         await laconic.table('foxy.dbc_item_random_properties').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -93,6 +93,7 @@ mixin _ItemRandomPropertiesRepositoryMixin
         rethrow;
       }
     }
+    return itemRandomProperties.id;
   }
 
   Future<void> updateItemRandomProperties(

@@ -48,7 +48,7 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
     return CreatureImmunityEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeCreatureImmunity(
+  Future<int> storeCreatureImmunity(
     CreatureImmunityEntity creatureImmunity,
   ) async {
     if (creatureImmunity.id <= 0) {
@@ -69,7 +69,7 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
         await laconic.table('creature_immunities').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in creature_immunities');
@@ -77,6 +77,7 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return creatureImmunity.id;
   }
 
   Future<void> updateCreatureImmunity(

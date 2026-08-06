@@ -66,11 +66,12 @@ mixin _PageTextDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storePageText(candidate);
+        final storedKey = await _repository.storePageText(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updatePageText(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      persistedKey.value = candidate.id;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

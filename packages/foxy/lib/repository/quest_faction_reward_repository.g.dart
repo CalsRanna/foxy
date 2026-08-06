@@ -108,7 +108,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
         .toList();
   }
 
-  Future<void> storeQuestFactionReward(
+  Future<int> storeQuestFactionReward(
     QuestFactionRewardEntity questFactionReward,
   ) async {
     if (questFactionReward.id <= 0) {
@@ -129,7 +129,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_quest_faction_reward').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -139,6 +139,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return questFactionReward.id;
   }
 
   Future<void> updateQuestFactionReward(

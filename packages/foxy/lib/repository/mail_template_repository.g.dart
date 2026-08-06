@@ -60,7 +60,7 @@ mixin _MailTemplateRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeMailTemplate(MailTemplateEntity mailTemplate) async {
+  Future<int> storeMailTemplate(MailTemplateEntity mailTemplate) async {
     if (mailTemplate.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -79,7 +79,7 @@ mixin _MailTemplateRepositoryMixin
         await laconic.table('foxy.dbc_mail_template').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -89,6 +89,7 @@ mixin _MailTemplateRepositoryMixin
         rethrow;
       }
     }
+    return mailTemplate.id;
   }
 
   Future<void> updateMailTemplate(

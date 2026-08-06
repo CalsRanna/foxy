@@ -38,7 +38,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
       itemId: await nextMaxPlusOne(
         'playercreateinfo_item',
         '`itemid`',
-        where: {'race': race, 'class': class_},
+        where: {'`race`': race, '`class`': class_},
       ),
     );
   }

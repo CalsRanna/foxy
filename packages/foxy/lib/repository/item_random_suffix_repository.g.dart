@@ -59,7 +59,7 @@ mixin _ItemRandomSuffixRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeItemRandomSuffix(
+  Future<int> storeItemRandomSuffix(
     ItemRandomSuffixEntity itemRandomSuffix,
   ) async {
     if (itemRandomSuffix.id <= 0) {
@@ -80,7 +80,7 @@ mixin _ItemRandomSuffixRepositoryMixin
         await laconic.table('foxy.dbc_item_random_suffix').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -90,6 +90,7 @@ mixin _ItemRandomSuffixRepositoryMixin
         rethrow;
       }
     }
+    return itemRandomSuffix.id;
   }
 
   Future<void> updateItemRandomSuffix(

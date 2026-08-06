@@ -122,7 +122,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeSpellItemEnchantment(
+  Future<int> storeSpellItemEnchantment(
     SpellItemEnchantmentEntity spellItemEnchantment,
   ) async {
     if (spellItemEnchantment.id <= 0) {
@@ -143,7 +143,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
         await laconic.table('foxy.dbc_spell_item_enchantment').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -153,6 +153,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
         rethrow;
       }
     }
+    return spellItemEnchantment.id;
   }
 
   Future<void> updateSpellItemEnchantment(

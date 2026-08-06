@@ -35,12 +35,12 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
       spellEffect: await nextMaxPlusOne(
         'spell_linked_spell',
         '`spell_effect`',
-        where: {'spell_trigger': spellTrigger},
+        where: {'`spell_trigger`': spellTrigger},
       ),
       type: await nextMaxPlusOne(
         'spell_linked_spell',
         '`type`',
-        where: {'spell_trigger': spellTrigger},
+        where: {'`spell_trigger`': spellTrigger},
       ),
     );
   }

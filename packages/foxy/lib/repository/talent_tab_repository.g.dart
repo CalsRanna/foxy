@@ -56,7 +56,7 @@ mixin _TalentTabRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeTalentTab(TalentTabEntity talentTab) async {
+  Future<int> storeTalentTab(TalentTabEntity talentTab) async {
     if (talentTab.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -75,7 +75,7 @@ mixin _TalentTabRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         await laconic.table('foxy.dbc_talent_tab').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_talent_tab');
@@ -83,6 +83,7 @@ mixin _TalentTabRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         rethrow;
       }
     }
+    return talentTab.id;
   }
 
   Future<void> updateTalentTab(

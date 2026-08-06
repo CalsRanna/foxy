@@ -34,7 +34,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
       index: await nextMaxPlusOne(
         'creature_template_spell',
         '`Index`',
-        where: {'CreatureID': creatureID},
+        where: {'`CreatureID`': creatureID},
       ),
     );
   }

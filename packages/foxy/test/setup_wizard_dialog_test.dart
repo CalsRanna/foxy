@@ -8,7 +8,7 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/page/setting/setup_wizard_dialog.dart';
-import 'package:foxy/page/workflow/workflow_status.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';

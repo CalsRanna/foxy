@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/view_model/npc_trainer_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
@@ -29,7 +28,6 @@ class NpcTrainerView extends StatefulWidget {
 
 class _NpcTrainerViewState extends State<NpcTrainerView> {
   final viewModel = GetIt.instance.get<NpcTrainerLinkedListViewModel>();
-  final _resolveParent = GetIt.instance.get<ResolveNpcTrainerParentUseCase>();
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +318,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
 
   Future<void> _setParent(int creatureId) async {
     try {
-      final trainerId = await _resolveParent.execute(creatureId);
+      final trainerId = await viewModel.resolveParent(creatureId);
       if (!mounted) return;
       if (trainerId == null) {
         viewModel.clearLink();

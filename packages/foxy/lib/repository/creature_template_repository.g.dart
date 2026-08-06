@@ -109,7 +109,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
         .toList();
   }
 
-  Future<void> storeCreatureTemplate(
+  Future<int> storeCreatureTemplate(
     CreatureTemplateEntity creatureTemplate,
   ) async {
     if (creatureTemplate.entry <= 0) {
@@ -130,7 +130,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
         await laconic.table('creature_template').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in creature_template');
@@ -138,6 +138,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return creatureTemplate.entry;
   }
 
   Future<void> updateCreatureTemplate(

@@ -76,11 +76,12 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storePlayerCreateInfo(candidate);
+        final _ = await _repository.storePlayerCreateInfo(candidate);
+        persistedKey.value = PlayerCreateInfoKey.fromEntity(candidate);
       } else {
         await _repository.updatePlayerCreateInfo(originalKey, candidate);
+        persistedKey.value = PlayerCreateInfoKey.fromEntity(candidate);
       }
-      persistedKey.value = PlayerCreateInfoKey.fromEntity(candidate);
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

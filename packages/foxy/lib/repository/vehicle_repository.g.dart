@@ -41,7 +41,7 @@ mixin _VehicleRepositoryMixin on RepositoryMixin {
     return VehicleEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeVehicle(VehicleEntity vehicle) async {
+  Future<int> storeVehicle(VehicleEntity vehicle) async {
     if (vehicle.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -60,7 +60,7 @@ mixin _VehicleRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_vehicle').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_vehicle');
@@ -68,6 +68,7 @@ mixin _VehicleRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return vehicle.id;
   }
 
   Future<void> updateVehicle(int originalKey, VehicleEntity vehicle) async {

@@ -23,7 +23,7 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     return SpellBonusDataEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSpellBonusData(SpellBonusDataEntity spellBonusData) async {
+  Future<int> storeSpellBonusData(SpellBonusDataEntity spellBonusData) async {
     if (spellBonusData.entry <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -42,7 +42,7 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
         await laconic.table('spell_bonus_data').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in spell_bonus_data');
@@ -50,6 +50,7 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return spellBonusData.entry;
   }
 
   Future<void> updateSpellBonusData(

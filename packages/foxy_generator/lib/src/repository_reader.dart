@@ -108,24 +108,49 @@ final class RepositoryReader {
       0,
       entityClassName.length - 'Entity'.length,
     );
-    final entityParameterName =
-        '${baseName[0].toLowerCase()}${baseName.substring(1)}';
+    if (baseName.isEmpty) {
+      _fail(
+        '$entityClassName 的 base name 为空（类名恰为 "Entity"）。',
+        element,
+        '使用有实际含义的 Entity 类名。',
+      );
+    }
+    final entityParameter = entityParameterName(entityClassName);
 
     // The query layer (create/copy/getBrief/count/_applyFilter) is generated
     // for two kinds of repositories: main-table ones with a list page, and
     // child-table ones declaring linkKey (detail-page tabs).
-    final listViewModelPresent = await buildStep.canRead(
-      AssetId(
-        buildStep.inputId.package,
-        'lib/view_model/${toSnakeCase(baseName)}_list_view_model.dart',
-      ),
+    //
+    // Presence is a *shape* check, not just file existence: a stale or
+    // placeholder list-VM file (e.g. one whose annotation was removed)
+    // must not silently enable/disable the generated query layer.
+    final listViewModelAssetId = AssetId(
+      buildStep.inputId.package,
+      'lib/view_model/${toSnakeCase(baseName)}_list_view_model.dart',
     );
+    final listViewModelPresent = await buildStep.canRead(
+      listViewModelAssetId,
+    ) &&
+        (await buildStep.readAsString(listViewModelAssetId)).contains(
+          '@FoxyListViewModel',
+        );
     final declaredLinkKeys = <String>[];
     final linkKeyReader = annotation.peek('linkKey');
     if (linkKeyReader != null && !linkKeyReader.isNull) {
-      for (final value in linkKeyReader.listValue) {
-        declaredLinkKeys.add(value.toStringValue()!);
+      // `isList` guards the type before `listValue` (which throws a raw
+      // StateError on a non-List like `linkKey: 'race'`). An unset optional
+      // list field surfaces as an *empty* list, so only element types are
+      // validated; an empty list means "no link key".
+      final list = linkKeyReader.isList ? linkKeyReader.listValue : null;
+      if (list == null || list.any((value) => value.toStringValue() == null)) {
+        _fail(
+          '$repositoryClassName 的 @FoxyRepository linkKey 必须是 '
+              'String 列表。',
+          element,
+          'linkKey: [\'字段名\']。',
+        );
       }
+      declaredLinkKeys.addAll(list.map((value) => value.toStringValue()!));
     }
     final queryLayerEnabled =
         listViewModelPresent || declaredLinkKeys.isNotEmpty;
@@ -213,6 +238,22 @@ final class RepositoryReader {
         );
       }
     }
+    // _emitCreate assigns `await nextMaxPlusOne(...)` (an int) to every
+    // non-link key field; a String key would produce uncompilable code with
+    // zero diagnostics at generation time.
+    if (queryLayerEnabled) {
+      for (final field in keyFields) {
+        final isLink = linkKeyFields.any((p) => p.dartName == field.dartName);
+        if (!isLink && field.dartType != 'int') {
+          _fail(
+            '$entityClassName.${field.dartName} 是 ${field.dartType} 主键，'
+                '不能生成 create 查询层（MAX+1 序列只支持 int）。',
+            entityElement,
+            '把该主键改为 int，或在仓库保留手写 create 方法并禁用查询层。',
+          );
+        }
+      }
+    }
 
     final filterFields = _readFilterFields(
       element,
@@ -289,9 +330,21 @@ final class RepositoryReader {
     final declaredAutoIncrementScope = <String>[];
     final scopeReader = annotation.peek('autoIncrementScope');
     if (scopeReader != null && !scopeReader.isNull) {
-      for (final value in scopeReader.listValue) {
-        declaredAutoIncrementScope.add(value.toStringValue()!);
+      // `isList` guards the type before `listValue` (which throws a raw
+      // StateError on a non-List). An unset optional list field surfaces as
+      // an *empty* list, so only element types are validated.
+      final list = scopeReader.isList ? scopeReader.listValue : null;
+      if (list == null || list.any((value) => value.toStringValue() == null)) {
+        _fail(
+          '$repositoryClassName 的 @FoxyRepository autoIncrementScope '
+              '必须是 String 列表。',
+          element,
+          'autoIncrementScope: [\'字段名\']。',
+        );
       }
+      declaredAutoIncrementScope.addAll(
+        list.map((value) => value.toStringValue()!),
+      );
     }
     for (final declared in declaredAutoIncrementScope) {
       final matched =
@@ -308,7 +361,7 @@ final class RepositoryReader {
 
     return RepositoryGenerationModel(
       entityClassName: entityClassName,
-      entityParameterName: entityParameterName,
+      entityParameterName: entityParameter,
       filterFields: List.unmodifiable(filterFields),
       keyFields: List.unmodifiable(keyFields),
       listViewModelPresent: listViewModelPresent,

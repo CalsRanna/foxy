@@ -45,7 +45,7 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
     return SkillLineEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSkillLine(SkillLineEntity skillLine) async {
+  Future<int> storeSkillLine(SkillLineEntity skillLine) async {
     if (skillLine.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -64,7 +64,7 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_skill_line').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_skill_line');
@@ -72,6 +72,7 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return skillLine.id;
   }
 
   Future<void> updateSkillLine(

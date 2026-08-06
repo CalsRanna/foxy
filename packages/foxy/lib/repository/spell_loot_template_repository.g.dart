@@ -26,7 +26,7 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
       item: await nextMaxPlusOne(
         'spell_loot_template',
         '`Item`',
-        where: {'Entry': entry},
+        where: {'`Entry`': entry},
       ),
     );
   }

@@ -59,7 +59,7 @@ mixin _CurrencyCategoryRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeCurrencyCategory(
+  Future<int> storeCurrencyCategory(
     CurrencyCategoryEntity currencyCategory,
   ) async {
     if (currencyCategory.id <= 0) {
@@ -80,7 +80,7 @@ mixin _CurrencyCategoryRepositoryMixin
         await laconic.table('foxy.dbc_currency_category').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -90,6 +90,7 @@ mixin _CurrencyCategoryRepositoryMixin
         rethrow;
       }
     }
+    return currencyCategory.id;
   }
 
   Future<void> updateCurrencyCategory(

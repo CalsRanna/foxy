@@ -46,7 +46,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
       spell: await nextMaxPlusOne(
         'playercreateinfo_spell_custom',
         '`Spell`',
-        where: {'racemask': raceMask, 'classmask': classMask},
+        where: {'`racemask`': raceMask, '`classmask`': classMask},
       ),
     );
   }

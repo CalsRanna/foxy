@@ -542,7 +542,7 @@ final class _FakeTransaction extends DatabaseTransaction {
   _FakeTransaction(this.optionRepository, this.localeRepository);
 
   @override
-  Future<void> execute(Future<void> Function() action) async {
+  Future<T> execute<T>(Future<T> Function() action) async {
     final optionSnapshot = List<GossipMenuOptionEntity>.of(
       optionRepository.rows,
     );
@@ -550,7 +550,7 @@ final class _FakeTransaction extends DatabaseTransaction {
       localeRepository.rows,
     );
     try {
-      await action();
+      return await action();
     } catch (_) {
       optionRepository.rows
         ..clear()

@@ -114,11 +114,12 @@ mixin _ScalingStatValueDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeScalingStatValue(candidate);
+        final storedKey = await _repository.storeScalingStatValue(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateScalingStatValue(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      persistedKey.value = candidate.id;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

@@ -47,7 +47,7 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
     return ZoneIntroMusicEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeZoneIntroMusic(ZoneIntroMusicEntity zoneIntroMusic) async {
+  Future<int> storeZoneIntroMusic(ZoneIntroMusicEntity zoneIntroMusic) async {
     if (zoneIntroMusic.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -66,7 +66,7 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_zone_intro_music_table').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -76,6 +76,7 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return zoneIntroMusic.id;
   }
 
   Future<void> updateZoneIntroMusic(

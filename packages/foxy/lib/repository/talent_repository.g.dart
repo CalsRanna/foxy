@@ -89,7 +89,7 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
     return results.map((e) => TalentEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> storeTalent(TalentEntity talent) async {
+  Future<int> storeTalent(TalentEntity talent) async {
     if (talent.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -108,7 +108,7 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_talent').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_talent');
@@ -116,6 +116,7 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return talent.id;
   }
 
   Future<void> updateTalent(int originalKey, TalentEntity talent) async {

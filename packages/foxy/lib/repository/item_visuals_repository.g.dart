@@ -41,7 +41,7 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
     return ItemVisualsEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeItemVisuals(ItemVisualsEntity itemVisuals) async {
+  Future<int> storeItemVisuals(ItemVisualsEntity itemVisuals) async {
     if (itemVisuals.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -60,7 +60,7 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_item_visuals').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_item_visuals');
@@ -68,6 +68,7 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return itemVisuals.id;
   }
 
   Future<void> updateItemVisuals(

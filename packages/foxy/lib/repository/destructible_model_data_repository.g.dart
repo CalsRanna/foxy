@@ -43,7 +43,7 @@ mixin _DestructibleModelDataRepositoryMixin on RepositoryMixin {
     return DestructibleModelDataEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeDestructibleModelData(
+  Future<int> storeDestructibleModelData(
     DestructibleModelDataEntity destructibleModelData,
   ) async {
     if (destructibleModelData.id <= 0) {
@@ -64,7 +64,7 @@ mixin _DestructibleModelDataRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_destructible_model_data').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -74,6 +74,7 @@ mixin _DestructibleModelDataRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return destructibleModelData.id;
   }
 
   Future<void> updateDestructibleModelData(

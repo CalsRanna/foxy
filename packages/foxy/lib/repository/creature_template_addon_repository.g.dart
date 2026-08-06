@@ -23,7 +23,7 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     return CreatureTemplateAddonEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeCreatureTemplateAddon(
+  Future<int> storeCreatureTemplateAddon(
     CreatureTemplateAddonEntity creatureTemplateAddon,
   ) async {
     if (creatureTemplateAddon.entry <= 0) {
@@ -44,7 +44,7 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
         await laconic.table('creature_template_addon').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -54,6 +54,7 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return creatureTemplateAddon.entry;
   }
 
   Future<void> updateCreatureTemplateAddon(

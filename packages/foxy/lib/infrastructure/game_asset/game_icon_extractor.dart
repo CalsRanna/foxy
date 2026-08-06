@@ -177,7 +177,9 @@ class GameIconExtractor {
           }
           done++;
           final dest = p.join(outputDir, '${entry.key}.blp');
-          if (File(dest).existsSync()) {
+          // A previous interrupted run (force-kill mid-write) may leave a
+          // truncated file; only treat a non-empty destination as done.
+          if (File(dest).existsSync() && File(dest).lengthSync() > 0) {
             skipped++;
           } else {
             try {
@@ -186,7 +188,12 @@ class GameIconExtractor {
                 failed++;
                 _recordError(errors, '${entry.value}: 提取结果为空');
               } else {
-                File(dest).writeAsBytesSync(bytes);
+                // Atomic-ish write: write to a `.part` file first, then
+                // rename into place, so an interruption never leaves a
+                // truncated `.blp` that would be permanently skipped.
+                final part = File('$dest.part');
+                part.writeAsBytesSync(bytes);
+                part.renameSync(dest);
                 extracted++;
               }
             } catch (error) {

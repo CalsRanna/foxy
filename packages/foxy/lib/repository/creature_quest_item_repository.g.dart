@@ -34,7 +34,7 @@ mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
       idx: await nextMaxPlusOne(
         'creature_questitem',
         '`Idx`',
-        where: {'CreatureEntry': creatureEntry},
+        where: {'`CreatureEntry`': creatureEntry},
       ),
     );
   }

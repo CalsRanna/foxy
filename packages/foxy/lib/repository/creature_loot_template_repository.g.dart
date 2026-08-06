@@ -61,17 +61,17 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
       item: await nextMaxPlusOne(
         'creature_loot_template',
         '`Item`',
-        where: {'Entry': entry},
+        where: {'`Entry`': entry},
       ),
       reference: await nextMaxPlusOne(
         'creature_loot_template',
         '`Reference`',
-        where: {'Entry': entry},
+        where: {'`Entry`': entry},
       ),
       groupId: await nextMaxPlusOne(
         'creature_loot_template',
         '`GroupId`',
-        where: {'Entry': entry},
+        where: {'`Entry`': entry},
       ),
     );
   }

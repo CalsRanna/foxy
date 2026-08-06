@@ -362,9 +362,10 @@ final class _NpcTextRepository extends NpcTextRepository {
   }
 
   @override
-  Future<void> storeNpcText(NpcTextEntity npcText) async {
+  Future<int> storeNpcText(NpcTextEntity npcText) async {
     if (rows.containsKey(npcText.id)) throw StateError('duplicate main');
     rows[npcText.id] = npcText;
+    return npcText.id;
   }
 
   @override
@@ -387,13 +388,13 @@ final class _Transaction extends DatabaseTransaction {
   _Transaction(this.mainRepository, this.localeRepository);
 
   @override
-  Future<void> execute(Future<void> Function() action) async {
+  Future<T> execute<T>(Future<T> Function() action) async {
     final mainSnapshot = Map<int, NpcTextEntity>.of(mainRepository.rows);
     final localeSnapshot = Map<NpcTextLocaleKey, NpcTextLocaleEntity>.of(
       localeRepository.rows,
     );
     try {
-      await action();
+      return await action();
     } catch (_) {
       mainRepository.rows
         ..clear()

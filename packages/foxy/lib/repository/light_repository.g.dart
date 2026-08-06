@@ -48,7 +48,7 @@ mixin _LightRepositoryMixin on RepositoryMixin {
     return LightEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeLight(LightEntity light) async {
+  Future<int> storeLight(LightEntity light) async {
     if (light.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -67,7 +67,7 @@ mixin _LightRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_light').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_light');
@@ -75,6 +75,7 @@ mixin _LightRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return light.id;
   }
 
   Future<void> updateLight(int originalKey, LightEntity light) async {

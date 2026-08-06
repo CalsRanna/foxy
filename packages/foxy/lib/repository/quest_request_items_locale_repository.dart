@@ -1,5 +1,6 @@
 import 'package:foxy/entity/quest_request_items_locale_entity.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -18,7 +19,7 @@ class QuestRequestItemsLocaleRepository
     required Map<QuestRequestItemsLocaleKey, QuestRequestItemsLocaleEntity>
     updates,
   }) async {
-    await laconic.transaction(() async {
+    await const DatabaseTransaction().execute(() async {
       for (final key in deletions) {
         await destroyQuestRequestItemsLocale(key);
       }

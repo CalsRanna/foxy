@@ -43,7 +43,7 @@ mixin _CreatureMovementInfoRepositoryMixin on RepositoryMixin {
     return CreatureMovementInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeCreatureMovementInfo(
+  Future<int> storeCreatureMovementInfo(
     CreatureMovementInfoEntity creatureMovementInfo,
   ) async {
     if (creatureMovementInfo.id <= 0) {
@@ -64,7 +64,7 @@ mixin _CreatureMovementInfoRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_creature_movement_info').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -74,6 +74,7 @@ mixin _CreatureMovementInfoRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return creatureMovementInfo.id;
   }
 
   Future<void> updateCreatureMovementInfo(

@@ -27,7 +27,7 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     return CreatureOnKillReputationEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeCreatureOnKillReputation(
+  Future<int> storeCreatureOnKillReputation(
     CreatureOnKillReputationEntity creatureOnKillReputation,
   ) async {
     if (creatureOnKillReputation.creatureID <= 0) {
@@ -51,7 +51,7 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
         await laconic.table('creature_onkill_reputation').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.creatureID;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -61,6 +61,7 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return creatureOnKillReputation.creatureID;
   }
 
   Future<void> updateCreatureOnKillReputation(

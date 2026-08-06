@@ -31,14 +31,30 @@ String dartLiteral(Object? value, {String? asType}) {
 /// Writes [value] as a single-quoted Dart string literal (quotes included).
 ///
 /// Also escapes `$`, otherwise `$` in table or column names would become
-/// string interpolation in the generated code.
+/// string interpolation in the generated code. Remaining control characters
+/// (e.g. `\b`/`\f`) become `\x{...}` escapes so they can never leak a raw
+/// control byte into generated source.
 String dartStringLiteral(String value) {
-  final escaped = value
-      .replaceAll(r'\', r'\\')
-      .replaceAll("'", r"\'")
-      .replaceAll(r'$', r'\$')
-      .replaceAll('\n', r'\n')
-      .replaceAll('\r', r'\r')
-      .replaceAll('\t', r'\t');
-  return "'$escaped'";
+  final buffer = StringBuffer("'");
+  for (final rune in value.runes) {
+    if (rune == 0x5c) {
+      buffer.write(r'\\');
+    } else if (rune == 0x27) {
+      buffer.write(r"\'");
+    } else if (rune == 0x24) {
+      buffer.write(r'\$');
+    } else if (rune == 0x0a) {
+      buffer.write(r'\n');
+    } else if (rune == 0x0d) {
+      buffer.write(r'\r');
+    } else if (rune == 0x09) {
+      buffer.write(r'\t');
+    } else if (rune < 0x20 || rune == 0x7f) {
+      buffer.write('\\x{${rune.toRadixString(16)}}');
+    } else {
+      buffer.writeCharCode(rune);
+    }
+  }
+  buffer.write("'");
+  return buffer.toString();
 }

@@ -16,6 +16,7 @@ class MoreReadViewModel with FieldControllerMixin {
 
   void dispose() {
     _refreshToken++;
+    searchController.removeListener(search);
     disposeControllers();
   }
 

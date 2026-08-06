@@ -64,11 +64,12 @@ mixin _GossipMenuDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeGossipMenu(candidate);
+        final _ = await _repository.storeGossipMenu(candidate);
+        persistedKey.value = GossipMenuKey.fromEntity(candidate);
       } else {
         await _repository.updateGossipMenu(originalKey, candidate);
+        persistedKey.value = GossipMenuKey.fromEntity(candidate);
       }
-      persistedKey.value = GossipMenuKey.fromEntity(candidate);
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

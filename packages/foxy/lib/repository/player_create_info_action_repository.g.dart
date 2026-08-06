@@ -41,7 +41,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
       button: await nextMaxPlusOne(
         'playercreateinfo_action',
         '`button`',
-        where: {'race': race, 'class': class_},
+        where: {'`race`': race, '`class`': class_},
       ),
     );
   }

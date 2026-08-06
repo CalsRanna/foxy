@@ -87,7 +87,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> storePageText(PageTextEntity pageText) async {
+  Future<int> storePageText(PageTextEntity pageText) async {
     if (pageText.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -106,7 +106,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
         await laconic.table('page_text').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in page_text');
@@ -114,6 +114,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return pageText.id;
   }
 
   Future<void> updatePageText(int originalKey, PageTextEntity pageText) async {

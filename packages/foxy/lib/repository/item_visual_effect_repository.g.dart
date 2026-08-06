@@ -50,7 +50,7 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
     return ItemVisualEffectEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeItemVisualEffect(
+  Future<int> storeItemVisualEffect(
     ItemVisualEffectEntity itemVisualEffect,
   ) async {
     if (itemVisualEffect.id <= 0) {
@@ -71,7 +71,7 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_item_visual_effects').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -81,6 +81,7 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return itemVisualEffect.id;
   }
 
   Future<void> updateItemVisualEffect(

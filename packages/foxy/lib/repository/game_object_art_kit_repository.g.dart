@@ -47,7 +47,7 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
     return GameObjectArtKitEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeGameObjectArtKit(
+  Future<int> storeGameObjectArtKit(
     GameObjectArtKitEntity gameObjectArtKit,
   ) async {
     if (gameObjectArtKit.id <= 0) {
@@ -68,7 +68,7 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_game_object_art_kit').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -78,6 +78,7 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return gameObjectArtKit.id;
   }
 
   Future<void> updateGameObjectArtKit(

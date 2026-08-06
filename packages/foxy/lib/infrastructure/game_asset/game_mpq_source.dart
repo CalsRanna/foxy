@@ -14,6 +14,16 @@ abstract interface class GameMpqSource {
   Uint8List extract(String name);
 }
 
+/// Hard cap on a single extracted in-archive file. warcrafty's sector reader
+/// allocates `block.fileSize` (a hostile uint32, up to 4 GiB) before
+/// checking the real data; this wrapper rejects the result once it exceeds
+/// the cap. It cannot prevent the allocation *during* [MpqArchive.extract]
+/// — that needs a warcrafty-side fix (tracked upstream) — but it stops
+/// oversized payloads from flowing into the rest of the pipeline. Icons are
+/// BLP files of a few hundred KB at most, so the cap is far above any
+/// legitimate file.
+const int _maxExtractedBytes = 64 << 20; // 64 MiB
+
 /// Implementation based on warcrafty (pure-Dart MPQ).
 final class WarcraftyMpqSource implements GameMpqSource {
   final MpqArchive _archive;
@@ -28,5 +38,13 @@ final class WarcraftyMpqSource implements GameMpqSource {
   void close() => _archive.close();
 
   @override
-  Uint8List extract(String name) => _archive.extract(name);
+  Uint8List extract(String name) {
+    final bytes = _archive.extract(name);
+    if (bytes.length > _maxExtractedBytes) {
+      throw MpqCorruptException(
+        'extracted file $name exceeds the $_maxExtractedBytes byte cap',
+      );
+    }
+    return bytes;
+  }
 }

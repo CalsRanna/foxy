@@ -61,7 +61,7 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     return DbcFactionTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeDbcFactionTemplate(
+  Future<int> storeDbcFactionTemplate(
     DbcFactionTemplateEntity dbcFactionTemplate,
   ) async {
     if (dbcFactionTemplate.id <= 0) {
@@ -82,7 +82,7 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_faction_template').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -92,6 +92,7 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return dbcFactionTemplate.id;
   }
 
   Future<void> updateDbcFactionTemplate(

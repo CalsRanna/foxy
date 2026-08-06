@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
+import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
@@ -18,6 +19,16 @@ part 'npc_trainer_linked_list_view_model.g.dart';
 )
 class NpcTrainerLinkedListViewModel
     with FieldControllerMixin, _NpcTrainerLinkedListViewModelMixin {
+  final _resolveParent = GetIt.instance.get<ResolveNpcTrainerParentUseCase>();
+
+  /// Resolves the parent trainer for a creature via the default-trainer
+  /// relation; `null` when the creature has no default trainer.
+  ///
+  /// Exposed through the ViewModel so pages never reach into use cases
+  /// directly.
+  Future<int?> resolveParent(int creatureId) =>
+      _resolveParent.execute(creatureId);
+
   void clearLink() {
     ++_refreshToken;
     linkKey.value = null;

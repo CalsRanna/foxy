@@ -41,7 +41,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
       skill: await nextMaxPlusOne(
         'playercreateinfo_skills',
         '`skill`',
-        where: {'raceMask': raceMask, 'classMask': classMask},
+        where: {'`raceMask`': raceMask, '`classMask`': classMask},
       ),
     );
   }

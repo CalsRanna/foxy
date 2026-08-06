@@ -47,7 +47,7 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     return ItemDisplayInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeItemDisplayInfo(
+  Future<int> storeItemDisplayInfo(
     ItemDisplayInfoEntity itemDisplayInfo,
   ) async {
     if (itemDisplayInfo.id <= 0) {
@@ -68,7 +68,7 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_item_display_info').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -78,6 +78,7 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return itemDisplayInfo.id;
   }
 
   Future<void> updateItemDisplayInfo(

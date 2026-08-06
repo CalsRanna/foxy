@@ -23,7 +23,7 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
     return QuestTemplateAddonEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeQuestTemplateAddon(
+  Future<int> storeQuestTemplateAddon(
     QuestTemplateAddonEntity questTemplateAddon,
   ) async {
     if (questTemplateAddon.id <= 0) {
@@ -44,7 +44,7 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
         await laconic.table('quest_template_addon').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in quest_template_addon');
@@ -52,6 +52,7 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return questTemplateAddon.id;
   }
 
   Future<void> updateQuestTemplateAddon(

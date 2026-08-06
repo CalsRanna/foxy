@@ -4,6 +4,7 @@ import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
+import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/view_model/npc_trainer_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
@@ -158,6 +159,9 @@ void main() {
       GetIt.instance.registerSingleton<NpcTrainerRepository>(repository);
       GetIt.instance.registerSingleton<CreatureDefaultTrainerRepository>(
         relationRepository,
+      );
+      GetIt.instance.registerSingleton<ResolveNpcTrainerParentUseCase>(
+        ResolveNpcTrainerParentUseCase(repository: relationRepository),
       );
     });
 

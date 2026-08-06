@@ -173,12 +173,13 @@ final class _GossipMenuRepository extends GossipMenuRepository {
   _GossipMenuRepository(this.rows);
 
   @override
-  Future<void> storeGossipMenu(GossipMenuEntity menu) async {
+  Future<GossipMenuKey> storeGossipMenu(GossipMenuEntity menu) async {
     final key = GossipMenuKey.fromEntity(menu);
     storeKeys.add(key);
     if (failWrites) throw StateError('gossip write failed');
     if (rows.containsKey(key)) throw StateError('duplicate gossip');
     rows[key] = menu;
+    return key;
   }
 }
 
@@ -189,10 +190,11 @@ final class _NpcTextRepository extends NpcTextRepository {
   _NpcTextRepository(this.rows);
 
   @override
-  Future<void> storeNpcText(NpcTextEntity npcText) async {
+  Future<int> storeNpcText(NpcTextEntity npcText) async {
     storeKeys.add(npcText.id);
     if (rows.containsKey(npcText.id)) throw StateError('duplicate npc text');
     rows[npcText.id] = npcText;
+    return npcText.id;
   }
 }
 
@@ -203,13 +205,13 @@ final class _Transaction extends DatabaseTransaction {
   _Transaction(this.gossipRepository, this.npcTextRepository);
 
   @override
-  Future<void> execute(Future<void> Function() action) async {
+  Future<T> execute<T>(Future<T> Function() action) async {
     final gossipSnapshot = Map<GossipMenuKey, GossipMenuEntity>.of(
       gossipRepository.rows,
     );
     final npcTextSnapshot = Map<int, NpcTextEntity>.of(npcTextRepository.rows);
     try {
-      await action();
+      return await action();
     } catch (_) {
       gossipRepository.rows
         ..clear()

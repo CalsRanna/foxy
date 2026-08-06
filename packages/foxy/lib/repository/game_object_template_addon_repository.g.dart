@@ -27,7 +27,7 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
     return GameObjectTemplateAddonEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeGameObjectTemplateAddon(
+  Future<int> storeGameObjectTemplateAddon(
     GameObjectTemplateAddonEntity gameObjectTemplateAddon,
   ) async {
     if (gameObjectTemplateAddon.entry <= 0) {
@@ -48,7 +48,7 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
         await laconic.table('gameobject_template_addon').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -58,6 +58,7 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return gameObjectTemplateAddon.entry;
   }
 
   Future<void> updateGameObjectTemplateAddon(

@@ -1,3 +1,5 @@
+import 'package:foxy_generator/src/naming.dart';
+
 /// List filter fields (all from the repository's `@FoxyFilter.text`).
 final class ListFilterFieldModel {
   final String name;
@@ -62,13 +64,7 @@ final class ListGenerationModel {
   /// `CreatureTemplateEntity` → `creatureTemplate` (matches the
   /// Repository's entity parameter naming; used as the entity name in logs
   /// and tooltips).
-  String get entityCamelName {
-    final base = entityClassName.substring(
-      0,
-      entityClassName.length - 'Entity'.length,
-    );
-    return '${base[0].toLowerCase()}${base.substring(1)}';
-  }
+  String get entityCamelName => entityParameterName(entityClassName);
 
   /// Filter class name: `CreatureTemplateRepository` →
   /// `CreatureTemplateFilter`.

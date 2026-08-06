@@ -25,8 +25,14 @@ class NoCollectionLoops extends DartLintRule {
       }
     });
 
+    // Only `for-in` over a collection is the target: a C-style indexed
+    // `for (var i = 0; i < n; i++)` is not a collection loop and must not
+    // be reported. Analyzer 8.x merged ForEachStatement into ForStatement;
+    // `forLoopParts is ForEachParts` distinguishes the two forms.
     context.registry.addForStatement((node) {
-      reporter.atNode(node, _code);
+      if (node.forLoopParts is ForEachParts) {
+        reporter.atNode(node, _code);
+      }
     });
   }
 }

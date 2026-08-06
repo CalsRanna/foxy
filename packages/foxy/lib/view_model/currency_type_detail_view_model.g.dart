@@ -66,11 +66,12 @@ mixin _CurrencyTypeDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeCurrencyType(candidate);
+        final storedKey = await _repository.storeCurrencyType(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateCurrencyType(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      persistedKey.value = candidate.id;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

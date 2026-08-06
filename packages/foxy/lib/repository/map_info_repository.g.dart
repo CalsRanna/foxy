@@ -56,7 +56,7 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeMapInfo(MapInfoEntity mapInfo) async {
+  Future<int> storeMapInfo(MapInfoEntity mapInfo) async {
     if (mapInfo.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -75,7 +75,7 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         await laconic.table('foxy.dbc_map').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_map');
@@ -83,6 +83,7 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         rethrow;
       }
     }
+    return mapInfo.id;
   }
 
   Future<void> updateMapInfo(int originalKey, MapInfoEntity mapInfo) async {

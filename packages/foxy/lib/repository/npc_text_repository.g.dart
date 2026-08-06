@@ -45,7 +45,7 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
     return NpcTextEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeNpcText(NpcTextEntity npcText) async {
+  Future<int> storeNpcText(NpcTextEntity npcText) async {
     if (npcText.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -64,7 +64,7 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
         await laconic.table('npc_text').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in npc_text');
@@ -72,6 +72,7 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return npcText.id;
   }
 
   Future<void> updateNpcText(int originalKey, NpcTextEntity npcText) async {

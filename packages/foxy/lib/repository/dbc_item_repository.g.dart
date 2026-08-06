@@ -48,7 +48,7 @@ mixin _DbcItemRepositoryMixin on RepositoryMixin {
     return DbcItemEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeDbcItem(DbcItemEntity dbcItem) async {
+  Future<int> storeDbcItem(DbcItemEntity dbcItem) async {
     if (dbcItem.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -67,7 +67,7 @@ mixin _DbcItemRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_item').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_item');
@@ -75,6 +75,7 @@ mixin _DbcItemRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return dbcItem.id;
   }
 
   Future<void> updateDbcItem(int originalKey, DbcItemEntity dbcItem) async {

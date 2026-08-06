@@ -137,11 +137,12 @@ class _FakeRepository extends CreatureOnKillReputationRepository {
   }
 
   @override
-  Future<void> storeCreatureOnKillReputation(
+  Future<int> storeCreatureOnKillReputation(
     CreatureOnKillReputationEntity rep,
   ) async {
     storeCount++;
     rows.add(rep);
+    return rep.creatureID;
   }
 
   @override

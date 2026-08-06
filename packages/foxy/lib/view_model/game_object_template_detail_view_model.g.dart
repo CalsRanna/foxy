@@ -101,11 +101,12 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeGameObjectTemplate(candidate);
+        final storedKey = await _repository.storeGameObjectTemplate(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateGameObjectTemplate(originalKey, candidate);
+        persistedKey.value = candidate.entry;
       }
-      persistedKey.value = candidate.entry;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

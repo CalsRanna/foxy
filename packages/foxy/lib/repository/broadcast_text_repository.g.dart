@@ -45,7 +45,7 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
     return BroadcastTextEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeBroadcastText(BroadcastTextEntity broadcastText) async {
+  Future<int> storeBroadcastText(BroadcastTextEntity broadcastText) async {
     if (broadcastText.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -64,7 +64,7 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
         await laconic.table('broadcast_text').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in broadcast_text');
@@ -72,6 +72,7 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return broadcastText.id;
   }
 
   Future<void> updateBroadcastText(

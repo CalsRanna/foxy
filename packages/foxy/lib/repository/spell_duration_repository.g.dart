@@ -41,7 +41,7 @@ mixin _SpellDurationRepositoryMixin on RepositoryMixin {
     return SpellDurationEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSpellDuration(SpellDurationEntity spellDuration) async {
+  Future<int> storeSpellDuration(SpellDurationEntity spellDuration) async {
     if (spellDuration.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -60,7 +60,7 @@ mixin _SpellDurationRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_spell_duration').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -70,6 +70,7 @@ mixin _SpellDurationRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return spellDuration.id;
   }
 
   Future<void> updateSpellDuration(

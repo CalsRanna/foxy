@@ -45,7 +45,7 @@ mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
     return LiquidTypeEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeLiquidType(LiquidTypeEntity liquidType) async {
+  Future<int> storeLiquidType(LiquidTypeEntity liquidType) async {
     if (liquidType.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -64,7 +64,7 @@ mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_liquid_type').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_liquid_type');
@@ -72,6 +72,7 @@ mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return liquidType.id;
   }
 
   Future<void> updateLiquidType(

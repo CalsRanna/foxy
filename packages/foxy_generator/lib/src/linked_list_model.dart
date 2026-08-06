@@ -1,3 +1,4 @@
+import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/form_model.dart';
 
 final class LinkedListGenerationModel {
@@ -51,9 +52,7 @@ final class LinkedListGenerationModel {
 
   String get briefEntityClassName => 'Brief${baseName}Entity';
 
-  /// `CreatureQuestItemEntity` → `creatureQuestItem`。
-  String get entityCamelName {
-    final base = baseName;
-    return '${base[0].toLowerCase()}${base.substring(1)}';
-  }
+  /// `CreatureQuestItemEntity` → `creatureQuestItem` (reserved words get a
+  /// trailing underscore)。
+  String get entityCamelName => entityParameterName(entityClassName);
 }

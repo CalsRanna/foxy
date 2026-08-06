@@ -1,5 +1,6 @@
 import 'package:source_gen/source_gen.dart';
 
+import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/dart_literal.dart';
 import 'package:foxy_generator/src/form_model.dart';
 
@@ -116,7 +117,14 @@ final class FormEmitter {
   }
 
   void _emitPersist(StringBuffer buffer, FormGenerationModel model) {
-    final persistedKeyWrite = model.singleKeyFieldName != null
+    // For a single int primary key the generated store returns the actual
+    // written key (duplicate-key retry may reallocate it); the persisted
+    // key must reflect reality, not the pre-filled candidate. The storedKey
+    // assignment lives *inside* the create branch — referencing it after
+    // the if/else would be undefined on the update path.
+    final singleIntKey = model.singleKeyFieldName != null &&
+        model.keyType == 'int';
+    final updateKeyWrite = model.singleKeyFieldName != null
         ? 'candidate.${model.singleKeyFieldName}'
         : '${model.baseName}Key.fromEntity(candidate)';
     buffer
@@ -133,14 +141,22 @@ final class FormEmitter {
       ..writeln('          ? ActivityActionType.create')
       ..writeln('          : ActivityActionType.update;')
       ..writeln('      if (originalKey == null) {')
-      ..writeln('        await _repository.store${model.baseName}(candidate);')
+      ..writeln(
+        '        final ${singleIntKey ? 'storedKey' : '_'} = '
+        'await _repository.store${model.baseName}(candidate);',
+      )
+      ..writeln(
+        singleIntKey
+            ? '        persistedKey.value = storedKey;'
+            : '        persistedKey.value = $updateKeyWrite;',
+      )
       ..writeln('      } else {')
       ..writeln(
         '        await _repository.update${model.baseName}('
         'originalKey, candidate);',
       )
+      ..writeln('        persistedKey.value = $updateKeyWrite;')
       ..writeln('      }')
-      ..writeln('      persistedKey.value = $persistedKeyWrite;')
       ..writeln('      entity.value = candidate;')
       ..writeln('      _logActivity(action, candidate);')
       ..writeln('    } catch (error) {')
@@ -230,14 +246,9 @@ final class FormEmitter {
   }
 
   /// `TalentEntity` → `talent` (matches the Repository's entity parameter
-  /// naming).
-  String _entityParameterName(String entityClassName) {
-    final baseName = entityClassName.substring(
-      0,
-      entityClassName.length - 'Entity'.length,
-    );
-    return '${baseName[0].toLowerCase()}${baseName.substring(1)}';
-  }
+  /// naming; reserved words get a trailing underscore).
+  String _entityParameterName(String entityClassName) =>
+      entityParameterName(entityClassName);
 
   /// `SelectFieldController` expression: the fallback type decides the
   /// generic type and the literal.

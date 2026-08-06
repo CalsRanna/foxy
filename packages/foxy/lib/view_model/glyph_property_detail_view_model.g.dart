@@ -68,11 +68,12 @@ mixin _GlyphPropertyDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeGlyphProperty(candidate);
+        final storedKey = await _repository.storeGlyphProperty(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateGlyphProperty(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      persistedKey.value = candidate.id;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

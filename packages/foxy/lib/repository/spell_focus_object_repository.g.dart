@@ -59,7 +59,7 @@ mixin _SpellFocusObjectRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeSpellFocusObject(
+  Future<int> storeSpellFocusObject(
     SpellFocusObjectEntity spellFocusObject,
   ) async {
     if (spellFocusObject.id <= 0) {
@@ -80,7 +80,7 @@ mixin _SpellFocusObjectRepositoryMixin
         await laconic.table('foxy.dbc_spell_focus_object').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -90,6 +90,7 @@ mixin _SpellFocusObjectRepositoryMixin
         rethrow;
       }
     }
+    return spellFocusObject.id;
   }
 
   Future<void> updateSpellFocusObject(

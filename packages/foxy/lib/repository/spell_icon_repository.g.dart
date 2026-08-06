@@ -45,7 +45,7 @@ mixin _SpellIconRepositoryMixin on RepositoryMixin {
     return SpellIconEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSpellIcon(SpellIconEntity spellIcon) async {
+  Future<int> storeSpellIcon(SpellIconEntity spellIcon) async {
     if (spellIcon.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -64,7 +64,7 @@ mixin _SpellIconRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_spell_icon').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_spell_icon');
@@ -72,6 +72,7 @@ mixin _SpellIconRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return spellIcon.id;
   }
 
   Future<void> updateSpellIcon(

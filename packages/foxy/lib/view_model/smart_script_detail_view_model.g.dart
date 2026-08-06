@@ -135,11 +135,12 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeSmartScript(candidate);
+        final _ = await _repository.storeSmartScript(candidate);
+        persistedKey.value = SmartScriptKey.fromEntity(candidate);
       } else {
         await _repository.updateSmartScript(originalKey, candidate);
+        persistedKey.value = SmartScriptKey.fromEntity(candidate);
       }
-      persistedKey.value = SmartScriptKey.fromEntity(candidate);
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

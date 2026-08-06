@@ -31,27 +31,27 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
       area: await nextMaxPlusOne(
         'spell_area',
         '`area`',
-        where: {'spell': spell},
+        where: {'`spell`': spell},
       ),
       questStart: await nextMaxPlusOne(
         'spell_area',
         '`quest_start`',
-        where: {'spell': spell},
+        where: {'`spell`': spell},
       ),
       auraSpell: await nextMaxPlusOne(
         'spell_area',
         '`aura_spell`',
-        where: {'spell': spell},
+        where: {'`spell`': spell},
       ),
       racemask: await nextMaxPlusOne(
         'spell_area',
         '`racemask`',
-        where: {'spell': spell},
+        where: {'`spell`': spell},
       ),
       gender: await nextMaxPlusOne(
         'spell_area',
         '`gender`',
-        where: {'spell': spell},
+        where: {'`spell`': spell},
       ),
     );
   }

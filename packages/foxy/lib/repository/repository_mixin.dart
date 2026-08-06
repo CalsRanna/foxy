@@ -47,6 +47,11 @@ mixin RepositoryMixin {
     Map<String, Object?> where = const {},
     int firstValue = 1,
   }) async {
+    _assertIdentifier(table);
+    _assertIdentifier(column);
+    for (final entry in where.entries) {
+      _assertIdentifier(entry.key);
+    }
     var builder = laconic.table(table).select(['max(`$column`) as max_id']);
     for (final entry in where.entries) {
       builder = builder.where(entry.key, entry.value);
@@ -75,6 +80,30 @@ mixin RepositoryMixin {
   /// verbatim. With backticks added uniformly, MySQL reserved words like
   /// `index` and `rank` need no per-column whitelist.
   Map<String, dynamic> prepareWriteJson(Map<String, dynamic> json) {
-    return {for (final entry in json.entries) '`${entry.key}`': entry.value};
+    return {
+      for (final entry in json.entries)
+        '`${_assertIdentifier(entry.key)}`': entry.value,
+    };
   }
+
+  /// Defensive identifier whitelist: identifiers are spliced verbatim into
+  /// SQL (laconic does not escape them), so anything that flows into
+  /// [nextMaxPlusOne] / [prepareWriteJson] must be a plain identifier.
+  /// Allowed: letters/digits/underscore, backtick-quoted column names (the
+  /// generated code passes `` `id` `` via `_column`) and dotted table names
+  /// (`foxy.dbc_x`). Quotes and whitespace — the SQL-breaking characters —
+  /// are rejected. All current call sites pass code constants; this guards
+  /// against future user-controlled columns/tables.
+  String _assertIdentifier(String identifier) {
+    if (!_identifierPattern.hasMatch(identifier)) {
+      throw ArgumentError.value(
+        identifier,
+        'identifier',
+        'expected a plain [A-Za-z0-9_.`] identifier',
+      );
+    }
+    return identifier;
+  }
+
+  static final _identifierPattern = RegExp(r'^[A-Za-z0-9_.`]+$');
 }

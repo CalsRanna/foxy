@@ -1,5 +1,6 @@
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -17,7 +18,7 @@ class PageTextLocaleRepository
     required List<PageTextLocaleKey> deletions,
     required Map<PageTextLocaleKey, PageTextLocaleEntity> updates,
   }) async {
-    await laconic.transaction(() async {
+    await const DatabaseTransaction().execute(() async {
       for (final key in deletions) {
         await destroyPageTextLocale(key);
       }

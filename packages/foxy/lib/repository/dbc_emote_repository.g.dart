@@ -45,7 +45,7 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
     return DbcEmoteEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeDbcEmote(DbcEmoteEntity dbcEmote) async {
+  Future<int> storeDbcEmote(DbcEmoteEntity dbcEmote) async {
     if (dbcEmote.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -64,7 +64,7 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_emotes').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_emotes');
@@ -72,6 +72,7 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return dbcEmote.id;
   }
 
   Future<void> updateDbcEmote(int originalKey, DbcEmoteEntity dbcEmote) async {

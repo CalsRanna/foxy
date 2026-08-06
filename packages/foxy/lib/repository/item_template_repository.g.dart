@@ -109,7 +109,7 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     return results.map((e) => ItemTemplateEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> storeItemTemplate(ItemTemplateEntity itemTemplate) async {
+  Future<int> storeItemTemplate(ItemTemplateEntity itemTemplate) async {
     if (itemTemplate.entry <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -128,7 +128,7 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
         await laconic.table('item_template').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in item_template');
@@ -136,6 +136,7 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return itemTemplate.entry;
   }
 
   Future<void> updateItemTemplate(

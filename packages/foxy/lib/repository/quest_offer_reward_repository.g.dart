@@ -23,7 +23,7 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
     return QuestOfferRewardEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeQuestOfferReward(
+  Future<int> storeQuestOfferReward(
     QuestOfferRewardEntity questOfferReward,
   ) async {
     if (questOfferReward.id <= 0) {
@@ -44,7 +44,7 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
         await laconic.table('quest_offer_reward').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in quest_offer_reward');
@@ -52,6 +52,7 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return questOfferReward.id;
   }
 
   Future<void> updateQuestOfferReward(

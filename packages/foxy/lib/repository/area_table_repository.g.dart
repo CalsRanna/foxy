@@ -105,7 +105,7 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeAreaTable(AreaTableEntity areaTable) async {
+  Future<int> storeAreaTable(AreaTableEntity areaTable) async {
     if (areaTable.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -124,7 +124,7 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         await laconic.table('foxy.dbc_area_table').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_area_table');
@@ -132,6 +132,7 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         rethrow;
       }
     }
+    return areaTable.id;
   }
 
   Future<void> updateAreaTable(

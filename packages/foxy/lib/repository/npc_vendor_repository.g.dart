@@ -28,12 +28,12 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
       item: await nextMaxPlusOne(
         'npc_vendor',
         '`item`',
-        where: {'entry': entry},
+        where: {'`entry`': entry},
       ),
       extendedCost: await nextMaxPlusOne(
         'npc_vendor',
         '`ExtendedCost`',
-        where: {'entry': entry},
+        where: {'`entry`': entry},
       ),
     );
   }

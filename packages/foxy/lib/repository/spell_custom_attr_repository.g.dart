@@ -23,7 +23,7 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
     return SpellCustomAttrEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSpellCustomAttr(
+  Future<int> storeSpellCustomAttr(
     SpellCustomAttrEntity spellCustomAttr,
   ) async {
     if (spellCustomAttr.spellId <= 0) {
@@ -44,7 +44,7 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
         await laconic.table('spell_custom_attr').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.spellId;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in spell_custom_attr');
@@ -52,6 +52,7 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return spellCustomAttr.spellId;
   }
 
   Future<void> updateSpellCustomAttr(

@@ -87,6 +87,75 @@ void main() {
       isTrue,
     );
   });
+
+  test('绑定 Repository 无 linkKey 时允许生成(手写 create 兜底)', () async {
+    await testBuilder(
+      foxyViewModelBuilder(BuilderOptions.empty),
+      {
+        formAnnotationAsset: formAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAsset: addonEntitySource,
+        repositoryAsset: addonRepositorySource.replaceFirst(
+          ", linkKey: ['entry']",
+          '',
+        ),
+        viewModelAsset: linkedDetailViewModelSource,
+      },
+      outputs: {
+        'foxy|lib/view_model/addon_linked_detail_view_model'
+            '.foxy_view_model.g.part': anything,
+      },
+    );
+  });
+
+  test('绑定 Repository 声明多个 linkKey 时拒绝生成', () async {
+    final logs = <String>[];
+    await testBuilder(
+      foxyViewModelBuilder(BuilderOptions.empty),
+      {
+        formAnnotationAsset: formAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAsset: addonEntitySource,
+        repositoryAsset: addonRepositorySource.replaceFirst(
+          "linkKey: ['entry']",
+          "linkKey: ['entry', 'comment']",
+        ),
+        viewModelAsset: linkedDetailViewModelSource,
+      },
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logs.any((log) => log.contains('只支持单一 linkKey')),
+      isTrue,
+    );
+  });
+
+  test('linkKey 与实体主键不匹配时拒绝生成', () async {
+    final logs = <String>[];
+    await testBuilder(
+      foxyViewModelBuilder(BuilderOptions.empty),
+      {
+        formAnnotationAsset: formAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAsset: addonEntitySource,
+        repositoryAsset: addonRepositorySource.replaceFirst(
+          "linkKey: ['entry']",
+          "linkKey: ['comment']",
+        ),
+        viewModelAsset: linkedDetailViewModelSource,
+      },
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logs.any((log) => log.contains('必须等于实体主键 entry')),
+      isTrue,
+    );
+  });
 }
 
 const formAnnotationAsset =
@@ -127,7 +196,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'addon_repository.g.dart';
 
-@FoxyRepository(AddonEntity)
+@FoxyRepository(AddonEntity, linkKey: ['entry'])
 class AddonRepository with _AddonRepositoryMixin {
   static const _table = 'foxy.addon';
 }

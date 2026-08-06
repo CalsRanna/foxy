@@ -59,7 +59,7 @@ mixin _ItemPurchaseGroupRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeItemPurchaseGroup(
+  Future<int> storeItemPurchaseGroup(
     ItemPurchaseGroupEntity itemPurchaseGroup,
   ) async {
     if (itemPurchaseGroup.id <= 0) {
@@ -80,7 +80,7 @@ mixin _ItemPurchaseGroupRepositoryMixin
         await laconic.table('foxy.dbc_item_purchase_group').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -90,6 +90,7 @@ mixin _ItemPurchaseGroupRepositoryMixin
         rethrow;
       }
     }
+    return itemPurchaseGroup.id;
   }
 
   Future<void> updateItemPurchaseGroup(

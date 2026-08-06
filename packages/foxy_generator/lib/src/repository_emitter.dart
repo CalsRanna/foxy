@@ -331,8 +331,30 @@ final class RepositoryEmitter {
 
   void _emitStore(StringBuffer buffer, RepositoryGenerationModel model) {
     final parameter = model.entityParameterName;
+    // The store returns the *actual* primary key: the duplicate-key retry
+    // reallocates the sequence column, so the caller must persist the real
+    // key (a pre-filled key may never have been written). Every single-int
+    // primary-key store returns `Future<int>` (even when that key is the
+    // linkKey, whose value is caller-supplied and never rewritten);
+    // composite `XxxKey` tables keep `Future<void>`.
+    final retriedKeys = model.autoIncrementKey != null
+        ? [model.autoIncrementKey!]
+        : model.keyFields
+              .where(
+                (field) =>
+                    field.dartType == 'int' &&
+                    !model.linkKeyFields.any(
+                      (p) => p.dartName == field.dartName,
+                    ),
+              )
+              .map((field) => field.dartName)
+              .toList();
+    final returnsKey = model.keyType == 'int';
+    final returnType = returnsKey
+        ? 'Future<${model.keyType}>'
+        : 'Future<void>';
     buffer.writeln(
-      '  Future<void> store${model.baseName}'
+      '  $returnType store${model.baseName}'
       '(${model.entityClassName} $parameter) async {',
     );
     if (model.keyFields.length == 1 &&
@@ -354,18 +376,6 @@ final class RepositoryEmitter {
     // DuplicateKeyException rather than rewriting multiple keys — pasting an
     // existing composite-key row with all keys taking a global MAX+1 would
     // silently write unrelated garbage rows.
-    final retriedKeys = model.autoIncrementKey != null
-        ? [model.autoIncrementKey!]
-        : model.keyFields
-              .where(
-                (field) =>
-                    field.dartType == 'int' &&
-                    !model.linkKeyFields.any(
-                      (p) => p.dartName == field.dartName,
-                    ),
-              )
-              .map((field) => field.dartName)
-              .toList();
     final retryScope = <String>{
       ...model.linkKeyFields.map((p) => p.dartName),
       ...model.autoIncrementScope,
@@ -388,9 +398,8 @@ final class RepositoryEmitter {
       );
       buffer
         // TOCTOU fallback: when concurrent creates obtain the same MAX+1,
-        // reallocate the sequence column and retry once.
-        // Known boundary: after a successful retry the caller's key is not
-        // updated; refreshing the list reveals the new row.
+        // reallocate the sequence column and retry once. The caller learns
+        // the actual written key through the return value.
         ..writeln('      final retried = $parameter.copyWith(')
         ..writeln('        $retriedKey: await nextMaxPlusOne(')
         ..writeln(
@@ -407,7 +416,9 @@ final class RepositoryEmitter {
         ..writeln('      try {')
         ..writeln('        await laconic.table(${_table(model)})'
           '.insert([prepareWriteJson(retried.toJson())]);')
-        ..writeln('        return;')
+        ..writeln(
+          returnsKey ? '        return retried.$retriedKey;' : '        return;',
+        )
         ..writeln('      } catch (retryError) {')
         ..writeln('        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {')
         ..writeln(
@@ -417,8 +428,16 @@ final class RepositoryEmitter {
         ..writeln('        rethrow;')
         ..writeln('      }');
     }
+    // Close the try-catch first; the success return lives *after* it (a
+    // return inside the catch block would be unreachable after the retry
+    // paths and leave the method without a trailing return).
+    buffer.writeln('    }');
+    if (returnsKey) {
+      buffer.writeln(
+        '      return $parameter.${model.keyFields.single.dartName};',
+      );
+    }
     buffer
-      ..writeln('    }')
       ..writeln('  }')
       ..writeln();
   }
@@ -507,8 +526,12 @@ final class RepositoryEmitter {
       .join();
 
   /// Link-key where map literal: `'`race`': race, '`class`': class_`.
-  String _linkWhereMap(List<RepositoryKeyFieldModel> links) =>
-      links.map((p) => "'${p.columnName}': ${p.dartName}").join(', ');
+  /// Backticks are unconditional (like [_column]): laconic splices these
+  /// keys into SQL verbatim, so a reserved-word link column (e.g. `index`)
+  /// must be quoted.
+  String _linkWhereMap(List<RepositoryKeyFieldModel> links) => links
+      .map((p) => "${_column(p.columnName)}: ${p.dartName}")
+      .join(', ');
 
   /// Sequence-column where map for the retry path, referenced via the entity
   /// parameter, e.g. `'CreatureID': loot.CreatureID` (_column already returns

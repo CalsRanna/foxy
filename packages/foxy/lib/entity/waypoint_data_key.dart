@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 /// Path-group identifier in the read-only waypoint picker; not the primary
 /// key of a single waypoint_data row.

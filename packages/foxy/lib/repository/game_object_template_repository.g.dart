@@ -99,7 +99,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
         .toList();
   }
 
-  Future<void> storeGameObjectTemplate(
+  Future<int> storeGameObjectTemplate(
     GameObjectTemplateEntity gameObjectTemplate,
   ) async {
     if (gameObjectTemplate.entry <= 0) {
@@ -120,7 +120,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
         await laconic.table('gameobject_template').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in gameobject_template');
@@ -128,6 +128,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return gameObjectTemplate.entry;
   }
 
   Future<void> updateGameObjectTemplate(

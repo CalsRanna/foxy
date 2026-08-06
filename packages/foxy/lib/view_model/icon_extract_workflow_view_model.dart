@@ -2,7 +2,7 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_summary.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
-import 'package:foxy/page/workflow/workflow_status.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';

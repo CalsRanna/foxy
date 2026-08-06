@@ -45,7 +45,7 @@ mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
     return PointOfInterestEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storePointOfInterest(
+  Future<int> storePointOfInterest(
     PointOfInterestEntity pointOfInterest,
   ) async {
     if (pointOfInterest.id <= 0) {
@@ -66,7 +66,7 @@ mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
         await laconic.table('points_of_interest').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in points_of_interest');
@@ -74,6 +74,7 @@ mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return pointOfInterest.id;
   }
 
   Future<void> updatePointOfInterest(

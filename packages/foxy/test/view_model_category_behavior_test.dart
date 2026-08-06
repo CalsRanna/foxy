@@ -9,7 +9,7 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/page/workflow/workflow_status.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';

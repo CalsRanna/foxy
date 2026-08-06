@@ -92,7 +92,7 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
     return results.map((e) => GemPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> storeGemProperty(GemPropertyEntity gemProperty) async {
+  Future<int> storeGemProperty(GemPropertyEntity gemProperty) async {
     if (gemProperty.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -111,7 +111,7 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_gem_properties').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -121,6 +121,7 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return gemProperty.id;
   }
 
   Future<void> updateGemProperty(

@@ -103,7 +103,7 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeAchievement(AchievementEntity achievement) async {
+  Future<int> storeAchievement(AchievementEntity achievement) async {
     if (achievement.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -122,7 +122,7 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         await laconic.table('foxy.dbc_achievement').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_achievement');
@@ -130,6 +130,7 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         rethrow;
       }
     }
+    return achievement.id;
   }
 
   Future<void> updateAchievement(

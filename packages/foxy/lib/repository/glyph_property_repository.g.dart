@@ -95,7 +95,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
+  Future<int> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     if (glyphProperty.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -114,7 +114,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_glyph_properties').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -124,6 +124,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return glyphProperty.id;
   }
 
   Future<void> updateGlyphProperty(

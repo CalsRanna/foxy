@@ -41,7 +41,7 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
     return SoundAmbienceEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSoundAmbience(SoundAmbienceEntity soundAmbience) async {
+  Future<int> storeSoundAmbience(SoundAmbienceEntity soundAmbience) async {
     if (soundAmbience.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -60,7 +60,7 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_sound_ambience').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -70,6 +70,7 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return soundAmbience.id;
   }
 
   Future<void> updateSoundAmbience(

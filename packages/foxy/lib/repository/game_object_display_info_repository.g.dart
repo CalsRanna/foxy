@@ -50,7 +50,7 @@ mixin _GameObjectDisplayInfoRepositoryMixin on RepositoryMixin {
     return GameObjectDisplayInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeGameObjectDisplayInfo(
+  Future<int> storeGameObjectDisplayInfo(
     GameObjectDisplayInfoEntity gameObjectDisplayInfo,
   ) async {
     if (gameObjectDisplayInfo.id <= 0) {
@@ -71,7 +71,7 @@ mixin _GameObjectDisplayInfoRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_game_object_display_info').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -81,6 +81,7 @@ mixin _GameObjectDisplayInfoRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return gameObjectDisplayInfo.id;
   }
 
   Future<void> updateGameObjectDisplayInfo(

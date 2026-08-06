@@ -22,7 +22,7 @@ void main() {
                 contains('mixin _SampleRepositoryMixin on RepositoryMixin'),
                 contains('Future<void> destroySample(int key)'),
                 contains('Future<SampleEntity?> getSample(int key)'),
-                contains('Future<void> storeSample(SampleEntity sample)'),
+                contains('Future<int> storeSample(SampleEntity sample)'),
                 contains('if (sample.id <= 0)'),
                 contains(
                   'Future<void> updateSample('
@@ -79,6 +79,7 @@ void main() {
         entityAsset: briefEntitySource,
         repositoryAsset: filterRepositorySource,
         listViewModelAsset: listViewModelSource,
+        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
       },
       outputs: {
         'foxy|lib/repository/sample_repository.foxy_repository.g.part':
@@ -130,7 +131,8 @@ void main() {
         entityAnnotationAsset: entityAnnotationSource,
         propertyEntityAsset: propertyEntitySource,
         propertyRepositoryAsset: propertyRepositorySource,
-        propertyListViewModelAsset: listViewModelSource,
+        propertyListViewModelAsset: propertyListViewModelSource,
+        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
       },
       outputs: {
         'foxy|lib/repository/sample_property_repository'
@@ -167,6 +169,7 @@ void main() {
         entityAsset: briefEntitySource,
         repositoryAsset: repository,
         listViewModelAsset: listViewModelSource,
+        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
       },
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
@@ -204,7 +207,9 @@ void main() {
                 contains('parentId: parentId,'),
                 contains('childId: await nextMaxPlusOne('),
                 contains("'`ChildID`',"),
-                contains("where: {'ParentID': parentId}"),
+                // _linkWhereMap backticks columns (laconic does not escape
+                // identifiers; reserved-word link columns need quoting).
+                contains("where: {'`ParentID`': parentId}"),
                 // copy: create carrying the parent key
                 contains(
                   'final blank = await createChildRecord(source.parentId);',
@@ -378,6 +383,7 @@ const entityAnnotationAsset =
     'foxy_annotation|lib/entity_annotations.dart';
 const entityAsset = 'foxy|lib/entity/sample_entity.dart';
 const listViewModelAsset = 'foxy|lib/view_model/sample_list_view_model.dart';
+const listAnnotationAsset = 'foxy_annotation|lib/list_annotations.dart';
 const propertyEntityAsset = 'foxy|lib/entity/sample_property_entity.dart';
 const repositoryAnnotationAsset =
     'foxy_annotation|lib/repository_annotations.dart';
@@ -489,13 +495,32 @@ class SampleRepository with _SampleRepositoryMixin {
 }
 ''';
 
-/// List-page presence marker: the Repository generator only checks file
-/// existence, not content. The real `@FoxyListViewModel` source is not
-/// used, so list_annotations' meta dependency in testBuilder cannot make
-/// the annotation unparseable and fail the whole build.
+/// List-page presence marker: the Repository generator must enable the
+/// query layer only when the list ViewModel actually declares
+/// `@FoxyListViewModel` (a shape check, not mere file existence).
 const listViewModelSource = r'''
-// Merely a "list page exists" marker.
+import 'package:foxy/entity/sample_entity.dart';
+import 'package:foxy/repository/sample_repository.dart';
+import 'package:foxy_annotation/list_annotations.dart';
+
+@FoxyListViewModel(
+  entity: SampleEntity,
+  repository: SampleRepository,
+)
 class SampleListViewModel {}
+''';
+
+/// Property-flavoured list ViewModel for the y→ies pluralization test.
+const propertyListViewModelSource = r'''
+import 'package:foxy/entity/sample_property_entity.dart';
+import 'package:foxy/repository/sample_property_repository.dart';
+import 'package:foxy_annotation/list_annotations.dart';
+
+@FoxyListViewModel(
+  entity: SamplePropertyEntity,
+  repository: SamplePropertyRepository,
+)
+class SamplePropertyListViewModel {}
 ''';
 
 /// Child-table entity: parent key ParentID + auto-increment ChildID.

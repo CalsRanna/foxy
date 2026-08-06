@@ -41,7 +41,7 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
     return TaxiPathEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeTaxiPath(TaxiPathEntity taxiPath) async {
+  Future<int> storeTaxiPath(TaxiPathEntity taxiPath) async {
     if (taxiPath.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -60,7 +60,7 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_taxi_path').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_taxi_path');
@@ -68,6 +68,7 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return taxiPath.id;
   }
 
   Future<void> updateTaxiPath(int originalKey, TaxiPathEntity taxiPath) async {

@@ -34,7 +34,7 @@ mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
       idx: await nextMaxPlusOne(
         'gameobject_questitem',
         '`Idx`',
-        where: {'GameObjectEntry': gameObjectEntry},
+        where: {'`GameObjectEntry`': gameObjectEntry},
       ),
     );
   }

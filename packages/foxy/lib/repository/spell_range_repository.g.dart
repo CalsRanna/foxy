@@ -56,7 +56,7 @@ mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeSpellRange(SpellRangeEntity spellRange) async {
+  Future<int> storeSpellRange(SpellRangeEntity spellRange) async {
     if (spellRange.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -75,7 +75,7 @@ mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         await laconic.table('foxy.dbc_spell_range').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_spell_range');
@@ -83,6 +83,7 @@ mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         rethrow;
       }
     }
+    return spellRange.id;
   }
 
   Future<void> updateSpellRange(

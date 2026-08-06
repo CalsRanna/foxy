@@ -17,9 +17,10 @@ class EntityNoFlutterImport extends DartLintRule {
 
     context.registry.addImportDirective((node) {
       final uri = node.uri.stringValue ?? '';
-      if (uri.startsWith('package:flutter/material') ||
-          uri.startsWith('package:flutter/widgets') ||
-          uri.startsWith('package:flutter/rendering') ||
+      // The whole Flutter framework surface is UI-adjacent: an entity only
+      // needs `package:meta` for annotations. `flutter/foundation` and
+      // `flutter/services` were previously missing from the blocklist.
+      if (uri.startsWith('package:flutter/') ||
           uri == 'dart:ui' ||
           uri.startsWith('package:foxy/page/') ||
           uri.startsWith('package:foxy/widget/') ||

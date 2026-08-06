@@ -59,7 +59,7 @@ mixin _EmoteTextDataRepositoryMixin
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeEmoteTextData(EmoteTextDataEntity emoteTextData) async {
+  Future<int> storeEmoteTextData(EmoteTextDataEntity emoteTextData) async {
     if (emoteTextData.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -78,7 +78,7 @@ mixin _EmoteTextDataRepositoryMixin
         await laconic.table('foxy.dbc_emotes_text_data').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -88,6 +88,7 @@ mixin _EmoteTextDataRepositoryMixin
         rethrow;
       }
     }
+    return emoteTextData.id;
   }
 
   Future<void> updateEmoteTextData(

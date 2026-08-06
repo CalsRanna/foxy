@@ -108,7 +108,7 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
         .toList();
   }
 
-  Future<void> storeScalingStatValue(
+  Future<int> storeScalingStatValue(
     ScalingStatValueEntity scalingStatValue,
   ) async {
     if (scalingStatValue.id <= 0) {
@@ -129,7 +129,7 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_scaling_stat_values').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -139,6 +139,7 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return scalingStatValue.id;
   }
 
   Future<void> updateScalingStatValue(

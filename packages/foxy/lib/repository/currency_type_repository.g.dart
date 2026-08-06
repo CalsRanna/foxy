@@ -95,7 +95,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     return results.map((e) => CurrencyTypeEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> storeCurrencyType(CurrencyTypeEntity currencyType) async {
+  Future<int> storeCurrencyType(CurrencyTypeEntity currencyType) async {
     if (currencyType.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -114,7 +114,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_currency_types').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -124,6 +124,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return currencyType.id;
   }
 
   Future<void> updateCurrencyType(

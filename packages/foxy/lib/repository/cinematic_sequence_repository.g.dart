@@ -43,7 +43,7 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
     return CinematicSequenceEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeCinematicSequence(
+  Future<int> storeCinematicSequence(
     CinematicSequenceEntity cinematicSequence,
   ) async {
     if (cinematicSequence.id <= 0) {
@@ -64,7 +64,7 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_cinematic_sequences').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -74,6 +74,7 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return cinematicSequence.id;
   }
 
   Future<void> updateCinematicSequence(

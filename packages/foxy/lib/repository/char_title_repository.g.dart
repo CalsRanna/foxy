@@ -56,7 +56,7 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<void> storeCharTitle(CharTitleEntity charTitle) async {
+  Future<int> storeCharTitle(CharTitleEntity charTitle) async {
     if (charTitle.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -75,7 +75,7 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         await laconic.table('foxy.dbc_char_titles').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_char_titles');
@@ -83,6 +83,7 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
         rethrow;
       }
     }
+    return charTitle.id;
   }
 
   Future<void> updateCharTitle(

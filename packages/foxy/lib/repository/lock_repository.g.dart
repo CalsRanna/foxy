@@ -41,7 +41,7 @@ mixin _LockRepositoryMixin on RepositoryMixin {
     return LockEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeLock(LockEntity lock) async {
+  Future<int> storeLock(LockEntity lock) async {
     if (lock.id <= 0) {
       throw InvalidPrimaryKeyException(
         'primary key must be assigned before store',
@@ -60,7 +60,7 @@ mixin _LockRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_lock').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in foxy.dbc_lock');
@@ -68,6 +68,7 @@ mixin _LockRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return lock.id;
   }
 
   Future<void> updateLock(int originalKey, LockEntity lock) async {

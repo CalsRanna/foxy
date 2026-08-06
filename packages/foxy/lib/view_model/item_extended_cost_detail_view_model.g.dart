@@ -84,11 +84,12 @@ mixin _ItemExtendedCostDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeItemExtendedCost(candidate);
+        final storedKey = await _repository.storeItemExtendedCost(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateItemExtendedCost(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      persistedKey.value = candidate.id;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

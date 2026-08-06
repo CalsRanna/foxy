@@ -23,7 +23,7 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
     return QuestRequestItemsEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeQuestRequestItems(
+  Future<int> storeQuestRequestItems(
     QuestRequestItemsEntity questRequestItems,
   ) async {
     if (questRequestItems.id <= 0) {
@@ -44,7 +44,7 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
         await laconic.table('quest_request_items').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException('duplicate key in quest_request_items');
@@ -52,6 +52,7 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return questRequestItems.id;
   }
 
   Future<void> updateQuestRequestItems(

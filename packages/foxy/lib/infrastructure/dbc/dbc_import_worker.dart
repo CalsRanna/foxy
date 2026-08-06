@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
+import 'package:foxy/infrastructure/dbc/dbc_header_guard.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -312,6 +313,7 @@ Future<int> _importFile(
   int totalFiles,
   bool Function() isCancelled,
 ) async {
+  assertDbcPayloadSafe(file.path);
   final loader = DbcLoader(file.path, file.format);
   final recordCount = loader.recordCount;
   if (recordCount == 0) return 0;
@@ -361,6 +363,22 @@ Future<int> _importFile(
   return imported;
 }
 
+/// uint64 values ≥2^63 cannot be represented in Dart's signed int64;
+/// warcrafty reads them as negative int64, and writing a negative number
+/// into a BIGINT UNSIGNED column fails with an opaque MySQL 1264. Surface
+/// a field-indexed diagnostic instead of letting the raw driver error
+/// through.
+String _uint64ToString(dynamic record, int index) {
+  final value = record.getInt64(index);
+  if (value < 0) {
+    throw ValidationException(
+      'uint64 field $index has high bit set (value ≥ 2^63), '
+      'which exceeds the signed 64-bit storage limit',
+    );
+  }
+  return value.toString();
+}
+
 String _readAndEscape(dynamic record, int index, String type) {
   return switch (type) {
     'string' => _escapeString(record.getString(index) as String),
@@ -370,10 +388,10 @@ String _readAndEscape(dynamic record, int index, String type) {
     // must be restored to positive before storing into an UNSIGNED column.
     'uint32' => record.getUint(index).toString(),
     'int64' => record.getInt64(index).toString(),
-    // uint64 high bits (≥2^63) exceed Dart's int range; when stored in
-    // BIGINT UNSIGNED the driver reads them back as BigInt. The write side
-    // (warcrafty) still reads as int64, so keep as-is.
-    'uint64' => record.getInt64(index).toString(),
+    // uint64 high bits (≥2^63) exceed Dart's int range: getInt64 goes
+    // negative and BIGINT UNSIGNED rejects it with MySQL 1264 (opaque).
+    // Detect it and surface a field-indexed message instead.
+    'uint64' => _uint64ToString(record, index),
     'int16' || 'uint16' => record.getInt16(index).toString(),
     'int8' => record.getInt8(index).toString(),
     'uint8' => record.getUint8(index).toString(),

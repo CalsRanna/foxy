@@ -107,7 +107,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
         .toList();
   }
 
-  Future<void> storeItemExtendedCost(
+  Future<int> storeItemExtendedCost(
     ItemExtendedCostEntity itemExtendedCost,
   ) async {
     if (itemExtendedCost.id <= 0) {
@@ -128,7 +128,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_item_extended_cost').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -138,6 +138,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return itemExtendedCost.id;
   }
 
   Future<void> updateItemExtendedCost(

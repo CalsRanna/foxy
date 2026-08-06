@@ -32,7 +32,7 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
       optionId: await nextMaxPlusOne(
         'gossip_menu_option',
         '`OptionID`',
-        where: {'MenuID': menuId},
+        where: {'`MenuID`': menuId},
       ),
     );
   }

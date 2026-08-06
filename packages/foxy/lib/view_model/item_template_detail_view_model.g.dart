@@ -336,11 +336,12 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeItemTemplate(candidate);
+        final storedKey = await _repository.storeItemTemplate(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateItemTemplate(originalKey, candidate);
+        persistedKey.value = candidate.entry;
       }
-      persistedKey.value = candidate.entry;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/setting_dialog_shell.dart';
-import 'package:foxy/page/workflow/workflow_status.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';

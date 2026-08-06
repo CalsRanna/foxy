@@ -27,7 +27,7 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     return CreatureDefaultTrainerEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeCreatureDefaultTrainer(
+  Future<int> storeCreatureDefaultTrainer(
     CreatureDefaultTrainerEntity creatureDefaultTrainer,
   ) async {
     if (creatureDefaultTrainer.creatureId <= 0) {
@@ -51,7 +51,7 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
         await laconic.table('creature_default_trainer').insert([
           prepareWriteJson(retried.toJson()),
         ]);
-        return;
+        return retried.creatureId;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -61,6 +61,7 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return creatureDefaultTrainer.creatureId;
   }
 
   Future<void> updateCreatureDefaultTrainer(

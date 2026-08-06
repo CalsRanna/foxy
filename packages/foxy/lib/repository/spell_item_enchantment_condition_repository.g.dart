@@ -49,7 +49,7 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
     return SpellItemEnchantmentConditionEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> storeSpellItemEnchantmentCondition(
+  Future<int> storeSpellItemEnchantmentCondition(
     SpellItemEnchantmentConditionEntity spellItemEnchantmentCondition,
   ) async {
     if (spellItemEnchantmentCondition.id <= 0) {
@@ -75,7 +75,7 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
         await laconic.table('foxy.dbc_spell_item_enchantment_condition').insert(
           [prepareWriteJson(retried.toJson())],
         );
-        return;
+        return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
           throw DuplicateKeyException(
@@ -85,6 +85,7 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
         rethrow;
       }
     }
+    return spellItemEnchantmentCondition.id;
   }
 
   Future<void> updateSpellItemEnchantmentCondition(
