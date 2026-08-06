@@ -74,10 +74,10 @@ final class FoxyCalendarViewModelGenerator
   const FoxyCalendarViewModelGenerator({
     this.reader = const CalendarReader(),
     this.emitter = const CalendarEmitter(),
-  }) : super(inPackage: 'foxy');
+  }) : super(inPackage: 'foxy_annotation');
   @override
   TypeChecker get typeChecker => const TypeChecker.fromUrl(
-    'package:foxy/infrastructure/codegen/form_annotations.dart#'
+    'package:foxy_annotation/form_annotations.dart#'
     'FoxyCalendarViewModel',
   );
   @override

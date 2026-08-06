@@ -12,19 +12,28 @@ Guidance for AI coding assistants working in this repository. Read this before m
 
 ## Quick Start
 
+Monorepo (Dart pub workspace): the Flutter app lives in `packages/foxy`; the
+code generators and annotations in `packages/foxy_generator` +
+`packages/foxy_annotation`; the custom_lint plugin in `packages/foxy_lint`.
+Run Flutter commands from `packages/foxy`.
+
 ```bash
-flutter pub get                          # install deps
+cd packages/foxy
+flutter pub get                          # install deps (workspace resolution)
 dart run build_runner build --delete-conflicting-outputs   # regenerate .g.dart (SLOW, can take many minutes)
 flutter analyze                          # includes the 8 custom_lint rules
 flutter test                             # ~99 test files; can take a while
 flutter run -d windows                   # run (reads config.yaml for DB connection)
 ```
 
+Generator tests live in `packages/foxy_generator/test/` — run them from that
+package with `dart test` (pure Dart, no Flutter runtime).
+
 `config.yaml` (gitignored) holds the MySQL connection (`acore_world`) and client/DBC paths. Without it the app opens the Bootstrap page.
 
 ## ⭐ The Code Generation System (read this first)
 
-The architecture is **annotation-declared + code-generated**. Hand-written code only declares *what* things are via `@Foxy*` annotations; mechanical boilerplate is emitted into `*.g.dart` **part files** by three custom `build_runner` builders (`lib/infrastructure/codegen/`).
+The architecture is **annotation-declared + code-generated**. Hand-written code only declares *what* things are via `@Foxy*` annotations; mechanical boilerplate is emitted into `*.g.dart` **part files** by three custom `build_runner` builders. The annotations live in the `foxy_annotation` package (`packages/foxy_annotation/lib/`), the generators in `foxy_generator` (`packages/foxy_generator/lib/`).
 
 **Golden rules:**
 
@@ -87,7 +96,7 @@ Full docs: `doc/codegen/README.md` (architecture), `doc/codegen/usage.md` (modul
 - Generated method names: `getBriefXxxs` / `countXxxs` / `getXxx` / `createXxx` / `copyXxx` / `destroyXxx`; Filter class `XxxFilter`.
 - Handwritten classes must mix in the generated mixin and declare `part 'xxx.g.dart';`.
 
-### custom_lint rules (enforced by `flutter analyze` — 8 rules in `lib/lint/rules/`)
+### custom_lint rules (enforced by `flutter analyze` — 8 rules in `packages/foxy_lint/lib/rules/`)
 
 | Rule | Meaning |
 | --- | --- |
@@ -136,7 +145,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 - **Contract tests** (`*_contract_test.dart`, one per module): verify generated code matches annotation declarations (entities, filters, repositories, locales).
 - **Database editing contract tests** (`*_database_editing_contract_test.dart`): run against a real MySQL; **auto-skip when the DB isn't configured** (e.g. `dbc_mysql_integration_test.dart`).
-- **Codegen tests**: `test/infrastructure/codegen/` — generator unit tests; use `test/support/local_dart_library_source.dart` to build in-memory sources.
+- **Codegen tests**: `packages/foxy_generator/test/` — generator unit tests (`dart test` from that package, no Flutter runtime needed); use `test/support/local_dart_library_source.dart` to build in-memory sources.
 - **Other**: DBC codec/import/export, BLP decoder + MPQ extraction (fixtures in `test/fixture/icons/`), form controllers, widget behavior, use-case tests.
 - New annotations/generators **require** contract tests (see `doc/codegen/extending.md` §d).
 

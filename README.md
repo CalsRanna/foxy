@@ -102,8 +102,11 @@ laconic query builder ──► MySQL (AzerothCore world 库 + foxy 元库)
 
 ### 安装与运行
 
+Monorepo(Dart pub workspace):Flutter app 位于 `packages/foxy`,代码生成器与注解在 `packages/foxy_generator` + `packages/foxy_annotation`,custom_lint 插件在 `packages/foxy_lint`。以下命令在 `packages/foxy` 目录执行:
+
 ```bash
 # 1. 拉取依赖
+cd packages/foxy
 flutter pub get
 
 # 2. 生成代码(Entity / Repository / ViewModel 三层 .g.dart)
@@ -175,7 +178,6 @@ lib/
 ├── constant/                  # 游戏语义常量与枚举(flags、类型、DBC 定义、本地化字段等)
 ├── database/                  # 连接管理 + 迁移 runner
 ├── infrastructure/
-│   ├── codegen/               # 自研代码生成器(注解 + reader/model/emitter/generator)
 │   ├── database/              # 事务封装、MySQL 错误归一
 │   ├── dbc/                   # DBC 导入( isolate worker)/导出/本地化字段编解码
 │   ├── game_asset/            # MPQ 读取、BLP 解码、图标提取与缓存
@@ -186,8 +188,14 @@ lib/
 │   ├── update/                # 自动更新(清单/下载校验/文件交换,辅助程序见 tool/updater/)
 │   └── window/                # 无边框窗口初始化
 ├── event/                     # 事件总线
-├── widget/                    # 通用组件(虚拟化表格、选择器、表单、对话框等)
-└── lint/                      # custom_lint 规则实现
+└── widget/                    # 通用组件(虚拟化表格、选择器、表单、对话框等)
+
+# 代码生成系统(独立 workspace 包)
+packages/
+├── foxy_annotation/           # 注解定义(Entity / Repository / ViewModel)
+├── foxy_generator/            # 自研代码生成器(reader/model/emitter/generator)
+└── foxy_lint/                 # custom_lint 规则实现
+
 doc/
 └── codegen/                   # 代码生成系统文档(总览 / 使用 / 实现 / 扩展)
 ```

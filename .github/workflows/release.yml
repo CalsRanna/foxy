@@ -34,13 +34,18 @@ jobs:
         with:
           channel: stable
 
+      # Monorepo: the Flutter app lives under packages/foxy (Dart pub
+      # workspace root at the repo root).
       - name: Resolve dependencies
+        working-directory: packages/foxy
         run: flutter pub get
 
       - name: Analyze
+        working-directory: packages/foxy
         run: flutter analyze
 
       - name: Test
+        working-directory: packages/foxy
         run: flutter test
 
       # NOTE: codegen tests (test/infrastructure/codegen/) are currently
@@ -59,6 +64,7 @@ jobs:
           channel: stable
 
       - name: Resolve dependencies
+        working-directory: packages/foxy
         run: flutter pub get
 
       - name: Determine version
@@ -84,22 +90,27 @@ jobs:
           Write-Output "is-prerelease=$($mainTag -ne $tag)" >> $env:GITHUB_OUTPUT
 
       - name: Build Windows release
+        working-directory: packages/foxy
         run: flutter build windows --release
 
       - name: Build updater helper
+        working-directory: packages/foxy
         run: >-
           dart compile exe tool/updater/updater_main.dart
           -o build/windows/x64/runner/Release/foxy_updater.exe
 
       - name: Package zip
+        # zip 输出到仓库根(供 Publish release 步骤使用);build 产物在
+        # packages/foxy 下。
         shell: pwsh
         run: >-
           Compress-Archive
-          -Path build/windows/x64/runner/Release/*
+          -Path packages/foxy/build/windows/x64/runner/Release/*
           -DestinationPath foxy-${{ steps.version.outputs.zip-version }}.zip
           -CompressionLevel Optimal
 
       - name: Fetch previous manifest (for release history)
+        working-directory: packages/foxy
         shell: pwsh
         run: |
           if (curl -sfL -o existing.yaml `
@@ -121,6 +132,7 @@ jobs:
           $global:LASTEXITCODE = 0
 
       - name: Generate update manifest
+        working-directory: packages/foxy
         shell: pwsh
         run: >-
           dart run tool/release/make_update_manifest.dart

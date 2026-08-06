@@ -22,11 +22,16 @@ Foxy 用 **「注解声明 + 代码生成 + 显式覆写」** 支撑 130 张数�
 ## 目录布局
 
 ```
-lib/infrastructure/codegen/
+注解与生成器是独立 workspace 包(monorepo,app 在 `packages/foxy/`):
+
+```
+packages/foxy_annotation/lib/
 ├── entity_annotations.dart      # Entity 层注解(@FoxyBriefEntity / @FoxyFullEntity / ...)
 ├── form_annotations.dart        # Form 层注解(@FoxyDetailViewModel / @FoxyLinkedListViewModel / ...)
 ├── list_annotations.dart        # 列表层注解(@FoxyListViewModel)
-├── repository_annotations.dart  # 仓库层注解(@FoxyRepository / @FoxyFilter)
+└── repository_annotations.dart  # 仓库层注解(@FoxyRepository / @FoxyFilter)
+
+packages/foxy_generator/lib/
 ├── builder.dart                 # build_runner Builder 入口(SharedPartBuilder)
 └── src/
     ├── entity_reader.dart       # 读取注解 + 校验 → EntityGenerationModel

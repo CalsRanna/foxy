@@ -2,7 +2,7 @@
 
 本文逐个生成器拆解 **reader / model / emitter / generator** 四层。按生成链路上游到下游排列:Entity → Repository(+Filter)→ Form → List → Linked List → Linked Detail。
 
-约定:每层文件都位于 `lib/infrastructure/codegen/src/`;`*_generator.dart` 是 source_gen 入口,`*_reader.dart` 读注解做校验产出模型,`*_model.dart` 是纯数据结构,`*_emitter.dart` 拼字符串产代码。所有 `_fail` 抛 `InvalidGenerationSourceError`(带 `todo` 修复文案)。
+约定:每层文件都位于 `packages/foxy_generator/lib/src/`;`*_generator.dart` 是 source_gen 入口,`*_reader.dart` 读注解做校验产出模型,`*_model.dart` 是纯数据结构,`*_emitter.dart` 拼字符串产代码。所有 `_fail` 抛 `InvalidGenerationSourceError`(带 `todo` 修复文案)。
 
 ---
 
