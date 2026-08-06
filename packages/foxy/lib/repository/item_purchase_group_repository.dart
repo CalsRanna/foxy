@@ -1,0 +1,91 @@
+import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/entity/item_purchase_group_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
+import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
+import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
+
+part 'item_purchase_group_repository.g.dart';
+
+@FoxyRepository(ItemPurchaseGroupEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class ItemPurchaseGroupRepository
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _ItemPurchaseGroupRepositoryMixin {
+  static const _table = 'foxy.dbc_item_purchase_group';
+
+  @override
+  String get dbcLocaleTableName => _table;
+
+  Future<int> copyItemPurchaseGroup(int key) async {
+    final source = await getItemPurchaseGroup(key);
+    if (source == null) {
+      throw RecordNotFoundException('record not found');
+    }
+    final candidate = source.copyWith(id: await _getNextId());
+    await storeItemPurchaseGroup(candidate);
+    return candidate.id;
+  }
+
+  Future<int> countItemPurchaseGroups({ItemPurchaseGroupFilter? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<ItemPurchaseGroupEntity> createItemPurchaseGroup() async {
+    return ItemPurchaseGroupEntity(id: await _getNextId());
+  }
+
+  Future<List<BriefItemPurchaseGroupEntity>> getBriefItemPurchaseGroups({
+    int page = 1,
+    ItemPurchaseGroupFilter? filter,
+  }) async {
+    var builder = laconic.table(_table).select(['ID', 'Name_lang_zhCN']);
+    builder = _applyFilter(builder, filter);
+    final rows = await builder
+        .orderBy('ID')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
+    return rows
+        .map((row) => BriefItemPurchaseGroupEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<List<ItemPurchaseGroupEntity>> getItemPurchaseGroups() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => ItemPurchaseGroupEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ItemPurchaseGroupFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%${escapeLike(filter.name)}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
+  }
+
+  Future<int> _getNextId() async {
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 2147483647) {
+      throw IdExhaustedException(
+        'item purchase group ID exceeds signed int32 range',
+      );
+    }
+    return id;
+  }
+}

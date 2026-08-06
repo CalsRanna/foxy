@@ -1,0 +1,124 @@
+import 'package:foxy/entity/quest_template_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
+import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
+
+part 'quest_template_repository.g.dart';
+
+@FoxyRepository(QuestTemplateEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('title', column: 'qt.LogTitle')
+class QuestTemplateRepository
+    with RepositoryMixin, _QuestTemplateRepositoryMixin {
+  static const _table = 'quest_template';
+
+  @override
+  Future<int> copyQuestTemplate(int key) async {
+    final source = await getQuestTemplate(key);
+    if (source == null) {
+      throw RecordNotFoundException('record not found');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeQuestTemplate(copied);
+    return copied.id;
+  }
+
+  @override
+  Future<int> countQuestTemplates({QuestTemplateFilter? filter}) async {
+    final needsLocaleJoin =
+        localeEnabled && filter != null && filter.title.isNotEmpty;
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        var idValue = int.tryParse(filter.id) ?? 0;
+        builder = builder.where('ID', idValue);
+      }
+      if (filter != null && filter.title.isNotEmpty) {
+        builder = builder.where(
+          'LogTitle',
+          '%${escapeLike(filter.title)}%',
+          comparator: 'like',
+        );
+      }
+      return builder.count();
+    }
+    var builder = laconic.table('$_table as qt');
+    builder = builder.leftJoin(
+      'quest_template_locale as qtl',
+      (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
+    );
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  @override
+  Future<QuestTemplateEntity> createQuestTemplate() async {
+    return QuestTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
+  }
+
+  @override
+  Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
+    int page = 1,
+    QuestTemplateFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table as qt');
+    final fields = <String>[
+      'qt.ID',
+      'qt.LogTitle',
+      if (localeEnabled) 'qtl.Title as localeTitle',
+      'qt.QuestDescription',
+      if (localeEnabled) 'qtl.Details as localeDetails',
+      'qt.QuestType',
+      'qt.QuestLevel',
+      'qt.MinLevel',
+    ];
+    builder = builder.select(fields);
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'quest_template_locale as qtl',
+        (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
+      );
+    }
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('qt.ID');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefQuestTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  @override
+  Future<List<QuestTemplateEntity>> getQuestTemplates() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
+  }
+
+  @override
+  QueryBuilder _applyFilter(QueryBuilder builder, QuestTemplateFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      var idValue = int.tryParse(filter.id) ?? 0;
+      builder = builder.where('qt.ID', idValue);
+    }
+    if (filter.title.isNotEmpty) {
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['qt.LogTitle', 'qtl.Title'],
+          '%${escapeLike(filter.title)}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'qt.LogTitle',
+          '%${escapeLike(filter.title)}%',
+          comparator: 'like',
+        );
+      }
+    }
+    return builder;
+  }
+}

@@ -31,7 +31,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+# 匹配任意层级(monorepo 下 app 在 packages/foxy,构建产物在 packages/foxy/build)
+build/
 
 # Symbolication related
 app.*.symbols

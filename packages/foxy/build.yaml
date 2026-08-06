@@ -1,0 +1,40 @@
+targets:
+  $default:
+    builders:
+      foxy:foxy_entity:
+        generate_for:
+          - lib/entity/**_entity.dart
+      foxy:foxy_repository:
+        generate_for:
+          - lib/repository/**_repository.dart
+      foxy:foxy_view_model:
+        generate_for:
+          - lib/view_model/**_view_model.dart
+
+builders:
+  foxy_entity:
+    import: "package:foxy_generator/builder.dart"
+    builder_factories: ["foxyEntityBuilder"]
+    build_extensions:
+      ".dart": [".foxy_entity.g.part"]
+    auto_apply: root_package
+    build_to: cache
+    applies_builders: ["source_gen:combining_builder"]
+
+  foxy_repository:
+    import: "package:foxy_generator/builder.dart"
+    builder_factories: ["foxyRepositoryBuilder"]
+    build_extensions:
+      ".dart": [".foxy_repository.g.part"]
+    auto_apply: root_package
+    build_to: cache
+    applies_builders: ["source_gen:combining_builder"]
+
+  foxy_view_model:
+    import: "package:foxy_generator/builder.dart"
+    builder_factories: ["foxyViewModelBuilder"]
+    build_extensions:
+      ".dart": [".foxy_view_model.g.part"]
+    auto_apply: root_package
+    build_to: cache
+    applies_builders: ["source_gen:combining_builder"]
