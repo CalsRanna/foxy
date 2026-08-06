@@ -8,7 +8,6 @@ import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
-import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
 import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
@@ -217,14 +216,6 @@ void main() {
         ),
       );
       GetIt.instance.registerSingleton(
-        CopyGossipMenuOptionUseCase(
-          transaction: transaction,
-          optionRepository: baseRepository,
-          localeRepository: localeRepository,
-          activityLogService: activityLogService,
-        ),
-      );
-      GetIt.instance.registerSingleton(
         DestroyGossipMenuOptionUseCase(
           transaction: transaction,
           optionRepository: baseRepository,
@@ -290,36 +281,26 @@ void main() {
       expect(viewModel.menuIdController.collect(), 12);
     });
 
-    test('复制 locale 失败时回滚新 base 和已复制 locale', () async {
-      localeRepository.failStores = true;
-      final useCase = GetIt.instance.get<CopyGossipMenuOptionUseCase>();
-
-      await expectLater(
-        useCase.execute(const GossipMenuOptionKey(menuId: 10, optionId: 2)),
-        throwsA(isA<StateError>()),
-      );
-
-      expect(baseRepository.rows, hasLength(1));
-      expect(
-        GossipMenuOptionKey.fromEntity(baseRepository.rows.single),
+    test('复制只复制主行,不复制 locale 子表', () async {
+      await baseRepository.copyGossipMenuOption(
         const GossipMenuOptionKey(menuId: 10, optionId: 2),
       );
+
+      // 复制产生了一条新主行
+      expect(baseRepository.rows, hasLength(2));
+      // locale 子表未被复制:仍只有源记录那一条
       expect(localeRepository.rows, hasLength(1));
-      expect(
-        GossipMenuOptionLocaleKey.fromEntity(localeRepository.rows.single),
-        const GossipMenuOptionLocaleKey(
-          menuId: 10,
-          optionId: 2,
-          locale: 'zhCN',
-        ),
-      );
+      // 且 locale 行仍指向源 key,不是新 key
+      final locale = localeRepository.rows.single;
+      expect(locale.menuId, 10);
+      expect(locale.optionId, 2);
     });
 
     test('复制源不存在时抛出稳定错误且不产生目标记录', () async {
-      final useCase = GetIt.instance.get<CopyGossipMenuOptionUseCase>();
-
       await expectLater(
-        useCase.execute(const GossipMenuOptionKey(menuId: 99, optionId: 1)),
+        baseRepository.copyGossipMenuOption(
+          const GossipMenuOptionKey(menuId: 99, optionId: 1),
+        ),
         throwsA(isA<RecordNotFoundException>()),
       );
 
@@ -386,7 +367,6 @@ class _FakeGossipMenuOptionLocaleRepository
   final List<GossipMenuOptionLocaleEntity> rows;
   final destroyKeys = <GossipMenuOptionLocaleKey>[];
   bool failUpdates = false;
-  bool failStores = false;
   final updateKeys = <GossipMenuOptionLocaleKey>[];
 
   _FakeGossipMenuOptionLocaleRepository(this.rows);
@@ -427,7 +407,6 @@ class _FakeGossipMenuOptionLocaleRepository
   Future<void> storeGossipMenuOptionLocale(
     GossipMenuOptionLocaleEntity model,
   ) async {
-    if (failStores) throw StateError('locale store failed');
     rows.add(model);
   }
 

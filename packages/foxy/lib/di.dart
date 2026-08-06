@@ -141,7 +141,6 @@ import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_c
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
-import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/create_gossip_menu_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_npc_text_use_case.dart';
@@ -629,14 +628,6 @@ class DI {
     );
     _instance.registerFactory(
       () => SaveGossipMenuOptionUseCase(
-        transaction: _instance.get<DatabaseTransaction>(),
-        optionRepository: _instance.get<GossipMenuOptionRepository>(),
-        localeRepository: _instance.get<GossipMenuOptionLocaleRepository>(),
-        activityLogService: _instance.get<ActivityLogService>(),
-      ),
-    );
-    _instance.registerFactory(
-      () => CopyGossipMenuOptionUseCase(
         transaction: _instance.get<DatabaseTransaction>(),
         optionRepository: _instance.get<GossipMenuOptionRepository>(),
         localeRepository: _instance.get<GossipMenuOptionLocaleRepository>(),

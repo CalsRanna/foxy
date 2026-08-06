@@ -5,7 +5,6 @@ import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
-import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -15,7 +14,6 @@ import 'package:signals/signals.dart';
 class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GossipMenuOptionRepository>();
   final _saveUseCase = GetIt.instance.get<SaveGossipMenuOptionUseCase>();
-  final _copyUseCase = GetIt.instance.get<CopyGossipMenuOptionUseCase>();
   final _destroyUseCase = GetIt.instance.get<DestroyGossipMenuOptionUseCase>();
 
   final linkKey = signal<int?>(null);
@@ -72,7 +70,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     submitting.value = true;
     errorMessage.value = null;
     try {
-      await _copyUseCase.execute(key);
+      await _repository.copyGossipMenuOption(key);
       if (token != _interactionToken || linkKey.value != link) return;
       try {
         _logActivity(ActivityActionType.copy, key);
