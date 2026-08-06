@@ -65,6 +65,10 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           username: username,
           password: password,
           useSsl: useSsl,
+          // Non-TLS needs RSA public-key retrieval for MySQL 8's
+          // caching_sha2_password (laconic_mysql 3.2.0 disables it by
+          // default).
+          allowPublicKeyRetrieval: !useSsl,
         ),
       ),
     );

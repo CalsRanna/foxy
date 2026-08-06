@@ -81,9 +81,12 @@ final class ImportDbcUseCase {
         database: config['database']?.toString() ?? 'acore_world',
         username: config['username']?.toString() ?? 'acore',
         password: config['password']?.toString() ?? 'acore',
-        // The TLS switch follows the bootstrap-page config; recommended for
-        // remote hosts (data-plane encryption).
+        // The TLS switch follows the saved config (`use_ssl: true` opt-in);
+        // off by default. Non-TLS needs RSA public-key retrieval for MySQL
+        // 8's caching_sha2_password (laconic_mysql 3.2.0 disables it by
+        // default).
         useSsl: config['use_ssl'] == true,
+        allowPublicKeyRetrieval: config['use_ssl'] != true,
       );
 
       DbcSyncResult? result;

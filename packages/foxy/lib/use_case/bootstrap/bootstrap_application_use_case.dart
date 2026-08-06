@@ -63,13 +63,14 @@ final class BootstrapApplicationUseCase {
   Future<BootstrapApplicationResult> execute(
     BootstrapApplicationInput input,
   ) async {
-    // Read local config first (no network dependency); the TLS switch
-    // defaults to the saved value; on first-time bootstrap with a remote
-    // host, recommend enabling it (data-plane encryption).
+    // Read local config first (no network dependency). SSL is off by
+    // default — only the saved config's explicit `use_ssl: true` (or the
+    // bootstrap-page switch) enables it. No automatic enabling for remote
+    // hosts: a self-signed remote certificate would then fail strict
+    // verification, and users who want encryption opt in via config.
     final savedConfig = await _configUtil.load();
     final useSsl =
-        input.useSsl ??
-        savedConfig['use_ssl'] == true || _isRemoteHost(input.host);
+        input.useSsl ?? savedConfig['use_ssl'] == true;
     final config = MysqlConfig(
       host: input.host,
       port: input.port,
@@ -77,6 +78,11 @@ final class BootstrapApplicationUseCase {
       username: input.username,
       password: input.password,
       useSsl: useSsl,
+      // MySQL 8's default caching_sha2_password needs the server RSA public
+      // key to encrypt the password over a non-TLS connection. laconic_mysql
+      // 3.2.0 disabled automatic retrieval by default (MITM hardening), so
+      // opt in explicitly whenever TLS is off; TLS keeps strict defaults.
+      allowPublicKeyRetrieval: !useSsl,
     );
     await Database.instance.connect(
       config,
@@ -120,14 +126,5 @@ final class BootstrapApplicationUseCase {
       features: List.unmodifiable(features),
       configSaved: configSaved,
     );
-  }
-
-  /// Any address other than the local loopback counts as a remote host
-  /// (TLS recommended for remote connections).
-  static bool _isRemoteHost(String host) {
-    final normalized = host.trim().toLowerCase();
-    return normalized != 'localhost' &&
-        normalized != '127.0.0.1' &&
-        normalized != '::1';
   }
 }
