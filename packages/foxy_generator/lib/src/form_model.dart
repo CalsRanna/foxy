@@ -65,6 +65,14 @@ final class FormGenerationModel {
   /// uses it to write back persistedKey.
   final String? singleKeyFieldName;
 
+  /// Physical table name from `@FoxyFullEntity(table:)`.
+  final String table;
+
+  /// Whether to emit the `_logActivity` hook. Linked List/Detail emitters
+  /// reuse the FormEmitter for controller boilerplate but emit their own
+  /// `_logActivity(key)` — this must be false there to avoid a duplicate.
+  final bool emitLogActivity;
+
   const FormGenerationModel({
     required this.className,
     required this.entityClassName,
@@ -74,7 +82,14 @@ final class FormGenerationModel {
     required this.repositoryClassName,
     required this.keyType,
     required this.singleKeyFieldName,
+    required this.table,
+    this.emitLogActivity = true,
   });
+
+  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
+  /// module name.
+  String get moduleName =>
+      table.startsWith('foxy.') ? table.substring(5) : table;
 
   /// `TalentEntity` → `talent` (matches the Repository's entity parameter
   /// naming; reserved words get a trailing underscore).

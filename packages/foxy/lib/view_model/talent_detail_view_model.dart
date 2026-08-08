@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -17,20 +18,9 @@ part 'talent_detail_view_model.g.dart';
 )
 class TalentDetailViewModel
     with FieldControllerMixin, _TalentDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   /// Collects data from all controllers to build the Talent
 
   /// Leaves the page
 
-  @override
-  void _logActivity(ActivityActionType action, TalentEntity talent) {
-    final log = ActivityLogEntity(
-      module: 'talent',
-      actionType: action,
-      entityName: 'Talent ${talent.id}',
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

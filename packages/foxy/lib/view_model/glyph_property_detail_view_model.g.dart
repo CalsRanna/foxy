@@ -103,8 +103,21 @@ mixin _GlyphPropertyDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
   void _logActivity(
     ActivityActionType action,
     GlyphPropertyEntity glyphProperty,
-  ) {}
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'dbc_glyph_properties',
+          actionType: action,
+          entityName: 'GlyphProperty ${glyphProperty.id}',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

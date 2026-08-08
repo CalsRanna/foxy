@@ -282,5 +282,18 @@ mixin _ItemSetDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, ItemSetEntity itemSet) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, ItemSetEntity itemSet) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'dbc_item_set',
+          actionType: action,
+          entityName: 'ItemSet ${itemSet.id}',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

@@ -28,6 +28,9 @@ final class LinkedDetailGenerationModel {
   /// key).
   final String singleKeyFieldName;
 
+  /// Physical table name from `@FoxyFullEntity(table:)`.
+  final String table;
+
   const LinkedDetailGenerationModel({
     required this.className,
     required this.entityClassName,
@@ -36,7 +39,13 @@ final class LinkedDetailGenerationModel {
     required this.repositoryClassName,
     required this.keyType,
     required this.singleKeyFieldName,
+    required this.table,
   });
+
+  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
+  /// module name.
+  String get moduleName =>
+      table.startsWith('foxy.') ? table.substring(5) : table;
 
   String get baseName =>
       entityClassName.substring(0, entityClassName.length - 'Entity'.length);

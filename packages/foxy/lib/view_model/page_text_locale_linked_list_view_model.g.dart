@@ -28,4 +28,22 @@ mixin _PageTextLocaleLinkedListViewModelMixin on FieldControllerMixin {
       verifiedBuild: verifiedBuildController.collect(),
     );
   }
+
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(
+    ActivityActionType action,
+    PageTextLocaleEntity pageTextLocale,
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'page_text_locale',
+          actionType: action,
+          entityName: 'PageTextLocale',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

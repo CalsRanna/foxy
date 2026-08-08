@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:foxy/constant/page_text_constants.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/page_text_locale_repository.dart';
@@ -145,6 +148,12 @@ class PageTextLocaleLinkedListViewModel
         await _repository.updatePageTextLocale(originalKey, candidate);
       }
       if (token != _interactionToken || linkKey.value != link) return;
+      _logActivity(
+        originalKey == null
+            ? ActivityActionType.create
+            : ActivityActionType.update,
+        candidate,
+      );
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {

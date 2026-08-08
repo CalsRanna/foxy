@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy_annotation/list_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -17,18 +18,4 @@ class GossipMenuListViewModel
         FieldControllerMixin,
         QueryVersionMixin,
         _GossipMenuListViewModelMixin {
-  @override
-  void _logActivity(ActivityActionType action, GossipMenuKey key) {
-    final templates = items.value;
-    final template = templates.where((t) => t.key == key).firstOrNull;
-    final name = template?.text ?? '';
-    final log = ActivityLogEntity(
-      module: 'gossip_menu',
-      actionType: action,
-      entityName:
-          'GossipMenu ${key.menuId}/${key.textId}${name.isEmpty ? '' : ' - $name'}',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
 }

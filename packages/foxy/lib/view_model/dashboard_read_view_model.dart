@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/event/activity_logged_event.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -27,7 +27,7 @@ class DashboardReadViewModel {
   final loading = signal(false);
   final errorMessage = signal<String?>(null);
 
-  StreamSubscription<ActivityLoggedEvent>? _activitySub;
+  StreamSubscription<EntityWrittenEvent>? _activitySub;
   int _refreshToken = 0;
 
   void dispose() {
@@ -36,7 +36,7 @@ class DashboardReadViewModel {
   }
 
   Future<void> initSignals() async {
-    _activitySub ??= _eventBus.on<ActivityLoggedEvent>().listen(
+    _activitySub ??= _eventBus.on<EntityWrittenEvent>().listen(
       (event) => _onActivityLogged(event.log),
     );
     await _refresh();

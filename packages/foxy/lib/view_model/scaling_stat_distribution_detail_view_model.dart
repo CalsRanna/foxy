@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -28,23 +29,9 @@ part 'scaling_stat_distribution_detail_view_model.g.dart';
 )
 class ScalingStatDistributionDetailViewModel
     with FieldControllerMixin, _ScalingStatDistributionDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   /// Collects data from all controllers to build the ScalingStatDistribution
 
   /// Leaves the page
 
-  @override
-  void _logActivity(
-    ActivityActionType action,
-    ScalingStatDistributionEntity t,
-  ) {
-    final log = ActivityLogEntity(
-      module: 'scaling_stat_distribution',
-      actionType: action,
-      entityName: 'ScalingStatDistribution ${t.id}',
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

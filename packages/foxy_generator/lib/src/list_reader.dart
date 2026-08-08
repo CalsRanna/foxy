@@ -64,7 +64,8 @@ final class ListReader {
       );
     }
 
-    final entityElement = _readEntity(annotation, className, element);
+    final (InterfaceElement entityElement, String table) =
+        _readEntity(annotation, className, element);
     final repositoryElement = _readRepository(
       annotation,
       className,
@@ -141,10 +142,11 @@ final class ListReader {
       countMethodName: 'count${pluralize(baseName)}',
       copyMethodName: 'copy$baseName',
       keyType: keyType,
+      table: table,
     );
   }
 
-  InterfaceElement _readEntity(
+  (InterfaceElement, String) _readEntity(
     ConstantReader annotation,
     String className,
     Element element,
@@ -171,7 +173,17 @@ final class ListReader {
         '只绑定已迁移的生成型 Full Entity。',
       );
     }
-    return entityElement;
+    final table = ConstantReader(entityAnnotations.single)
+        .read('table')
+        .stringValue;
+    if (table.isEmpty) {
+      _fail(
+        '${entityElement.name} 的 @FoxyFullEntity 必须声明 table。',
+        entityElement,
+        '声明物理表名，如 @FoxyFullEntity(table: \'xxx\')。',
+      );
+    }
+    return (entityElement, table);
   }
 
   InterfaceElement _readRepository(

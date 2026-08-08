@@ -1,10 +1,11 @@
 import 'package:foxy/constant/condition_source_type.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -16,8 +17,24 @@ import 'package:signals/signals.dart';
 const kConditionModeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
 
 class ConditionDetailViewModel with FieldControllerMixin {
+  void _logActivity(ActivityActionType action, ConditionEntity c) {
+    try {
+      final log = ActivityLogEntity(
+        module: 'conditions',
+        actionType: action,
+        entityName:
+            'Condition ${c.sourceTypeOrReferenceId}/${c.sourceGroup}/'
+            '${c.sourceEntry}/${c.sourceId}/${c.elseGroup}'
+            '${c.comment.isEmpty ? '' : ' - ${c.comment}'}',
+        createdAt: DateTime.now(),
+      );
+      GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+    } catch (e) {
+      LoggerUtil.instance.e('记录条件活动失败: $e');
+    }
+  }
+
   final _repository = GetIt.instance.get<ConditionRepository>();
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   final entity = signal<ConditionEntity?>(null);
   final persistedKey = signal<ConditionKey?>(null);
@@ -251,22 +268,6 @@ class ConditionDetailViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, ConditionEntity c) {
-    try {
-      final log = ActivityLogEntity(
-        module: 'conditions',
-        actionType: action,
-        entityName:
-            'Condition ${c.sourceTypeOrReferenceId}/${c.sourceGroup}/'
-            '${c.sourceEntry}/${c.sourceId}/${c.elseGroup}'
-            '${c.comment.isEmpty ? '' : ' - ${c.comment}'}',
-        createdAt: DateTime.now(),
-      );
-      _activityLogService.recordBestEffort(log);
-    } catch (e) {
-      LoggerUtil.instance.e('记录条件活动失败: $e');
-    }
-  }
 
   void _onConditionModeChange() {
     selectedConditionMode.value = conditionModeController.collect();

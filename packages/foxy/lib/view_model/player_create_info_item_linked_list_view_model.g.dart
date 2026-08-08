@@ -33,4 +33,22 @@ mixin _PlayerCreateInfoItemLinkedListViewModelMixin on FieldControllerMixin {
       note: noteController.collect(),
     );
   }
+
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(
+    ActivityActionType action,
+    PlayerCreateInfoItemEntity playerCreateInfoItem,
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'playercreateinfo_item',
+          actionType: action,
+          entityName: 'PlayerCreateInfoItem',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

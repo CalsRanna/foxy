@@ -143,9 +143,20 @@ mixin _SpellBonusDataLinkedDetailViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
-  /// Override point: records child-table row add/update/delete activity
-  /// log.
-  void _logActivity(ActivityActionType action, int key) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, int key) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'spell_bonus_data',
+          actionType: action,
+          entityName: key.toString(),
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 
   Future<void> _refresh() async {
     final token = ++_refreshToken;

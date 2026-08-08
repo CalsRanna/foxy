@@ -224,5 +224,18 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, SmartScriptEntity smartScript) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, SmartScriptEntity smartScript) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'smart_scripts',
+          actionType: action,
+          entityName: 'SmartScript',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

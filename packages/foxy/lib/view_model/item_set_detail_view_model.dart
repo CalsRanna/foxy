@@ -1,8 +1,9 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -14,7 +15,6 @@ part 'item_set_detail_view_model.g.dart';
 @FoxyDetailViewModel(entity: ItemSetEntity, repository: ItemSetRepository)
 class ItemSetDetailViewModel
     with FieldControllerMixin, _ItemSetDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   final nameLangFlags = signal<int>(0);
 
@@ -42,14 +42,4 @@ class ItemSetDetailViewModel
 
   /// Leaves the page
 
-  @override
-  void _logActivity(ActivityActionType action, ItemSetEntity itemSet) {
-    final log = ActivityLogEntity(
-      module: 'item_set',
-      actionType: action,
-      entityName: 'ItemSet ${itemSet.id}',
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

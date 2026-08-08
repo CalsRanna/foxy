@@ -41,6 +41,8 @@ final class LinkedDetailEmitter {
       repositoryClassName: '',
       keyType: '',
       singleKeyFieldName: null,
+      table: model.table,
+      emitLogActivity: false,
     );
     final formMixin = const FormEmitter().emit(form);
     final bodyStart = formMixin.indexOf('{') + 1;
@@ -171,12 +173,19 @@ final class LinkedDetailEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln(
-        '  /// Override point: records child-table row add/update/delete activity\n'
-        '  /// log.',
+        '  /// Fires the activity-log event after a write; persistence is handled by\n'
+        '  /// the single ActivityLogListener aspect.',
       )
       ..writeln(
-        '  void _logActivity(ActivityActionType action, ${model.keyType} key) {}',
+        '  void _logActivity(ActivityActionType action, ${model.keyType} key) {',
       )
+      ..writeln('    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(')
+      ..writeln('      module: \'${model.moduleName}\',')
+      ..writeln('      actionType: action,')
+      ..writeln('      entityName: key.toString(),')
+      ..writeln('      createdAt: DateTime.now(),')
+      ..writeln('    )));')
+      ..writeln('  }')
       ..writeln()
       ..writeln('  Future<void> _refresh() async {')
       ..writeln('    final token = ++_refreshToken;')

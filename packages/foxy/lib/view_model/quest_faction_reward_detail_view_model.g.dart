@@ -122,8 +122,21 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
   void _logActivity(
     ActivityActionType action,
     QuestFactionRewardEntity questFactionReward,
-  ) {}
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'dbc_quest_faction_reward',
+          actionType: action,
+          entityName: 'QuestFactionReward ${questFactionReward.id}',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

@@ -101,8 +101,21 @@ mixin _CurrencyTypeDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
   void _logActivity(
     ActivityActionType action,
     CurrencyTypeEntity currencyType,
-  ) {}
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'dbc_currency_types',
+          actionType: action,
+          entityName: 'CurrencyType ${currencyType.id}',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

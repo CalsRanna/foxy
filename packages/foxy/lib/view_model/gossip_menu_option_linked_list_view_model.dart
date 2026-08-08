@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
@@ -12,6 +13,16 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
+  void _logActivity(ActivityActionType action, GossipMenuOptionKey key) {
+    final log = ActivityLogEntity(
+      module: 'gossip_menu_option',
+      actionType: action,
+      entityName: key.toString(),
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+  }
+
   final _repository = GetIt.instance.get<GossipMenuOptionRepository>();
   final _saveUseCase = GetIt.instance.get<SaveGossipMenuOptionUseCase>();
   final _destroyUseCase = GetIt.instance.get<DestroyGossipMenuOptionUseCase>();
@@ -281,15 +292,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, GossipMenuOptionKey key) {
-    final log = ActivityLogEntity(
-      module: 'gossip_menu_option',
-      actionType: action,
-      entityName: key.toString(),
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
 
   Future<void> _refresh() async {
     final link = linkKey.value;

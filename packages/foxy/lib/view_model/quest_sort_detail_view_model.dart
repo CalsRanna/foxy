@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -9,8 +10,17 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class QuestSortDetailViewModel with FieldControllerMixin {
+  void _logActivity(ActivityActionType action, QuestSortEntity t) {
+    final log = ActivityLogEntity(
+      module: 'quest_sort',
+      actionType: action,
+      entityName: t.sortNameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+  }
+
   final _repository = GetIt.instance.get<QuestSortRepository>();
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   final entity = signal<QuestSortEntity?>(null);
   final persistedKey = signal<int?>(null);
@@ -119,13 +129,4 @@ class QuestSortDetailViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, QuestSortEntity t) {
-    final log = ActivityLogEntity(
-      module: 'quest_sort',
-      actionType: action,
-      entityName: t.sortNameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

@@ -1,8 +1,9 @@
 import 'package:foxy/constant/game_object_constants.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -44,7 +45,6 @@ part 'game_object_template_detail_view_model.g.dart';
 )
 class GameObjectTemplateDetailViewModel
     with FieldControllerMixin, _GameObjectTemplateDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   /// Currently selected GameObject type; drives the Data0..Data23 edit
   /// specs
@@ -87,19 +87,6 @@ class GameObjectTemplateDetailViewModel
     }
   }
 
-  @override
-  void _logActivity(
-    ActivityActionType action,
-    GameObjectTemplateEntity gameObjectTemplate,
-  ) {
-    final log = ActivityLogEntity(
-      module: 'gameobject_template',
-      actionType: action,
-      entityName: gameObjectTemplate.name,
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 
   void _onTypeChanged() {
     selectedType.value = typeController.collect();

@@ -1,8 +1,9 @@
 import 'package:foxy/constant/smart_script_constants.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -37,7 +38,6 @@ part 'smart_script_detail_view_model.g.dart';
 )
 class SmartScriptDetailViewModel
     with FieldControllerMixin, _SmartScriptDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   /// Currently selected four discriminator types; drive each parameter
   /// group's edit specs
@@ -96,18 +96,6 @@ class SmartScriptDetailViewModel
     _refreshParamEditors();
   }
 
-  @override
-  void _logActivity(ActivityActionType action, SmartScriptEntity smartScript) {
-    final log = ActivityLogEntity(
-      module: 'smart_script',
-      actionType: action,
-      entityName:
-          'SmartScript ${smartScript.entryOrGuid}/${smartScript.sourceType}/${smartScript.id}/${smartScript.link}'
-          '${smartScript.comment.isEmpty ? '' : ' - ${smartScript.comment}'}',
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 
   void _onActionTypeChange() {
     selectedActionType.value = actionTypeController.collect();

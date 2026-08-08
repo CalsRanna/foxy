@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_link_key.dart';
 import 'package:foxy_annotation/form_annotations.dart';
@@ -153,6 +156,12 @@ class ItemEnchantmentTemplateLinkedListViewModel
         await _repository.updateItemEnchantmentTemplate(originalKey, candidate);
       }
       if (token != _interactionToken || linkKey.value != link) return;
+      _logActivity(
+        originalKey == null
+            ? ActivityActionType.create
+            : ActivityActionType.update,
+        candidate,
+      );
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {

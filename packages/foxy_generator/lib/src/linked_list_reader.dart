@@ -132,6 +132,7 @@ final class LinkedListReader {
           keyFieldTypes.length == 1 ? keyFieldNames.single : null,
       linkFieldName: linkFieldName,
       linkKeyType: linkFieldType,
+      table: form.table,
     );
   }
 

@@ -25,4 +25,22 @@ mixin _ItemEnchantmentTemplateLinkedListViewModelMixin on FieldControllerMixin {
       chance: chanceController.collect(),
     );
   }
+
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(
+    ActivityActionType action,
+    ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'item_enchantment_template',
+          actionType: action,
+          entityName: 'ItemEnchantmentTemplate',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

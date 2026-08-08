@@ -48,6 +48,9 @@ final class ListGenerationModel {
   /// fields).
   final String keyType;
 
+  /// Physical table name from `@FoxyFullEntity(table:)`.
+  final String table;
+
   const ListGenerationModel({
     required this.className,
     required this.entityClassName,
@@ -59,7 +62,13 @@ final class ListGenerationModel {
     required this.countMethodName,
     required this.copyMethodName,
     required this.keyType,
+    required this.table,
   });
+
+  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
+  /// module name.
+  String get moduleName =>
+      table.startsWith('foxy.') ? table.substring(5) : table;
 
   /// `CreatureTemplateEntity` → `creatureTemplate` (matches the
   /// Repository's entity parameter naming; used as the entity name in logs

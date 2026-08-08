@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -9,8 +10,17 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
+  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
+    final log = ActivityLogEntity(
+      module: 'spell_item_enchantment',
+      actionType: action,
+      entityName: t.nameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+  }
+
   final _repository = GetIt.instance.get<SpellItemEnchantmentRepository>();
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   final entity = signal<SpellItemEnchantmentEntity?>(null);
   final persistedKey = signal<int?>(null);
@@ -219,13 +229,4 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
-    final log = ActivityLogEntity(
-      module: 'spell_item_enchantment',
-      actionType: action,
-      entityName: t.nameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

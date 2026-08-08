@@ -1,3 +1,4 @@
+import 'package:foxy/event/activity_log_listener.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
@@ -281,6 +282,16 @@ class DI {
     _instance.registerLazySingleton(() => DbcExportRegistry());
     _instance.registerLazySingleton(
       () => ActivityLogService(_instance.get<ActivityLogRepository>()),
+    );
+    // Activity log persistence aspect: subscribes EntityWrittenEvent once
+    // the bus exists; generated VMs fire the event after writes. The service
+    // is resolved lazily at event time (its repository dependency registers
+    // later in DI).
+    _instance.registerSingleton(
+      ActivityLogListener(
+        _instance.get<EventBus>(),
+        () => _instance.get<ActivityLogService>(),
+      )..start(),
     );
   }
 

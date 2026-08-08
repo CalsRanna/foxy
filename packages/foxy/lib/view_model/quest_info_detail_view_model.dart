@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -9,8 +10,17 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class QuestInfoDetailViewModel with FieldControllerMixin {
+  void _logActivity(ActivityActionType action, QuestInfoEntity t) {
+    final log = ActivityLogEntity(
+      module: 'quest_info',
+      actionType: action,
+      entityName: t.infoNameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+  }
+
   final _repository = GetIt.instance.get<QuestInfoRepository>();
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   final entity = signal<QuestInfoEntity?>(null);
   final persistedKey = signal<int?>(null);
@@ -119,13 +129,4 @@ class QuestInfoDetailViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, QuestInfoEntity t) {
-    final log = ActivityLogEntity(
-      module: 'quest_info',
-      actionType: action,
-      entityName: t.infoNameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

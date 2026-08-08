@@ -308,8 +308,21 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
   void _logActivity(
     ActivityActionType action,
     CreatureTemplateEntity creatureTemplate,
-  ) {}
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'creature_template',
+          actionType: action,
+          entityName: creatureTemplate.name,
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

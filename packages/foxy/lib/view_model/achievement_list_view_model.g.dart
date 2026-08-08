@@ -97,8 +97,20 @@ mixin _AchievementListViewModelMixin
     );
   }
 
-  /// Override point: records copy/delete activity log; entityName differs per page.
-  void _logActivity(ActivityActionType action, int key) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, int key) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'dbc_achievement',
+          actionType: action,
+          entityName: key.toString(),
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 
   Future<void> _refresh() async {
     final token = ++_refreshToken;

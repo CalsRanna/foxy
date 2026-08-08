@@ -95,5 +95,18 @@ mixin _GossipMenuDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, GossipMenuEntity gossipMenu) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, GossipMenuEntity gossipMenu) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'gossip_menu',
+          actionType: action,
+          entityName: 'GossipMenu',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

@@ -112,6 +112,7 @@ final class LinkedDetailReader {
       repositoryClassName: repositoryClassName,
       keyType: form.keyType,
       singleKeyFieldName: singleKeyFieldName,
+      table: form.table,
     );
   }
 

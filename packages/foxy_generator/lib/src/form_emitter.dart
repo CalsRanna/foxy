@@ -42,7 +42,10 @@ final class FormEmitter {
     _emitApply(buffer, model);
     buffer.writeln();
     _emitCollect(buffer, model);
-    if (model.skeletonEnabled) {
+    // The activity-log hook is emitted even with the skeleton disabled:
+    // hand-written persist overrides still call `_logActivity`. Linked
+    // emitters turn it off (they emit their own `(action, key)` hook).
+    if (model.emitLogActivity) {
       buffer.writeln();
       _emitLogActivity(buffer, model);
     }
@@ -169,10 +172,32 @@ final class FormEmitter {
   }
 
   void _emitLogActivity(StringBuffer buffer, FormGenerationModel model) {
-    buffer.writeln(
-      '  void _logActivity(ActivityActionType action, '
-      '${model.entityClassName} ${model.entityCamelName}) {}',
-    );
+    final nameField = model.fields
+        .where((f) => f.dartName == 'name')
+        .firstOrNull;
+    final entityNameExpr = nameField == null
+        ? model.singleKeyFieldName != null
+              ? '\'${model.baseName} \${${model.entityCamelName}.${model.singleKeyFieldName}}\''
+              : '\'${model.baseName}\''
+        : nameField.dartType == 'String?'
+              ? '${model.entityCamelName}.name ?? \'\''
+              : '${model.entityCamelName}.name';
+    buffer
+      ..writeln(
+        '  /// Fires the activity-log event after a write; persistence is handled by\n'
+        '  /// the single ActivityLogListener aspect.',
+      )
+      ..writeln(
+        '  void _logActivity(ActivityActionType action, '
+        '${model.entityClassName} ${model.entityCamelName}) {',
+      )
+      ..writeln('    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(')
+      ..writeln('      module: \'${model.moduleName}\',')
+      ..writeln('      actionType: action,')
+      ..writeln('      entityName: $entityNameExpr,')
+      ..writeln('      createdAt: DateTime.now(),')
+      ..writeln('    )));')
+      ..writeln('  }');
   }
 
   /// Aligned with hand-written style: the `SelectFieldController` family

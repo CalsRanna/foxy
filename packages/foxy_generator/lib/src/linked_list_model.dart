@@ -35,6 +35,9 @@ final class LinkedListGenerationModel {
   /// Link-key parameter type (always int in the single-link-key form).
   final String linkKeyType;
 
+  /// Physical table name from `@FoxyFullEntity(table:)`.
+  final String table;
+
   const LinkedListGenerationModel({
     required this.className,
     required this.entityClassName,
@@ -45,7 +48,13 @@ final class LinkedListGenerationModel {
     required this.singleKeyFieldName,
     required this.linkFieldName,
     required this.linkKeyType,
+    required this.table,
   });
+
+  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
+  /// module name.
+  String get moduleName =>
+      table.startsWith('foxy.') ? table.substring(5) : table;
 
   String get baseName =>
       entityClassName.substring(0, entityClassName.length - 'Entity'.length);

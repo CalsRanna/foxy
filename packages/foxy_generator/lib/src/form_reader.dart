@@ -81,6 +81,17 @@ final class FormReader {
       );
     }
 
+    final table = ConstantReader(entityAnnotations.single)
+        .read('table')
+        .stringValue;
+    if (table.isEmpty) {
+      _fail(
+        '$entityClassName 的 @FoxyFullEntity 必须声明 table。',
+        entityElement,
+        '声明物理表名，如 @FoxyFullEntity(table: \'xxx\')。',
+      );
+    }
+
     final constructor = entityElement.unnamedConstructor;
     if (constructor == null || !constructor.isGenerative) {
       _fail(
@@ -229,6 +240,7 @@ final class FormReader {
       repositoryClassName: repositoryClassName,
       keyType: keyType,
       singleKeyFieldName: singleKeyFieldName,
+      table: table,
     );
   }
 

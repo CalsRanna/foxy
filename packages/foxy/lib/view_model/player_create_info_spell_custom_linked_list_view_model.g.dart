@@ -31,4 +31,22 @@ mixin _PlayerCreateInfoSpellCustomLinkedListViewModelMixin
       note: noteController.collect(),
     );
   }
+
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(
+    ActivityActionType action,
+    PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'playercreateinfo_spell_custom',
+          actionType: action,
+          entityName: 'PlayerCreateInfoSpellCustom',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -16,7 +17,6 @@ part 'reference_loot_template_detail_view_model.g.dart';
 )
 class ReferenceLootTemplateDetailViewModel
     with FieldControllerMixin, _ReferenceLootTemplateDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   final hasReference = signal(false);
   ReferenceLootTemplateDetailViewModel() {
@@ -56,22 +56,6 @@ class ReferenceLootTemplateDetailViewModel
     }
   }
 
-  @override
-  void _logActivity(
-    ActivityActionType action,
-    ReferenceLootTemplateEntity referenceLootTemplate,
-  ) {
-    _activityLogService.recordBestEffort(
-      ActivityLogEntity(
-        module: 'reference_loot_template',
-        actionType: action,
-        entityName:
-            'ReferenceLoot ${referenceLootTemplate.entry}/${referenceLootTemplate.item}/'
-            '${referenceLootTemplate.reference}/${referenceLootTemplate.groupId}',
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
 
   void _syncReferenceState() {
     try {

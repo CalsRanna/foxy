@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy_annotation/list_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -14,14 +15,4 @@ part 'talent_list_view_model.g.dart';
 @FoxyListViewModel(entity: TalentEntity, repository: TalentRepository)
 class TalentListViewModel
     with FieldControllerMixin, QueryVersionMixin, _TalentListViewModelMixin {
-  @override
-  void _logActivity(ActivityActionType action, int key) {
-    final log = ActivityLogEntity(
-      module: 'talent',
-      actionType: action,
-      entityName: 'Talent $key',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
 }

@@ -220,9 +220,20 @@ mixin _SpellRankLinkedListViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
-  /// Override point: records child-table row add/update/copy/delete
-  /// activity log.
-  void _logActivity(ActivityActionType action, SpellRankKey key) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, SpellRankKey key) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'spell_ranks',
+          actionType: action,
+          entityName: key.toString(),
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 
   Future<void> _refresh() async {
     final link = linkKey.value;

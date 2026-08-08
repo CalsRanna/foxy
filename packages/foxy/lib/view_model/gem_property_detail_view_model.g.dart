@@ -106,5 +106,18 @@ mixin _GemPropertyDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, GemPropertyEntity gemProperty) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, GemPropertyEntity gemProperty) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'dbc_gem_properties',
+          actionType: action,
+          entityName: 'GemProperty ${gemProperty.id}',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

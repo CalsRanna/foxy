@@ -1,16 +1,11 @@
 import 'dart:async';
 
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/event/activity_logged_event.dart';
-import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
-import 'package:get_it/get_it.dart';
 
 class ActivityLogRepository with RepositoryMixin {
   static const _table = 'foxy.activity_log';
-
-  final _eventBus = GetIt.instance.get<EventBus>();
 
   Future<int> countActivityLogs() async {
     return laconic.table(_table).count();
@@ -30,7 +25,6 @@ class ActivityLogRepository with RepositoryMixin {
   /// log was persisted.
   Future<void> storeActivityLog(ActivityLogEntity log) async {
     await laconic.table(_table).insert([log.toJson()]);
-    _eventBus.fire(ActivityLoggedEvent(log));
   }
 
   /// Best-effort activity log: written asynchronously; failures are only

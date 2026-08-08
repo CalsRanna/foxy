@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -59,7 +60,6 @@ part 'item_template_detail_view_model.g.dart';
 )
 class ItemTemplateDetailViewModel
     with FieldControllerMixin, _ItemTemplateDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
   /// Signals
 
@@ -76,17 +76,4 @@ class ItemTemplateDetailViewModel
 
   bool get hasProspectingLoot => ((entity.value?.flags ?? 0) & 262144) != 0;
 
-  @override
-  void _logActivity(
-    ActivityActionType action,
-    ItemTemplateEntity itemTemplate,
-  ) {
-    final log = ActivityLogEntity(
-      module: 'item_template',
-      actionType: action,
-      entityName: itemTemplate.name,
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

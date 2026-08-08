@@ -60,9 +60,10 @@ void main() {
                 contains('SampleFilter _collectFilter() {'),
                 contains('entry: entryController.collect(),'),
                 contains('name: nameController.collect(),'),
-                contains(
-                  'void _logActivity(ActivityActionType action, int key) {}',
-                ),
+                contains("GetIt.instance.get<EventBus>().fire("),
+                contains('EntityWrittenEvent('),
+                contains("module: 'sample',"),
+                contains('entityName: key.toString(),'),
                 contains('_repository.getBriefSamples('),
                 contains('_repository.countSamples(filter: filter),'),
                 contains("LoggerUtil.instance.e('刷新列表失败: \$error');"),
@@ -159,9 +160,10 @@ void main() {
               allOf(<Matcher>[
                 contains('Future<void> copy(SampleKey key) async {'),
                 contains('Future<void> destroy(SampleKey key) async {'),
-                contains(
-                  'void _logActivity(ActivityActionType action, SampleKey key) {}',
-                ),
+                contains("GetIt.instance.get<EventBus>().fire("),
+                contains('EntityWrittenEvent('),
+                contains("module: 'sample',"),
+                contains('entityName: key.toString(),'),
               ]),
             ),
       },

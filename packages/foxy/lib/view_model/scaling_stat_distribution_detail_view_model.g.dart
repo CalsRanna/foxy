@@ -179,8 +179,21 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
   void _logActivity(
     ActivityActionType action,
     ScalingStatDistributionEntity scalingStatDistribution,
-  ) {}
+  ) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'dbc_scaling_stat_distribution',
+          actionType: action,
+          entityName: 'ScalingStatDistribution ${scalingStatDistribution.id}',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

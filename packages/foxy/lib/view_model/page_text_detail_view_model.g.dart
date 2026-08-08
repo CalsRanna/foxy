@@ -101,5 +101,18 @@ mixin _PageTextDetailViewModelMixin on FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, PageTextEntity pageText) {}
+  /// Fires the activity-log event after a write; persistence is handled by
+  /// the single ActivityLogListener aspect.
+  void _logActivity(ActivityActionType action, PageTextEntity pageText) {
+    GetIt.instance.get<EventBus>().fire(
+      EntityWrittenEvent(
+        ActivityLogEntity(
+          module: 'page_text',
+          actionType: action,
+          entityName: 'PageText ${pageText.id}',
+          createdAt: DateTime.now(),
+        ),
+      ),
+    );
+  }
 }

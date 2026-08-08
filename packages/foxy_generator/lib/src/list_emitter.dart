@@ -79,11 +79,19 @@ final class ListEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln(
-        '  /// Override point: records copy/delete activity log; entityName differs per page.',
+        '  /// Fires the activity-log event after a write; persistence is handled by\n'
+        '  /// the single ActivityLogListener aspect.',
       )
       ..writeln(
-        '  void _logActivity(ActivityActionType action, ${model.keyParameter}) {}',
+        '  void _logActivity(ActivityActionType action, ${model.keyParameter}) {',
       )
+      ..writeln('    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(')
+      ..writeln('      module: \'${model.moduleName}\',')
+      ..writeln('      actionType: action,')
+      ..writeln('      entityName: key.toString(),')
+      ..writeln('      createdAt: DateTime.now(),')
+      ..writeln('    )));')
+      ..writeln('  }')
       ..writeln()
       ..writeln('  Future<void> _refresh() async {')
       ..writeln('    final token = ++_refreshToken;')

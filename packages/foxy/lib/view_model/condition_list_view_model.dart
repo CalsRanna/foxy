@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy_annotation/list_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -17,16 +18,4 @@ class ConditionListViewModel
         FieldControllerMixin,
         QueryVersionMixin,
         _ConditionListViewModelMixin {
-  @override
-  void _logActivity(ActivityActionType action, ConditionKey key) {
-    final log = ActivityLogEntity(
-      module: 'conditions',
-      actionType: action,
-      entityName:
-          'Condition ${key.sourceTypeOrReferenceId}/${key.sourceGroup}/'
-          '${key.sourceEntry}/${key.sourceId}/${key.elseGroup}',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
 }

@@ -1,7 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
@@ -15,7 +16,6 @@ part 'gossip_menu_detail_view_model.g.dart';
 @FoxyDetailViewModel(entity: GossipMenuEntity, repository: GossipMenuRepository)
 class GossipMenuDetailViewModel
     with FieldControllerMixin, _GossipMenuDetailViewModelMixin {
-  final _activityLogService = GetIt.instance.get<ActivityLogService>();
   final _npcTextRepository = GetIt.instance.get<NpcTextRepository>();
   final _createUseCase = GetIt.instance.get<CreateGossipMenuUseCase>();
 
@@ -106,14 +106,4 @@ class GossipMenuDetailViewModel
     }
   }
 
-  @override
-  void _logActivity(ActivityActionType action, GossipMenuEntity gossipMenu) {
-    final log = ActivityLogEntity(
-      module: 'gossip_menu',
-      actionType: action,
-      entityName: 'GossipMenu ${gossipMenu.menuId}/${gossipMenu.textId}',
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
 }

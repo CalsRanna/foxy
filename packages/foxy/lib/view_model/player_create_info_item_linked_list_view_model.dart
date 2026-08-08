@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/event/entity_written_event.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_item_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/player_create_info_item_repository.dart';
@@ -142,6 +145,12 @@ class PlayerCreateInfoItemLinkedListViewModel
         await _repository.updatePlayerCreateInfoItem(originalKey, candidate);
       }
       if (token != _interactionToken || linkKey.value != link) return;
+      _logActivity(
+        originalKey == null
+            ? ActivityActionType.create
+            : ActivityActionType.update,
+        candidate,
+      );
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {

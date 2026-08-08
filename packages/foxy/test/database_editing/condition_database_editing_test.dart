@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
+import 'package:foxy/event/activity_log_listener.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
@@ -226,6 +227,12 @@ void main() {
       GetIt.instance.registerSingleton(ActivityLogService(activityLogs));
       GetIt.instance.registerSingleton<ConditionRepository>(repository);
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+      // Persistence aspect mirrors production DI: subscribes
+      // EntityWrittenEvent and records through the service.
+      GetIt.instance.registerSingleton(
+        ActivityLogListener(eventBus, () => ActivityLogService(activityLogs))
+          ..start(),
+      );
     });
 
     tearDown(() async {
