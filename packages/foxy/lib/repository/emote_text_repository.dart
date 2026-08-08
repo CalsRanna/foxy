@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'emote_text_repository.g.dart';
 
-@FoxyRepository(EmoteTextEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class EmoteTextRepository with RepositoryMixin, _EmoteTextRepositoryMixin {
@@ -23,7 +23,11 @@ class EmoteTextRepository with RepositoryMixin, _EmoteTextRepositoryMixin {
       builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('Name', '%${escapeLike(filter.name)}%', comparator: 'like');
+      builder = builder.where(
+        'Name',
+        '%${escapeLike(filter.name)}%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

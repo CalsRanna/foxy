@@ -292,7 +292,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     );
   }
 
-
   Future<void> _refresh() async {
     final link = linkKey.value;
     if (link == null) return;

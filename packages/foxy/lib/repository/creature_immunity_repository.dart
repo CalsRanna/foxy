@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_immunity_repository.g.dart';
 
-@FoxyRepository(CreatureImmunityEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('comment')
 class CreatureImmunityRepository

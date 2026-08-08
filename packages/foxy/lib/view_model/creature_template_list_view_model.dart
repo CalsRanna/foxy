@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'creature_template_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: CreatureTemplateEntity, repository: CreatureTemplateRepository)
+@FoxyListViewModel()
 class CreatureTemplateListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _CreatureTemplateListViewModelMixin {
-}
+        _CreatureTemplateListViewModelMixin {}

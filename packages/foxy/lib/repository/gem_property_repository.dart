@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'gem_property_repository.g.dart';
 
-@FoxyRepository(GemPropertyEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';

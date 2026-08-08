@@ -11,15 +11,10 @@ import 'package:signals/signals.dart';
 
 part 'currency_type_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: CurrencyTypeEntity,
-  repository: CurrencyTypeRepository,
-)
+@FoxyDetailViewModel()
 class CurrencyTypeDetailViewModel
     with FieldControllerMixin, _CurrencyTypeDetailViewModelMixin {
-
   /// Collects data from all controllers to build the CurrencyType
 
   /// Leaves the page
-
 }

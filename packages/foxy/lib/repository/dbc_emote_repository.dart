@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'dbc_emote_repository.g.dart';
 
-@FoxyRepository(DbcEmoteEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('command')
 class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
@@ -58,7 +58,9 @@ class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, DbcEmoteFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.command.isNotEmpty) {
       builder = builder.where(
         'EmoteSlashCommand',

@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'quest_template_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: QuestTemplateEntity, repository: QuestTemplateRepository)
+@FoxyListViewModel()
 class QuestTemplateListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _QuestTemplateListViewModelMixin {
-}
+        _QuestTemplateListViewModelMixin {}

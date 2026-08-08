@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_template_repository.g.dart';
 
-@FoxyRepository(QuestTemplateEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('title', column: 'qt.LogTitle')
 class QuestTemplateRepository

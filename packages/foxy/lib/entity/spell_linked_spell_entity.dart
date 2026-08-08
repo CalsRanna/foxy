@@ -5,7 +5,7 @@ part 'spell_linked_spell_entity.g.dart';
 /// Spell linked spells
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'spell_linked_spell')
+@FoxyFullEntity()
 class SpellLinkedSpellEntity with _SpellLinkedSpellEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('spell_trigger', key: true)

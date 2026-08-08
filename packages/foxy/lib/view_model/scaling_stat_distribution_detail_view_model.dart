@@ -12,7 +12,6 @@ import 'package:signals/signals.dart';
 part 'scaling_stat_distribution_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  entity: ScalingStatDistributionEntity,
   selects: {
     'statId0': 0,
     'statId1': 0,
@@ -25,13 +24,10 @@ part 'scaling_stat_distribution_detail_view_model.g.dart';
     'statId8': 0,
     'statId9': 0,
   },
-  repository: ScalingStatDistributionRepository,
 )
 class ScalingStatDistributionDetailViewModel
     with FieldControllerMixin, _ScalingStatDistributionDetailViewModelMixin {
-
   /// Collects data from all controllers to build the ScalingStatDistribution
 
   /// Leaves the page
-
 }

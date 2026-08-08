@@ -9,7 +9,7 @@ part 'skinning_loot_template_entity.g.dart';
 @FoxyBriefField.text('itemLocaleName')
 @FoxyBriefField.integer('itemQuality')
 @FoxyBriefField.text('itemIcon')
-@FoxyFullEntity(table: 'skinning_loot_template')
+@FoxyFullEntity()
 class SkinningLootTemplateEntity with _SkinningLootTemplateEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('Entry', key: true)

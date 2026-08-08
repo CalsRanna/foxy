@@ -5,7 +5,7 @@ part 'spell_bonus_data_entity.g.dart';
 /// Spell bonus data
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'spell_bonus_data')
+@FoxyFullEntity()
 class SpellBonusDataEntity with _SpellBonusDataEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('entry', key: true)

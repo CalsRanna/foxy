@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_focus_object_repository.g.dart';
 
-@FoxyRepository(SpellFocusObjectEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SpellFocusObjectRepository
@@ -66,7 +66,9 @@ class SpellFocusObjectRepository
     SpellFocusObjectFilter? filter,
   ) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(
         ['Name_lang_zhCN', 'Name_lang_enUS'],

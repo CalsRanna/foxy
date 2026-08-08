@@ -77,7 +77,7 @@ packages/foxy_generator/lib/
 
 ```
 手写 repository/currency_type_repository.dart:
-  @FoxyRepository(CurrencyTypeEntity)
+  @FoxyRepository()          # entity 从类名推导
   @FoxyFilter.text('id')
   class CurrencyTypeRepository with RepositoryMixin, _CurrencyTypeRepositoryMixin {...}
                 │
@@ -115,7 +115,8 @@ packages/foxy_generator/lib/
 2. **约定优于配置(Convention over Configuration)**
    - 命名约定:类名 ↔ 文件名(snake_case)、`XxxEntity` ↔ `XxxRepository` ↔ `XxxFilter` ↔ `BriefXxxEntity`、方法名 `getBriefXxxs`/`countXxxs`/`copyXxx`/`destroyXxx`;
    - 位置约定:每个生成文件必须位于 `lib/<层>/<snake_case>.dart`,生成器会校验;
-   - 结构约定:每个手写类必须混入生成的私有 mixin、声明 `part 'xxx.g.dart'`、Entity 还要有约定签名的 `factory fromJson` 委托。
+   - 结构约定:每个手写类必须混入生成的私有 mixin、声明 `part 'xxx.g.dart'`、Entity 还要有约定签名的 `factory fromJson` 委托;
+   - **推导链(annotation slimming)**:注解参数凡是能从类名/类型推导的都可以省略,推导规则集中在 `convention.dart`(表名 = `snake_case(类名去 Entity)`,仓库实体 = 类名互推,VM 实体/仓库 = 最长后缀剥离),由 `entity_resolver.dart` 把推导出的类名解析成真实 `ClassElement`;显式声明永远优先且与推导不一致时构建期报错。**不推导的边界**:表名偏离约定(DBC `foxy.` 前缀、复数表名)显式写 `table:`;`@FoxyBriefEntity` 是「表格行展示模型」声明,消费方含手写代码,必须显式;`linkKey`/`autoIncrementKey`/`autoIncrementScope` 是查询作用域语义,必须显式。
 
 3. **失败要早、信息要准**
    - 校验分两层:`Reader` 里做「结构校验」(注解用法、命名、文件位置、mixin 是否混入),`EntityValidator` 做「模型校验」(表名非空、列名唯一、Brief 覆盖 key 等);

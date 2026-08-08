@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'lock_repository.g.dart';
 
-@FoxyRepository(LockEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class LockRepository with RepositoryMixin, _LockRepositoryMixin {
   static const _table = 'foxy.dbc_lock';

@@ -13,13 +13,8 @@ import 'package:signals/signals.dart';
 
 part 'creature_template_resistance_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: CreatureTemplateResistanceEntity,
-  selects: {'school': 0},
-  repository: CreatureTemplateResistanceRepository,
-)
+@FoxyLinkedListViewModel(selects: {'school'})
 class CreatureTemplateResistanceLinkedListViewModel
     with
         FieldControllerMixin,
-        _CreatureTemplateResistanceLinkedListViewModelMixin {
-}
+        _CreatureTemplateResistanceLinkedListViewModelMixin {}

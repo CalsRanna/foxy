@@ -5,6 +5,8 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'package:foxy_generator/src/convention.dart';
+import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/form_reader.dart';
 import 'package:foxy_generator/src/linked_detail_model.dart';
 
@@ -23,24 +25,36 @@ final class LinkedDetailReader {
     // Controller boilerplate is fully isomorphic with FoxyDetailViewModel:
     // reuse FormReader.
     final form = await const FormReader().read(element, annotation, buildStep);
-    if (form.repositoryClassName.isEmpty) {
-      _fail(
-        '${form.className} 的 @FoxyLinkedDetailViewModel 缺少 repository 参数。',
-        element,
-        '传入具体的 Repository 类型。',
-      );
+
+    // Bound repository: explicit `repository:` wins; otherwise derived from
+    // the class name.
+    final declaredRepository = annotation.peek('repository');
+    String repositoryClassName;
+    if (declaredRepository != null && !declaredRepository.isNull) {
+      final repositoryType = declaredRepository.typeValue;
+      if (repositoryType is! InterfaceType) {
+        _fail(
+          '${form.className} 的 @FoxyLinkedDetailViewModel repository '
+              '参数不是 Repository class。',
+          element,
+          '传入具体的 Repository 类型。',
+        );
+      }
+      repositoryClassName = repositoryType.element.name!;
+    } else {
+      repositoryClassName = repositoryClassNameOfViewModel(form.className) ??
+          (throw InvalidGenerationSourceError(
+            '${form.className} 无法推导 repository 类名。',
+            element: element,
+          ));
     }
-    final repositoryType = annotation.read('repository').typeValue;
-    if (repositoryType is! InterfaceType) {
-      _fail(
-        '${form.className} 的 @FoxyLinkedDetailViewModel repository '
-            '参数不是 Repository class。',
-        element,
-        '传入具体的 Repository 类型。',
-      );
-    }
-    final repositoryElement = repositoryType.element;
-    final repositoryClassName = repositoryElement.name!;
+    final repositoryElement = await resolveClass(
+      buildStep,
+      element,
+      repositoryClassName,
+      'repository',
+      '${form.className} 的 @FoxyLinkedDetailViewModel',
+    );
     final repositoryAnnotations = _repositoryChecker
         .annotationsOf(repositoryElement)
         .toList();

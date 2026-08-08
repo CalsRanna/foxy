@@ -11,11 +11,8 @@ import 'package:signals/signals.dart';
 
 part 'game_object_template_addon_linked_detail_view_model.g.dart';
 
-@FoxyLinkedDetailViewModel(
-  entity: GameObjectTemplateAddonEntity,
-  repository: GameObjectTemplateAddonRepository,
-  flags: {'flags'},
-)
+@FoxyLinkedDetailViewModel(flags: {'flags'})
 class GameObjectTemplateAddonLinkedDetailViewModel
-    with FieldControllerMixin, _GameObjectTemplateAddonLinkedDetailViewModelMixin {
-}
+    with
+        FieldControllerMixin,
+        _GameObjectTemplateAddonLinkedDetailViewModelMixin {}

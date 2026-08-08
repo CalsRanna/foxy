@@ -9,7 +9,7 @@ part 'prospecting_loot_template_entity.g.dart';
 @FoxyBriefField.text('itemLocaleName')
 @FoxyBriefField.integer('itemQuality')
 @FoxyBriefField.text('itemIcon')
-@FoxyFullEntity(table: 'prospecting_loot_template')
+@FoxyFullEntity()
 class ProspectingLootTemplateEntity with _ProspectingLootTemplateEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('Entry', key: true)

@@ -31,7 +31,7 @@ class SetupStatusViewModel {
   final dbcPathError = signal<String?>(null);
 
   SetupStatusViewModel({ConfigUtil? configUtil})
-      : _configUtil = configUtil ?? GetIt.instance.get<ConfigUtil>();
+    : _configUtil = configUtil ?? GetIt.instance.get<ConfigUtil>();
 
   bool get isClientDirConfigured =>
       clientDir.value != null && clientDirExists.value;
@@ -67,24 +67,24 @@ class SetupStatusViewModel {
   /// Validates and persists the client directory; returns false on failure
   /// and writes [clientDirError].
   Future<bool> saveClientDir(String path) => _savePath(
-        clientDir,
-        clientDirExists,
-        clientDirError,
-        'client_dir',
-        '客户端目录',
-        path,
-      );
+    clientDir,
+    clientDirExists,
+    clientDirError,
+    'client_dir',
+    '客户端目录',
+    path,
+  );
 
   /// Validates and persists the server DBC directory; returns false on
   /// failure and writes [dbcPathError].
   Future<bool> saveDbcPath(String path) => _savePath(
-        dbcPath,
-        dbcPathExists,
-        dbcPathError,
-        'dbc_path',
-        '服务端 DBC 目录',
-        path,
-      );
+    dbcPath,
+    dbcPathExists,
+    dbcPathError,
+    'dbc_path',
+    '服务端 DBC 目录',
+    path,
+  );
 
   Future<bool> _savePath(
     Signal<String?> target,

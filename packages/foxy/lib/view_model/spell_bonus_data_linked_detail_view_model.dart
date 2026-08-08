@@ -11,10 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'spell_bonus_data_linked_detail_view_model.g.dart';
 
-@FoxyLinkedDetailViewModel(
-  entity: SpellBonusDataEntity,
-  repository: SpellBonusDataRepository,
-)
+@FoxyLinkedDetailViewModel()
 class SpellBonusDataLinkedDetailViewModel
-    with FieldControllerMixin, _SpellBonusDataLinkedDetailViewModelMixin {
-}
+    with FieldControllerMixin, _SpellBonusDataLinkedDetailViewModelMixin {}

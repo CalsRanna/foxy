@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'vehicle_repository.g.dart';
 
-@FoxyRepository(VehicleEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class VehicleRepository with RepositoryMixin, _VehicleRepositoryMixin {
   static const _table = 'foxy.dbc_vehicle';

@@ -13,8 +13,7 @@ import 'package:signals/signals.dart';
 part 'smart_script_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  entity: SmartScriptEntity,
-  selects: {'sourceType': 0, 'eventType': 0, 'actionType': 0, 'targetType': 0},
+  selects: {'sourceType', 'eventType', 'actionType', 'targetType'},
   flags: {'eventPhaseMask', 'eventFlags'},
   groups: {
     'eventParam1',
@@ -34,11 +33,9 @@ part 'smart_script_detail_view_model.g.dart';
     'targetParam3',
     'targetParam4',
   },
-  repository: SmartScriptRepository,
 )
 class SmartScriptDetailViewModel
     with FieldControllerMixin, _SmartScriptDetailViewModelMixin {
-
   /// Currently selected four discriminator types; drive each parameter
   /// group's edit specs
   final selectedSourceType = signal(0);
@@ -95,7 +92,6 @@ class SmartScriptDetailViewModel
     // controller listener callback order.
     _refreshParamEditors();
   }
-
 
   void _onActionTypeChange() {
     selectedActionType.value = actionTypeController.collect();

@@ -34,7 +34,9 @@ enum FoxyFilterType { boolean, decimal, integer, text }
 
 @Target({TargetKind.classType})
 final class FoxyRepository {
-  final Type entity;
+  /// The Full Entity this repository maps to; when omitted, the generator
+  /// derives it from the class name (`XxxRepository` → `XxxEntity`).
+  final Type? entity;
 
   /// Link-key fields (entity dart names). When declared, the query layer is
   /// generated in the link-key form: `getBrief*`/`count*`/`create*` take the
@@ -64,8 +66,8 @@ final class FoxyRepository {
   /// condition of `nextMaxPlusOne`.
   final List<String> autoIncrementScope;
 
-  const FoxyRepository(
-    this.entity, {
+  const FoxyRepository({
+    this.entity,
     this.linkKey = const [],
     this.autoIncrementKey,
     this.autoIncrementScope = const [],

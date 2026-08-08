@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'emote_text_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: EmoteTextEntity, repository: EmoteTextRepository)
+@FoxyListViewModel()
 class EmoteTextListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _EmoteTextListViewModelMixin {
-}
+        _EmoteTextListViewModelMixin {}

@@ -11,8 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'page_text_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: PageTextEntity, repository: PageTextRepository)
+@FoxyDetailViewModel()
 class PageTextDetailViewModel
-    with FieldControllerMixin, _PageTextDetailViewModelMixin {
-
-}
+    with FieldControllerMixin, _PageTextDetailViewModelMixin {}

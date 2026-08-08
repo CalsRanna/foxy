@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_random_suffix_repository.g.dart';
 
-@FoxyRepository(ItemRandomSuffixEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class ItemRandomSuffixRepository

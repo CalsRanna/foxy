@@ -4,7 +4,7 @@ part 'page_text_entity.g.dart';
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('localeText')
-@FoxyFullEntity(table: 'page_text')
+@FoxyFullEntity()
 class PageTextEntity with _PageTextEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

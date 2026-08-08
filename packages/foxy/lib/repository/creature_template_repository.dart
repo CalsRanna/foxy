@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_template_repository.g.dart';
 
-@FoxyRepository(CreatureTemplateEntity)
+@FoxyRepository()
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 @FoxyFilter.text('subName')
@@ -40,7 +40,11 @@ class CreatureTemplateRepository
         builder = builder.where('entry', int.tryParse(filter.entry) ?? 0);
       }
       if (filter != null && filter.name.isNotEmpty) {
-        builder = builder.where('name', '%${escapeLike(filter.name)}%', comparator: 'like');
+        builder = builder.where(
+          'name',
+          '%${escapeLike(filter.name)}%',
+          comparator: 'like',
+        );
       }
       if (filter != null && filter.subName.isNotEmpty) {
         builder = builder.where(

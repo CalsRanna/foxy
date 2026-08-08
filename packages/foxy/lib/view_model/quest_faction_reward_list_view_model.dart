@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'quest_faction_reward_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: QuestFactionRewardEntity, repository: QuestFactionRewardRepository)
+@FoxyListViewModel()
 class QuestFactionRewardListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _QuestFactionRewardListViewModelMixin {
-}
+        _QuestFactionRewardListViewModelMixin {}

@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_duration_repository.g.dart';
 
-@FoxyRepository(SpellDurationEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class SpellDurationRepository
     with RepositoryMixin, _SpellDurationRepositoryMixin {

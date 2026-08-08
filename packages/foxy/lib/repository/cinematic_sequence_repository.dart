@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'cinematic_sequence_repository.g.dart';
 
-@FoxyRepository(CinematicSequenceEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class CinematicSequenceRepository
     with RepositoryMixin, _CinematicSequenceRepositoryMixin {

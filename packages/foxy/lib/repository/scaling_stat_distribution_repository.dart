@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'scaling_stat_distribution_repository.g.dart';
 
-@FoxyRepository(ScalingStatDistributionEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class ScalingStatDistributionRepository
     with RepositoryMixin, _ScalingStatDistributionRepositoryMixin {

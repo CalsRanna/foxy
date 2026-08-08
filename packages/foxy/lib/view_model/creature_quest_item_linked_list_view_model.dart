@@ -13,12 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'creature_quest_item_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: CreatureQuestItemEntity,
-  repository: CreatureQuestItemRepository,
-)
+@FoxyLinkedListViewModel()
 class CreatureQuestItemLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _CreatureQuestItemLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _CreatureQuestItemLinkedListViewModelMixin {}

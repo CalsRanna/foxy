@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'char_title_repository.g.dart';
 
-@FoxyRepository(CharTitleEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class CharTitleRepository

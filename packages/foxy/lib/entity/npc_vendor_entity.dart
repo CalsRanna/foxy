@@ -9,7 +9,7 @@ part 'npc_vendor_entity.g.dart';
 @FoxyBriefField.text('itemName')
 @FoxyBriefField.text('itemLocaleName')
 @FoxyBriefField.integer('itemQuality')
-@FoxyFullEntity(table: 'npc_vendor')
+@FoxyFullEntity()
 class NpcVendorEntity with _NpcVendorEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('entry', key: true)

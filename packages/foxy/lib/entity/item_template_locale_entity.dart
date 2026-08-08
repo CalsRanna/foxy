@@ -6,7 +6,7 @@ part 'item_template_locale_entity.g.dart';
 /// ID + Locale)
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'item_template_locale')
+@FoxyFullEntity()
 class ItemTemplateLocaleEntity with _ItemTemplateLocaleEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

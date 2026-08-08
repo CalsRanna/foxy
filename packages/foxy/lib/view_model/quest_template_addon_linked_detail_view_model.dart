@@ -11,11 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'quest_template_addon_linked_detail_view_model.g.dart';
 
-@FoxyLinkedDetailViewModel(
-  entity: QuestTemplateAddonEntity,
-  repository: QuestTemplateAddonRepository,
-  flags: {'allowableClasses', 'specialFlags'},
-)
+@FoxyLinkedDetailViewModel(flags: {'allowableClasses', 'specialFlags'})
 class QuestTemplateAddonLinkedDetailViewModel
-    with FieldControllerMixin, _QuestTemplateAddonLinkedDetailViewModelMixin {
-}
+    with FieldControllerMixin, _QuestTemplateAddonLinkedDetailViewModelMixin {}

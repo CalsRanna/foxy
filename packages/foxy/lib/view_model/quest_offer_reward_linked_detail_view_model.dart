@@ -11,10 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'quest_offer_reward_linked_detail_view_model.g.dart';
 
-@FoxyLinkedDetailViewModel(
-  entity: QuestOfferRewardEntity,
-  repository: QuestOfferRewardRepository,
-)
+@FoxyLinkedDetailViewModel()
 class QuestOfferRewardLinkedDetailViewModel
-    with FieldControllerMixin, _QuestOfferRewardLinkedDetailViewModelMixin {
-}
+    with FieldControllerMixin, _QuestOfferRewardLinkedDetailViewModelMixin {}

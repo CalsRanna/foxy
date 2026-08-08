@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'glyph_property_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: GlyphPropertyEntity, repository: GlyphPropertyRepository)
+@FoxyListViewModel()
 class GlyphPropertyListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _GlyphPropertyListViewModelMixin {
-}
+        _GlyphPropertyListViewModelMixin {}

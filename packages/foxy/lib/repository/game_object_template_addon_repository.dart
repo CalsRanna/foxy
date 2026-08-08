@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_template_addon_repository.g.dart';
 
-@FoxyRepository(GameObjectTemplateAddonEntity)
+@FoxyRepository()
 class GameObjectTemplateAddonRepository
     with RepositoryMixin, _GameObjectTemplateAddonRepositoryMixin {
   static const _table = 'gameobject_template_addon';

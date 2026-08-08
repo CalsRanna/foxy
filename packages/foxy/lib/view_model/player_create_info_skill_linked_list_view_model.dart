@@ -13,14 +13,9 @@ import 'package:signals/signals.dart';
 
 part 'player_create_info_skill_linked_list_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: PlayerCreateInfoSkillEntity,
-  flags: {'classMask', 'raceMask'},
-)
+@FoxyDetailViewModel(flags: {'classMask', 'raceMask'}, skeleton: false)
 class PlayerCreateInfoSkillLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _PlayerCreateInfoSkillLinkedListViewModelMixin {
+    with FieldControllerMixin, _PlayerCreateInfoSkillLinkedListViewModelMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoSkillRepository>();
 
   final linkKey = signal<PlayerCreateInfoKey?>(null);
@@ -171,10 +166,7 @@ class PlayerCreateInfoSkillLinkedListViewModel
     editingKey.value = null;
     selectedKey.value = null;
     _applyCandidate(
-      PlayerCreateInfoSkillEntity(
-        raceMask: link.race,
-        classMask: link.class_,
-      ),
+      PlayerCreateInfoSkillEntity(raceMask: link.race, classMask: link.class_),
     );
     await _refresh();
   }

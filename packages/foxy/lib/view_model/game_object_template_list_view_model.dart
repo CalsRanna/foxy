@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'game_object_template_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: GameObjectTemplateEntity, repository: GameObjectTemplateRepository)
+@FoxyListViewModel()
 class GameObjectTemplateListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _GameObjectTemplateListViewModelMixin {
-}
+        _GameObjectTemplateListViewModelMixin {}

@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'item_template_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: ItemTemplateEntity, repository: ItemTemplateRepository)
+@FoxyListViewModel()
 class ItemTemplateListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _ItemTemplateListViewModelMixin {
-}
+        _ItemTemplateListViewModelMixin {}

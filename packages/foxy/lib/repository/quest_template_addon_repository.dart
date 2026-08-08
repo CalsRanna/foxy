@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_template_addon_repository.g.dart';
 
-@FoxyRepository(QuestTemplateAddonEntity)
+@FoxyRepository()
 class QuestTemplateAddonRepository
     with RepositoryMixin, _QuestTemplateAddonRepositoryMixin {
   static const _table = 'quest_template_addon';

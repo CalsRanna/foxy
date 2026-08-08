@@ -11,11 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'spell_custom_attr_linked_detail_view_model.g.dart';
 
-@FoxyLinkedDetailViewModel(
-  entity: SpellCustomAttrEntity,
-  repository: SpellCustomAttrRepository,
-  flags: {'attributes'},
-)
+@FoxyLinkedDetailViewModel(flags: {'attributes'})
 class SpellCustomAttrLinkedDetailViewModel
-    with FieldControllerMixin, _SpellCustomAttrLinkedDetailViewModelMixin {
-}
+    with FieldControllerMixin, _SpellCustomAttrLinkedDetailViewModelMixin {}

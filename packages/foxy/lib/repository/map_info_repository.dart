@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'map_info_repository.g.dart';
 
-@FoxyRepository(MapInfoEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class MapInfoRepository

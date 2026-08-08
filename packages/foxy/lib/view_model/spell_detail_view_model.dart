@@ -1094,7 +1094,6 @@ class SpellDetailViewModel with FieldControllerMixin {
     );
   }
 
-
   /// Listens to SelectFieldController changes and syncs them to a signal.
   ///
   /// Uses [SelectFieldController.addListener] to observe linkage changes.

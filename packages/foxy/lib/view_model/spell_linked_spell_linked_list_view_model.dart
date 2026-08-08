@@ -13,13 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'spell_linked_spell_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: SpellLinkedSpellEntity,
-  selects: {'type': 0},
-  repository: SpellLinkedSpellRepository,
-)
+@FoxyLinkedListViewModel(selects: {'type'})
 class SpellLinkedSpellLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _SpellLinkedSpellLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _SpellLinkedSpellLinkedListViewModelMixin {}

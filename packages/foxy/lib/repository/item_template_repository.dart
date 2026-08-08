@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_template_repository.g.dart';
 
-@FoxyRepository(ItemTemplateEntity)
+@FoxyRepository()
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 @FoxyFilter.text('description')

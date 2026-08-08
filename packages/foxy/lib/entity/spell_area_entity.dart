@@ -5,7 +5,7 @@ part 'spell_area_entity.g.dart';
 /// Spell-area spells
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'spell_area')
+@FoxyFullEntity()
 class SpellAreaEntity with _SpellAreaEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('spell', key: true)

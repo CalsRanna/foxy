@@ -5,6 +5,8 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'package:foxy_generator/src/convention.dart';
+import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/form_reader.dart';
 import 'package:foxy_generator/src/linked_list_model.dart';
 
@@ -27,24 +29,49 @@ final class LinkedListReader {
     // reuse FormReader.
     final form = await const FormReader().read(element, annotation, buildStep);
 
-    final repositoryType = annotation.read('repository').typeValue;
-    if (repositoryType is! InterfaceType) {
-      _fail(
-        '${form.className} 的 @FoxyLinkedListViewModel repository '
-            '参数不是 Repository class。',
-        element,
-        '传入具体的 Repository 类型。',
-      );
+    final entityElement = (await resolveFullEntity(
+      buildStep,
+      element,
+      form.entityClassName,
+      '${form.className} 的 @FoxyLinkedListViewModel',
+    )).entityElement;
+
+    // Bound repository: explicit `repository:` wins; otherwise derived from
+    // the class name.
+    final declaredRepository = annotation.peek('repository');
+    String repositoryClassName;
+    if (declaredRepository != null && !declaredRepository.isNull) {
+      final repositoryType = declaredRepository.typeValue;
+      if (repositoryType is! InterfaceType) {
+        _fail(
+          '${form.className} 的 @FoxyLinkedListViewModel repository '
+              '参数不是 Repository class。',
+          element,
+          '传入具体的 Repository 类型。',
+        );
+      }
+      repositoryClassName = repositoryType.element.name!;
+      if (!repositoryClassName.endsWith('Repository')) {
+        _fail(
+          '${form.className} 绑定的 Repository 必须以 Repository 结尾。',
+          element,
+          '传入具体的 Repository 类型。',
+        );
+      }
+    } else {
+      repositoryClassName = repositoryClassNameOfViewModel(form.className) ??
+          (throw InvalidGenerationSourceError(
+            '${form.className} 无法推导 repository 类名。',
+            element: element,
+          ));
     }
-    final repositoryElement = repositoryType.element;
-    final repositoryClassName = repositoryElement.name!;
-    if (!repositoryClassName.endsWith('Repository')) {
-      _fail(
-        '${form.className} 绑定的 Repository 必须以 Repository 结尾。',
-        element,
-        '传入具体的 Repository 类型。',
-      );
-    }
+    final repositoryElement = await resolveClass(
+      buildStep,
+      element,
+      repositoryClassName,
+      'repository',
+      '${form.className} 的 @FoxyLinkedListViewModel',
+    );
     final repositoryAnnotations = _repositoryChecker
         .annotationsOf(repositoryElement)
         .toList();
@@ -69,17 +96,6 @@ final class LinkedListReader {
       );
     }
     final linkFieldName = linkKeyValues.single.toStringValue()!;
-
-    final entityType = annotation.read('entity').typeValue;
-    if (entityType is! InterfaceType) {
-      _fail(
-        '${form.className} 的 @FoxyLinkedListViewModel entity '
-            '参数不是 Entity class。',
-        element,
-        '传入具体的 Full Entity 类型。',
-      );
-    }
-    final entityElement = entityType.element;
 
     // Validate that the linkKey field actually exists on the entity and is
     // an int, and infer the full key type.

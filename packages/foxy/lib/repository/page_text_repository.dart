@@ -8,7 +8,7 @@ import 'package:laconic/laconic.dart';
 
 part 'page_text_repository.g.dart';
 
-@FoxyRepository(PageTextEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('text')
 class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
@@ -39,7 +39,11 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
         builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
       }
       if (filter != null && filter.text.isNotEmpty) {
-        builder = builder.where('Text', '%${escapeLike(filter.text)}%', comparator: 'like');
+        builder = builder.where(
+          'Text',
+          '%${escapeLike(filter.text)}%',
+          comparator: 'like',
+        );
       }
       return builder.count();
     }

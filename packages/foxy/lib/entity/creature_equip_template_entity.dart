@@ -18,7 +18,7 @@ part 'creature_equip_template_entity.g.dart';
 @FoxyBriefField.text('localeName3')
 @FoxyBriefField.integer('quality3')
 @FoxyBriefField.text('icon3')
-@FoxyFullEntity(table: 'creature_equip_template')
+@FoxyFullEntity()
 class CreatureEquipTemplateEntity with _CreatureEquipTemplateEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('CreatureID', key: true)

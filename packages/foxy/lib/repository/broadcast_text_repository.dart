@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'broadcast_text_repository.g.dart';
 
-@FoxyRepository(BroadcastTextEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('text')
 class BroadcastTextRepository

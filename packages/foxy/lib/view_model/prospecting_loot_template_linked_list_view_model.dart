@@ -13,13 +13,8 @@ import 'package:signals/signals.dart';
 
 part 'prospecting_loot_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: ProspectingLootTemplateEntity,
-  flags: {'lootMode'},
-  repository: ProspectingLootTemplateRepository,
-)
+@FoxyLinkedListViewModel(flags: {'lootMode'})
 class ProspectingLootTemplateLinkedListViewModel
     with
         FieldControllerMixin,
-        _ProspectingLootTemplateLinkedListViewModelMixin {
-}
+        _ProspectingLootTemplateLinkedListViewModelMixin {}

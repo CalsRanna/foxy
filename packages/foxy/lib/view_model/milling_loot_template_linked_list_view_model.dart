@@ -13,13 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'milling_loot_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: MillingLootTemplateEntity,
-  flags: {'lootMode'},
-  repository: MillingLootTemplateRepository,
-)
+@FoxyLinkedListViewModel(flags: {'lootMode'})
 class MillingLootTemplateLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _MillingLootTemplateLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _MillingLootTemplateLinkedListViewModelMixin {}

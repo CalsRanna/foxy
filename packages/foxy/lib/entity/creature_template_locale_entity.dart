@@ -3,7 +3,7 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'creature_template_locale_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'creature_template_locale')
+@FoxyFullEntity()
 class CreatureTemplateLocaleEntity with _CreatureTemplateLocaleEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('entry', key: true)

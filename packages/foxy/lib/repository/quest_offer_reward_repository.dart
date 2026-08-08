@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_offer_reward_repository.g.dart';
 
-@FoxyRepository(QuestOfferRewardEntity)
+@FoxyRepository()
 class QuestOfferRewardRepository
     with RepositoryMixin, _QuestOfferRewardRepositoryMixin {
   static const _table = 'quest_offer_reward';

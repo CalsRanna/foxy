@@ -500,5 +500,4 @@ class AchievementDetailViewModel with FieldControllerMixin {
       sharesCriteria: sharesCriteriaController.collect(),
     );
   }
-
 }

@@ -11,8 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'emote_text_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: EmoteTextEntity, repository: EmoteTextRepository)
+@FoxyDetailViewModel()
 class EmoteTextDetailViewModel
-    with FieldControllerMixin, _EmoteTextDetailViewModelMixin {
-
-}
+    with FieldControllerMixin, _EmoteTextDetailViewModelMixin {}

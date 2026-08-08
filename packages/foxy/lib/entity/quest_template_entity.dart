@@ -5,7 +5,7 @@ part 'quest_template_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('localeTitle')
 @FoxyBriefField.text('localeDetails')
-@FoxyFullEntity(table: 'quest_template')
+@FoxyFullEntity()
 class QuestTemplateEntity with _QuestTemplateEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'dbc_item_repository.g.dart';
 
-@FoxyRepository(DbcItemEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.boolean('handEquippableOnly')
 class DbcItemRepository with RepositoryMixin, _DbcItemRepositoryMixin {
@@ -65,7 +65,9 @@ class DbcItemRepository with RepositoryMixin, _DbcItemRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.handEquippableOnly) {
       builder = builder.whereIn('InventoryType', handEquippableInventoryTypes);
     }

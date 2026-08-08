@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'liquid_type_repository.g.dart';
 
-@FoxyRepository(LiquidTypeEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class LiquidTypeRepository with RepositoryMixin, _LiquidTypeRepositoryMixin {
@@ -58,9 +58,15 @@ class LiquidTypeRepository with RepositoryMixin, _LiquidTypeRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, LiquidTypeFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('Name', '%${escapeLike(filter.name)}%', comparator: 'like');
+      builder = builder.where(
+        'Name',
+        '%${escapeLike(filter.name)}%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

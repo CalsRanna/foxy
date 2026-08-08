@@ -5,6 +5,8 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'package:foxy_generator/src/convention.dart';
+import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
 import 'package:foxy_generator/src/repository_filter_reader.dart';
@@ -18,9 +20,6 @@ const _briefFieldChecker = TypeChecker.fromUrl(
 );
 const _filterChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/repository_annotations.dart#FoxyFilter',
-);
-const _fullEntityChecker = TypeChecker.fromUrl(
-  'package:foxy_annotation/entity_annotations.dart#FoxyFullEntity',
 );
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
@@ -62,52 +61,57 @@ final class RepositoryReader {
       );
     }
 
-    final entityType = annotation.read('entity').typeValue;
-    if (entityType is! InterfaceType) {
-      _fail(
-        '$repositoryClassName 的 @FoxyRepository 参数不是 Entity class。',
-        element,
-        '传入具体的 Full Entity 类型。',
-      );
-    }
-    final entityElement = entityType.element;
-    final entityClassName = entityElement.name;
-    if (entityClassName == null || !entityClassName.endsWith('Entity')) {
-      _fail(
-        '$repositoryClassName 绑定的类型必须以 Entity 结尾。',
-        element,
-        '传入具体的 Full Entity 类型。',
-      );
-    }
-    final expectedRepositoryClassName =
-        '${entityClassName.substring(0, entityClassName.length - 'Entity'.length)}'
-        'Repository';
-    if (repositoryClassName != expectedRepositoryClassName) {
-      _fail(
-        '$repositoryClassName 与 $entityClassName 不符合一对一命名约定。',
-        element,
-        'Repository 和 Entity 使用相同 base name。',
-      );
+    // Bound entity: explicit `@FoxyRepository(XxxEntity)` wins; otherwise
+    // derived from the class name (`XxxRepository` → `XxxEntity`).
+    final declaredEntity = annotation.peek('entity');
+    String entityClassName;
+    if (declaredEntity != null && !declaredEntity.isNull) {
+      final entityType = declaredEntity.typeValue;
+      if (entityType is! InterfaceType) {
+        _fail(
+          '$repositoryClassName 的 @FoxyRepository 参数不是 Entity class。',
+          element,
+          '传入具体的 Full Entity 类型。',
+        );
+      }
+      entityClassName = entityType.element.name!;
+      if (!entityClassName.endsWith('Entity')) {
+        _fail(
+          '$repositoryClassName 绑定的类型必须以 Entity 结尾。',
+          element,
+          '传入具体的 Full Entity 类型。',
+        );
+      }
+      final expectedRepositoryClassName =
+          '${stripSuffix(entityClassName, 'Entity')}Repository';
+      if (repositoryClassName != expectedRepositoryClassName) {
+        _fail(
+          '$repositoryClassName 与 $entityClassName 不符合一对一命名约定。',
+          element,
+          'Repository 和 Entity 使用相同 base name。',
+        );
+      }
+    } else {
+      entityClassName = entityClassNameOfRepository(repositoryClassName);
+      if (entityClassName == 'Entity') {
+        _fail(
+          '$repositoryClassName 无法推导实体名（类名恰为 "Repository"）。',
+          element,
+          '使用有实际含义的 Repository 类名。',
+        );
+      }
     }
 
-    final entityAnnotations = _fullEntityChecker
-        .annotationsOf(entityElement)
-        .toList();
-    if (entityAnnotations.length != 1) {
-      _fail(
-        '$entityClassName 必须且只能声明一个 @FoxyFullEntity。',
-        entityElement,
-        '只绑定已迁移的生成型 Full Entity。',
-      );
-    }
-    final table = ConstantReader(
-      entityAnnotations.single,
-    ).read('table').stringValue;
-
-    final baseName = entityClassName.substring(
-      0,
-      entityClassName.length - 'Entity'.length,
+    final resolved = await resolveFullEntity(
+      buildStep,
+      element,
+      entityClassName,
+      '$repositoryClassName 的 @FoxyRepository',
     );
+    final entityElement = resolved.entityElement;
+    final table = resolved.table;
+
+    final baseName = stripSuffix(entityClassName, 'Entity');
     if (baseName.isEmpty) {
       _fail(
         '$entityClassName 的 base name 为空（类名恰为 "Entity"）。',
@@ -224,9 +228,14 @@ final class RepositoryReader {
           .toList();
       if (briefAnnotations.length != 1) {
         _fail(
-          '$entityClassName 必须声明 @FoxyBriefEntity 才能生成列表查询层。',
+          '$entityClassName 必须声明 @FoxyBriefEntity：查询层生成的'
+              ' getBrief${pluralize(baseName)}/count${pluralize(baseName)}'
+              ' 返回 Brief$baseName 表格行投影，'
+              '没有 Brief 声明生成的代码无法编译。',
           entityElement,
-          '给 Entity 加上 @FoxyBriefEntity，或在仓库保留手写查询方法。',
+          '给 Entity 加上 @FoxyBriefEntity()，'
+              '或在仓库保留手写查询方法并移除查询层触发条件'
+              '（linkKey / List ViewModel）。',
         );
       }
       if (briefProjectionColumns.isEmpty) {

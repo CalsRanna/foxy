@@ -7,7 +7,7 @@ part 'creature_template_spell_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('spellName')
 @FoxyBriefField.text('spellSubtext')
-@FoxyFullEntity(table: 'creature_template_spell')
+@FoxyFullEntity()
 class CreatureTemplateSpellEntity with _CreatureTemplateSpellEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('CreatureID', key: true)

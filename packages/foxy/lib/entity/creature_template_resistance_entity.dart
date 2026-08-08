@@ -5,7 +5,7 @@ part 'creature_template_resistance_entity.g.dart';
 /// Creature template resistances
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'creature_template_resistance')
+@FoxyFullEntity()
 class CreatureTemplateResistanceEntity
     with _CreatureTemplateResistanceEntityMixin {
   @FoxyBriefField()

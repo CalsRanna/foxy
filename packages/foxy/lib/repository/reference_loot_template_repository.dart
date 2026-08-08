@@ -7,11 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'reference_loot_template_repository.g.dart';
 
-@FoxyRepository(
-  ReferenceLootTemplateEntity,
-  autoIncrementKey: 'item',
-  autoIncrementScope: ['entry'],
-)
+@FoxyRepository(autoIncrementKey: 'item', autoIncrementScope: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name', column: 'it.name')
 class ReferenceLootTemplateRepository

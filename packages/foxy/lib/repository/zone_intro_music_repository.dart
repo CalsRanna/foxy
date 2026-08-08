@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'zone_intro_music_repository.g.dart';
 
-@FoxyRepository(ZoneIntroMusicEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class ZoneIntroMusicRepository
@@ -55,9 +55,15 @@ class ZoneIntroMusicRepository
     ZoneIntroMusicFilter? filter,
   ) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('Name', '%${escapeLike(filter.name)}%', comparator: 'like');
+      builder = builder.where(
+        'Name',
+        '%${escapeLike(filter.name)}%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

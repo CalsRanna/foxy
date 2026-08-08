@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'skill_line_repository.g.dart';
 
-@FoxyRepository(SkillLineEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SkillLineRepository with RepositoryMixin, _SkillLineRepositoryMixin {
@@ -58,7 +58,9 @@ class SkillLineRepository with RepositoryMixin, _SkillLineRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, SkillLineFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'DisplayName_lang_zhCN',

@@ -128,5 +128,4 @@ class QuestSortDetailViewModel with FieldControllerMixin {
       sortNameLangFlags: sortNameLangFlagsController.collect(),
     );
   }
-
 }

@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'destructible_model_data_repository.g.dart';
 
-@FoxyRepository(DestructibleModelDataEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class DestructibleModelDataRepository
     with RepositoryMixin, _DestructibleModelDataRepositoryMixin {

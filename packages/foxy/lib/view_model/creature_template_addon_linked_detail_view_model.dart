@@ -11,11 +11,8 @@ import 'package:signals/signals.dart';
 
 part 'creature_template_addon_linked_detail_view_model.g.dart';
 
-@FoxyLinkedDetailViewModel(
-  entity: CreatureTemplateAddonEntity,
-  repository: CreatureTemplateAddonRepository,
-  selects: {'visibilityDistanceType': 0},
-)
+@FoxyLinkedDetailViewModel(selects: {'visibilityDistanceType'})
 class CreatureTemplateAddonLinkedDetailViewModel
-    with FieldControllerMixin, _CreatureTemplateAddonLinkedDetailViewModelMixin {
-}
+    with
+        FieldControllerMixin,
+        _CreatureTemplateAddonLinkedDetailViewModelMixin {}

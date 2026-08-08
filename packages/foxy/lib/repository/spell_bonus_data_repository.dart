@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_bonus_data_repository.g.dart';
 
-@FoxyRepository(SpellBonusDataEntity)
+@FoxyRepository()
 class SpellBonusDataRepository
     with RepositoryMixin, _SpellBonusDataRepositoryMixin {
   static const _table = 'spell_bonus_data';

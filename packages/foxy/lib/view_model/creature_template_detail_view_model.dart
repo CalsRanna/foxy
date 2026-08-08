@@ -12,7 +12,6 @@ import 'package:signals/signals.dart';
 part 'creature_template_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  entity: CreatureTemplateEntity,
   flags: {
     'dynamicFlags',
     'flagsExtra',
@@ -32,11 +31,9 @@ part 'creature_template_detail_view_model.g.dart';
     'type': 0,
     'unitClass': 1,
   },
-  repository: CreatureTemplateRepository,
 )
 class CreatureTemplateDetailViewModel
     with FieldControllerMixin, _CreatureTemplateDetailViewModelMixin {
-
   /// Collects data from all fields to build the CreatureTemplate
 
   /// Leaves the page
@@ -69,5 +66,4 @@ class CreatureTemplateDetailViewModel
       submitting.value = false;
     }
   }
-
 }

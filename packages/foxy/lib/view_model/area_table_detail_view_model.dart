@@ -212,7 +212,6 @@ class AreaTableDetailViewModel with FieldControllerMixin {
     );
   }
 
-
   Future<void> _validate(
     AreaTableEntity value, {
     required int? originalKey,

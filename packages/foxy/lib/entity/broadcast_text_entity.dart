@@ -3,7 +3,7 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'broadcast_text_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'broadcast_text')
+@FoxyFullEntity()
 class BroadcastTextEntity with _BroadcastTextEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

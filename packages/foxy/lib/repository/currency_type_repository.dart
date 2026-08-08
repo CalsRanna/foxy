@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'currency_type_repository.g.dart';
 
-@FoxyRepository(CurrencyTypeEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name', column: 'it.name')
 class CurrencyTypeRepository
@@ -87,12 +87,22 @@ class CurrencyTypeRepository
     required bool joinLocale,
   }) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ct.ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ct.ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
       builder = builder.whereNested((query) {
-        query.where('it.name', '%${escapeLike(filter.name)}%', comparator: 'like');
+        query.where(
+          'it.name',
+          '%${escapeLike(filter.name)}%',
+          comparator: 'like',
+        );
         if (joinLocale) {
-          query.orWhere('itl.Name', '%${escapeLike(filter.name)}%', comparator: 'like');
+          query.orWhere(
+            'itl.Name',
+            '%${escapeLike(filter.name)}%',
+            comparator: 'like',
+          );
         }
       });
     }

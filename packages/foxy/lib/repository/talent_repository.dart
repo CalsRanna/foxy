@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'talent_repository.g.dart';
 
-@FoxyRepository(TalentEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('spell', column: 'SpellRank0')
 class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
@@ -31,7 +31,9 @@ class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, TalentFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.spell.isNotEmpty) {
       builder = builder.whereNested(
         (query) => query

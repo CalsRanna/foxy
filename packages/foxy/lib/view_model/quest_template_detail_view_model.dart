@@ -12,16 +12,8 @@ import 'package:signals/signals.dart';
 part 'quest_template_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  entity: QuestTemplateEntity,
   flags: {'allowableRaces', 'flags'},
-  selects: {
-    'questType': 2,
-    'rewardMoneyDifficulty': 0,
-    'rewardXpDifficulty': 0,
-  },
-  repository: QuestTemplateRepository,
+  selects: {'questType', 'rewardMoneyDifficulty', 'rewardXpDifficulty'},
 )
 class QuestTemplateDetailViewModel
-    with FieldControllerMixin, _QuestTemplateDetailViewModelMixin {
-
-}
+    with FieldControllerMixin, _QuestTemplateDetailViewModelMixin {}

@@ -13,13 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'skinning_loot_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: SkinningLootTemplateEntity,
-  flags: {'lootMode'},
-  repository: SkinningLootTemplateRepository,
-)
+@FoxyLinkedListViewModel(flags: {'lootMode'})
 class SkinningLootTemplateLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _SkinningLootTemplateLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _SkinningLootTemplateLinkedListViewModelMixin {}

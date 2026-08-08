@@ -7,7 +7,7 @@ enum ItemEnchantmentKind { randomProperty, randomSuffix }
 /// Item enchantment template — maps to the item_enchantment_template table
 /// (composite key: entry + ench)
 
-@FoxyFullEntity(table: 'item_enchantment_template')
+@FoxyFullEntity()
 class ItemEnchantmentTemplateEntity with _ItemEnchantmentTemplateEntityMixin {
   @FoxyFullField('entry', key: true)
   final int entry;

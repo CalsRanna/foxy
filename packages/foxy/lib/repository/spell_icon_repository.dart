@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_icon_repository.g.dart';
 
-@FoxyRepository(SpellIconEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SpellIconRepository with RepositoryMixin, _SpellIconRepositoryMixin {

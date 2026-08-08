@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'gossip_menu_option_repository.g.dart';
 
-@FoxyRepository(GossipMenuOptionEntity, linkKey: ['menuId'])
+@FoxyRepository(linkKey: ['menuId'])
 class GossipMenuOptionRepository
     with RepositoryMixin, _GossipMenuOptionRepositoryMixin {
   static const _table = 'gossip_menu_option';

@@ -12,14 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'reference_loot_template_list_view_model.g.dart';
 
-@FoxyListViewModel(
-  entity: ReferenceLootTemplateEntity,
-  repository: ReferenceLootTemplateRepository,
-)
+@FoxyListViewModel()
 class ReferenceLootTemplateListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _ReferenceLootTemplateListViewModelMixin {
-
-}
+        _ReferenceLootTemplateListViewModelMixin {}

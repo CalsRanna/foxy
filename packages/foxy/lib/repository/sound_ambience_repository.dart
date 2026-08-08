@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'sound_ambience_repository.g.dart';
 
-@FoxyRepository(SoundAmbienceEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class SoundAmbienceRepository
     with RepositoryMixin, _SoundAmbienceRepositoryMixin {

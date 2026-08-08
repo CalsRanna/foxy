@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'zone_music_repository.g.dart';
 
-@FoxyRepository(ZoneMusicEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class ZoneMusicRepository with RepositoryMixin, _ZoneMusicRepositoryMixin {
@@ -49,7 +49,9 @@ class ZoneMusicRepository with RepositoryMixin, _ZoneMusicRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, ZoneMusicFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'SetName',

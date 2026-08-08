@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_template_locale_repository.g.dart';
 
-@FoxyRepository(ItemTemplateLocaleEntity)
+@FoxyRepository()
 class ItemTemplateLocaleRepository
     with RepositoryMixin, _ItemTemplateLocaleRepositoryMixin {
   static const _table = 'item_template_locale';

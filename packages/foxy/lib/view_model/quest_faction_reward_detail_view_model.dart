@@ -11,15 +11,10 @@ import 'package:signals/signals.dart';
 
 part 'quest_faction_reward_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: QuestFactionRewardEntity,
-  repository: QuestFactionRewardRepository,
-)
+@FoxyDetailViewModel()
 class QuestFactionRewardDetailViewModel
     with FieldControllerMixin, _QuestFactionRewardDetailViewModelMixin {
-
   /// Collects data from all controllers to build the QuestFactionReward
 
   /// Leaves the page
-
 }

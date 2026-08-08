@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_template_addon_repository.g.dart';
 
-@FoxyRepository(CreatureTemplateAddonEntity)
+@FoxyRepository()
 class CreatureTemplateAddonRepository
     with RepositoryMixin, _CreatureTemplateAddonRepositoryMixin {
   static const _table = 'creature_template_addon';

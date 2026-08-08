@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'npc_text_locale_repository.g.dart';
 
-@FoxyRepository(NpcTextLocaleEntity)
+@FoxyRepository()
 class NpcTextLocaleRepository
     with RepositoryMixin, _NpcTextLocaleRepositoryMixin {
   static const _table = 'npc_text_locale';

@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'spell_item_enchantment_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: SpellItemEnchantmentEntity, repository: SpellItemEnchantmentRepository)
+@FoxyListViewModel()
 class SpellItemEnchantmentListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _SpellItemEnchantmentListViewModelMixin {
-}
+        _SpellItemEnchantmentListViewModelMixin {}

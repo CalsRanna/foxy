@@ -12,7 +12,6 @@ import 'package:signals/signals.dart';
 part 'item_template_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  entity: ItemTemplateEntity,
   flags: {
     'allowableClass',
     'allowableRace',
@@ -26,41 +25,39 @@ part 'item_template_detail_view_model.g.dart';
     'socketColor3',
   },
   selects: {
-    'ammoType': 0,
-    'bonding': 0,
-    'className': 0,
-    'dmgType1': 0,
-    'dmgType2': 0,
-    'foodType': 0,
-    'inventoryType': 0,
-    'languageId': 0,
-    'material': 0,
-    'pageMaterial': 0,
-    'quality': 0,
-    'requiredReputationRank': 0,
-    'sheath': 0,
-    'spellTrigger1': 0,
-    'spellTrigger2': 0,
-    'spellTrigger3': 0,
-    'spellTrigger4': 0,
-    'spellTrigger5': 0,
-    'statType1': 0,
-    'statType10': 0,
-    'statType2': 0,
-    'statType3': 0,
-    'statType4': 0,
-    'statType5': 0,
-    'statType6': 0,
-    'statType7': 0,
-    'statType8': 0,
-    'statType9': 0,
-    'subclass': 0,
+    'ammoType',
+    'bonding',
+    'className',
+    'dmgType1',
+    'dmgType2',
+    'foodType',
+    'inventoryType',
+    'languageId',
+    'material',
+    'pageMaterial',
+    'quality',
+    'requiredReputationRank',
+    'sheath',
+    'spellTrigger1',
+    'spellTrigger2',
+    'spellTrigger3',
+    'spellTrigger4',
+    'spellTrigger5',
+    'statType1',
+    'statType10',
+    'statType2',
+    'statType3',
+    'statType4',
+    'statType5',
+    'statType6',
+    'statType7',
+    'statType8',
+    'statType9',
+    'subclass',
   },
-  repository: ItemTemplateRepository,
 )
 class ItemTemplateDetailViewModel
     with FieldControllerMixin, _ItemTemplateDetailViewModelMixin {
-
   /// Signals
 
   bool get hasDisenchantLoot => (entity.value?.disenchantId ?? 0) != 0;
@@ -75,5 +72,4 @@ class ItemTemplateDetailViewModel
   bool get hasMillingLoot => ((entity.value?.flags ?? 0) & 536870912) != 0;
 
   bool get hasProspectingLoot => ((entity.value?.flags ?? 0) & 262144) != 0;
-
 }

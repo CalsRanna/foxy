@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'area_table_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: AreaTableEntity, repository: AreaTableRepository)
+@FoxyListViewModel()
 class AreaTableListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _AreaTableListViewModelMixin {
-}
+        _AreaTableListViewModelMixin {}

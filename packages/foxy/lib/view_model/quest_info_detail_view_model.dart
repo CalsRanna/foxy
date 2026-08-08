@@ -128,5 +128,4 @@ class QuestInfoDetailViewModel with FieldControllerMixin {
       infoNameLangFlags: infoNameLangFlagsController.collect(),
     );
   }
-
 }

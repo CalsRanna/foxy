@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'scaling_stat_distribution_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: ScalingStatDistributionEntity, repository: ScalingStatDistributionRepository)
+@FoxyListViewModel()
 class ScalingStatDistributionListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _ScalingStatDistributionListViewModelMixin {
-}
+        _ScalingStatDistributionListViewModelMixin {}

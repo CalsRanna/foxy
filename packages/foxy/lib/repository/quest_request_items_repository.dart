@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_request_items_repository.g.dart';
 
-@FoxyRepository(QuestRequestItemsEntity)
+@FoxyRepository()
 class QuestRequestItemsRepository
     with RepositoryMixin, _QuestRequestItemsRepositoryMixin {
   static const _table = 'quest_request_items';

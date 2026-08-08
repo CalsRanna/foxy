@@ -6,20 +6,27 @@ import 'package:meta/meta_meta.dart';
 /// The generator works on "default inference + exception-driven" rules:
 /// - Ordinary fields infer their controller from the Dart type: `int →
 ///   IntFieldController`, `double → DoubleFieldController`, `String →
-///   StringFieldController`,
+///   StringFieldController`, `String? → NullableStringFieldController`,
 ///   `bool → SelectFieldController<int>(fallback: 0)` (paired with a
 ///   `collect() == 1` conversion).
 /// - Exception fields (select/flag/exclude) must be declared here
 ///   explicitly; a misspelled field name is caught by the validator at
 ///   generation time.
+/// - The entity is derived from the class name (`XxxDetailViewModel` →
+///   `XxxEntity`); an explicit `entity:` overrides it.
+/// - The behavior skeleton is generated when a same-named repository exists
+///   (or `repository:` is declared); `skeleton: false` opts out.
 @Target({TargetKind.classType})
 class FoxyDetailViewModel {
-  /// The Full Entity type the form maps to.
-  final Type entity;
+  /// Exception override: the Full Entity type the form maps to. When
+  /// omitted, derived from the class name.
+  final Type? entity;
 
-  /// Exception: controller name → fallback for `SelectFieldController`
-  /// (int or String).
-  final Map<String, Object> selects;
+  /// Exception: select-field names with a fallback. Two shapes:
+  /// a Map `{'type': 0}` (explicit fallback for `SelectFieldController`)
+  /// or a Set `{'type'}` (fallback derived from the entity constructor
+  /// default for the same field).
+  final Object selects;
 
   /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
@@ -28,28 +35,29 @@ class FoxyDetailViewModel {
   /// editing).
   final Set<String> groups;
 
-  /// Exception: controller name → `NullableStringFieldController`
-  /// (nullable String).
-  final Set<String> nullable;
-
   /// Fields excluded from the form (no controller is generated, and they do
   /// not appear in collect/apply).
   final Set<String> exclude;
 
-  /// Repository providing store/update/get/create. The behavior skeleton
-  /// (signals/initSignals/persist/dispose/_logActivity hooks) is only
-  /// generated when this is declared; declaring only the entity generates
+  /// Repository providing store/update/get/create. When omitted, a
+  /// same-named repository that is present and migrated (`@FoxyRepository`)
+  /// enables the behavior skeleton (signals/initSignals/persist/dispose/
+  /// _logActivity hooks). Declaring neither entity nor repository generates
   /// just the controller boilerplate (backward compatible).
   final Type? repository;
 
+  /// Opt out of the behavior skeleton even when a same-named repository
+  /// exists. Mutually exclusive with [repository].
+  final bool? skeleton;
+
   const FoxyDetailViewModel({
-    required this.entity,
+    this.entity,
     this.selects = const {},
     this.flags = const {},
     this.groups = const {},
-    this.nullable = const {},
     this.exclude = const {},
     this.repository,
+    this.skeleton,
   });
 }
 
@@ -60,18 +68,23 @@ class FoxyDetailViewModel {
 /// link-key subset signal, pagination, race token,
 /// copy/create/destroy/edit/persist/setLinkKey/_refresh. The Repository
 /// must declare `@FoxyRepository(..., linkKey: [...])` (validated at build
-/// time).
+/// time). The entity and repository are derived from the class name
+/// (`XxxLinkedListViewModel` → `XxxEntity` / `XxxRepository`); explicit
+/// overrides are validated against the derivation.
 @Target({TargetKind.classType})
 class FoxyLinkedListViewModel {
-  /// The Full Entity type the form maps to.
-  final Type entity;
+  /// Exception override: the Full Entity type the form maps to. When
+  /// omitted, derived from the class name.
+  final Type? entity;
 
-  /// Repository type providing getBrief/count/create/copy/store/update.
-  final Type repository;
+  /// Exception override: Repository type providing
+  /// getBrief/count/create/copy/store/update. When omitted, derived from
+  /// the class name.
+  final Type? repository;
 
-  /// Exception: controller name → fallback for `SelectFieldController`
-  /// (int or String).
-  final Map<String, Object> selects;
+  /// Exception: select-field names with a fallback (Map with explicit
+  /// fallback, or Set deriving it from the entity constructor default).
+  final Object selects;
 
   /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
@@ -80,21 +93,16 @@ class FoxyLinkedListViewModel {
   /// editing).
   final Set<String> groups;
 
-  /// Exception: controller name → `NullableStringFieldController`
-  /// (nullable String).
-  final Set<String> nullable;
-
   /// Fields excluded from the form (no controller is generated, and they do
   /// not appear in collect/apply).
   final Set<String> exclude;
 
   const FoxyLinkedListViewModel({
-    required this.entity,
-    required this.repository,
+    this.entity,
+    this.repository,
     this.selects = const {},
     this.flags = const {},
     this.groups = const {},
-    this.nullable = const {},
     this.exclude = const {},
   });
 }
@@ -107,18 +115,22 @@ class FoxyLinkedListViewModel {
 /// initSignals/setLinkKey/destroy/persist/_refresh (get-or-create: when no
 /// record exists, pre-create a default row via the repository's `create*`).
 /// Requires the entity to have exactly one physical Key (the link key is
-/// the primary key); composite-key forms stay hand-written.
+/// the primary key); composite-key forms stay hand-written. The entity and
+/// repository are derived from the class name (`XxxLinkedDetailViewModel` →
+/// `XxxEntity` / `XxxRepository`).
 @Target({TargetKind.classType})
 class FoxyLinkedDetailViewModel {
-  /// The Full Entity type the form maps to.
-  final Type entity;
+  /// Exception override: the Full Entity type the form maps to. When
+  /// omitted, derived from the class name.
+  final Type? entity;
 
-  /// Repository type providing get/store/update/destroy/create.
-  final Type repository;
+  /// Exception override: Repository type providing get/store/update/
+  /// destroy/create. When omitted, derived from the class name.
+  final Type? repository;
 
-  /// Exception: controller name → fallback for `SelectFieldController`
-  /// (int or String).
-  final Map<String, Object> selects;
+  /// Exception: select-field names with a fallback (Map with explicit
+  /// fallback, or Set deriving it from the entity constructor default).
+  final Object selects;
 
   /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
@@ -127,21 +139,16 @@ class FoxyLinkedDetailViewModel {
   /// editing).
   final Set<String> groups;
 
-  /// Exception: controller name → `NullableStringFieldController`
-  /// (nullable String).
-  final Set<String> nullable;
-
   /// Fields excluded from the form (no controller is generated, and they do
   /// not appear in collect/apply).
   final Set<String> exclude;
 
   const FoxyLinkedDetailViewModel({
-    required this.entity,
-    required this.repository,
+    this.entity,
+    this.repository,
     this.selects = const {},
     this.flags = const {},
     this.groups = const {},
-    this.nullable = const {},
     this.exclude = const {},
   });
 }

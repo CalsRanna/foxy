@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_spell_data_repository.g.dart';
 
-@FoxyRepository(CreatureSpellDataEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('spell')
 class CreatureSpellDataRepository

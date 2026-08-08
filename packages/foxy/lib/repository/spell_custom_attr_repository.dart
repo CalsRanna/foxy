@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_custom_attr_repository.g.dart';
 
-@FoxyRepository(SpellCustomAttrEntity)
+@FoxyRepository()
 class SpellCustomAttrRepository
     with RepositoryMixin, _SpellCustomAttrRepositoryMixin {
   static const _table = 'spell_custom_attr';

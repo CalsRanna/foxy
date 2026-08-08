@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_faction_reward_repository.g.dart';
 
-@FoxyRepository(QuestFactionRewardEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class QuestFactionRewardRepository
     with RepositoryMixin, _QuestFactionRewardRepositoryMixin {

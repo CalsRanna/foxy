@@ -5,7 +5,7 @@ part 'creature_default_trainer_entity.g.dart';
 /// Creature default trainer mapping — maps to the creature_default_trainer
 /// table.
 
-@FoxyFullEntity(table: 'creature_default_trainer')
+@FoxyFullEntity()
 class CreatureDefaultTrainerEntity with _CreatureDefaultTrainerEntityMixin {
   @FoxyFullField('CreatureId', key: true)
   final int creatureId;

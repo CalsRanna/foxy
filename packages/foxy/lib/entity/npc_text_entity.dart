@@ -5,7 +5,7 @@ part 'npc_text_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('text0')
 @FoxyBriefField.text('text1')
-@FoxyFullEntity(table: 'npc_text')
+@FoxyFullEntity()
 class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

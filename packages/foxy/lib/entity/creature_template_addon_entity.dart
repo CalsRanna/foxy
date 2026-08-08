@@ -5,7 +5,7 @@ part 'creature_template_addon_entity.g.dart';
 /// Creature template addon data
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'creature_template_addon')
+@FoxyFullEntity()
 class CreatureTemplateAddonEntity with _CreatureTemplateAddonEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('entry', key: true)

@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'point_of_interest_repository.g.dart';
 
-@FoxyRepository(PointOfInterestEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class PointOfInterestRepository
@@ -73,7 +73,9 @@ class PointOfInterestRepository
     PointOfInterestFilter? filter,
   ) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('poi.ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('poi.ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'poi.Name',

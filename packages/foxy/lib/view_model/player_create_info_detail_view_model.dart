@@ -11,12 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'player_create_info_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: PlayerCreateInfoEntity,
-  selects: {'class_': 0, 'race': 0},
-  repository: PlayerCreateInfoRepository,
-)
+@FoxyDetailViewModel(selects: {'class_', 'race'})
 class PlayerCreateInfoDetailViewModel
-    with FieldControllerMixin, _PlayerCreateInfoDetailViewModelMixin {
-
-}
+    with FieldControllerMixin, _PlayerCreateInfoDetailViewModelMixin {}

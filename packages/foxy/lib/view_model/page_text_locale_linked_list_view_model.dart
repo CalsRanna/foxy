@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 
 part 'page_text_locale_linked_list_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: PageTextLocaleEntity, selects: {'locale': 'zhCN'})
+@FoxyDetailViewModel(selects: {'locale': 'zhCN'}, skeleton: false)
 class PageTextLocaleLinkedListViewModel
     with FieldControllerMixin, _PageTextLocaleLinkedListViewModelMixin {
   final _repository = GetIt.instance.get<PageTextLocaleRepository>();

@@ -8,7 +8,7 @@ import 'package:laconic/laconic.dart';
 
 part 'gossip_menu_option_locale_repository.g.dart';
 
-@FoxyRepository(GossipMenuOptionLocaleEntity)
+@FoxyRepository()
 class GossipMenuOptionLocaleRepository
     with RepositoryMixin, _GossipMenuOptionLocaleRepositoryMixin {
   static const _table = 'gossip_menu_option_locale';
@@ -86,9 +86,12 @@ class GossipMenuOptionLocaleRepository
   Future<List<BriefGossipMenuOptionLocaleEntity>>
   getBriefGossipMenuOptionLocales({int menuId = 0, int page = 1}) async {
     final query = menuId == 0
-        ? laconic.table(_table).select(
-            ['MenuID', 'OptionID', 'Locale', 'OptionText'],
-          )
+        ? laconic.table(_table).select([
+            'MenuID',
+            'OptionID',
+            'Locale',
+            'OptionText',
+          ])
         : laconic
               .table(_table)
               .select(['MenuID', 'OptionID', 'Locale', 'OptionText'])

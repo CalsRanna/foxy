@@ -11,13 +11,9 @@ import 'package:signals/signals.dart';
 
 part 'reference_loot_template_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: ReferenceLootTemplateEntity,
-  repository: ReferenceLootTemplateRepository,
-)
+@FoxyDetailViewModel()
 class ReferenceLootTemplateDetailViewModel
     with FieldControllerMixin, _ReferenceLootTemplateDetailViewModelMixin {
-
   final hasReference = signal(false);
   ReferenceLootTemplateDetailViewModel() {
     referenceController.addListener(_syncReferenceState);
@@ -55,7 +51,6 @@ class ReferenceLootTemplateDetailViewModel
       submitting.value = false;
     }
   }
-
 
   void _syncReferenceState() {
     try {

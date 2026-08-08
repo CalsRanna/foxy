@@ -13,7 +13,6 @@ import 'package:signals/signals.dart';
 part 'game_object_template_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  entity: GameObjectTemplateEntity,
   groups: {
     'data0',
     'data1',
@@ -40,12 +39,10 @@ part 'game_object_template_detail_view_model.g.dart';
     'data8',
     'data9',
   },
-  selects: {'type': 0},
-  repository: GameObjectTemplateRepository,
+  selects: {'type'},
 )
 class GameObjectTemplateDetailViewModel
     with FieldControllerMixin, _GameObjectTemplateDetailViewModelMixin {
-
   /// Currently selected GameObject type; drives the Data0..Data23 edit
   /// specs
   final selectedType = signal(0);
@@ -86,7 +83,6 @@ class GameObjectTemplateDetailViewModel
       loading.value = false;
     }
   }
-
 
   void _onTypeChanged() {
     selectedType.value = typeController.collect();

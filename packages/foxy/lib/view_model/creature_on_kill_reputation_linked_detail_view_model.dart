@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 part 'creature_on_kill_reputation_linked_detail_view_model.g.dart';
 
 @FoxyLinkedDetailViewModel(
-  entity: CreatureOnKillReputationEntity,
-  repository: CreatureOnKillReputationRepository,
-  selects: {'maxStanding1': 0, 'maxStanding2': 0, 'teamDependent': 0},
+  selects: {'maxStanding1', 'maxStanding2', 'teamDependent'},
 )
 class CreatureOnKillReputationLinkedDetailViewModel
-    with FieldControllerMixin, _CreatureOnKillReputationLinkedDetailViewModelMixin {
-}
+    with
+        FieldControllerMixin,
+        _CreatureOnKillReputationLinkedDetailViewModelMixin {}

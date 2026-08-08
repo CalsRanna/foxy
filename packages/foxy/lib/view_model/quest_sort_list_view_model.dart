@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'quest_sort_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: QuestSortEntity, repository: QuestSortRepository)
+@FoxyListViewModel()
 class QuestSortListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _QuestSortListViewModelMixin {
-}
+        _QuestSortListViewModelMixin {}

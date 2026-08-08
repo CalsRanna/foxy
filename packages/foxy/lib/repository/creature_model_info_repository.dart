@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_model_info_repository.g.dart';
 
-@FoxyRepository(CreatureModelInfoEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class CreatureModelInfoRepository
     with RepositoryMixin, _CreatureModelInfoRepositoryMixin {

@@ -11,16 +11,10 @@ import 'package:signals/signals.dart';
 
 part 'talent_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: TalentEntity,
-  selects: {'flags': 0},
-  repository: TalentRepository,
-)
+@FoxyDetailViewModel(selects: {'flags'})
 class TalentDetailViewModel
     with FieldControllerMixin, _TalentDetailViewModelMixin {
-
   /// Collects data from all controllers to build the Talent
 
   /// Leaves the page
-
 }

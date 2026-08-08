@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_range_repository.g.dart';
 
-@FoxyRepository(SpellRangeEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SpellRangeRepository

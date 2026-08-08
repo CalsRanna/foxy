@@ -13,12 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'game_object_quest_item_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: GameObjectQuestItemEntity,
-  repository: GameObjectQuestItemRepository,
-)
+@FoxyLinkedListViewModel()
 class GameObjectQuestItemLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _GameObjectQuestItemLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _GameObjectQuestItemLinkedListViewModelMixin {}

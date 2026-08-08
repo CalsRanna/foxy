@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'taxi_path_repository.g.dart';
 
-@FoxyRepository(TaxiPathEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class TaxiPathRepository with RepositoryMixin, _TaxiPathRepositoryMixin {
   static const _table = 'foxy.dbc_taxi_path';

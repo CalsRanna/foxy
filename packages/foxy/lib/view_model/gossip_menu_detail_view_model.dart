@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 
 part 'gossip_menu_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: GossipMenuEntity, repository: GossipMenuRepository)
+@FoxyDetailViewModel()
 class GossipMenuDetailViewModel
     with FieldControllerMixin, _GossipMenuDetailViewModelMixin {
   final _npcTextRepository = GetIt.instance.get<NpcTextRepository>();
@@ -105,5 +105,4 @@ class GossipMenuDetailViewModel
       submitting.value = false;
     }
   }
-
 }

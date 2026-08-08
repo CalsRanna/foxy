@@ -5,7 +5,7 @@ part 'spell_group_entity.g.dart';
 /// Spell groups
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'spell_group')
+@FoxyFullEntity()
 class SpellGroupEntity with _SpellGroupEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('id', key: true)

@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'sound_provider_preferences_repository.g.dart';
 
-@FoxyRepository(SoundProviderPreferencesEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('description')
 class SoundProviderPreferencesRepository
@@ -62,7 +62,9 @@ class SoundProviderPreferencesRepository
     SoundProviderPreferencesFilter? filter,
   ) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.description.isNotEmpty) {
       builder = builder.where(
         'Description',

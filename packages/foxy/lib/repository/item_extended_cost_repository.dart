@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_extended_cost_repository.g.dart';
 
-@FoxyRepository(ItemExtendedCostEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class ItemExtendedCostRepository
     with RepositoryMixin, _ItemExtendedCostRepositoryMixin {

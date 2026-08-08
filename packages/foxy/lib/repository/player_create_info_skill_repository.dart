@@ -7,10 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_skill_repository.g.dart';
 
-@FoxyRepository(
-  PlayerCreateInfoSkillEntity,
-  linkKey: ['raceMask', 'classMask'],
-)
+@FoxyRepository(linkKey: ['raceMask', 'classMask'])
 class PlayerCreateInfoSkillRepository
     with RepositoryMixin, _PlayerCreateInfoSkillRepositoryMixin {
   static const _table = 'playercreateinfo_skills';

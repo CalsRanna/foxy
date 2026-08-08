@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'smart_script_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: SmartScriptEntity, repository: SmartScriptRepository)
+@FoxyListViewModel()
 class SmartScriptListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _SmartScriptListViewModelMixin {
-}
+        _SmartScriptListViewModelMixin {}

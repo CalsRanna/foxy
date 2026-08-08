@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_info_repository.g.dart';
 
-@FoxyRepository(QuestInfoEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name', column: 'InfoName_lang_zhCN')
 class QuestInfoRepository

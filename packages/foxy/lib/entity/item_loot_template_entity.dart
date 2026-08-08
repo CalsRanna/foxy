@@ -9,7 +9,7 @@ part 'item_loot_template_entity.g.dart';
 @FoxyBriefField.text('itemLocaleName')
 @FoxyBriefField.integer('itemQuality')
 @FoxyBriefField.text('itemIcon')
-@FoxyFullEntity(table: 'item_loot_template')
+@FoxyFullEntity()
 class ItemLootTemplateEntity with _ItemLootTemplateEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('Entry', key: true)

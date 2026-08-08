@@ -12,10 +12,6 @@ import 'package:signals/signals.dart';
 
 part 'item_set_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: ItemSetEntity, repository: ItemSetRepository)
+@FoxyListViewModel()
 class ItemSetListViewModel
-    with
-        FieldControllerMixin,
-        QueryVersionMixin,
-        _ItemSetListViewModelMixin {
-}
+    with FieldControllerMixin, QueryVersionMixin, _ItemSetListViewModelMixin {}

@@ -13,12 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'creature_equip_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: CreatureEquipTemplateEntity,
-  repository: CreatureEquipTemplateRepository,
-)
+@FoxyLinkedListViewModel()
 class CreatureEquipTemplateLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _CreatureEquipTemplateLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _CreatureEquipTemplateLinkedListViewModelMixin {}

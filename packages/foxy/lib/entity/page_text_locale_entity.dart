@@ -3,7 +3,7 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'page_text_locale_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'page_text_locale')
+@FoxyFullEntity()
 class PageTextLocaleEntity with _PageTextLocaleEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

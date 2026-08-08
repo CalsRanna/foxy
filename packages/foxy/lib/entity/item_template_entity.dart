@@ -6,7 +6,7 @@ part 'item_template_entity.g.dart';
 @FoxyBriefField.text('localeName')
 @FoxyBriefField.integer('classId')
 @FoxyBriefField.text('inventoryIcon')
-@FoxyFullEntity(table: 'item_template')
+@FoxyFullEntity()
 class ItemTemplateEntity with _ItemTemplateEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('entry', key: true)

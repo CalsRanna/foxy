@@ -5,7 +5,7 @@ part 'spell_custom_attr_entity.g.dart';
 /// Spell custom attributes
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'spell_custom_attr')
+@FoxyFullEntity()
 class SpellCustomAttrEntity with _SpellCustomAttrEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('spell_id', key: true)

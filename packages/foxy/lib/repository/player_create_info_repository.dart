@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_repository.g.dart';
 
-@FoxyRepository(PlayerCreateInfoEntity)
+@FoxyRepository()
 @FoxyFilter.text('race')
 @FoxyFilter.text('class_')
 class PlayerCreateInfoRepository

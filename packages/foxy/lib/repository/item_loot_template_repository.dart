@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_loot_template_repository.g.dart';
 
-@FoxyRepository(ItemLootTemplateEntity, linkKey: ['entry'], autoIncrementKey: 'item')
+@FoxyRepository(linkKey: ['entry'], autoIncrementKey: 'item')
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class ItemLootTemplateRepository

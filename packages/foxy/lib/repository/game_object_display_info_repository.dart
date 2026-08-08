@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_display_info_repository.g.dart';
 
-@FoxyRepository(GameObjectDisplayInfoEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('modelName')
 class GameObjectDisplayInfoRepository
@@ -65,7 +65,9 @@ class GameObjectDisplayInfoRepository
     GameObjectDisplayInfoFilter? filter,
   ) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.modelName.isNotEmpty) {
       builder = builder.where(
         'ModelName',

@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'dbc_faction_repository.g.dart';
 
-@FoxyRepository(DbcFactionEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class DbcFactionRepository

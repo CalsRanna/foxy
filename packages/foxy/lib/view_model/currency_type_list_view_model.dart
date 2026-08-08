@@ -12,13 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'currency_type_list_view_model.g.dart';
 
-@FoxyListViewModel(
-  entity: CurrencyTypeEntity,
-  repository: CurrencyTypeRepository,
-)
+@FoxyListViewModel()
 class CurrencyTypeListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _CurrencyTypeListViewModelMixin {
-}
+        _CurrencyTypeListViewModelMixin {}

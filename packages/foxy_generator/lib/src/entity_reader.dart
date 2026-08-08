@@ -6,6 +6,7 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_model.dart';
 import 'package:foxy_generator/src/entity_validator.dart';
 import 'package:foxy_generator/src/naming.dart';
@@ -88,6 +89,19 @@ final class EntityReader {
       fields.add(_readField(classElement, field, parameters));
     }
 
+    // Physical table name: explicit `table:` wins; otherwise derived from
+    // the class name (`CreatureLootTemplateEntity` → `creature_loot_template`).
+    final table =
+        annotation.peek('table')?.stringValue ?? tableNameOf(className);
+    if (table.isEmpty) {
+      _fail(
+        '$className 未声明 @FoxyFullEntity(table:) 且类名无法推导表名'
+            '（类名恰为 "Entity"）。',
+        classElement,
+        '给 @FoxyFullEntity 显式传 table: \'物理表名\'。',
+      );
+    }
+
     final model = EntityGenerationModel(
       className: className,
       generateBrief: _hasSingleAnnotation(
@@ -97,7 +111,7 @@ final class EntityReader {
       ),
       inputFileName: inputFileName,
       mixinName: mixinName,
-      table: annotation.read('table').stringValue,
+      table: table,
       fields: List.unmodifiable(fields),
       briefProjectionFields: List.unmodifiable(
         _readBriefProjectionFields(classElement),

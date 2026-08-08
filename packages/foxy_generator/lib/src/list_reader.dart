@@ -6,12 +6,11 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:foxy_annotation/repository_annotations.dart';
+import 'package:foxy_generator/src/convention.dart';
+import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/list_model.dart';
 import 'package:foxy_generator/src/naming.dart';
 
-const _fullEntityChecker = TypeChecker.fromUrl(
-  'package:foxy_annotation/entity_annotations.dart#FoxyFullEntity',
-);
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
 );
@@ -64,13 +63,14 @@ final class ListReader {
       );
     }
 
-    final (InterfaceElement entityElement, String table) =
-        _readEntity(annotation, className, element);
-    final repositoryElement = _readRepository(
+    final (ClassElement entityElement, String table) =
+        await _readEntity(annotation, className, element, buildStep);
+    final repositoryElement = await _readRepository(
       annotation,
       className,
       entityElement,
       element,
+      buildStep,
     );
     final repositoryClassName = repositoryElement.name!;
 
@@ -146,84 +146,99 @@ final class ListReader {
     );
   }
 
-  (InterfaceElement, String) _readEntity(
+  Future<(ClassElement, String)> _readEntity(
     ConstantReader annotation,
     String className,
     Element element,
-  ) {
-    final entityType = annotation.read('entity').typeValue;
-    if (entityType is! InterfaceType) {
-      _fail(
-        '$className 的 @FoxyListViewModel 参数不是 Entity class。',
-        element,
-        '传入具体的 Full Entity 类型。',
-      );
+    BuildStep buildStep,
+  ) async {
+    // Bound entity: explicit `entity:` wins; otherwise derived from the
+    // class name (`XxxListViewModel` → `XxxEntity`).
+    String entityClassName;
+    final declaredEntity = annotation.peek('entity');
+    if (declaredEntity != null && !declaredEntity.isNull) {
+      final entityType = declaredEntity.typeValue;
+      if (entityType is! InterfaceType) {
+        _fail(
+          '$className 的 @FoxyListViewModel entity 参数不是 Entity class。',
+          element,
+          '传入具体的 Full Entity 类型。',
+        );
+      }
+      entityClassName = entityType.element.name!;
+      if (!entityClassName.endsWith('Entity')) {
+        _fail('$className 绑定的类型必须以 Entity 结尾。', element, '传入具体的 Full Entity 类型。');
+      }
+    } else {
+      entityClassName = entityClassNameOfViewModel(className) ??
+          (throw InvalidGenerationSourceError(
+            '$className 无法推导 entity 类名。',
+            element: element,
+          ));
     }
-    final entityElement = entityType.element;
-    if (!entityElement.name!.endsWith('Entity')) {
-      _fail('$className 绑定的类型必须以 Entity 结尾。', element, '传入具体的 Full Entity 类型。');
-    }
-    final entityAnnotations = _fullEntityChecker
-        .annotationsOf(entityElement)
-        .toList();
-    if (entityAnnotations.length != 1) {
-      _fail(
-        '${entityElement.name} 必须且只能声明一个 @FoxyFullEntity。',
-        entityElement,
-        '只绑定已迁移的生成型 Full Entity。',
-      );
-    }
-    final table = ConstantReader(entityAnnotations.single)
-        .read('table')
-        .stringValue;
-    if (table.isEmpty) {
-      _fail(
-        '${entityElement.name} 的 @FoxyFullEntity 必须声明 table。',
-        entityElement,
-        '声明物理表名，如 @FoxyFullEntity(table: \'xxx\')。',
-      );
-    }
-    return (entityElement, table);
+    final resolved = await resolveFullEntity(
+      buildStep,
+      element,
+      entityClassName,
+      '$className 的 @FoxyListViewModel',
+    );
+    return (resolved.entityElement, resolved.table);
   }
 
-  InterfaceElement _readRepository(
+  Future<ClassElement> _readRepository(
     ConstantReader annotation,
     String className,
     InterfaceElement entityElement,
     Element element,
-  ) {
-    final repositoryType = annotation.read('repository').typeValue;
-    if (repositoryType is! InterfaceType) {
-      _fail(
-        '$className 的 @FoxyListViewModel 参数不是 Repository class。',
-        element,
-        '传入具体的 Repository 类型。',
-      );
+    BuildStep buildStep,
+  ) async {
+    // Bound repository: explicit `repository:` wins (and must match the
+    // entity's base name); otherwise derived from the class name
+    // (`XxxListViewModel` → `XxxRepository`).
+    String repositoryClassName;
+    final declaredRepository = annotation.peek('repository');
+    if (declaredRepository != null && !declaredRepository.isNull) {
+      final repositoryType = declaredRepository.typeValue;
+      if (repositoryType is! InterfaceType) {
+        _fail(
+          '$className 的 @FoxyListViewModel repository 参数不是 Repository class。',
+          element,
+          '传入具体的 Repository 类型。',
+        );
+      }
+      repositoryClassName = repositoryType.element.name!;
+      if (!repositoryClassName.endsWith('Repository')) {
+        _fail(
+          '$className 绑定的类型必须以 Repository 结尾。',
+          element,
+          '传入具体的 Repository 类型。',
+        );
+      }
+      if (stripSuffix(repositoryClassName, 'Repository') !=
+          stripSuffix(entityElement.name!, 'Entity')) {
+        _fail(
+          '$repositoryClassName 与 ${entityElement.name} 不符合一对一命名约定。',
+          element,
+          'Repository 和 Entity 使用相同 base name。',
+        );
+      }
+    } else {
+      repositoryClassName = repositoryClassNameOfViewModel(className) ??
+          (throw InvalidGenerationSourceError(
+            '$className 无法推导 repository 类名。',
+            element: element,
+          ));
     }
-    final repositoryElement = repositoryType.element;
-    final repositoryClassName = repositoryElement.name!;
-    if (!repositoryClassName.endsWith('Repository')) {
-      _fail(
-        '$className 绑定的类型必须以 Repository 结尾。',
-        element,
-        '传入具体的 Repository 类型。',
-      );
-    }
-    final entityBaseName = entityElement.name!.substring(
-      0,
-      entityElement.name!.length - 'Entity'.length,
+
+    // The derived repository must exist and be a migrated (annotated)
+    // repository — otherwise the generated list has no query layer to call.
+    final repositoryElement = await resolveClass(
+      buildStep,
+      element,
+      repositoryClassName,
+      'repository',
+      '$className 的 @FoxyListViewModel',
     );
-    final repositoryBaseName = repositoryClassName.substring(
-      0,
-      repositoryClassName.length - 'Repository'.length,
-    );
-    if (repositoryBaseName != entityBaseName) {
-      _fail(
-        '$repositoryClassName 与 ${entityElement.name} 不符合一对一命名约定。',
-        element,
-        'Repository 和 Entity 使用相同 base name。',
-      );
-    }
     final repositoryAnnotations = _repositoryChecker
         .annotationsOf(repositoryElement)
         .toList();
@@ -232,17 +247,6 @@ final class ListReader {
         '$repositoryClassName 必须且只能声明一个 @FoxyRepository。',
         repositoryElement,
         '只绑定已迁移的生成型 Repository。',
-      );
-    }
-    final boundEntityName = ConstantReader(
-      repositoryAnnotations.single,
-    ).read('entity').typeValue.element?.name;
-    if (boundEntityName != entityElement.name) {
-      _fail(
-        '$repositoryClassName 的 @FoxyRepository 绑定的实体是 '
-            '$boundEntityName，与注解传入的 ${entityElement.name} 不一致。',
-        element,
-        '让 @FoxyListViewModel 的 repository 与 entity 匹配。',
       );
     }
     return repositoryElement;

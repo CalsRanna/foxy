@@ -228,5 +228,4 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
       minLevel: minLevelController.collect(),
     );
   }
-
 }

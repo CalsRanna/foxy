@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'scaling_stat_value_repository.g.dart';
 
-@FoxyRepository(ScalingStatValueEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('charlevel')
 class ScalingStatValueRepository

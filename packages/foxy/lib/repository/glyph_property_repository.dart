@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'glyph_property_repository.g.dart';
 
-@FoxyRepository(GlyphPropertyEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class GlyphPropertyRepository
     with RepositoryMixin, _GlyphPropertyRepositoryMixin {

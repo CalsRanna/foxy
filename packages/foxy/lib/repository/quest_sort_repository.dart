@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_sort_repository.g.dart';
 
-@FoxyRepository(QuestSortEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name', column: 'SortName_lang_zhCN')
 class QuestSortRepository

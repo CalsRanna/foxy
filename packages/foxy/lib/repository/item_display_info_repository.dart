@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_display_info_repository.g.dart';
 
-@FoxyRepository(ItemDisplayInfoEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class ItemDisplayInfoRepository

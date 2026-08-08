@@ -4,18 +4,31 @@
 
 ## 注解速查
 
+**推导链**:标灰的参数都可以省略——省略时由生成器从类名/类型推导(见「推导规则」表);显式声明永远优先,且与推导不一致时构建期报错。
+
 | 注解 | 标注位置 | 作用 |
 | --- | --- | --- |
-| `@FoxyBriefEntity` | Entity class | 声明「列表行」实体(`BriefXxxEntity`) |
+| `@FoxyBriefEntity()` | Entity class | 声明「表格行展示模型」(`BriefXxxEntity`),list page 表格 / picker 选择列表 / 子表 tab 表格共用。**必须显式声明,不推导**——消费方含生成器看不见的手写代码 |
 | `@FoxyBriefField` | Entity class / 字段 | class 上:声明 Brief 投影字段(带类型与默认值);字段上:无参形式标记该物理字段进 Brief |
-| `@FoxyFullEntity(table)` | Entity class | 声明全量实体(物理表名) |
-| `@FoxyFullField(name, key)` | Entity 字段 | 声明物理列名;`key: true` 标记主键 |
-| `@FoxyRepository(entity, linkKey)` | Repository class | 生成查询层;`linkKey` 声明关联键后生成子表形态 |
+| `@FoxyFullEntity(~~table~~)` | Entity class | 声明全量实体;`table:` 省略时推导为 `snake_case(类名去 Entity)`(`CreatureLootTemplateEntity` → `creature_loot_template`)。DBC 表(`foxy.dbc_*`)、复数表名(`conditions`)、拼写差异表(`trainer_spell`)显式声明 |
+| `@FoxyFullField(name, key)` | Entity 字段 | 声明物理列名;`key: true` 标记主键(列名推导为阶段 2) |
+| `@FoxyRepository(~~entity~~, linkKey)` | Repository class | `entity:` 省略时推导为 `类名去 Repository + Entity`;`linkKey` 声明关联键后生成子表形态(不可推导,必须显式) |
 | `@FoxyFilter` | Repository class | 声明列表筛选字段(单事实来源) |
-| `@FoxyListViewModel(entity, repository)` | List ViewModel | 生成列表控制器/分页/竞态/操作钩子 |
-| `@FoxyDetailViewModel(entity, selects/flags/groups/nullable/exclude/repository)` | Detail ViewModel | 生成表单控制器 + 行为骨架 |
-| `@FoxyLinkedListViewModel(entity, repository, ...)` | 子表列表 ViewModel | 生成关联键子集列表 + 行编辑骨架 |
-| `@FoxyLinkedDetailViewModel(entity, repository, ...)` | 一对一子表 ViewModel | 生成 get-or-create 单行编辑器骨架 |
+| `@FoxyListViewModel(~~entity, repository~~)` | List ViewModel | entity/repository 都从类名推导(`XxxListViewModel` → `XxxEntity` / `XxxRepository`) |
+| `@FoxyDetailViewModel(~~entity, repository~~, selects/flags/groups/exclude, skeleton)` | Detail ViewModel | entity 推导;repository 省略时同名仓库存在即生成行为骨架,`skeleton: false` 关闭 |
+| `@FoxyLinkedListViewModel(~~entity, repository~~, ...)` | 子表列表 ViewModel | entity/repository 推导;生成关联键子集列表 + 行编辑骨架 |
+| `@FoxyLinkedDetailViewModel(~~entity, repository~~, ...)` | 一对一子表 ViewModel | entity/repository 推导;生成 get-or-create 单行编辑器骨架 |
+
+### 推导规则
+
+| 事实 | 约定(默认) | 配置(例外) |
+| --- | --- | --- |
+| 表名 | `snake_case(类名去 Entity)` | `@FoxyFullEntity(table: 'xxx')` |
+| 仓库绑定的实体 | 类名去 `Repository` + `Entity` | `@FoxyRepository(XxxEntity)` |
+| VM 绑定的实体/仓库 | 类名去 VM 后缀 + `Entity`/`Repository` | `entity:` / `repository:` |
+| 表单行为骨架 | 同名 `XxxRepository` 存在即启用 | `skeleton: false` |
+| nullable 字段控制器 | `String?` 类型即声明 | —(无需任何声明) |
+| select fallback | 实体构造器同名参数默认值 | `selects: {'type': 0}`(Map 显式) |
 
 ## 5 种模块形态
 
@@ -34,7 +47,7 @@
 **`entity/creature_template_entity.dart`**
 ```dart
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'creature_template')
+@FoxyFullEntity()              // table 推导为 'creature_template'
 class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyBriefField()                // 字段级：进 Brief 列表行
   @FoxyFullField('entry', key: true)  // 物理列名 + 主键
@@ -62,7 +75,7 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
 
 **`repository/creature_template_repository.dart`**
 ```dart
-@FoxyRepository(CreatureTemplateEntity)
+@FoxyRepository()             // entity 推导为 CreatureTemplateEntity
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class CreatureTemplateRepository
@@ -73,7 +86,7 @@ class CreatureTemplateRepository
 
 **`view_model/creature_template_list_view_model.dart`**
 ```dart
-@FoxyListViewModel(entity: CreatureTemplateEntity, repository: CreatureTemplateRepository)
+@FoxyListViewModel()          // entity/repository 都从类名推导
 class CreatureTemplateListViewModel
     with FieldControllerMixin, QueryVersionMixin, _CreatureTemplateListViewModelMixin {
   // 覆写点：记录复制/删除活动日志
@@ -85,10 +98,9 @@ class CreatureTemplateListViewModel
 **`view_model/creature_template_detail_view_model.dart`**
 ```dart
 @FoxyDetailViewModel(
-  entity: CreatureTemplateEntity,
-  selects: {'type': 0, 'faction': 0},      // 例外：SelectFieldController
+  selects: {'type', 'faction'},             // Set：fallback 从构造器默认值推导
   flags: {'unitFlags', 'typeFlags'},        // 例外：FlagFieldController
-  repository: CreatureTemplateRepository,   // 声明后生成行为骨架
+  // repository 省略：同名仓库存在，行为骨架自动启用
 )
 class CreatureTemplateDetailViewModel
     with FieldControllerMixin, _CreatureTemplateDetailViewModelMixin {
@@ -101,7 +113,7 @@ class CreatureTemplateDetailViewModel
 详情页的每个 Tab 对应一个子表仓库,`linkKey` 声明后生成「按关联键查子集合」的查询层:
 
 ```dart
-@FoxyRepository(CreatureLootTemplateEntity, linkKey: ['entry'])
+@FoxyRepository(linkKey: ['entry'])   // entity 推导；linkKey 必须显式
 @FoxyFilter.text('item')
 class CreatureLootTemplateRepository
     with RepositoryMixin, _CreatureLootTemplateRepositoryMixin {
@@ -124,9 +136,7 @@ Future<CreatureLootTemplateEntity> createCreatureLootTemplate(int entry)
 
 ```dart
 @FoxyLinkedListViewModel(
-  entity: CreatureLootTemplateEntity,
-  repository: CreatureLootTemplateRepository,
-  selects: {'item': 0},                    // 可选的例外声明
+  selects: {'item'},                       // Set：fallback 从构造器默认值推导
 )
 class CreatureLootTemplateLinkedListViewModel
     with FieldControllerMixin, _CreatureLootTemplateLinkedListViewModelMixin {}
@@ -137,10 +147,7 @@ class CreatureLootTemplateLinkedListViewModel
 ### 形态 4:Linked Detail Tab(一对一子表表单)
 
 ```dart
-@FoxyLinkedDetailViewModel(
-  entity: CreatureTemplateAddonEntity,
-  repository: CreatureTemplateAddonRepository,
-)
+@FoxyLinkedDetailViewModel()
 class CreatureTemplateAddonLinkedDetailViewModel
     with FieldControllerMixin, _CreatureTemplateAddonLinkedDetailViewModelMixin {}
 ```
@@ -159,9 +166,9 @@ class CreatureTemplateAddonLinkedDetailViewModel
 | `double` | `DoubleFieldController` | |
 | `String` | `StringFieldController` | |
 | `bool` | `SelectFieldController<int>(fallback: 0)` | `collect() == 1` 转换;toJson 时 `1/0` |
-| `String?` | `NullableStringFieldController` | 必须显式加 `nullable:` |
-| 例外:int | `SelectFieldController<int>(fallback)` | 加 `selects: {'字段': fallback}` |
-| 例外:String | `SelectFieldController<String>(fallback)` | 加 `selects: {'字段': fallback}` |
+| `String?` | `NullableStringFieldController` | 类型即声明,无需任何注解 |
+| 例外:int | `SelectFieldController<int>(fallback)` | `selects: {'字段'}`(Set,fallback 取构造器默认值)或 `selects: {'字段': fallback}`(Map 显式覆盖) |
+| 例外:String | `SelectFieldController<String>(fallback)` | 同上 |
 | 例外:int(位标志) | `FlagFieldController` | 加 `flags: {...}` |
 | 例外:int(动态组) | `IntFieldControllerGroup` | 加 `groups: {...}` |
 | 不进表单 | — | 加 `exclude: {...}` |
@@ -169,9 +176,9 @@ class CreatureTemplateAddonLinkedDetailViewModel
 约束(构建期校验,拼错即报错):
 
 - `bool` 没有专用 controller,一律走 Select(见 `pickpocketing_loot_template_linked_list_view_model.dart` 的既有做法);
-- `selects` fallback 类型必须与字段类型一致(int/String);
-- `nullable` 只支持 `String?`;`groups` 只支持 `int`;`flags` 只支持 `int`;
-- 一个字段只能属于一个例外集合(selects/flags/groups/nullable/exclude 互斥)。
+- `selects` fallback 类型必须与字段类型一致(int/String);Set 形态推导失败(构造器默认值不是 int/String 常量)时改用 Map 显式;
+- `groups` 只支持 `int`;`flags` 只支持 `int`;
+- 一个字段只能属于一个例外集合(selects/flags/groups/exclude 互斥)。
 
 ## 覆写模式
 
@@ -198,10 +205,15 @@ class CreatureTemplateAddonLinkedDetailViewModel
 | `XxxEntity 必须保留约定签名的 fromJson factory 委托` | factory 签名不符 | 委托到 `_XxxEntityMixin.fromJson(json)` |
 | `XxxEntity 没有物理主键字段` | 没有 `@FoxyFullField(key: true)` | 至少一个 key 字段 |
 | `XxxRepository 必须混入 _XxxRepositoryMixin` | 没混入 | `with RepositoryMixin, _XxxRepositoryMixin` |
-| `XxxRepository._table 与 XxxEntity 的物理表不一致` | `_table` 与注解不符 | 对齐 |
+| `XxxRepository._table 与 XxxEntity 的物理表不一致` | `_table` 与表名不符 | 对齐 |
 | `Xxx 缺少 part 'xxx.g.dart'` | 缺 part | 补上 |
 | `Xxx 必须混入 FieldControllerMixin` / `...Mixin` | List VM 缺基座 | 加 `FieldControllerMixin, QueryVersionMixin` |
 | `... 已手写 copyWith ... 与生成成员冲突` | 手写了生成成员 | 删手写,保留 Entity 特有业务方法 |
+| `XxxEntity 必须声明 @FoxyBriefEntity` | 查询层生成 `getBrief*` 返回 `BriefXxxEntity` | 给 Entity 加 `@FoxyBriefEntity()`(表格行展示模型声明) |
+| `... 推导出文件 xxx.dart，但文件不存在` / `找不到 class` | 推导的仓库/实体未迁移或类名不符 | 创建并迁移同名类,或在注解显式声明 |
+| `... 无法推导 entity 类名` | VM 类名无约定后缀 | 用 `XxxListViewModel` 等规范命名 |
+| `... 的构造默认值不是可求值的常量` | `selects` Set 形态推导 fallback 失败 | 改用 Map 显式:`selects: {'字段': fallback}` |
+| `... 不能同时声明 repository 与 skeleton: false` | 两个互斥参数同时传 | 只保留一个 |
 | `... 缺少对应列 ... 无法推断物理列` | `@FoxyFilter` 名与实体字段不一致 | 显式 `column:` 或改名 |
 | `... 只能使用无参数的 @FoxyBriefField()` | 字段级误用带参形式 | 类级具名构造函数是投影别名,字段级只能无参 |
 | `... 必须且只能声明一个 @FoxyFullEntity` | 同文件多个 Full Entity | 拆到独立文件 |

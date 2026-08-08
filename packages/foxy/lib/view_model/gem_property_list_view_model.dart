@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'gem_property_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: GemPropertyEntity, repository: GemPropertyRepository)
+@FoxyListViewModel()
 class GemPropertyListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _GemPropertyListViewModelMixin {
-}
+        _GemPropertyListViewModelMixin {}

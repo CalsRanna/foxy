@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 part 'item_enchantment_template_linked_list_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: ItemEnchantmentTemplateEntity)
+@FoxyDetailViewModel(skeleton: false)
 class ItemEnchantmentTemplateLinkedListViewModel
     with
         FieldControllerMixin,
@@ -128,9 +128,8 @@ class ItemEnchantmentTemplateLinkedListViewModel
     }
   }
 
-  Future<void> initSignals({
-    required ItemEnchantmentTemplateLinkKey linkKey,
-  }) => setLinkKey(linkKey);
+  Future<void> initSignals({required ItemEnchantmentTemplateLinkKey linkKey}) =>
+      setLinkKey(linkKey);
 
   Future<void> paginate(int page) async {
     _interactionToken++;

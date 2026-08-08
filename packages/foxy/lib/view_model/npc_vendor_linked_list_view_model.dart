@@ -13,10 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'npc_vendor_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: NpcVendorEntity,
-  repository: NpcVendorRepository,
-)
+@FoxyLinkedListViewModel()
 class NpcVendorLinkedListViewModel
-    with FieldControllerMixin, _NpcVendorLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _NpcVendorLinkedListViewModelMixin {}

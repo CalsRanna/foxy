@@ -14,10 +14,7 @@ import 'package:signals/signals.dart';
 
 part 'npc_trainer_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: NpcTrainerEntity,
-  repository: NpcTrainerRepository,
-)
+@FoxyLinkedListViewModel()
 class NpcTrainerLinkedListViewModel
     with FieldControllerMixin, _NpcTrainerLinkedListViewModelMixin {
   final _resolveParent = GetIt.instance.get<ResolveNpcTrainerParentUseCase>();

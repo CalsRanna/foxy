@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_template_repository.g.dart';
 
-@FoxyRepository(GameObjectTemplateEntity)
+@FoxyRepository()
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class GameObjectTemplateRepository
@@ -39,7 +39,11 @@ class GameObjectTemplateRepository
         builder = builder.where('entry', int.tryParse(filter.entry) ?? 0);
       }
       if (filter != null && filter.name.isNotEmpty) {
-        builder = builder.where('name', '%${escapeLike(filter.name)}%', comparator: 'like');
+        builder = builder.where(
+          'name',
+          '%${escapeLike(filter.name)}%',
+          comparator: 'like',
+        );
       }
       return builder.count();
     }

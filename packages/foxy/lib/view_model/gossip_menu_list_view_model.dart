@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'gossip_menu_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: GossipMenuEntity, repository: GossipMenuRepository)
+@FoxyListViewModel()
 class GossipMenuListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _GossipMenuListViewModelMixin {
-}
+        _GossipMenuListViewModelMixin {}

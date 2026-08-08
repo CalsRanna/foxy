@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_template_resistance_repository.g.dart';
 
-@FoxyRepository(CreatureTemplateResistanceEntity, linkKey: ['creatureID'])
+@FoxyRepository(linkKey: ['creatureID'])
 class CreatureTemplateResistanceRepository
     with RepositoryMixin, _CreatureTemplateResistanceRepositoryMixin {
   static const _table = 'creature_template_resistance';

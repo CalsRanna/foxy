@@ -246,5 +246,4 @@ class DbcExportWorkflowViewModel {
         break;
     }
   }
-
 }

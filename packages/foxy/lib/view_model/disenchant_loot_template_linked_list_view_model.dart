@@ -13,13 +13,8 @@ import 'package:signals/signals.dart';
 
 part 'disenchant_loot_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: DisenchantLootTemplateEntity,
-  flags: {'lootMode'},
-  repository: DisenchantLootTemplateRepository,
-)
+@FoxyLinkedListViewModel(flags: {'lootMode'})
 class DisenchantLootTemplateLinkedListViewModel
     with
         FieldControllerMixin,
-        _DisenchantLootTemplateLinkedListViewModelMixin {
-}
+        _DisenchantLootTemplateLinkedListViewModelMixin {}

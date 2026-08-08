@@ -268,7 +268,6 @@ class ConditionDetailViewModel with FieldControllerMixin {
     );
   }
 
-
   void _onConditionModeChange() {
     selectedConditionMode.value = conditionModeController.collect();
     _refreshConditionValueEditors();

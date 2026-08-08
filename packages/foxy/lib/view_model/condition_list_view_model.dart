@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'condition_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: ConditionEntity, repository: ConditionRepository)
+@FoxyListViewModel()
 class ConditionListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _ConditionListViewModelMixin {
-}
+        _ConditionListViewModelMixin {}

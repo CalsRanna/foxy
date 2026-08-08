@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_visual_effect_repository.g.dart';
 
-@FoxyRepository(ItemVisualEffectEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('model')
 class ItemVisualEffectRepository
@@ -66,7 +66,11 @@ class ItemVisualEffectRepository
       builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.model.isNotEmpty) {
-      builder = builder.where('Model', '%${escapeLike(filter.model)}%', comparator: 'like');
+      builder = builder.where(
+        'Model',
+        '%${escapeLike(filter.model)}%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

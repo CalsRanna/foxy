@@ -30,9 +30,12 @@ enum FoxyBriefFieldType { boolean, decimal, integer, text }
 
 @Target({TargetKind.classType})
 class FoxyFullEntity {
-  final String table;
+  /// Physical table name; when omitted, the generator derives it from the
+  /// class name (`CreatureLootTemplateEntity` → `creature_loot_template`)
+  /// and errors at build time if the class name cannot be derived.
+  final String? table;
 
-  const FoxyFullEntity({required this.table});
+  const FoxyFullEntity({this.table});
 }
 
 @Target({TargetKind.field})

@@ -7,7 +7,7 @@ part 'quest_offer_reward_entity.g.dart';
 /// primary key.
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'quest_offer_reward')
+@FoxyFullEntity()
 class QuestOfferRewardEntity with _QuestOfferRewardEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

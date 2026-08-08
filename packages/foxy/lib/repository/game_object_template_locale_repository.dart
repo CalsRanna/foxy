@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_template_locale_repository.g.dart';
 
-@FoxyRepository(GameObjectTemplateLocaleEntity)
+@FoxyRepository()
 class GameObjectTemplateLocaleRepository
     with RepositoryMixin, _GameObjectTemplateLocaleRepositoryMixin {
   static const _table = 'gameobject_template_locale';

@@ -3,7 +3,7 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'quest_offer_reward_locale_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'quest_offer_reward_locale')
+@FoxyFullEntity()
 class QuestOfferRewardLocaleEntity with _QuestOfferRewardLocaleEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

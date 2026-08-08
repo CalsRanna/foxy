@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_template_spell_repository.g.dart';
 
-@FoxyRepository(CreatureTemplateSpellEntity, linkKey: ['creatureID'])
+@FoxyRepository(linkKey: ['creatureID'])
 class CreatureTemplateSpellRepository
     with RepositoryMixin, _CreatureTemplateSpellRepositoryMixin {
   static const _table = 'creature_template_spell';

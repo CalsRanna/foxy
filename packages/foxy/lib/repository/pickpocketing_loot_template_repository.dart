@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'pickpocketing_loot_template_repository.g.dart';
 
-@FoxyRepository(PickpocketingLootTemplateEntity, linkKey: ['entry'], autoIncrementKey: 'item')
+@FoxyRepository(linkKey: ['entry'], autoIncrementKey: 'item')
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class PickpocketingLootTemplateRepository

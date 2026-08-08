@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_quest_ender_repository.g.dart';
 
-@FoxyRepository(GameObjectQuestEnderEntity, linkKey: ['quest'])
+@FoxyRepository(linkKey: ['quest'])
 class GameObjectQuestEnderRepository
     with RepositoryMixin, _GameObjectQuestEnderRepositoryMixin {
   static const _table = 'gameobject_questender';

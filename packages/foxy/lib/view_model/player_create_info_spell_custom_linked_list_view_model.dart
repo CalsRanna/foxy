@@ -13,10 +13,7 @@ import 'package:signals/signals.dart';
 
 part 'player_create_info_spell_custom_linked_list_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: PlayerCreateInfoSpellCustomEntity,
-  flags: {'classMask', 'raceMask'},
-)
+@FoxyDetailViewModel(flags: {'classMask', 'raceMask'}, skeleton: false)
 class PlayerCreateInfoSpellCustomLinkedListViewModel
     with
         FieldControllerMixin,

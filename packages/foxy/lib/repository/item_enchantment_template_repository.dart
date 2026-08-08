@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_enchantment_template_repository.g.dart';
 
-@FoxyRepository(ItemEnchantmentTemplateEntity)
+@FoxyRepository()
 @FoxyFilter.text('entry')
 class ItemEnchantmentTemplateRepository
     with RepositoryMixin, _ItemEnchantmentTemplateRepositoryMixin {

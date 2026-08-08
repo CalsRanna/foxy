@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'condition_repository.g.dart';
 
-@FoxyRepository(ConditionEntity)
+@FoxyRepository()
 @FoxyFilter.text('sourceTypeOrReferenceId')
 @FoxyFilter.text('sourceEntry')
 class ConditionRepository with RepositoryMixin, _ConditionRepositoryMixin {

@@ -74,8 +74,9 @@ class FeatureStateViewModel {
       final latestIndex = latest.indexWhere((feature) => feature.id == id);
       if (latestIndex == -1) return;
       final nextFeatures = [...latest];
-      nextFeatures[latestIndex] =
-          latest[latestIndex].copyWith(isFavorite: nextValue);
+      nextFeatures[latestIndex] = latest[latestIndex].copyWith(
+        isFavorite: nextValue,
+      );
       allFeatures.value = nextFeatures;
     } catch (error) {
       errorMessage.value = '更新收藏状态失败: ${foxyErrorMessage(error)}';
@@ -100,8 +101,9 @@ class FeatureStateViewModel {
       final latestIndex = latest.indexWhere((feature) => feature.id == id);
       if (latestIndex == -1) return;
       final nextFeatures = [...latest];
-      nextFeatures[latestIndex] =
-          latest[latestIndex].copyWith(isPinned: nextValue);
+      nextFeatures[latestIndex] = latest[latestIndex].copyWith(
+        isPinned: nextValue,
+      );
       allFeatures.value = nextFeatures;
     } catch (error) {
       errorMessage.value = '更新固定状态失败: ${foxyErrorMessage(error)}';

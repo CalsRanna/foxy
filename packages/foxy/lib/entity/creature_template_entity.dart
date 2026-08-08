@@ -5,7 +5,7 @@ part 'creature_template_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('localeName')
 @FoxyBriefField.text('localeSubName')
-@FoxyFullEntity(table: 'creature_template')
+@FoxyFullEntity()
 class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('AIName')
   final String aiName;

@@ -6,12 +6,11 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'package:foxy_generator/src/convention.dart';
+import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/form_model.dart';
 import 'package:foxy_generator/src/naming.dart';
 
-const _fullEntityChecker = TypeChecker.fromUrl(
-  'package:foxy_annotation/entity_annotations.dart#FoxyFullEntity',
-);
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
 );
@@ -57,40 +56,41 @@ final class FormReader {
       );
     }
 
-    final entityType = annotation.read('entity').typeValue;
-    if (entityType is! InterfaceType) {
-      _fail(
-        '$className 的 @FoxyDetailViewModel 参数不是 Entity class。',
-        element,
-        '传入具体的 Full Entity 类型。',
-      );
+    // Bound entity: explicit `entity:` wins; otherwise derived from the
+    // class name (longest ViewModel suffix first, so a `@FoxyDetailViewModel`
+    // on a hand-written `*LinkedListViewModel` class still resolves).
+    String entityClassName;
+    final declaredEntity = annotation.peek('entity');
+    if (declaredEntity != null && !declaredEntity.isNull) {
+      final entityType = declaredEntity.typeValue;
+      if (entityType is! InterfaceType) {
+        _fail(
+          '$className 的注解 entity 参数不是 Entity class。',
+          element,
+          '传入具体的 Full Entity 类型。',
+        );
+      }
+      entityClassName = entityType.element.name!;
+      if (!entityClassName.endsWith('Entity')) {
+        _fail('$className 绑定的类型必须以 Entity 结尾。', element, '传入具体的 Full Entity 类型。');
+      }
+    } else {
+      entityClassName = entityClassNameOfViewModel(className) ??
+          (throw InvalidGenerationSourceError(
+            '$className 无法推导 entity 类名：类名不包含约定的'
+                ' ListViewModel/DetailViewModel/LinkedListViewModel/'
+                'LinkedDetailViewModel 后缀。',
+            element: element,
+          ));
     }
-    final entityElement = entityType.element;
-    final entityClassName = entityElement.name;
-    if (entityClassName == null || !entityClassName.endsWith('Entity')) {
-      _fail('$className 绑定的类型必须以 Entity 结尾。', element, '传入具体的 Full Entity 类型。');
-    }
-    final entityAnnotations = _fullEntityChecker
-        .annotationsOf(entityElement)
-        .toList();
-    if (entityAnnotations.length != 1) {
-      _fail(
-        '$entityClassName 必须且只能声明一个 @FoxyFullEntity。',
-        entityElement,
-        '只绑定已迁移的生成型 Full Entity。',
-      );
-    }
-
-    final table = ConstantReader(entityAnnotations.single)
-        .read('table')
-        .stringValue;
-    if (table.isEmpty) {
-      _fail(
-        '$entityClassName 的 @FoxyFullEntity 必须声明 table。',
-        entityElement,
-        '声明物理表名，如 @FoxyFullEntity(table: \'xxx\')。',
-      );
-    }
+    final resolved = await resolveFullEntity(
+      buildStep,
+      element,
+      entityClassName,
+      '$className 的注解',
+    );
+    final entityElement = resolved.entityElement;
+    final table = resolved.table;
 
     final constructor = entityElement.unnamedConstructor;
     if (constructor == null || !constructor.isGenerative) {
@@ -101,18 +101,19 @@ final class FormReader {
       );
     }
 
-    final selects = _readSelects(annotation);
+    // `selects` accepts two shapes: a Map (explicit fallback, e.g.
+    // {'type': 0}) or a Set (fallback derived from the entity constructor
+    // default for the same field, e.g. {'type'}).
+    final (declaredSelects, derivedSelects) = _readSelects(annotation);
     final flags = _readStringSet(annotation, 'flags');
     final groups = _readStringSet(annotation, 'groups');
-    final nullable = _readStringSet(annotation, 'nullable');
     final exclude = _readStringSet(annotation, 'exclude');
     _validateDistinctExceptions(
       className,
       entityClassName,
-      selects.keys.toSet(),
+      {...declaredSelects.keys, ...derivedSelects},
       flags,
       groups,
-      nullable,
       exclude,
       element,
     );
@@ -125,17 +126,17 @@ final class FormReader {
       constructorFieldNames.add(parameter.name!);
     }
     for (final name in {
-      ...selects.keys,
+      ...declaredSelects.keys,
+      ...derivedSelects,
       ...flags,
       ...groups,
-      ...nullable,
       ...exclude,
     }) {
       if (!constructorFieldNames.contains(name)) {
         _fail(
           '$entityClassName 没有名为 $name 的字段。',
           element,
-          '修正 @FoxyDetailViewModel 里拼写错误的字段名。',
+          '修正注解里拼写错误的字段名。',
         );
       }
     }
@@ -153,10 +154,10 @@ final class FormReader {
           entityClassName,
           name,
           parameter,
-          selects,
+          declaredSelects,
+          derivedSelects,
           flags,
           groups,
-          nullable,
           element,
         ),
       );
@@ -209,11 +210,20 @@ final class FormReader {
     String keyType = '';
     String? singleKeyFieldName;
     final repositoryReader = annotation.peek('repository');
+    final skeletonDisabled = annotation.peek('skeleton')?.boolValue == false;
     if (repositoryReader != null && !repositoryReader.isNull) {
+      if (skeletonDisabled) {
+        _fail(
+          '$className 不能同时声明 repository 与 skeleton: false。',
+          element,
+          '只保留 repository:（生成行为骨架），'
+              '或只保留 skeleton: false（无骨架，不传 repository）。',
+        );
+      }
       final repositoryType = repositoryReader.typeValue;
       if (repositoryType is! InterfaceType) {
         _fail(
-          '$className 的 @FoxyDetailViewModel repository 参数不是 Repository class。',
+          '$className 的注解 repository 参数不是 Repository class。',
           element,
           '传入具体的 Repository 类型。',
         );
@@ -226,6 +236,24 @@ final class FormReader {
           '传入具体的 Repository 类型。',
         );
       }
+    } else if (!skeletonDisabled) {
+      // Behavior skeleton on by convention when a same-named repository
+      // exists and is migrated; `skeleton: false` opts out.
+      final derived = repositoryClassNameOfViewModel(className);
+      if (derived != null) {
+        final fileName = '${toSnakeCase(derived)}.dart';
+        final assetId = AssetId(
+          buildStep.inputId.package,
+          'lib/repository/$fileName',
+        );
+        final present = await buildStep.canRead(assetId) &&
+            (await buildStep.readAsString(assetId)).contains('@FoxyRepository');
+        if (present) {
+          repositoryClassName = derived;
+        }
+      }
+    }
+    if (repositoryClassName.isNotEmpty) {
       final keyFieldInfo = _readEntityKeyField(entityElement, element);
       keyType = keyFieldInfo.$1;
       singleKeyFieldName = keyFieldInfo.$2;
@@ -292,21 +320,14 @@ final class FormReader {
     String entityClassName,
     String name,
     FormalParameterElement parameter,
-    Map<String, Object> selects,
+    Map<String, Object> declaredSelects,
+    Set<String> derivedSelects,
     Set<String> flags,
     Set<String> groups,
-    Set<String> nullable,
     Element element,
   ) {
     final type = parameter.type.getDisplayString();
     final isNullable = type.endsWith('?');
-    if (isNullable && !nullable.contains(name)) {
-      _fail(
-        '$entityClassName.$name 是 nullable($type)，必须显式标注 nullable。',
-        element,
-        '把该字段加入 @FoxyDetailViewModel 的 nullable 集合。',
-      );
-    }
     if (groups.contains(name)) {
       if (type != 'int') {
         _fail(
@@ -321,10 +342,10 @@ final class FormReader {
         kind: FormFieldKind.group,
       );
     }
-    if (nullable.contains(name)) {
+    if (isNullable) {
       if (type != 'String?') {
         _fail(
-          '$entityClassName.$name 标注为 nullable 但类型是 $type。',
+          '$entityClassName.$name 是 nullable($type)。',
           element,
           'nullable 只支持 String? 字段。',
         );
@@ -335,7 +356,7 @@ final class FormReader {
         kind: FormFieldKind.nullable,
       );
     }
-    final selectFallback = selects[name];
+    final selectFallback = declaredSelects[name];
     if (selectFallback != null) {
       final supported = selectFallback is int
           ? type == 'int'
@@ -353,6 +374,32 @@ final class FormReader {
         dartType: type,
         kind: FormFieldKind.select,
         selectFallback: selectFallback,
+      );
+    }
+    if (derivedSelects.contains(name)) {
+      // Set form: the fallback comes from the entity constructor default.
+      final fallback = _deriveSelectFallback(
+        name,
+        parameter,
+        entityClassName,
+        element,
+      );
+      final supported = fallback is int
+          ? type == 'int'
+          : fallback is String && type == 'String';
+      if (!supported) {
+        _fail(
+          '$entityClassName.$name 标注为 selects 但类型是 $type'
+              '(构造默认值 $fallback)。',
+          element,
+          'selects 的 fallback 类型必须与字段类型一致(int/String)。',
+        );
+      }
+      return FormFieldModel(
+        dartName: name,
+        dartType: type,
+        kind: FormFieldKind.select,
+        selectFallback: fallback,
       );
     }
     if (flags.contains(name)) {
@@ -383,14 +430,66 @@ final class FormReader {
     );
   }
 
-  Map<String, Object> _readSelects(ConstantReader annotation) {
+  /// Reads the `selects` exception set, which accepts two shapes:
+  /// a Map `{'name': fallback}` (explicit fallback) or a Set `{'name'}`
+  /// (fallback derived from the entity constructor default).
+  (Map<String, Object>, Set<String>) _readSelects(ConstantReader annotation) {
     final reader = annotation.read('selects');
-    if (reader.isNull) return const {};
-    final map = reader.mapValue;
-    return {
-      for (final entry in map.entries)
-        entry.key!.toStringValue()!: _readSelectValue(entry.value!),
-    };
+    if (reader.isNull) return (const {}, const {});
+    if (reader.isMap) {
+      final map = reader.mapValue;
+      return (
+        {
+          for (final entry in map.entries)
+            entry.key!.toStringValue()!: _readSelectValue(entry.value!),
+        },
+        const {},
+      );
+    }
+    if (reader.isSet) {
+      return (
+        const {},
+        {for (final value in reader.setValue) value.toStringValue()!},
+      );
+    }
+    throw InvalidGenerationSourceError(
+      'selects 必须是 Map（显式 fallback）或 Set（推导 fallback）。',
+    );
+  }
+
+  /// Derives the select fallback from the entity constructor's constant
+  /// default for the same field (`this.type = 0` → `0`).
+  Object _deriveSelectFallback(
+    String name,
+    FormalParameterElement parameter,
+    String entityClassName,
+    Element element,
+  ) {
+    if (!parameter.hasDefaultValue) {
+      _fail(
+        '$entityClassName.$name 标注为 selects 但构造参数没有默认值。',
+        element,
+        '给 this.$name 添加常量默认值，'
+            '或用 Map 形态显式声明 fallback：selects: {\'$name\': ...}。',
+      );
+    }
+    final value = parameter.computeConstantValue();
+    if (value == null || !value.hasKnownValue || value.isNull) {
+      _fail(
+        '$entityClassName.$name 的构造默认值不是可求值的常量。',
+        element,
+        '改用 Map 形态显式声明 fallback：selects: {\'$name\': ...}。',
+      );
+    }
+    final intValue = value.toIntValue();
+    if (intValue != null) return intValue;
+    final stringValue = value.toStringValue();
+    if (stringValue != null) return stringValue;
+    _fail(
+      '$entityClassName.$name 的构造默认值类型不是 int/String。',
+      element,
+      '改用 Map 形态显式声明 fallback：selects: {\'$name\': ...}。',
+    );
   }
 
   Object _readSelectValue(DartObject value) {
@@ -415,7 +514,6 @@ final class FormReader {
     Set<String> selects,
     Set<String> flags,
     Set<String> groups,
-    Set<String> nullable,
     Set<String> exclude,
     Element element,
   ) {
@@ -423,7 +521,6 @@ final class FormReader {
       'selects': selects,
       'flags': flags,
       'groups': groups,
-      'nullable': nullable,
       'exclude': exclude,
     };
     for (final entry in conflicts.entries) {

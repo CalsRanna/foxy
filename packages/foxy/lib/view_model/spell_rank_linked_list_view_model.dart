@@ -13,10 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'spell_rank_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: SpellRankEntity,
-  repository: SpellRankRepository,
-)
+@FoxyLinkedListViewModel()
 class SpellRankLinkedListViewModel
-    with FieldControllerMixin, _SpellRankLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _SpellRankLinkedListViewModelMixin {}

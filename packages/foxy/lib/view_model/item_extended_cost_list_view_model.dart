@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'item_extended_cost_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: ItemExtendedCostEntity, repository: ItemExtendedCostRepository)
+@FoxyListViewModel()
 class ItemExtendedCostListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _ItemExtendedCostListViewModelMixin {
-}
+        _ItemExtendedCostListViewModelMixin {}

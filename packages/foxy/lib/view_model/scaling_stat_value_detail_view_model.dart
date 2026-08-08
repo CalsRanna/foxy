@@ -11,15 +11,10 @@ import 'package:signals/signals.dart';
 
 part 'scaling_stat_value_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: ScalingStatValueEntity,
-  repository: ScalingStatValueRepository,
-)
+@FoxyDetailViewModel()
 class ScalingStatValueDetailViewModel
     with FieldControllerMixin, _ScalingStatValueDetailViewModelMixin {
-
   /// Collects data from all controllers to build the ScalingStatValue
 
   /// Leaves the page
-
 }

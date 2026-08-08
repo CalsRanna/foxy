@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_item_enchantment_condition_repository.g.dart';
 
-@FoxyRepository(SpellItemEnchantmentConditionEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class SpellItemEnchantmentConditionRepository
     with RepositoryMixin, _SpellItemEnchantmentConditionRepositoryMixin {

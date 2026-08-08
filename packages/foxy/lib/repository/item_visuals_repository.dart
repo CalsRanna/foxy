@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'item_visuals_repository.g.dart';
 
-@FoxyRepository(ItemVisualsEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 class ItemVisualsRepository with RepositoryMixin, _ItemVisualsRepositoryMixin {
   static const _table = 'foxy.dbc_item_visuals';

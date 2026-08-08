@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'area_table_repository.g.dart';
 
-@FoxyRepository(AreaTableEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name', column: 'AreaName_lang_zhCN')
 class AreaTableRepository

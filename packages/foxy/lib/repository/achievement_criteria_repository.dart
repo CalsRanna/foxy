@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'achievement_criteria_repository.g.dart';
 
-@FoxyRepository(AchievementCriteriaEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('achievementId')
 @FoxyFilter.text('type')
@@ -69,11 +69,18 @@ class AchievementCriteriaRepository
     AchievementCriteriaFilter? filter,
   ) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
-    if (filter.achievementId.isNotEmpty) {
-      builder = builder.where('Achievement_ID', int.tryParse(filter.achievementId) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
     }
-    if (filter.type.isNotEmpty) builder = builder.where('Type', int.tryParse(filter.type) ?? 0);
+    if (filter.achievementId.isNotEmpty) {
+      builder = builder.where(
+        'Achievement_ID',
+        int.tryParse(filter.achievementId) ?? 0,
+      );
+    }
+    if (filter.type.isNotEmpty) {
+      builder = builder.where('Type', int.tryParse(filter.type) ?? 0);
+    }
     if (filter.description.isNotEmpty) {
       builder = builder.where(
         'Description_lang_zhCN',

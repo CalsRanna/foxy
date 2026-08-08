@@ -13,13 +13,8 @@ import 'package:signals/signals.dart';
 
 part 'pickpocketing_loot_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: PickpocketingLootTemplateEntity,
-  flags: {'lootMode'},
-  repository: PickpocketingLootTemplateRepository,
-)
+@FoxyLinkedListViewModel(flags: {'lootMode'})
 class PickpocketingLootTemplateLinkedListViewModel
     with
         FieldControllerMixin,
-        _PickpocketingLootTemplateLinkedListViewModelMixin {
-}
+        _PickpocketingLootTemplateLinkedListViewModelMixin {}

@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'player_create_info_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: PlayerCreateInfoEntity, repository: PlayerCreateInfoRepository)
+@FoxyListViewModel()
 class PlayerCreateInfoListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _PlayerCreateInfoListViewModelMixin {
-}
+        _PlayerCreateInfoListViewModelMixin {}

@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'talent_tab_repository.g.dart';
 
-@FoxyRepository(TalentTabEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class TalentTabRepository
@@ -66,7 +66,9 @@ class TalentTabRepository
 
   QueryBuilder _applyFilter(QueryBuilder builder, TalentTabFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',

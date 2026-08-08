@@ -13,11 +13,14 @@ import 'package:meta/meta_meta.dart';
 /// legacy naming is kept).
 @Target({TargetKind.classType})
 class FoxyListViewModel {
-  /// The Full Entity type the list maps to.
-  final Type entity;
+  /// Exception override: the Full Entity type the list maps to. When
+  /// omitted, derived from the class name (`XxxListViewModel` →
+  /// `XxxEntity`).
+  final Type? entity;
 
-  /// Repository type providing getBrief/count/copy/destroy.
-  final Type repository;
+  /// Exception override: Repository type providing getBrief/count/copy/
+  /// destroy. When omitted, derived from the class name.
+  final Type? repository;
 
-  const FoxyListViewModel({required this.entity, required this.repository});
+  const FoxyListViewModel({this.entity, this.repository});
 }

@@ -7,10 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_spell_custom_repository.g.dart';
 
-@FoxyRepository(
-  PlayerCreateInfoSpellCustomEntity,
-  linkKey: ['raceMask', 'classMask'],
-)
+@FoxyRepository(linkKey: ['raceMask', 'classMask'])
 class PlayerCreateInfoSpellCustomRepository
     with RepositoryMixin, _PlayerCreateInfoSpellCustomRepositoryMixin {
   static const _table = 'playercreateinfo_spell_custom';

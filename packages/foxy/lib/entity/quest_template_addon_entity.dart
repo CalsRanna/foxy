@@ -7,7 +7,7 @@ part 'quest_template_addon_entity.g.dart';
 /// primary key.
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'quest_template_addon')
+@FoxyFullEntity()
 class QuestTemplateAddonEntity with _QuestTemplateAddonEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)

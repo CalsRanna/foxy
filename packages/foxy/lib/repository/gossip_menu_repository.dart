@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'gossip_menu_repository.g.dart';
 
-@FoxyRepository(GossipMenuEntity)
+@FoxyRepository()
 @FoxyFilter.text('menuId')
 @FoxyFilter.text('text', column: 'nt.text0_0')
 class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {

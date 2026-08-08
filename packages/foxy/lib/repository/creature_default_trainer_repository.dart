@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_default_trainer_repository.g.dart';
 
-@FoxyRepository(CreatureDefaultTrainerEntity)
+@FoxyRepository()
 class CreatureDefaultTrainerRepository
     with RepositoryMixin, _CreatureDefaultTrainerRepositoryMixin {
   // ignore: unused_field

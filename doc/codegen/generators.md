@@ -22,6 +22,21 @@ Entity / Repository / Filter 三个 emitter 都要把常量值写回 Dart 源码
 - `toSnakeCase`:`AchievementEntity` → `achievement_entity`;连续大写按缩写切分(`NPCVendorRepository` → `npc_vendor_repository`)。
 - `pluralize`:`GemProperty` → `GemProperties`(辅音 + y → ies,避免 `GemPropertys`);与手写仓库的 `getBrief*/count*` 命名对齐。
 
+### `convention.dart` — 约定推导(Convention over Configuration)
+
+所有「从类名推导」的规则集中于此,reader 只在注解省略参数时回退到推导值,显式参数永远优先:
+
+- `tableNameOf`:`CreatureLootTemplateEntity` → `creature_loot_template`(类名恰为 `Entity` 返回空,调用方报错);
+- `entityClassNameOfRepository` / `repositoryClassNameOfEntity`:一对一命名互推;
+- `baseNameOfViewModel` / `entityClassNameOfViewModel` / `repositoryClassNameOfViewModel`:按最长后缀剥离(`LinkedDetailViewModel` > `LinkedListViewModel` > `DetailViewModel` > `ListViewModel`——`XxxLinkedDetailViewModel` 以 `DetailViewModel` 结尾,必须先剥长后缀)。
+
+### `entity_resolver.dart` — 推导类名的解析
+
+推导出的类名没有注解 `typeValue` 可用,需要按约定路径(`lib/<层>/<snake_case(类名)>.dart`)解析出真实 `ClassElement`:
+
+- `resolveClass(buildStep, errorElement, className, directory, context)`:canRead 文件 → `resolver.libraryFor` → 按类名取 ClassElement;失败抛 `InvalidGenerationSourceError`(带修复文案)。
+- `resolveFullEntity(...)`:在 `resolveClass` 之上校验 `@FoxyFullEntity` 唯一,并读物理表名(`table:` 省略时回退 `tableNameOf` 推导)。
+
 ---
 
 ## 1. Entity 生成器(`FoxyEntityGenerator`)
@@ -39,6 +54,7 @@ Entity / Repository / Filter 三个 emitter 都要把常量值写回 Dart 源码
 2. **唯一性校验**(`_validateUniqueFullEntity`):每个库(文件)必须且只能一个 `@FoxyFullEntity` class。
 3. **成员冲突校验**(`_validateNoGeneratedMemberConflicts`):手写类不允许存在 `copyWith` / `toJson` / `toString` / `==` / `hashCode`(生成成员);必须声明唯一的 `fromJson` factory。
 4. **构造校验**:必须有无名 generative 构造;每个非静态字段必须对应同名 named initializing formal(`this.x = ...`);`required` 参数不支持;字段必须 `final`、不能有字段初始化器(默认值移到构造参数)。
+4. **表名推导**:`@FoxyFullEntity(table:)` 省略时按 `convention.tableNameOf(className)` 推导(显式声明优先);推导为空(类名恰为 `Entity`)报错。
 5. **字段读取**(`_readField`):从 `@FoxyFullField(name, key:)` 取物理列名与 key 标记;从构造参数 `computeConstantValue()` 取编译期常量默认值;类型仅支持 `int`/`double`/`String`/`bool` 及 nullable 形式;`nullable` 由类型 `?` 推断,默认值可为 null。
 6. **Brief 读取**:字段级 `@FoxyBriefField()`(无参)标记物理字段进 Brief;类级 `@FoxyBriefField.text/integer/decimal/boolean('name')` 声明投影别名(非物理列,由 Repository 查询提供,如 locale 的 `localeName`)。
 
@@ -111,11 +127,11 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 
 读取流程与校验:
 
-1. **结构校验**:类名以 `Repository` 结尾;文件位置正确;`part` 声明;必须混入 `_XxxRepositoryMixin`(正则检查 with 列表);`static const _table` 必须与 `@FoxyFullEntity.table` 一致。
-2. **命名约定**:`@FoxyRepository(entity:)` 的实体必须是 `XxxEntity`,且 `Repository` 名必须 = `XxxRepository`(一对一命名,防止错绑)。
+1. **结构校验**:类名以 `Repository` 结尾;文件位置正确;`part` 声明;必须混入 `_XxxRepositoryMixin`(正则检查 with 列表);`static const _table` 必须与实体的物理表名一致。
+2. **绑定实体**:`@FoxyRepository(entity:)` 显式传入时校验命名一对一(安全网);省略时按 `convention.entityClassNameOfRepository` 推导,再经 `resolveFullEntity` 解析出 ClassElement 并读表名。
 3. **Key 推断**:扫描实体 `@FoxyFullField(key: true)` 字段;**nullable 的 key 直接报错**(SQL `列 = NULL` 恒不成立,`_whereKey` 会静默匹配 0 行误报「原记录不存在」)。
 4. **Brief 投影列**:字段级 `@FoxyBriefField()` 的物理列收集到 `briefProjectionColumns`(查询 select 用)。
-5. **linkKey 校验**:每个声明的 `linkKey:` 必须是实体 key 字段(dart 名);声明了查询层但没有 `@FoxyBriefEntity` / 没有投影列时报错。
+5. **linkKey 校验**:每个声明的 `linkKey:` 必须是实体 key 字段(dart 名);声明了查询层但没有 `@FoxyBriefEntity` / 没有投影列时报错——查询层生成的 `getBrief*`/`count*` 返回 `BriefXxxEntity`,Brief 是「表格行展示模型」声明,与 linkKey 正交但查询层必须依赖它在场。
 6. **Filter 读取**(`_readFilterFields`):`column` 未声明时从 Entity 同名字段推断物理列;推断失败时——主表仓库(有 List VM)报错,子表仓库(无 List VM,不生成 `_applyFilter`)允许(Filter 类仍生成,仅作查询输入对象)。
 7. **locale helpers**:源码同时出现 `DbcLocaleRepositoryMixin` 与 `dbcLocaleTableName` 时启用(`localeHelpersEnabled`),生成 `get*Locales` / `save*Locales` 委托;`on` 子句相应扩宽到 `DbcLocaleRepositoryMixin`。
 
@@ -157,11 +173,12 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 ### Reader([form_reader.dart])→ `FormGenerationModel`
 
 - 只能标注 `XxxViewModel`;文件位置正确;`part`;必须混入 `_XxxViewModelMixin`,且 `FieldControllerMixin` 必须在 `with` 列表里**位于** `_XxxViewModelMixin` **之前**(mixin 解析顺序,否则生成的 `registerController` 调用无法解析)。
+- **绑定实体**:`entity:` 显式传入时校验;省略时按 `convention.entityClassNameOfViewModel` 推导(最长后缀剥离,所以 `@FoxyDetailViewModel` 标在手写 `*LinkedListViewModel` 类上也能正确解析),再经 `resolveFullEntity` 解析。
 - 实体必须有 unnamed generative 构造;从构造参数(仅 named initializing formal)读字段,顺序 = 构造参数顺序。
-- **例外集合读取 + 互斥校验**:`selects`(Map,fallback int/String)/ `flags` / `groups` / `nullable` / `exclude`(Set);一个字段只能属于一个集合;所有例外字段名必须真实存在于实体(拼错即报错)。
-- **类型推断**(`_readField`):`groups` 只支持 `int`;`nullable` 只支持 `String?`(且必须显式声明,nullable 类型不标注会报错);`selects` fallback 类型必须与字段类型一致;`flags` 只支持 `int`;其余必须 ∈ {int, double, String, bool}。
+- **例外集合读取 + 互斥校验**:`selects`(Map 显式 fallback **或** Set 推导 fallback,见下)/ `flags` / `groups` / `exclude`(Set);`nullable` 已删除——`String?` 类型本身就是声明;一个字段只能属于一个集合;所有例外字段名必须真实存在于实体(拼错即报错)。
+- **类型推断**(`_readField`):`groups` 只支持 `int`;`String?` 自动走 `NullableStringFieldController`(无需声明);`selects` Set 形态的 fallback 从实体构造器同名参数常量默认值推导(`_deriveSelectFallback`,取不到报错提示改用 Map);`flags` 只支持 `int`;其余必须 ∈ {int, double, String, bool}。
 - **Key 推断**(`_readEntityKeyField`):从 `@FoxyFullField(key: true)`;单 key 返回 (类型, 名),复合 key 返回 (`XxxKey`, null)——后者不能用于 Linked Detail。
-- **repository 可选**:声明 `repository:` 后 `skeletonEnabled = true`(生成行为骨架);不声明则只生成 controller 样板(向后兼容)。
+- **repository 推导 + 骨架开关**:`repository:` 显式传入时 `skeletonEnabled = true`;省略时探测同名 `lib/repository/<base>_repository.dart` 是否存在且含 `@FoxyRepository`(约定:存在即启用行为骨架);`skeleton: false` 显式关闭(与 `repository:` 互斥,构建期校验)——只读/特殊持久化表单的出口。
 
 ### Emitter([form_emitter.dart])→ `_XxxViewModelMixin on FieldControllerMixin`
 
@@ -199,7 +216,7 @@ controller 名 = 字段名去尾部 `_`(`class_` → `class`,Dart 保留字转�
 ### Reader([list_reader.dart])→ `ListGenerationModel`
 
 - 只能标注 `XxxListViewModel`;文件位置;`part`;必须混入 `_XxxListViewModelMixin`,且 `FieldControllerMixin` 与 `QueryVersionMixin` 都必须位于它**之前**。
-- Entity / Repository 校验:两者 base name 必须一致(一对一命名);`@FoxyListViewModel.repository` 绑定的仓库必须 `@FoxyRepository` 且其 `entity` 参数 == 注解传入的 entity(三重一致)。
+- **绑定实体/仓库**:`entity:` / `repository:` 省略时都从类名推导;推导出的仓库经 `resolveClass` 解析并校验 `@FoxyRepository` 唯一(显式传入时保留一对一命名安全网)。
 - **筛选字段**:从仓库 `@FoxyFilter` 读取(不在 List 注解里重复,单一事实来源);**只支持 `@FoxyFilter.text`**(其它类型构建期报错)。
 - Key 类型:单 key → 字段类型;复合 key → `XxxKey`。
 - 方法名按命名约定直接取:`getBrief<Base>s` / `count<Base>s` / `copy<Base>` / `destroy<Base>`(手写 `@override` 顶掉生成版,签名不匹配由编译器报错)。
@@ -223,7 +240,7 @@ controller 名 = 字段名去尾部 `_`(`class_` → `class`,Dart 保留字转�
 
 ### Reader([linked_list_reader.dart])→ `LinkedListGenerationModel`
 
-- **复用 `FormReader`**(controller 样板与 Detail 完全同构),再叠加链接语义;
+- **复用 `FormReader`**(controller 样板与 Detail 完全同构),再叠加链接语义;`repository:` 省略时从类名推导,经 `resolveClass` 解析并校验 `@FoxyRepository`;
 - 仓库必须 `@FoxyRepository` 且**恰好一个 `linkKey`**(复合关联键如 player_create_info 系列保持手写,构建期明确报错);
 - `linkKey` 字段必须在实体上且类型为 `int`。
 
@@ -247,7 +264,7 @@ controller 名 = 字段名去尾部 `_`(`class_` → `class`,Dart 保留字转�
 
 ### Reader([linked_detail_reader.dart])→ `LinkedDetailGenerationModel`
 
-- 复用 `FormReader`;**必须有 `repository:` 参数**(与 Detail 不同,Linked Detail 没有"仅 controller"形态);
+- 复用 `FormReader`;`repository:` 省略时从类名推导,经 `resolveClass` 解析并校验 `@FoxyRepository`,推导不到报错(Linked Detail 没有"仅 controller"形态);
 - 实体必须**恰好一个物理 Key**(复合键报错,保持手写)。
 
 ### Emitter([linked_detail_emitter.dart])→ `_XxxLinkedDetailViewModelMixin on FieldControllerMixin`

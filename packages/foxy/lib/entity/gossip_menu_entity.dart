@@ -9,7 +9,7 @@ part 'gossip_menu_entity.g.dart';
 @FoxyBriefField.text('text01')
 @FoxyBriefField.text('textLocale00')
 @FoxyBriefField.text('textLocale01')
-@FoxyFullEntity(table: 'gossip_menu')
+@FoxyFullEntity()
 class GossipMenuEntity with _GossipMenuEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('MenuID', key: true)

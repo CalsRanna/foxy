@@ -13,12 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'creature_template_spell_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(
-  entity: CreatureTemplateSpellEntity,
-  repository: CreatureTemplateSpellRepository,
-)
+@FoxyLinkedListViewModel()
 class CreatureTemplateSpellLinkedListViewModel
-    with
-        FieldControllerMixin,
-        _CreatureTemplateSpellLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _CreatureTemplateSpellLinkedListViewModelMixin {}

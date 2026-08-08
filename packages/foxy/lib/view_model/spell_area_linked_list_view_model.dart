@@ -14,11 +14,8 @@ import 'package:signals/signals.dart';
 part 'spell_area_linked_list_view_model.g.dart';
 
 @FoxyLinkedListViewModel(
-  entity: SpellAreaEntity,
-  selects: {'autocast': 0, 'gender': 2},
+  selects: {'autocast', 'gender'},
   flags: {'questEndStatus', 'questStartStatus', 'racemask'},
-  repository: SpellAreaRepository,
 )
 class SpellAreaLinkedListViewModel
-    with FieldControllerMixin, _SpellAreaLinkedListViewModelMixin {
-}
+    with FieldControllerMixin, _SpellAreaLinkedListViewModelMixin {}

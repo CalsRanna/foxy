@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'achievement_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: AchievementEntity, repository: AchievementRepository)
+@FoxyListViewModel()
 class AchievementListViewModel
     with
         FieldControllerMixin,
         QueryVersionMixin,
-        _AchievementListViewModelMixin {
-}
+        _AchievementListViewModelMixin {}

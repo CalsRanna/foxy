@@ -12,10 +12,6 @@ import 'package:signals/signals.dart';
 
 part 'spell_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: SpellEntity, repository: SpellRepository)
+@FoxyListViewModel()
 class SpellListViewModel
-    with
-        FieldControllerMixin,
-        QueryVersionMixin,
-        _SpellListViewModelMixin {
-}
+    with FieldControllerMixin, QueryVersionMixin, _SpellListViewModelMixin {}

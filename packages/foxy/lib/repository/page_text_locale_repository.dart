@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'page_text_locale_repository.g.dart';
 
-@FoxyRepository(PageTextLocaleEntity)
+@FoxyRepository()
 class PageTextLocaleRepository
     with RepositoryMixin, _PageTextLocaleRepositoryMixin {
   static const _table = 'page_text_locale';

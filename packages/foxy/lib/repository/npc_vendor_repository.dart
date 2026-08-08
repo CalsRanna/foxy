@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'npc_vendor_repository.g.dart';
 
-@FoxyRepository(NpcVendorEntity, linkKey: ['entry'])
+@FoxyRepository(linkKey: ['entry'])
 class NpcVendorRepository with RepositoryMixin, _NpcVendorRepositoryMixin {
   static const _table = 'npc_vendor';
   static const primaryKeyColumns = {'entry', 'item', 'ExtendedCost'};

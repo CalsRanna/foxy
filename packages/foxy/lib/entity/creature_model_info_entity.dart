@@ -3,7 +3,7 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'creature_model_info_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFullEntity(table: 'creature_model_info')
+@FoxyFullEntity()
 class CreatureModelInfoEntity with _CreatureModelInfoEntityMixin {
   @FoxyBriefField()
   @FoxyFullField('DisplayID', key: true)

@@ -7,7 +7,7 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_offer_reward_locale_repository.g.dart';
 
-@FoxyRepository(QuestOfferRewardLocaleEntity)
+@FoxyRepository()
 class QuestOfferRewardLocaleRepository
     with RepositoryMixin, _QuestOfferRewardLocaleRepositoryMixin {
   static const _table = 'quest_offer_reward_locale';

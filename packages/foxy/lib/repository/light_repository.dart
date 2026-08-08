@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'light_repository.g.dart';
 
-@FoxyRepository(LightEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('continentId')
 class LightRepository with RepositoryMixin, _LightRepositoryMixin {
@@ -55,9 +55,14 @@ class LightRepository with RepositoryMixin, _LightRepositoryMixin {
 
   QueryBuilder _applyFilter(QueryBuilder builder, LightFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.continentId.isNotEmpty) {
-      builder = builder.where('ContinentID', int.tryParse(filter.continentId) ?? 0);
+      builder = builder.where(
+        'ContinentID',
+        int.tryParse(filter.continentId) ?? 0,
+      );
     }
     return builder;
   }

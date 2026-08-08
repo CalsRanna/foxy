@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'npc_trainer_repository.g.dart';
 
-@FoxyRepository(NpcTrainerEntity, linkKey: ['trainerId'])
+@FoxyRepository(linkKey: ['trainerId'])
 class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
   static const _table = 'trainer_spell';
   static const primaryKeyColumns = {'TrainerId', 'SpellId'};

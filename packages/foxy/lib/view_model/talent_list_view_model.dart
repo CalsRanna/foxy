@@ -12,7 +12,6 @@ import 'package:signals/signals.dart';
 
 part 'talent_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: TalentEntity, repository: TalentRepository)
+@FoxyListViewModel()
 class TalentListViewModel
-    with FieldControllerMixin, QueryVersionMixin, _TalentListViewModelMixin {
-}
+    with FieldControllerMixin, QueryVersionMixin, _TalentListViewModelMixin {}

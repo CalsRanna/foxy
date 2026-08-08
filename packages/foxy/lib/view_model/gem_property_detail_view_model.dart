@@ -11,16 +11,10 @@ import 'package:signals/signals.dart';
 
 part 'gem_property_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(
-  entity: GemPropertyEntity,
-  selects: {'type': 0},
-  repository: GemPropertyRepository,
-)
+@FoxyDetailViewModel(selects: {'type'})
 class GemPropertyDetailViewModel
     with FieldControllerMixin, _GemPropertyDetailViewModelMixin {
-
   /// Collects data from all controllers to build the GemProperty
 
   /// Leaves the page
-
 }

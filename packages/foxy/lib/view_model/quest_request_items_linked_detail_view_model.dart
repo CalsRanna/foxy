@@ -11,10 +11,6 @@ import 'package:signals/signals.dart';
 
 part 'quest_request_items_linked_detail_view_model.g.dart';
 
-@FoxyLinkedDetailViewModel(
-  entity: QuestRequestItemsEntity,
-  repository: QuestRequestItemsRepository,
-)
+@FoxyLinkedDetailViewModel()
 class QuestRequestItemsLinkedDetailViewModel
-    with FieldControllerMixin, _QuestRequestItemsLinkedDetailViewModelMixin {
-}
+    with FieldControllerMixin, _QuestRequestItemsLinkedDetailViewModelMixin {}

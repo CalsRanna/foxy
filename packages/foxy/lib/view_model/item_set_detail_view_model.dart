@@ -12,10 +12,9 @@ import 'package:signals/signals.dart';
 
 part 'item_set_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: ItemSetEntity, repository: ItemSetRepository)
+@FoxyDetailViewModel()
 class ItemSetDetailViewModel
     with FieldControllerMixin, _ItemSetDetailViewModelMixin {
-
   final nameLangFlags = signal<int>(0);
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
@@ -41,5 +40,4 @@ class ItemSetDetailViewModel
   /// Collects data from all controllers to build the ItemSetEntity
 
   /// Leaves the page
-
 }

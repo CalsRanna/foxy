@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 
 part 'achievement_repository.g.dart';
 
-@FoxyRepository(AchievementEntity)
+@FoxyRepository()
 @FoxyFilter.text('id')
 @FoxyFilter.text('title', column: 'Title_lang_zhCN')
 class AchievementRepository
@@ -41,7 +41,9 @@ class AchievementRepository
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
     if (filter.title.isNotEmpty) {
       builder = builder.where(
         'Title_lang_zhCN',

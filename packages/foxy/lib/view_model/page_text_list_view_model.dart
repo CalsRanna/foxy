@@ -12,10 +12,6 @@ import 'package:signals/signals.dart';
 
 part 'page_text_list_view_model.g.dart';
 
-@FoxyListViewModel(entity: PageTextEntity, repository: PageTextRepository)
+@FoxyListViewModel()
 class PageTextListViewModel
-    with
-        FieldControllerMixin,
-        QueryVersionMixin,
-        _PageTextListViewModelMixin {
-}
+    with FieldControllerMixin, QueryVersionMixin, _PageTextListViewModelMixin {}

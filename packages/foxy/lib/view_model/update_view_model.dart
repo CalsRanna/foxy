@@ -20,8 +20,8 @@ import 'package:signals/signals.dart';
 
 class UpdateViewModel {
   UpdateViewModel({UpdateService? service, SharedPreferencesUtil? preferences})
-      : _service = service ?? UpdateService(),
-        _preferences = preferences ?? SharedPreferencesUtil.instance;
+    : _service = service ?? UpdateService(),
+      _preferences = preferences ?? SharedPreferencesUtil.instance;
 
   /// Silent-check throttle: at most one check per 24h at startup.
   static const silentCheckInterval = Duration(hours: 24);
@@ -74,8 +74,7 @@ class UpdateViewModel {
   /// Returns whether a new version was found.
   Future<bool> checkSilently() async {
     final last = await _preferences.getLastUpdateCheckAt();
-    if (last != null &&
-        DateTime.now().difference(last) < silentCheckInterval) {
+    if (last != null && DateTime.now().difference(last) < silentCheckInterval) {
       return false;
     }
     return _check(manual: false);

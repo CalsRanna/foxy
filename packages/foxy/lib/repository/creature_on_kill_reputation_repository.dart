@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_on_kill_reputation_repository.g.dart';
 
-@FoxyRepository(CreatureOnKillReputationEntity)
+@FoxyRepository()
 class CreatureOnKillReputationRepository
     with RepositoryMixin, _CreatureOnKillReputationRepositoryMixin {
   static const _table = 'creature_onkill_reputation';
