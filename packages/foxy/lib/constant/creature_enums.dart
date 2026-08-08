@@ -164,7 +164,7 @@ const kTrainerTypeOptions = {
   3: '宠物训练师', // Pet Trainer
 };
 
-/// unit_class options
+/// unit_class options (AzerothCore CLASSMASK_ALL_CREATURES)
 const kUnitClassOptions = {
   1: '战士', // Warrior
   2: '圣骑士', // Paladin
