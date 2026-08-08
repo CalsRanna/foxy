@@ -12,7 +12,6 @@ part 'point_of_interest_repository.g.dart';
 @FoxyFilter.text('name')
 class PointOfInterestRepository
     with RepositoryMixin, _PointOfInterestRepositoryMixin {
-  static const _table = 'points_of_interest';
   static const _localeTable = 'points_of_interest_locale';
 
   Future<int> copyPointOfInterest(int key) async {

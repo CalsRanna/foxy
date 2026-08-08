@@ -14,7 +14,6 @@ part 'spell_range_repository.g.dart';
 @FoxyFilter.text('name')
 class SpellRangeRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _SpellRangeRepositoryMixin {
-  static const _table = 'foxy.dbc_spell_range';
 
   @override
   String get dbcLocaleTableName => _table;

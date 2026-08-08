@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages, deprecated_member_use
 
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
@@ -10,6 +11,7 @@ import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_model.dart';
 import 'package:foxy_generator/src/entity_validator.dart';
 import 'package:foxy_generator/src/naming.dart';
+import 'package:foxy_generator/src/source_shape.dart';
 
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyBriefEntity',
@@ -26,8 +28,12 @@ const _fullFieldChecker = TypeChecker.fromUrl(
 
 final class EntityReader {
   final EntityValidator validator;
+  final SourceShape sourceShape;
 
-  const EntityReader({this.validator = const EntityValidator()});
+  const EntityReader({
+    this.validator = const EntityValidator(),
+    this.sourceShape = const SourceShape(),
+  });
 
   Future<EntityGenerationModel> read(
     Element element,
@@ -63,14 +69,14 @@ final class EntityReader {
       );
     }
 
-    final source = await buildStep.readAsString(buildStep.inputId);
     final mixinName = '_${className}Mixin';
+    final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
     _validateSourceShape(
       classElement,
-      source,
+      await sourceShape.parseInput(buildStep, classElement),
       className,
       mixinName,
-      inputFileName,
+      partName,
     );
 
     _validateNoGeneratedMemberConflicts(classElement);
@@ -442,38 +448,36 @@ final class EntityReader {
 
   void _validateSourceShape(
     ClassElement element,
-    String source,
+    CompilationUnit unit,
     String className,
     String mixinName,
-    String inputFileName,
+    String partName,
   ) {
-    final escapedClass = RegExp.escape(className);
-    final escapedMixin = RegExp.escape(mixinName);
-    if (!RegExp(
-      'class\\s+$escapedClass\\s+with\\s+$escapedMixin\\b',
-    ).hasMatch(source)) {
+    final cls = sourceShape.classDeclaration(unit, className);
+    if (cls == null) {
+      _fail(
+        '$className is not declared in the current file.',
+        element,
+        'Declare the class in this file.',
+      );
+    }
+    if (!sourceShape.withClauseTypeNames(cls).contains(mixinName)) {
       _fail(
         '$className must apply the conventional Mixin $mixinName.',
         element,
         'Change the declaration to class $className with $mixinName.',
       );
     }
-    final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
-    if (!RegExp(
-      "part\\s+['\"]${RegExp.escape(partName)}['\"]\\s*;",
-    ).hasMatch(source)) {
+    if (!sourceShape.hasPartDirective(unit, partName)) {
       _fail(
         '$className is missing the correct part ${_quote(partName)}.',
         element,
         "Add part ${_quote(partName)};",
       );
     }
-    if (!RegExp(
-      'factory\\s+$escapedClass\\.fromJson\\s*'
-      '\\(\\s*Map<String,\\s*dynamic>\\s+json\\s*,?\\s*\\)\\s*=>\\s*'
-      '$escapedMixin\\.fromJson\\(json\\)\\s*;',
-      multiLine: true,
-    ).hasMatch(source)) {
+    final fromJson = sourceShape.constructor(cls, 'fromJson');
+    if (fromJson == null ||
+        !sourceShape.factoryDelegatesTo(fromJson, mixinName)) {
       _fail(
         '$className must keep the fromJson factory delegating with the '
             'conventional signature.',

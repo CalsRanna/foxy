@@ -10,6 +10,7 @@ import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/form_model.dart';
 import 'package:foxy_generator/src/naming.dart';
+import 'package:foxy_generator/src/source_shape.dart';
 
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
@@ -23,7 +24,9 @@ const _fullFieldChecker = TypeChecker.fromUrl(
 const _supportedPlainTypes = {'int', 'double', 'String', 'bool'};
 
 final class FormReader {
-  const FormReader();
+  final SourceShape sourceShape;
+
+  const FormReader({this.sourceShape = const SourceShape()});
 
   Future<FormGenerationModel> read(
     Element element,
@@ -171,46 +174,46 @@ final class FormReader {
     }
 
     final mixinName = '_${className}Mixin';
-    final source = await buildStep.readAsString(buildStep.inputId);
     final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
-    if (!source.contains("part '$partName';") &&
-        !source.contains('part "$partName";')) {
+    final unit = await sourceShape.parseInput(buildStep, element);
+    final cls = sourceShape.classDeclaration(unit, className);
+    if (cls == null) {
+      _fail(
+        '$className is not declared in the current file.',
+        element,
+        'Declare the ViewModel class in this file.',
+      );
+    }
+    if (!sourceShape.hasPartDirective(unit, partName)) {
       _fail(
         '$className is missing part \'$partName\';.',
         element,
         'Declare the generated part after the ViewModel imports.',
       );
     }
-    if (!RegExp(
-      'class\\s+$className\\s+with\\s+[^\\{;]*\\b$mixinName\\b',
-    ).hasMatch(source)) {
+    final withClause = sourceShape.withClauseTypeNames(cls);
+    if (!withClause.contains(mixinName)) {
       _fail(
         '$className must mix in $mixinName.',
         element,
         "Append $mixinName to the end of the ViewModel's with list.",
       );
     }
-    final withList = RegExp(
-      'class\\s+$className\\s+with\\s+([^\\{;]*)',
-    ).firstMatch(source)?.group(1);
-    if (withList != null) {
-      final parts = withList.split(',').map((part) => part.trim()).toList();
-      final controllerIndex = parts.indexOf('FieldControllerMixin');
-      final mixinIndex = parts.indexOf(mixinName);
-      if (controllerIndex < 0) {
-        _fail(
-          '$className must mix in FieldControllerMixin.',
-          element,
-          'Add FieldControllerMixin to the with list.',
-        );
-      }
-      if (controllerIndex > mixinIndex) {
-        _fail(
-          'FieldControllerMixin must come before $mixinName.',
-          element,
-          'Reorder the with list: FieldControllerMixin, ..., $mixinName.',
-        );
-      }
+    final controllerIndex = withClause.indexOf('FieldControllerMixin');
+    final mixinIndex = withClause.indexOf(mixinName);
+    if (controllerIndex < 0) {
+      _fail(
+        '$className must mix in FieldControllerMixin.',
+        element,
+        'Add FieldControllerMixin to the with list.',
+      );
+    }
+    if (controllerIndex > mixinIndex) {
+      _fail(
+        'FieldControllerMixin must come before $mixinName.',
+        element,
+        'Reorder the with list: FieldControllerMixin, ..., $mixinName.',
+      );
     }
 
     String repositoryClassName = '';

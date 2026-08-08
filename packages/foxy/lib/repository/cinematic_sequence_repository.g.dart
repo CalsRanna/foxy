@@ -23,10 +23,7 @@ final class CinematicSequenceFilter {
 mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
   Future<void> destroyCinematicSequence(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_cinematic_sequences'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_cinematic_sequences record not found',
@@ -35,10 +32,7 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
   }
 
   Future<CinematicSequenceEntity?> getCinematicSequence(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_cinematic_sequences'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CinematicSequenceEntity.fromJson(results.first.toMap());
   }
@@ -54,14 +48,14 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
     await _beforeStore(cinematicSequence);
     final json = prepareWriteJson(cinematicSequence.toJson());
     try {
-      await laconic.table('foxy.dbc_cinematic_sequences').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = cinematicSequence.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_cinematic_sequences', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_cinematic_sequences').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -86,7 +80,7 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_cinematic_sequences'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -117,3 +111,5 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_cinematic_sequences';

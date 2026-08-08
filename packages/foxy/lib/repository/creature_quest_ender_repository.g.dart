@@ -17,26 +17,19 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countCreatureQuestEnders(int quest) async {
-    return laconic.table('creature_questender').where('`quest`', quest).count();
+    return laconic.table(_table).where('`quest`', quest).count();
   }
 
   Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int quest) async {
     return CreatureQuestEnderEntity(
       quest: quest,
-      id: await nextMaxPlusOne(
-        'creature_questender',
-        '`id`',
-        where: {'`quest`': quest},
-      ),
+      id: await nextMaxPlusOne(_table, '`id`', where: {'`quest`': quest}),
     );
   }
 
   Future<void> destroyCreatureQuestEnder(CreatureQuestEnderKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_questender'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_questender record not found');
     }
@@ -45,10 +38,7 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
   Future<CreatureQuestEnderEntity?> getCreatureQuestEnder(
     CreatureQuestEnderKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_questender'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureQuestEnderEntity.fromJson(results.first.toMap());
   }
@@ -58,10 +48,7 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('creature_questender').select([
-      '`id`',
-      '`quest`',
-    ]);
+    var builder = laconic.table(_table).select(['`id`', '`quest`']);
     builder = builder.where('`quest`', quest);
     builder = builder.orderBy('`id`').orderBy('`quest`');
     builder = builder.limit(kPageSize).offset(offset);
@@ -77,18 +64,18 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureQuestEnder);
     final json = prepareWriteJson(creatureQuestEnder.toJson());
     try {
-      await laconic.table('creature_questender').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureQuestEnder.copyWith(
         id: await nextMaxPlusOne(
-          'creature_questender',
+          _table,
           '`id`',
           where: {'`quest`': creatureQuestEnder.quest},
         ),
       );
       try {
-        await laconic.table('creature_questender').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -110,7 +97,7 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_questender'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -142,3 +129,5 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'creature_questender';

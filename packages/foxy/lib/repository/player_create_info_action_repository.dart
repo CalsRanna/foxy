@@ -9,7 +9,6 @@ part 'player_create_info_action_repository.g.dart';
 @FoxyRepository(linkKey: ['race', 'class_'])
 class PlayerCreateInfoActionRepository
     with RepositoryMixin, _PlayerCreateInfoActionRepositoryMixin {
-  static const _table = 'playercreateinfo_action';
 
   @override
   Future<PlayerCreateInfoActionKey> copyPlayerCreateInfoAction(

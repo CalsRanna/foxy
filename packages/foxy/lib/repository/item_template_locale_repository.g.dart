@@ -5,10 +5,7 @@ part of 'item_template_locale_repository.dart';
 mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
   Future<void> destroyItemTemplateLocale(ItemTemplateLocaleKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('item_template_locale'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('item_template_locale record not found');
     }
@@ -17,10 +14,7 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
   Future<ItemTemplateLocaleEntity?> getItemTemplateLocale(
     ItemTemplateLocaleKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('item_template_locale'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemTemplateLocaleEntity.fromJson(results.first.toMap());
   }
@@ -31,14 +25,14 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemTemplateLocale);
     final json = prepareWriteJson(itemTemplateLocale.toJson());
     try {
-      await laconic.table('item_template_locale').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemTemplateLocale.copyWith(
-        id: await nextMaxPlusOne('item_template_locale', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('item_template_locale').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -60,7 +54,7 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('item_template_locale'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -92,3 +86,5 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'item_template_locale';

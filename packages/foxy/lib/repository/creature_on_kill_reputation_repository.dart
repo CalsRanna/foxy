@@ -9,7 +9,6 @@ part 'creature_on_kill_reputation_repository.g.dart';
 @FoxyRepository()
 class CreatureOnKillReputationRepository
     with RepositoryMixin, _CreatureOnKillReputationRepositoryMixin {
-  static const _table = 'creature_onkill_reputation';
   static const primaryKeyColumns = {'creature_id'};
 
   Future<int> copyCreatureOnKillReputation(int sourceKey) async {

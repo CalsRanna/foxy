@@ -17,7 +17,6 @@ class ItemPurchaseGroupRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _ItemPurchaseGroupRepositoryMixin {
-  static const _table = 'foxy.dbc_item_purchase_group';
 
   @override
   String get dbcLocaleTableName => _table;

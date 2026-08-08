@@ -14,7 +14,6 @@ class EmoteTextRepository with RepositoryMixin, _EmoteTextRepositoryMixin {
   // The generated query layer inlines the table-name literal (mixins cannot
   // access class statics); this only serves as a contract check.
   // ignore: unused_field
-  static const _table = 'foxy.dbc_emotes_text';
 
   @override
   QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextFilter? filter) {

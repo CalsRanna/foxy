@@ -22,34 +22,30 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countSpellAreas(int spell) async {
-    return laconic.table('spell_area').where('`spell`', spell).count();
+    return laconic.table(_table).where('`spell`', spell).count();
   }
 
   Future<SpellAreaEntity> createSpellArea(int spell) async {
     return SpellAreaEntity(
       spell: spell,
-      area: await nextMaxPlusOne(
-        'spell_area',
-        '`area`',
-        where: {'`spell`': spell},
-      ),
+      area: await nextMaxPlusOne(_table, '`area`', where: {'`spell`': spell}),
       questStart: await nextMaxPlusOne(
-        'spell_area',
+        _table,
         '`quest_start`',
         where: {'`spell`': spell},
       ),
       auraSpell: await nextMaxPlusOne(
-        'spell_area',
+        _table,
         '`aura_spell`',
         where: {'`spell`': spell},
       ),
       racemask: await nextMaxPlusOne(
-        'spell_area',
+        _table,
         '`racemask`',
         where: {'`spell`': spell},
       ),
       gender: await nextMaxPlusOne(
-        'spell_area',
+        _table,
         '`gender`',
         where: {'`spell`': spell},
       ),
@@ -58,20 +54,14 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySpellArea(SpellAreaKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('spell_area'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_area record not found');
     }
   }
 
   Future<SpellAreaEntity?> getSpellArea(SpellAreaKey key) async {
-    final results = await _whereKey(
-      laconic.table('spell_area'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellAreaEntity.fromJson(results.first.toMap());
   }
@@ -81,7 +71,7 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('spell_area').select([
+    var builder = laconic.table(_table).select([
       '`spell`',
       '`area`',
       '`quest_start`',
@@ -111,7 +101,7 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellArea);
     final json = prepareWriteJson(spellArea.toJson());
     try {
-      await laconic.table('spell_area').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in spell_area');
@@ -127,7 +117,7 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('spell_area'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -161,3 +151,5 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'spell_area';

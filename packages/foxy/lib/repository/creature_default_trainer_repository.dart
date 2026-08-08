@@ -10,7 +10,6 @@ part 'creature_default_trainer_repository.g.dart';
 class CreatureDefaultTrainerRepository
     with RepositoryMixin, _CreatureDefaultTrainerRepositoryMixin {
   // ignore: unused_field
-  static const _table = 'creature_default_trainer';
   static const primaryKeyColumns = {'CreatureId'};
 
   Future<CreatureDefaultTrainerEntity> createCreatureDefaultTrainer(

@@ -175,4 +175,48 @@ void main() {
 
     expect(firstSource, secondSource);
   });
+
+  test('块体 fromJson factory 委托被 AST 校验接受', () async {
+    // The old source-text regex required the exact arrow form; the AST
+    // check accepts any formatting that still delegates to the mixin.
+    final blockBody = standardEntitySource.replaceFirst(
+      '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) =>\n'
+          '      _CodegenSampleEntityMixin.fromJson(json);',
+      '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) {\n'
+          '    return _CodegenSampleEntityMixin.fromJson(json);\n'
+          '  }',
+    );
+    const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';
+
+    await testBuilder(
+      foxyEntityBuilder(BuilderOptions.empty),
+      sourceAsset(standardEntityAsset, blockBody),
+      outputs: {
+        output: decodedMatches(
+          contains('static CodegenSampleEntity fromJson'),
+        ),
+      },
+    );
+  });
+
+  test('fromJson 委托缺失时给出构建期错误', () async {
+    final missing = standardEntitySource.replaceFirst(
+      '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) =>\n'
+          '      _CodegenSampleEntityMixin.fromJson(json);',
+      '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) {\n'
+          '    return CodegenSampleEntity();\n'
+          '  }',
+    );
+    final logs = <String>[];
+    await testBuilder(
+      foxyEntityBuilder(BuilderOptions.empty),
+      sourceAsset(standardEntityAsset, missing),
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logContains(logs, 'must keep the fromJson factory delegating'),
+      isTrue,
+    );
+  });
 }

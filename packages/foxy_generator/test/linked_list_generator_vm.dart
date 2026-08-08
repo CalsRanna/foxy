@@ -128,9 +128,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 part 'child_item_repository.g.dart';
 
 @FoxyRepository(ChildItemEntity, linkKey: ['parentId'])
-class ChildItemRepository with _ChildItemRepositoryMixin {
-  static const _table = 'foxy.child';
-}
+class ChildItemRepository with _ChildItemRepositoryMixin {}
 ''';
 
 const editorViewModelSource = r'''

@@ -37,29 +37,23 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<int> countSpells({SpellFilter? filter}) async {
-    return _applyFilter(laconic.table('foxy.dbc_spell'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<SpellEntity> createSpell() async {
-    return SpellEntity(id: await nextMaxPlusOne('foxy.dbc_spell', '`ID`'));
+    return SpellEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroySpell(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_spell'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_spell record not found');
     }
   }
 
   Future<SpellEntity?> getSpell(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_spell'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellEntity.fromJson(results.first.toMap());
   }
@@ -69,7 +63,7 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     SpellFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_spell').select(['`ID`']);
+    var builder = laconic.table(_table).select(['`ID`']);
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('`ID`');
     builder = builder.limit(kPageSize).offset(offset);
@@ -78,7 +72,7 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<List<SpellEntity>> getSpells() async {
-    var builder = laconic.table('foxy.dbc_spell').orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
   }
@@ -103,14 +97,12 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     await _beforeStore(spell);
     final json = prepareWriteJson(spell.toJson());
     try {
-      await laconic.table('foxy.dbc_spell').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
-      final retried = spell.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_spell', '`ID`'),
-      );
+      final retried = spell.copyWith(id: await nextMaxPlusOne(_table, '`ID`'));
       try {
-        await laconic.table('foxy.dbc_spell').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -130,7 +122,7 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_spell'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -150,7 +142,7 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
       builder = builder.where('`ID`', filter.id);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('`ds.Name_lang_zhCN`', filter.name);
+      builder = builder.where('`ds`.`Name_lang_zhCN`', filter.name);
     }
     return builder;
   }
@@ -165,3 +157,5 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_spell';

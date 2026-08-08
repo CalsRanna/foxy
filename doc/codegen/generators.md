@@ -127,13 +127,14 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 
 读取流程与校验:
 
-1. **结构校验**:类名以 `Repository` 结尾;文件位置正确;`part` 声明;必须混入 `_XxxRepositoryMixin`(正则检查 with 列表);`static const _table` 必须与实体的物理表名一致。
+1. **结构校验**(基于 `source_shape.dart` 语法级 AST,免符号解析、与 `.g.dart` 是否已生成无关):类名以 `Repository` 结尾;文件位置正确;`part` 声明;必须混入 `_XxxRepositoryMixin`;**手写 `_table` 直接报错**——表名单一来源在 Entity 注解,生成 part 产出 `const _table`。
 2. **绑定实体**:`@FoxyRepository(entity:)` 显式传入时校验命名一对一(安全网);省略时按 `convention.entityClassNameOfRepository` 推导,再经 `resolveFullEntity` 解析出 ClassElement 并读表名。
 3. **Key 推断**:扫描实体 `@FoxyFullField(key: true)` 字段;**nullable 的 key 直接报错**(SQL `列 = NULL` 恒不成立,`_whereKey` 会静默匹配 0 行误报「原记录不存在」)。
-4. **Brief 投影列**:字段级 `@FoxyBriefField()` 的物理列收集到 `briefProjectionColumns`(查询 select 用)。
+4. **Brief 投影列**:字段级 `@FoxyBriefField()` 的物理列收集到 `briefProjectionColumns`(查询 select 用);类级 `@FoxyBriefField.text/integer/...` 是 JOIN 别名,不计入。
 5. **linkKey 校验**:每个声明的 `linkKey:` 必须是实体 key 字段(dart 名);声明了查询层但没有 `@FoxyBriefEntity` / 没有投影列时报错——查询层生成的 `getBrief*`/`count*` 返回 `BriefXxxEntity`,Brief 是「表格行展示模型」声明,与 linkKey 正交但查询层必须依赖它在场。
 6. **Filter 读取**(`_readFilterFields`):`column` 未声明时从 Entity 同名字段推断物理列;推断失败时——主表仓库(有 List VM)报错,子表仓库(无 List VM,不生成 `_applyFilter`)允许(Filter 类仍生成,仅作查询输入对象)。
-7. **locale helpers**:源码同时出现 `DbcLocaleRepositoryMixin` 与 `dbcLocaleTableName` 时启用(`localeHelpersEnabled`),生成 `get*Locales` / `save*Locales` 委托;`on` 子句相应扩宽到 `DbcLocaleRepositoryMixin`。
+7. **强制覆写校验(查询层护栏)**:查询层保持完整基线生成,但生成器无法表达 JOIN——① 主表仓库的 filter 含别名列(`column: 'it.name'`)时,count/getBrief 必须由手写类自行声明;② 实体有类级 Brief 别名字段时,getBrief 必须手写。未声明则构建期报错(带 `Fix:`),而不是生成运行时才会炸的查询。
+8. **locale helpers**:with 列表含 `DbcLocaleRepositoryMixin` 且类声明 `dbcLocaleTableName` 时启用(`localeHelpersEnabled`),生成 `get*Locales` / `save*Locales` 委托;`on` 子句相应扩宽到 `DbcLocaleRepositoryMixin`。
 
 ### Emitter([repository_emitter.dart])→ `_XxxRepositoryMixin on RepositoryMixin`
 
@@ -160,8 +161,8 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 
 几个细节:
 
-- **列名反引号**:`_column` 把物理列名包反引号再写 Dart 字符串(`'`rank`'`),laconic 不转义标识符,反引号统一规避 MySQL 保留字(`index`、`rank`),无需白名单。
-- **`_table` 内联**:mixin 无法按裸名访问宿主类的 `static const _table`,所以 `_table(model)` 直接内联字面量;`_table` 声明本身仍由 Reader 校验一致。
+- **列名反引号**:`_column` 把物理列名包反引号再写 Dart 字符串(`'`rank`'`),laconic 不转义标识符,反引号统一规避 MySQL 保留字(`index`、`rank`),无需白名单;**含 `.` 的列名按段加反引号**(`` `it`.`name` ``,而不是把 `it.name` 当成单个标识符)。
+- **`const _table`**:表名单一来源在 Entity 注解,生成 part 在 mixin 之后产出库级 `const _table = '...'`(满足「Sort Members」:Filter < `_XxxMixin` < `_table`);生成代码与手写代码都按裸名引用它,mixin 实例方法可裸名访问库级顶层常量。
 - **子表 `copy` 关联键**:`copyXxx` 时 `create(linkKey)` 用 `source.linkKey`,保证复制仍落在同一关联键下。
 
 ---

@@ -9,7 +9,6 @@ part 'gem_property_repository.g.dart';
 @FoxyRepository()
 @FoxyFilter.text('id')
 class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
-  static const _table = 'foxy.dbc_gem_properties';
 
   @override
   Future<int> copyGemProperty(int key) async {

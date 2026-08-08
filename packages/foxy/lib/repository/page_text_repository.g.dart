@@ -37,29 +37,23 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countPageTexts({PageTextFilter? filter}) async {
-    return _applyFilter(laconic.table('page_text'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<PageTextEntity> createPageText() async {
-    return PageTextEntity(id: await nextMaxPlusOne('page_text', '`ID`'));
+    return PageTextEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroyPageText(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('page_text'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('page_text record not found');
     }
   }
 
   Future<PageTextEntity?> getPageText(int key) async {
-    final results = await _whereKey(
-      laconic.table('page_text'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PageTextEntity.fromJson(results.first.toMap());
   }
@@ -69,7 +63,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     PageTextFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('page_text').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`Text`',
       '`NextPageID`',
@@ -82,7 +76,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<PageTextEntity>> getPageTexts() async {
-    var builder = laconic.table('page_text').orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
   }
@@ -96,14 +90,14 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     await _beforeStore(pageText);
     final json = prepareWriteJson(pageText.toJson());
     try {
-      await laconic.table('page_text').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = pageText.copyWith(
-        id: await nextMaxPlusOne('page_text', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('page_text').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -123,7 +117,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('page_text'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -158,3 +152,5 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'page_text';

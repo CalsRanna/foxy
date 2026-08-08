@@ -27,20 +27,14 @@ final class NpcTextFilter {
 mixin _NpcTextRepositoryMixin on RepositoryMixin {
   Future<void> destroyNpcText(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('npc_text'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('npc_text record not found');
     }
   }
 
   Future<NpcTextEntity?> getNpcText(int key) async {
-    final results = await _whereKey(
-      laconic.table('npc_text'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return NpcTextEntity.fromJson(results.first.toMap());
   }
@@ -54,14 +48,14 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
     await _beforeStore(npcText);
     final json = prepareWriteJson(npcText.toJson());
     try {
-      await laconic.table('npc_text').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = npcText.copyWith(
-        id: await nextMaxPlusOne('npc_text', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('npc_text').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -81,7 +75,7 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('npc_text'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -105,3 +99,5 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'npc_text';

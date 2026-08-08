@@ -35,24 +35,16 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countGlyphProperties({GlyphPropertyFilter? filter}) async {
-    return _applyFilter(
-      laconic.table('foxy.dbc_glyph_properties'),
-      filter,
-    ).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<GlyphPropertyEntity> createGlyphProperty() async {
-    return GlyphPropertyEntity(
-      id: await nextMaxPlusOne('foxy.dbc_glyph_properties', '`ID`'),
-    );
+    return GlyphPropertyEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroyGlyphProperty(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_glyph_properties'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_glyph_properties record not found',
@@ -61,10 +53,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
   }
 
   Future<GlyphPropertyEntity?> getGlyphProperty(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_glyph_properties'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GlyphPropertyEntity.fromJson(results.first.toMap());
   }
@@ -74,7 +63,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     GlyphPropertyFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_glyph_properties').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`SpellID`',
       '`GlyphSlotFlags`',
@@ -90,7 +79,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<GlyphPropertyEntity>> getGlyphProperties() async {
-    var builder = laconic.table('foxy.dbc_glyph_properties').orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
   }
@@ -104,14 +93,14 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     await _beforeStore(glyphProperty);
     final json = prepareWriteJson(glyphProperty.toJson());
     try {
-      await laconic.table('foxy.dbc_glyph_properties').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = glyphProperty.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_glyph_properties', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_glyph_properties').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -136,7 +125,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_glyph_properties'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -175,3 +164,5 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_glyph_properties';

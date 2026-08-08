@@ -10,7 +10,6 @@ part 'item_extended_cost_repository.g.dart';
 @FoxyFilter.text('id')
 class ItemExtendedCostRepository
     with RepositoryMixin, _ItemExtendedCostRepositoryMixin {
-  static const _table = 'foxy.dbc_item_extended_cost';
 
   @override
   Future<int> copyItemExtendedCost(int key) async {

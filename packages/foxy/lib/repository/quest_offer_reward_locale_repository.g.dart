@@ -7,10 +7,7 @@ mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
     QuestOfferRewardLocaleKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('quest_offer_reward_locale'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'quest_offer_reward_locale record not found',
@@ -21,10 +18,7 @@ mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
   Future<QuestOfferRewardLocaleEntity?> getQuestOfferRewardLocale(
     QuestOfferRewardLocaleKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('quest_offer_reward_locale'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestOfferRewardLocaleEntity.fromJson(results.first.toMap());
   }
@@ -35,14 +29,14 @@ mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(questOfferRewardLocale);
     final json = prepareWriteJson(questOfferRewardLocale.toJson());
     try {
-      await laconic.table('quest_offer_reward_locale').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = questOfferRewardLocale.copyWith(
-        id: await nextMaxPlusOne('quest_offer_reward_locale', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('quest_offer_reward_locale').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -66,7 +60,7 @@ mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('quest_offer_reward_locale'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -102,3 +96,5 @@ mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'quest_offer_reward_locale';

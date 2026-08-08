@@ -12,7 +12,6 @@ part 'creature_immunity_repository.g.dart';
 @FoxyFilter.text('comment')
 class CreatureImmunityRepository
     with RepositoryMixin, _CreatureImmunityRepositoryMixin {
-  static const _table = 'creature_immunities';
 
   Future<int> copyCreatureImmunity(int key) async {
     final source = await getCreatureImmunity(key);

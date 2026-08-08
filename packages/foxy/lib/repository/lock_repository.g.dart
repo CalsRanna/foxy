@@ -23,20 +23,14 @@ final class LockFilter {
 mixin _LockRepositoryMixin on RepositoryMixin {
   Future<void> destroyLock(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_lock'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_lock record not found');
     }
   }
 
   Future<LockEntity?> getLock(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_lock'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return LockEntity.fromJson(results.first.toMap());
   }
@@ -50,14 +44,12 @@ mixin _LockRepositoryMixin on RepositoryMixin {
     await _beforeStore(lock);
     final json = prepareWriteJson(lock.toJson());
     try {
-      await laconic.table('foxy.dbc_lock').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
-      final retried = lock.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_lock', '`ID`'),
-      );
+      final retried = lock.copyWith(id: await nextMaxPlusOne(_table, '`ID`'));
       try {
-        await laconic.table('foxy.dbc_lock').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -77,7 +69,7 @@ mixin _LockRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_lock'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -101,3 +93,5 @@ mixin _LockRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_lock';

@@ -11,7 +11,6 @@ part 'zone_music_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class ZoneMusicRepository with RepositoryMixin, _ZoneMusicRepositoryMixin {
-  static const _table = 'foxy.dbc_zone_music';
 
   Future<int> copyZoneMusic(int key) async {
     final source = await getZoneMusic(key);

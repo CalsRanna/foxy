@@ -27,20 +27,14 @@ final class ZoneMusicFilter {
 mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
   Future<void> destroyZoneMusic(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_zone_music'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_zone_music record not found');
     }
   }
 
   Future<ZoneMusicEntity?> getZoneMusic(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_zone_music'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ZoneMusicEntity.fromJson(results.first.toMap());
   }
@@ -54,14 +48,14 @@ mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
     await _beforeStore(zoneMusic);
     final json = prepareWriteJson(zoneMusic.toJson());
     try {
-      await laconic.table('foxy.dbc_zone_music').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = zoneMusic.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_zone_music', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_zone_music').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -84,7 +78,7 @@ mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_zone_music'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -111,3 +105,5 @@ mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_zone_music';

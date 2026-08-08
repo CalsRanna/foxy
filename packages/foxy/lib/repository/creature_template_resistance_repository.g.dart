@@ -22,10 +22,7 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countCreatureTemplateResistances(int creatureID) async {
-    return laconic
-        .table('creature_template_resistance')
-        .where('`CreatureID`', creatureID)
-        .count();
+    return laconic.table(_table).where('`CreatureID`', creatureID).count();
   }
 
   Future<CreatureTemplateResistanceEntity> createCreatureTemplateResistance(
@@ -34,7 +31,7 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     return CreatureTemplateResistanceEntity(
       creatureID: creatureID,
       school: await nextMaxPlusOne(
-        'creature_template_resistance',
+        _table,
         '`School`',
         where: {'`CreatureID`': creatureID},
       ),
@@ -45,10 +42,7 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     CreatureTemplateResistanceKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_template_resistance'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'creature_template_resistance record not found',
@@ -59,10 +53,7 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
   Future<CreatureTemplateResistanceEntity?> getCreatureTemplateResistance(
     CreatureTemplateResistanceKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_template_resistance'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateResistanceEntity.fromJson(results.first.toMap());
   }
@@ -70,7 +61,7 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
   Future<List<BriefCreatureTemplateResistanceEntity>>
   getBriefCreatureTemplateResistances(int creatureID, {int page = 1}) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('creature_template_resistance').select([
+    var builder = laconic.table(_table).select([
       '`CreatureID`',
       '`School`',
       '`Resistance`',
@@ -91,18 +82,18 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureTemplateResistance);
     final json = prepareWriteJson(creatureTemplateResistance.toJson());
     try {
-      await laconic.table('creature_template_resistance').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureTemplateResistance.copyWith(
         school: await nextMaxPlusOne(
-          'creature_template_resistance',
+          _table,
           '`School`',
           where: {'`CreatureID`': creatureTemplateResistance.creatureID},
         ),
       );
       try {
-        await laconic.table('creature_template_resistance').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -126,7 +117,7 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_template_resistance'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -165,3 +156,5 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'creature_template_resistance';

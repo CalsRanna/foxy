@@ -14,7 +14,6 @@ part 'char_title_repository.g.dart';
 @FoxyFilter.text('name')
 class CharTitleRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _CharTitleRepositoryMixin {
-  static const _table = 'foxy.dbc_char_titles';
 
   @override
   String get dbcLocaleTableName => _table;

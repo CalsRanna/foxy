@@ -9,7 +9,6 @@ part 'creature_template_addon_repository.g.dart';
 @FoxyRepository()
 class CreatureTemplateAddonRepository
     with RepositoryMixin, _CreatureTemplateAddonRepositoryMixin {
-  static const _table = 'creature_template_addon';
 
   Future<int> copyCreatureTemplateAddon(int key) async {
     final source = await getCreatureTemplateAddon(key);

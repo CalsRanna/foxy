@@ -5,20 +5,14 @@ part of 'page_text_locale_repository.dart';
 mixin _PageTextLocaleRepositoryMixin on RepositoryMixin {
   Future<void> destroyPageTextLocale(PageTextLocaleKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('page_text_locale'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('page_text_locale record not found');
     }
   }
 
   Future<PageTextLocaleEntity?> getPageTextLocale(PageTextLocaleKey key) async {
-    final results = await _whereKey(
-      laconic.table('page_text_locale'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PageTextLocaleEntity.fromJson(results.first.toMap());
   }
@@ -27,14 +21,14 @@ mixin _PageTextLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(pageTextLocale);
     final json = prepareWriteJson(pageTextLocale.toJson());
     try {
-      await laconic.table('page_text_locale').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = pageTextLocale.copyWith(
-        id: await nextMaxPlusOne('page_text_locale', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('page_text_locale').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -56,7 +50,7 @@ mixin _PageTextLocaleRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('page_text_locale'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -86,3 +80,5 @@ mixin _PageTextLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'page_text_locale';

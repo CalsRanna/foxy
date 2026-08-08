@@ -8,7 +8,6 @@ part 'npc_trainer_repository.g.dart';
 
 @FoxyRepository(linkKey: ['trainerId'])
 class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
-  static const _table = 'trainer_spell';
   static const primaryKeyColumns = {'TrainerId', 'SpellId'};
 
   @override

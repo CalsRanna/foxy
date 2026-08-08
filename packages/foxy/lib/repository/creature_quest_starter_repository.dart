@@ -9,7 +9,6 @@ part 'creature_quest_starter_repository.g.dart';
 @FoxyRepository(linkKey: ['quest'])
 class CreatureQuestStarterRepository
     with RepositoryMixin, _CreatureQuestStarterRepositoryMixin {
-  static const _table = 'creature_queststarter';
   static const primaryKeyColumns = {'id', 'quest'};
 
   @override

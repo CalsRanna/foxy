@@ -27,20 +27,14 @@ final class BroadcastTextFilter {
 mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
   Future<void> destroyBroadcastText(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('broadcast_text'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('broadcast_text record not found');
     }
   }
 
   Future<BroadcastTextEntity?> getBroadcastText(int key) async {
-    final results = await _whereKey(
-      laconic.table('broadcast_text'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return BroadcastTextEntity.fromJson(results.first.toMap());
   }
@@ -54,14 +48,14 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
     await _beforeStore(broadcastText);
     final json = prepareWriteJson(broadcastText.toJson());
     try {
-      await laconic.table('broadcast_text').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = broadcastText.copyWith(
-        id: await nextMaxPlusOne('broadcast_text', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('broadcast_text').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -84,7 +78,7 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('broadcast_text'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -111,3 +105,5 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'broadcast_text';

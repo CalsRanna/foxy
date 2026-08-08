@@ -13,7 +13,6 @@ part 'creature_template_repository.g.dart';
 @FoxyFilter.text('subName')
 class CreatureTemplateRepository
     with RepositoryMixin, _CreatureTemplateRepositoryMixin {
-  static const _table = 'creature_template';
 
   @override
   Future<int> copyCreatureTemplate(int key) async {

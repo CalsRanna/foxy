@@ -9,7 +9,6 @@ part 'game_object_quest_item_repository.g.dart';
 @FoxyRepository(linkKey: ['gameObjectEntry'])
 class GameObjectQuestItemRepository
     with RepositoryMixin, _GameObjectQuestItemRepositoryMixin {
-  static const _table = 'gameobject_questitem';
   static const primaryKeyColumns = {'GameObjectEntry', 'Idx'};
 
   @override

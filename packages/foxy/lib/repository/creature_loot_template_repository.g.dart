@@ -47,10 +47,7 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countCreatureLootTemplates(int entry) async {
-    return laconic
-        .table('creature_loot_template')
-        .where('`Entry`', entry)
-        .count();
+    return laconic.table(_table).where('`Entry`', entry).count();
   }
 
   Future<CreatureLootTemplateEntity> createCreatureLootTemplate(
@@ -58,18 +55,14 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
   ) async {
     return CreatureLootTemplateEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'creature_loot_template',
-        '`Item`',
-        where: {'`Entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`Item`', where: {'`Entry`': entry}),
       reference: await nextMaxPlusOne(
-        'creature_loot_template',
+        _table,
         '`Reference`',
         where: {'`Entry`': entry},
       ),
       groupId: await nextMaxPlusOne(
-        'creature_loot_template',
+        _table,
         '`GroupId`',
         where: {'`Entry`': entry},
       ),
@@ -78,10 +71,7 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyCreatureLootTemplate(CreatureLootTemplateKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_loot_template record not found');
     }
@@ -90,10 +80,7 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
   Future<CreatureLootTemplateEntity?> getCreatureLootTemplate(
     CreatureLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -103,7 +90,7 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('creature_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -132,18 +119,18 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureLootTemplate);
     final json = prepareWriteJson(creatureLootTemplate.toJson());
     try {
-      await laconic.table('creature_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'creature_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': creatureLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('creature_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -167,7 +154,7 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -201,3 +188,5 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'creature_loot_template';

@@ -5,10 +5,7 @@ part of 'creature_default_trainer_repository.dart';
 mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureDefaultTrainer(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_default_trainer'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'creature_default_trainer record not found',
@@ -19,10 +16,7 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
   Future<CreatureDefaultTrainerEntity?> getCreatureDefaultTrainer(
     int key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_default_trainer'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureDefaultTrainerEntity.fromJson(results.first.toMap());
   }
@@ -38,17 +32,14 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureDefaultTrainer);
     final json = prepareWriteJson(creatureDefaultTrainer.toJson());
     try {
-      await laconic.table('creature_default_trainer').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureDefaultTrainer.copyWith(
-        creatureId: await nextMaxPlusOne(
-          'creature_default_trainer',
-          '`CreatureId`',
-        ),
+        creatureId: await nextMaxPlusOne(_table, '`CreatureId`'),
       );
       try {
-        await laconic.table('creature_default_trainer').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.creatureId;
@@ -73,7 +64,7 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_default_trainer'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -106,3 +97,5 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     return builder.where('`CreatureId`', key);
   }
 }
+
+const _table = 'creature_default_trainer';

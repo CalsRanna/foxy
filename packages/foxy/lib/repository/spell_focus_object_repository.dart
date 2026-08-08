@@ -17,7 +17,6 @@ class SpellFocusObjectRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _SpellFocusObjectRepositoryMixin {
-  static const _table = 'foxy.dbc_spell_focus_object';
 
   @override
   String get dbcLocaleTableName => _table;

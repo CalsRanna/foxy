@@ -5,20 +5,14 @@ part of 'creature_template_addon_repository.dart';
 mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureTemplateAddon(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_template_addon'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_template_addon record not found');
     }
   }
 
   Future<CreatureTemplateAddonEntity?> getCreatureTemplateAddon(int key) async {
-    final results = await _whereKey(
-      laconic.table('creature_template_addon'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateAddonEntity.fromJson(results.first.toMap());
   }
@@ -34,14 +28,14 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureTemplateAddon);
     final json = prepareWriteJson(creatureTemplateAddon.toJson());
     try {
-      await laconic.table('creature_template_addon').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureTemplateAddon.copyWith(
-        entry: await nextMaxPlusOne('creature_template_addon', '`entry`'),
+        entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table('creature_template_addon').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.entry;
@@ -66,7 +60,7 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_template_addon'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -95,3 +89,5 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
+
+const _table = 'creature_template_addon';

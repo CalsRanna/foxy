@@ -51,31 +51,23 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countItemTemplates({ItemTemplateFilter? filter}) async {
-    return _applyFilter(laconic.table('item_template'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<ItemTemplateEntity> createItemTemplate() async {
-    return ItemTemplateEntity(
-      entry: await nextMaxPlusOne('item_template', '`entry`'),
-    );
+    return ItemTemplateEntity(entry: await nextMaxPlusOne(_table, '`entry`'));
   }
 
   Future<void> destroyItemTemplate(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('item_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('item_template record not found');
     }
   }
 
   Future<ItemTemplateEntity?> getItemTemplate(int key) async {
-    final results = await _whereKey(
-      laconic.table('item_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemTemplateEntity.fromJson(results.first.toMap());
   }
@@ -85,7 +77,7 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     ItemTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('item_template').select([
+    var builder = laconic.table(_table).select([
       '`entry`',
       '`name`',
       '`Quality`',
@@ -104,7 +96,7 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<ItemTemplateEntity>> getItemTemplates() async {
-    var builder = laconic.table('item_template').orderBy('`entry`');
+    var builder = laconic.table(_table).orderBy('`entry`');
     final results = await builder.get();
     return results.map((e) => ItemTemplateEntity.fromJson(e.toMap())).toList();
   }
@@ -118,14 +110,14 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemTemplate);
     final json = prepareWriteJson(itemTemplate.toJson());
     try {
-      await laconic.table('item_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemTemplate.copyWith(
-        entry: await nextMaxPlusOne('item_template', '`entry`'),
+        entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table('item_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.entry;
@@ -148,7 +140,7 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('item_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -189,3 +181,5 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
+
+const _table = 'item_template';

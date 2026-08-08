@@ -17,7 +17,6 @@ class EmoteTextDataRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _EmoteTextDataRepositoryMixin {
-  static const _table = 'foxy.dbc_emotes_text_data';
 
   @override
   String get dbcLocaleTableName => _table;

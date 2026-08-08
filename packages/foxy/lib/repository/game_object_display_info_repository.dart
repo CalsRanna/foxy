@@ -12,7 +12,6 @@ part 'game_object_display_info_repository.g.dart';
 @FoxyFilter.text('modelName')
 class GameObjectDisplayInfoRepository
     with RepositoryMixin, _GameObjectDisplayInfoRepositoryMixin {
-  static const _table = 'foxy.dbc_game_object_display_info';
 
   Future<int> copyGameObjectDisplayInfo(int key) async {
     final source = await getGameObjectDisplayInfo(key);

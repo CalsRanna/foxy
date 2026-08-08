@@ -42,10 +42,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countSkinningLootTemplates(int entry) async {
-    return laconic
-        .table('skinning_loot_template')
-        .where('`Entry`', entry)
-        .count();
+    return laconic.table(_table).where('`Entry`', entry).count();
   }
 
   Future<SkinningLootTemplateEntity> createSkinningLootTemplate(
@@ -53,20 +50,13 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
   ) async {
     return SkinningLootTemplateEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'skinning_loot_template',
-        '`Item`',
-        where: {'`Entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`Item`', where: {'`Entry`': entry}),
     );
   }
 
   Future<void> destroySkinningLootTemplate(SkinningLootTemplateKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('skinning_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('skinning_loot_template record not found');
     }
@@ -75,10 +65,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
   Future<SkinningLootTemplateEntity?> getSkinningLootTemplate(
     SkinningLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('skinning_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SkinningLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -88,7 +75,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('skinning_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -113,18 +100,18 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(skinningLootTemplate);
     final json = prepareWriteJson(skinningLootTemplate.toJson());
     try {
-      await laconic.table('skinning_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = skinningLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'skinning_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': skinningLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('skinning_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -148,7 +135,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('skinning_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -180,3 +167,5 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'skinning_loot_template';

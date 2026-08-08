@@ -20,10 +20,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countCreatureTemplateSpells(int creatureID) async {
-    return laconic
-        .table('creature_template_spell')
-        .where('`CreatureID`', creatureID)
-        .count();
+    return laconic.table(_table).where('`CreatureID`', creatureID).count();
   }
 
   Future<CreatureTemplateSpellEntity> createCreatureTemplateSpell(
@@ -32,7 +29,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     return CreatureTemplateSpellEntity(
       creatureID: creatureID,
       index: await nextMaxPlusOne(
-        'creature_template_spell',
+        _table,
         '`Index`',
         where: {'`CreatureID`': creatureID},
       ),
@@ -43,10 +40,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     CreatureTemplateSpellKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_template_spell'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_template_spell record not found');
     }
@@ -55,10 +49,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
   Future<CreatureTemplateSpellEntity?> getCreatureTemplateSpell(
     CreatureTemplateSpellKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_template_spell'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateSpellEntity.fromJson(results.first.toMap());
   }
@@ -68,7 +59,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('creature_template_spell').select([
+    var builder = laconic.table(_table).select([
       '`CreatureID`',
       '`Index`',
       '`Spell`',
@@ -89,18 +80,18 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureTemplateSpell);
     final json = prepareWriteJson(creatureTemplateSpell.toJson());
     try {
-      await laconic.table('creature_template_spell').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureTemplateSpell.copyWith(
         index: await nextMaxPlusOne(
-          'creature_template_spell',
+          _table,
           '`Index`',
           where: {'`CreatureID`': creatureTemplateSpell.creatureID},
         ),
       );
       try {
-        await laconic.table('creature_template_spell').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -124,7 +115,7 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_template_spell'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -156,3 +147,5 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'creature_template_spell';

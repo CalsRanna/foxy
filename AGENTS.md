@@ -177,7 +177,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 - **Changes to annotations require a full (slow) build_runner pass**; batch your annotation edits.
 - After changing an entity field, check the generated file, then run `flutter analyze` — codegen validation errors (`InvalidGenerationSourceError`) pin to the offending element with a `todo:` fix hint.
-- Existing generators have no inter-dependencies — they "handshake" via naming conventions and by reading annotations/`_table`/mixin presence from the handwritten source. Follow the same pattern when extending.
+- Existing generators have no inter-dependencies — they "handshake" via naming conventions and by reading annotations/mixin presence from the handwritten source (source-shape checks are syntax-level AST via `source_shape.dart`). Follow the same pattern when extending.
 - Check `doc/codegen/` docs before touching codegen internals; `doc/codegen/extending.md` has the standard modify-flow and debugging tips (generated code lands in `.dart_tool/build/...`).
 - Comments: English. UI strings, log messages, and docs: Chinese. Throws: English only (`no_chinese_throw`).
 - Commits: conventional prefixes with English descriptions, e.g. `feat(codegen): add parent-key query layer`.

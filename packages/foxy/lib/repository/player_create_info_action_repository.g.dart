@@ -25,7 +25,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
 
   Future<int> countPlayerCreateInfoActions(int race, int class_) async {
     return laconic
-        .table('playercreateinfo_action')
+        .table(_table)
         .where('`race`', race)
         .where('`class`', class_)
         .count();
@@ -39,7 +39,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
       race: race,
       class_: class_,
       button: await nextMaxPlusOne(
-        'playercreateinfo_action',
+        _table,
         '`button`',
         where: {'`race`': race, '`class`': class_},
       ),
@@ -50,10 +50,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoActionKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('playercreateinfo_action'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('playercreateinfo_action record not found');
     }
@@ -62,10 +59,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
   Future<PlayerCreateInfoActionEntity?> getPlayerCreateInfoAction(
     PlayerCreateInfoActionKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('playercreateinfo_action'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoActionEntity.fromJson(results.first.toMap());
   }
@@ -73,7 +67,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
   Future<List<BriefPlayerCreateInfoActionEntity>>
   getBriefPlayerCreateInfoActions(int race, int class_, {int page = 1}) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('playercreateinfo_action').select([
+    var builder = laconic.table(_table).select([
       '`race`',
       '`class`',
       '`button`',
@@ -95,12 +89,12 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
     await _beforeStore(playerCreateInfoAction);
     final json = prepareWriteJson(playerCreateInfoAction.toJson());
     try {
-      await laconic.table('playercreateinfo_action').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = playerCreateInfoAction.copyWith(
         button: await nextMaxPlusOne(
-          'playercreateinfo_action',
+          _table,
           '`button`',
           where: {
             '`race`': playerCreateInfoAction.race,
@@ -109,7 +103,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table('playercreateinfo_action').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -133,7 +127,7 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('playercreateinfo_action'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -166,3 +160,5 @@ mixin _PlayerCreateInfoActionRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'playercreateinfo_action';

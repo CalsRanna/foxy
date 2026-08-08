@@ -5,10 +5,7 @@ part of 'creature_on_kill_reputation_repository.dart';
 mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureOnKillReputation(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_onkill_reputation'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'creature_onkill_reputation record not found',
@@ -19,10 +16,7 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_onkill_reputation'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureOnKillReputationEntity.fromJson(results.first.toMap());
   }
@@ -38,17 +32,14 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureOnKillReputation);
     final json = prepareWriteJson(creatureOnKillReputation.toJson());
     try {
-      await laconic.table('creature_onkill_reputation').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureOnKillReputation.copyWith(
-        creatureID: await nextMaxPlusOne(
-          'creature_onkill_reputation',
-          '`creature_id`',
-        ),
+        creatureID: await nextMaxPlusOne(_table, '`creature_id`'),
       );
       try {
-        await laconic.table('creature_onkill_reputation').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.creatureID;
@@ -73,7 +64,7 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_onkill_reputation'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -106,3 +97,5 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     return builder.where('`creature_id`', key);
   }
 }
+
+const _table = 'creature_onkill_reputation';

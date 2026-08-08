@@ -10,7 +10,6 @@ part 'player_create_info_skill_repository.g.dart';
 @FoxyRepository(linkKey: ['raceMask', 'classMask'])
 class PlayerCreateInfoSkillRepository
     with RepositoryMixin, _PlayerCreateInfoSkillRepositoryMixin {
-  static const _table = 'playercreateinfo_skills';
 
   @override
   Future<PlayerCreateInfoSkillKey> copyPlayerCreateInfoSkill(

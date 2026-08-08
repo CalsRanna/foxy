@@ -17,7 +17,6 @@ class ItemRandomSuffixRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _ItemRandomSuffixRepositoryMixin {
-  static const _table = 'foxy.dbc_item_random_suffix';
 
   @override
   String get dbcLocaleTableName => _table;

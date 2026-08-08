@@ -14,7 +14,6 @@ part 'map_info_repository.g.dart';
 @FoxyFilter.text('name')
 class MapInfoRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _MapInfoRepositoryMixin {
-  static const _table = 'foxy.dbc_map';
 
   @override
   String get dbcLocaleTableName => _table;

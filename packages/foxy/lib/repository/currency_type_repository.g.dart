@@ -37,34 +37,23 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) async {
-    return _applyFilter(
-      laconic.table('foxy.dbc_currency_types'),
-      filter,
-    ).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<CurrencyTypeEntity> createCurrencyType() async {
-    return CurrencyTypeEntity(
-      id: await nextMaxPlusOne('foxy.dbc_currency_types', '`ID`'),
-    );
+    return CurrencyTypeEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroyCurrencyType(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_currency_types'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_currency_types record not found');
     }
   }
 
   Future<CurrencyTypeEntity?> getCurrencyType(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_currency_types'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CurrencyTypeEntity.fromJson(results.first.toMap());
   }
@@ -74,7 +63,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     CurrencyTypeFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_currency_types').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`ItemID`',
       '`CategoryID`',
@@ -90,7 +79,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
-    var builder = laconic.table('foxy.dbc_currency_types').orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results.map((e) => CurrencyTypeEntity.fromJson(e.toMap())).toList();
   }
@@ -104,14 +93,14 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     await _beforeStore(currencyType);
     final json = prepareWriteJson(currencyType.toJson());
     try {
-      await laconic.table('foxy.dbc_currency_types').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = currencyType.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_currency_types', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_currency_types').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -136,7 +125,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_currency_types'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -156,7 +145,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
       builder = builder.where('`ID`', filter.id);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('`it.name`', filter.name);
+      builder = builder.where('`it`.`name`', filter.name);
     }
     return builder;
   }
@@ -174,3 +163,5 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_currency_types';

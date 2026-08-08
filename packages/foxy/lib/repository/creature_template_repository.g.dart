@@ -51,31 +51,25 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async {
-    return _applyFilter(laconic.table('creature_template'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<CreatureTemplateEntity> createCreatureTemplate() async {
     return CreatureTemplateEntity(
-      entry: await nextMaxPlusOne('creature_template', '`entry`'),
+      entry: await nextMaxPlusOne(_table, '`entry`'),
     );
   }
 
   Future<void> destroyCreatureTemplate(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_template record not found');
     }
   }
 
   Future<CreatureTemplateEntity?> getCreatureTemplate(int key) async {
-    final results = await _whereKey(
-      laconic.table('creature_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateEntity.fromJson(results.first.toMap());
   }
@@ -85,7 +79,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     CreatureTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('creature_template').select([
+    var builder = laconic.table(_table).select([
       '`entry`',
       '`maxlevel`',
       '`minlevel`',
@@ -102,7 +96,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
-    var builder = laconic.table('creature_template').orderBy('`entry`');
+    var builder = laconic.table(_table).orderBy('`entry`');
     final results = await builder.get();
     return results
         .map((e) => CreatureTemplateEntity.fromJson(e.toMap()))
@@ -120,14 +114,14 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureTemplate);
     final json = prepareWriteJson(creatureTemplate.toJson());
     try {
-      await laconic.table('creature_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureTemplate.copyWith(
-        entry: await nextMaxPlusOne('creature_template', '`entry`'),
+        entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table('creature_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.entry;
@@ -150,7 +144,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -194,3 +188,5 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
+
+const _table = 'creature_template';

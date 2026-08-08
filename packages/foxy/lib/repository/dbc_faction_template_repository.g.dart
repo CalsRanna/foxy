@@ -41,10 +41,7 @@ final class DbcFactionTemplateFilter {
 mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyDbcFactionTemplate(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_faction_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_faction_template record not found',
@@ -53,10 +50,7 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<DbcFactionTemplateEntity?> getDbcFactionTemplate(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_faction_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return DbcFactionTemplateEntity.fromJson(results.first.toMap());
   }
@@ -72,14 +66,14 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(dbcFactionTemplate);
     final json = prepareWriteJson(dbcFactionTemplate.toJson());
     try {
-      await laconic.table('foxy.dbc_faction_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = dbcFactionTemplate.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_faction_template', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_faction_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -104,7 +98,7 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_faction_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -137,3 +131,5 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_faction_template';

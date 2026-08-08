@@ -12,7 +12,6 @@ part 'item_display_info_repository.g.dart';
 @FoxyFilter.text('name')
 class ItemDisplayInfoRepository
     with RepositoryMixin, _ItemDisplayInfoRepositoryMixin {
-  static const _table = 'foxy.dbc_item_display_info';
 
   Future<int> copyItemDisplayInfo(int key) async {
     final source = await getItemDisplayInfo(key);

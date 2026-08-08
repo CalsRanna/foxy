@@ -18,17 +18,14 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countNpcTrainers(int trainerId) async {
-    return laconic
-        .table('trainer_spell')
-        .where('`TrainerId`', trainerId)
-        .count();
+    return laconic.table(_table).where('`TrainerId`', trainerId).count();
   }
 
   Future<NpcTrainerEntity> createNpcTrainer(int trainerId) async {
     return NpcTrainerEntity(
       trainerId: trainerId,
       spellId: await nextMaxPlusOne(
-        'trainer_spell',
+        _table,
         '`SpellId`',
         where: {'`TrainerId`': trainerId},
       ),
@@ -37,20 +34,14 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyNpcTrainer(NpcTrainerKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('trainer_spell'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('trainer_spell record not found');
     }
   }
 
   Future<NpcTrainerEntity?> getNpcTrainer(NpcTrainerKey key) async {
-    final results = await _whereKey(
-      laconic.table('trainer_spell'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return NpcTrainerEntity.fromJson(results.first.toMap());
   }
@@ -60,7 +51,7 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('trainer_spell').select([
+    var builder = laconic.table(_table).select([
       '`TrainerId`',
       '`SpellId`',
       '`MoneyCost`',
@@ -80,18 +71,18 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     await _beforeStore(npcTrainer);
     final json = prepareWriteJson(npcTrainer.toJson());
     try {
-      await laconic.table('trainer_spell').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = npcTrainer.copyWith(
         spellId: await nextMaxPlusOne(
-          'trainer_spell',
+          _table,
           '`SpellId`',
           where: {'`TrainerId`': npcTrainer.trainerId},
         ),
       );
       try {
-        await laconic.table('trainer_spell').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -113,7 +104,7 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('trainer_spell'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -143,3 +134,5 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'trainer_spell';

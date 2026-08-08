@@ -28,10 +28,7 @@ mixin _CurrencyCategoryRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyCurrencyCategory(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_currency_category'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_currency_category record not found',
@@ -40,10 +37,7 @@ mixin _CurrencyCategoryRepositoryMixin
   }
 
   Future<CurrencyCategoryEntity?> getCurrencyCategory(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_currency_category'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CurrencyCategoryEntity.fromJson(results.first.toMap());
   }
@@ -70,14 +64,14 @@ mixin _CurrencyCategoryRepositoryMixin
     await _beforeStore(currencyCategory);
     final json = prepareWriteJson(currencyCategory.toJson());
     try {
-      await laconic.table('foxy.dbc_currency_category').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = currencyCategory.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_currency_category', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_currency_category').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -102,7 +96,7 @@ mixin _CurrencyCategoryRepositoryMixin
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_currency_category'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -133,3 +127,5 @@ mixin _CurrencyCategoryRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_currency_category';

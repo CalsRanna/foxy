@@ -14,7 +14,6 @@ part 'smart_script_repository.g.dart';
 @FoxyFilter.text('entryOrGuid')
 @FoxyFilter.text('comment')
 class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
-  static const _table = 'smart_scripts';
   static const primaryKeyColumns = {'entryorguid', 'source_type', 'id', 'link'};
 
   @override

@@ -14,7 +14,6 @@ part 'item_set_repository.g.dart';
 @FoxyFilter.text('name', column: 'Name_lang_zhCN')
 class ItemSetRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _ItemSetRepositoryMixin {
-  static const _table = 'foxy.dbc_item_set';
 
   @override
   String get dbcLocaleTableName => _table;

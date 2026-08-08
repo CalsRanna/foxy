@@ -17,26 +17,19 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countSpellLootTemplates(int entry) async {
-    return laconic.table('spell_loot_template').where('`Entry`', entry).count();
+    return laconic.table(_table).where('`Entry`', entry).count();
   }
 
   Future<SpellLootTemplateEntity> createSpellLootTemplate(int entry) async {
     return SpellLootTemplateEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'spell_loot_template',
-        '`Item`',
-        where: {'`Entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`Item`', where: {'`Entry`': entry}),
     );
   }
 
   Future<void> destroySpellLootTemplate(SpellLootTemplateKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('spell_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_loot_template record not found');
     }
@@ -45,10 +38,7 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
   Future<SpellLootTemplateEntity?> getSpellLootTemplate(
     SpellLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('spell_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -58,7 +48,7 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('spell_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -85,18 +75,18 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellLootTemplate);
     final json = prepareWriteJson(spellLootTemplate.toJson());
     try {
-      await laconic.table('spell_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'spell_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': spellLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('spell_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -118,7 +108,7 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('spell_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -148,3 +138,5 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'spell_loot_template';

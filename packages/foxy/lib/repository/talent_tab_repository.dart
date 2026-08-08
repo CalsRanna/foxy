@@ -14,7 +14,6 @@ part 'talent_tab_repository.g.dart';
 @FoxyFilter.text('name')
 class TalentTabRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _TalentTabRepositoryMixin {
-  static const _table = 'foxy.dbc_talent_tab';
 
   @override
   String get dbcLocaleTableName => _table;

@@ -12,7 +12,6 @@ part 'game_object_art_kit_repository.g.dart';
 @FoxyFilter.text('path')
 class GameObjectArtKitRepository
     with RepositoryMixin, _GameObjectArtKitRepositoryMixin {
-  static const _table = 'foxy.dbc_game_object_art_kit';
 
   Future<int> copyGameObjectArtKit(int key) async {
     final source = await getGameObjectArtKit(key);

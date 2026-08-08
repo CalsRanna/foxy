@@ -23,20 +23,14 @@ final class SoundAmbienceFilter {
 mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
   Future<void> destroySoundAmbience(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_sound_ambience'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_sound_ambience record not found');
     }
   }
 
   Future<SoundAmbienceEntity?> getSoundAmbience(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_sound_ambience'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SoundAmbienceEntity.fromJson(results.first.toMap());
   }
@@ -50,14 +44,14 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
     await _beforeStore(soundAmbience);
     final json = prepareWriteJson(soundAmbience.toJson());
     try {
-      await laconic.table('foxy.dbc_sound_ambience').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = soundAmbience.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_sound_ambience', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_sound_ambience').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -82,7 +76,7 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_sound_ambience'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -109,3 +103,5 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_sound_ambience';

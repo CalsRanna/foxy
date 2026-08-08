@@ -79,10 +79,10 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class CreatureTemplateRepository
-    with RepositoryMixin, _CreatureTemplateRepositoryMixin {
-  static const _table = 'creature_template';
-}
+    with RepositoryMixin, _CreatureTemplateRepositoryMixin {}
 ```
+
+> 表名不用手写:单一来源在 Entity 注解(或类名推导),生成 part 产出库级 `const _table`,手写代码按裸名引用即可。
 
 **`view_model/creature_template_list_view_model.dart`**
 ```dart
@@ -116,9 +116,7 @@ class CreatureTemplateDetailViewModel
 @FoxyRepository(linkKey: ['entry'])   // entity 推导；linkKey 必须显式
 @FoxyFilter.text('item')
 class CreatureLootTemplateRepository
-    with RepositoryMixin, _CreatureLootTemplateRepositoryMixin {
-  static const _table = 'creature_loot_template';
-}
+    with RepositoryMixin, _CreatureLootTemplateRepositoryMixin {}
 ```
 
 生成方法形态(单关联键):
@@ -190,7 +188,7 @@ class CreatureTemplateAddonLinkedDetailViewModel
   - `Form._afterApplyCandidate`(加载实体后的联动,如编辑规格刷新);
   - `Form._logActivity` / `List._logActivity`(活动日志,entityName 各页不同);
   - `List._refresh` 内部整体可覆写(不常见);
-- **在手写类里声明 `static const _table`**:生成器校验它必须与 `@FoxyFullEntity.table` 一致,不一致构建期报错;
+- **别名列 / Brief 别名字段必须手写查询方法**:filter 用别名列(`@FoxyFilter.text('name', column: 'it.name')`)或实体有类级 `@FoxyBriefField.*` 别名字段时,count/getBrief 需要 JOIN,生成器无法表达——**必须**在 Repository 里手写 `countXxxs` / `getBriefXxxs`(否则构建期报错)。表名仍引用生成的 `_table`:`laconic.table('$_table as ct')`;
 - **给 Repository 混入 `DbcLocaleRepositoryMixin` 并声明 `dbcLocaleTableName`**:生成器检测到后生成 `get*Locales` / `save*Locales` 委托;
 - **保持手写方法不进生成范围**:Repository 里没被 `@FoxyRepository` 覆盖的私有方法照常可用(如 `CurrencyTypeRepository._applyLocaleFilter` / `_getNextId`)。
 
@@ -205,7 +203,8 @@ class CreatureTemplateAddonLinkedDetailViewModel
 | `XxxEntity must keep the fromJson factory delegate with the conventional signature` | factory 签名不符 | 委托到 `_XxxEntityMixin.fromJson(json)` |
 | `XxxEntity has no physical primary key field` | 没有 `@FoxyFullField(key: true)` | 至少一个 key 字段 |
 | `XxxRepository must mix in _XxxRepositoryMixin` | 没混入 | `with RepositoryMixin, _XxxRepositoryMixin` |
-| `XxxRepository._table does not match the physical table of XxxEntity` | `_table` 与表名不符 | 对齐 |
+| `XxxRepository hand-writes _table ...` | 手写了 `static const _table` | 删除——表名由 Entity 注解推导,生成 part 产出 `const _table` |
+| `countXxxs must be hand-written ...` / `getBriefXxxs must be hand-written ...` | filter 用了别名列(`column: 'it.name'`)或实体有类级 Brief 别名字段,生成器无法表达 JOIN | 在 Repository 里手写这些方法(带 JOIN) |
 | `Xxx is missing part 'xxx.g.dart'` | 缺 part | 补上 |
 | `Xxx must mix in FieldControllerMixin` / `...Mixin` | List VM 缺基座 | 加 `FieldControllerMixin, QueryVersionMixin` |
 | `... already hand-writes copyWith ... conflicting with the generated member` | 手写了生成成员 | 删手写,保留 Entity 特有业务方法 |

@@ -10,6 +10,7 @@ import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/list_model.dart';
 import 'package:foxy_generator/src/naming.dart';
+import 'package:foxy_generator/src/source_shape.dart';
 
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
@@ -30,7 +31,9 @@ const _filterChecker = TypeChecker.fromUrl(
 /// version while the method name stays the same — signature mismatches
 /// surface as compiler errors, the generator does no source-text matching.
 final class ListReader {
-  const ListReader();
+  final SourceShape sourceShape;
+
+  const ListReader({this.sourceShape = const SourceShape()});
 
   Future<ListGenerationModel> read(
     Element element,
@@ -90,50 +93,50 @@ final class ListReader {
 
     final keyType = _readEntityKeyType(entityElement, element);
     final mixinName = '_${className}Mixin';
-    final source = await buildStep.readAsString(buildStep.inputId);
     final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
-    if (!source.contains("part '$partName';") &&
-        !source.contains('part "$partName";')) {
+    final unit = await sourceShape.parseInput(buildStep, element);
+    final cls = sourceShape.classDeclaration(unit, className);
+    if (cls == null) {
+      _fail(
+        '$className is not declared in the current file.',
+        element,
+        'Declare the ViewModel class in this file.',
+      );
+    }
+    if (!sourceShape.hasPartDirective(unit, partName)) {
       _fail(
         "$className is missing part '$partName';.",
         element,
         'Declare the generated part after the ViewModel imports.',
       );
     }
-    if (!RegExp(
-      'class\\s+$className\\s+with\\s+[^\\{;]*\\b$mixinName\\b',
-    ).hasMatch(source)) {
+    final withClause = sourceShape.withClauseTypeNames(cls);
+    if (!withClause.contains(mixinName)) {
       _fail(
         '$className must mix in $mixinName.',
         element,
         "Add $mixinName to the end of the ViewModel's with list.",
       );
     }
-    final withList = RegExp(
-      'class\\s+$className\\s+with\\s+([^\\{;]*)',
-    ).firstMatch(source)?.group(1);
-    if (withList != null) {
-      final parts = withList.split(',').map((part) => part.trim()).toList();
-      final controllerIndex = parts.indexOf('FieldControllerMixin');
-      final queryIndex = parts.indexOf('QueryVersionMixin');
-      final mixinIndex = parts.indexOf(mixinName);
-      if (controllerIndex < 0 || queryIndex < 0) {
-        _fail(
-          '$className must mix in FieldControllerMixin and '
-              'QueryVersionMixin.',
-          element,
-          'Add FieldControllerMixin, QueryVersionMixin to the with list.',
-        );
-      }
-      if (controllerIndex > mixinIndex || queryIndex > mixinIndex) {
-        _fail(
-          'FieldControllerMixin / QueryVersionMixin must precede '
-              '$mixinName.',
-          element,
-          'Reorder the with list: FieldControllerMixin, QueryVersionMixin, '
-              '..., $mixinName.',
-        );
-      }
+    final controllerIndex = withClause.indexOf('FieldControllerMixin');
+    final queryIndex = withClause.indexOf('QueryVersionMixin');
+    final mixinIndex = withClause.indexOf(mixinName);
+    if (controllerIndex < 0 || queryIndex < 0) {
+      _fail(
+        '$className must mix in FieldControllerMixin and '
+            'QueryVersionMixin.',
+        element,
+        'Add FieldControllerMixin, QueryVersionMixin to the with list.',
+      );
+    }
+    if (controllerIndex > mixinIndex || queryIndex > mixinIndex) {
+      _fail(
+        'FieldControllerMixin / QueryVersionMixin must precede '
+            '$mixinName.',
+        element,
+        'Reorder the with list: FieldControllerMixin, QueryVersionMixin, '
+            '..., $mixinName.',
+      );
     }
 
     return ListGenerationModel(

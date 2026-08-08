@@ -12,7 +12,6 @@ part 'creature_spell_data_repository.g.dart';
 @FoxyFilter.text('spell')
 class CreatureSpellDataRepository
     with RepositoryMixin, _CreatureSpellDataRepositoryMixin {
-  static const _table = 'foxy.dbc_creature_spell_data';
   static const _spellTable = 'foxy.dbc_spell';
 
   Future<int> copyCreatureSpellData(int key) async {

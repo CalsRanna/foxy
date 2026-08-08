@@ -5,20 +5,14 @@ part of 'spell_bonus_data_repository.dart';
 mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
   Future<void> destroySpellBonusData(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('spell_bonus_data'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_bonus_data record not found');
     }
   }
 
   Future<SpellBonusDataEntity?> getSpellBonusData(int key) async {
-    final results = await _whereKey(
-      laconic.table('spell_bonus_data'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellBonusDataEntity.fromJson(results.first.toMap());
   }
@@ -32,14 +26,14 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellBonusData);
     final json = prepareWriteJson(spellBonusData.toJson());
     try {
-      await laconic.table('spell_bonus_data').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellBonusData.copyWith(
-        entry: await nextMaxPlusOne('spell_bonus_data', '`entry`'),
+        entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table('spell_bonus_data').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.entry;
@@ -62,7 +56,7 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('spell_bonus_data'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -89,3 +83,5 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
+
+const _table = 'spell_bonus_data';

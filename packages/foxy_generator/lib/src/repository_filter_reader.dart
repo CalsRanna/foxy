@@ -8,9 +8,12 @@ import 'package:source_gen/source_gen.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
+import 'package:foxy_generator/src/source_shape.dart';
 
 final class RepositoryFilterReader {
-  const RepositoryFilterReader();
+  final SourceShape sourceShape;
+
+  const RepositoryFilterReader({this.sourceShape = const SourceShape()});
 
   Future<RepositoryFilterGenerationModel> read(
     ClassElement element,
@@ -38,10 +41,9 @@ final class RepositoryFilterReader {
       );
     }
 
-    final source = await buildStep.readAsString(buildStep.inputId);
     final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
-    if (!source.contains("part '$partName';") &&
-        !source.contains('part "$partName";')) {
+    final unit = await sourceShape.parseInput(buildStep, element);
+    if (!sourceShape.hasPartDirective(unit, partName)) {
       _fail(
         '$repositoryClassName is missing part \'$partName\';.',
         element,

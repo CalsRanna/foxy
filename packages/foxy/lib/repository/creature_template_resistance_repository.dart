@@ -9,7 +9,6 @@ part 'creature_template_resistance_repository.g.dart';
 @FoxyRepository(linkKey: ['creatureID'])
 class CreatureTemplateResistanceRepository
     with RepositoryMixin, _CreatureTemplateResistanceRepositoryMixin {
-  static const _table = 'creature_template_resistance';
   static const maxSchool = 6;
   static const minSchool = 1;
   static const primaryKeyColumns = {'CreatureID', 'School'};

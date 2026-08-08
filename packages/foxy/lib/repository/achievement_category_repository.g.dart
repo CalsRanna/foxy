@@ -31,10 +31,7 @@ mixin _AchievementCategoryRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyAchievementCategory(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_achievement_category'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_achievement_category record not found',
@@ -43,10 +40,7 @@ mixin _AchievementCategoryRepositoryMixin
   }
 
   Future<AchievementCategoryEntity?> getAchievementCategory(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_achievement_category'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return AchievementCategoryEntity.fromJson(results.first.toMap());
   }
@@ -73,14 +67,14 @@ mixin _AchievementCategoryRepositoryMixin
     await _beforeStore(achievementCategory);
     final json = prepareWriteJson(achievementCategory.toJson());
     try {
-      await laconic.table('foxy.dbc_achievement_category').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = achievementCategory.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_achievement_category', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_achievement_category').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -105,7 +99,7 @@ mixin _AchievementCategoryRepositoryMixin
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_achievement_category'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -138,3 +132,5 @@ mixin _AchievementCategoryRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_achievement_category';

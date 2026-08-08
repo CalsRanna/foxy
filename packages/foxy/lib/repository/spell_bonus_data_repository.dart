@@ -9,7 +9,6 @@ part 'spell_bonus_data_repository.g.dart';
 @FoxyRepository()
 class SpellBonusDataRepository
     with RepositoryMixin, _SpellBonusDataRepositoryMixin {
-  static const _table = 'spell_bonus_data';
 
   Future<void> copySpellBonusData(int key) async {
     throw CopyNotSupportedException(

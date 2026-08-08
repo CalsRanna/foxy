@@ -15,36 +15,26 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countSpellGroups(int spellId) async {
-    return laconic.table('spell_group').where('`spell_id`', spellId).count();
+    return laconic.table(_table).where('`spell_id`', spellId).count();
   }
 
   Future<SpellGroupEntity> createSpellGroup(int spellId) async {
     return SpellGroupEntity(
       spellId: spellId,
-      id: await nextMaxPlusOne(
-        'spell_group',
-        '`id`',
-        where: {'`spell_id`': spellId},
-      ),
+      id: await nextMaxPlusOne(_table, '`id`', where: {'`spell_id`': spellId}),
     );
   }
 
   Future<void> destroySpellGroup(SpellGroupKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('spell_group'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_group record not found');
     }
   }
 
   Future<SpellGroupEntity?> getSpellGroup(SpellGroupKey key) async {
-    final results = await _whereKey(
-      laconic.table('spell_group'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellGroupEntity.fromJson(results.first.toMap());
   }
@@ -54,7 +44,7 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('spell_group').select(['`id`', '`spell_id`']);
+    var builder = laconic.table(_table).select(['`id`', '`spell_id`']);
     builder = builder.where('`spell_id`', spellId);
     builder = builder.orderBy('`id`').orderBy('`spell_id`');
     builder = builder.limit(kPageSize).offset(offset);
@@ -68,18 +58,18 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellGroup);
     final json = prepareWriteJson(spellGroup.toJson());
     try {
-      await laconic.table('spell_group').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellGroup.copyWith(
         id: await nextMaxPlusOne(
-          'spell_group',
+          _table,
           '`id`',
           where: {'`spell_id`': spellGroup.spellId},
         ),
       );
       try {
-        await laconic.table('spell_group').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -101,7 +91,7 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('spell_group'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -131,3 +121,5 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'spell_group';

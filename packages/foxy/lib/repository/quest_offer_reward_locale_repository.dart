@@ -10,7 +10,6 @@ part 'quest_offer_reward_locale_repository.g.dart';
 @FoxyRepository()
 class QuestOfferRewardLocaleRepository
     with RepositoryMixin, _QuestOfferRewardLocaleRepositoryMixin {
-  static const _table = 'quest_offer_reward_locale';
   static const primaryKeyColumns = {'ID', 'locale'};
 
   Future<void> applyQuestOfferRewardLocaleChanges({

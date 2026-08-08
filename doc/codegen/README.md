@@ -101,14 +101,15 @@ packages/foxy_generator/lib/
 
 生成的代码都是 `mixin _XxxMixin on ...`,手写类通过 `with` 混入。原因:
 
-- 手写类可声明 `static const _table`、可 `@override` 生成方法(如 `CurrencyTypeRepository` 覆写 `countCurrencyTypes`),mixin 的覆写语义是天然的「显式覆盖」钩子;
-- 一个 part 文件只含一个 mixin + 一个公开类(Filter),`on` 子句(`on RepositoryMixin`)保证生成代码能调用基座成员;
+- 手写类可 `@override` 生成方法(如 `CurrencyTypeRepository` 覆写 `countCurrencyTypes`),mixin 的覆写语义是天然的「显式覆盖」钩子;
+- 一个 part 文件只含一个 mixin + 一个公开类(Filter)+ 一个 `const _table`,`on` 子句(`on RepositoryMixin`)保证生成代码能调用基座成员;
 - Entity 的 `Full mixin` 同理,手写 `class XxxEntity with _XxxEntityMixin` 通过 mixin 拿到 `fromJson`/`copyWith`/`==`/`hashCode`/`toString`。
 
 ## 设计原则
 
 1. **单一事实来源(Single Source of Truth)**
    - 物理列名只在 `@FoxyFullField('列名')` 声明一次;Repository/Filter/List 的列名要么从 Entity 推断,要么显式声明,绝不重复手写;
+   - 物理表名只在 Entity 的 `@FoxyFullEntity(table:)`(或类名推导)声明一次;Repository 生成 part 产出库级 `const _table`,手写代码与生成代码都引用它,手写 `static const _table` 会被构建期拒绝;
    - 筛选字段只在 Repository 的 `@FoxyFilter` 声明;List ViewModel 的筛选控制器由生成器从 `@FoxyFilter` 读取(不在 List 注解里重复);
    - Entity 的 key 字段是唯一 key 来源,Repository/Form/List 都从它推断 key 类型与名字。
 
@@ -119,7 +120,9 @@ packages/foxy_generator/lib/
    - **推导链(annotation slimming)**:注解参数凡是能从类名/类型推导的都可以省略,推导规则集中在 `convention.dart`(表名 = `snake_case(类名去 Entity)`,仓库实体 = 类名互推,VM 实体/仓库 = 最长后缀剥离),由 `entity_resolver.dart` 把推导出的类名解析成真实 `ClassElement`;显式声明永远优先且与推导不一致时构建期报错。**不推导的边界**:表名偏离约定(DBC `foxy.` 前缀、复数表名)显式写 `table:`;`@FoxyBriefEntity` 是「表格行展示模型」声明,消费方含手写代码,必须显式;`linkKey`/`autoIncrementKey`/`autoIncrementScope` 是查询作用域语义,必须显式。
 
 3. **失败要早、信息要准**
-   - 校验分两层:`Reader` 里做「结构校验」(注解用法、命名、文件位置、mixin 是否混入),`EntityValidator` 做「模型校验」(表名非空、列名唯一、Brief 覆盖 key 等);
+   - 校验分两层:`Reader` 里做「结构校验」(注解用法、命名、文件位置、`part` 声明、mixin 混入与顺序、`factory fromJson` 委托、`_table` 是否手写残留),`EntityValidator` 做「模型校验」(表名非空、列名唯一、Brief 覆盖 key 等);
+   - 结构校验基于 analyzer **语法级 AST**(`source_shape.dart` 的 `parseString` 助手),不依赖源码文本格式,与 `.g.dart` 是否已生成无关;跨文件「注解存在性」探测(如 List ViewModel 是否存在)仍是文本检查;
+   - **生成器明知基线无法正确时强制覆写**:别名列 filter(`column: 'it.name'`)或类级 `@FoxyBriefField.*` 别名字段来自 JOIN 表,生成器无法表达 JOIN——此时构建期要求手写类必须自行声明 `countXxxs` / `getBriefXxxs`,否则报错;生成层仍保留完整基线(含合格的反引号限定符 `` `it`.`name` ``),由手写覆写接管;
    - 所有 `_fail` 都抛 `InvalidGenerationSourceError`,带 `message + todo`(错误消息英文,`todo` 以 `Fix:` 开头),`flutter analyze` / `build_runner` 会把错误钉到出错元素;运行期异常同理保持英文,用户文案统一经 `foxyErrorMessage` 映射;
    - 生成代码的「运行时不变式」也尽量前移:例如 store 前校验主键 > 0、update 未命中 0 行抛 `RecordNotFoundException`,把数据库静默失败变成显式业务异常。
 
@@ -129,7 +132,7 @@ packages/foxy_generator/lib/
    - `dart_literal.dart` 统一处理常量 → 字面量(含 double 补 `.0`、字符串转义 `$`)。
 
 5. **生成器之间无直接依赖,通过命名约定握手**
-   - Repository 生成器不 import Entity 生成器:它只依赖 Entity 的**注解与模型**(`@FoxyFullField` 的列名、key 标记),以及手写 Repository 源码文本里的 `_table` / `DbcLocaleRepositoryMixin` 出现与否;
+   - Repository 生成器不 import Entity 生成器:它只依赖 Entity 的**注解与模型**(`@FoxyFullField` 的列名、key 标记),以及手写 Repository 的 with 列表里 `DbcLocaleRepositoryMixin` 出现与否;
    - List/Form 生成器也不 import Repository 生成器:它们直接读 Repository 的 `@FoxyFilter` / Entity 的 `@FoxyFullField`,靠命名约定(方法名、Filter 类名)与 Repository 生成器握手;
    - 所以**新增一个生成器时,只要遵守同样的「读注解 + 命名约定」约定,就能独立加入**,见 [extending.md](extending.md)。
 

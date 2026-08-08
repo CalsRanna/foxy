@@ -10,7 +10,6 @@ part 'npc_text_locale_repository.g.dart';
 @FoxyRepository()
 class NpcTextLocaleRepository
     with RepositoryMixin, _NpcTextLocaleRepositoryMixin {
-  static const _table = 'npc_text_locale';
   static const primaryKeyColumns = {'ID', 'Locale'};
 
   /// Applies locale-editor changes atomically: deletions, then updates, then

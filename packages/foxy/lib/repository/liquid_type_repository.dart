@@ -11,7 +11,6 @@ part 'liquid_type_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class LiquidTypeRepository with RepositoryMixin, _LiquidTypeRepositoryMixin {
-  static const _table = 'foxy.dbc_liquid_type';
 
   Future<int> copyLiquidType(int key) async {
     final source = await getLiquidType(key);

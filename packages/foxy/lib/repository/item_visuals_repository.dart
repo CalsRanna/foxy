@@ -9,7 +9,6 @@ part 'item_visuals_repository.g.dart';
 @FoxyRepository()
 @FoxyFilter.text('id')
 class ItemVisualsRepository with RepositoryMixin, _ItemVisualsRepositoryMixin {
-  static const _table = 'foxy.dbc_item_visuals';
 
   Future<int> copyItemVisual(int key) async {
     final source = await getItemVisuals(key);

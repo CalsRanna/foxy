@@ -19,19 +19,15 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countNpcVendors(int entry) async {
-    return laconic.table('npc_vendor').where('`entry`', entry).count();
+    return laconic.table(_table).where('`entry`', entry).count();
   }
 
   Future<NpcVendorEntity> createNpcVendor(int entry) async {
     return NpcVendorEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'npc_vendor',
-        '`item`',
-        where: {'`entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`item`', where: {'`entry`': entry}),
       extendedCost: await nextMaxPlusOne(
-        'npc_vendor',
+        _table,
         '`ExtendedCost`',
         where: {'`entry`': entry},
       ),
@@ -40,20 +36,14 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyNpcVendor(NpcVendorKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('npc_vendor'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('npc_vendor record not found');
     }
   }
 
   Future<NpcVendorEntity?> getNpcVendor(NpcVendorKey key) async {
-    final results = await _whereKey(
-      laconic.table('npc_vendor'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return NpcVendorEntity.fromJson(results.first.toMap());
   }
@@ -63,7 +53,7 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('npc_vendor').select([
+    var builder = laconic.table(_table).select([
       '`entry`',
       '`slot`',
       '`item`',
@@ -87,7 +77,7 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     await _beforeStore(npcVendor);
     final json = prepareWriteJson(npcVendor.toJson());
     try {
-      await laconic.table('npc_vendor').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in npc_vendor');
@@ -103,7 +93,7 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('npc_vendor'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -134,3 +124,5 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'npc_vendor';

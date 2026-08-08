@@ -12,7 +12,6 @@ part 'quest_template_repository.g.dart';
 @FoxyFilter.text('title', column: 'qt.LogTitle')
 class QuestTemplateRepository
     with RepositoryMixin, _QuestTemplateRepositoryMixin {
-  static const _table = 'quest_template';
 
   @override
   Future<int> copyQuestTemplate(int key) async {

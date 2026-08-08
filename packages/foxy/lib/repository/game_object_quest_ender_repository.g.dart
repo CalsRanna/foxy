@@ -17,10 +17,7 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countGameObjectQuestEnders(int quest) async {
-    return laconic
-        .table('gameobject_questender')
-        .where('`quest`', quest)
-        .count();
+    return laconic.table(_table).where('`quest`', quest).count();
   }
 
   Future<GameObjectQuestEnderEntity> createGameObjectQuestEnder(
@@ -28,20 +25,13 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
   ) async {
     return GameObjectQuestEnderEntity(
       quest: quest,
-      id: await nextMaxPlusOne(
-        'gameobject_questender',
-        '`id`',
-        where: {'`quest`': quest},
-      ),
+      id: await nextMaxPlusOne(_table, '`id`', where: {'`quest`': quest}),
     );
   }
 
   Future<void> destroyGameObjectQuestEnder(GameObjectQuestEnderKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('gameobject_questender'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('gameobject_questender record not found');
     }
@@ -50,10 +40,7 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
   Future<GameObjectQuestEnderEntity?> getGameObjectQuestEnder(
     GameObjectQuestEnderKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('gameobject_questender'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectQuestEnderEntity.fromJson(results.first.toMap());
   }
@@ -63,10 +50,7 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('gameobject_questender').select([
-      '`id`',
-      '`quest`',
-    ]);
+    var builder = laconic.table(_table).select(['`id`', '`quest`']);
     builder = builder.where('`quest`', quest);
     builder = builder.orderBy('`id`').orderBy('`quest`');
     builder = builder.limit(kPageSize).offset(offset);
@@ -82,18 +66,18 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
     await _beforeStore(gameObjectQuestEnder);
     final json = prepareWriteJson(gameObjectQuestEnder.toJson());
     try {
-      await laconic.table('gameobject_questender').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gameObjectQuestEnder.copyWith(
         id: await nextMaxPlusOne(
-          'gameobject_questender',
+          _table,
           '`id`',
           where: {'`quest`': gameObjectQuestEnder.quest},
         ),
       );
       try {
-        await laconic.table('gameobject_questender').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -115,7 +99,7 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('gameobject_questender'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -147,3 +131,5 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'gameobject_questender';

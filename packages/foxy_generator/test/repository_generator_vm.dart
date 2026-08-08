@@ -28,7 +28,10 @@ void main() {
                   'Future<void> updateSample('
                   'int originalKey, SampleEntity sample)',
                 ),
-                contains("laconic.table('foxy.sample')"),
+                // The table name is generated as a library-level const
+                // (single source of truth from the Entity annotation).
+                contains('laconic.table(_table)'),
+                contains("const _table = 'foxy.sample';"),
                 contains('MysqlErrorUtil.isDuplicateEntry(error)'),
                 contains('prepareWriteJson(sample.toJson())'),
                 contains('Future<void> _beforeDestroy(int key) async {}'),
@@ -45,12 +48,11 @@ void main() {
 
   test('无列表页时手写 CRUD 合法(壳 override 生成版)', () async {
     final source = scalarRepositorySource.replaceFirst(
-      '  static const _table',
+      'class SampleRepository with _SampleRepositoryMixin {',
       '''
+class SampleRepository with _SampleRepositoryMixin {
   @override
-  Future<SampleEntity?> getSample(int key) async => null;
-
-  static const _table''',
+  Future<SampleEntity?> getSample(int key) async => null;''',
     );
 
     await testBuilder(
@@ -93,12 +95,11 @@ void main() {
                 contains('return copied.id;'),
                 // count: goes through _applyFilter
                 contains('Future<int> countSamples({SampleFilter? filter})'),
-                contains(
-                  '_applyFilter(laconic.table(\'foxy.sample\'), filter)',
-                ),
+                contains('_applyFilter(laconic.table(_table), filter)'),
+                contains("const _table = 'foxy.sample';"),
                 // create: key field prefilled via nextMaxPlusOne
                 contains('Future<SampleEntity> createSample() async {'),
-                contains("id: await nextMaxPlusOne('foxy.sample', '`ID`')"),
+                contains("id: await nextMaxPlusOne(_table, '`ID`')"),
                 // getBrief: brief projection columns + orderBy key +
                 // pagination
                 contains('Future<List<BriefSampleEntity>> getBriefSamples({'),
@@ -391,6 +392,142 @@ class SampleEntity {
       isTrue,
     );
   });
+
+  test('别名列 filter 时手写 count/getBrief 覆写后生成合格 SQL', () async {
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: briefEntitySource,
+        repositoryAsset: dottedFilterRepositorySource,
+        listViewModelAsset: listViewModelSource,
+        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
+      },
+      outputs: {
+        'foxy|lib/repository/sample_repository.foxy_repository.g.part':
+            decodedMatches(
+              allOf(<Matcher>[
+                // A dotted column is a qualified reference: each segment is
+                // backticked (`it`.`name`), never a single `it.name` id.
+                contains("'`it`.`name`'"),
+                contains('filter.name'),
+                contains("const _table = 'foxy.sample';"),
+              ]),
+            ),
+      },
+    );
+  });
+
+  test('别名列 filter 未手写 count 时拒绝生成', () async {
+    final logs = <String>[];
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: briefEntitySource,
+        repositoryAsset: dottedFilterRepositorySource.replaceFirst(
+          '  @override\n'
+          '  Future<int> countSamples({SampleFilter? filter}) async => 0;\n\n',
+          '',
+        ),
+        listViewModelAsset: listViewModelSource,
+        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
+      },
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logs.any(
+        (log) => log.contains('countSamples must be hand-written'),
+      ),
+      isTrue,
+      reason: '主表 count 走 _applyFilter，别名列查询无法由生成器表达',
+    );
+  });
+
+  test('别名列 filter 未手写 getBrief 时拒绝生成', () async {
+    final logs = <String>[];
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: briefEntitySource,
+        repositoryAsset: dottedFilterRepositorySource.replaceFirst(
+          '  @override\n'
+          '  Future<List<BriefSampleEntity>> getBriefSamples({\n'
+          '    int page = 1,\n'
+          '    SampleFilter? filter,\n'
+          '  }) async => [];',
+          '',
+        ),
+        listViewModelAsset: listViewModelSource,
+        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
+      },
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logs.any(
+        (log) => log.contains('getBriefSamples must be hand-written'),
+      ),
+      isTrue,
+    );
+  });
+
+  test('类级 Brief 别名字段未手写 getBrief 时拒绝生成', () async {
+    final logs = <String>[];
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: aliasBriefEntitySource,
+        repositoryAsset: filterRepositorySource,
+        listViewModelAsset: listViewModelSource,
+        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
+      },
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logs.any(
+        (log) =>
+            log.contains('getBriefSamples must be hand-written') &&
+            log.contains('Brief projection fields'),
+      ),
+      isTrue,
+      reason: '类级 @FoxyBriefField.* 是 JOIN 别名，生成器无法填充',
+    );
+  });
+
+  test('手写 _table 残留时拒绝生成(表名单一来源)', () async {
+    final repository = scalarRepositorySource.replaceFirst(
+      'class SampleRepository with _SampleRepositoryMixin {}',
+      '''
+class SampleRepository with _SampleRepositoryMixin {
+  static const _table = 'foxy.sample';
+}''',
+    );
+    final logs = <String>[];
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: scalarEntitySource,
+        repositoryAsset: repository,
+      },
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logs.any((log) => log.contains('Remove static const _table')),
+      isTrue,
+    );
+  });
 }
 
 const entityAnnotationAsset =
@@ -444,9 +581,7 @@ part 'sample_property_repository.g.dart';
 
 @FoxyRepository(SamplePropertyEntity)
 @FoxyFilter.text('id')
-class SamplePropertyRepository with _SamplePropertyRepositoryMixin {
-  static const _table = 'foxy.sample';
-}
+class SamplePropertyRepository with _SamplePropertyRepositoryMixin {}
 ''';
 
 const scalarEntitySource = r'''
@@ -468,9 +603,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 part 'sample_repository.g.dart';
 
 @FoxyRepository(SampleEntity)
-class SampleRepository with _SampleRepositoryMixin {
-  static const _table = 'foxy.sample';
-}
+class SampleRepository with _SampleRepositoryMixin {}
 ''';
 
 /// Entity with a Brief projection and key, for query-layer generation
@@ -504,9 +637,7 @@ part 'sample_repository.g.dart';
 @FoxyRepository(SampleEntity)
 @FoxyFilter.text('id')
 @FoxyFilter.text('name', column: 'Name_lang_zhCN')
-class SampleRepository with _SampleRepositoryMixin {
-  static const _table = 'foxy.sample';
-}
+class SampleRepository with _SampleRepositoryMixin {}
 ''';
 
 /// List-page presence marker: the Repository generator must enable the
@@ -572,9 +703,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 part 'child_record_repository.g.dart';
 
 @FoxyRepository(ChildRecordEntity, linkKey: ['parentId'])
-class ChildRecordRepository with _ChildRecordRepositoryMixin {
-  static const _table = 'foxy.child';
-}
+class ChildRecordRepository with _ChildRecordRepositoryMixin {}
 ''';
 
 /// Repository mixing in DbcLocaleRepositoryMixin (the locale-helper
@@ -602,10 +731,54 @@ part 'locale_repository.g.dart';
 @FoxyRepository(LocaleEntity)
 class LocaleRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _LocaleRepositoryMixin {
-  static const _table = 'foxy.sample';
-
   @override
   String get dbcLocaleTableName => _table;
+}
+''';
+
+/// Repository declaring a filter on a JOINed table (dotted column): the
+/// query layer cannot express the JOIN, so count/getBrief must be
+/// hand-written (validated by the reader).
+const dottedFilterRepositorySource = r'''
+import 'package:foxy/entity/sample_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+
+part 'sample_repository.g.dart';
+
+@FoxyRepository(SampleEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name', column: 'it.name')
+class SampleRepository with _SampleRepositoryMixin {
+  @override
+  Future<int> countSamples({SampleFilter? filter}) async => 0;
+
+  @override
+  Future<List<BriefSampleEntity>> getBriefSamples({
+    int page = 1,
+    SampleFilter? filter,
+  }) async => [];
+}
+''';
+
+/// Entity whose Brief declares a class-level projection alias
+/// (`localeName`): the alias comes from a JOINed table the generator cannot
+/// express, so getBrief must be hand-written (validated by the reader).
+const aliasBriefEntitySource = r'''
+import 'package:foxy_annotation/entity_annotations.dart';
+
+@FoxyBriefEntity()
+@FoxyBriefField.text('localeName')
+@FoxyFullEntity(table: 'foxy.sample')
+class SampleEntity {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
+  final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Name')
+  final String name;
+
+  const SampleEntity({this.id = 0, this.name = ''});
 }
 ''';
 

@@ -11,7 +11,6 @@ part 'item_enchantment_template_repository.g.dart';
 @FoxyFilter.text('entry')
 class ItemEnchantmentTemplateRepository
     with RepositoryMixin, _ItemEnchantmentTemplateRepositoryMixin {
-  static const _table = 'item_enchantment_template';
   static const primaryKeyColumns = {'entry', 'ench'};
 
   Future<void> copyItemEnchantmentTemplate(

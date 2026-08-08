@@ -30,20 +30,14 @@ final class CreatureImmunityFilter {
 mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureImmunity(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_immunities'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_immunities record not found');
     }
   }
 
   Future<CreatureImmunityEntity?> getCreatureImmunity(int key) async {
-    final results = await _whereKey(
-      laconic.table('creature_immunities'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureImmunityEntity.fromJson(results.first.toMap());
   }
@@ -59,14 +53,14 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureImmunity);
     final json = prepareWriteJson(creatureImmunity.toJson());
     try {
-      await laconic.table('creature_immunities').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureImmunity.copyWith(
-        id: await nextMaxPlusOne('creature_immunities', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('creature_immunities').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -89,7 +83,7 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_immunities'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -116,3 +110,5 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'creature_immunities';

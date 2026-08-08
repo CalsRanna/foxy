@@ -37,24 +37,18 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
   Future<int> countScalingStatDistributions({
     ScalingStatDistributionFilter? filter,
   }) async {
-    return _applyFilter(
-      laconic.table('foxy.dbc_scaling_stat_distribution'),
-      filter,
-    ).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<ScalingStatDistributionEntity> createScalingStatDistribution() async {
     return ScalingStatDistributionEntity(
-      id: await nextMaxPlusOne('foxy.dbc_scaling_stat_distribution', '`ID`'),
+      id: await nextMaxPlusOne(_table, '`ID`'),
     );
   }
 
   Future<void> destroyScalingStatDistribution(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_scaling_stat_distribution'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_scaling_stat_distribution record not found',
@@ -65,10 +59,7 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
   Future<ScalingStatDistributionEntity?> getScalingStatDistribution(
     int key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_scaling_stat_distribution'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ScalingStatDistributionEntity.fromJson(results.first.toMap());
   }
@@ -79,7 +70,7 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     ScalingStatDistributionFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_scaling_stat_distribution').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`StatID0`',
       '`StatID1`',
@@ -114,9 +105,7 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
 
   Future<List<ScalingStatDistributionEntity>>
   getScalingStatDistributions() async {
-    var builder = laconic
-        .table('foxy.dbc_scaling_stat_distribution')
-        .orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results
         .map((e) => ScalingStatDistributionEntity.fromJson(e.toMap()))
@@ -134,14 +123,14 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     await _beforeStore(scalingStatDistribution);
     final json = prepareWriteJson(scalingStatDistribution.toJson());
     try {
-      await laconic.table('foxy.dbc_scaling_stat_distribution').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = scalingStatDistribution.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_scaling_stat_distribution', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_scaling_stat_distribution').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -166,7 +155,7 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_scaling_stat_distribution'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -210,3 +199,5 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_scaling_stat_distribution';

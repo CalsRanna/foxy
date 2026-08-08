@@ -37,31 +37,23 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countQuestTemplates({QuestTemplateFilter? filter}) async {
-    return _applyFilter(laconic.table('quest_template'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<QuestTemplateEntity> createQuestTemplate() async {
-    return QuestTemplateEntity(
-      id: await nextMaxPlusOne('quest_template', '`ID`'),
-    );
+    return QuestTemplateEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroyQuestTemplate(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('quest_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('quest_template record not found');
     }
   }
 
   Future<QuestTemplateEntity?> getQuestTemplate(int key) async {
-    final results = await _whereKey(
-      laconic.table('quest_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestTemplateEntity.fromJson(results.first.toMap());
   }
@@ -71,7 +63,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     QuestTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('quest_template').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`QuestType`',
       '`QuestLevel`',
@@ -89,7 +81,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<QuestTemplateEntity>> getQuestTemplates() async {
-    var builder = laconic.table('quest_template').orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
   }
@@ -103,14 +95,14 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(questTemplate);
     final json = prepareWriteJson(questTemplate.toJson());
     try {
-      await laconic.table('quest_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = questTemplate.copyWith(
-        id: await nextMaxPlusOne('quest_template', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('quest_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -133,7 +125,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('quest_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -153,7 +145,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
       builder = builder.where('`ID`', filter.id);
     }
     if (filter.title.isNotEmpty) {
-      builder = builder.where('`qt.LogTitle`', filter.title);
+      builder = builder.where('`qt`.`LogTitle`', filter.title);
     }
     return builder;
   }
@@ -171,3 +163,5 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'quest_template';

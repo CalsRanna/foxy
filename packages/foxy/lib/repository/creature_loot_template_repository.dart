@@ -12,7 +12,6 @@ part 'creature_loot_template_repository.g.dart';
 @FoxyFilter.text('name')
 class CreatureLootTemplateRepository
     with RepositoryMixin, _CreatureLootTemplateRepositoryMixin {
-  static const _table = 'creature_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item', 'Reference', 'GroupId'};
 
   @override

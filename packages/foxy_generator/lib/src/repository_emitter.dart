@@ -40,6 +40,14 @@ final class RepositoryEmitter {
     _emitWriteHooks(buffer, model);
     _emitWhereKey(buffer, model);
     buffer.writeln('}');
+    // The table name is a single source of truth on the Entity annotation;
+    // this part materializes it as a library-level const so both the mixin
+    // and the hand-written class reference the same name. Emitted after the
+    // mixin to keep the top-level "Sort Members" order
+    // (Filter < _XxxMixin < _table).
+    buffer
+      ..writeln()
+      ..writeln('const _table = ${dartStringLiteral(model.table)};');
     return buffer.toString();
   }
 
@@ -78,7 +86,13 @@ final class RepositoryEmitter {
   /// laconic does not escape identifiers; column names are spliced into SQL
   /// verbatim. With unconditional backticks, MySQL reserved words such as
   /// `index` and `rank` need no whitelist.
-  String _column(String columnName) => dartStringLiteral('`$columnName`');
+  ///
+  /// A dotted name (`it.name`) is a qualified reference, not a single
+  /// identifier: each segment is quoted so MySQL sees `` `it`.`name` `` —
+  /// `` `it.name` `` would name a column literally called `it.name`.
+  String _column(String columnName) => dartStringLiteral(
+    columnName.split('.').map((segment) => '`$segment`').join('.'),
+  );
 
   void _emitApplyFilter(StringBuffer buffer, RepositoryGenerationModel model) {
     buffer.writeln(
@@ -152,7 +166,7 @@ final class RepositoryEmitter {
           '({${model.filterClassName}? filter}) async {',
         )
         ..writeln(
-          '    return _applyFilter(laconic.table(${_table(model)}), filter)'
+          '    return _applyFilter(laconic.table(_table), filter)'
           '.count();',
         )
         ..writeln('  }')
@@ -165,7 +179,7 @@ final class RepositoryEmitter {
         '(${_linkParams(links)}) async {',
       )
       ..writeln(
-        '    return laconic.table(${_table(model)})${_linkWheres(links)}'
+        '    return laconic.table(_table)${_linkWheres(links)}'
         '.count();',
       )
       ..writeln('  }')
@@ -182,7 +196,7 @@ final class RepositoryEmitter {
       for (final field in model.keyFields) {
         buffer.writeln(
           '      ${field.dartName}: await nextMaxPlusOne('
-          '${_table(model)}, ${_column(field.columnName)}),',
+          '_table, ${_column(field.columnName)}),',
         );
       }
       buffer
@@ -204,7 +218,7 @@ final class RepositoryEmitter {
       if (linkNames.contains(field.dartName)) continue;
       buffer.writeln(
         '      ${field.dartName}: await nextMaxPlusOne('
-        '${_table(model)}, ${_column(field.columnName)}, '
+        '_table, ${_column(field.columnName)}, '
         'where: {${_linkWhereMap(links)}}),',
       );
     }
@@ -222,7 +236,7 @@ final class RepositoryEmitter {
       ..writeln('    await _beforeDestroy(key);')
       ..writeln(
         '    final deletedRows = await _whereKey('
-        'laconic.table(${_table(model)}), key).delete();',
+        'laconic.table(_table), key).delete();',
       )
       ..writeln('    if (deletedRows == 0) {')
       ..writeln(
@@ -241,7 +255,7 @@ final class RepositoryEmitter {
       )
       ..writeln(
         '    final results = await _whereKey('
-        'laconic.table(${_table(model)}), key).limit(1).get();',
+        'laconic.table(_table), key).limit(1).get();',
       )
       ..writeln('    if (results.isEmpty) return null;')
       ..writeln(
@@ -258,7 +272,7 @@ final class RepositoryEmitter {
         'get${pluralize(model.baseName)}() async {',
       )
       ..writeln(
-        '    var builder = laconic.table(${_table(model)})'
+        '    var builder = laconic.table(_table)'
         '${_orderByClause(model)};',
       )
       ..writeln('    final results = await builder.get();')
@@ -282,7 +296,7 @@ final class RepositoryEmitter {
         ..writeln('    ${model.filterClassName}? filter,')
         ..writeln('  }) async {')
         ..writeln('    var offset = (page - 1) * kPageSize;')
-        ..writeln('    var builder = laconic.table(${_table(model)}).select([');
+        ..writeln('    var builder = laconic.table(_table).select([');
       for (final column in model.briefProjectionColumns) {
         buffer.writeln('      ${_column(column)},');
       }
@@ -310,7 +324,7 @@ final class RepositoryEmitter {
       ..writeln('    int page = 1,')
       ..writeln('  }) async {')
       ..writeln('    var offset = (page - 1) * kPageSize;')
-      ..writeln('    var builder = laconic.table(${_table(model)}).select([');
+      ..writeln('    var builder = laconic.table(_table).select([');
     for (final column in model.briefProjectionColumns) {
       buffer.writeln('      ${_column(column)},');
     }
@@ -384,7 +398,7 @@ final class RepositoryEmitter {
       ..writeln('    await _beforeStore($parameter);')
       ..writeln('    final json = prepareWriteJson($parameter.toJson());')
       ..writeln('    try {')
-      ..writeln('      await laconic.table(${_table(model)}).insert([json]);')
+      ..writeln('      await laconic.table(_table).insert([json]);')
       ..writeln('    } catch (error) {')
       ..writeln('      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;');
     if (retriedKeys.length != 1) {
@@ -403,7 +417,7 @@ final class RepositoryEmitter {
         ..writeln('      final retried = $parameter.copyWith(')
         ..writeln('        $retriedKey: await nextMaxPlusOne(')
         ..writeln(
-          '          ${_table(model)}, ${_column(retriedField.columnName)},',
+          '          _table, ${_column(retriedField.columnName)},',
         );
       if (retryScope.isNotEmpty) {
         buffer.writeln(
@@ -414,7 +428,7 @@ final class RepositoryEmitter {
         ..writeln('        ),')
         ..writeln('      );')
         ..writeln('      try {')
-        ..writeln('        await laconic.table(${_table(model)})'
+        ..writeln('        await laconic.table(_table)'
           '.insert([prepareWriteJson(retried.toJson())]);')
         ..writeln(
           returnsKey ? '        return retried.$retriedKey;' : '        return;',
@@ -454,7 +468,7 @@ final class RepositoryEmitter {
       ..writeln('    final int matchedRows;')
       ..writeln('    try {')
       ..writeln('      matchedRows = await _whereKey(')
-      ..writeln('        laconic.table(${_table(model)}),')
+      ..writeln('        laconic.table(_table),')
       ..writeln('        originalKey,')
       ..writeln('      ).update(json);')
       ..writeln('    } catch (error) {')
@@ -560,13 +574,4 @@ final class RepositoryEmitter {
     }
     return buffer.toString();
   }
-
-  /// Physical table name written as a Dart string literal.
-  ///
-  /// The mixing-in class declares `static const _table`, but mixin instance
-  /// methods cannot access static members by bare name, so the literal is
-  /// inlined here; RepositoryReader still validates that `_table` matches
-  /// the annotation.
-  String _table(RepositoryGenerationModel model) =>
-      dartStringLiteral(model.table);
 }

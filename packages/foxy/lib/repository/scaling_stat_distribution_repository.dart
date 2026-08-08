@@ -10,7 +10,6 @@ part 'scaling_stat_distribution_repository.g.dart';
 @FoxyFilter.text('id')
 class ScalingStatDistributionRepository
     with RepositoryMixin, _ScalingStatDistributionRepositoryMixin {
-  static const _table = 'foxy.dbc_scaling_stat_distribution';
 
   @override
   Future<int> copyScalingStatDistribution(int key) async {

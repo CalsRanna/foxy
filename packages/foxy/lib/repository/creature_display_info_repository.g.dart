@@ -30,10 +30,7 @@ final class CreatureDisplayInfoFilter {
 mixin _CreatureDisplayInfoRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureDisplayInfo(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_creature_display_info'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_creature_display_info record not found',
@@ -42,10 +39,7 @@ mixin _CreatureDisplayInfoRepositoryMixin on RepositoryMixin {
   }
 
   Future<CreatureDisplayInfoEntity?> getCreatureDisplayInfo(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_creature_display_info'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureDisplayInfoEntity.fromJson(results.first.toMap());
   }
@@ -61,14 +55,14 @@ mixin _CreatureDisplayInfoRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureDisplayInfo);
     final json = prepareWriteJson(creatureDisplayInfo.toJson());
     try {
-      await laconic.table('foxy.dbc_creature_display_info').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureDisplayInfo.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_creature_display_info', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_creature_display_info').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -93,7 +87,7 @@ mixin _CreatureDisplayInfoRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_creature_display_info'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -126,3 +120,5 @@ mixin _CreatureDisplayInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_creature_display_info';

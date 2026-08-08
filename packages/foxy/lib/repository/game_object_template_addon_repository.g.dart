@@ -5,10 +5,7 @@ part of 'game_object_template_addon_repository.dart';
 mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
   Future<void> destroyGameObjectTemplateAddon(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('gameobject_template_addon'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'gameobject_template_addon record not found',
@@ -19,10 +16,7 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
   Future<GameObjectTemplateAddonEntity?> getGameObjectTemplateAddon(
     int key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('gameobject_template_addon'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectTemplateAddonEntity.fromJson(results.first.toMap());
   }
@@ -38,14 +32,14 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
     await _beforeStore(gameObjectTemplateAddon);
     final json = prepareWriteJson(gameObjectTemplateAddon.toJson());
     try {
-      await laconic.table('gameobject_template_addon').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gameObjectTemplateAddon.copyWith(
-        entry: await nextMaxPlusOne('gameobject_template_addon', '`entry`'),
+        entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table('gameobject_template_addon').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.entry;
@@ -70,7 +64,7 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('gameobject_template_addon'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -103,3 +97,5 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
+
+const _table = 'gameobject_template_addon';

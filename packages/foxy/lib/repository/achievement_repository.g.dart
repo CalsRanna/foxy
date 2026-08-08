@@ -37,31 +37,23 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<int> countAchievements({AchievementFilter? filter}) async {
-    return _applyFilter(laconic.table('foxy.dbc_achievement'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<AchievementEntity> createAchievement() async {
-    return AchievementEntity(
-      id: await nextMaxPlusOne('foxy.dbc_achievement', '`ID`'),
-    );
+    return AchievementEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroyAchievement(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_achievement'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_achievement record not found');
     }
   }
 
   Future<AchievementEntity?> getAchievement(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_achievement'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return AchievementEntity.fromJson(results.first.toMap());
   }
@@ -71,7 +63,7 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     AchievementFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_achievement').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`Title_lang_zhCN`',
       '`Description_lang_zhCN`',
@@ -87,7 +79,7 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<List<AchievementEntity>> getAchievements() async {
-    var builder = laconic.table('foxy.dbc_achievement').orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
   }
@@ -112,14 +104,14 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     await _beforeStore(achievement);
     final json = prepareWriteJson(achievement.toJson());
     try {
-      await laconic.table('foxy.dbc_achievement').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = achievement.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_achievement', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_achievement').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -142,7 +134,7 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_achievement'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -180,3 +172,5 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_achievement';

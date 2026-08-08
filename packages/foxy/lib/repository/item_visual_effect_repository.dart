@@ -12,7 +12,6 @@ part 'item_visual_effect_repository.g.dart';
 @FoxyFilter.text('model')
 class ItemVisualEffectRepository
     with RepositoryMixin, _ItemVisualEffectRepositoryMixin {
-  static const _table = 'foxy.dbc_item_visual_effects';
 
   Future<int> copyItemVisualEffect(int key) async {
     final source = await getItemVisualEffect(key);

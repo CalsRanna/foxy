@@ -17,7 +17,6 @@ class AchievementRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _AchievementRepositoryMixin {
-  static const _table = 'foxy.dbc_achievement';
 
   @override
   String get dbcLocaleTableName => _table;

@@ -11,7 +11,6 @@ part 'gossip_menu_repository.g.dart';
 @FoxyFilter.text('menuId')
 @FoxyFilter.text('text', column: 'nt.text0_0')
 class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
-  static const _table = 'gossip_menu';
 
   @override
   Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {

@@ -30,7 +30,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     int classMask,
   ) async {
     return laconic
-        .table('playercreateinfo_spell_custom')
+        .table(_table)
         .where('`racemask`', raceMask)
         .where('`classmask`', classMask)
         .count();
@@ -44,7 +44,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
       raceMask: raceMask,
       classMask: classMask,
       spell: await nextMaxPlusOne(
-        'playercreateinfo_spell_custom',
+        _table,
         '`Spell`',
         where: {'`racemask`': raceMask, '`classmask`': classMask},
       ),
@@ -55,10 +55,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSpellCustomKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('playercreateinfo_spell_custom'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'playercreateinfo_spell_custom record not found',
@@ -69,10 +66,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
   Future<PlayerCreateInfoSpellCustomEntity?> getPlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('playercreateinfo_spell_custom'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoSpellCustomEntity.fromJson(results.first.toMap());
   }
@@ -84,7 +78,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('playercreateinfo_spell_custom').select([
+    var builder = laconic.table(_table).select([
       '`racemask`',
       '`classmask`',
       '`Spell`',
@@ -110,12 +104,12 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     await _beforeStore(playerCreateInfoSpellCustom);
     final json = prepareWriteJson(playerCreateInfoSpellCustom.toJson());
     try {
-      await laconic.table('playercreateinfo_spell_custom').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = playerCreateInfoSpellCustom.copyWith(
         spell: await nextMaxPlusOne(
-          'playercreateinfo_spell_custom',
+          _table,
           '`Spell`',
           where: {
             '`racemask`': playerCreateInfoSpellCustom.raceMask,
@@ -124,7 +118,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table('playercreateinfo_spell_custom').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -148,7 +142,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('playercreateinfo_spell_custom'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -188,3 +182,5 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'playercreateinfo_spell_custom';

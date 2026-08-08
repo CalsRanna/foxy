@@ -12,7 +12,6 @@ part 'currency_type_repository.g.dart';
 @FoxyFilter.text('name', column: 'it.name')
 class CurrencyTypeRepository
     with RepositoryMixin, _CurrencyTypeRepositoryMixin {
-  static const _table = 'foxy.dbc_currency_types';
 
   @override
   Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) {

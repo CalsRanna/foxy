@@ -5,20 +5,14 @@ part of 'quest_template_addon_repository.dart';
 mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
   Future<void> destroyQuestTemplateAddon(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('quest_template_addon'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('quest_template_addon record not found');
     }
   }
 
   Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(int key) async {
-    final results = await _whereKey(
-      laconic.table('quest_template_addon'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestTemplateAddonEntity.fromJson(results.first.toMap());
   }
@@ -34,14 +28,14 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
     await _beforeStore(questTemplateAddon);
     final json = prepareWriteJson(questTemplateAddon.toJson());
     try {
-      await laconic.table('quest_template_addon').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = questTemplateAddon.copyWith(
-        id: await nextMaxPlusOne('quest_template_addon', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('quest_template_addon').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -64,7 +58,7 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('quest_template_addon'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -93,3 +87,5 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'quest_template_addon';

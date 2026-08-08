@@ -27,20 +27,14 @@ final class DbcEmoteFilter {
 mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
   Future<void> destroyDbcEmote(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_emotes'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_emotes record not found');
     }
   }
 
   Future<DbcEmoteEntity?> getDbcEmote(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_emotes'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return DbcEmoteEntity.fromJson(results.first.toMap());
   }
@@ -54,14 +48,14 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
     await _beforeStore(dbcEmote);
     final json = prepareWriteJson(dbcEmote.toJson());
     try {
-      await laconic.table('foxy.dbc_emotes').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = dbcEmote.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_emotes', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_emotes').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -81,7 +75,7 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_emotes'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -105,3 +99,5 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_emotes';

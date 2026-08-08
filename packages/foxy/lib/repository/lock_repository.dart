@@ -9,7 +9,6 @@ part 'lock_repository.g.dart';
 @FoxyRepository()
 @FoxyFilter.text('id')
 class LockRepository with RepositoryMixin, _LockRepositoryMixin {
-  static const _table = 'foxy.dbc_lock';
 
   Future<int> copyLock(int key) async {
     final source = await getLock(key);

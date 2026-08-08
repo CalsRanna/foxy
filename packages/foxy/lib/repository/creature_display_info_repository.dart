@@ -12,7 +12,6 @@ part 'creature_display_info_repository.g.dart';
 @FoxyFilter.text('modelName')
 class CreatureDisplayInfoRepository
     with RepositoryMixin, _CreatureDisplayInfoRepositoryMixin {
-  static const _table = 'foxy.dbc_creature_display_info';
   static const _modelDataTable = 'foxy.dbc_creature_model_data';
 
   Future<int> copyCreatureDisplayInfo(int key) async {

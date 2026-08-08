@@ -5,20 +5,14 @@ part of 'quest_request_items_repository.dart';
 mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
   Future<void> destroyQuestRequestItems(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('quest_request_items'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('quest_request_items record not found');
     }
   }
 
   Future<QuestRequestItemsEntity?> getQuestRequestItems(int key) async {
-    final results = await _whereKey(
-      laconic.table('quest_request_items'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestRequestItemsEntity.fromJson(results.first.toMap());
   }
@@ -34,14 +28,14 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
     await _beforeStore(questRequestItems);
     final json = prepareWriteJson(questRequestItems.toJson());
     try {
-      await laconic.table('quest_request_items').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = questRequestItems.copyWith(
-        id: await nextMaxPlusOne('quest_request_items', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('quest_request_items').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -64,7 +58,7 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('quest_request_items'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -91,3 +85,5 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'quest_request_items';

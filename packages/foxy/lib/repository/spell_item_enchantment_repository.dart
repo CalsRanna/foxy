@@ -17,7 +17,6 @@ class SpellItemEnchantmentRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _SpellItemEnchantmentRepositoryMixin {
-  static const _table = 'foxy.dbc_spell_item_enchantment';
 
   @override
   String get dbcLocaleTableName => _table;

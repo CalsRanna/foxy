@@ -25,7 +25,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
 
   Future<int> countPlayerCreateInfoSkills(int raceMask, int classMask) async {
     return laconic
-        .table('playercreateinfo_skills')
+        .table(_table)
         .where('`raceMask`', raceMask)
         .where('`classMask`', classMask)
         .count();
@@ -39,7 +39,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
       raceMask: raceMask,
       classMask: classMask,
       skill: await nextMaxPlusOne(
-        'playercreateinfo_skills',
+        _table,
         '`skill`',
         where: {'`raceMask`': raceMask, '`classMask`': classMask},
       ),
@@ -50,10 +50,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSkillKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('playercreateinfo_skills'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('playercreateinfo_skills record not found');
     }
@@ -62,10 +59,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
   Future<PlayerCreateInfoSkillEntity?> getPlayerCreateInfoSkill(
     PlayerCreateInfoSkillKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('playercreateinfo_skills'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoSkillEntity.fromJson(results.first.toMap());
   }
@@ -76,7 +70,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('playercreateinfo_skills').select([
+    var builder = laconic.table(_table).select([
       '`raceMask`',
       '`classMask`',
       '`skill`',
@@ -103,12 +97,12 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     await _beforeStore(playerCreateInfoSkill);
     final json = prepareWriteJson(playerCreateInfoSkill.toJson());
     try {
-      await laconic.table('playercreateinfo_skills').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = playerCreateInfoSkill.copyWith(
         skill: await nextMaxPlusOne(
-          'playercreateinfo_skills',
+          _table,
           '`skill`',
           where: {
             '`raceMask`': playerCreateInfoSkill.raceMask,
@@ -117,7 +111,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table('playercreateinfo_skills').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -141,7 +135,7 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('playercreateinfo_skills'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -174,3 +168,5 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'playercreateinfo_skills';

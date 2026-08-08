@@ -10,7 +10,6 @@ part 'item_template_locale_repository.g.dart';
 @FoxyRepository()
 class ItemTemplateLocaleRepository
     with RepositoryMixin, _ItemTemplateLocaleRepositoryMixin {
-  static const _table = 'item_template_locale';
   static const primaryKeyColumns = {'ID', 'locale'};
 
   Future<void> applyItemTemplateLocaleChanges({

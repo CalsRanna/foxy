@@ -12,7 +12,6 @@ part 'pickpocketing_loot_template_repository.g.dart';
 @FoxyFilter.text('name')
 class PickpocketingLootTemplateRepository
     with RepositoryMixin, _PickpocketingLootTemplateRepositoryMixin {
-  static const _table = 'pickpocketing_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
   @override

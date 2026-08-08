@@ -28,10 +28,7 @@ mixin _SpellFocusObjectRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroySpellFocusObject(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_spell_focus_object'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_spell_focus_object record not found',
@@ -40,10 +37,7 @@ mixin _SpellFocusObjectRepositoryMixin
   }
 
   Future<SpellFocusObjectEntity?> getSpellFocusObject(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_spell_focus_object'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellFocusObjectEntity.fromJson(results.first.toMap());
   }
@@ -70,14 +64,14 @@ mixin _SpellFocusObjectRepositoryMixin
     await _beforeStore(spellFocusObject);
     final json = prepareWriteJson(spellFocusObject.toJson());
     try {
-      await laconic.table('foxy.dbc_spell_focus_object').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellFocusObject.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_spell_focus_object', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_spell_focus_object').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -102,7 +96,7 @@ mixin _SpellFocusObjectRepositoryMixin
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_spell_focus_object'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -133,3 +127,5 @@ mixin _SpellFocusObjectRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_spell_focus_object';

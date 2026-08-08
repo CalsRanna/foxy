@@ -7,10 +7,7 @@ mixin _CreatureTemplateLocaleRepositoryMixin on RepositoryMixin {
     CreatureTemplateLocaleKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_template_locale'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'creature_template_locale record not found',
@@ -21,10 +18,7 @@ mixin _CreatureTemplateLocaleRepositoryMixin on RepositoryMixin {
   Future<CreatureTemplateLocaleEntity?> getCreatureTemplateLocale(
     CreatureTemplateLocaleKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_template_locale'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateLocaleEntity.fromJson(results.first.toMap());
   }
@@ -35,14 +29,14 @@ mixin _CreatureTemplateLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureTemplateLocale);
     final json = prepareWriteJson(creatureTemplateLocale.toJson());
     try {
-      await laconic.table('creature_template_locale').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureTemplateLocale.copyWith(
-        entry: await nextMaxPlusOne('creature_template_locale', '`entry`'),
+        entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table('creature_template_locale').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -66,7 +60,7 @@ mixin _CreatureTemplateLocaleRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_template_locale'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -102,3 +96,5 @@ mixin _CreatureTemplateLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'creature_template_locale';

@@ -11,7 +11,6 @@ part 'scaling_stat_value_repository.g.dart';
 @FoxyFilter.text('charlevel')
 class ScalingStatValueRepository
     with RepositoryMixin, _ScalingStatValueRepositoryMixin {
-  static const _table = 'foxy.dbc_scaling_stat_values';
 
   @override
   Future<int> copyScalingStatValue(int key) async {

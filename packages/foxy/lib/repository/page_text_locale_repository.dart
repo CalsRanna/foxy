@@ -10,7 +10,6 @@ part 'page_text_locale_repository.g.dart';
 @FoxyRepository()
 class PageTextLocaleRepository
     with RepositoryMixin, _PageTextLocaleRepositoryMixin {
-  static const _table = 'page_text_locale';
   static const primaryKeyColumns = {'ID', 'locale'};
 
   Future<void> applyPageTextLocaleChanges({

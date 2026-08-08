@@ -11,7 +11,6 @@ part 'dbc_emote_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('command')
 class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
-  static const _table = 'foxy.dbc_emotes';
 
   Future<int> copyDbcEmote(int key) async {
     final source = await getDbcEmote(key);

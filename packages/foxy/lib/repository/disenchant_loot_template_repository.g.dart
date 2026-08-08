@@ -44,10 +44,7 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countDisenchantLootTemplates(int entry) async {
-    return laconic
-        .table('disenchant_loot_template')
-        .where('`Entry`', entry)
-        .count();
+    return laconic.table(_table).where('`Entry`', entry).count();
   }
 
   Future<DisenchantLootTemplateEntity> createDisenchantLootTemplate(
@@ -55,11 +52,7 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
   ) async {
     return DisenchantLootTemplateEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'disenchant_loot_template',
-        '`Item`',
-        where: {'`Entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`Item`', where: {'`Entry`': entry}),
     );
   }
 
@@ -67,10 +60,7 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
     DisenchantLootTemplateKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('disenchant_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'disenchant_loot_template record not found',
@@ -81,10 +71,7 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
   Future<DisenchantLootTemplateEntity?> getDisenchantLootTemplate(
     DisenchantLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('disenchant_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return DisenchantLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -92,7 +79,7 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
   Future<List<BriefDisenchantLootTemplateEntity>>
   getBriefDisenchantLootTemplates(int entry, {int page = 1}) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('disenchant_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -117,18 +104,18 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(disenchantLootTemplate);
     final json = prepareWriteJson(disenchantLootTemplate.toJson());
     try {
-      await laconic.table('disenchant_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = disenchantLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'disenchant_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': disenchantLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('disenchant_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -152,7 +139,7 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('disenchant_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -188,3 +175,5 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'disenchant_loot_template';

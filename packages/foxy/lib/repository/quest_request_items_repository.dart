@@ -9,7 +9,6 @@ part 'quest_request_items_repository.g.dart';
 @FoxyRepository()
 class QuestRequestItemsRepository
     with RepositoryMixin, _QuestRequestItemsRepositoryMixin {
-  static const _table = 'quest_request_items';
 
   Future<int> copyQuestRequestItems(int key) async {
     final source = await getQuestRequestItems(key);

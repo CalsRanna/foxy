@@ -42,31 +42,25 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
   Future<int> countGameObjectTemplates({
     GameObjectTemplateFilter? filter,
   }) async {
-    return _applyFilter(laconic.table('gameobject_template'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<GameObjectTemplateEntity> createGameObjectTemplate() async {
     return GameObjectTemplateEntity(
-      entry: await nextMaxPlusOne('gameobject_template', '`entry`'),
+      entry: await nextMaxPlusOne(_table, '`entry`'),
     );
   }
 
   Future<void> destroyGameObjectTemplate(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('gameobject_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('gameobject_template record not found');
     }
   }
 
   Future<GameObjectTemplateEntity?> getGameObjectTemplate(int key) async {
-    final results = await _whereKey(
-      laconic.table('gameobject_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectTemplateEntity.fromJson(results.first.toMap());
   }
@@ -76,7 +70,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     GameObjectTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('gameobject_template').select([
+    var builder = laconic.table(_table).select([
       '`entry`',
       '`type`',
       '`name`',
@@ -92,7 +86,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<GameObjectTemplateEntity>> getGameObjectTemplates() async {
-    var builder = laconic.table('gameobject_template').orderBy('`entry`');
+    var builder = laconic.table(_table).orderBy('`entry`');
     final results = await builder.get();
     return results
         .map((e) => GameObjectTemplateEntity.fromJson(e.toMap()))
@@ -110,14 +104,14 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(gameObjectTemplate);
     final json = prepareWriteJson(gameObjectTemplate.toJson());
     try {
-      await laconic.table('gameobject_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gameObjectTemplate.copyWith(
-        entry: await nextMaxPlusOne('gameobject_template', '`entry`'),
+        entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table('gameobject_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.entry;
@@ -140,7 +134,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('gameobject_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -183,3 +177,5 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
+
+const _table = 'gameobject_template';

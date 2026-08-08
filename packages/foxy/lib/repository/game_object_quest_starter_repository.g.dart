@@ -17,10 +17,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countGameObjectQuestStarters(int quest) async {
-    return laconic
-        .table('gameobject_queststarter')
-        .where('`quest`', quest)
-        .count();
+    return laconic.table(_table).where('`quest`', quest).count();
   }
 
   Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
@@ -28,11 +25,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
   ) async {
     return GameObjectQuestStarterEntity(
       quest: quest,
-      id: await nextMaxPlusOne(
-        'gameobject_queststarter',
-        '`id`',
-        where: {'`quest`': quest},
-      ),
+      id: await nextMaxPlusOne(_table, '`id`', where: {'`quest`': quest}),
     );
   }
 
@@ -40,10 +33,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
     GameObjectQuestStarterKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('gameobject_queststarter'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('gameobject_queststarter record not found');
     }
@@ -52,10 +42,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
   Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
     GameObjectQuestStarterKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('gameobject_queststarter'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectQuestStarterEntity.fromJson(results.first.toMap());
   }
@@ -63,10 +50,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
   Future<List<BriefGameObjectQuestStarterEntity>>
   getBriefGameObjectQuestStarters(int quest, {int page = 1}) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('gameobject_queststarter').select([
-      '`id`',
-      '`quest`',
-    ]);
+    var builder = laconic.table(_table).select(['`id`', '`quest`']);
     builder = builder.where('`quest`', quest);
     builder = builder.orderBy('`id`').orderBy('`quest`');
     builder = builder.limit(kPageSize).offset(offset);
@@ -82,18 +66,18 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
     await _beforeStore(gameObjectQuestStarter);
     final json = prepareWriteJson(gameObjectQuestStarter.toJson());
     try {
-      await laconic.table('gameobject_queststarter').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gameObjectQuestStarter.copyWith(
         id: await nextMaxPlusOne(
-          'gameobject_queststarter',
+          _table,
           '`id`',
           where: {'`quest`': gameObjectQuestStarter.quest},
         ),
       );
       try {
-        await laconic.table('gameobject_queststarter').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -117,7 +101,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('gameobject_queststarter'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -149,3 +133,5 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'gameobject_queststarter';

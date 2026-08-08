@@ -141,9 +141,7 @@ part 'codegen_sample_repository.g.dart';
 @FoxyRepository(CodegenSampleEntity)
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
-class CodegenSampleRepository with _CodegenSampleRepositoryMixin {
-  static const _table = 'foxy.codegen_sample';
-}
+class CodegenSampleRepository with _CodegenSampleRepositoryMixin {}
 ''';
 
 const _relationRepositorySource = r'''
@@ -156,9 +154,7 @@ part 'codegen_relation_repository.g.dart';
 // linkKey), so the generated surface is destroy/get/getXxxs only — no
 // create with `nextMaxPlusOne` on a String key.
 @FoxyRepository(CodegenRelationEntity)
-class CodegenRelationRepository with _CodegenRelationRepositoryMixin {
-  static const _table = 'codegen_relation';
-}
+class CodegenRelationRepository with _CodegenRelationRepositoryMixin {}
 ''';
 
 const _sampleListViewModelSource = r'''

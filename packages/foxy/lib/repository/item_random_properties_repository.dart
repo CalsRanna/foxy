@@ -17,7 +17,6 @@ class ItemRandomPropertiesRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _ItemRandomPropertiesRepositoryMixin {
-  static const _table = 'foxy.dbc_item_random_properties';
 
   @override
   String get dbcLocaleTableName => _table;

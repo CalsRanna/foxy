@@ -44,10 +44,7 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countProspectingLootTemplates(int entry) async {
-    return laconic
-        .table('prospecting_loot_template')
-        .where('`Entry`', entry)
-        .count();
+    return laconic.table(_table).where('`Entry`', entry).count();
   }
 
   Future<ProspectingLootTemplateEntity> createProspectingLootTemplate(
@@ -55,11 +52,7 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
   ) async {
     return ProspectingLootTemplateEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'prospecting_loot_template',
-        '`Item`',
-        where: {'`Entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`Item`', where: {'`Entry`': entry}),
     );
   }
 
@@ -67,10 +60,7 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     ProspectingLootTemplateKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('prospecting_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'prospecting_loot_template record not found',
@@ -81,10 +71,7 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
   Future<ProspectingLootTemplateEntity?> getProspectingLootTemplate(
     ProspectingLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('prospecting_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ProspectingLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -92,7 +79,7 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
   Future<List<BriefProspectingLootTemplateEntity>>
   getBriefProspectingLootTemplates(int entry, {int page = 1}) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('prospecting_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -117,18 +104,18 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(prospectingLootTemplate);
     final json = prepareWriteJson(prospectingLootTemplate.toJson());
     try {
-      await laconic.table('prospecting_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = prospectingLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'prospecting_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': prospectingLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('prospecting_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -152,7 +139,7 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('prospecting_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -188,3 +175,5 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'prospecting_loot_template';

@@ -27,20 +27,14 @@ final class SkillLineFilter {
 mixin _SkillLineRepositoryMixin on RepositoryMixin {
   Future<void> destroySkillLine(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_skill_line'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_skill_line record not found');
     }
   }
 
   Future<SkillLineEntity?> getSkillLine(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_skill_line'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SkillLineEntity.fromJson(results.first.toMap());
   }
@@ -54,14 +48,14 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
     await _beforeStore(skillLine);
     final json = prepareWriteJson(skillLine.toJson());
     try {
-      await laconic.table('foxy.dbc_skill_line').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = skillLine.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_skill_line', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_skill_line').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -84,7 +78,7 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_skill_line'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -111,3 +105,5 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_skill_line';

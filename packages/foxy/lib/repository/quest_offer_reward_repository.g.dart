@@ -5,20 +5,14 @@ part of 'quest_offer_reward_repository.dart';
 mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
   Future<void> destroyQuestOfferReward(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('quest_offer_reward'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('quest_offer_reward record not found');
     }
   }
 
   Future<QuestOfferRewardEntity?> getQuestOfferReward(int key) async {
-    final results = await _whereKey(
-      laconic.table('quest_offer_reward'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestOfferRewardEntity.fromJson(results.first.toMap());
   }
@@ -34,14 +28,14 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
     await _beforeStore(questOfferReward);
     final json = prepareWriteJson(questOfferReward.toJson());
     try {
-      await laconic.table('quest_offer_reward').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = questOfferReward.copyWith(
-        id: await nextMaxPlusOne('quest_offer_reward', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('quest_offer_reward').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -64,7 +58,7 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('quest_offer_reward'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -91,3 +85,5 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'quest_offer_reward';

@@ -27,10 +27,7 @@ final class GameObjectArtKitFilter {
 mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
   Future<void> destroyGameObjectArtKit(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_game_object_art_kit'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_game_object_art_kit record not found',
@@ -39,10 +36,7 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
   }
 
   Future<GameObjectArtKitEntity?> getGameObjectArtKit(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_game_object_art_kit'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectArtKitEntity.fromJson(results.first.toMap());
   }
@@ -58,14 +52,14 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
     await _beforeStore(gameObjectArtKit);
     final json = prepareWriteJson(gameObjectArtKit.toJson());
     try {
-      await laconic.table('foxy.dbc_game_object_art_kit').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gameObjectArtKit.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_game_object_art_kit', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_game_object_art_kit').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -90,7 +84,7 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_game_object_art_kit'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -121,3 +115,5 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_game_object_art_kit';

@@ -13,7 +13,6 @@ part 'dbc_faction_template_repository.g.dart';
 @FoxyFilter.text('name')
 class DbcFactionTemplateRepository
     with RepositoryMixin, _DbcFactionTemplateRepositoryMixin {
-  static const _table = 'foxy.dbc_faction_template';
   static const _factionTable = 'foxy.dbc_faction';
 
   Future<int> copyDbcFactionTemplate(int key) async {

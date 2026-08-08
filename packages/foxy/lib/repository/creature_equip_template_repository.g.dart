@@ -17,10 +17,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countCreatureEquipTemplates(int creatureID) async {
-    return laconic
-        .table('creature_equip_template')
-        .where('`CreatureID`', creatureID)
-        .count();
+    return laconic.table(_table).where('`CreatureID`', creatureID).count();
   }
 
   Future<CreatureEquipTemplateEntity> createCreatureEquipTemplate(
@@ -29,7 +26,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     return CreatureEquipTemplateEntity(
       creatureID: creatureID,
       id: await nextMaxPlusOne(
-        'creature_equip_template',
+        _table,
         '`ID`',
         where: {'`CreatureID`': creatureID},
       ),
@@ -40,10 +37,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     CreatureEquipTemplateKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_equip_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_equip_template record not found');
     }
@@ -52,10 +46,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
   Future<CreatureEquipTemplateEntity?> getCreatureEquipTemplate(
     CreatureEquipTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('creature_equip_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureEquipTemplateEntity.fromJson(results.first.toMap());
   }
@@ -65,7 +56,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('creature_equip_template').select([
+    var builder = laconic.table(_table).select([
       '`CreatureID`',
       '`ID`',
       '`ItemID1`',
@@ -88,18 +79,18 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureEquipTemplate);
     final json = prepareWriteJson(creatureEquipTemplate.toJson());
     try {
-      await laconic.table('creature_equip_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureEquipTemplate.copyWith(
         id: await nextMaxPlusOne(
-          'creature_equip_template',
+          _table,
           '`ID`',
           where: {'`CreatureID`': creatureEquipTemplate.creatureID},
         ),
       );
       try {
-        await laconic.table('creature_equip_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -123,7 +114,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_equip_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -155,3 +146,5 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'creature_equip_template';

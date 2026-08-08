@@ -27,20 +27,14 @@ final class CharTitleFilter {
 mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyCharTitle(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_char_titles'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_char_titles record not found');
     }
   }
 
   Future<CharTitleEntity?> getCharTitle(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_char_titles'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CharTitleEntity.fromJson(results.first.toMap());
   }
@@ -65,14 +59,14 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     await _beforeStore(charTitle);
     final json = prepareWriteJson(charTitle.toJson());
     try {
-      await laconic.table('foxy.dbc_char_titles').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = charTitle.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_char_titles', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_char_titles').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -95,7 +89,7 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_char_titles'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -122,3 +116,5 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_char_titles';

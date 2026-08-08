@@ -12,7 +12,6 @@ part 'disenchant_loot_template_repository.g.dart';
 @FoxyFilter.text('name')
 class DisenchantLootTemplateRepository
     with RepositoryMixin, _DisenchantLootTemplateRepositoryMixin {
-  static const _table = 'disenchant_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
   @override

@@ -45,24 +45,16 @@ mixin _SpellItemEnchantmentRepositoryMixin
   Future<int> countSpellItemEnchantments({
     SpellItemEnchantmentFilter? filter,
   }) async {
-    return _applyFilter(
-      laconic.table('foxy.dbc_spell_item_enchantment'),
-      filter,
-    ).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<SpellItemEnchantmentEntity> createSpellItemEnchantment() async {
-    return SpellItemEnchantmentEntity(
-      id: await nextMaxPlusOne('foxy.dbc_spell_item_enchantment', '`ID`'),
-    );
+    return SpellItemEnchantmentEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroySpellItemEnchantment(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_spell_item_enchantment'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_spell_item_enchantment record not found',
@@ -71,10 +63,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
   }
 
   Future<SpellItemEnchantmentEntity?> getSpellItemEnchantment(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_spell_item_enchantment'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellItemEnchantmentEntity.fromJson(results.first.toMap());
   }
@@ -84,7 +73,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
     SpellItemEnchantmentFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_spell_item_enchantment').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`Charges`',
       '`Effect0`',
@@ -102,9 +91,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
   }
 
   Future<List<SpellItemEnchantmentEntity>> getSpellItemEnchantments() async {
-    var builder = laconic
-        .table('foxy.dbc_spell_item_enchantment')
-        .orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results
         .map((e) => SpellItemEnchantmentEntity.fromJson(e.toMap()))
@@ -133,14 +120,14 @@ mixin _SpellItemEnchantmentRepositoryMixin
     await _beforeStore(spellItemEnchantment);
     final json = prepareWriteJson(spellItemEnchantment.toJson());
     try {
-      await laconic.table('foxy.dbc_spell_item_enchantment').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellItemEnchantment.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_spell_item_enchantment', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_spell_item_enchantment').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -165,7 +152,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_spell_item_enchantment'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -212,3 +199,5 @@ mixin _SpellItemEnchantmentRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_spell_item_enchantment';

@@ -12,7 +12,6 @@ part 'game_object_template_repository.g.dart';
 @FoxyFilter.text('name')
 class GameObjectTemplateRepository
     with RepositoryMixin, _GameObjectTemplateRepositoryMixin {
-  static const _table = 'gameobject_template';
 
   @override
   Future<int> copyGameObjectTemplate(int key) async {

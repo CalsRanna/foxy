@@ -30,10 +30,7 @@ final class ItemVisualEffectFilter {
 mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
   Future<void> destroyItemVisualEffect(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_item_visual_effects'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_item_visual_effects record not found',
@@ -42,10 +39,7 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
   }
 
   Future<ItemVisualEffectEntity?> getItemVisualEffect(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_item_visual_effects'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemVisualEffectEntity.fromJson(results.first.toMap());
   }
@@ -61,14 +55,14 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemVisualEffect);
     final json = prepareWriteJson(itemVisualEffect.toJson());
     try {
-      await laconic.table('foxy.dbc_item_visual_effects').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemVisualEffect.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_item_visual_effects', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_item_visual_effects').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -93,7 +87,7 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_item_visual_effects'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -124,3 +118,5 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_item_visual_effects';

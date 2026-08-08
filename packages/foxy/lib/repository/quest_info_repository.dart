@@ -14,7 +14,6 @@ part 'quest_info_repository.g.dart';
 @FoxyFilter.text('name', column: 'InfoName_lang_zhCN')
 class QuestInfoRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _QuestInfoRepositoryMixin {
-  static const _table = 'foxy.dbc_quest_info';
 
   @override
   String get dbcLocaleTableName => _table;

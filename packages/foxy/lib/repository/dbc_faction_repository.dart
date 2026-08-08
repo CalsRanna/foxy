@@ -14,7 +14,6 @@ part 'dbc_faction_repository.g.dart';
 @FoxyFilter.text('name')
 class DbcFactionRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _DbcFactionRepositoryMixin {
-  static const _table = 'foxy.dbc_faction';
 
   @override
   String get dbcLocaleTableName => _table;

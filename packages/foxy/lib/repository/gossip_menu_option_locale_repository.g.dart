@@ -7,10 +7,7 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     GossipMenuOptionLocaleKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('gossip_menu_option_locale'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'gossip_menu_option_locale record not found',
@@ -21,10 +18,7 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
   Future<GossipMenuOptionLocaleEntity?> getGossipMenuOptionLocale(
     GossipMenuOptionLocaleKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('gossip_menu_option_locale'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GossipMenuOptionLocaleEntity.fromJson(results.first.toMap());
   }
@@ -35,7 +29,7 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(gossipMenuOptionLocale);
     final json = prepareWriteJson(gossipMenuOptionLocale.toJson());
     try {
-      await laconic.table('gossip_menu_option_locale').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in gossip_menu_option_locale');
@@ -51,7 +45,7 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('gossip_menu_option_locale'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -88,3 +82,5 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'gossip_menu_option_locale';

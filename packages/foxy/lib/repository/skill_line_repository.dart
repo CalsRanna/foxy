@@ -11,7 +11,6 @@ part 'skill_line_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SkillLineRepository with RepositoryMixin, _SkillLineRepositoryMixin {
-  static const _table = 'foxy.dbc_skill_line';
 
   Future<int> copySkillLine(int key) async {
     final source = await getSkillLine(key);

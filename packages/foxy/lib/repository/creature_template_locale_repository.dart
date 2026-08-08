@@ -10,7 +10,6 @@ part 'creature_template_locale_repository.g.dart';
 @FoxyRepository()
 class CreatureTemplateLocaleRepository
     with RepositoryMixin, _CreatureTemplateLocaleRepositoryMixin {
-  static const _table = 'creature_template_locale';
   static const primaryKeyColumns = {'entry', 'locale'};
 
   Future<void> applyCreatureTemplateLocaleChanges({

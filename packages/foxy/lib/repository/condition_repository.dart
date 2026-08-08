@@ -13,7 +13,6 @@ class ConditionRepository with RepositoryMixin, _ConditionRepositoryMixin {
   // The generated query layer inlines the table-name literal (mixins cannot
   // access class statics); this only serves as a contract check.
   // ignore: unused_field
-  static const _table = 'conditions';
 
   /// Full 10-column primary key of acore_world.conditions
   static const pkColumns = [

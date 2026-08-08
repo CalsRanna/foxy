@@ -17,7 +17,6 @@ class MailTemplateRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _MailTemplateRepositoryMixin {
-  static const _table = 'foxy.dbc_mail_template';
 
   @override
   String get dbcLocaleTableName => _table;

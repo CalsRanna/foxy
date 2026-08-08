@@ -27,10 +27,7 @@ final class SpellItemEnchantmentConditionFilter {
 mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
   Future<void> destroySpellItemEnchantmentCondition(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_spell_item_enchantment_condition'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_spell_item_enchantment_condition record not found',
@@ -41,10 +38,7 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
   Future<SpellItemEnchantmentConditionEntity?> getSpellItemEnchantmentCondition(
     int key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_spell_item_enchantment_condition'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellItemEnchantmentConditionEntity.fromJson(results.first.toMap());
   }
@@ -60,21 +54,16 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellItemEnchantmentCondition);
     final json = prepareWriteJson(spellItemEnchantmentCondition.toJson());
     try {
-      await laconic.table('foxy.dbc_spell_item_enchantment_condition').insert([
-        json,
-      ]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellItemEnchantmentCondition.copyWith(
-        id: await nextMaxPlusOne(
-          'foxy.dbc_spell_item_enchantment_condition',
-          '`ID`',
-        ),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_spell_item_enchantment_condition').insert(
-          [prepareWriteJson(retried.toJson())],
-        );
+        await laconic.table(_table).insert([
+          prepareWriteJson(retried.toJson()),
+        ]);
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -97,7 +86,7 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_spell_item_enchantment_condition'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -130,3 +119,5 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_spell_item_enchantment_condition';

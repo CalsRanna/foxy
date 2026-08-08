@@ -40,32 +40,26 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countGossipMenus({GossipMenuFilter? filter}) async {
-    return _applyFilter(laconic.table('gossip_menu'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<GossipMenuEntity> createGossipMenu() async {
     return GossipMenuEntity(
-      menuId: await nextMaxPlusOne('gossip_menu', '`MenuID`'),
-      textId: await nextMaxPlusOne('gossip_menu', '`TextID`'),
+      menuId: await nextMaxPlusOne(_table, '`MenuID`'),
+      textId: await nextMaxPlusOne(_table, '`TextID`'),
     );
   }
 
   Future<void> destroyGossipMenu(GossipMenuKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('gossip_menu'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('gossip_menu record not found');
     }
   }
 
   Future<GossipMenuEntity?> getGossipMenu(GossipMenuKey key) async {
-    final results = await _whereKey(
-      laconic.table('gossip_menu'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GossipMenuEntity.fromJson(results.first.toMap());
   }
@@ -75,7 +69,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     GossipMenuFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('gossip_menu').select(['`MenuID`', '`TextID`']);
+    var builder = laconic.table(_table).select(['`MenuID`', '`TextID`']);
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('`MenuID`').orderBy('`TextID`');
     builder = builder.limit(kPageSize).offset(offset);
@@ -86,10 +80,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<GossipMenuEntity>> getGossipMenus() async {
-    var builder = laconic
-        .table('gossip_menu')
-        .orderBy('`MenuID`')
-        .orderBy('`TextID`');
+    var builder = laconic.table(_table).orderBy('`MenuID`').orderBy('`TextID`');
     final results = await builder.get();
     return results.map((e) => GossipMenuEntity.fromJson(e.toMap())).toList();
   }
@@ -98,7 +89,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     await _beforeStore(gossipMenu);
     final json = prepareWriteJson(gossipMenu.toJson());
     try {
-      await laconic.table('gossip_menu').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in gossip_menu');
@@ -114,7 +105,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('gossip_menu'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -134,7 +125,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
       builder = builder.where('`MenuID`', filter.menuId);
     }
     if (filter.text.isNotEmpty) {
-      builder = builder.where('`nt.text0_0`', filter.text);
+      builder = builder.where('`nt`.`text0_0`', filter.text);
     }
     return builder;
   }
@@ -155,3 +146,5 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'gossip_menu';

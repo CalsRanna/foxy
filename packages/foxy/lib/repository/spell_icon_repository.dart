@@ -11,7 +11,6 @@ part 'spell_icon_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SpellIconRepository with RepositoryMixin, _SpellIconRepositoryMixin {
-  static const _table = 'foxy.dbc_spell_icon';
 
   Future<int> copySpellIcon(int key) async {
     final source = await getSpellIcon(key);

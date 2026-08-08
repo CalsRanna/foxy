@@ -45,34 +45,28 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countSmartScripts({SmartScriptFilter? filter}) async {
-    return _applyFilter(laconic.table('smart_scripts'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<SmartScriptEntity> createSmartScript() async {
     return SmartScriptEntity(
-      entryOrGuid: await nextMaxPlusOne('smart_scripts', '`entryorguid`'),
-      sourceType: await nextMaxPlusOne('smart_scripts', '`source_type`'),
-      id: await nextMaxPlusOne('smart_scripts', '`id`'),
-      link: await nextMaxPlusOne('smart_scripts', '`link`'),
+      entryOrGuid: await nextMaxPlusOne(_table, '`entryorguid`'),
+      sourceType: await nextMaxPlusOne(_table, '`source_type`'),
+      id: await nextMaxPlusOne(_table, '`id`'),
+      link: await nextMaxPlusOne(_table, '`link`'),
     );
   }
 
   Future<void> destroySmartScript(SmartScriptKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('smart_scripts'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('smart_scripts record not found');
     }
   }
 
   Future<SmartScriptEntity?> getSmartScript(SmartScriptKey key) async {
-    final results = await _whereKey(
-      laconic.table('smart_scripts'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SmartScriptEntity.fromJson(results.first.toMap());
   }
@@ -82,7 +76,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     SmartScriptFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('smart_scripts').select([
+    var builder = laconic.table(_table).select([
       '`entryorguid`',
       '`source_type`',
       '`id`',
@@ -107,7 +101,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
 
   Future<List<SmartScriptEntity>> getSmartScripts() async {
     var builder = laconic
-        .table('smart_scripts')
+        .table(_table)
         .orderBy('`entryorguid`')
         .orderBy('`source_type`')
         .orderBy('`id`')
@@ -120,12 +114,12 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     await _beforeStore(smartScript);
     final json = prepareWriteJson(smartScript.toJson());
     try {
-      await laconic.table('smart_scripts').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = smartScript.copyWith(
         id: await nextMaxPlusOne(
-          'smart_scripts',
+          _table,
           '`id`',
           where: {
             '`entryorguid`': smartScript.entryOrGuid,
@@ -134,7 +128,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table('smart_scripts').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -156,7 +150,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('smart_scripts'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -199,3 +193,5 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'smart_scripts';

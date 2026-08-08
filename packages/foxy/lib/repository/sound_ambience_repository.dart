@@ -10,7 +10,6 @@ part 'sound_ambience_repository.g.dart';
 @FoxyFilter.text('id')
 class SoundAmbienceRepository
     with RepositoryMixin, _SoundAmbienceRepositoryMixin {
-  static const _table = 'foxy.dbc_sound_ambience';
 
   Future<int> copySoundAmbience(int key) async {
     final source = await getSoundAmbience(key);

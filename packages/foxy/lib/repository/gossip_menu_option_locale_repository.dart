@@ -11,7 +11,6 @@ part 'gossip_menu_option_locale_repository.g.dart';
 @FoxyRepository()
 class GossipMenuOptionLocaleRepository
     with RepositoryMixin, _GossipMenuOptionLocaleRepositoryMixin {
-  static const _table = 'gossip_menu_option_locale';
   static const primaryKeyColumns = {'MenuID', 'OptionID', 'Locale'};
 
   /// Applies locale-editor changes atomically: deletions, then updates, then

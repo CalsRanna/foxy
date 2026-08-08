@@ -10,7 +10,6 @@ part 'game_object_template_locale_repository.g.dart';
 @FoxyRepository()
 class GameObjectTemplateLocaleRepository
     with RepositoryMixin, _GameObjectTemplateLocaleRepositoryMixin {
-  static const _table = 'gameobject_template_locale';
   static const primaryKeyColumns = {'entry', 'locale'};
 
   Future<void> applyGameObjectTemplateLocaleChanges({

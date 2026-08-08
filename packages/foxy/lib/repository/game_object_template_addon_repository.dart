@@ -9,7 +9,6 @@ part 'game_object_template_addon_repository.g.dart';
 @FoxyRepository()
 class GameObjectTemplateAddonRepository
     with RepositoryMixin, _GameObjectTemplateAddonRepositoryMixin {
-  static const _table = 'gameobject_template_addon';
 
   Future<void> copyGameObjectTemplateAddon(int key) {
     throw CopyNotSupportedException(

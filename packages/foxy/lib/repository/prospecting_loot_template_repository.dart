@@ -12,7 +12,6 @@ part 'prospecting_loot_template_repository.g.dart';
 @FoxyFilter.text('name')
 class ProspectingLootTemplateRepository
     with RepositoryMixin, _ProspectingLootTemplateRepositoryMixin {
-  static const _table = 'prospecting_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
   @override

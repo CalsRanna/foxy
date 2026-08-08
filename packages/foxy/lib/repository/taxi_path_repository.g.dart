@@ -23,20 +23,14 @@ final class TaxiPathFilter {
 mixin _TaxiPathRepositoryMixin on RepositoryMixin {
   Future<void> destroyTaxiPath(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_taxi_path'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_taxi_path record not found');
     }
   }
 
   Future<TaxiPathEntity?> getTaxiPath(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_taxi_path'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return TaxiPathEntity.fromJson(results.first.toMap());
   }
@@ -50,14 +44,14 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
     await _beforeStore(taxiPath);
     final json = prepareWriteJson(taxiPath.toJson());
     try {
-      await laconic.table('foxy.dbc_taxi_path').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = taxiPath.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_taxi_path', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_taxi_path').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -77,7 +71,7 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_taxi_path'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -101,3 +95,5 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_taxi_path';

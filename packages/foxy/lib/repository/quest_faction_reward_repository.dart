@@ -13,7 +13,6 @@ class QuestFactionRewardRepository
   // The generated query layer inlines the table-name literal (mixins cannot
   // access class statics); this only serves as a contract check.
   // ignore: unused_field
-  static const _table = 'foxy.dbc_quest_faction_reward';
 
   @override
   Future<QuestFactionRewardEntity> createQuestFactionReward() async {

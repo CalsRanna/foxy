@@ -37,24 +37,16 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
   Future<int> countQuestFactionRewards({
     QuestFactionRewardFilter? filter,
   }) async {
-    return _applyFilter(
-      laconic.table('foxy.dbc_quest_faction_reward'),
-      filter,
-    ).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<QuestFactionRewardEntity> createQuestFactionReward() async {
-    return QuestFactionRewardEntity(
-      id: await nextMaxPlusOne('foxy.dbc_quest_faction_reward', '`ID`'),
-    );
+    return QuestFactionRewardEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroyQuestFactionReward(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_quest_faction_reward'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_quest_faction_reward record not found',
@@ -63,10 +55,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
   }
 
   Future<QuestFactionRewardEntity?> getQuestFactionReward(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_quest_faction_reward'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestFactionRewardEntity.fromJson(results.first.toMap());
   }
@@ -76,7 +65,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     QuestFactionRewardFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_quest_faction_reward').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`Difficulty0`',
       '`Difficulty1`',
@@ -99,9 +88,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<QuestFactionRewardEntity>> getQuestFactionRewards() async {
-    var builder = laconic
-        .table('foxy.dbc_quest_faction_reward')
-        .orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results
         .map((e) => QuestFactionRewardEntity.fromJson(e.toMap()))
@@ -119,14 +106,14 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     await _beforeStore(questFactionReward);
     final json = prepareWriteJson(questFactionReward.toJson());
     try {
-      await laconic.table('foxy.dbc_quest_faction_reward').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = questFactionReward.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_quest_faction_reward', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_quest_faction_reward').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -151,7 +138,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_quest_faction_reward'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -195,3 +182,5 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_quest_faction_reward';

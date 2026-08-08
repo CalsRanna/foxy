@@ -164,9 +164,9 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 2. **`selects` / `flags` / `groups` / `nullable` / `exclude` 互斥**:一个字段只能属于一个例外集合(FormReader 校验)。这是刻意约束,防止同一个字段被两种控制器语义解释。
 3. **`@FoxyLinkedListViewModel` 只支持单关联键**:复合关联键(如 `player_create_info` 按 `(race, class)`)保持手写。扩展成支持复合键需要动 Reader(linkKey 读取)+ Emitter(`_linkParams` / `_linkWheres`)+ 命名约定,收益是消掉一批手写文件,代价是生成复杂度上升——按需取舍。
 4. **`@FoxyListViewModel` 只支持 `@FoxyFilter.text`**:筛选类型目前只有文本;扩展为支持 integer/decimal/boolean 需要同步改 `ListReader._readFilterFields`(目前显式拒绝非 text)与 `ListEmitter`(controller 类型推断),以及 `_applyFilter` 的「与默认值不等才生效」语义。
-5. **Repository 的 `_table` 必须与 `@FoxyFullEntity.table` 一致**:生成器校验是「文本正则」而非「符号解析」,所以 `_table` 声明必须保持 `static const _table = '...'` 的单行形式(不能用其它写法)。
-6. **Entity 的 `fromJson` factory 必须是指定委托形式**:同样由正则校验,`=> _XxxEntityMixin.fromJson(json)` 之外的形式(如加中间转换)会报错。
-7. **正则校验手写源码**:Entity/Repository/Form/List 的「mixin 是否混入 / part 是否存在」靠源码正则,而非 AST 解析(除了 FormReader 的 with 列表是 AST 解析的)。所以手写格式要保守——不要在同一行写多余东西干扰正则。
+5. **Repository 不得手写 `_table`**:表名单一来源在 Entity 注解,生成 part 产出 `const _table`;手写类再声明同名成员会被构建期拒绝(`Remove static const _table`)。表名只从 `@FoxyFullEntity.table`(或类名推导)来。
+6. **Entity 的 `fromJson` factory 必须是指定委托形式**:由 AST 校验,`=> _XxxEntityMixin.fromJson(json)` 或等价块体 `{ return _XxxEntityMixin.fromJson(json); }` 之外的形式(如加中间转换)会报错。
+7. **结构校验基于语法级 AST**(`source_shape.dart` 的 `parseString` 助手):mixin 混入与顺序、part 声明、成员声明、factory 委托都是 AST 检查,对格式不敏感(跨行、引号、块体均可),与 `.g.dart` 是否已生成无关。跨文件「注解存在性」探测(如 List ViewModel 是否存在)仍是文本检查。
 
 ## 7. 扩展路线图(按收益排序)
 

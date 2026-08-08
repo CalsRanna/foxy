@@ -10,7 +10,6 @@ part 'talent_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('spell', column: 'SpellRank0')
 class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
-  static const _table = 'foxy.dbc_talent';
 
   @override
   Future<int> copyTalent(int key) async {

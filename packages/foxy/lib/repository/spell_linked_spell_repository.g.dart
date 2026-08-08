@@ -21,10 +21,7 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countSpellLinkedSpells(int spellTrigger) async {
-    return laconic
-        .table('spell_linked_spell')
-        .where('`spell_trigger`', spellTrigger)
-        .count();
+    return laconic.table(_table).where('`spell_trigger`', spellTrigger).count();
   }
 
   Future<SpellLinkedSpellEntity> createSpellLinkedSpell(
@@ -33,12 +30,12 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     return SpellLinkedSpellEntity(
       spellTrigger: spellTrigger,
       spellEffect: await nextMaxPlusOne(
-        'spell_linked_spell',
+        _table,
         '`spell_effect`',
         where: {'`spell_trigger`': spellTrigger},
       ),
       type: await nextMaxPlusOne(
-        'spell_linked_spell',
+        _table,
         '`type`',
         where: {'`spell_trigger`': spellTrigger},
       ),
@@ -47,10 +44,7 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySpellLinkedSpell(SpellLinkedSpellKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('spell_linked_spell'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_linked_spell record not found');
     }
@@ -59,10 +53,7 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
   Future<SpellLinkedSpellEntity?> getSpellLinkedSpell(
     SpellLinkedSpellKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('spell_linked_spell'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellLinkedSpellEntity.fromJson(results.first.toMap());
   }
@@ -72,7 +63,7 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('spell_linked_spell').select([
+    var builder = laconic.table(_table).select([
       '`spell_trigger`',
       '`spell_effect`',
       '`type`',
@@ -96,7 +87,7 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellLinkedSpell);
     final json = prepareWriteJson(spellLinkedSpell.toJson());
     try {
-      await laconic.table('spell_linked_spell').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in spell_linked_spell');
@@ -112,7 +103,7 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('spell_linked_spell'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -143,3 +134,5 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'spell_linked_spell';

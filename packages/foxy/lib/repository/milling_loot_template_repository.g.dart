@@ -42,29 +42,19 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countMillingLootTemplates(int entry) async {
-    return laconic
-        .table('milling_loot_template')
-        .where('`Entry`', entry)
-        .count();
+    return laconic.table(_table).where('`Entry`', entry).count();
   }
 
   Future<MillingLootTemplateEntity> createMillingLootTemplate(int entry) async {
     return MillingLootTemplateEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'milling_loot_template',
-        '`Item`',
-        where: {'`Entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`Item`', where: {'`Entry`': entry}),
     );
   }
 
   Future<void> destroyMillingLootTemplate(MillingLootTemplateKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('milling_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('milling_loot_template record not found');
     }
@@ -73,10 +63,7 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
   Future<MillingLootTemplateEntity?> getMillingLootTemplate(
     MillingLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('milling_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return MillingLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -86,7 +73,7 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('milling_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -111,18 +98,18 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(millingLootTemplate);
     final json = prepareWriteJson(millingLootTemplate.toJson());
     try {
-      await laconic.table('milling_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = millingLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'milling_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': millingLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('milling_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -144,7 +131,7 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('milling_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -176,3 +163,5 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'milling_loot_template';

@@ -23,20 +23,14 @@ final class CreatureModelInfoFilter {
 mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureModelInfo(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('creature_model_info'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_model_info record not found');
     }
   }
 
   Future<CreatureModelInfoEntity?> getCreatureModelInfo(int key) async {
-    final results = await _whereKey(
-      laconic.table('creature_model_info'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureModelInfoEntity.fromJson(results.first.toMap());
   }
@@ -52,14 +46,14 @@ mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureModelInfo);
     final json = prepareWriteJson(creatureModelInfo.toJson());
     try {
-      await laconic.table('creature_model_info').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureModelInfo.copyWith(
-        displayId: await nextMaxPlusOne('creature_model_info', '`DisplayID`'),
+        displayId: await nextMaxPlusOne(_table, '`DisplayID`'),
       );
       try {
-        await laconic.table('creature_model_info').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.displayId;
@@ -82,7 +76,7 @@ mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('creature_model_info'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -109,3 +103,5 @@ mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`DisplayID`', key);
   }
 }
+
+const _table = 'creature_model_info';

@@ -17,7 +17,6 @@ class CurrencyCategoryRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _CurrencyCategoryRepositoryMixin {
-  static const _table = 'foxy.dbc_currency_category';
 
   @override
   String get dbcLocaleTableName => _table;

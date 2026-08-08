@@ -13,7 +13,6 @@ part 'item_template_repository.g.dart';
 @FoxyFilter.text('description')
 class ItemTemplateRepository
     with RepositoryMixin, _ItemTemplateRepositoryMixin {
-  static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
 
   @override

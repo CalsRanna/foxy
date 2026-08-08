@@ -44,10 +44,7 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countPickpocketingLootTemplates(int entry) async {
-    return laconic
-        .table('pickpocketing_loot_template')
-        .where('`Entry`', entry)
-        .count();
+    return laconic.table(_table).where('`Entry`', entry).count();
   }
 
   Future<PickpocketingLootTemplateEntity> createPickpocketingLootTemplate(
@@ -55,11 +52,7 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
   ) async {
     return PickpocketingLootTemplateEntity(
       entry: entry,
-      item: await nextMaxPlusOne(
-        'pickpocketing_loot_template',
-        '`Item`',
-        where: {'`Entry`': entry},
-      ),
+      item: await nextMaxPlusOne(_table, '`Item`', where: {'`Entry`': entry}),
     );
   }
 
@@ -67,10 +60,7 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     PickpocketingLootTemplateKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('pickpocketing_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'pickpocketing_loot_template record not found',
@@ -81,10 +71,7 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
   Future<PickpocketingLootTemplateEntity?> getPickpocketingLootTemplate(
     PickpocketingLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('pickpocketing_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PickpocketingLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -92,7 +79,7 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
   Future<List<BriefPickpocketingLootTemplateEntity>>
   getBriefPickpocketingLootTemplates(int entry, {int page = 1}) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('pickpocketing_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -117,18 +104,18 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(pickpocketingLootTemplate);
     final json = prepareWriteJson(pickpocketingLootTemplate.toJson());
     try {
-      await laconic.table('pickpocketing_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = pickpocketingLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'pickpocketing_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': pickpocketingLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('pickpocketing_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -152,7 +139,7 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('pickpocketing_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -191,3 +178,5 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'pickpocketing_loot_template';

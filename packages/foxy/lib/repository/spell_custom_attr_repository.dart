@@ -9,7 +9,6 @@ part 'spell_custom_attr_repository.g.dart';
 @FoxyRepository()
 class SpellCustomAttrRepository
     with RepositoryMixin, _SpellCustomAttrRepositoryMixin {
-  static const _table = 'spell_custom_attr';
 
   Future<void> copySpellCustomAttr(int key) async {
     throw CopyNotSupportedException(

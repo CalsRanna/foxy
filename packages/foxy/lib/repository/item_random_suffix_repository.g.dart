@@ -28,10 +28,7 @@ mixin _ItemRandomSuffixRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyItemRandomSuffix(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_item_random_suffix'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_item_random_suffix record not found',
@@ -40,10 +37,7 @@ mixin _ItemRandomSuffixRepositoryMixin
   }
 
   Future<ItemRandomSuffixEntity?> getItemRandomSuffix(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_item_random_suffix'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemRandomSuffixEntity.fromJson(results.first.toMap());
   }
@@ -70,14 +64,14 @@ mixin _ItemRandomSuffixRepositoryMixin
     await _beforeStore(itemRandomSuffix);
     final json = prepareWriteJson(itemRandomSuffix.toJson());
     try {
-      await laconic.table('foxy.dbc_item_random_suffix').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemRandomSuffix.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_item_random_suffix', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_item_random_suffix').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -102,7 +96,7 @@ mixin _ItemRandomSuffixRepositoryMixin
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_item_random_suffix'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -133,3 +127,5 @@ mixin _ItemRandomSuffixRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_item_random_suffix';

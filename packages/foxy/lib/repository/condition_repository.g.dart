@@ -62,46 +62,40 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countConditions({ConditionFilter? filter}) async {
-    return _applyFilter(laconic.table('conditions'), filter).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<ConditionEntity> createCondition() async {
     return ConditionEntity(
       sourceTypeOrReferenceId: await nextMaxPlusOne(
-        'conditions',
+        _table,
         '`SourceTypeOrReferenceId`',
       ),
-      sourceGroup: await nextMaxPlusOne('conditions', '`SourceGroup`'),
-      sourceEntry: await nextMaxPlusOne('conditions', '`SourceEntry`'),
-      sourceId: await nextMaxPlusOne('conditions', '`SourceId`'),
-      elseGroup: await nextMaxPlusOne('conditions', '`ElseGroup`'),
+      sourceGroup: await nextMaxPlusOne(_table, '`SourceGroup`'),
+      sourceEntry: await nextMaxPlusOne(_table, '`SourceEntry`'),
+      sourceId: await nextMaxPlusOne(_table, '`SourceId`'),
+      elseGroup: await nextMaxPlusOne(_table, '`ElseGroup`'),
       conditionTypeOrReference: await nextMaxPlusOne(
-        'conditions',
+        _table,
         '`ConditionTypeOrReference`',
       ),
-      conditionTarget: await nextMaxPlusOne('conditions', '`ConditionTarget`'),
-      conditionValue1: await nextMaxPlusOne('conditions', '`ConditionValue1`'),
-      conditionValue2: await nextMaxPlusOne('conditions', '`ConditionValue2`'),
-      conditionValue3: await nextMaxPlusOne('conditions', '`ConditionValue3`'),
+      conditionTarget: await nextMaxPlusOne(_table, '`ConditionTarget`'),
+      conditionValue1: await nextMaxPlusOne(_table, '`ConditionValue1`'),
+      conditionValue2: await nextMaxPlusOne(_table, '`ConditionValue2`'),
+      conditionValue3: await nextMaxPlusOne(_table, '`ConditionValue3`'),
     );
   }
 
   Future<void> destroyCondition(ConditionKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('conditions'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('conditions record not found');
     }
   }
 
   Future<ConditionEntity?> getCondition(ConditionKey key) async {
-    final results = await _whereKey(
-      laconic.table('conditions'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ConditionEntity.fromJson(results.first.toMap());
   }
@@ -111,7 +105,7 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     ConditionFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('conditions').select([
+    var builder = laconic.table(_table).select([
       '`SourceTypeOrReferenceId`',
       '`SourceGroup`',
       '`SourceEntry`',
@@ -145,7 +139,7 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
 
   Future<List<ConditionEntity>> getConditions() async {
     var builder = laconic
-        .table('conditions')
+        .table(_table)
         .orderBy('`SourceTypeOrReferenceId`')
         .orderBy('`SourceGroup`')
         .orderBy('`SourceEntry`')
@@ -164,7 +158,7 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     await _beforeStore(condition);
     final json = prepareWriteJson(condition.toJson());
     try {
-      await laconic.table('conditions').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in conditions');
@@ -180,7 +174,7 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('conditions'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -238,3 +232,5 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'conditions';

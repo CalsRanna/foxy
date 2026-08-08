@@ -10,7 +10,6 @@ part 'creature_model_info_repository.g.dart';
 @FoxyFilter.text('id')
 class CreatureModelInfoRepository
     with RepositoryMixin, _CreatureModelInfoRepositoryMixin {
-  static const _table = 'creature_model_info';
 
   Future<int> copyCreatureModelInfo(int key) async {
     final source = await getCreatureModelInfo(key);

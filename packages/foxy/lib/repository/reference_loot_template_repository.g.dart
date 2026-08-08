@@ -44,16 +44,13 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
   Future<int> countReferenceLootTemplates({
     ReferenceLootTemplateFilter? filter,
   }) async {
-    return _applyFilter(
-      laconic.table('reference_loot_template'),
-      filter,
-    ).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<ReferenceLootTemplateEntity> createReferenceLootTemplate() async {
     return ReferenceLootTemplateEntity(
-      entry: await nextMaxPlusOne('reference_loot_template', '`Entry`'),
-      item: await nextMaxPlusOne('reference_loot_template', '`Item`'),
+      entry: await nextMaxPlusOne(_table, '`Entry`'),
+      item: await nextMaxPlusOne(_table, '`Item`'),
     );
   }
 
@@ -61,10 +58,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     ReferenceLootTemplateKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('reference_loot_template'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('reference_loot_template record not found');
     }
@@ -73,10 +67,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
   Future<ReferenceLootTemplateEntity?> getReferenceLootTemplate(
     ReferenceLootTemplateKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('reference_loot_template'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ReferenceLootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -87,7 +78,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     ReferenceLootTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('reference_loot_template').select([
+    var builder = laconic.table(_table).select([
       '`Entry`',
       '`Item`',
       '`Reference`',
@@ -107,10 +98,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<ReferenceLootTemplateEntity>> getReferenceLootTemplates() async {
-    var builder = laconic
-        .table('reference_loot_template')
-        .orderBy('`Entry`')
-        .orderBy('`Item`');
+    var builder = laconic.table(_table).orderBy('`Entry`').orderBy('`Item`');
     final results = await builder.get();
     return results
         .map((e) => ReferenceLootTemplateEntity.fromJson(e.toMap()))
@@ -123,18 +111,18 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(referenceLootTemplate);
     final json = prepareWriteJson(referenceLootTemplate.toJson());
     try {
-      await laconic.table('reference_loot_template').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = referenceLootTemplate.copyWith(
         item: await nextMaxPlusOne(
-          'reference_loot_template',
+          _table,
           '`Item`',
           where: {'`Entry`': referenceLootTemplate.entry},
         ),
       );
       try {
-        await laconic.table('reference_loot_template').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -158,7 +146,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('reference_loot_template'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -181,7 +169,7 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
       builder = builder.where('`Entry`', filter.entry);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('`it.name`', filter.name);
+      builder = builder.where('`it`.`name`', filter.name);
     }
     return builder;
   }
@@ -204,3 +192,5 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'reference_loot_template';

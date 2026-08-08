@@ -12,7 +12,6 @@ part 'page_text_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('text')
 class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
-  static const _table = 'page_text';
 
   static const _localeTable = 'page_text_locale';
 

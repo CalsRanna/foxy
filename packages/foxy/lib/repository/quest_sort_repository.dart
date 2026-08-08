@@ -14,7 +14,6 @@ part 'quest_sort_repository.g.dart';
 @FoxyFilter.text('name', column: 'SortName_lang_zhCN')
 class QuestSortRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _QuestSortRepositoryMixin {
-  static const _table = 'foxy.dbc_quest_sort';
 
   @override
   String get dbcLocaleTableName => _table;

@@ -9,7 +9,6 @@ part 'gossip_menu_option_repository.g.dart';
 @FoxyRepository(linkKey: ['menuId'])
 class GossipMenuOptionRepository
     with RepositoryMixin, _GossipMenuOptionRepositoryMixin {
-  static const _table = 'gossip_menu_option';
   static const _localeTable = 'gossip_menu_option_locale';
   static const primaryKeyColumns = {'MenuID', 'OptionID'};
 

@@ -12,7 +12,6 @@ part 'game_object_loot_template_repository.g.dart';
 @FoxyFilter.text('name')
 class GameObjectLootTemplateRepository
     with RepositoryMixin, _GameObjectLootTemplateRepositoryMixin {
-  static const _table = 'gameobject_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
   @override

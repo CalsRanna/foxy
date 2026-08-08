@@ -10,7 +10,6 @@ part 'dbc_item_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.boolean('handEquippableOnly')
 class DbcItemRepository with RepositoryMixin, _DbcItemRepositoryMixin {
-  static const _table = 'foxy.dbc_item';
   static const handEquippableInventoryTypes = [
     13,
     14,

@@ -35,24 +35,16 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
   }
 
   Future<int> countItemExtendedCosts({ItemExtendedCostFilter? filter}) async {
-    return _applyFilter(
-      laconic.table('foxy.dbc_item_extended_cost'),
-      filter,
-    ).count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<ItemExtendedCostEntity> createItemExtendedCost() async {
-    return ItemExtendedCostEntity(
-      id: await nextMaxPlusOne('foxy.dbc_item_extended_cost', '`ID`'),
-    );
+    return ItemExtendedCostEntity(id: await nextMaxPlusOne(_table, '`ID`'));
   }
 
   Future<void> destroyItemExtendedCost(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_item_extended_cost'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_item_extended_cost record not found',
@@ -61,10 +53,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
   }
 
   Future<ItemExtendedCostEntity?> getItemExtendedCost(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_item_extended_cost'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemExtendedCostEntity.fromJson(results.first.toMap());
   }
@@ -74,7 +63,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     ItemExtendedCostFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('foxy.dbc_item_extended_cost').select([
+    var builder = laconic.table(_table).select([
       '`ID`',
       '`HonorPoints`',
       '`ArenaPoints`',
@@ -100,7 +89,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
   }
 
   Future<List<ItemExtendedCostEntity>> getItemExtendedCosts() async {
-    var builder = laconic.table('foxy.dbc_item_extended_cost').orderBy('`ID`');
+    var builder = laconic.table(_table).orderBy('`ID`');
     final results = await builder.get();
     return results
         .map((e) => ItemExtendedCostEntity.fromJson(e.toMap()))
@@ -118,14 +107,14 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemExtendedCost);
     final json = prepareWriteJson(itemExtendedCost.toJson());
     try {
-      await laconic.table('foxy.dbc_item_extended_cost').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemExtendedCost.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_item_extended_cost', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_item_extended_cost').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -150,7 +139,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_item_extended_cost'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -192,3 +181,5 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_item_extended_cost';

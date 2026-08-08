@@ -12,7 +12,6 @@ part 'milling_loot_template_repository.g.dart';
 @FoxyFilter.text('name')
 class MillingLootTemplateRepository
     with RepositoryMixin, _MillingLootTemplateRepositoryMixin {
-  static const _table = 'milling_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
   @override

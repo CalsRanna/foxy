@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages, deprecated_member_use, experimental_member_use
 
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -11,6 +12,7 @@ import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
 import 'package:foxy_generator/src/repository_filter_reader.dart';
 import 'package:foxy_generator/src/repository_model.dart';
+import 'package:foxy_generator/src/source_shape.dart';
 
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyBriefEntity',
@@ -26,7 +28,9 @@ const _fullFieldChecker = TypeChecker.fromUrl(
 );
 
 final class RepositoryReader {
-  const RepositoryReader();
+  final SourceShape sourceShape;
+
+  const RepositoryReader({this.sourceShape = const SourceShape()});
 
   Future<RepositoryGenerationModel> read(
     Element element,
@@ -286,40 +290,97 @@ final class RepositoryReader {
       listViewModelPresent,
     );
 
-    final source = await buildStep.readAsString(buildStep.inputId);
-    final repositoryTable = RegExp(
-      r'''static\s+const\s+_table\s*=\s*['"]([^'"]+)['"]\s*;''',
-    ).firstMatch(source)?.group(1);
-    if (repositoryTable != table) {
+    final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
+    final unit = await sourceShape.parseInput(buildStep, element);
+    final cls = sourceShape.classDeclaration(unit, repositoryClassName);
+    if (cls == null) {
       _fail(
-        "$repositoryClassName._table does not match $entityClassName's "
-            'physical table: ${repositoryTable ?? 'undeclared'} != $table.',
+        '$repositoryClassName is not declared in the current file.',
         element,
-        'Make Repository._table exactly match @FoxyFullEntity.table.',
+        'Declare the Repository class in this file.',
       );
     }
-    final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
-    if (!source.contains("part '$partName';") &&
-        !source.contains('part "$partName";')) {
+    if (!sourceShape.hasPartDirective(unit, partName)) {
       _fail(
         '$repositoryClassName is missing part \'$partName\';.',
         element,
         'Declare the generated part after the Repository imports.',
       );
     }
+    // The table name is a single source of truth on the Entity annotation
+    // (@FoxyFullEntity.table or the class-name derivation); the generated
+    // part declares `const _table`. A hand-written `_table` would silently
+    // duplicate — and could drift from — that source.
+    if (sourceShape.declaresMember(cls, '_table')) {
+      _fail(
+        '$repositoryClassName hand-writes _table; the table name is '
+            'generated from $entityClassName\'s @FoxyFullEntity.table.',
+        element,
+        'Remove static const _table — the generated part declares '
+            'const _table.',
+      );
+    }
     // Locale-helper delegates need DbcLocaleRepositoryMixin's
     // loadDbcLocaleField/storeDbcLocaleField and dbcLocaleTableName.
     final localeHelpersEnabled =
-        RegExp(r'\bDbcLocaleRepositoryMixin\b').hasMatch(source) &&
-        RegExp(r'\bdbcLocaleTableName\b').hasMatch(source);
+        sourceShape.withClauseTypeNames(cls).contains(
+              'DbcLocaleRepositoryMixin',
+            ) &&
+        sourceShape.declaresMember(cls, 'dbcLocaleTableName');
     final mixinName = '_${repositoryClassName}Mixin';
-    if (!RegExp(
-      'class\\s+$repositoryClassName\\s+with\\s+[^\\{;]*\\b$mixinName\\b',
-    ).hasMatch(source)) {
+    if (!sourceShape.withClauseTypeNames(cls).contains(mixinName)) {
       _fail(
         '$repositoryClassName must mix in $mixinName.',
         element,
         "Append $mixinName to the end of the Repository's with list.",
+      );
+    }
+
+    // Query-layer guardrails: the generated query layer stays the full
+    // baseline, but the generator cannot express JOINs, so when a filter
+    // column or a Brief projection field lives on a joined table the
+    // hand-written class must override the affected query methods. Without
+    // the override the generated count/getBrief would reference columns
+    // that do not exist on the base table, failing at runtime.
+    final dottedFilterColumns =
+        filterFields.where((field) => field.column.contains('.')).toList();
+    final classLevelBriefFields = _briefFieldChecker
+        .annotationsOf(entityElement)
+        .where((value) => ConstantReader(value).peek('name')?.stringValue != null)
+        .length;
+    // The main-table count branch applies the filter through _applyFilter;
+    // the linkKey branch filters by link keys only, so a dotted filter
+    // column only breaks the query layer of main-table repositories.
+    if (listViewModelPresent &&
+        linkKeyFields.isEmpty &&
+        dottedFilterColumns.isNotEmpty) {
+      _requireHandWrittenQuery(
+        cls,
+        element,
+        'count${pluralize(baseName)}',
+        'filter columns on joined tables (e.g. '
+            "${dottedFilterColumns.first.column}) require JOINs the "
+            'generator cannot infer',
+      );
+    }
+    if (listViewModelPresent && dottedFilterColumns.isNotEmpty) {
+      _requireHandWrittenQuery(
+        cls,
+        element,
+        'getBrief${pluralize(baseName)}',
+        'filter columns on joined tables (e.g. '
+            "${dottedFilterColumns.first.column}) require JOINs the "
+            'generator cannot infer',
+      );
+    }
+    if (queryLayerEnabled && classLevelBriefFields > 0) {
+      _requireHandWrittenQuery(
+        cls,
+        element,
+        'getBrief${pluralize(baseName)}',
+        'Brief projection fields declared via @FoxyBriefField.text/'
+            'integer/decimal/boolean are aliases of JOINed tables the '
+            'generator cannot infer',
       );
     }
 
@@ -398,6 +459,24 @@ final class RepositoryReader {
       queryLayerEnabled: queryLayerEnabled,
       repositoryClassName: repositoryClassName,
       table: table,
+    );
+  }
+
+  /// Requires the hand-written class to declare [methodName] itself;
+  /// otherwise the generated query layer would be the only implementation
+  /// and could not express [reason] (joined-table columns).
+  void _requireHandWrittenQuery(
+    ClassDeclaration cls,
+    Element element,
+    String methodName,
+    String reason,
+  ) {
+    if (sourceShape.declaresMember(cls, methodName)) return;
+    _fail(
+      '$methodName must be hand-written in the Repository class: $reason.',
+      element,
+      'Declare $methodName (with its JOINs) in the Repository class; the '
+          'generated query layer cannot express $reason.',
     );
   }
 

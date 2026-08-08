@@ -10,7 +10,6 @@ part 'cinematic_sequence_repository.g.dart';
 @FoxyFilter.text('id')
 class CinematicSequenceRepository
     with RepositoryMixin, _CinematicSequenceRepositoryMixin {
-  static const _table = 'foxy.dbc_cinematic_sequences';
 
   Future<int> copyCinematicSequence(int key) async {
     final source = await getCinematicSequence(key);

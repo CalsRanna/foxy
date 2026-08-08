@@ -23,20 +23,14 @@ final class ItemVisualsFilter {
 mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
   Future<void> destroyItemVisuals(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_item_visuals'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_item_visuals record not found');
     }
   }
 
   Future<ItemVisualsEntity?> getItemVisuals(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_item_visuals'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemVisualsEntity.fromJson(results.first.toMap());
   }
@@ -50,14 +44,14 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemVisuals);
     final json = prepareWriteJson(itemVisuals.toJson());
     try {
-      await laconic.table('foxy.dbc_item_visuals').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemVisuals.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_item_visuals', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_item_visuals').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -80,7 +74,7 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_item_visuals'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -107,3 +101,5 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_item_visuals';

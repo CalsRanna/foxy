@@ -8,7 +8,6 @@ part 'spell_rank_repository.g.dart';
 
 @FoxyRepository(linkKey: ['firstSpellId'])
 class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
-  static const _table = 'spell_ranks';
 
   @override
   Future<SpellRankKey> copySpellRank(SpellRankKey key) async {

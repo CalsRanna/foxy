@@ -27,10 +27,7 @@ final class ItemDisplayInfoFilter {
 mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
   Future<void> destroyItemDisplayInfo(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_item_display_info'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_item_display_info record not found',
@@ -39,10 +36,7 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
   }
 
   Future<ItemDisplayInfoEntity?> getItemDisplayInfo(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_item_display_info'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemDisplayInfoEntity.fromJson(results.first.toMap());
   }
@@ -58,14 +52,14 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemDisplayInfo);
     final json = prepareWriteJson(itemDisplayInfo.toJson());
     try {
-      await laconic.table('foxy.dbc_item_display_info').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemDisplayInfo.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_item_display_info', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_item_display_info').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -90,7 +84,7 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_item_display_info'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -121,3 +115,5 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_item_display_info';

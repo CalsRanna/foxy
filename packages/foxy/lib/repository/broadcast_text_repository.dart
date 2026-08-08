@@ -12,7 +12,6 @@ part 'broadcast_text_repository.g.dart';
 @FoxyFilter.text('text')
 class BroadcastTextRepository
     with RepositoryMixin, _BroadcastTextRepositoryMixin {
-  static const _table = 'broadcast_text';
 
   Future<int> copyBroadcastText(int key) async {
     final source = await getBroadcastText(key);

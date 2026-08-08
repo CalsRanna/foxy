@@ -10,7 +10,6 @@ part 'quest_template_locale_repository.g.dart';
 @FoxyRepository()
 class QuestTemplateLocaleRepository
     with RepositoryMixin, _QuestTemplateLocaleRepositoryMixin {
-  static const _table = 'quest_template_locale';
   static const primaryKeyColumns = {'ID', 'locale'};
 
   Future<void> applyQuestTemplateLocaleChanges({

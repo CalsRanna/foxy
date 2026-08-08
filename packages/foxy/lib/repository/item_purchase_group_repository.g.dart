@@ -28,10 +28,7 @@ mixin _ItemPurchaseGroupRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroyItemPurchaseGroup(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_item_purchase_group'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_item_purchase_group record not found',
@@ -40,10 +37,7 @@ mixin _ItemPurchaseGroupRepositoryMixin
   }
 
   Future<ItemPurchaseGroupEntity?> getItemPurchaseGroup(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_item_purchase_group'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemPurchaseGroupEntity.fromJson(results.first.toMap());
   }
@@ -70,14 +64,14 @@ mixin _ItemPurchaseGroupRepositoryMixin
     await _beforeStore(itemPurchaseGroup);
     final json = prepareWriteJson(itemPurchaseGroup.toJson());
     try {
-      await laconic.table('foxy.dbc_item_purchase_group').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemPurchaseGroup.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_item_purchase_group', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_item_purchase_group').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -102,7 +96,7 @@ mixin _ItemPurchaseGroupRepositoryMixin
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_item_purchase_group'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -133,3 +127,5 @@ mixin _ItemPurchaseGroupRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_item_purchase_group';

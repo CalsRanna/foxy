@@ -22,7 +22,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
 
   Future<int> countPlayerCreateInfoItems(int race, int class_) async {
     return laconic
-        .table('playercreateinfo_item')
+        .table(_table)
         .where('`race`', race)
         .where('`class`', class_)
         .count();
@@ -36,7 +36,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
       race: race,
       class_: class_,
       itemId: await nextMaxPlusOne(
-        'playercreateinfo_item',
+        _table,
         '`itemid`',
         where: {'`race`': race, '`class`': class_},
       ),
@@ -45,10 +45,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyPlayerCreateInfoItem(PlayerCreateInfoItemKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('playercreateinfo_item'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('playercreateinfo_item record not found');
     }
@@ -57,10 +54,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
   Future<PlayerCreateInfoItemEntity?> getPlayerCreateInfoItem(
     PlayerCreateInfoItemKey key,
   ) async {
-    final results = await _whereKey(
-      laconic.table('playercreateinfo_item'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoItemEntity.fromJson(results.first.toMap());
   }
@@ -71,7 +65,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('playercreateinfo_item').select([
+    var builder = laconic.table(_table).select([
       '`race`',
       '`class`',
       '`itemid`',
@@ -93,12 +87,12 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     await _beforeStore(playerCreateInfoItem);
     final json = prepareWriteJson(playerCreateInfoItem.toJson());
     try {
-      await laconic.table('playercreateinfo_item').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = playerCreateInfoItem.copyWith(
         itemId: await nextMaxPlusOne(
-          'playercreateinfo_item',
+          _table,
           '`itemid`',
           where: {
             '`race`': playerCreateInfoItem.race,
@@ -107,7 +101,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table('playercreateinfo_item').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return;
@@ -129,7 +123,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('playercreateinfo_item'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -162,3 +156,5 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
+
+const _table = 'playercreateinfo_item';

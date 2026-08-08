@@ -180,9 +180,7 @@ part 'sample_repository.g.dart';
 @FoxyRepository(SampleEntity)
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
-class SampleRepository with _SampleRepositoryMixin {
-  static const _table = 'foxy.sample';
-}
+class SampleRepository with _SampleRepositoryMixin {}
 
 class SampleFilter {
   final String entry;
@@ -390,8 +388,6 @@ part 'sample_repository.g.dart';
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class SampleRepository with _SampleRepositoryMixin {
-  static const _table = 'foxy.sample';
-
   Future<void> copySample(int key) async {}
 
   Future<int> countSamples({SampleFilter? filter}) async => 0;

@@ -30,20 +30,14 @@ final class LightFilter {
 mixin _LightRepositoryMixin on RepositoryMixin {
   Future<void> destroyLight(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_light'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_light record not found');
     }
   }
 
   Future<LightEntity?> getLight(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_light'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return LightEntity.fromJson(results.first.toMap());
   }
@@ -57,14 +51,12 @@ mixin _LightRepositoryMixin on RepositoryMixin {
     await _beforeStore(light);
     final json = prepareWriteJson(light.toJson());
     try {
-      await laconic.table('foxy.dbc_light').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
-      final retried = light.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_light', '`ID`'),
-      );
+      final retried = light.copyWith(id: await nextMaxPlusOne(_table, '`ID`'));
       try {
-        await laconic.table('foxy.dbc_light').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -84,7 +76,7 @@ mixin _LightRepositoryMixin on RepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_light'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -108,3 +100,5 @@ mixin _LightRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_light';

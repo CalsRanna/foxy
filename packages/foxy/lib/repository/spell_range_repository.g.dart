@@ -27,20 +27,14 @@ final class SpellRangeFilter {
 mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroySpellRange(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(
-      laconic.table('foxy.dbc_spell_range'),
-      key,
-    ).delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_spell_range record not found');
     }
   }
 
   Future<SpellRangeEntity?> getSpellRange(int key) async {
-    final results = await _whereKey(
-      laconic.table('foxy.dbc_spell_range'),
-      key,
-    ).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellRangeEntity.fromJson(results.first.toMap());
   }
@@ -65,14 +59,14 @@ mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     await _beforeStore(spellRange);
     final json = prepareWriteJson(spellRange.toJson());
     try {
-      await laconic.table('foxy.dbc_spell_range').insert([json]);
+      await laconic.table(_table).insert([json]);
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellRange.copyWith(
-        id: await nextMaxPlusOne('foxy.dbc_spell_range', '`ID`'),
+        id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table('foxy.dbc_spell_range').insert([
+        await laconic.table(_table).insert([
           prepareWriteJson(retried.toJson()),
         ]);
         return retried.id;
@@ -95,7 +89,7 @@ mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     final int matchedRows;
     try {
       matchedRows = await _whereKey(
-        laconic.table('foxy.dbc_spell_range'),
+        laconic.table(_table),
         originalKey,
       ).update(json);
     } catch (error) {
@@ -122,3 +116,5 @@ mixin _SpellRangeRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
+
+const _table = 'foxy.dbc_spell_range';

@@ -14,7 +14,6 @@ part 'area_table_repository.g.dart';
 @FoxyFilter.text('name', column: 'AreaName_lang_zhCN')
 class AreaTableRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _AreaTableRepositoryMixin {
-  static const _table = 'foxy.dbc_area_table';
 
   @override
   String get dbcLocaleTableName => _table;

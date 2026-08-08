@@ -12,7 +12,6 @@ part 'sound_provider_preferences_repository.g.dart';
 @FoxyFilter.text('description')
 class SoundProviderPreferencesRepository
     with RepositoryMixin, _SoundProviderPreferencesRepositoryMixin {
-  static const _table = 'foxy.dbc_sound_provider_preferences';
 
   Future<int> copySoundProviderPreference(int key) async {
     final source = await getSoundProviderPreferences(key);

@@ -11,7 +11,6 @@ part 'npc_text_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('text')
 class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
-  static const _table = 'npc_text';
 
   Future<int> copyNpcText(int key) async {
     final source = await getNpcText(key);

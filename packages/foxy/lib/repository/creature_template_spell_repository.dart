@@ -9,7 +9,6 @@ part 'creature_template_spell_repository.g.dart';
 @FoxyRepository(linkKey: ['creatureID'])
 class CreatureTemplateSpellRepository
     with RepositoryMixin, _CreatureTemplateSpellRepositoryMixin {
-  static const _table = 'creature_template_spell';
   static const maxIndex = 7;
   static const minIndex = 0;
   static const primaryKeyColumns = {'CreatureID', 'Index'};
