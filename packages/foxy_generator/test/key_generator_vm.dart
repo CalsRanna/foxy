@@ -54,6 +54,9 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logContains(logs, '没有物理主键字段'), isTrue);
+    expect(
+      logContains(logs, 'has no physical primary key field'),
+      isTrue,
+    );
   });
 }

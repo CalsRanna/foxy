@@ -87,7 +87,7 @@ void main() {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('必须声明且只能声明一个 linkKey')),
+      logs.any((log) => log.contains('must declare exactly one linkKey')),
       isTrue,
     );
   });

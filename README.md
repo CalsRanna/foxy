@@ -35,7 +35,7 @@ Foxy 面向内容制作场景,把「列表检索 → 详情编辑 → 关联子�
 | 依赖注入 | `get_it`(全量显式注册,不使用服务定位魔法) |
 | 路由 | `auto_route` + 自研 `RouterFacade`(面包屑路径、菜单高亮) |
 | 代码生成 | `build_runner` + `source_gen` + `analyzer`,自研三层 Builder |
-| 静态检查 | `custom_lint` + 8 条自研规则(见 `analysis_options.yaml`) |
+| 静态检查 | 官方 analyzer 插件系统(Dart 3.10+)+ 8 条自研规则(见根 `analysis_options.yaml`) |
 | DBC 解析 | `warcrafty`(DBC 二进制 schema 定义) |
 | 其它 | `window_manager`(无边框窗口)、`shared_preferences`、`file_selector`、`yaml_edit`(config.yaml)、`logger`、`package_info_plus` |
 
@@ -70,7 +70,7 @@ laconic query builder ──► MySQL (AzerothCore world 库 + foxy 元库)
 
 > 完整的代码生成系统文档见 [`doc/codegen/`](doc/codegen/README.md)(使用指南 / 生成器实现 / 扩展指南)。
 
-### 工程约束(custom_lint 强制)
+### 工程约束(analyzer 插件强制)
 
 | 规则 | 含义 |
 | --- | --- |
@@ -78,10 +78,12 @@ laconic query builder ──► MySQL (AzerothCore world 库 + foxy 元库)
 | `repository_no_save` | Repository 不暴露直接 save,统一走生成的行为骨架 |
 | `no_collection_loops` | 禁止手写集合循环,统一用集合方法 |
 | `entity_no_flutter_import` | Entity 层禁止依赖 Flutter |
-| `viewmodel_no_router_facade` | ViewModel 不触达路由 |
+| `view_model_no_router_facade` | ViewModel 不触达路由 |
 | `no_flex_in_view` | 视图层禁止使用 `Flex` 布局,统一走 Row/Column 的 `spacing` |
 | `no_readonly_in_view` | 视图层禁止直接实例化只读输入控件 |
 | `no_chinese_throw` | 异常内禁止中文文案 |
+
+> 8 条规则通过**官方 analyzer 插件系统**运行(Dart 3.10+),由 workspace 根的 `analysis_options.yaml` 声明(`plugins: foxy_lint`)。静态检查请在**仓库根**执行 `dart analyze`(workspace 模式,插件对全部成员生效);`flutter analyze` 在子包目录运行时受 SDK 限制([dart-lang/sdk#61477](https://github.com/dart-lang/sdk/issues/61477))不加载插件,仅作 Flutter 层检查。
 
 ### 异常体系
 
@@ -102,7 +104,7 @@ laconic query builder ──► MySQL (AzerothCore world 库 + foxy 元库)
 
 ### 安装与运行
 
-Monorepo(Dart pub workspace):Flutter app 位于 `packages/foxy`,代码生成器与注解在 `packages/foxy_generator` + `packages/foxy_annotation`,custom_lint 插件在 `packages/foxy_lint`。以下命令在 `packages/foxy` 目录执行:
+Monorepo(Dart pub workspace):Flutter app 位于 `packages/foxy`,代码生成器与注解在 `packages/foxy_generator` + `packages/foxy_annotation`,自研 analyzer 插件在 `packages/foxy_lint`。以下命令在 `packages/foxy` 目录执行:
 
 ```bash
 # 1. 拉取依赖
@@ -194,7 +196,7 @@ lib/
 packages/
 ├── foxy_annotation/           # 注解定义(Entity / Repository / ViewModel)
 ├── foxy_generator/            # 自研代码生成器(reader/model/emitter/generator)
-└── foxy_lint/                 # custom_lint 规则实现
+└── foxy_lint/                 # 自研 analyzer 插件规则(lib/main.dart 为插件入口)
 
 doc/
 └── codegen/                   # 代码生成系统文档(总览 / 使用 / 实现 / 扩展)

@@ -174,7 +174,10 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('无法推断物理列')), isTrue);
+    expect(
+      logs.any((log) => log.contains('cannot infer a physical column')),
+      isTrue,
+    );
   });
 
   test('声明 linkKey 时生成父键形态(count/getBrief/create/copy)', () async {
@@ -241,7 +244,9 @@ void main() {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('不是 ChildRecordEntity 的 key 字段')),
+      logs.any(
+        (log) => log.contains('is not a key field of ChildRecordEntity'),
+      ),
       isTrue,
     );
   });
@@ -345,7 +350,11 @@ class SampleEntity {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('不能作为生成 CRUD 的物理 Key')),
+      logs.any(
+        (log) => log.contains(
+          'cannot serve as the physical Key for generated CRUD',
+        ),
+      ),
       isTrue,
       reason: '`列 = NULL` 恒不成立，生成的 _whereKey 会静默匹配 0 行',
     );
@@ -356,7 +365,7 @@ class SampleEntity {
     final source = scalarRepositorySource
         .replaceFirst(
           '@FoxyRepository(SampleEntity)',
-          '@FoxyRepository(OtherEntity)',
+          '@FoxyRepository(entity: OtherEntity)',
         )
         .replaceFirst(
           "import 'package:foxy/entity/sample_entity.dart';",
@@ -375,7 +384,12 @@ class SampleEntity {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('不符合一对一命名约定')), isTrue);
+    expect(
+      logs.any(
+        (log) => log.contains('do not follow the one-to-one naming convention'),
+      ),
+      isTrue,
+    );
   });
 }
 
@@ -542,7 +556,11 @@ class ChildRecordEntity {
   @FoxyFullField('Note')
   final String note;
 
-  const ChildEntity({this.parentId = 0, this.childId = 0, this.note = ''});
+  const ChildRecordEntity({
+    this.parentId = 0,
+    this.childId = 0,
+    this.note = '',
+  });
 }
 ''';
 

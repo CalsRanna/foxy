@@ -1,38 +1,85 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 
 import 'package:foxy_lint/rules/file_scopes.dart';
 
-const _code = LintCode(
-  name: 'no_collection_loops',
-  problemMessage: '{0} 文件禁止使用 {1}，应显式展开字段',
-);
+/// Entity/ViewModel/View files must not use collection loops
+/// (`List.generate` or `for-in` over a collection); fields must be
+/// explicitly expanded.
+class NoCollectionLoops extends AnalysisRule {
+  static const LintCode code = LintCode(
+    'no_collection_loops',
+    '{0} files must not use {1}; expand fields explicitly.',
+    correctionMessage:
+        'Replace the collection loop with explicit per-field statements.',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
-class NoCollectionLoops extends DartLintRule {
-  const NoCollectionLoops() : super(code: _code);
+  NoCollectionLoops()
+      : super(
+          name: 'no_collection_loops',
+          description:
+              'Entity/ViewModel/View files must not use collection loops.',
+        );
 
   @override
-  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
-    final scope = collectionLoopScope(resolver.path);
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    final scope = collectionLoopScope(context.definingUnit.file.path);
     if (scope == null) return;
+    registry.addMethodInvocation(
+      this,
+      _MethodInvocationVisitor(this, context, scope),
+    );
+    registry.addForStatement(this, _ForStatementVisitor(this, context, scope));
+  }
+}
 
-    context.registry.addMethodInvocation((node) {
-      if (node.methodName.name != 'generate') return;
-      final target = node.target;
-      if (target is Identifier && target.name == 'List') {
-        reporter.atNode(node, _code);
-      }
-    });
+class _MethodInvocationVisitor extends SimpleAstVisitor<void> {
+  final NoCollectionLoops rule;
 
+  final RuleContext context;
+
+  final String scope;
+
+  _MethodInvocationVisitor(this.rule, this.context, this.scope);
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (node.methodName.name != 'generate') return;
+    final target = node.target;
+    if (target is Identifier && target.name == 'List') {
+      rule.reportAtNode(node, arguments: [scope, 'List.generate']);
+    }
+  }
+}
+
+class _ForStatementVisitor extends SimpleAstVisitor<void> {
+  final NoCollectionLoops rule;
+
+  final RuleContext context;
+
+  final String scope;
+
+  _ForStatementVisitor(this.rule, this.context, this.scope);
+
+  @override
+  void visitForStatement(ForStatement node) {
     // Only `for-in` over a collection is the target: a C-style indexed
     // `for (var i = 0; i < n; i++)` is not a collection loop and must not
-    // be reported. Analyzer 8.x merged ForEachStatement into ForStatement;
+    // be reported. Analyzer merged ForEachStatement into ForStatement;
     // `forLoopParts is ForEachParts` distinguishes the two forms.
-    context.registry.addForStatement((node) {
-      if (node.forLoopParts is ForEachParts) {
-        reporter.atNode(node, _code);
-      }
-    });
+    if (node.forLoopParts is ForEachParts) {
+      rule.reportAtNode(node, arguments: [scope, 'for-in']);
+    }
   }
 }

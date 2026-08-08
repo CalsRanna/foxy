@@ -13,7 +13,8 @@ dependencies:
     sdk: flutter
 
   archive: ^4.0.9
-  auto_route: ^10.2.0
+  # 11.x: auto_route_generator 10.6.0(支持 analyzer 12)要求 auto_route ^11.1.0。
+  auto_route: ^11.1.0
   collection: ^1.19.1
   crypto: ^3.0.7
   file_selector: ^1.1.0
@@ -43,9 +44,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  auto_route_generator: ^10.2.5
-  build_runner: ^2.4.9
-  custom_lint: ^0.8.1
+  auto_route_generator: ^10.5.0
+  build_runner: ^2.15.1
   flutter_lints: ^6.0.0
   foxy_generator:
     path: ../foxy_generator

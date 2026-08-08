@@ -48,7 +48,10 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('重复声明字段 id')), isTrue);
+    expect(
+      logs.any((log) => log.contains('declares field id more than once')),
+      isTrue,
+    );
   });
 
   test('非法字段名在生成期给出明确诊断', () async {
@@ -64,7 +67,10 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('不是合法 lowerCamelCase')), isTrue);
+    expect(
+      logs.any((log) => log.contains('is not a valid lowerCamelCase identifier')),
+      isTrue,
+    );
   });
 }
 const annotationAsset =

@@ -242,7 +242,10 @@ class BriefSampleEntity {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('只支持 @FoxyFilter.text')), isTrue);
+    expect(
+      logs.any((log) => log.contains('supports only @FoxyFilter.text')),
+      isTrue,
+    );
   });
 
   test('VM 类名不以 ListViewModel 结尾时拒绝生成', () async {
@@ -264,7 +267,10 @@ class BriefSampleEntity {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('以 ListViewModel 结尾')), isTrue);
+    expect(
+      logs.any((log) => log.contains('ending in ListViewModel')),
+      isTrue,
+    );
   });
 
   test('缺少 part 声明时拒绝生成', () async {
@@ -286,7 +292,7 @@ class BriefSampleEntity {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('缺少 part')), isTrue);
+    expect(logs.any((log) => log.contains('is missing part')), isTrue);
   });
 
   test('缺少 mixin 混入时拒绝生成', () async {
@@ -309,18 +315,25 @@ class BriefSampleEntity {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('必须混入 _SampleListViewModelMixin')),
+      logs.any((log) => log.contains('must mix in _SampleListViewModelMixin')),
       isTrue,
     );
   });
 
   test('Repository 与 Entity base name 不一致时拒绝生成', () async {
-    final entity = sampleEntitySource.replaceAll('SampleEntity', 'OtherEntity');
+    // The repository class name is changed so its base name no longer
+    // matches the entity's; the reader's one-to-one naming check fires
+    // before the derived-repository resolution.
+    final repository = sampleRepositorySource.replaceFirst(
+      'class SampleRepository',
+      'class OtherRepository',
+    );
     final source = sampleViewModelSource
-        .replaceFirst('entity: SampleEntity', 'entity: OtherEntity')
+        .replaceFirst('repository: SampleRepository', 'repository: OtherRepository')
         .replaceFirst(
-          "import 'package:foxy/entity/sample_entity.dart';",
-          "import 'package:foxy/entity/sample_entity.dart' show OtherEntity;",
+          "import 'package:foxy/repository/sample_repository.dart';",
+          "import 'package:foxy/repository/sample_repository.dart' "
+              'show OtherRepository;',
         );
     final logs = <String>[];
     await testBuilder(
@@ -329,14 +342,19 @@ class BriefSampleEntity {
         listAnnotationAsset: listAnnotationSource,
         entityAnnotationAsset: entityAnnotationSource,
         repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: entity,
-        repositoryAsset: sampleRepositorySource,
+        entityAsset: sampleEntitySource,
+        repositoryAsset: repository,
         viewModelAsset: source,
       },
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('不符合一对一命名约定')), isTrue);
+    expect(
+      logs.any(
+        (log) => log.contains('do not follow the one-to-one naming convention'),
+      ),
+      isTrue,
+    );
   });
 }
 

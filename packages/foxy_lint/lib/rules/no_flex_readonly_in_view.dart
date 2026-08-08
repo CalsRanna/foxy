@@ -1,47 +1,100 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 
 import 'package:foxy_lint/rules/file_scopes.dart';
 
-const _flexCode = LintCode(
-  name: 'no_flex_in_view',
-  problemMessage: 'View 文件禁止使用 flex: 参数，应使用 Expanded 等宽布局',
-);
+/// View files must not use the `flex:` parameter; use Expanded for even
+/// layouts.
+class NoFlexInView extends AnalysisRule {
+  static const LintCode code = LintCode(
+    'no_flex_in_view',
+    'View files must not use the flex: parameter; use Expanded for even '
+        'layouts.',
+    correctionMessage: 'Replace flex: with Expanded.',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
-const _readOnlyCode = LintCode(
-  name: 'no_readonly_in_view',
-  problemMessage: 'View 文件禁止使用 readOnly: true，所有字段应可编辑',
-);
-
-class NoFlexInView extends DartLintRule {
-  const NoFlexInView() : super(code: _flexCode);
+  NoFlexInView()
+      : super(
+          name: 'no_flex_in_view',
+          description:
+              'View files must not use the flex: parameter.',
+        );
 
   @override
-  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
-    if (!isViewFile(resolver.path)) return;
+  LintCode get diagnosticCode => code;
 
-    context.registry.addNamedExpression((node) {
-      if (node.name.label.name == 'flex') {
-        reporter.atNode(node, _flexCode);
-      }
-    });
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    registry.addNamedExpression(this, _FlexVisitor(this, context));
   }
 }
 
-class NoReadOnlyInView extends DartLintRule {
-  const NoReadOnlyInView() : super(code: _readOnlyCode);
+class _FlexVisitor extends SimpleAstVisitor<void> {
+  final NoFlexInView rule;
+
+  final RuleContext context;
+
+  _FlexVisitor(this.rule, this.context);
 
   @override
-  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
-    if (!isViewFile(resolver.path)) return;
+  void visitNamedExpression(NamedExpression node) {
+    if (!isViewFile(context.definingUnit.file.path)) return;
+    if (node.name.label.name == 'flex') {
+      rule.reportAtNode(node);
+    }
+  }
+}
 
-    context.registry.addNamedExpression((node) {
-      if (node.name.label.name != 'readOnly') return;
-      final expression = node.expression;
-      if (expression is BooleanLiteral && expression.value) {
-        reporter.atNode(node, _readOnlyCode);
-      }
-    });
+/// View files must not use `readOnly: true`; all fields must be editable.
+class NoReadOnlyInView extends AnalysisRule {
+  static const LintCode code = LintCode(
+    'no_readonly_in_view',
+    'View files must not use readOnly: true; all fields must be editable.',
+    correctionMessage: 'Remove readOnly: true.',
+    severity: DiagnosticSeverity.WARNING,
+  );
+
+  NoReadOnlyInView()
+      : super(
+          name: 'no_readonly_in_view',
+          description:
+              'View files must not use readOnly: true.',
+        );
+
+  @override
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    registry.addNamedExpression(this, _ReadOnlyVisitor(this, context));
+  }
+}
+
+class _ReadOnlyVisitor extends SimpleAstVisitor<void> {
+  final NoReadOnlyInView rule;
+
+  final RuleContext context;
+
+  _ReadOnlyVisitor(this.rule, this.context);
+
+  @override
+  void visitNamedExpression(NamedExpression node) {
+    if (!isViewFile(context.definingUnit.file.path)) return;
+    if (node.name.label.name != 'readOnly') return;
+    final expression = node.expression;
+    if (expression is BooleanLiteral && expression.value) {
+      rule.reportAtNode(node);
+    }
   }
 }

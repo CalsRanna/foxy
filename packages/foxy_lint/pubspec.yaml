@@ -1,5 +1,5 @@
 name: foxy_lint
-description: "Foxy 的 custom_lint 插件 — 项目专属 lint 规则。"
+description: "Foxy 的 analyzer 插件 — 项目专属 lint 规则(官方 analyzer 插件系统, Dart 3.10+)。"
 publish_to: none
 
 environment:
@@ -8,10 +8,13 @@ environment:
 resolution: workspace
 
 dependencies:
-  # <8.4.0: 与 foxy_generator 保持一致(source_gen 3.1.0 不兼容 analyzer 8.4+)
-  analyzer: ">=8.1.1 <8.4.0"
-  custom_lint_builder: ^0.8.1
+  # 0.3.10 / 10.2.0: 与 workspace 的 analyzer 10.2.0 匹配(Flutter 3.44.9
+  # 依赖 pin 限制,见 foxy_generator 注释)。
+  analysis_server_plugin: ^0.3.10
+  analyzer: ^10.2.0
   path: ^1.9.1
 
 dev_dependencies:
+  analyzer_testing: ^0.2.1
   test: ^1.30.0
+  test_reflective_loader: ^0.4.0

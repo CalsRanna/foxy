@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, experimental_member_use
+// ignore_for_file: depend_on_referenced_packages, deprecated_member_use, experimental_member_use
 
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';

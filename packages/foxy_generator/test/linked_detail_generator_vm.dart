@@ -83,7 +83,12 @@ void main() {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('是复合键实体，不能生成 Linked Detail 骨架')),
+      logs.any(
+        (log) => log.contains(
+          'is a composite-key entity; a Linked Detail skeleton '
+              'cannot be generated',
+        ),
+      ),
       isTrue,
     );
   });
@@ -128,7 +133,7 @@ void main() {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('只支持单一 linkKey')),
+      logs.any((log) => log.contains('supports only a single linkKey')),
       isTrue,
     );
   });
@@ -152,7 +157,9 @@ void main() {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('必须等于实体主键 entry')),
+      logs.any(
+        (log) => log.contains('must equal the entity primary key entry'),
+      ),
       isTrue,
     );
   });

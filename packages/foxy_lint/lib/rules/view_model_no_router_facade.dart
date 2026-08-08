@@ -7,19 +7,20 @@ import 'package:analyzer/error/error.dart';
 
 import 'package:foxy_lint/rules/file_scopes.dart';
 
-/// Entity files must not import UI-layer packages.
-class EntityNoFlutterImport extends AnalysisRule {
+/// ViewModels must not import RouterFacade (navigation stays in the view
+/// layer).
+class ViewModelNoRouterFacade extends AnalysisRule {
   static const LintCode code = LintCode(
-    'entity_no_flutter_import',
-    'Entity files must not import UI-layer packages.',
-    correctionMessage: 'Remove the import from the Entity file.',
+    'view_model_no_router_facade',
+    'ViewModels must not import RouterFacade.',
+    correctionMessage: 'Move navigation to the view layer.',
     severity: DiagnosticSeverity.WARNING,
   );
 
-  EntityNoFlutterImport()
+  ViewModelNoRouterFacade()
       : super(
-          name: 'entity_no_flutter_import',
-          description: 'Entity files must not import UI-layer packages.',
+          name: 'view_model_no_router_facade',
+          description: 'ViewModels must not import RouterFacade.',
         );
 
   @override
@@ -35,7 +36,7 @@ class EntityNoFlutterImport extends AnalysisRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  final EntityNoFlutterImport rule;
+  final ViewModelNoRouterFacade rule;
 
   final RuleContext context;
 
@@ -43,16 +44,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitImportDirective(ImportDirective node) {
-    if (!isEntityFile(context.definingUnit.file.path)) return;
+    if (!isViewModelFile(context.definingUnit.file.path)) return;
     final uri = node.uri.stringValue ?? '';
-    // The whole Flutter framework surface is UI-adjacent: an entity only
-    // needs `package:meta` for annotations. `flutter/foundation` and
-    // `flutter/services` were previously missing from the blocklist.
-    if (uri.startsWith('package:flutter/') ||
-        uri == 'dart:ui' ||
-        uri.startsWith('package:foxy/page/') ||
-        uri.startsWith('package:foxy/widget/') ||
-        uri == 'package:signals_flutter/signals_flutter.dart') {
+    if (uri.contains('router_facade.dart')) {
       rule.reportAtNode(node);
     }
   }

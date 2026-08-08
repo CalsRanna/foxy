@@ -52,7 +52,10 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logContains(logs, 'required 构造参数暂不支持'), isTrue);
+    expect(
+      logContains(logs, 'Required constructor parameters are not yet supported'),
+      isTrue,
+    );
   });
 
   test('重复物理列名时整体生成失败', () async {
@@ -68,7 +71,10 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logContains(logs, '重复声明物理列名 ID'), isTrue);
+    expect(
+      logContains(logs, 'declares the physical column name ID more than once'),
+      isTrue,
+    );
   });
 
   test('缺少字段注解与不支持类型都不会被静默跳过', () async {
@@ -83,7 +89,10 @@ void main() {
       outputs: {},
       onLog: (record) => missingLogs.add(record.toString()),
     );
-    expect(logContains(missingLogs, 'enabled 缺少 @FoxyFullField'), isTrue);
+    expect(
+      logContains(missingLogs, 'enabled is missing @FoxyFullField'),
+      isTrue,
+    );
 
     final unsupportedType = standardEntitySource.replaceFirst(
       'final String? description;',
@@ -96,7 +105,14 @@ void main() {
       outputs: {},
       onLog: (record) => unsupportedLogs.add(record.toString()),
     );
-    expect(logContains(unsupportedLogs, 'List<int>? 暂不支持'), isTrue);
+    expect(
+      logContains(
+        unsupportedLogs,
+        'The type List<int>? of CodegenSampleEntity.description '
+            'is not yet supported',
+      ),
+      isTrue,
+    );
   });
 
   test('一个输入文件包含多个 Full Entity 时给出拆分诊断', () async {
@@ -112,7 +128,7 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logContains(logs, '当前为 2 个'), isTrue);
+    expect(logContains(logs, 'it currently declares 2.'), isTrue);
   });
 
   test('调整 class 与 field 注解排列顺序产生相同代码', () async {

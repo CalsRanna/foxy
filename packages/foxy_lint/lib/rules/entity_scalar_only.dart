@@ -1,30 +1,59 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 
 import 'package:foxy_lint/rules/file_scopes.dart';
 
-const _code = LintCode(
-  name: 'entity_scalar_only',
-  problemMessage: 'Entity 字段必须是标量类型 (int/double/String/bool)，禁止使用 {0}',
-);
+/// Entity fields must be scalar types (int/double/String/bool); collection
+/// types must be split into explicit per-column fields.
+class EntityScalarOnly extends AnalysisRule {
+  static const LintCode code = LintCode(
+    'entity_scalar_only',
+    'Entity fields must be scalar types (int/double/String/bool); got {0}.',
+    correctionMessage: 'Split the collection into explicit per-column fields.',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
-class EntityScalarOnly extends DartLintRule {
-  const EntityScalarOnly() : super(code: _code);
+  EntityScalarOnly()
+      : super(
+          name: 'entity_scalar_only',
+          description:
+              'Entity fields must be scalar types; collection types are '
+                  'not allowed.',
+        );
 
   @override
-  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
-    if (!isEntityFile(resolver.path)) return;
+  LintCode get diagnosticCode => code;
 
-    context.registry.addFieldDeclaration((node) {
-      final parent = node.parent;
-      if (parent is! ClassDeclaration) return;
-      if (!parent.name.lexeme.endsWith('Entity')) return;
-      final type = node.fields.type;
-      if (type is! NamedType) return;
-      if (!const {'List', 'Map', 'Set'}.contains(type.name.lexeme)) return;
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    registry.addFieldDeclaration(this, _Visitor(this, context));
+  }
+}
 
-      reporter.atNode(node, _code);
-    });
+class _Visitor extends SimpleAstVisitor<void> {
+  final EntityScalarOnly rule;
+
+  final RuleContext context;
+
+  _Visitor(this.rule, this.context);
+
+  @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    if (!isEntityFile(context.definingUnit.file.path)) return;
+    final parent = node.parent;
+    if (parent is! ClassDeclaration) return;
+    if (!parent.namePart.typeName.lexeme.endsWith('Entity')) return;
+    final type = node.fields.type;
+    if (type is! NamedType) return;
+    if (!const {'List', 'Map', 'Set'}.contains(type.name.lexeme)) return;
+
+    rule.reportAtNode(node, arguments: [type.name.lexeme]);
   }
 }

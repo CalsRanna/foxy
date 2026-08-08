@@ -1,99 +1,82 @@
-import 'package:analyzer/dart/analysis/features.dart';
-import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:test/test.dart';
+// ignore_for_file: non_constant_identifier_names
 
-/// Regression tests for the core logic of the no_chinese_throw rule.
-///
-/// Uses the analyzer to parse source directly and reproduce the rule's
-/// detection logic (a string literal containing CJK inside a throw
-/// expression subtree is a violation), locking down two regressions:
-/// - matching only `SimpleStringLiteral` misses interpolated strings (the
-///   H2 fix point);
-/// - CJK regex range fallback (Extension A / full-width punctuation
-///   misses).
-void main() {
-  // The regex kept in sync with lib/rules/no_chinese_throw.dart.
-  final cjk = RegExp(r'[㐀-鿿＀-￯]');
+import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+import 'package:foxy_lint/rules/no_chinese_throw.dart';
+import 'package:test_reflective_loader/test_reflective_loader.dart';
 
-  String? findViolation(String source) {
-    final result = parseString(
-      content: source,
-      featureSet: FeatureSet.latestLanguageVersion(),
-    );
-    final scanner = _ThrowScanner(cjk);
-    result.unit.accept(scanner);
-    return scanner.violation;
+/// Tests the real NoChineseThrow rule through the official
+/// analyzer_testing harness (AnalysisRuleTest), covering:
+/// - simple string literals with CJK inside a throw;
+/// - interpolated strings with CJK after an `$id` segment;
+/// - English-only messages must not be reported;
+/// - CJK outside a throw subtree must not be reported.
+@reflectiveTest
+class NoChineseThrowRuleTest extends AnalysisRuleTest {
+  @override
+  void setUp() {
+    rule = NoChineseThrow();
+    super.setUp();
   }
 
-  group('no_chinese_throw 检测逻辑', () {
-    test('插值字符串中的中文被命中(H2 修复点)', () {
-      expect(
-        findViolation("void f() { throw FormatException('\$x 中文消息'); }"),
-        isNotNull,
-      );
-    });
-
-    test('纯英文插值不命中', () {
-      expect(
-        findViolation("void f() { throw FormatException('\$x error'); }"),
-        isNull,
-      );
-    });
-
-    test('普通字符串字面量中文被命中', () {
-      expect(findViolation("void f() { throw StateError('中文'); }"), isNotNull);
-    });
-
-    test('非 throw 子树中的中文不命中', () {
-      expect(findViolation("void f() { final s = '中文文案'; }"), isNull);
-    });
-
-    test('throw 后相邻字符串拼接的中文被命中', () {
-      expect(
-        findViolation(
-          "void f() { throw FormatException(\n"
-          "  'record \$x 中文',\n"
-          "); }",
-        ),
-        isNotNull,
-      );
-    });
-  });
+  void test_simpleLiteral_insideThrow_reports() async {
+    await assertDiagnostics(
+      r'''
+class Boom implements Exception {
+  const Boom(this.message);
+  final String message;
 }
 
-class _ThrowScanner extends RecursiveAstVisitor<void> {
-  final RegExp cjk;
-  String? violation;
-
-  _ThrowScanner(this.cjk);
-
-  @override
-  void visitSimpleStringLiteral(SimpleStringLiteral node) {
-    _check(node, node.value);
-    super.visitSimpleStringLiteral(node);
-  }
-
-  @override
-  void visitStringInterpolation(StringInterpolation node) {
-    _check(
-      node,
-      node.elements
-          .whereType<InterpolationString>()
-          .map((element) => element.value)
-          .join(),
+void f() {
+  throw const Boom('中文');
+}
+''',
+      [lint(119, 4)],
     );
-    super.visitStringInterpolation(node);
   }
 
-  void _check(AstNode node, String text) {
-    if (violation != null || !cjk.hasMatch(text)) return;
-    for (var parent = node.parent; parent != null; parent = parent.parent) {
-      if (parent is ThrowExpression) {
-        violation = text;
-        return;
-      }
-    }
+  void test_interpolated_insideThrow_reports() async {
+    await assertDiagnostics(
+      r'''
+class Boom implements Exception {
+  const Boom(this.message);
+  final String message;
+}
+
+void f(int id) {
+  throw Boom('$id 中文消息');
+}
+''',
+      [lint(119, 10)],
+    );
   }
+
+  void test_englishOnly_doesNotReport() async {
+    await assertNoDiagnostics(
+      r'''
+class Boom implements Exception {
+  const Boom(this.message);
+  final String message;
+}
+
+void f() {
+  throw const Boom('record not found');
+}
+''',
+    );
+  }
+
+  void test_cjkOutsideThrow_doesNotReport() async {
+    await assertNoDiagnostics(
+      r'''
+const label = '中文文案';
+void f() {}
+''',
+    );
+  }
+}
+
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(NoChineseThrowRuleTest);
+  });
 }

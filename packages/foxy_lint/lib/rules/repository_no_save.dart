@@ -1,32 +1,62 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 
 import 'package:foxy_lint/rules/file_scopes.dart';
 
-const _code = LintCode(
-  name: 'repository_no_save',
-  problemMessage: 'Repository 禁止手写 save*/insertAndGetId，使用 store*/update*/destroy*',
-);
+/// Repositories must not hand-write `save*`/`insertAndGetId`; use the
+/// generated `store*`/`update*`/`destroy*` instead.
+class RepositoryNoSave extends AnalysisRule {
+  static const LintCode code = LintCode(
+    'repository_no_save',
+    'Repositories must not hand-write save*/insertAndGetId; use '
+        'store*/update*/destroy*.',
+    correctionMessage:
+        'Use the generated store*/update*/destroy* methods.',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
-class RepositoryNoSave extends DartLintRule {
-  const RepositoryNoSave() : super(code: _code);
+  RepositoryNoSave()
+      : super(
+          name: 'repository_no_save',
+          description:
+              'Repositories must not hand-write save*/insertAndGetId.',
+        );
 
   @override
-  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
-    if (!isRepositoryFile(resolver.path)) return;
+  LintCode get diagnosticCode => code;
 
-    context.registry.addMethodDeclaration((node) {
-      final parent = node.parent;
-      if (parent is! ClassDeclaration) return;
-      if (!parent.name.lexeme.endsWith('Repository')) return;
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    registry.addMethodDeclaration(this, _Visitor(this, context));
+  }
+}
 
-      final name = node.name.lexeme;
-      if ((name.startsWith('save') || name == 'insertAndGetId') &&
-          !name.endsWith('Locales') &&
-          !name.endsWith('Locale')) {
-        reporter.atNode(node, _code);
-      }
-    });
+class _Visitor extends SimpleAstVisitor<void> {
+  final RepositoryNoSave rule;
+
+  final RuleContext context;
+
+  _Visitor(this.rule, this.context);
+
+  @override
+  void visitMethodDeclaration(MethodDeclaration node) {
+    if (!isRepositoryFile(context.definingUnit.file.path)) return;
+    final parent = node.parent;
+    if (parent is! ClassDeclaration) return;
+    if (!parent.namePart.typeName.lexeme.endsWith('Repository')) return;
+
+    final name = node.name.lexeme;
+    if ((name.startsWith('save') || name == 'insertAndGetId') &&
+        !name.endsWith('Locales') &&
+        !name.endsWith('Locale')) {
+      rule.reportAtNode(node);
+    }
   }
 }

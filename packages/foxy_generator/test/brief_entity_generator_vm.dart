@@ -70,7 +70,10 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logContains(logs, '缺少完整物理身份'), isTrue);
+    expect(
+      logContains(logs, 'is missing the full physical identity'),
+      isTrue,
+    );
   });
 
   test('class 上的具名 FoxyBriefField 只生成 Brief 投影字段', () async {
@@ -136,6 +139,9 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logContains(logs, '重复声明 Brief 字段 name'), isTrue);
+    expect(
+      logContains(logs, 'declares Brief field name more than once'),
+      isTrue,
+    );
   });
 }

@@ -1,19 +1,7 @@
-include: package:flutter_lints/flutter.yaml
-
-analyzer:
-  plugins:
-    - custom_lint
-
-custom_lint:
-  rules:
-    - entity_scalar_only: true
-    - repository_no_save: true
-    - no_collection_loops: true
-    - entity_no_flutter_import: true
-    - viewmodel_no_router_facade: true
-    - no_flex_in_view: true
-    - no_readonly_in_view: true
-    - no_chinese_throw: true
+# Analyzer plugins can only be declared in the workspace-root
+# analysis_options.yaml; include it to get both flutter_lints and the
+# foxy_lint rules here.
+include: ../../analysis_options.yaml
 
 linter:
   rules:

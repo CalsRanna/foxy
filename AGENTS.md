@@ -103,7 +103,7 @@ Full docs: `doc/codegen/README.md` (architecture), `doc/codegen/usage.md` (modul
 | `entity_scalar_only` | Entities only contain scalar fields |
 | `entity_no_flutter_import` | Entity layer must not import Flutter |
 | `repository_no_save` | Repositories never expose direct save; use generated behavior skeletons |
-| `viewmodel_no_router_facade` | ViewModels don't reach into routing |
+| `view_model_no_router_facade` | ViewModels don't reach into routing |
 | `no_collection_loops` | No hand-written collection loops — use collection methods (`map/where/...`) |
 | `no_flex_in_view` | No `Flex` widgets in views — use `Row`/`Column` with `spacing:` |
 | `no_readonly_in_view` | Don't instantiate read-only inputs directly (use `FoxyInputReadonly`) |
