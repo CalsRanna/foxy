@@ -27,13 +27,39 @@ void main() {
     expect(image.height, 64);
   });
 
-  test('重复加载命中缓存（同一实例）', () async {
+  test('重复加载命中缓存（返回独立克隆）', () async {
     final cache = GameIconCache();
     final path = File('test/fixture/icons/fixture_dxt1.blp').absolute.path;
     final first = await cache.load(path);
     expect(cache.contains(path), isTrue);
     final second = await cache.load(path);
-    expect(identical(first, second), isTrue);
+    expect(second, isNotNull);
+    // 每次 load 返回调用方自有的克隆:释放任一份不影响另一份。
+    expect(identical(first, second), isFalse);
+    first!.dispose();
+    expect(second!.width, 64);
+    expect(second.height, 64);
+    second.dispose();
+  });
+
+  test('驱逐原件不影响已借出的克隆', () async {
+    final cache = GameIconCache(maxEntries: 2);
+    final dir = Directory(p.join(tempDir.path, 'icons'))..createSync();
+    for (final name in ['a', 'b', 'c']) {
+      File('test/fixture/icons/fixture_dxt1.blp').copySync(
+        p.join(dir.path, '$name.blp'),
+      );
+    }
+    // 借出 a 的克隆,再加载 b、c 把 a 的原件挤出缓存并销毁。
+    final borrowed = await cache.load(p.join(dir.path, 'a.blp'));
+    expect(borrowed, isNotNull);
+    await cache.load(p.join(dir.path, 'b.blp'));
+    await cache.load(p.join(dir.path, 'c.blp'));
+    expect(cache.contains(p.join(dir.path, 'a.blp')), isFalse);
+    // 克隆的底层像素由引用计数保活,驱逐后仍可用、可绘制。
+    expect(borrowed!.width, 64);
+    expect(borrowed.height, 64);
+    borrowed.dispose();
   });
 
   test('文件缺失返回 null', () async {
@@ -78,8 +104,12 @@ void main() {
   test('clear 释放并清空缓存', () async {
     final cache = GameIconCache();
     final path = File('test/fixture/icons/fixture_dxt1.blp').absolute.path;
-    await cache.load(path);
+    (await cache.load(path))?.dispose();
     cache.clear();
     expect(cache.contains(path), isFalse);
+    // 清空后重新加载仍可从磁盘解码。
+    final reloaded = await cache.load(path);
+    expect(reloaded, isNotNull);
+    reloaded!.dispose();
   });
 }

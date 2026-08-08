@@ -11,11 +11,18 @@ import 'package:foxy/infrastructure/game_asset/blp_decoder.dart';
 /// re-decoding the same icon during list scrolls. Uses LRU (access
 /// promotes to front); over-limit entries evict the least-recently-used
 /// one.
+///
+/// Ownership contract: the cache holds the sole reference to each decoded
+/// original and owns its lifecycle. [load] returns a [ui.Image.clone] per
+/// caller, so an eviction (which disposes the original) never invalidates
+/// images already handed out; callers must dispose their clones when done.
 class GameIconCache {
   static final GameIconCache instance = GameIconCache();
 
   final int _maxEntries;
 
+  /// Decoded originals (never handed out directly; see the ownership
+  /// contract above).
   final LinkedHashMap<String, ui.Image> _images = LinkedHashMap();
 
   /// Negative cache for definite misses (file absent): by default most
@@ -32,7 +39,9 @@ class GameIconCache {
   GameIconCache({int maxEntries = 256}) : _maxEntries = maxEntries;
 
   /// Empties the cache (called after extraction, so deleted old icons are
-  /// never referenced).
+  /// never re-referenced and pre-extraction misses are forgotten). Disposes
+  /// the stored originals; outstanding clones handed out earlier are
+  /// unaffected.
   void clear() {
     _generation++;
     for (final image in _images.values) {
@@ -45,17 +54,25 @@ class GameIconCache {
   /// Whether the path is cached (for tests and diagnostics).
   bool contains(String path) => _images.containsKey(path);
 
-  /// Loads and decodes a BLP file; returns null if the file is missing or
-  /// decoding fails.
+  /// Loads and decodes a BLP file; returns a caller-owned clone of the
+  /// decoded image, or null if the file is missing or decoding fails.
+  ///
+  /// The clone shares the original's underlying pixels, so multiple
+  /// consumers (e.g. list rows showing the same icon) each get an
+  /// independently disposable handle; disposing one never affects the
+  /// cache or other holders.
   Future<ui.Image?> load(String path) async {
     if (_missing.contains(path)) return null;
     final cached = _images.remove(path);
     if (cached != null) {
       _images[path] = cached; // promote to front
-      return cached;
+      return cached.clone();
     }
     final inFlight = _pending[path];
-    if (inFlight != null) return inFlight;
+    if (inFlight != null) {
+      final image = await inFlight;
+      return image?.clone();
+    }
 
     final generation = _generation;
     final future = _decode(path).then(
@@ -65,7 +82,8 @@ class GameIconCache {
           _images[path] = image;
           while (_images.length > _maxEntries) {
             // Evict the least-recently-used entry and explicitly release
-            // its GPU texture.
+            // its GPU texture. Outstanding clones handed out earlier keep
+            // their underlying pixels alive via reference counting.
             final evicted = _images.remove(_images.keys.first);
             evicted?.dispose();
           }
@@ -87,7 +105,8 @@ class GameIconCache {
       },
     );
     _pending[path] = future;
-    return future;
+    final image = await future;
+    return image?.clone();
   }
 
   Future<ui.Image?> _decode(String path) async {

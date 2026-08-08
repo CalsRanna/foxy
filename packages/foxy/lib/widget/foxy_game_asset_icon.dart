@@ -16,6 +16,10 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// page (raw BLP format); the app ships no icons. Missing or
 /// client-nonexistent icons show a placeholder. Decoded results are cached
 /// and reused via [GameIconCache].
+///
+/// The cache returns a caller-owned clone per [GameIconCache.load]; this
+/// State holds that clone, paints it via [RawImage], and disposes it on
+/// unload/icon change, so cache evictions never invalidate a visible icon.
 class FoxyGameAssetIcon extends StatefulWidget {
   /// Raw DBC icon path (backslashes, case-insensitive; may carry an
   /// `interface/icons` prefix).
@@ -24,7 +28,16 @@ class FoxyGameAssetIcon extends StatefulWidget {
   /// Display edge length (square).
   final double size;
 
-  const FoxyGameAssetIcon({super.key, required this.rawPath, this.size = 40});
+  /// Icon cache used for loading; injectable for tests, defaults to the
+  /// app-wide instance.
+  final GameIconCache cache;
+
+  FoxyGameAssetIcon({
+    super.key,
+    required this.rawPath,
+    this.size = 40,
+    GameIconCache? cache,
+  }) : cache = cache ?? GameIconCache.instance;
 
   @override
   State<FoxyGameAssetIcon> createState() => _FoxyGameAssetIconState();
@@ -64,12 +77,20 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
   void didUpdateWidget(covariant FoxyGameAssetIcon oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.rawPath != widget.rawPath) {
-      // On icon change, reset state immediately: clear the old image, go
+      // On icon change, reset state immediately: release the old clone, go
       // back to loading, then start the new load.
+      _image?.dispose();
       _image = null;
       _loading = true;
       _load();
     }
+  }
+
+  @override
+  void dispose() {
+    // Release the caller-owned clone; the cache keeps its own reference.
+    _image?.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,13 +106,18 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
     _requestedPath = path;
     ui.Image? image;
     try {
-      image = await GameIconCache.instance.load(path);
+      image = await widget.cache.load(path);
     } catch (_) {
       // The cache layer should return null on decode failure; here IO/decode
       // exceptions are caught as a fallback and treated as missing.
       image = null;
     }
-    if (!mounted || path != _requestedPath) return;
+    if (!mounted || path != _requestedPath) {
+      // Stale result (widget swapped or unmounted mid-load): release the
+      // clone so it does not leak.
+      image?.dispose();
+      return;
+    }
     setState(() {
       _image = image;
       _loading = false;
