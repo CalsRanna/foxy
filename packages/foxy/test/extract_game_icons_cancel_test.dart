@@ -19,6 +19,8 @@ import 'package:path/path.dart' as p;
 /// delay — so the second task is guaranteed to still be running when the
 /// stale cancel timer fires.
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late Directory tempDir;
   late Directory clientRoot;
   late Directory outputDir;
@@ -104,6 +106,7 @@ void main() {
     expect(third.success, isTrue);
     expect(useCase.isRunning, isFalse);
   });
+
 }
 
 /// Scripted worker: honours the control protocol, terminates immediately on

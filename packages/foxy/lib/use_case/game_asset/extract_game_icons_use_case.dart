@@ -4,7 +4,6 @@ import 'dart:isolate';
 
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/infrastructure/game_asset/game_icon_cache.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extract_worker.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
@@ -116,11 +115,6 @@ final class ExtractGameIconsUseCase {
         // Full-extraction success marker, letting the first-setup wizard
         // decide the "extract icons" step is complete.
         await _configUtil.update({'icons_extracted': true});
-        // The icon set changed: drop cached textures and, crucially, the
-        // negative-cache entries recorded for icons that were missing
-        // before extraction, so the new files are picked up immediately
-        // without an app restart.
-        GameIconCache.instance.clear();
       }
       return result;
     } finally {
