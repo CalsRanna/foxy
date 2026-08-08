@@ -153,6 +153,7 @@ final class LinkedListReader {
       linkFieldName: linkFieldName,
       linkKeyType: linkFieldType,
       table: form.table,
+      logNameFields: List.unmodifiable(logNameFieldsOf(entityElement)),
     );
   }
 

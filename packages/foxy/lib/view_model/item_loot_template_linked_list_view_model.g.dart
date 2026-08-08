@@ -83,7 +83,7 @@ mixin _ItemLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
       await _repository.copyItemLootTemplate(key);
       if (token != _interactionToken || linkKey.value != link) return;
       try {
-        _logActivity(ActivityActionType.copy, key);
+        await _logActivity(ActivityActionType.copy, key);
       } catch (_) {
         // Activity log is best-effort; failure (e.g. not registered in
         // tests) must not affect the main flow.
@@ -133,10 +133,11 @@ mixin _ItemLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
     submitting.value = true;
     errorMessage.value = null;
     try {
+      final record = await _repository.getItemLootTemplate(key);
       await _repository.destroyItemLootTemplate(key);
       if (token != _interactionToken || linkKey.value != link) return;
       try {
-        _logActivity(ActivityActionType.delete, key);
+        await _logActivity(ActivityActionType.delete, key, record);
       } catch (_) {
         // Activity log is best-effort; failure (e.g. not registered in
         // tests) must not affect the main flow.
@@ -214,7 +215,7 @@ mixin _ItemLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       try {
-        _logActivity(
+        await _logActivity(
           action,
           originalKey ?? ItemLootTemplateKey.fromEntity(candidate),
         );
@@ -247,14 +248,27 @@ mixin _ItemLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
   }
 
   /// Fires the activity-log event after a write; persistence is handled by
-  /// the single ActivityLogListener aspect.
-  void _logActivity(ActivityActionType action, ItemLootTemplateKey key) {
+  /// the single ActivityLogListener aspect. The default resolves the
+  /// record's name from the database via the generated query layer
+  /// (pass [record] to skip the lookup, e.g. after a delete); override
+  /// in the hand-written class when the business log content differs.
+  Future<void> _logActivity(
+    ActivityActionType action,
+    ItemLootTemplateKey key, [
+    ItemLootTemplateEntity? record,
+  ]) async {
+    final resolved = record ?? await _repository.getItemLootTemplate(key);
+    final entityName = resolved == null
+        ? key.toString()
+        : resolved.comment.isNotEmpty
+        ? resolved.comment
+        : key.toString();
     GetIt.instance.get<EventBus>().fire(
       EntityWrittenEvent(
         ActivityLogEntity(
           module: 'item_loot_template',
           actionType: action,
-          entityName: key.toString(),
+          entityName: entityName,
           createdAt: DateTime.now(),
         ),
       ),

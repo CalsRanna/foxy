@@ -151,6 +151,7 @@ final class ListReader {
       copyMethodName: 'copy$baseName',
       keyType: keyType,
       table: table,
+      logNameFields: List.unmodifiable(logNameFieldsOf(entityElement)),
     );
   }
 

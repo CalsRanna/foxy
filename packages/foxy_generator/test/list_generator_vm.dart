@@ -73,6 +73,85 @@ void main() {
     );
   });
 
+  test('实体有 name 字段时 _logActivity 按 key 查库解析名称', () async {
+    final entity = sampleEntitySource.replaceFirst(
+      '  const SampleEntity({this.id = 0});',
+      "  @FoxyFullField('Name')\n"
+          "  final String name;\n\n"
+          "  const SampleEntity({this.id = 0, this.name = ''});",
+    );
+
+    await testBuilder(
+      foxyViewModelBuilder(BuilderOptions.empty),
+      {
+        listAnnotationAsset: listAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAsset: entity,
+        repositoryAsset: sampleRepositorySource,
+        viewModelAsset: sampleViewModelSource,
+      },
+      outputs: {
+        'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
+            decodedMatches(
+              allOf(<Matcher>[
+                // destroy 在删库前预取记录,日志收到名称而不是空查询。
+                contains('final record = await _repository.getSample(key);'),
+                contains('await _logActivity(ActivityActionType.delete, key, record);'),
+                contains('await _logActivity(ActivityActionType.copy, key);'),
+                // 签名经 dart_style 换行,按片段断言。
+                contains('Future<void> _logActivity('),
+                contains('int key, ['),
+                contains('SampleEntity? record,'),
+                contains(']) async {'),
+                contains(
+                  'final resolved = record ?? '
+                  'await _repository.getSample(key);',
+                ),
+                contains('resolved.name.isNotEmpty'),
+                contains('? resolved.name'),
+                contains("entityName: entityName,"),
+                // 无 name 字段的表保持同步 key 版本(见第一个用例)。
+                isNot(
+                  contains('void _logActivity(ActivityActionType action, '
+                      'int key) {'),
+                ),
+              ]),
+            ),
+      },
+    );
+  });
+
+  test('实体只有 nameLangZhCN 时 _logActivity 使用 locale 候选字段', () async {
+    final entity = sampleEntitySource.replaceFirst(
+      '  const SampleEntity({this.id = 0});',
+      "  @FoxyFullField('Name_lang_zhCN')\n"
+          "  final String nameLangZhCN;\n\n"
+          "  const SampleEntity({this.id = 0, this.nameLangZhCN = ''});",
+    );
+
+    await testBuilder(
+      foxyViewModelBuilder(BuilderOptions.empty),
+      {
+        listAnnotationAsset: listAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAsset: entity,
+        repositoryAsset: sampleRepositorySource,
+        viewModelAsset: sampleViewModelSource,
+      },
+      outputs: {
+        'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
+            decodedMatches(
+              allOf(<Matcher>[
+                contains('resolved.nameLangZhCN.isNotEmpty'),
+                contains('? resolved.nameLangZhCN'),
+              ]),
+            ),
+      },
+    );
+  });
+
   test('filter 字段 id 生成 idController(与字段同名)', () async {
     final repository = sampleRepositorySource.replaceFirst(
       "@FoxyFilter.text('entry')",

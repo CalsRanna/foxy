@@ -76,6 +76,13 @@ final class LinkedDetailReader {
       );
     }
 
+    final entityElement = (await resolveFullEntity(
+      buildStep,
+      element,
+      form.entityClassName,
+      "${form.className}'s @FoxyLinkedDetailViewModel",
+    )).entityElement;
+
     // Handshake with the bound Repository: the get-or-create skeleton calls
     // `getXxx(linkKey)` (by primary key) and `createXxx(linkKey)`. When the
     // repository declares linkKey it must be exactly the entity's single key
@@ -132,6 +139,7 @@ final class LinkedDetailReader {
       keyType: form.keyType,
       singleKeyFieldName: singleKeyFieldName,
       table: form.table,
+      logNameFields: List.unmodifiable(logNameFieldsOf(entityElement)),
     );
   }
 

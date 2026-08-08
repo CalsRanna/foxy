@@ -33,7 +33,7 @@ mixin _SpellItemEnchantmentListViewModelMixin
     errorMessage.value = null;
     try {
       await _repository.copySpellItemEnchantment(key);
-      _logActivity(ActivityActionType.copy, key);
+      await _logActivity(ActivityActionType.copy, key);
       await _refresh();
     } catch (error) {
       errorMessage.value = foxyErrorMessage(error);
@@ -50,8 +50,9 @@ mixin _SpellItemEnchantmentListViewModelMixin
     submitting.value = true;
     errorMessage.value = null;
     try {
+      final record = await _repository.getSpellItemEnchantment(key);
       await _repository.destroySpellItemEnchantment(key);
-      _logActivity(ActivityActionType.delete, key);
+      await _logActivity(ActivityActionType.delete, key, record);
       normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
@@ -98,14 +99,27 @@ mixin _SpellItemEnchantmentListViewModelMixin
   }
 
   /// Fires the activity-log event after a write; persistence is handled by
-  /// the single ActivityLogListener aspect.
-  void _logActivity(ActivityActionType action, int key) {
+  /// the single ActivityLogListener aspect. The default resolves the
+  /// record's name from the database via the generated query layer
+  /// (pass [record] to skip the lookup, e.g. after a delete); override
+  /// in the hand-written class when the business log content differs.
+  Future<void> _logActivity(
+    ActivityActionType action,
+    int key, [
+    SpellItemEnchantmentEntity? record,
+  ]) async {
+    final resolved = record ?? await _repository.getSpellItemEnchantment(key);
+    final entityName = resolved == null
+        ? key.toString()
+        : resolved.nameLangZhCN.isNotEmpty
+        ? resolved.nameLangZhCN
+        : key.toString();
     GetIt.instance.get<EventBus>().fire(
       EntityWrittenEvent(
         ActivityLogEntity(
           module: 'dbc_spell_item_enchantment',
           actionType: action,
-          entityName: key.toString(),
+          entityName: entityName,
           createdAt: DateTime.now(),
         ),
       ),

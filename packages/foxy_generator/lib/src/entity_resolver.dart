@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, deprecated_member_use
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
@@ -9,6 +9,10 @@ import 'package:foxy_generator/src/naming.dart';
 
 const _fullEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullEntity',
+);
+
+const _fullFieldChecker = TypeChecker.fromUrl(
+  'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
 );
 
 /// Resolves a class by its convention-derived file path
@@ -65,6 +69,41 @@ Never _fail(String message, Element element, String correction) {
     '$message\nFix: $correction',
     element: element,
   );
+}
+
+/// Candidate name fields of a Full Entity in priority order, used as the
+/// default activity-log entity name (see the list emitters). Matches
+/// `String`/`String?` fields by naming convention: `name`, the first
+/// `*NameLangZhCN` locale variant (`nameLangZhCN` / `areaNameLangZhCN` /
+/// `sortNameLangZhCN`), `titleLangZhCN`, `title`, `logTitle`, then
+/// `comment`. Empty when the entity has no name-ish column; the caller
+/// falls back to the record key.
+List<String> logNameFieldsOf(ClassElement entityElement) {
+  final stringFields = <String>{};
+  for (final field in entityElement.fields) {
+    if (field.isStatic || field.isSynthetic) continue;
+    if (_fullFieldChecker.annotationsOf(field).length != 1) continue;
+    final name = field.name;
+    if (name == null) continue;
+    final type = field.type.getDisplayString();
+    if (type != 'String' && type != 'String?') continue;
+    stringFields.add(name);
+  }
+  final candidates = <String>[];
+  void addIfPresent(String name) {
+    if (stringFields.contains(name)) candidates.add(name);
+  }
+
+  addIfPresent('name');
+  final localeNames = stringFields.where(
+    (n) => n.toLowerCase().endsWith('namelangzhcn'),
+  );
+  if (localeNames.isNotEmpty) candidates.add(localeNames.first);
+  addIfPresent('titleLangZhCN');
+  addIfPresent('title');
+  addIfPresent('logTitle');
+  addIfPresent('comment');
+  return candidates;
 }
 
 /// Resolved Full Entity: its class element plus the physical table name

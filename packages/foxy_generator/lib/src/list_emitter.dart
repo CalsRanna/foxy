@@ -1,4 +1,5 @@
 import 'package:foxy_generator/src/list_model.dart';
+import 'package:foxy_generator/src/log_activity_hook.dart';
 
 final class ListEmitter {
   const ListEmitter();
@@ -9,6 +10,7 @@ final class ListEmitter {
   /// paginate → reset → search), private methods by name
   /// (_collectFilter → _logActivity → _refresh).
   String emit(ListGenerationModel model) {
+    final hook = logActivityHook(model);
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName}')
       ..writeln('    on FieldControllerMixin, QueryVersionMixin {');
@@ -24,8 +26,20 @@ final class ListEmitter {
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
-      ..writeln('      await _repository.destroy${_baseName(model)}(key);')
-      ..writeln('      _logActivity(ActivityActionType.delete, key);')
+      ..writeln(
+        model.logNameFields.isEmpty
+            ? '      await _repository.destroy${_baseName(model)}(key);'
+            // The row is gone after the destroy; capture its name first so
+            // the activity log can record it.
+            : '      final record = '
+                'await _repository.get${_baseName(model)}(key);\n'
+                '      await _repository.destroy${_baseName(model)}(key);',
+      )
+      ..writeln(
+        model.logNameFields.isEmpty
+            ? '      _logActivity(ActivityActionType.delete, key);'
+            : '      await _logActivity(ActivityActionType.delete, key, record);',
+      )
       ..writeln('      normalizePageAfterDelete(total.value - 1);')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
@@ -78,19 +92,9 @@ final class ListEmitter {
       ..writeln('    );')
       ..writeln('  }')
       ..writeln()
-      ..writeln(
-        '  /// Fires the activity-log event after a write; persistence is handled by\n'
-        '  /// the single ActivityLogListener aspect.',
-      )
-      ..writeln(
-        '  void _logActivity(ActivityActionType action, ${model.keyParameter}) {',
-      )
-      ..writeln('    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(')
-      ..writeln('      module: \'${model.moduleName}\',')
-      ..writeln('      actionType: action,')
-      ..writeln('      entityName: key.toString(),')
-      ..writeln('      createdAt: DateTime.now(),')
-      ..writeln('    )));')
+      ..writeln(hook.documentation)
+      ..writeln(hook.signature)
+      ..writeln(hook.body)
       ..writeln('  }')
       ..writeln()
       ..writeln('  Future<void> _refresh() async {')
@@ -164,7 +168,11 @@ final class ListEmitter {
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
       ..writeln('      await _repository.${model.copyMethodName}(key);')
-      ..writeln('      _logActivity(ActivityActionType.copy, key);')
+      ..writeln(
+        model.logNameFields.isEmpty
+            ? '      _logActivity(ActivityActionType.copy, key);'
+            : '      await _logActivity(ActivityActionType.copy, key);',
+      )
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
       ..writeln('      errorMessage.value = foxyErrorMessage(error);')
@@ -177,4 +185,15 @@ final class ListEmitter {
 
   String _baseName(ListGenerationModel model) => model.repositoryClassName
       .substring(0, model.repositoryClassName.length - 'Repository'.length);
+
+  /// Shared `_logActivity` hook rendering (name-resolving DB lookup or the
+  /// key-only fallback), see LogActivityHookEmitter.
+  LogActivityHookEmitter logActivityHook(ListGenerationModel model) =>
+      LogActivityHookEmitter(
+        entityClassName: model.entityClassName,
+        keyParameter: model.keyParameter,
+        getMethodName: 'get${_baseName(model)}',
+        moduleName: model.moduleName,
+        logNameFields: model.logNameFields,
+      );
 }

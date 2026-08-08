@@ -1,6 +1,7 @@
 import 'package:foxy_generator/src/form_emitter.dart';
 import 'package:foxy_generator/src/form_model.dart';
 import 'package:foxy_generator/src/linked_list_model.dart';
+import 'package:foxy_generator/src/log_activity_hook.dart';
 import 'package:foxy_generator/src/naming.dart';
 
 final class LinkedListEmitter {
@@ -11,8 +12,15 @@ final class LinkedListEmitter {
   /// public methods by name (copy → create → destroy → dispose → edit →
   /// initSignals → paginate → persist → setLinkKey), private methods by
   /// name (_afterApplyCandidate → _applyCandidate → _collectCandidate →
-  /// _refresh).
+  /// _logActivity → _refresh).
   String emit(LinkedListGenerationModel model) {
+    final hook = LogActivityHookEmitter(
+      entityClassName: model.entityClassName,
+      keyParameter: '${model.keyType} key',
+      getMethodName: 'get${model.baseName}',
+      moduleName: model.moduleName,
+      logNameFields: model.logNameFields,
+    );
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName} on FieldControllerMixin {')
       ..writeln(
@@ -78,7 +86,11 @@ final class LinkedListEmitter {
         '      if (token != _interactionToken || linkKey.value != link) return;',
       )
       ..writeln('      try {')
-      ..writeln('        _logActivity(ActivityActionType.copy, key);')
+      ..writeln(
+        model.logNameFields.isEmpty
+            ? '        _logActivity(ActivityActionType.copy, key);'
+            : '        await _logActivity(ActivityActionType.copy, key);',
+      )
       ..writeln('      } catch (_) {')
       ..writeln(
         '        // Activity log is best-effort; failure (e.g. not registered in\n'
@@ -142,12 +154,24 @@ final class LinkedListEmitter {
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
-      ..writeln('      await _repository.destroy${model.baseName}(key);')
+      ..writeln(
+        model.logNameFields.isEmpty
+            ? '      await _repository.destroy${model.baseName}(key);'
+            // The row is gone after the destroy; capture its name first so
+            // the activity log can record it.
+            : '      final record = '
+                'await _repository.get${model.baseName}(key);\n'
+                '      await _repository.destroy${model.baseName}(key);',
+      )
       ..writeln(
         '      if (token != _interactionToken || linkKey.value != link) return;',
       )
       ..writeln('      try {')
-      ..writeln('        _logActivity(ActivityActionType.delete, key);')
+      ..writeln(
+        model.logNameFields.isEmpty
+            ? '        _logActivity(ActivityActionType.delete, key);'
+            : '        await _logActivity(ActivityActionType.delete, key, record);',
+      )
       ..writeln('      } catch (_) {')
       ..writeln(
         '        // Activity log is best-effort; failure (e.g. not registered in\n'
@@ -246,7 +270,7 @@ final class LinkedListEmitter {
       ..writeln('          : ActivityActionType.update;')
       ..writeln('      try {')
       ..writeln(
-        '        _logActivity(action, '
+        '        ${model.logNameFields.isEmpty ? '' : 'await '}_logActivity(action, '
         '${model.singleKeyFieldName != null ? 'originalKey ?? candidate.${model.singleKeyFieldName}' : 'originalKey ?? ${model.baseName}Key.fromEntity(candidate)'});',
       )
       ..writeln('      } catch (_) {')
@@ -288,19 +312,9 @@ final class LinkedListEmitter {
       ..writeln('    await _refresh();')
       ..writeln('  }')
       ..writeln()
-      ..writeln(
-        '  /// Fires the activity-log event after a write; persistence is handled by\n'
-        '  /// the single ActivityLogListener aspect.',
-      )
-      ..writeln(
-        '  void _logActivity(ActivityActionType action, ${model.keyType} key) {',
-      )
-      ..writeln('    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(')
-      ..writeln('      module: \'${model.moduleName}\',')
-      ..writeln('      actionType: action,')
-      ..writeln('      entityName: key.toString(),')
-      ..writeln('      createdAt: DateTime.now(),')
-      ..writeln('    )));')
+      ..writeln(hook.documentation)
+      ..writeln(hook.signature)
+      ..writeln(hook.body)
       ..writeln('  }')
       ..writeln()
       ..writeln('  Future<void> _refresh() async {')

@@ -90,7 +90,7 @@ mixin _PickpocketingLootTemplateLinkedListViewModelMixin
       await _repository.copyPickpocketingLootTemplate(key);
       if (token != _interactionToken || linkKey.value != link) return;
       try {
-        _logActivity(ActivityActionType.copy, key);
+        await _logActivity(ActivityActionType.copy, key);
       } catch (_) {
         // Activity log is best-effort; failure (e.g. not registered in
         // tests) must not affect the main flow.
@@ -140,10 +140,11 @@ mixin _PickpocketingLootTemplateLinkedListViewModelMixin
     submitting.value = true;
     errorMessage.value = null;
     try {
+      final record = await _repository.getPickpocketingLootTemplate(key);
       await _repository.destroyPickpocketingLootTemplate(key);
       if (token != _interactionToken || linkKey.value != link) return;
       try {
-        _logActivity(ActivityActionType.delete, key);
+        await _logActivity(ActivityActionType.delete, key, record);
       } catch (_) {
         // Activity log is best-effort; failure (e.g. not registered in
         // tests) must not affect the main flow.
@@ -224,7 +225,7 @@ mixin _PickpocketingLootTemplateLinkedListViewModelMixin
           ? ActivityActionType.create
           : ActivityActionType.update;
       try {
-        _logActivity(
+        await _logActivity(
           action,
           originalKey ?? PickpocketingLootTemplateKey.fromEntity(candidate),
         );
@@ -257,17 +258,28 @@ mixin _PickpocketingLootTemplateLinkedListViewModelMixin
   }
 
   /// Fires the activity-log event after a write; persistence is handled by
-  /// the single ActivityLogListener aspect.
-  void _logActivity(
+  /// the single ActivityLogListener aspect. The default resolves the
+  /// record's name from the database via the generated query layer
+  /// (pass [record] to skip the lookup, e.g. after a delete); override
+  /// in the hand-written class when the business log content differs.
+  Future<void> _logActivity(
     ActivityActionType action,
-    PickpocketingLootTemplateKey key,
-  ) {
+    PickpocketingLootTemplateKey key, [
+    PickpocketingLootTemplateEntity? record,
+  ]) async {
+    final resolved =
+        record ?? await _repository.getPickpocketingLootTemplate(key);
+    final entityName = resolved == null
+        ? key.toString()
+        : resolved.comment.isNotEmpty
+        ? resolved.comment
+        : key.toString();
     GetIt.instance.get<EventBus>().fire(
       EntityWrittenEvent(
         ActivityLogEntity(
           module: 'pickpocketing_loot_template',
           actionType: action,
-          entityName: key.toString(),
+          entityName: entityName,
           createdAt: DateTime.now(),
         ),
       ),

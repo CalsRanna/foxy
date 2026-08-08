@@ -51,6 +51,11 @@ final class ListGenerationModel {
   /// Physical table name from `@FoxyFullEntity(table:)`.
   final String table;
 
+  /// Candidate name fields on the full entity (priority order, see
+  /// ListReader); empty when the table has no name-ish column, in which
+  /// case the activity log falls back to the record key.
+  final List<String> logNameFields;
+
   const ListGenerationModel({
     required this.className,
     required this.entityClassName,
@@ -63,6 +68,7 @@ final class ListGenerationModel {
     required this.copyMethodName,
     required this.keyType,
     required this.table,
+    required this.logNameFields,
   });
 
   /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
