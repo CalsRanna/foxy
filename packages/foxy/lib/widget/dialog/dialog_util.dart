@@ -3,19 +3,19 @@ import 'package:foxy/router/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Uniform dialog max width (consistent across the project).
-const kFoxyDialogMaxWidth = 720.0;
+const kDialogWidth = 720.0;
 
 /// Dialog max height = screen height × this ratio.
 const kFoxyDialogMaxHeightRatio = 0.8;
 
-/// Uniform dialog constraints: maxWidth fixed to [kFoxyDialogMaxWidth],
+/// Uniform dialog constraints: maxWidth fixed to [kDialogWidth],
 /// maxHeight by screen ratio.
 ///
 /// Every business dialog's [ShadDialog.constraints] should use this
 /// function, keeping width and max height consistent project-wide.
 BoxConstraints foxyDialogConstraints(BuildContext context) {
   return BoxConstraints(
-    maxWidth: kFoxyDialogMaxWidth,
+    maxWidth: kDialogWidth,
     maxHeight: MediaQuery.of(context).size.height * kFoxyDialogMaxHeightRatio,
   );
 }
@@ -79,6 +79,7 @@ class DialogUtil {
         return ShadDialog.alert(
           title: Text(title),
           description: Text(message),
+          constraints: foxyDialogConstraints(context),
           actions: [
             ShadButton(
               child: const Text('确定'),
@@ -104,6 +105,7 @@ class DialogUtil {
         return ShadDialog.alert(
           title: Text(title),
           description: description != null ? Text(description) : null,
+          constraints: foxyDialogConstraints(context),
           actions: [
             ShadButton.outline(
               child: Text(cancelText),
@@ -155,6 +157,7 @@ class DialogUtil {
         return ShadDialog.alert(
           title: Text('错误'),
           description: Text(error),
+          constraints: foxyDialogConstraints(context),
           actions: [
             ShadButton(
               child: Text('确定'),

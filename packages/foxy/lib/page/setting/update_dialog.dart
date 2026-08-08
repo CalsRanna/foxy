@@ -34,7 +34,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: kFoxyDialogMaxWidth,
+      width: kDialogWidth,
       child: Watch((_) {
         final vm = _vm;
         final checking = vm.checking.value;

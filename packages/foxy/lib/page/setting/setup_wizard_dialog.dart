@@ -7,10 +7,9 @@ import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-
-const _kWizardWidth = 640.0;
 
 /// First-setup wizard: a non-dismissable three-step guide.
 ///
@@ -60,7 +59,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     return PopScope(
       canPop: false,
       child: SizedBox(
-        width: _kWizardWidth,
+        width: kDialogWidth,
         child: Watch((_) {
           if (!_checked.value) {
             return SettingDialogShell(

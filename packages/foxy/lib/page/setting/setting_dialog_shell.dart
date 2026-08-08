@@ -8,7 +8,7 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-const _kDialogWidth = kFoxyDialogMaxWidth;
+const _kDialogWidth = kDialogWidth;
 
 // ─── Common shell ──────────────────────────────────────────────────────────
 
