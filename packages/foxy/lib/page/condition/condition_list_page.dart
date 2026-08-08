@@ -135,7 +135,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
         ),
         FoxyTableColumn.flex(
           label: '参数1',
-          cell: (_, condition) => Text(condition.conditionValue1.toString()),
+          cell: (_, condition) => Text(condition.conditionValue1Label),
         ),
         FoxyTableColumn.flex(
           label: '说明',

@@ -3,6 +3,7 @@ import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
+import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
@@ -80,5 +81,20 @@ void main() {
       ),
       throwsA(isA<CopyNotSupportedException>()),
     );
+  });
+
+  test('spell_linked_spell 类型映射为标签，未知值回退', () {
+    const linked = BriefSpellLinkedSpellEntity(type: 1);
+    expect(linked.typeLabel, '命中');
+    expect(const BriefSpellLinkedSpellEntity(type: 9).typeLabel, '9');
+  });
+
+  test('spell_area 任务状态掩码展开为标签，未命中回退', () {
+    const area = BriefSpellAreaEntity(
+      questStartStatus: 0x01 | 0x08,
+      questEndStatus: 0,
+    );
+    expect(area.questStartStatusLabel, '未接取, 进行中');
+    expect(area.questEndStatusLabel, '0');
   });
 }

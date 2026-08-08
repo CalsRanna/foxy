@@ -1,3 +1,4 @@
+import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'player_create_info_entity.g.dart';
@@ -50,4 +51,12 @@ class PlayerCreateInfoEntity with _PlayerCreateInfoEntityMixin {
 
   factory PlayerCreateInfoEntity.fromJson(Map<String, dynamic> json) =>
       _PlayerCreateInfoEntityMixin.fromJson(json);
+}
+
+extension BriefPlayerCreateInfoEntityLabel on BriefPlayerCreateInfoEntity {
+  /// 种族标签（人类/兽人/…），未知值回退为原始数字。
+  String get raceLabel => kPlayerRaceOptions[race] ?? race.toString();
+
+  /// 职业标签（战士/圣骑士/…），未知值回退为原始数字。
+  String get classLabel => kPlayerClassOptions[class_] ?? class_.toString();
 }

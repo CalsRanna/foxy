@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/entity/game_object_template_entity.dart';
 
 void main() {
 
@@ -95,6 +96,11 @@ void main() {
     expect(gameObjectDataFieldSpec(4, 0), isA<IntegerNumberFieldSpec>());
     expect(gameObjectDataFieldSpec(4, 0).editable, isFalse);
     expect(gameObjectDataFieldSpec(6, 3), isA<IntegerReferenceFieldSpec>());
+  });
+
+  test('游戏对象类型映射为标签，未知值回退', () {
+    expect(const BriefGameObjectTemplateEntity(type: 2).typeLabel, '任务发放者');
+    expect(const BriefGameObjectTemplateEntity(type: 99).typeLabel, '99');
   });
 
 }

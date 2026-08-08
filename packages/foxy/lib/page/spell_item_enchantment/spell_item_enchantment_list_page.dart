@@ -130,17 +130,17 @@ class _SpellItemEnchantmentListPageState
         FoxyTableColumn.fixed(
           label: '效果0',
           width: 120,
-          cell: (_, item) => Text(item.effect0.toString()),
+          cell: (_, item) => Text(item.effect0Label),
         ),
         FoxyTableColumn.fixed(
           label: '效果1',
           width: 120,
-          cell: (_, item) => Text(item.effect1.toString()),
+          cell: (_, item) => Text(item.effect1Label),
         ),
         FoxyTableColumn.fixed(
           label: '效果2',
           width: 120,
-          cell: (_, item) => Text(item.effect2.toString()),
+          cell: (_, item) => Text(item.effect2Label),
         ),
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),

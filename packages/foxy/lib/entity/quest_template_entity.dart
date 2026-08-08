@@ -1,3 +1,4 @@
+import 'package:foxy/constant/quest_enums.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'quest_template_entity.g.dart';
@@ -445,4 +446,9 @@ extension BriefQuestTemplateEntityDisplay on BriefQuestTemplateEntity {
       localeDetails.isNotEmpty ? localeDetails : questDescription;
 
   String get displayTitle => localeTitle.isNotEmpty ? localeTitle : logTitle;
+}
+
+extension BriefQuestTemplateEntityLabel on BriefQuestTemplateEntity {
+  /// 任务类型标签（自动完成等），未知值回退为原始数字。
+  String get typeLabel => kQuestMethodOptions[questType] ?? questType.toString();
 }

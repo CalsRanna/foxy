@@ -1,3 +1,4 @@
+import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'spell_linked_spell_entity.g.dart';
@@ -32,4 +33,9 @@ class SpellLinkedSpellEntity with _SpellLinkedSpellEntityMixin {
 
   factory SpellLinkedSpellEntity.fromJson(Map<String, dynamic> json) =>
       _SpellLinkedSpellEntityMixin.fromJson(json);
+}
+
+extension BriefSpellLinkedSpellEntityLabel on BriefSpellLinkedSpellEntity {
+  /// 链接类型标签（施放/命中/光环），未知值回退为原始数字。
+  String get typeLabel => kSpellLinkedTypeOptions[type] ?? type.toString();
 }

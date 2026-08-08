@@ -111,12 +111,12 @@ class _PlayerCreateInfoSpellCustomViewState
         FoxyTableColumn.fixed(
           label: '种族掩码',
           width: 120,
-          cell: (_, item) => Text(item.raceMask.toString()),
+          cell: (_, item) => Text(item.raceMaskLabel),
         ),
         FoxyTableColumn.fixed(
           label: '职业掩码',
           width: 120,
-          cell: (_, item) => Text(item.classMask.toString()),
+          cell: (_, item) => Text(item.classMaskLabel),
         ),
         FoxyTableColumn.fixed(
           label: '法术',

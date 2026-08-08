@@ -1,3 +1,5 @@
+import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'gossip_menu_option_entity.g.dart';
@@ -81,4 +83,10 @@ class GossipMenuOptionEntity with _GossipMenuOptionEntityMixin {
 extension BriefGossipMenuOptionEntityDisplay on BriefGossipMenuOptionEntity {
   String get displayText =>
       localeOptionText.isNotEmpty ? localeOptionText : optionText;
+}
+
+extension BriefGossipMenuOptionEntityLabel on BriefGossipMenuOptionEntity {
+  /// NPC 标识掩码标签（对话/任务/商人/…），未命中回退为原始掩码。
+  String get optionNpcFlagLabel =>
+      flagMaskLabel(optionNpcFlag, kNpcFlagOptions);
 }

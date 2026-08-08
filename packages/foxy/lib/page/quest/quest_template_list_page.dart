@@ -134,7 +134,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
         FoxyTableColumn.fixed(
           label: '类型',
           width: 120,
-          cell: (_, item) => Text(item.questType.toString()),
+          cell: (_, item) => Text(item.typeLabel),
         ),
         FoxyTableColumn.fixed(
           label: '等级',

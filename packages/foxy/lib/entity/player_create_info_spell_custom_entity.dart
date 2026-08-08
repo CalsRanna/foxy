@@ -1,3 +1,5 @@
+import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'player_create_info_spell_custom_entity.g.dart';
@@ -32,4 +34,15 @@ class PlayerCreateInfoSpellCustomEntity
   factory PlayerCreateInfoSpellCustomEntity.fromJson(
     Map<String, dynamic> json,
   ) => _PlayerCreateInfoSpellCustomEntityMixin.fromJson(json);
+}
+
+extension BriefPlayerCreateInfoSpellCustomEntityLabel
+    on BriefPlayerCreateInfoSpellCustomEntity {
+  /// 种族掩码标签（人类/兽人/…），未命中回退为原始掩码。
+  String get raceMaskLabel =>
+      flagMaskLabel(raceMask, kPlayerCreateRaceMaskFlags);
+
+  /// 职业掩码标签（战士/圣骑士/…），未命中回退为原始掩码。
+  String get classMaskLabel =>
+      flagMaskLabel(classMask, kPlayerCreateClassMaskFlags);
 }

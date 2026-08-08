@@ -282,11 +282,11 @@ class _SpellAreaViewState extends State<SpellAreaView> {
         FoxyTableColumn.fixed(
           label: '开始任务掩码',
           width: 100,
-          cell: (_, item) => Text(item.questStartStatus.toString()),
+          cell: (_, item) => Text(item.questStartStatusLabel),
         ),
         FoxyTableColumn.flex(
           label: '结束任务掩码',
-          cell: (_, item) => Text(item.questEndStatus.toString()),
+          cell: (_, item) => Text(item.questEndStatusLabel),
         ),
       ],
       onRowDoubleTap: (item) async {

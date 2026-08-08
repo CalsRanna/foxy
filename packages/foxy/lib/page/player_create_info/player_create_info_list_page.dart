@@ -124,12 +124,12 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
         FoxyTableColumn.fixed(
           label: '种族',
           width: 120,
-          cell: (_, info) => Text(info.race.toString()),
+          cell: (_, info) => Text(info.raceLabel),
         ),
         FoxyTableColumn.fixed(
           label: '职业',
           width: 120,
-          cell: (_, info) => Text(info.class_.toString()),
+          cell: (_, info) => Text(info.classLabel),
         ),
         FoxyTableColumn.fixed(
           label: '地图',

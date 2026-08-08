@@ -73,4 +73,13 @@ void main() {
     expect(kGossipBooleanOptions, {0: '否', 1: '是'});
   });
 
+  test('NPC 标识掩码展开为标签，未命中回退', () {
+    const option = BriefGossipMenuOptionEntity(optionNpcFlag: 0x01 | 0x80);
+    expect(option.optionNpcFlagLabel, '对话, 商人');
+    expect(
+      const BriefGossipMenuOptionEntity(optionNpcFlag: 0).optionNpcFlagLabel,
+      '0',
+    );
+  });
+
 }

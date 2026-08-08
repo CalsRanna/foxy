@@ -124,7 +124,7 @@ class _GameObjectTemplateListPageState
         FoxyTableColumn.fixed(
           label: '类型',
           width: 120,
-          cell: (_, template) => Text(template.type.toString()),
+          cell: (_, template) => Text(template.typeLabel),
         ),
         FoxyTableColumn.fixed(
           label: '尺寸',

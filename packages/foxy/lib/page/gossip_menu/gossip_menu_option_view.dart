@@ -331,7 +331,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
         FoxyTableColumn.fixed(
           label: 'NPC标识',
           width: 120,
-          cell: (_, o) => Text(o.optionNpcFlag.toString()),
+          cell: (_, o) => Text(o.optionNpcFlagLabel),
         ),
         FoxyTableColumn.fixed(
           label: '子选项',

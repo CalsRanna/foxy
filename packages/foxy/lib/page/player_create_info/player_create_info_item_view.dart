@@ -104,12 +104,12 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
         FoxyTableColumn.fixed(
           label: '种族',
           width: 120,
-          cell: (_, item) => Text(item.race.toString()),
+          cell: (_, item) => Text(item.raceLabel),
         ),
         FoxyTableColumn.fixed(
           label: '职业',
           width: 120,
-          cell: (_, item) => Text(item.class_.toString()),
+          cell: (_, item) => Text(item.classLabel),
         ),
         FoxyTableColumn.fixed(
           label: '物品ID',

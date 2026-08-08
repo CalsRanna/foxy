@@ -107,12 +107,12 @@ class _PlayerCreateInfoCastSpellViewState
         FoxyTableColumn.fixed(
           label: '种族掩码',
           width: 180,
-          cell: (_, row) => Text(row.raceMask.toString()),
+          cell: (_, row) => Text(row.raceMaskLabel),
         ),
         FoxyTableColumn.fixed(
           label: '职业掩码',
           width: 180,
-          cell: (_, row) => Text(row.classMask.toString()),
+          cell: (_, row) => Text(row.classMaskLabel),
         ),
         FoxyTableColumn.fixed(
           label: '法术',

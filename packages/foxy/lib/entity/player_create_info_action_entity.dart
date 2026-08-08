@@ -1,3 +1,4 @@
+import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'player_create_info_action_entity.g.dart';
@@ -35,4 +36,11 @@ class PlayerCreateInfoActionEntity with _PlayerCreateInfoActionEntityMixin {
 
   factory PlayerCreateInfoActionEntity.fromJson(Map<String, dynamic> json) =>
       _PlayerCreateInfoActionEntityMixin.fromJson(json);
+}
+
+extension BriefPlayerCreateInfoActionEntityLabel
+    on BriefPlayerCreateInfoActionEntity {
+  /// 动作按钮类型标签（法术/宏/…），未知值回退为原始数字。
+  String get typeLabel =>
+      kPlayerActionButtonTypeOptions[type] ?? type.toString();
 }

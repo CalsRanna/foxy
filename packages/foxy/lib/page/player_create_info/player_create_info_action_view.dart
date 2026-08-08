@@ -240,7 +240,7 @@ class _PlayerCreateInfoActionViewState
         ),
         FoxyTableColumn.flex(
           label: '类型',
-          cell: (_, item) => Text(item.type.toString()),
+          cell: (_, item) => Text(item.typeLabel),
         ),
       ],
       onRowDoubleTap: (item) async {

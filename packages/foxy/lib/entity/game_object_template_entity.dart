@@ -1,3 +1,4 @@
+import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'game_object_template_entity.g.dart';
@@ -160,4 +161,9 @@ class GameObjectTemplateEntity with _GameObjectTemplateEntityMixin {
 extension BriefGameObjectTemplateEntityDisplay
     on BriefGameObjectTemplateEntity {
   String get displayName => localeName.isNotEmpty ? localeName : name;
+}
+
+extension BriefGameObjectTemplateEntityLabel on BriefGameObjectTemplateEntity {
+  /// 游戏对象类型标签（门/按钮/任务发放者/…），未知值回退为原始数字。
+  String get typeLabel => kGameObjectTypeOptions[type] ?? type.toString();
 }

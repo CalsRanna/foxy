@@ -186,7 +186,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
         FoxyTableColumn.fixed(
           label: '类型',
           width: 100,
-          cell: (_, item) => Text(item.type.toString()),
+          cell: (_, item) => Text(item.typeLabel),
         ),
         FoxyTableColumn.flex(
           label: '注解',

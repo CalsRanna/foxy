@@ -1,3 +1,4 @@
+import 'package:foxy/constant/spell_item_enchantment_constants.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'spell_item_enchantment_entity.g.dart';
@@ -168,4 +169,19 @@ class SpellItemEnchantmentEntity with _SpellItemEnchantmentEntityMixin {
 
   factory SpellItemEnchantmentEntity.fromJson(Map<String, dynamic> json) =>
       _SpellItemEnchantmentEntityMixin.fromJson(json);
+}
+
+extension BriefSpellItemEnchantmentEntityLabel
+    on BriefSpellItemEnchantmentEntity {
+  /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
+  String get effect0Label =>
+      kSpellItemEnchantmentEffectTypeOptions[effect0] ?? effect0.toString();
+
+  /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
+  String get effect1Label =>
+      kSpellItemEnchantmentEffectTypeOptions[effect1] ?? effect1.toString();
+
+  /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
+  String get effect2Label =>
+      kSpellItemEnchantmentEffectTypeOptions[effect2] ?? effect2.toString();
 }
