@@ -91,33 +91,34 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
           child: Text('确定'),
         ),
       ],
-      child: Flexible(
-        child: FoxyDataTable<FlagItem>(
-          pinnedRowCount: 1,
-          rows: flags,
-          onRowTap: (flag) => _toggleFlag(flag.value),
-          columns: [
-            FoxyTableColumn.fixed(
-              label: '',
-              width: 120,
-              cell: (_, flag) => ShadCheckbox(
-                value: (_currentValue & flag.value) != 0,
-                onChanged: (_) => _toggleFlag(flag.value),
-              ),
+      // ShadDialog already wraps its child in a BoxyColumn + Flexible
+      // (shadcn_ui dialog.dart), so no extra Flexible here: a nested
+      // Flutter Flexible would compete for the same FlexParentData.
+      child: FoxyDataTable<FlagItem>(
+        pinnedRowCount: 1,
+        rows: flags,
+        onRowTap: (flag) => _toggleFlag(flag.value),
+        columns: [
+          FoxyTableColumn.fixed(
+            label: '',
+            width: 120,
+            cell: (_, flag) => ShadCheckbox(
+              value: (_currentValue & flag.value) != 0,
+              onChanged: (_) => _toggleFlag(flag.value),
             ),
-            FoxyTableColumn.fixed(
-              label: '标志值',
-              width: 160,
-              cell: (_, flag) => Text(
-                '0x${flag.value.toRadixString(16).toUpperCase().padLeft(8, '0')}',
-              ),
+          ),
+          FoxyTableColumn.fixed(
+            label: '标志值',
+            width: 160,
+            cell: (_, flag) => Text(
+              '0x${flag.value.toRadixString(16).toUpperCase().padLeft(8, '0')}',
             ),
-            FoxyTableColumn.flex(
-              label: '名称',
-              cell: (_, flag) => Text(flag.label),
-            ),
-          ],
-        ),
+          ),
+          FoxyTableColumn.flex(
+            label: '名称',
+            cell: (_, flag) => Text(flag.label),
+          ),
+        ],
       ),
     );
   }

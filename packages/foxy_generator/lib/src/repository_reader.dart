@@ -13,7 +13,6 @@ import 'package:foxy_generator/src/source_shape.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
 import 'package:foxy_generator/src/repository_filter_reader.dart';
 import 'package:foxy_generator/src/repository_model.dart';
-import 'package:foxy_generator/src/source_shape.dart';
 
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyBriefEntity',
@@ -142,12 +141,11 @@ final class RepositoryReader {
       buildStep.inputId.package,
       'lib/view_model/${toSnakeCase(baseName)}_list_view_model.dart',
     );
-    final listViewModelPresent =
-        await const SourceShape().fileHasAnnotation(
-          buildStep,
-          listViewModelAssetId,
-          'FoxyListViewModel',
-        );
+    final listViewModelPresent = await const SourceShape().fileHasAnnotation(
+      buildStep,
+      listViewModelAssetId,
+      'FoxyListViewModel',
+    );
     final declaredLinkKeys = <String>[];
     final linkKeyReader = annotation.peek('linkKey');
     if (linkKeyReader != null && !linkKeyReader.isNull) {
@@ -325,9 +323,9 @@ final class RepositoryReader {
     // Locale-helper delegates need DbcLocaleRepositoryMixin's
     // loadDbcLocaleField/storeDbcLocaleField and dbcLocaleTableName.
     final localeHelpersEnabled =
-        sourceShape.withClauseTypeNames(cls).contains(
-              'DbcLocaleRepositoryMixin',
-            ) &&
+        sourceShape
+            .withClauseTypeNames(cls)
+            .contains('DbcLocaleRepositoryMixin') &&
         sourceShape.declaresMember(cls, 'dbcLocaleTableName');
     final mixinName = '_${repositoryClassName}Mixin';
     if (!sourceShape.withClauseTypeNames(cls).contains(mixinName)) {
@@ -344,11 +342,14 @@ final class RepositoryReader {
     // hand-written class must override the affected query methods. Without
     // the override the generated count/getBrief would reference columns
     // that do not exist on the base table, failing at runtime.
-    final dottedFilterColumns =
-        filterFields.where((field) => field.column.contains('.')).toList();
+    final dottedFilterColumns = filterFields
+        .where((field) => field.column.contains('.'))
+        .toList();
     final classLevelBriefFields = _briefFieldChecker
         .annotationsOf(entityElement)
-        .where((value) => ConstantReader(value).peek('name')?.stringValue != null)
+        .where(
+          (value) => ConstantReader(value).peek('name')?.stringValue != null,
+        )
         .length;
     // The main-table count branch applies the filter through _applyFilter;
     // the linkKey branch filters by link keys only, so a dotted filter
@@ -392,7 +393,9 @@ final class RepositoryReader {
     final autoIncrementKey = annotation.peek('autoIncrementKey')?.stringValue;
     String? resolvedAutoIncrementKey;
     if (autoIncrementKey != null && autoIncrementKey.isNotEmpty) {
-      final matched = keyFields.where((field) => field.dartName == autoIncrementKey);
+      final matched = keyFields.where(
+        (field) => field.dartName == autoIncrementKey,
+      );
       if (matched.isEmpty) {
         _fail(
           "$repositoryClassName's autoIncrementKey: '$autoIncrementKey' "
@@ -433,8 +436,9 @@ final class RepositoryReader {
       );
     }
     for (final declared in declaredAutoIncrementScope) {
-      final matched =
-          keyFields.where((field) => field.dartName == declared).toList();
+      final matched = keyFields
+          .where((field) => field.dartName == declared)
+          .toList();
       if (matched.isEmpty) {
         _fail(
           "$repositoryClassName's autoIncrementScope: '$declared' is not a "
