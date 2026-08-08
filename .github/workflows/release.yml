@@ -74,12 +74,22 @@ jobs:
 
       # Workspace members: generator and lint plugin tests run as plain
       # Dart (no Flutter runtime), so they have their own gate steps.
+      # These are sequential in the same job, but each gets its own
+      # `.dart_tool` cache: build_test-based tests concurrently rename
+      # `.dart_tool/build_resolvers/sdk.sum`, which hits a file-lock race
+      # on Windows (PathAccessException: Access is denied). Isolated
+      # caches make the generator/lint suites independent of the earlier
+      # `flutter test` step.
       - name: Test generator package
         working-directory: packages/foxy_generator
+        env:
+          PUB_CACHE: C:\Users\runneradmin\AppData\Local\Pub\Cache\gen
         run: dart test
 
       - name: Test lint package
         working-directory: packages/foxy_lint
+        env:
+          PUB_CACHE: C:\Users\runneradmin\AppData\Local\Pub\Cache\lint
         run: dart test
 
       - name: Determine version
