@@ -7,24 +7,15 @@
 
 ### 新增
 
-- 双击表格行快速打开编辑器对话框；各实体编辑器对话框样式统一。
-- foxy-tab 自动将活动 tab 滚动至可见区域，并同步激活指示器。
-- 活动日志集中持久化：所有写操作经事件监听器统一落库，日志条目记录实体名。
-- 代码生成器支持从类名派生注解参数；生成的 repository 携带 `_table` 信息并保护 JOIN 查询。
-- 新增 lint 规则 annotation_file_mismatch：注解类必须放在与生成器 glob 匹配的文件中，避免被生成器静默跳过。
-
-### 改进
-
-- 代码生成器与 lint 拆分为独立包（foxy_annotation / foxy_generator / foxy_lint），pub workspace 统一管理，CI 纳入三包测试。
-- lint 系统从 custom_lint 迁移到 analyzer 插件。
-- 生成器错误消息统一为英文。
-- 对话框宽度常量统一；图标+名称行提取为共享组件 FoxyIconText。
-- MySQL 非 TLS 连接支持公钥检索认证（MySQL 8 caching_sha2_password）。
-- 项目文档（README / AGENTS / codegen）刷新。
+- 表格中双击任意一行即可打开编辑窗口，操作更快捷。
+- 编辑窗口样式统一调整。
+- 详情页标签自动滚动到当前激活的标签，切换页面时更跟手。
+- 活动日志现在会记录操作对应的数据表，历史操作一目了然。
 
 ### 修复
 
-- 标志选择器对话框内嵌套 Flexible 导致的布局问题。
+- 修复部分 MySQL 8 服务器无法连接的问题。
+- 修复标志选择窗口在窄窗口下的显示问题。
 
 ## v1.1.1
 
