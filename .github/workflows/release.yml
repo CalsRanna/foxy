@@ -139,21 +139,28 @@ jobs:
         working-directory: packages/foxy
         shell: pwsh
         run: |
-          if (curl -sfL -o existing.yaml `
-              "https://github.com/CalsRanna/foxy/releases/latest/download/latest.yaml") {
+          # Invoke curl.exe explicitly: `curl` in pwsh aliases
+          # Invoke-WebRequest, which does not understand these flags. Also
+          # test $LASTEXITCODE, not `if (curl ...)`: a native command placed
+          # in an if condition evaluates its (empty, due to -o redirect)
+          # stdout, so the condition was always false and history was never
+          # merged (every release ended up with only its own entry).
+          curl.exe -sfL -o existing.yaml `
+            "https://github.com/CalsRanna/foxy/releases/latest/download/latest.yaml"
+          $fetchExit = $LASTEXITCODE
+          if ($fetchExit -eq 0) {
             Write-Output "fetched previous manifest"
           } else {
-            Write-Output "no previous manifest (first release)"
-            # First CI release: latest.yaml does not exist yet. The manifest
-            # script tolerates a missing existing.yaml (see
-            # make_update_manifest.dart), so only create an empty placeholder
-            # for the --existing flag. -Force: curl -o may have created an
-            # empty existing.yaml before failing, and New-Item errors when
-            # the file already exists.
+            Write-Output "no previous manifest (first release); curl exit code: $fetchExit"
+            # curl may have created an empty existing.yaml before failing;
+            # clear it and create a clean placeholder (the manifest script
+            # tolerates a missing existing.yaml, see
+            # make_update_manifest.dart). -Force: New-Item errors when the
+            # file already exists.
+            Remove-Item -Path existing.yaml -Force -ErrorAction SilentlyContinue
             New-Item -ItemType File -Path existing.yaml -Force | Out-Null
           }
-          # curl failing leaves $LASTEXITCODE non-zero, which fails the step
-          # even though the branch handled it; reset to 0 so a missing
+          # The branch handled the exit code; reset it so a missing
           # previous manifest is a non-fatal first-release condition.
           $global:LASTEXITCODE = 0
 

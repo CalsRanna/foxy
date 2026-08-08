@@ -169,7 +169,7 @@ class UpdateService {
       // latin-1 when the Content-Type header carries no charset (GitHub
       // serves release assets as application/octet-stream), which garbles
       // the Chinese notes.
-      final update = _parseManifest(utf8.decode(response.bodyBytes));
+      final updates = _parseManifest(utf8.decode(response.bodyBytes));
 
       String currentVersion;
       String currentBuild;
@@ -182,8 +182,16 @@ class UpdateService {
         currentBuild = info.buildNumber;
       }
 
-      if (_isNewer(update, currentVersion, currentBuild)) {
-        return UpdateAvailable(update);
+      // Newest-first scan: prerelease entries (test versions) are skipped so
+      // they never shadow a stable release, and the first stable release
+      // newer than the installed version wins.
+      for (final update in updates) {
+        if (update.isPrerelease) {
+          continue;
+        }
+        if (_isNewer(update, currentVersion, currentBuild)) {
+          return UpdateAvailable(update);
+        }
       }
       return const UpToDate();
     } on UpdateException {
@@ -392,22 +400,17 @@ class UpdateService {
     return updateDir;
   }
 
-  /// Whether the new version is higher than the current one: major versions
+  /// Whether [update] is higher than the installed version: major versions
   /// compare first, with the build number as tiebreaker.
   ///
-  /// A manifest marked prerelease (`isPrerelease`, release tag with a
-  /// `-alpha`/`-beta`/`-rc` suffix) does not count as an update: test
-  /// versions are never pushed to regular users. Users currently on a
-  /// prerelease still receive later stable updates (stable releases are
-  /// never marked prerelease).
+  /// Prerelease filtering happens in [checkForUpdates], which skips entries
+  /// marked `isPrerelease` (test versions are never pushed to regular
+  /// users); this method only compares versions.
   static bool _isNewer(
     UpdateManifestInfo update,
     String installedVersion,
     String installedBuildNumber,
   ) {
-    if (update.isPrerelease) {
-      return false;
-    }
     final current = _tryParseVersion(installedVersion);
     final latest = _tryParseVersion(update.version);
     if (current == null || latest == null) {
@@ -428,13 +431,12 @@ class UpdateService {
     return false;
   }
 
-  /// Parses the `latest.yaml` manifest: validates the appId and takes the
-  /// first release entry.
+  /// Parses the `latest.yaml` manifest: validates the appId and returns all
+  /// release entries newest-first.
   ///
   /// Structure in `tool/release/make_update_manifest.dart`; the release
-  /// pipeline guarantees the newest version is first, so the first entry is
-  /// the latest available update.
-  static UpdateManifestInfo _parseManifest(String body) {
+  /// pipeline guarantees the newest version is first.
+  static List<UpdateManifestInfo> _parseManifest(String body) {
     final decoded = loadYaml(body);
     if (decoded is! Map) {
       throw const UpdateException(
@@ -455,15 +457,22 @@ class UpdateService {
         'Update manifest has no releases',
       );
     }
-    final first = releases.first;
-    if (first is! Map) {
+    return [
+      for (final release in releases) _parseRelease(release),
+    ];
+  }
+
+  /// Parses one release entry; missing or mistyped fields throw
+  /// [FormatException] wrapped as an invalid-manifest [UpdateException].
+  static UpdateManifestInfo _parseRelease(dynamic release) {
+    if (release is! Map) {
       throw const UpdateException(
         UpdateErrorKind.invalidManifest,
-        'Update manifest first release is not a mapping',
+        'Update manifest release is not a mapping',
       );
     }
     try {
-      return UpdateManifestInfo.fromMap(first);
+      return UpdateManifestInfo.fromMap(release);
     } on FormatException catch (error) {
       throw UpdateException(
         UpdateErrorKind.invalidManifest,

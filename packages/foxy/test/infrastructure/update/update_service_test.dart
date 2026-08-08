@@ -204,6 +204,30 @@ void main() {
       expect(result, isA<UpToDate>());
     });
 
+    test('当前在预发布版,后续正式版更旧 → 不降级', () async {
+      // User runs the 1.1.3-alpha build itself; the manifest holds that
+      // alpha and the older 1.1.2 stable — neither is an update.
+      final service = UpdateService(
+        client: _clientReturning(
+          _manifestYaml(
+            releases: [
+              _releaseMap(
+                version: '1.1.3',
+                buildNumber: '691',
+                isPrerelease: true,
+              ),
+              _releaseMap(version: '1.1.2', buildNumber: '690'),
+            ],
+          ),
+        ),
+      );
+      final result = await service.checkForUpdates(
+        installedVersion: '1.1.3',
+        installedBuildNumber: '691',
+      );
+      expect(result, isA<UpToDate>());
+    });
+
     test('清单正式版 → 正常更新', () async {
       final service = UpdateService(
         client: _clientReturning(_manifestYaml(isPrerelease: false)),
@@ -246,7 +270,7 @@ void main() {
       );
     });
 
-    test('releases 数组取第一条(次条更高版本也不选)', () async {
+    test('releases 依次检查:首条与当前相同,取次条更高版本', () async {
       final service = UpdateService(
         client: _clientReturning(
           _manifestYaml(
@@ -261,7 +285,53 @@ void main() {
         installedVersion: '1.0.0',
         installedBuildNumber: '628',
       );
-      expect(result, isA<UpToDate>()); // first 1.0.0 equals current → no update
+      expect(result, isA<UpdateAvailable>());
+      expect((result as UpdateAvailable).update.version, '2.0.0');
+    });
+
+    test('首条预发布更高不拦截,选后续正式版', () async {
+      // A prerelease at the top of the manifest (the CI published an alpha
+      // after a stable) must not shadow the stable release below it.
+      final service = UpdateService(
+        client: _clientReturning(
+          _manifestYaml(
+            releases: [
+              _releaseMap(
+                version: '1.2.0',
+                buildNumber: '700',
+                isPrerelease: true,
+              ),
+              _releaseMap(version: '1.1.2', buildNumber: '690'),
+            ],
+          ),
+        ),
+      );
+      final result = await service.checkForUpdates(
+        installedVersion: '1.1.0',
+        installedBuildNumber: '664',
+      );
+      expect(result, isA<UpdateAvailable>());
+      final update = (result as UpdateAvailable).update;
+      expect(update.version, '1.1.2');
+      expect(update.isPrerelease, isFalse);
+    });
+
+    test('全部条目为预发布 → UpToDate', () async {
+      final service = UpdateService(
+        client: _clientReturning(
+          _manifestYaml(
+            releases: [
+              _releaseMap(version: '2.0.0', isPrerelease: true),
+              _releaseMap(version: '1.5.0', isPrerelease: true),
+            ],
+          ),
+        ),
+      );
+      final result = await service.checkForUpdates(
+        installedVersion: '1.0.0',
+        installedBuildNumber: '628',
+      );
+      expect(result, isA<UpToDate>());
     });
 
     test('appId 不符 → invalidManifest', () async {
