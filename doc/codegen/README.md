@@ -120,7 +120,7 @@ packages/foxy_generator/lib/
 
 3. **失败要早、信息要准**
    - 校验分两层:`Reader` 里做「结构校验」(注解用法、命名、文件位置、mixin 是否混入),`EntityValidator` 做「模型校验」(表名非空、列名唯一、Brief 覆盖 key 等);
-   - 所有 `_fail` 都抛 `InvalidGenerationSourceError`,带 `message + todo`(修复方式),`flutter analyze` / `build_runner` 会把错误钉到出错元素;
+   - 所有 `_fail` 都抛 `InvalidGenerationSourceError`,带 `message + todo`(错误消息英文,`todo` 以 `Fix:` 开头),`flutter analyze` / `build_runner` 会把错误钉到出错元素;运行期异常同理保持英文,用户文案统一经 `foxyErrorMessage` 映射;
    - 生成代码的「运行时不变式」也尽量前移:例如 store 前校验主键 > 0、update 未命中 0 行抛 `RecordNotFoundException`,把数据库静默失败变成显式业务异常。
 
 4. **生成代码贴近手写风格**

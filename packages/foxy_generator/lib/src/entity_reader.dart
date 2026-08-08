@@ -36,9 +36,9 @@ final class EntityReader {
   ) async {
     if (element is! ClassElement) {
       _fail(
-        '@FoxyFullEntity 只能标注 class。',
+        '@FoxyFullEntity can only annotate a class.',
         element,
-        '把注解移动到 Full Entity class。',
+        'Move the annotation to a Full Entity class.',
       );
     }
     final classElement = element;
@@ -46,15 +46,20 @@ final class EntityReader {
 
     final className = classElement.name;
     if (className == null) {
-      _fail('Full Entity class 必须有名称。', classElement, '为 class 命名。');
+      _fail(
+        'The Full Entity class must have a name.',
+        classElement,
+        'Name the class.',
+      );
     }
     final inputFileName = buildStep.inputId.pathSegments.last;
     final expectedFileName = '${toSnakeCase(className)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
-        '$className 必须位于 $expectedFileName，当前文件是 $inputFileName。',
+        '$className must be located in $expectedFileName; the current file '
+            'is $inputFileName.',
         classElement,
-        '重命名输入文件，使其与 Full Entity class 对应。',
+        'Rename the input file to match the Full Entity class.',
       );
     }
 
@@ -72,9 +77,9 @@ final class EntityReader {
     final constructor = classElement.unnamedConstructor;
     if (constructor == null || !constructor.isGenerative) {
       _fail(
-        '$className 必须声明未命名 generative constructor。',
+        '$className must declare an unnamed generative constructor.',
         classElement,
-        '添加 const $className({...}) 构造函数。',
+        'Add a const $className({...}) constructor.',
       );
     }
 
@@ -95,10 +100,11 @@ final class EntityReader {
         annotation.peek('table')?.stringValue ?? tableNameOf(className);
     if (table.isEmpty) {
       _fail(
-        '$className 未声明 @FoxyFullEntity(table:) 且类名无法推导表名'
-            '（类名恰为 "Entity"）。',
+        '$className declares no @FoxyFullEntity(table:) and the table name '
+            'cannot be derived from the class name (a class named exactly '
+            '"Entity").',
         classElement,
-        '给 @FoxyFullEntity 显式传 table: \'物理表名\'。',
+        'Pass table: \'physical_table_name\' explicitly to @FoxyFullEntity.',
       );
     }
 
@@ -141,9 +147,9 @@ final class EntityReader {
     final annotations = checker.annotationsOf(element).toList();
     if (annotations.length > 1) {
       _fail(
-        '${element.displayName} 重复使用 @$annotationName。',
+        '${element.displayName} uses @$annotationName more than once.',
         element,
-        '只保留一个 @$annotationName。',
+        'Keep only one @$annotationName.',
       );
     }
     return annotations.isNotEmpty;
@@ -159,10 +165,11 @@ final class EntityReader {
       final typeReader = annotation.read('type');
       if (nameReader.isNull || typeReader.isNull) {
         _fail(
-          '${classElement.name} 上的 @FoxyBriefField 必须使用'
-              ' text/integer/decimal/boolean 具名构造函数。',
+          '@FoxyBriefField on ${classElement.name} must use the '
+              'text/integer/decimal/boolean named constructors.',
           classElement,
-          '无参数的 @FoxyBriefField() 只能标注 Full Entity 字段。',
+          'The parameterless @FoxyBriefField() can only annotate Full '
+              'Entity fields.',
         );
       }
 
@@ -172,9 +179,10 @@ final class EntityReader {
           typeIndex < 0 ||
           typeIndex >= FoxyBriefFieldType.values.length) {
         _fail(
-          '${classElement.name} 的 Brief 投影字段 $name 类型无法识别。',
+          'The type of Brief projection field $name on ${classElement.name} '
+              'is unrecognized.',
           classElement,
-          '使用 FoxyBriefField 的具名构造函数。',
+          'Use a FoxyBriefField named constructor.',
         );
       }
       final type = FoxyBriefFieldType.values[typeIndex];
@@ -188,9 +196,11 @@ final class EntityReader {
       final defaultValue = _convertConstant(defaultObject, dartType);
       if (defaultValue == null) {
         _fail(
-          '${classElement.name} 的 Brief 投影字段 $name 默认值类型不匹配。',
+          'The default value type of Brief projection field $name on '
+              '${classElement.name} does not match.',
           classElement,
-          '通过对应具名构造函数传入正确类型的 defaultValue。',
+          'Pass a defaultValue of the correct type via the corresponding '
+              'named constructor.',
         );
       }
 
@@ -219,35 +229,39 @@ final class EntityReader {
     if (!parameter.hasDefaultValue) {
       if (nullable) return null;
       _fail(
-        '${classElement.name}.${field.name} 的 non-nullable 构造参数'
-            '必须提供显式常量默认值。',
+        'The non-nullable constructor parameter of '
+            '${classElement.name}.${field.name} must provide an explicit '
+            'constant default value.',
         parameter,
-        '为 this.${field.name} 添加与 $type 兼容的默认值。',
+        'Add a default value compatible with $type to this.${field.name}.',
       );
     }
     final value = parameter.computeConstantValue();
     if (value == null || !value.hasKnownValue) {
       _fail(
-        '${classElement.name}.${field.name} 的默认值必须是可求值的编译期常量。',
+        'The default value of ${classElement.name}.${field.name} must be '
+            'an evaluable compile-time constant.',
         parameter,
-        '使用 int、double、String、bool 或 null 常量。',
+        'Use an int, double, String, bool, or null constant.',
       );
     }
     if (value.isNull) {
       if (nullable) return null;
       _fail(
-        '${classElement.name}.${field.name} 是 non-nullable，默认值不能为 null。',
+        '${classElement.name}.${field.name} is non-nullable, so its default '
+            'value cannot be null.',
         parameter,
-        '提供与 $type 兼容的非空默认值。',
+        'Provide a non-null default value compatible with $type.',
       );
     }
     final converted = _convertConstant(value, type);
     if (converted == null) {
       _fail(
-        '${classElement.name}.${field.name} 的构造参数默认值类型不匹配：'
-            '字段类型为 ${field.type.getDisplayString()}。',
+        'The constructor parameter default value type of '
+            '${classElement.name}.${field.name} does not match: the field '
+            'type is ${field.type.getDisplayString()}.',
         parameter,
-        '提供与字段类型兼容的常量默认值。',
+        'Provide a constant default value compatible with the field type.',
       );
     }
     return converted;
@@ -260,20 +274,25 @@ final class EntityReader {
   ) {
     final fieldName = field.name;
     if (fieldName == null) {
-      _fail('${classElement.name} 包含无名称实例字段。', field, '为字段命名。');
+      _fail(
+        '${classElement.name} contains an unnamed instance field.',
+        field,
+        'Name the field.',
+      );
     }
     if (!field.isFinal) {
       _fail(
-        '${classElement.name}.$fieldName 必须是 final。',
+        '${classElement.name}.$fieldName must be final.',
         field,
-        '把实例字段声明为 final。',
+        'Declare the instance field as final.',
       );
     }
     if (field.constantInitializer != null) {
       _fail(
-        '${classElement.name}.$fieldName 不能使用字段初始化器。',
+        '${classElement.name}.$fieldName cannot use a field initializer.',
         field,
-        '把默认值移动到 this.$fieldName 构造参数。',
+        'Move the default value to the this.$fieldName constructor '
+            'parameter.',
       );
     }
 
@@ -281,10 +300,13 @@ final class EntityReader {
     if (fullAnnotations.length != 1) {
       _fail(
         fullAnnotations.isEmpty
-            ? '${classElement.name}.$fieldName 缺少 @FoxyFullField。'
-            : '${classElement.name}.$fieldName 重复使用 @FoxyFullField。',
+            ? '${classElement.name}.$fieldName is missing @FoxyFullField.'
+            : '${classElement.name}.$fieldName uses @FoxyFullField more '
+                'than once.',
         field,
-        fullAnnotations.isEmpty ? '添加唯一的字段注解。' : '只保留一个字段注解。',
+        fullAnnotations.isEmpty
+            ? 'Add a single field annotation.'
+            : 'Keep only one field annotation.',
       );
     }
     final full = ConstantReader(fullAnnotations.single);
@@ -295,40 +317,46 @@ final class EntityReader {
         : typeName;
     if (!const {'int', 'double', 'String', 'bool'}.contains(nonNullableType)) {
       _fail(
-        '${classElement.name}.$fieldName 的类型 $typeName 暂不支持。',
+        'The type $typeName of ${classElement.name}.$fieldName is not yet '
+            'supported.',
         field,
-        '第一阶段只支持 int、double、String、bool 及其 nullable 形式。',
+        'Phase 1 supports only int, double, String, bool and their nullable '
+            'forms.',
       );
     }
 
     final parameter = parameters[fieldName];
     if (parameter == null) {
       _fail(
-        '${classElement.name}.$fieldName 缺少同名 named 构造参数。',
+        '${classElement.name}.$fieldName is missing a named constructor '
+            'parameter with the same name.',
         field,
-        '在未命名构造函数中添加 this.$fieldName。',
+        'Add this.$fieldName to the unnamed constructor.',
       );
     }
     if (!parameter.isNamed || !parameter.isInitializingFormal) {
       _fail(
-        '${classElement.name}.$fieldName 的构造参数必须是 named '
-            'initializing formal：this.$fieldName。',
+        'The constructor parameter of ${classElement.name}.$fieldName must '
+            'be a named initializing formal: this.$fieldName.',
         parameter,
-        '改用 {this.$fieldName = ...}。',
+        'Use {this.$fieldName = ...} instead.',
       );
     }
     if (parameter.isRequiredNamed) {
       _fail(
-        '${classElement.name}.$fieldName 的 required 构造参数暂不支持。',
+        'Required constructor parameters are not yet supported for '
+            '${classElement.name}.$fieldName.',
         parameter,
-        '第一阶段保留该 Entity 手写，或改成有常量默认值的可选参数。',
+        'Keep this Entity handwritten for now in Phase 1, or make it an '
+            'optional parameter with a constant default value.',
       );
     }
     if (parameter.type.getDisplayString() != typeName) {
       _fail(
-        '${classElement.name}.$fieldName 的构造参数类型与字段类型不一致。',
+        'The constructor parameter type of ${classElement.name}.$fieldName '
+            'does not match the field type.',
         parameter,
-        '让 this.$fieldName 与字段都使用 $typeName。',
+        'Use $typeName for both this.$fieldName and the field.',
       );
     }
 
@@ -356,9 +384,10 @@ final class EntityReader {
     final annotations = _briefFieldChecker.annotationsOf(field).toList();
     if (annotations.length > 1) {
       _fail(
-        '${field.enclosingElement.name}.${field.name} 重复使用 @FoxyBriefField。',
+        '${field.enclosingElement.name}.${field.name} uses @FoxyBriefField '
+            'more than once.',
         field,
-        '只保留一个 @FoxyBriefField。',
+        'Keep only one @FoxyBriefField.',
       );
     }
     if (annotations.isEmpty) return false;
@@ -368,10 +397,11 @@ final class EntityReader {
         !annotation.read('type').isNull ||
         !annotation.read('defaultValue').isNull) {
       _fail(
-        '${field.enclosingElement.name}.${field.name} 上只能使用'
-            '无参数的 @FoxyBriefField()。',
+        'Only the parameterless @FoxyBriefField() can be used on '
+            '${field.enclosingElement.name}.${field.name}.',
         field,
-        'Brief 投影字段请使用 class 上的具名构造函数。',
+        'Use the named constructors on the class for Brief projection '
+            'fields.',
       );
     }
     return true;
@@ -382,23 +412,30 @@ final class EntityReader {
     for (final method in element.methods) {
       if (generatedMethods.contains(method.name)) {
         _fail(
-          '${element.name} 已手写 ${method.name}，与生成成员冲突。',
+          '${element.name} hand-writes ${method.name}, conflicting with '
+              'the generated member.',
           method,
-          '删除手写成员，保留 Entity 特有业务方法。',
+          'Remove the hand-written member; keep Entity-specific business '
+              'methods.',
         );
       }
     }
     if (element.getters.any((getter) => getter.name == 'hashCode')) {
-      _fail('${element.name} 已手写 hashCode，与生成成员冲突。', element, '删除手写 hashCode。');
+      _fail(
+        '${element.name} hand-writes hashCode, conflicting with the '
+            'generated member.',
+        element,
+        'Remove the hand-written hashCode.',
+      );
     }
     final fromJson = element.constructors.where(
       (constructor) => constructor.name == 'fromJson',
     );
     if (fromJson.length != 1 || !fromJson.single.isFactory) {
       _fail(
-        '${element.name} 必须声明唯一的 fromJson factory。',
+        '${element.name} must declare a single fromJson factory.',
         element,
-        '添加约定签名的 factory 委托。',
+        'Add a factory delegating with the conventional signature.',
       );
     }
   }
@@ -416,9 +453,9 @@ final class EntityReader {
       'class\\s+$escapedClass\\s+with\\s+$escapedMixin\\b',
     ).hasMatch(source)) {
       _fail(
-        '$className 必须应用约定 Mixin $mixinName。',
+        '$className must apply the conventional Mixin $mixinName.',
         element,
-        '把声明改为 class $className with $mixinName。',
+        'Change the declaration to class $className with $mixinName.',
       );
     }
     final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
@@ -426,9 +463,9 @@ final class EntityReader {
       "part\\s+['\"]${RegExp.escape(partName)}['\"]\\s*;",
     ).hasMatch(source)) {
       _fail(
-        '$className 缺少正确的 part ${_quote(partName)}。',
+        '$className is missing the correct part ${_quote(partName)}.',
         element,
-        "添加 part ${_quote(partName)};",
+        "Add part ${_quote(partName)};",
       );
     }
     if (!RegExp(
@@ -438,9 +475,10 @@ final class EntityReader {
       multiLine: true,
     ).hasMatch(source)) {
       _fail(
-        '$className 必须保留约定签名的 fromJson factory 委托。',
+        '$className must keep the fromJson factory delegating with the '
+            'conventional signature.',
         element,
-        '委托到 $mixinName.fromJson(json)。',
+        'Delegate to $mixinName.fromJson(json).',
       );
     }
   }
@@ -452,18 +490,18 @@ final class EntityReader {
         .toList(growable: false);
     if (annotated.length != 1) {
       _fail(
-        '${library.uri} 必须且只能声明一个 @FoxyFullEntity class，'
-            '当前为 ${annotated.length} 个。',
+        '${library.uri} must declare exactly one @FoxyFullEntity class; '
+            'it currently declares ${annotated.length}.',
         element,
-        '把每个 Full Entity 拆到独立源文件。',
+        'Split each Full Entity into its own source file.',
       );
     }
     final annotations = _fullEntityChecker.annotationsOf(element).toList();
     if (annotations.length != 1) {
       _fail(
-        '${element.name} 重复使用 @FoxyFullEntity。',
+        '${element.name} uses @FoxyFullEntity more than once.',
         element,
-        '只保留一个 @FoxyFullEntity。',
+        'Keep only one @FoxyFullEntity.',
       );
     }
   }

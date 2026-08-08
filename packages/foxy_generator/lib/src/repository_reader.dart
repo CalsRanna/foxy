@@ -35,18 +35,18 @@ final class RepositoryReader {
   ) async {
     if (element is! ClassElement) {
       _fail(
-        '@FoxyRepository 只能标注 Repository class。',
+        '@FoxyRepository can only annotate a Repository class.',
         element,
-        '把注解移动到具体 Repository class。',
+        'Move the annotation to a concrete Repository class.',
       );
     }
     final repositoryClassName = element.name;
     if (repositoryClassName == null ||
         !repositoryClassName.endsWith('Repository')) {
       _fail(
-        '@FoxyRepository 只能标注以 Repository 结尾的 class。',
+        '@FoxyRepository can only annotate a class ending in Repository.',
         element,
-        '使用具体 Repository class。',
+        'Use a concrete Repository class.',
       );
     }
 
@@ -54,10 +54,10 @@ final class RepositoryReader {
     final expectedFileName = '${toSnakeCase(repositoryClassName)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
-        '$repositoryClassName 必须位于 $expectedFileName，'
-            '当前文件是 $inputFileName。',
+        '$repositoryClassName must be in $expectedFileName; current file '
+            'is $inputFileName.',
         element,
-        '让 Repository class 与文件名保持一致。',
+        'Keep the Repository class name consistent with the file name.',
       );
     }
 
@@ -69,35 +69,38 @@ final class RepositoryReader {
       final entityType = declaredEntity.typeValue;
       if (entityType is! InterfaceType) {
         _fail(
-          '$repositoryClassName 的 @FoxyRepository 参数不是 Entity class。',
+          "$repositoryClassName's @FoxyRepository entity parameter is not "
+              'an Entity class.',
           element,
-          '传入具体的 Full Entity 类型。',
+          'Pass a concrete Full Entity type.',
         );
       }
       entityClassName = entityType.element.name!;
       if (!entityClassName.endsWith('Entity')) {
         _fail(
-          '$repositoryClassName 绑定的类型必须以 Entity 结尾。',
+          "The type bound by $repositoryClassName must end in Entity.",
           element,
-          '传入具体的 Full Entity 类型。',
+          'Pass a concrete Full Entity type.',
         );
       }
       final expectedRepositoryClassName =
           '${stripSuffix(entityClassName, 'Entity')}Repository';
       if (repositoryClassName != expectedRepositoryClassName) {
         _fail(
-          '$repositoryClassName 与 $entityClassName 不符合一对一命名约定。',
+          '$repositoryClassName and $entityClassName do not follow the '
+              'one-to-one naming convention.',
           element,
-          'Repository 和 Entity 使用相同 base name。',
+          'Use the same base name for the Repository and the Entity.',
         );
       }
     } else {
       entityClassName = entityClassNameOfRepository(repositoryClassName);
       if (entityClassName == 'Entity') {
         _fail(
-          '$repositoryClassName 无法推导实体名（类名恰为 "Repository"）。',
+          '$repositoryClassName cannot derive an entity name (the class '
+              'name is exactly "Repository").',
           element,
-          '使用有实际含义的 Repository 类名。',
+          'Use a Repository class name with a meaningful prefix.',
         );
       }
     }
@@ -106,7 +109,7 @@ final class RepositoryReader {
       buildStep,
       element,
       entityClassName,
-      '$repositoryClassName 的 @FoxyRepository',
+      "$repositoryClassName's @FoxyRepository",
     );
     final entityElement = resolved.entityElement;
     final table = resolved.table;
@@ -114,9 +117,10 @@ final class RepositoryReader {
     final baseName = stripSuffix(entityClassName, 'Entity');
     if (baseName.isEmpty) {
       _fail(
-        '$entityClassName 的 base name 为空（类名恰为 "Entity"）。',
+        "$entityClassName's base name is empty (the class name is exactly "
+            '"Entity").',
         element,
-        '使用有实际含义的 Entity 类名。',
+        'Use an Entity class name with a meaningful prefix.',
       );
     }
     final entityParameter = entityParameterName(entityClassName);
@@ -148,10 +152,10 @@ final class RepositoryReader {
       final list = linkKeyReader.isList ? linkKeyReader.listValue : null;
       if (list == null || list.any((value) => value.toStringValue() == null)) {
         _fail(
-          '$repositoryClassName 的 @FoxyRepository linkKey 必须是 '
-              'String 列表。',
+          "$repositoryClassName's @FoxyRepository linkKey must be a "
+              'List<String>.',
           element,
-          'linkKey: [\'字段名\']。',
+          'linkKey: [\'fieldName\'].',
         );
       }
       declaredLinkKeys.addAll(list.map((value) => value.toStringValue()!));
@@ -177,11 +181,14 @@ final class RepositoryReader {
         final dartType = field.type.getDisplayString();
         if (dartType.endsWith('?')) {
           _fail(
-            '$entityClassName.${field.name} 是 nullable，不能作为生成 CRUD 的物理 Key。',
+            '$entityClassName.${field.name} is nullable and cannot serve '
+                'as the physical Key for generated CRUD.',
             field,
-            'SQL 中 `列 = NULL` 恒不成立，生成的 _whereKey 会静默匹配 0 行并'
-                '误报「原记录不存在」。把该列改成 non-nullable，'
-                '或让该 Repository 保持手写并用 `<=>` 做 NULL 安全比较。',
+            'In SQL, `column = NULL` never holds; the generated _whereKey '
+                'would silently match 0 rows and falsely report "original '
+                'record not found". Make the column non-nullable, or keep '
+                'this Repository hand-written and use `<=>` for NULL-safe '
+                'comparison.',
           );
         }
         keyFields.add(
@@ -198,9 +205,9 @@ final class RepositoryReader {
     }
     if (keyFields.isEmpty) {
       _fail(
-        '$entityClassName 没有可用于 Repository 的物理 Key。',
+        '$entityClassName has no physical Key usable by the Repository.',
         entityElement,
-        '在至少一个 @FoxyFullField 上设置 key: true。',
+        'Set key: true on at least one @FoxyFullField.',
       );
     }
     final linkKeyFields = <RepositoryKeyFieldModel>[];
@@ -214,10 +221,11 @@ final class RepositoryReader {
       }
       if (matched == null) {
         _fail(
-          '$repositoryClassName 的 linkKey: \'$declared\' '
-              '不是 $entityClassName 的 key 字段。',
+          "$repositoryClassName's linkKey: '$declared' is not a key field "
+              'of $entityClassName.',
           element,
-          'linkKey 必须是实体上 @FoxyFullField(key: true) 的字段名。',
+          'linkKey must be the name of a field annotated '
+              '@FoxyFullField(key: true) on the entity.',
         );
       }
       linkKeyFields.add(matched);
@@ -228,22 +236,24 @@ final class RepositoryReader {
           .toList();
       if (briefAnnotations.length != 1) {
         _fail(
-          '$entityClassName 必须声明 @FoxyBriefEntity：查询层生成的'
-              ' getBrief${pluralize(baseName)}/count${pluralize(baseName)}'
-              ' 返回 Brief$baseName 表格行投影，'
-              '没有 Brief 声明生成的代码无法编译。',
+          '$entityClassName must declare @FoxyBriefEntity: the query layer '
+              'generates getBrief${pluralize(baseName)}/'
+              'count${pluralize(baseName)} returning a Brief$baseName '
+              'table-row projection; without a Brief declaration the '
+              'generated code cannot compile.',
           entityElement,
-          '给 Entity 加上 @FoxyBriefEntity()，'
-              '或在仓库保留手写查询方法并移除查询层触发条件'
-              '（linkKey / List ViewModel）。',
+          'Add @FoxyBriefEntity() to the Entity, or keep handwritten query '
+              'methods in the repository and remove the query-layer '
+              'triggers (linkKey / List ViewModel).',
         );
       }
       if (briefProjectionColumns.isEmpty) {
         _fail(
-          '$entityClassName 没有 @FoxyBriefField 标记的投影列。',
+          '$entityClassName has no projection columns marked with '
+              '@FoxyBriefField.',
           entityElement,
-          '至少把一个物理字段标记为 @FoxyBriefField()，'
-              '否则 Brief 列表查询无法选择展示列。',
+          'Mark at least one physical field with @FoxyBriefField() so the '
+              'Brief list query can select display columns.',
         );
       }
     }
@@ -255,10 +265,12 @@ final class RepositoryReader {
         final isLink = linkKeyFields.any((p) => p.dartName == field.dartName);
         if (!isLink && field.dartType != 'int') {
           _fail(
-            '$entityClassName.${field.dartName} 是 ${field.dartType} 主键，'
-                '不能生成 create 查询层（MAX+1 序列只支持 int）。',
+            '$entityClassName.${field.dartName} is a ${field.dartType} '
+                'primary key, so the create query layer cannot be '
+                'generated (the MAX+1 sequence only supports int).',
             entityElement,
-            '把该主键改为 int，或在仓库保留手写 create 方法并禁用查询层。',
+            'Change the primary key to int, or keep a handwritten create '
+                'method in the repository and disable the query layer.',
           );
         }
       }
@@ -280,19 +292,19 @@ final class RepositoryReader {
     ).firstMatch(source)?.group(1);
     if (repositoryTable != table) {
       _fail(
-        '$repositoryClassName._table 与 $entityClassName 的物理表不一致：'
-            '${repositoryTable ?? '未声明'} != $table。',
+        "$repositoryClassName._table does not match $entityClassName's "
+            'physical table: ${repositoryTable ?? 'undeclared'} != $table.',
         element,
-        '让 Repository._table 与 @FoxyFullEntity.table 完全一致。',
+        'Make Repository._table exactly match @FoxyFullEntity.table.',
       );
     }
     final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
     if (!source.contains("part '$partName';") &&
         !source.contains('part "$partName";')) {
       _fail(
-        '$repositoryClassName 缺少 part \'$partName\';。',
+        '$repositoryClassName is missing part \'$partName\';.',
         element,
-        '在 Repository imports 后声明生成 part。',
+        'Declare the generated part after the Repository imports.',
       );
     }
     // Locale-helper delegates need DbcLocaleRepositoryMixin's
@@ -305,9 +317,9 @@ final class RepositoryReader {
       'class\\s+$repositoryClassName\\s+with\\s+[^\\{;]*\\b$mixinName\\b',
     ).hasMatch(source)) {
       _fail(
-        '$repositoryClassName 必须混入 $mixinName。',
+        '$repositoryClassName must mix in $mixinName.',
         element,
-        '把 $mixinName 添加到 Repository 的 with 列表末尾。',
+        "Append $mixinName to the end of the Repository's with list.",
       );
     }
 
@@ -320,18 +332,20 @@ final class RepositoryReader {
       final matched = keyFields.where((field) => field.dartName == autoIncrementKey);
       if (matched.isEmpty) {
         _fail(
-          '$repositoryClassName 的 autoIncrementKey: \'$autoIncrementKey\' '
-              '不是 $entityClassName 的 key 字段。',
+          "$repositoryClassName's autoIncrementKey: '$autoIncrementKey' "
+              'is not a key field of $entityClassName.',
           element,
-          'autoIncrementKey 必须是实体上 @FoxyFullField(key: true) 的字段名。',
+          'autoIncrementKey must be the name of a field annotated '
+              '@FoxyFullField(key: true) on the entity.',
         );
       }
       if (matched.single.dartType != 'int') {
         _fail(
-          '$repositoryClassName 的 autoIncrementKey: \'$autoIncrementKey\' '
-              '类型是 ${matched.single.dartType},必须是 int。',
+          "$repositoryClassName's autoIncrementKey: '$autoIncrementKey' has "
+              'type ${matched.single.dartType}; it must be int.',
           element,
-          '只有 int 主键列支持 MAX+1 自动重分配。',
+          'Only int primary-key columns support MAX+1 automatic '
+              'reallocation.',
         );
       }
       resolvedAutoIncrementKey = autoIncrementKey;
@@ -345,10 +359,10 @@ final class RepositoryReader {
       final list = scopeReader.isList ? scopeReader.listValue : null;
       if (list == null || list.any((value) => value.toStringValue() == null)) {
         _fail(
-          '$repositoryClassName 的 @FoxyRepository autoIncrementScope '
-              '必须是 String 列表。',
+          "$repositoryClassName's @FoxyRepository autoIncrementScope must "
+              'be a List<String>.',
           element,
-          'autoIncrementScope: [\'字段名\']。',
+          'autoIncrementScope: [\'fieldName\'].',
         );
       }
       declaredAutoIncrementScope.addAll(
@@ -360,10 +374,11 @@ final class RepositoryReader {
           keyFields.where((field) => field.dartName == declared).toList();
       if (matched.isEmpty) {
         _fail(
-          '$repositoryClassName 的 autoIncrementScope: \'$declared\' '
-              '不是 $entityClassName 的 key 字段。',
+          "$repositoryClassName's autoIncrementScope: '$declared' is not a "
+              'key field of $entityClassName.',
           element,
-          'autoIncrementScope 必须是实体上 @FoxyFullField(key: true) 的字段名。',
+          'autoIncrementScope must be the name of a field annotated '
+              '@FoxyFullField(key: true) on the entity.',
         );
       }
     }
@@ -394,9 +409,10 @@ final class RepositoryReader {
     final annotations = _briefFieldChecker.annotationsOf(field).toList();
     if (annotations.length > 1) {
       _fail(
-        '${field.enclosingElement.name}.${field.name} 重复使用 @FoxyBriefField。',
+        '${field.enclosingElement.name}.${field.name} uses '
+            '@FoxyBriefField more than once.',
         field,
-        '只保留一个 @FoxyBriefField。',
+        'Keep only one @FoxyBriefField.',
       );
     }
     if (annotations.isEmpty) return false;
@@ -416,9 +432,9 @@ final class RepositoryReader {
       final field = readFilterField(object, filterClassName, element);
       if (!names.add(field.name)) {
         _fail(
-          '$filterClassName 重复声明字段 ${field.name}。',
+          '$filterClassName declares field ${field.name} more than once.',
           element,
-          '确保每个 @FoxyFilter 字段名唯一。',
+          'Ensure each @FoxyFilter field name is unique.',
         );
       }
       if (field.column.isNotEmpty) {
@@ -429,11 +445,11 @@ final class RepositoryReader {
       if (inferred == null) {
         if (requireColumnInference) {
           _fail(
-            '$filterClassName.${field.name} 无法推断物理列：'
-                'Entity 没有同名 ${field.name} 字段。',
+            '$filterClassName.${field.name} cannot infer a physical '
+                'column: the Entity has no field named ${field.name}.',
             element,
-            '给 @FoxyFilter.${field.type.name}('
-                "'${field.name}') 显式声明 column: '物理列名'。",
+            'Declare column: \'columnName\' on @FoxyFilter.${field.type.name}'
+                "('${field.name}').",
           );
         }
         // Child-table repositories do not generate _applyFilter, so column
@@ -455,7 +471,7 @@ final class RepositoryReader {
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
+      '$message\nFix: $correction',
       element: element,
     );
   }

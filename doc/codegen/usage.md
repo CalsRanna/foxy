@@ -196,24 +196,24 @@ class CreatureTemplateAddonLinkedDetailViewModel
 
 ## 常见错误与修复
 
-所有构建期错误都带 `修复方式:`(todo 文案),下面是几个典型:
+所有构建期错误都带 `Fix:`(todo 文案,已英文化),下面是几个典型:
 
 | 错误 | 原因 | 修复 |
 | --- | --- | --- |
-| `XxxEntity 必须应用约定 Mixin _XxxEntityMixin` | 手写类没混入生成的 mixin | `with _XxxEntityMixin` |
-| `XxxEntity 缺少正确的 part 'xxx_entity.g.dart'` | 没声明生成 part | 加 `part 'xxx_entity.g.dart';` |
-| `XxxEntity 必须保留约定签名的 fromJson factory 委托` | factory 签名不符 | 委托到 `_XxxEntityMixin.fromJson(json)` |
-| `XxxEntity 没有物理主键字段` | 没有 `@FoxyFullField(key: true)` | 至少一个 key 字段 |
-| `XxxRepository 必须混入 _XxxRepositoryMixin` | 没混入 | `with RepositoryMixin, _XxxRepositoryMixin` |
-| `XxxRepository._table 与 XxxEntity 的物理表不一致` | `_table` 与表名不符 | 对齐 |
-| `Xxx 缺少 part 'xxx.g.dart'` | 缺 part | 补上 |
-| `Xxx 必须混入 FieldControllerMixin` / `...Mixin` | List VM 缺基座 | 加 `FieldControllerMixin, QueryVersionMixin` |
-| `... 已手写 copyWith ... 与生成成员冲突` | 手写了生成成员 | 删手写,保留 Entity 特有业务方法 |
-| `XxxEntity 必须声明 @FoxyBriefEntity` | 查询层生成 `getBrief*` 返回 `BriefXxxEntity` | 给 Entity 加 `@FoxyBriefEntity()`(表格行展示模型声明) |
-| `... 推导出文件 xxx.dart，但文件不存在` / `找不到 class` | 推导的仓库/实体未迁移或类名不符 | 创建并迁移同名类,或在注解显式声明 |
-| `... 无法推导 entity 类名` | VM 类名无约定后缀 | 用 `XxxListViewModel` 等规范命名 |
-| `... 的构造默认值不是可求值的常量` | `selects` Set 形态推导 fallback 失败 | 改用 Map 显式:`selects: {'字段': fallback}` |
-| `... 不能同时声明 repository 与 skeleton: false` | 两个互斥参数同时传 | 只保留一个 |
-| `... 缺少对应列 ... 无法推断物理列` | `@FoxyFilter` 名与实体字段不一致 | 显式 `column:` 或改名 |
-| `... 只能使用无参数的 @FoxyBriefField()` | 字段级误用带参形式 | 类级具名构造函数是投影别名,字段级只能无参 |
-| `... 必须且只能声明一个 @FoxyFullEntity` | 同文件多个 Full Entity | 拆到独立文件 |
+| `XxxEntity must mix in _XxxEntityMixin` | 手写类没混入生成的 mixin | `with _XxxEntityMixin` |
+| `XxxEntity is missing part 'xxx_entity.g.dart'` | 没声明生成 part | 加 `part 'xxx_entity.g.dart';` |
+| `XxxEntity must keep the fromJson factory delegate with the conventional signature` | factory 签名不符 | 委托到 `_XxxEntityMixin.fromJson(json)` |
+| `XxxEntity has no physical primary key field` | 没有 `@FoxyFullField(key: true)` | 至少一个 key 字段 |
+| `XxxRepository must mix in _XxxRepositoryMixin` | 没混入 | `with RepositoryMixin, _XxxRepositoryMixin` |
+| `XxxRepository._table does not match the physical table of XxxEntity` | `_table` 与表名不符 | 对齐 |
+| `Xxx is missing part 'xxx.g.dart'` | 缺 part | 补上 |
+| `Xxx must mix in FieldControllerMixin` / `...Mixin` | List VM 缺基座 | 加 `FieldControllerMixin, QueryVersionMixin` |
+| `... already hand-writes copyWith ... conflicting with the generated member` | 手写了生成成员 | 删手写,保留 Entity 特有业务方法 |
+| `XxxEntity must declare @FoxyBriefEntity` | 查询层生成 `getBrief*` 返回 `BriefXxxEntity` | 给 Entity 加 `@FoxyBriefEntity()`(表格行展示模型声明) |
+| `... derives file xxx.dart, but it does not exist` / `cannot find class` | 推导的仓库/实体未迁移或类名不符 | 创建并迁移同名类,或在注解显式声明 |
+| `... cannot derive an entity class name` | VM 类名无约定后缀 | 用 `XxxListViewModel` 等规范命名 |
+| `... constructor default is not a constant int/String` | `selects` Set 形态推导 fallback 失败 | 改用 Map 显式:`selects: {'字段': fallback}` |
+| `... cannot declare both repository and skeleton: false` | 两个互斥参数同时传 | 只保留一个 |
+| `... cannot infer the physical column` | `@FoxyFilter` 名与实体字段不一致 | 显式 `column:` 或改名 |
+| `... must use the parameterless @FoxyBriefField()` | 字段级误用带参形式 | 类级具名构造函数是投影别名,字段级只能无参 |
+| `... must declare exactly one @FoxyFullEntity` | 同文件多个 Full Entity | 拆到独立文件 |

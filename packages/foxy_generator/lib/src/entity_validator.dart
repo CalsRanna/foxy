@@ -11,23 +11,23 @@ final class EntityValidator {
   void validate(EntityGenerationModel model, ClassElement element) {
     if (model.table.trim().isEmpty) {
       _fail(
-        '${model.className} 的 @FoxyFullEntity.table 不能为空。',
+        '@FoxyFullEntity.table of ${model.className} must not be empty.',
         element,
-        '填写完整物理表名。',
+        'Fill in the full physical table name.',
       );
     }
     if (!model.className.endsWith('Entity')) {
       _fail(
-        '${model.className} 必须以 Entity 结尾。',
+        '${model.className} must end with Entity.',
         element,
-        '按 <Name>Entity 形式命名 Full Entity。',
+        'Name the Full Entity in the form <Name>Entity.',
       );
     }
     if (model.keyFields.isEmpty) {
       _fail(
-        '${model.className} 没有物理主键字段。',
+        '${model.className} has no physical primary key field.',
         element,
-        '在至少一个 @FoxyFullField 上设置 key: true。',
+        'Set key: true on at least one @FoxyFullField.',
       );
     }
 
@@ -37,16 +37,19 @@ final class EntityValidator {
       dartNames.add(field.dartName);
       if (field.columnName.trim().isEmpty) {
         _fail(
-          '${model.className}.${field.dartName} 的物理列名不能为空。',
+          'The physical column name of ${model.className}.${field.dartName} '
+              'must not be empty.',
           element.getField(field.dartName) ?? element,
-          '为 @FoxyFullField 填写精确物理列名。',
+          'Fill in the exact physical column name for @FoxyFullField.',
         );
       }
       if (!columns.add(field.columnName)) {
         _fail(
-          '${model.className} 重复声明物理列名 ${field.columnName}。',
+          '${model.className} declares the physical column name '
+              '${field.columnName} more than once.',
           element.getField(field.dartName) ?? element,
-          '确保每个 @FoxyFullField.name 在 Entity 内唯一且区分大小写。',
+          'Ensure each @FoxyFullField.name is unique and case-sensitive '
+              'within the Entity.',
         );
       }
     }
@@ -55,25 +58,29 @@ final class EntityValidator {
     for (final field in model.briefProjectionFields) {
       if (field.dartName.trim().isEmpty) {
         _fail(
-          '${model.className} 的 Brief 投影字段名不能为空。',
+          'The Brief projection field name of ${model.className} must not '
+              'be empty.',
           element,
-          '为 FoxyBriefField 具名构造函数填写字段名。',
+          'Fill in the field name for the FoxyBriefField named constructor.',
         );
       }
       if (!RegExp(r'^[a-z][A-Za-z0-9]*$').hasMatch(field.dartName)) {
         _fail(
-          '${model.className} 的 Brief 投影字段名 ${field.dartName} '
-              '不是合法 lowerCamelCase 标识符。',
+          'The Brief projection field name ${field.dartName} of '
+              '${model.className} is not a valid lowerCamelCase identifier.',
           element,
-          '使用合法的 Dart 字段名，并让 Repository 查询使用同名 alias。',
+          'Use a valid Dart field name and have the Repository query use a '
+              'same-named alias.',
         );
       }
       if (dartNames.contains(field.dartName) ||
           !projectionNames.add(field.dartName)) {
         _fail(
-          '${model.className} 重复声明 Brief 字段 ${field.dartName}。',
+          '${model.className} declares Brief field ${field.dartName} more '
+              'than once.',
           element,
-          '投影字段不能与 Full 字段或其他投影字段重名。',
+          'Projection fields must not duplicate Full fields or other '
+              'projection fields.',
         );
       }
     }
@@ -85,10 +92,11 @@ final class EntityValidator {
           .toList(growable: false);
       if (missingKeys.isNotEmpty) {
         _fail(
-          '${model.briefClassName} 缺少完整物理身份：'
-              '${missingKeys.join(', ')} 未标注 @FoxyBriefField。',
+          '${model.briefClassName} is missing the full physical identity; '
+              '${missingKeys.join(', ')} must be annotated with '
+              '@FoxyBriefField.',
           element,
-          '为全部 key 字段添加 @FoxyBriefField。',
+          'Add @FoxyBriefField to all key fields.',
         );
       }
     } else {
@@ -99,12 +107,12 @@ final class EntityValidator {
         _fail(
           '${model.className}'
               '${briefField == null ? '' : '.${briefField.dartName}'} '
-              '使用了 @FoxyBriefField，'
-              '但 class 没有 @FoxyBriefEntity。',
+              'uses @FoxyBriefField, but the class has no @FoxyBriefEntity.',
           briefField == null
               ? element
               : element.getField(briefField.dartName) ?? element,
-          '在 class 上添加 @FoxyBriefEntity，或移除字段注解。',
+          'Add @FoxyBriefEntity to the class, or remove the field '
+              'annotation.',
         );
       }
     }

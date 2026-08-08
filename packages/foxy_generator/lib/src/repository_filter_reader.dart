@@ -21,9 +21,9 @@ final class RepositoryFilterReader {
     if (repositoryClassName == null ||
         !repositoryClassName.endsWith('Repository')) {
       _fail(
-        '@FoxyFilter 只能标注以 Repository 结尾的 class。',
+        '@FoxyFilter can only annotate a class ending with Repository.',
         element,
-        '使用具体 Repository class 作为 Filter owner。',
+        'Use a concrete Repository class as the Filter owner.',
       );
     }
 
@@ -31,10 +31,10 @@ final class RepositoryFilterReader {
     final expectedFileName = '${toSnakeCase(repositoryClassName)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
-        '$repositoryClassName 必须位于 $expectedFileName，'
-            '当前文件是 $inputFileName。',
+        '$repositoryClassName must be located in $expectedFileName; the '
+            'current file is $inputFileName.',
         element,
-        '让 Repository class 与文件名保持一致。',
+        'Keep the Repository class consistent with the file name.',
       );
     }
 
@@ -43,9 +43,9 @@ final class RepositoryFilterReader {
     if (!source.contains("part '$partName';") &&
         !source.contains('part "$partName";')) {
       _fail(
-        '$repositoryClassName 缺少 part \'$partName\';。',
+        '$repositoryClassName is missing part \'$partName\';.',
         element,
-        '在 Repository imports 后声明生成 part。',
+        'Declare the generated part after the Repository imports.',
       );
     }
 
@@ -60,9 +60,9 @@ final class RepositoryFilterReader {
       final field = readFilterField(object, filterClassName, element);
       if (!names.add(field.name)) {
         _fail(
-          '$filterClassName 重复声明字段 ${field.name}。',
+          '$filterClassName declares field ${field.name} more than once.',
           element,
-          '确保每个 @FoxyFilter 字段名唯一。',
+          'Ensure each @FoxyFilter field name is unique.',
         );
       }
       fields.add(field);
@@ -77,7 +77,7 @@ final class RepositoryFilterReader {
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
+      '$message\nFix: $correction',
       element: element,
     );
   }
@@ -98,9 +98,11 @@ RepositoryFilterFieldModel readFilterField(
   final name = reader.read('name').stringValue;
   if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
     _fail(
-      '$filterClassName 的字段名 $name 不是合法 lowerCamelCase 标识符。',
+      'The field name $name of $filterClassName is not a valid '
+          'lowerCamelCase identifier.',
       element,
-      '使用 lowerCamelCase；Dart 保留字允许追加单个下划线。',
+      'Use lowerCamelCase; Dart reserved words may append a single '
+          'underscore.',
     );
   }
 
@@ -113,9 +115,10 @@ RepositoryFilterFieldModel readFilterField(
       typeIndex < 0 ||
       typeIndex >= FoxyFilterType.values.length) {
     _fail(
-      '$filterClassName.$name 的类型无法识别。',
+      'The type of $filterClassName.$name is unrecognized.',
       element,
-      '使用 FoxyFilter 的 text/integer/decimal/boolean 具名构造函数。',
+      'Use the text/integer/decimal/boolean named constructors of '
+          'FoxyFilter.',
     );
   }
   final type = FoxyFilterType.values[typeIndex];
@@ -125,9 +128,11 @@ RepositoryFilterFieldModel readFilterField(
   );
   if (defaultValue == null) {
     _fail(
-      '$filterClassName.$name 的默认值与 ${type.name} 类型不兼容。',
+      'The default value of $filterClassName.$name is incompatible with '
+          'type ${type.name}.',
       element,
-      '通过对应的 FoxyFilter 具名构造函数传入正确默认值。',
+      'Pass a correct default value via the corresponding FoxyFilter named '
+          'constructor.',
     );
   }
 
@@ -141,7 +146,7 @@ RepositoryFilterFieldModel readFilterField(
 
 Never _fail(String message, Element element, String correction) {
   throw InvalidGenerationSourceError(
-    '$message\n修复方式：$correction',
+    '$message\nFix: $correction',
     element: element,
   );
 }

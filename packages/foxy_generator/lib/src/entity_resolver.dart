@@ -29,11 +29,11 @@ Future<ClassElement> resolveClass(
     'lib/$directory/$fileName',
   );
   if (!await buildStep.canRead(assetId)) {
-    throw InvalidGenerationSourceError(
-      '$context 推导出文件 $fileName，但文件不存在。\n'
-      '修复方式：创建 lib/$directory/$fileName 并声明 $className，'
-      '或在注解中显式声明。',
-      element: errorElement,
+    _fail(
+      '$context derives file $fileName, but it does not exist.',
+      errorElement,
+      'Create lib/$directory/$fileName and declare $className, '
+          'or declare it explicitly in the annotation.',
     );
   }
 
@@ -41,22 +41,30 @@ Future<ClassElement> resolveClass(
   try {
     library = await buildStep.resolver.libraryFor(assetId);
   } on Object catch (error) {
-    throw InvalidGenerationSourceError(
-      '$context 无法解析库 $fileName：$error',
-      element: errorElement,
+    _fail(
+      '$context cannot resolve library $fileName: $error',
+      errorElement,
+      'Ensure the file parses cleanly (syntax / dependencies).',
     );
   }
   final candidates = library.classes
       .where((candidate) => candidate.name == className)
       .toList();
   if (candidates.isEmpty) {
-    throw InvalidGenerationSourceError(
-      '$context 在 $fileName 中找不到 class $className。\n'
-      '修复方式：在 lib/$directory/$fileName 中声明 $className。',
-      element: errorElement,
+    _fail(
+      '$context cannot find class $className in $fileName.',
+      errorElement,
+      'Declare $className in lib/$directory/$fileName.',
     );
   }
   return candidates.single;
+}
+
+Never _fail(String message, Element element, String correction) {
+  throw InvalidGenerationSourceError(
+    '$message\nFix: $correction',
+    element: element,
+  );
 }
 
 /// Resolved Full Entity: its class element plus the physical table name
@@ -75,7 +83,7 @@ final class ResolvedEntityInfo {
 /// the annotation omits `table:`.
 ///
 /// `context` names the entity in error messages
-/// (e.g. `CreatureTemplateListViewModel 的 entity`).
+/// (e.g. `CreatureTemplateListViewModel's entity`).
 Future<ResolvedEntityInfo> resolveFullEntity(
   BuildStep buildStep,
   Element errorElement,
@@ -92,21 +100,23 @@ Future<ResolvedEntityInfo> resolveFullEntity(
 
   final annotations = _fullEntityChecker.annotationsOf(entityElement).toList();
   if (annotations.length != 1) {
-    throw InvalidGenerationSourceError(
-      '$entityClassName 必须且只能声明一个 @FoxyFullEntity。\n'
-      '修复方式：只绑定已迁移的生成型 Full Entity。',
-      element: entityElement,
+    _fail(
+      '$entityClassName must declare exactly one @FoxyFullEntity.',
+      entityElement,
+      'Bind to a migrated generated Full Entity.',
     );
   }
   final table =
       ConstantReader(annotations.single).peek('table')?.stringValue ??
       tableNameOf(entityClassName);
   if (table.isEmpty) {
-    throw InvalidGenerationSourceError(
-      '$entityClassName 未声明 @FoxyFullEntity(table:) 且类名无法推导表名'
-          '（类名恰为 "Entity"）。\n'
-          '修复方式：给 @FoxyFullEntity 显式传 table: \'物理表名\'。',
-      element: entityElement,
+    _fail(
+      '$entityClassName declares no @FoxyFullEntity(table:) and the table '
+          'name cannot be derived from the class name (a class named '
+          'exactly "Entity").',
+      entityElement,
+      "Pass the physical table name explicitly: "
+          "@FoxyFullEntity(table: 'table_name').",
     );
   }
   return ResolvedEntityInfo(entityElement: entityElement, table: table);

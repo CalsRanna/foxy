@@ -33,7 +33,7 @@ final class LinkedListReader {
       buildStep,
       element,
       form.entityClassName,
-      '${form.className} 的 @FoxyLinkedListViewModel',
+      "${form.className}'s @FoxyLinkedListViewModel",
     )).entityElement;
 
     // Bound repository: explicit `repository:` wins; otherwise derived from
@@ -44,42 +44,44 @@ final class LinkedListReader {
       final repositoryType = declaredRepository.typeValue;
       if (repositoryType is! InterfaceType) {
         _fail(
-          '${form.className} 的 @FoxyLinkedListViewModel repository '
-              '参数不是 Repository class。',
+          "The repository parameter of ${form.className}'s "
+              '@FoxyLinkedListViewModel is not a Repository class.',
           element,
-          '传入具体的 Repository 类型。',
+          'Pass a concrete Repository type.',
         );
       }
       repositoryClassName = repositoryType.element.name!;
       if (!repositoryClassName.endsWith('Repository')) {
         _fail(
-          '${form.className} 绑定的 Repository 必须以 Repository 结尾。',
+          'The Repository bound by ${form.className} must end in '
+              'Repository.',
           element,
-          '传入具体的 Repository 类型。',
+          'Pass a concrete Repository type.',
         );
       }
     } else {
       repositoryClassName = repositoryClassNameOfViewModel(form.className) ??
-          (throw InvalidGenerationSourceError(
-            '${form.className} 无法推导 repository 类名。',
-            element: element,
-          ));
+          _fail(
+            '${form.className} cannot derive a repository class name.',
+            element,
+            'Use a class name ending in LinkedListViewModel.',
+          );
     }
     final repositoryElement = await resolveClass(
       buildStep,
       element,
       repositoryClassName,
       'repository',
-      '${form.className} 的 @FoxyLinkedListViewModel',
+      "${form.className}'s @FoxyLinkedListViewModel",
     );
     final repositoryAnnotations = _repositoryChecker
         .annotationsOf(repositoryElement)
         .toList();
     if (repositoryAnnotations.length != 1) {
       _fail(
-        '$repositoryClassName 必须且只能声明一个 @FoxyRepository。',
+        '$repositoryClassName must declare exactly one @FoxyRepository.',
         repositoryElement,
-        '只绑定生成型 Repository。',
+        'Bind to a generated Repository.',
       );
     }
     final linkKeyValues = ConstantReader(
@@ -87,12 +89,13 @@ final class LinkedListReader {
     ).read('linkKey').listValue;
     if (linkKeyValues.length != 1) {
       _fail(
-        '$repositoryClassName 的 @FoxyRepository 必须声明且只能声明一个 '
-            'linkKey(当前 ${linkKeyValues.length} 个),'
-            '才能生成 Linked List 骨架。',
+        "$repositoryClassName's @FoxyRepository must declare exactly one "
+            'linkKey (currently ${linkKeyValues.length}) to generate the '
+            'Linked List skeleton.',
         element,
-        '单关联键子表使用本注解;复合关联键子表(如 player_create_info 系列)'
-            '保持手写 Linked List。',
+        'Use this annotation for single-link-key subtables; keep Linked '
+            'List hand-written for composite-link-key subtables '
+            '(e.g. the player_create_info series).',
       );
     }
     final linkFieldName = linkKeyValues.single.toStringValue()!;
@@ -121,17 +124,18 @@ final class LinkedListReader {
     }
     if (linkFieldType == null || linkFieldType != 'int') {
       _fail(
-        '$repositoryClassName 的 linkKey: \'$linkFieldName\' 不是 '
-            '${form.entityClassName} 的 int key 字段。',
+        "The linkKey: '$linkFieldName' of $repositoryClassName is not an "
+            'int key field of ${form.entityClassName}.',
         element,
-        'linkKey 必须指向实体的 int 类型 key 字段。',
+        'linkKey must point to an int-typed key field of the entity.',
       );
     }
     if (keyFieldTypes.isEmpty) {
       _fail(
-        '${form.entityClassName} 没有可用于编辑器操作的物理 Key。',
+        '${form.entityClassName} has no physical key usable for editor '
+            'operations.',
         element,
-        '在至少一个 @FoxyFullField 上设置 key: true。',
+        'Set key: true on at least one @FoxyFullField.',
       );
     }
 
@@ -154,7 +158,7 @@ final class LinkedListReader {
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
+      '$message\nFix: $correction',
       element: element,
     );
   }

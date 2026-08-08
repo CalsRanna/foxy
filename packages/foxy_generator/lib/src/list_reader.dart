@@ -39,17 +39,18 @@ final class ListReader {
   ) async {
     if (element is! ClassElement) {
       _fail(
-        '@FoxyListViewModel 只能标注 ViewModel class。',
+        '@FoxyListViewModel can only annotate a ViewModel class.',
         element,
-        '把注解移动到具体 List ViewModel class。',
+        'Move the annotation to a concrete List ViewModel class.',
       );
     }
     final className = element.name;
     if (className == null || !className.endsWith('ListViewModel')) {
       _fail(
-        '@FoxyListViewModel 只能标注以 ListViewModel 结尾的 class。',
+        '@FoxyListViewModel can only annotate a class ending in '
+            'ListViewModel.',
         element,
-        '使用具体 List ViewModel class。',
+        'Use a concrete List ViewModel class.',
       );
     }
 
@@ -57,9 +58,10 @@ final class ListReader {
     final expectedFileName = '${toSnakeCase(className)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
-        '$className 必须位于 $expectedFileName，当前文件是 $inputFileName。',
+        '$className must be located in $expectedFileName; the current '
+            'file is $inputFileName.',
         element,
-        '让 ViewModel class 与文件名保持一致。',
+        'Keep the ViewModel class name consistent with the file name.',
       );
     }
 
@@ -93,18 +95,18 @@ final class ListReader {
     if (!source.contains("part '$partName';") &&
         !source.contains('part "$partName";')) {
       _fail(
-        '$className 缺少 part \'$partName\';。',
+        "$className is missing part '$partName';.",
         element,
-        '在 ViewModel imports 后声明生成 part。',
+        'Declare the generated part after the ViewModel imports.',
       );
     }
     if (!RegExp(
       'class\\s+$className\\s+with\\s+[^\\{;]*\\b$mixinName\\b',
     ).hasMatch(source)) {
       _fail(
-        '$className 必须混入 $mixinName。',
+        '$className must mix in $mixinName.',
         element,
-        '把 $mixinName 添加到 ViewModel 的 with 列表末尾。',
+        "Add $mixinName to the end of the ViewModel's with list.",
       );
     }
     final withList = RegExp(
@@ -117,16 +119,19 @@ final class ListReader {
       final mixinIndex = parts.indexOf(mixinName);
       if (controllerIndex < 0 || queryIndex < 0) {
         _fail(
-          '$className 必须混入 FieldControllerMixin 与 QueryVersionMixin。',
+          '$className must mix in FieldControllerMixin and '
+              'QueryVersionMixin.',
           element,
-          '把 FieldControllerMixin, QueryVersionMixin 添加到 with 列表。',
+          'Add FieldControllerMixin, QueryVersionMixin to the with list.',
         );
       }
       if (controllerIndex > mixinIndex || queryIndex > mixinIndex) {
         _fail(
-          'FieldControllerMixin / QueryVersionMixin 必须在 $mixinName 之前。',
+          'FieldControllerMixin / QueryVersionMixin must precede '
+              '$mixinName.',
           element,
-          '调整 with 顺序：FieldControllerMixin, QueryVersionMixin, ..., $mixinName。',
+          'Reorder the with list: FieldControllerMixin, QueryVersionMixin, '
+              '..., $mixinName.',
         );
       }
     }
@@ -160,27 +165,33 @@ final class ListReader {
       final entityType = declaredEntity.typeValue;
       if (entityType is! InterfaceType) {
         _fail(
-          '$className 的 @FoxyListViewModel entity 参数不是 Entity class。',
+          "The entity parameter of $className's @FoxyListViewModel is not "
+              'an Entity class.',
           element,
-          '传入具体的 Full Entity 类型。',
+          'Pass a concrete Full Entity type.',
         );
       }
       entityClassName = entityType.element.name!;
       if (!entityClassName.endsWith('Entity')) {
-        _fail('$className 绑定的类型必须以 Entity 结尾。', element, '传入具体的 Full Entity 类型。');
+        _fail(
+          "The type bound by $className must end in Entity.",
+          element,
+          'Pass a concrete Full Entity type.',
+        );
       }
     } else {
       entityClassName = entityClassNameOfViewModel(className) ??
-          (throw InvalidGenerationSourceError(
-            '$className 无法推导 entity 类名。',
-            element: element,
-          ));
+          _fail(
+            '$className cannot derive an entity class name.',
+            element,
+            'Use a class name ending in ListViewModel.',
+          );
     }
     final resolved = await resolveFullEntity(
       buildStep,
       element,
       entityClassName,
-      '$className 的 @FoxyListViewModel',
+      "$className's @FoxyListViewModel",
     );
     return (resolved.entityElement, resolved.table);
   }
@@ -201,33 +212,36 @@ final class ListReader {
       final repositoryType = declaredRepository.typeValue;
       if (repositoryType is! InterfaceType) {
         _fail(
-          '$className 的 @FoxyListViewModel repository 参数不是 Repository class。',
+          "The repository parameter of $className's @FoxyListViewModel is "
+              'not a Repository class.',
           element,
-          '传入具体的 Repository 类型。',
+          'Pass a concrete Repository type.',
         );
       }
       repositoryClassName = repositoryType.element.name!;
       if (!repositoryClassName.endsWith('Repository')) {
         _fail(
-          '$className 绑定的类型必须以 Repository 结尾。',
+          "The type bound by $className must end in Repository.",
           element,
-          '传入具体的 Repository 类型。',
+          'Pass a concrete Repository type.',
         );
       }
       if (stripSuffix(repositoryClassName, 'Repository') !=
           stripSuffix(entityElement.name!, 'Entity')) {
         _fail(
-          '$repositoryClassName 与 ${entityElement.name} 不符合一对一命名约定。',
+          '$repositoryClassName and ${entityElement.name} do not follow '
+              'the one-to-one naming convention.',
           element,
-          'Repository 和 Entity 使用相同 base name。',
+          'Use the same base name for the Repository and the Entity.',
         );
       }
     } else {
       repositoryClassName = repositoryClassNameOfViewModel(className) ??
-          (throw InvalidGenerationSourceError(
-            '$className 无法推导 repository 类名。',
-            element: element,
-          ));
+          _fail(
+            '$className cannot derive a repository class name.',
+            element,
+            'Use a class name ending in ListViewModel.',
+          );
     }
 
     // The derived repository must exist and be a migrated (annotated)
@@ -237,16 +251,16 @@ final class ListReader {
       element,
       repositoryClassName,
       'repository',
-      '$className 的 @FoxyListViewModel',
+      "$className's @FoxyListViewModel",
     );
     final repositoryAnnotations = _repositoryChecker
         .annotationsOf(repositoryElement)
         .toList();
     if (repositoryAnnotations.length != 1) {
       _fail(
-        '$repositoryClassName 必须且只能声明一个 @FoxyRepository。',
+        '$repositoryClassName must declare exactly one @FoxyRepository.',
         repositoryElement,
-        '只绑定已迁移的生成型 Repository。',
+        'Bind to a migrated generated Repository.',
       );
     }
     return repositoryElement;
@@ -264,16 +278,18 @@ final class ListReader {
       final name = reader.read('name').stringValue;
       if (!names.add(name)) {
         _fail(
-          '$filterClassName 重复声明字段 $name。',
+          '$filterClassName declares duplicate field $name.',
           element,
-          '确保每个 @FoxyFilter 字段名唯一。',
+          'Ensure every @FoxyFilter field name is unique.',
         );
       }
       if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
         _fail(
-          '$filterClassName 的字段名 $name 不是合法 lowerCamelCase 标识符。',
+          "The field name $name of $filterClassName is not a valid "
+              'lowerCamelCase identifier.',
           element,
-          '使用 lowerCamelCase；Dart 保留字允许追加单个下划线。',
+          'Use lowerCamelCase; a trailing underscore is allowed for Dart '
+              'reserved words.',
         );
       }
       final typeIndex = reader
@@ -289,10 +305,11 @@ final class ListReader {
           : null;
       if (type != FoxyFilterType.text) {
         _fail(
-          '$filterClassName.$name 的筛选类型是 ${type?.name ?? '未知'}。',
+          'The filter type of $filterClassName.$name is '
+              "${type?.name ?? 'unknown'}.",
           element,
-          'List ViewModel 当前只支持 @FoxyFilter.text 文本筛选字段；'
-              '移除该筛选或改用 text。',
+          'List ViewModel currently supports only @FoxyFilter.text text '
+              'filter fields; remove this filter or switch it to text.',
         );
       }
       fields.add(ListFilterFieldModel(name: name));
@@ -318,9 +335,10 @@ final class ListReader {
     }
     if (keyFieldTypes.isEmpty) {
       _fail(
-        '${entityElement.name} 没有可用于列表操作的物理 Key。',
+        '${entityElement.name} has no physical key usable for list '
+            'operations.',
         element,
-        '在至少一个 @FoxyFullField 上设置 key: true。',
+        'Set key: true on at least one @FoxyFullField.',
       );
     }
     if (keyFieldTypes.length == 1) return keyFieldTypes.single;
@@ -333,7 +351,7 @@ final class ListReader {
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
+      '$message\nFix: $correction',
       element: element,
     );
   }

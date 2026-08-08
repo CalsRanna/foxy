@@ -32,17 +32,18 @@ final class FormReader {
   ) async {
     if (element is! ClassElement) {
       _fail(
-        '@FoxyDetailViewModel 只能标注 ViewModel class。',
+        '@FoxyDetailViewModel can only annotate a ViewModel class.',
         element,
-        '把注解移动到具体 Detail ViewModel class。',
+        'Move the annotation to a concrete Detail ViewModel class.',
       );
     }
     final className = element.name;
     if (className == null || !className.endsWith('ViewModel')) {
       _fail(
-        '@FoxyDetailViewModel 只能标注以 ViewModel 结尾的 class。',
+        '@FoxyDetailViewModel can only annotate a class ending in '
+            'ViewModel.',
         element,
-        '使用具体 Detail ViewModel class。',
+        'Use a concrete Detail ViewModel class.',
       );
     }
 
@@ -50,9 +51,10 @@ final class FormReader {
     final expectedFileName = '${toSnakeCase(className)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
-        '$className 必须位于 $expectedFileName，当前文件是 $inputFileName。',
+        '$className must be in $expectedFileName; current file is '
+            '$inputFileName.',
         element,
-        '让 ViewModel class 与文件名保持一致。',
+        'Keep the ViewModel class name consistent with the file name.',
       );
     }
 
@@ -65,29 +67,34 @@ final class FormReader {
       final entityType = declaredEntity.typeValue;
       if (entityType is! InterfaceType) {
         _fail(
-          '$className 的注解 entity 参数不是 Entity class。',
+          "The entity parameter of $className's annotation is not an "
+              'Entity class.',
           element,
-          '传入具体的 Full Entity 类型。',
+          'Pass a concrete Full Entity type.',
         );
       }
       entityClassName = entityType.element.name!;
       if (!entityClassName.endsWith('Entity')) {
-        _fail('$className 绑定的类型必须以 Entity 结尾。', element, '传入具体的 Full Entity 类型。');
+        _fail(
+          "The type bound by $className must end in Entity.",
+          element,
+          'Pass a concrete Full Entity type.',
+        );
       }
     } else {
       entityClassName = entityClassNameOfViewModel(className) ??
-          (throw InvalidGenerationSourceError(
-            '$className 无法推导 entity 类名：类名不包含约定的'
-                ' ListViewModel/DetailViewModel/LinkedListViewModel/'
-                'LinkedDetailViewModel 后缀。',
-            element: element,
-          ));
+          _fail(
+            '$className cannot derive an entity class name.',
+            element,
+            'Use a convention suffix: ListViewModel/DetailViewModel/'
+                'LinkedListViewModel/LinkedDetailViewModel.',
+          );
     }
     final resolved = await resolveFullEntity(
       buildStep,
       element,
       entityClassName,
-      '$className 的注解',
+      "$className's annotation",
     );
     final entityElement = resolved.entityElement;
     final table = resolved.table;
@@ -95,16 +102,16 @@ final class FormReader {
     final constructor = entityElement.unnamedConstructor;
     if (constructor == null || !constructor.isGenerative) {
       _fail(
-        '$entityClassName 必须声明未命名 generative constructor。',
+        '$entityClassName must declare an unnamed generative constructor.',
         entityElement,
-        '添加 const $entityClassName({...}) 构造函数。',
+        'Add a const $entityClassName({...}) constructor.',
       );
     }
 
     // `selects` accepts two shapes: a Map (explicit fallback, e.g.
     // {'type': 0}) or a Set (fallback derived from the entity constructor
     // default for the same field, e.g. {'type'}).
-    final (declaredSelects, derivedSelects) = _readSelects(annotation);
+    final (declaredSelects, derivedSelects) = _readSelects(annotation, element);
     final flags = _readStringSet(annotation, 'flags');
     final groups = _readStringSet(annotation, 'groups');
     final exclude = _readStringSet(annotation, 'exclude');
@@ -134,9 +141,9 @@ final class FormReader {
     }) {
       if (!constructorFieldNames.contains(name)) {
         _fail(
-          '$entityClassName 没有名为 $name 的字段。',
+          '$entityClassName has no field named $name.',
           element,
-          '修正注解里拼写错误的字段名。',
+          'Fix the misspelled field name in the annotation.',
         );
       }
     }
@@ -169,18 +176,18 @@ final class FormReader {
     if (!source.contains("part '$partName';") &&
         !source.contains('part "$partName";')) {
       _fail(
-        '$className 缺少 part \'$partName\';。',
+        '$className is missing part \'$partName\';.',
         element,
-        '在 ViewModel imports 后声明生成 part。',
+        'Declare the generated part after the ViewModel imports.',
       );
     }
     if (!RegExp(
       'class\\s+$className\\s+with\\s+[^\\{;]*\\b$mixinName\\b',
     ).hasMatch(source)) {
       _fail(
-        '$className 必须混入 $mixinName。',
+        '$className must mix in $mixinName.',
         element,
-        '把 $mixinName 添加到 ViewModel 的 with 列表末尾。',
+        "Append $mixinName to the end of the ViewModel's with list.",
       );
     }
     final withList = RegExp(
@@ -192,16 +199,16 @@ final class FormReader {
       final mixinIndex = parts.indexOf(mixinName);
       if (controllerIndex < 0) {
         _fail(
-          '$className 必须混入 FieldControllerMixin。',
+          '$className must mix in FieldControllerMixin.',
           element,
-          '把 FieldControllerMixin 添加到 with 列表。',
+          'Add FieldControllerMixin to the with list.',
         );
       }
       if (controllerIndex > mixinIndex) {
         _fail(
-          'FieldControllerMixin 必须在 $mixinName 之前。',
+          'FieldControllerMixin must come before $mixinName.',
           element,
-          '调整 with 顺序：FieldControllerMixin, ..., $mixinName。',
+          'Reorder the with list: FieldControllerMixin, ..., $mixinName.',
         );
       }
     }
@@ -214,26 +221,27 @@ final class FormReader {
     if (repositoryReader != null && !repositoryReader.isNull) {
       if (skeletonDisabled) {
         _fail(
-          '$className 不能同时声明 repository 与 skeleton: false。',
+          '$className cannot declare both repository and skeleton: false.',
           element,
-          '只保留 repository:（生成行为骨架），'
-              '或只保留 skeleton: false（无骨架，不传 repository）。',
+          'Keep only repository: (generates a behavior skeleton), or keep '
+              'only skeleton: false (no skeleton, no repository).',
         );
       }
       final repositoryType = repositoryReader.typeValue;
       if (repositoryType is! InterfaceType) {
         _fail(
-          '$className 的注解 repository 参数不是 Repository class。',
+          "The repository parameter of $className's annotation is not a "
+              'Repository class.',
           element,
-          '传入具体的 Repository 类型。',
+          'Pass a concrete Repository type.',
         );
       }
       repositoryClassName = repositoryType.element.name!;
       if (!repositoryClassName.endsWith('Repository')) {
         _fail(
-          '$className 绑定的 Repository 必须以 Repository 结尾。',
+          "The Repository bound by $className must end in Repository.",
           element,
-          '传入具体的 Repository 类型。',
+          'Pass a concrete Repository type.',
         );
       }
     } else if (!skeletonDisabled) {
@@ -293,9 +301,10 @@ final class FormReader {
     }
     if (keyFields.isEmpty) {
       _fail(
-        '${entityElement.name} 没有可用于详情加载的物理 Key。',
+        '${entityElement.name} has no physical Key usable for detail '
+            'loading.',
         element,
-        '在至少一个 @FoxyFullField 上设置 key: true。',
+        'Set key: true on at least one @FoxyFullField.',
       );
     }
     if (keyFields.length == 1) {
@@ -310,7 +319,7 @@ final class FormReader {
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
+      '$message\nFix: $correction',
       element: element,
     );
   }
@@ -331,9 +340,10 @@ final class FormReader {
     if (groups.contains(name)) {
       if (type != 'int') {
         _fail(
-          '$entityClassName.$name 标注为 groups 但类型是 $type。',
+          '$entityClassName.$name is marked as groups but its type is '
+              '$type.',
           element,
-          'groups 只支持 int 字段。',
+          'groups only supports int fields.',
         );
       }
       return FormFieldModel(
@@ -345,9 +355,9 @@ final class FormReader {
     if (isNullable) {
       if (type != 'String?') {
         _fail(
-          '$entityClassName.$name 是 nullable($type)。',
+          '$entityClassName.$name is nullable ($type).',
           element,
-          'nullable 只支持 String? 字段。',
+          'nullable only supports String? fields.',
         );
       }
       return FormFieldModel(
@@ -363,10 +373,11 @@ final class FormReader {
           : selectFallback is String && type == 'String';
       if (!supported) {
         _fail(
-          '$entityClassName.$name 标注为 selects 但类型是 $type'
-              '($selectFallback)。',
+          '$entityClassName.$name is marked as selects but its type is '
+              '$type ($selectFallback).',
           element,
-          'selects 的 fallback 类型必须与字段类型一致(int/String)。',
+          'The selects fallback type must match the field type '
+              '(int/String).',
         );
       }
       return FormFieldModel(
@@ -389,10 +400,11 @@ final class FormReader {
           : fallback is String && type == 'String';
       if (!supported) {
         _fail(
-          '$entityClassName.$name 标注为 selects 但类型是 $type'
-              '(构造默认值 $fallback)。',
+          '$entityClassName.$name is marked as selects but its type is '
+              '$type (constructor default $fallback).',
           element,
-          'selects 的 fallback 类型必须与字段类型一致(int/String)。',
+          'The selects fallback type must match the field type '
+              '(int/String).',
         );
       }
       return FormFieldModel(
@@ -405,9 +417,10 @@ final class FormReader {
     if (flags.contains(name)) {
       if (type != 'int') {
         _fail(
-          '$entityClassName.$name 标注为 flags 但类型是 $type。',
+          '$entityClassName.$name is marked as flags but its type is '
+              '$type.',
           element,
-          'flags 只支持 int 字段。',
+          'flags only supports int fields.',
         );
       }
       return FormFieldModel(
@@ -418,9 +431,10 @@ final class FormReader {
     }
     if (!_supportedPlainTypes.contains(type)) {
       _fail(
-        '$entityClassName.$name 的类型 $type 暂不支持。',
+        'The type of $entityClassName.$name ($type) is not supported yet.',
         element,
-        '用 selects/flags/exclude 标注例外，或等待类型支持扩展。',
+        'Mark the field as an exception with selects/flags/exclude, or '
+            'wait for extended type support.',
       );
     }
     return FormFieldModel(
@@ -433,7 +447,10 @@ final class FormReader {
   /// Reads the `selects` exception set, which accepts two shapes:
   /// a Map `{'name': fallback}` (explicit fallback) or a Set `{'name'}`
   /// (fallback derived from the entity constructor default).
-  (Map<String, Object>, Set<String>) _readSelects(ConstantReader annotation) {
+  (Map<String, Object>, Set<String>) _readSelects(
+    ConstantReader annotation,
+    Element element,
+  ) {
     final reader = annotation.read('selects');
     if (reader.isNull) return (const {}, const {});
     if (reader.isMap) {
@@ -452,8 +469,12 @@ final class FormReader {
         {for (final value in reader.setValue) value.toStringValue()!},
       );
     }
-    throw InvalidGenerationSourceError(
-      'selects 必须是 Map（显式 fallback）或 Set（推导 fallback）。',
+    _fail(
+      'selects must be a Map (explicit fallback) or a Set (derived '
+          'fallback).',
+      element,
+      "Write selects as Map({'fieldName': fallback}) or "
+          "Set({'fieldName'}).",
     );
   }
 
@@ -467,18 +488,21 @@ final class FormReader {
   ) {
     if (!parameter.hasDefaultValue) {
       _fail(
-        '$entityClassName.$name 标注为 selects 但构造参数没有默认值。',
+        '$entityClassName.$name is marked as selects but its constructor '
+            'parameter has no default value.',
         element,
-        '给 this.$name 添加常量默认值，'
-            '或用 Map 形态显式声明 fallback：selects: {\'$name\': ...}。',
+        'Add a constant default value to this.$name, or declare the '
+            'fallback explicitly in Map form: selects: {\'$name\': ...}.',
       );
     }
     final value = parameter.computeConstantValue();
     if (value == null || !value.hasKnownValue || value.isNull) {
       _fail(
-        '$entityClassName.$name 的构造默认值不是可求值的常量。',
+        "$entityClassName.$name's constructor default is not an evaluable "
+            'constant.',
         element,
-        '改用 Map 形态显式声明 fallback：selects: {\'$name\': ...}。',
+        'Declare the fallback explicitly in Map form instead: '
+            'selects: {\'$name\': ...}.',
       );
     }
     final intValue = value.toIntValue();
@@ -486,9 +510,10 @@ final class FormReader {
     final stringValue = value.toStringValue();
     if (stringValue != null) return stringValue;
     _fail(
-      '$entityClassName.$name 的构造默认值类型不是 int/String。',
+      "$entityClassName.$name's constructor default type is not int/String.",
       element,
-      '改用 Map 形态显式声明 fallback：selects: {\'$name\': ...}。',
+      'Declare the fallback explicitly in Map form instead: '
+          'selects: {\'$name\': ...}.',
     );
   }
 
@@ -529,10 +554,10 @@ final class FormReader {
         final overlap = entry.value.intersection(other.value);
         if (overlap.isNotEmpty) {
           _fail(
-            '$entityClassName 的字段 ${overlap.join(', ')} 同时出现在 '
-                '${entry.key} 和 ${other.key}。',
+            "$entityClassName's fields ${overlap.join(', ')} appear in "
+                'both ${entry.key} and ${other.key}.',
             element,
-            '一个字段只能属于一个例外集合。',
+            'A field can belong to only one exception set.',
           );
         }
       }

@@ -34,43 +34,45 @@ final class LinkedDetailReader {
       final repositoryType = declaredRepository.typeValue;
       if (repositoryType is! InterfaceType) {
         _fail(
-          '${form.className} 的 @FoxyLinkedDetailViewModel repository '
-              '参数不是 Repository class。',
+          "The repository parameter of ${form.className}'s "
+              '@FoxyLinkedDetailViewModel is not a Repository class.',
           element,
-          '传入具体的 Repository 类型。',
+          'Pass a concrete Repository type.',
         );
       }
       repositoryClassName = repositoryType.element.name!;
     } else {
       repositoryClassName = repositoryClassNameOfViewModel(form.className) ??
-          (throw InvalidGenerationSourceError(
-            '${form.className} 无法推导 repository 类名。',
-            element: element,
-          ));
+          _fail(
+            '${form.className} cannot derive a repository class name.',
+            element,
+            'Use a class name ending in LinkedDetailViewModel.',
+          );
     }
     final repositoryElement = await resolveClass(
       buildStep,
       element,
       repositoryClassName,
       'repository',
-      '${form.className} 的 @FoxyLinkedDetailViewModel',
+      "${form.className}'s @FoxyLinkedDetailViewModel",
     );
     final repositoryAnnotations = _repositoryChecker
         .annotationsOf(repositoryElement)
         .toList();
     if (repositoryAnnotations.length != 1) {
       _fail(
-        '$repositoryClassName 必须且只能声明一个 @FoxyRepository。',
+        '$repositoryClassName must declare exactly one @FoxyRepository.',
         repositoryElement,
-        '只绑定生成型 Repository。',
+        'Bind to a generated Repository.',
       );
     }
     final singleKeyFieldName = form.singleKeyFieldName;
     if (singleKeyFieldName == null) {
       _fail(
-        '${form.entityClassName} 是复合键实体，不能生成 Linked Detail 骨架。',
+        '${form.entityClassName} is a composite-key entity; a Linked '
+            'Detail skeleton cannot be generated.',
         element,
-        '复合键的一对一表单保持手写。',
+        'Keep the one-to-one form hand-written for composite-key entities.',
       );
     }
 
@@ -91,30 +93,33 @@ final class LinkedDetailReader {
       final list = linkKeyReader.isList ? linkKeyReader.listValue : null;
       if (list == null || list.any((value) => value.toStringValue() == null)) {
         _fail(
-          '$repositoryClassName 的 @FoxyRepository linkKey 必须是 '
-              'String 列表。',
+          "The linkKey of $repositoryClassName's @FoxyRepository must be "
+              'a list of Strings.',
           repositoryElement,
-          'linkKey 使用字符串字面量列表，例如 linkKey: [\'entry\']。',
+          'Declare linkKey as a list of string literals, e.g. '
+              "linkKey: ['entry'].",
         );
       }
       declaredLinkKeys.addAll(list.map((value) => value.toStringValue()!));
     }
     if (declaredLinkKeys.length > 1) {
       _fail(
-        '$repositoryClassName 声明了多个 linkKey（$declaredLinkKeys），'
-            'Linked Detail 只支持单一 linkKey。',
+        '$repositoryClassName declares multiple linkKeys '
+            '($declaredLinkKeys); Linked Detail supports only a single '
+            'linkKey.',
         repositoryElement,
-        'Linked Detail 绑定单主键实体，linkKey 只声明一个。',
+        'Bind Linked Detail to a single-primary-key entity and declare '
+            'only one linkKey.',
       );
     }
     if (declaredLinkKeys.length == 1 &&
         declaredLinkKeys.single != singleKeyFieldName) {
       _fail(
-        '$repositoryClassName 的 linkKey（${declaredLinkKeys.single}）'
-            '必须等于实体主键 $singleKeyFieldName。',
+        "The linkKey (${declaredLinkKeys.single}) of $repositoryClassName "
+            'must equal the entity primary key $singleKeyFieldName.',
         repositoryElement,
-        '给 @FoxyRepository 声明 linkKey: [\'$singleKeyFieldName\']，'
-            '或移除 linkKey 并手写 create 方法。',
+        "Declare linkKey: ['$singleKeyFieldName'] on @FoxyRepository, "
+            'or remove linkKey and hand-write the create method.',
       );
     }
 
@@ -132,7 +137,7 @@ final class LinkedDetailReader {
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
+      '$message\nFix: $correction',
       element: element,
     );
   }
