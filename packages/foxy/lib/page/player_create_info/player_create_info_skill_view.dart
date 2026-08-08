@@ -130,6 +130,7 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
           cell: (_, row) => Text(row.comment),
         ),
       ],
+      onRowDoubleTap: (row) => _showEditDialog(row),
       onRowSecondaryTapDownWithDetails: (row, details) {
         showFoxyContextMenu(
           context: context,
@@ -268,6 +269,11 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
                 Expanded(
                   child: FoxyFormItem(
                     label: '阶数',
@@ -277,11 +283,6 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
                     ),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
                 Expanded(
                   child: FoxyFormItem(
                     label: '备注',
@@ -291,8 +292,6 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
                     ),
                   ),
                 ),
-                const Expanded(child: SizedBox()),
-                const Expanded(child: SizedBox()),
                 const Expanded(child: SizedBox()),
               ],
             ),

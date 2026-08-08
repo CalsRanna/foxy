@@ -61,82 +61,94 @@ class _PickpocketingLootTemplateViewState
     final isEditing = viewModel.selectedKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '掉落模板 ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.entryController,
-              placeholder: 'Entry',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Item ID
-          FoxyFormItem(
-            label: '物品ID',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemController,
-              placeholder: 'Item',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Reference ID
-          FoxyFormItem(
-            label: '关联ID',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.referenceLoot,
-              controller: viewModel.referenceController,
-              placeholder: 'Reference (0=直接掉落)',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Drop chance
-          FoxyFormItem(
-            label: '掉落几率',
-            child: FoxyNumberInput<double>(
-              controller: viewModel.chanceController,
-              placeholder: 'Chance (%)',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Required quest
-          FoxyFormItem(
-            label: '需要任务',
-            child: FoxyShadSelect<int>(
-              controller: viewModel.questRequiredController,
-              options: kBooleanOptions,
-              placeholder: Text('QuestRequired'),
-            ),
-          ),
-          SizedBox(height: 16),
-          // Loot mode
-          FoxyFormItem(
-            label: '掉落模式',
-            child: FoxyFlagPicker(
-              controller: viewModel.lootModeController,
-              flags: kLootModeFlagOptions,
-              title: '掉落模式',
-              placeholder: 'LootMode',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Group ID
-          FoxyFormItem(
-            label: '组ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.groupIdController,
-              placeholder: 'GroupId',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Quantity range
           Row(
-            spacing: 16,
+            spacing: 8,
             children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '掉落模板 ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.entryController,
+                    placeholder: 'Entry',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '物品ID',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemTemplate,
+                    controller: viewModel.itemController,
+                    placeholder: 'Item',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '关联ID',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.referenceLoot,
+                    controller: viewModel.referenceController,
+                    placeholder: 'Reference',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '掉落几率',
+                  child: FoxyNumberInput<double>(
+                    controller: viewModel.chanceController,
+                    placeholder: 'Chance',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '需要任务',
+                  child: FoxyShadSelect<int>(
+                    controller: viewModel.questRequiredController,
+                    options: kBooleanOptions,
+                    placeholder: Text('QuestRequired'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '掉落模式',
+                  child: FoxyFlagPicker(
+                    controller: viewModel.lootModeController,
+                    flags: kLootModeFlagOptions,
+                    title: '掉落模式',
+                    placeholder: 'LootMode',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '组ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.groupIdController,
+                    placeholder: 'GroupId',
+                  ),
+                ),
+              ),
               Expanded(
                 child: FoxyFormItem(
                   label: '最小数量',
@@ -155,18 +167,24 @@ class _PickpocketingLootTemplateViewState
                   ),
                 ),
               ),
-              const Expanded(child: SizedBox()),
-              const Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 16),
-          // Comment
-          FoxyFormItem(
-            label: '备注',
-            child: FoxyStringInput(
-              controller: viewModel.commentController,
-              placeholder: 'Comment',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '备注',
+                  child: FoxyStringInput(
+                    controller: viewModel.commentController,
+                    placeholder: 'Comment',
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+            ],
           ),
           SizedBox(height: 24),
           // Button row
@@ -278,6 +296,12 @@ class _PickpocketingLootTemplateViewState
           cell: (_, loot) => Text(loot.groupId.toString()),
         ),
       ],
+      onRowDoubleTap: (loot) async {
+        viewModel.selectedKey.value = loot.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog();
+      },
       onRowSecondaryTapDownWithDetails: (loot, details) {
         showFoxyContextMenu(
           context: context,
@@ -359,6 +383,9 @@ class _PickpocketingLootTemplateViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('新增掉落'),
         description: Text('新增一条掉落记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -371,6 +398,9 @@ class _PickpocketingLootTemplateViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑掉落'),
         description: Text('编辑选中的掉落记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

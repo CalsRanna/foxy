@@ -121,11 +121,9 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
           width: 120,
           cell: (_, item) => Text(item.amount.toString()),
         ),
-        FoxyTableColumn.flex(
-          label: '备注',
-          cell: (_, item) => Text(item.note),
-        ),
+        FoxyTableColumn.flex(label: '备注', cell: (_, item) => Text(item.note)),
       ],
+      onRowDoubleTap: (item) => _showEditDialog(item),
       onRowSecondaryTapDownWithDetails: (item, details) {
         showFoxyContextMenu(
           context: context,
@@ -192,8 +190,11 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text(isEditing ? '编辑起始物品' : '新增起始物品'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 960),
+          constraints: const BoxConstraints(maxWidth: 720),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
@@ -231,6 +232,11 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                       ),
                     ),
                   ),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
                   Expanded(
                     child: FoxyFormItem(
                       label: '数量',
@@ -240,11 +246,6 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                       ),
                     ),
                   ),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
                   Expanded(
                     child: FoxyFormItem(
                       label: '备注',
@@ -254,8 +255,6 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                       ),
                     ),
                   ),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
                   const Expanded(child: SizedBox()),
                 ],
               ),

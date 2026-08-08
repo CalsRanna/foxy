@@ -57,69 +57,96 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editingKey.value != null;
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '商人 ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.entryController,
-              placeholder: 'entry',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '商人 ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.entryController,
+                    placeholder: 'entry',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '插槽',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.slotController,
+                    placeholder: 'slot',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '物品',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemTemplate,
+                    controller: viewModel.itemController,
+                    placeholder: 'item',
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          FoxyFormItem(
-            label: '插槽',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.slotController,
-              placeholder: 'slot',
-            ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '最大数量',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.maxcountController,
+                    placeholder: 'maxcount',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '补货时间',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.incrtimeController,
+                    placeholder: 'incrtime',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '扩展价格',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemExtendedCost,
+                    controller: viewModel.extendedCostController,
+                    placeholder: 'ExtendedCost',
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          FoxyFormItem(
-            label: '物品',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemController,
-              placeholder: 'item',
-            ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '验证版本',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.verifiedBuildController,
+                    placeholder: 'VerifiedBuild',
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+            ],
           ),
-          const SizedBox(height: 16),
-          FoxyFormItem(
-            label: '最大数量',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.maxcountController,
-              placeholder: 'maxcount (0=无限)',
-            ),
-          ),
-          const SizedBox(height: 16),
-          FoxyFormItem(
-            label: '补货时间',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.incrtimeController,
-              placeholder: 'incrtime (秒)',
-            ),
-          ),
-          const SizedBox(height: 16),
-          FoxyFormItem(
-            label: '扩展价格',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemExtendedCost,
-              controller: viewModel.extendedCostController,
-              placeholder: 'ExtendedCost',
-            ),
-          ),
-          const SizedBox(height: 16),
-          FoxyFormItem(
-            label: '验证版本',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
-              placeholder: 'VerifiedBuild',
-            ),
-          ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -185,7 +212,10 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           cell: (_, vendor) {
             final qualityColor =
                 kItemQualityColors[vendor.itemQuality] ?? Colors.white;
-            return Text(vendor.displayName, style: TextStyle(color: qualityColor));
+            return Text(
+              vendor.displayName,
+              style: TextStyle(color: qualityColor),
+            );
           },
         ),
         FoxyTableColumn.fixed(
@@ -208,6 +238,12 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           ),
         ),
       ],
+      onRowDoubleTap: (vendor) async {
+        viewModel.selectedKey.value = vendor.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog();
+      },
       onRowSecondaryTapDownWithDetails: (vendor, details) {
         viewModel.selectedKey.value = vendor.key;
         showFoxyContextMenu(
@@ -280,6 +316,9 @@ class _NpcVendorViewState extends State<NpcVendorView> {
       builder: (dialogContext) => ShadDialog(
         title: const Text('新增商品'),
         description: const Text('新增一条商品记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -291,6 +330,9 @@ class _NpcVendorViewState extends State<NpcVendorView> {
       builder: (dialogContext) => ShadDialog(
         title: const Text('编辑商品'),
         description: const Text('编辑选中的商品记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

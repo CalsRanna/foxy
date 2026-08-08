@@ -71,38 +71,47 @@ class _ItemEnchantmentTemplateViewState
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '附魔组ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.entryController,
-              placeholder: 'Entry',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '附魔ID',
-            child: FoxyEntityPicker(
-              delegate:
-                  viewModel.linkKey.value?.kind ==
-                      ItemEnchantmentKind.randomProperty
-                  ? FoxyEntityPickerDelegates.itemRandomProperties
-                  : FoxyEntityPickerDelegates.itemRandomSuffix,
-              controller: viewModel.enchController,
-              placeholder: 'Ench',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '几率',
-            child: FoxyNumberInput<double>(
-              controller: viewModel.chanceController,
-              placeholder: 'Chance (%)',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '附魔组ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.entryController,
+                    placeholder: 'Entry',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '附魔ID',
+                  child: FoxyEntityPicker(
+                    delegate:
+                        viewModel.linkKey.value?.kind ==
+                            ItemEnchantmentKind.randomProperty
+                        ? FoxyEntityPickerDelegates.itemRandomProperties
+                        : FoxyEntityPickerDelegates.itemRandomSuffix,
+                    controller: viewModel.enchController,
+                    placeholder: 'Ench',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '几率',
+                  child: FoxyNumberInput<double>(
+                    controller: viewModel.chanceController,
+                    placeholder: 'Chance',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 24),
           Row(
@@ -182,6 +191,12 @@ class _ItemEnchantmentTemplateViewState
           cell: (_, ench) => Text('${ench.chance}%'),
         ),
       ],
+      onRowDoubleTap: (ench) async {
+        viewModel.selectedKey.value = ench.key;
+        if (!await _load(ench.key)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (ench, details) {
         final key = ench.key;
         showFoxyContextMenu(
@@ -260,6 +275,9 @@ class _ItemEnchantmentTemplateViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('新增附魔'),
         description: Text('新增一条附魔记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -271,6 +289,9 @@ class _ItemEnchantmentTemplateViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑附魔'),
         description: Text('编辑选中的附魔记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

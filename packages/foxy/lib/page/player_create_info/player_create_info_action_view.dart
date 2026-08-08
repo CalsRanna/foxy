@@ -118,8 +118,11 @@ class _PlayerCreateInfoActionViewState
   Widget _buildDialog(BuildContext dialogContext, {required bool isEditing}) {
     return ShadDialog(
       title: Text(isEditing ? '编辑动作' : '新增动作'),
+      titlePinned: true,
+      descriptionPinned: true,
+      constraints: foxyDialogConstraints(dialogContext),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 960),
+        constraints: BoxConstraints(maxWidth: 720),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
@@ -156,17 +159,17 @@ class _PlayerCreateInfoActionViewState
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
                 Expanded(
                   child: FoxyFormItem(
                     label: '动作',
                     child: Watch((_) => _buildActionInput()),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
                 Expanded(
                   child: FoxyFormItem(
                     label: '类型',
@@ -177,8 +180,6 @@ class _PlayerCreateInfoActionViewState
                     ),
                   ),
                 ),
-                const Expanded(child: SizedBox()),
-                const Expanded(child: SizedBox()),
                 const Expanded(child: SizedBox()),
               ],
             ),
@@ -242,6 +243,11 @@ class _PlayerCreateInfoActionViewState
           cell: (_, item) => Text(item.type.toString()),
         ),
       ],
+      onRowDoubleTap: (item) async {
+        if (!await _load(item.key)) return;
+        if (!mounted) return;
+        _showDialog(isEditing: true);
+      },
       onRowSecondaryTapDownWithDetails: (item, details) {
         showFoxyContextMenu(
           context: context,

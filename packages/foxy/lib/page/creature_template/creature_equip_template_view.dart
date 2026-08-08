@@ -63,66 +63,78 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Creature ID
-          FoxyFormItem(
-            label: '生物ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIDController,
-              placeholder: 'CreatureID',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '生物ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.creatureIDController,
+                    placeholder: 'CreatureID',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '模板ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.idController,
+                    placeholder: 'ID',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '主手武器',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
+                    controller: viewModel.itemID1Controller,
+                    placeholder: 'ItemID1',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
-          // Template ID (primary-key index)
-          FoxyFormItem(
-            label: '模板ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.idController,
-              placeholder: 'ID',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Main-hand weapon
-          FoxyFormItem(
-            label: '主手武器',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
-              controller: viewModel.itemID1Controller,
-              placeholder: 'ItemID1',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Off-hand weapon
-          FoxyFormItem(
-            label: '副手武器',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
-              controller: viewModel.itemID2Controller,
-              placeholder: 'ItemID2',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Ranged weapon
-          FoxyFormItem(
-            label: '远程武器',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
-              controller: viewModel.itemID3Controller,
-              placeholder: 'ItemID3',
-            ),
-          ),
-          SizedBox(height: 16),
-          // VerifiedBuild
-          FoxyFormItem(
-            label: '验证版本',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
-              placeholder: 'VerifiedBuild',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '副手武器',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
+                    controller: viewModel.itemID2Controller,
+                    placeholder: 'ItemID2',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '远程武器',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
+                    controller: viewModel.itemID3Controller,
+                    placeholder: 'ItemID3',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '验证版本',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.verifiedBuildController,
+                    placeholder: 'VerifiedBuild',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 24),
           // Button row
@@ -222,6 +234,12 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           cell: (_, equip) => Text(equip.verifiedBuild.toString()),
         ),
       ],
+      onRowDoubleTap: (equip) async {
+        viewModel.selectedKey.value = equip.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (equip, details) {
         showFoxyContextMenu(
           context: context,
@@ -322,6 +340,9 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增装备模板'),
         description: Text('新增一条装备模板记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -334,6 +355,9 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑装备模板'),
         description: Text('编辑选中的装备模板记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

@@ -60,13 +60,13 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
     final isEditing = viewModel.selectedKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 960),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            spacing: 16,
+            spacing: 8,
             children: [
               Expanded(
                 child: FoxyFormItem(
@@ -96,6 +96,12 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '注解',
@@ -105,6 +111,8 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                   ),
                 ),
               ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),
@@ -185,6 +193,12 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
           cell: (_, item) => Text(item.comment),
         ),
       ],
+      onRowDoubleTap: (item) async {
+        viewModel.selectedKey.value = item.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
         showFoxyContextMenu(
@@ -278,6 +292,9 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增链接技能'),
         description: Text('新增一条链接技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -289,6 +306,9 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑链接技能'),
         description: Text('编辑选中的链接技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

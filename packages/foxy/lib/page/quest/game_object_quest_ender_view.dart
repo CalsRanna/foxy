@@ -57,22 +57,33 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.selectedKey.value != null;
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '物体编号',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.idController,
-              placeholder: 'GameobjectId',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '任务编号',
-            child: FoxyNumberInput<int>(controller: viewModel.questController),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '物体编号',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.idController,
+                    placeholder: 'GameobjectId',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '任务编号',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.questController,
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+            ],
           ),
           SizedBox(height: 24),
           Row(
@@ -151,6 +162,12 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
           ),
         ),
       ],
+      onRowDoubleTap: (item) async {
+        viewModel.selectedKey.value = item.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
         showFoxyContextMenu(
@@ -227,6 +244,9 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增结束物体'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -237,6 +257,9 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑结束物体'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

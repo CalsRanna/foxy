@@ -125,6 +125,11 @@ class _PlayerCreateInfoCastSpellViewState
           cell: (_, row) => Text(row.note ?? 'NULL'),
         ),
       ],
+      onRowDoubleTap: (row) async {
+        if (!await _load(row.key)) return;
+        if (!mounted) return;
+        _showDialog('编辑登录施法');
+      },
       onRowSecondaryTapDownWithDetails: (row, details) {
         showFoxyContextMenu(
           context: context,
@@ -235,6 +240,11 @@ class _PlayerCreateInfoCastSpellViewState
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
                 Expanded(
                   child: FoxyFormItem(
                     label: '备注',
@@ -244,6 +254,8 @@ class _PlayerCreateInfoCastSpellViewState
                     ),
                   ),
                 ),
+                const Expanded(child: SizedBox()),
+                const Expanded(child: SizedBox()),
               ],
             ),
             Row(

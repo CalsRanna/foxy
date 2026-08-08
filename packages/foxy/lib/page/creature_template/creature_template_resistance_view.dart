@@ -63,46 +63,60 @@ class _CreatureTemplateResistanceViewState
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Creature ID
-          FoxyFormItem(
-            label: '生物ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIDController,
-              placeholder: 'CreatureID',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '生物ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.creatureIDController,
+                    placeholder: 'CreatureID',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '抗性类型',
+                  child: FoxyShadSelect<int>(
+                    controller: viewModel.schoolController,
+                    options: kResistanceSchoolOptions,
+                    placeholder: Text('School'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '抗性值',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.resistanceController,
+                    placeholder: 'Resistance',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
-          // Resistance type
-          FoxyFormItem(
-            label: '抗性类型',
-            child: FoxyShadSelect<int>(
-              controller: viewModel.schoolController,
-              options: kResistanceSchoolOptions,
-              placeholder: Text('School'),
-            ),
-          ),
-          SizedBox(height: 16),
-          // Resistance value
-          FoxyFormItem(
-            label: '抗性值',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.resistanceController,
-              placeholder: 'Resistance',
-            ),
-          ),
-          SizedBox(height: 16),
-          // VerifiedBuild
-          FoxyFormItem(
-            label: '验证版本',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
-              placeholder: 'VerifiedBuild',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '验证版本',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.verifiedBuildController,
+                    placeholder: 'VerifiedBuild',
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+            ],
           ),
           SizedBox(height: 24),
           // Button row
@@ -187,6 +201,12 @@ class _CreatureTemplateResistanceViewState
           cell: (_, resistance) => Text(resistance.verifiedBuild.toString()),
         ),
       ],
+      onRowDoubleTap: (resistance) async {
+        viewModel.selectedKey.value = resistance.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (resistance, details) {
         showFoxyContextMenu(
           context: context,
@@ -287,6 +307,9 @@ class _CreatureTemplateResistanceViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('新增抗性'),
         description: Text('新增一条抗性记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -299,6 +322,9 @@ class _CreatureTemplateResistanceViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑抗性'),
         description: Text('编辑选中的抗性记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

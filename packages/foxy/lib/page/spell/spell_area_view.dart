@@ -65,13 +65,13 @@ class _SpellAreaViewState extends State<SpellAreaView> {
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 960),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            spacing: 16,
+            spacing: 8,
             children: [
               Expanded(
                 child: FoxyFormItem(
@@ -92,14 +92,6 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
-              Expanded(child: SizedBox()),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            spacing: 16,
-            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '开始任务',
@@ -110,6 +102,12 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '结束任务',
@@ -146,7 +144,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
           ),
           SizedBox(height: 16),
           Row(
-            spacing: 16,
+            spacing: 8,
             children: [
               Expanded(
                 child: FoxyFormItem(
@@ -178,6 +176,12 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '自动施放',
@@ -188,6 +192,8 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   ),
                 ),
               ),
+              Expanded(child: SizedBox()),
+              Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),
@@ -283,6 +289,12 @@ class _SpellAreaViewState extends State<SpellAreaView> {
           cell: (_, item) => Text(item.questEndStatus.toString()),
         ),
       ],
+      onRowDoubleTap: (item) async {
+        viewModel.selectedKey.value = item.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
         showFoxyContextMenu(
@@ -360,6 +372,9 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增区域技能'),
         description: Text('新增一条区域技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -371,6 +386,9 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑区域技能'),
         description: Text('编辑选中的区域技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

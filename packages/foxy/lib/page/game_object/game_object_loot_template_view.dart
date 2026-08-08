@@ -113,7 +113,9 @@ class _GameObjectLootTemplateViewState
               FoxyTableColumn.flex(
                 label: '物品名称',
                 cell: (_, item) => Text(
-                  item.reference != 0 ? '[${item.displayName}]' : item.displayName,
+                  item.reference != 0
+                      ? '[${item.displayName}]'
+                      : item.displayName,
                   style: TextStyle(color: _getQualityColor(item.itemQuality)),
                 ),
               ),
@@ -148,7 +150,7 @@ class _GameObjectLootTemplateViewState
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 960),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,6 +187,12 @@ class _GameObjectLootTemplateViewState
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '掉落几率',
@@ -194,12 +202,6 @@ class _GameObjectLootTemplateViewState
                   ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            spacing: 8,
-            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '需要任务',
@@ -219,6 +221,12 @@ class _GameObjectLootTemplateViewState
                   ),
                 ),
               ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '组 ID',
@@ -237,12 +245,6 @@ class _GameObjectLootTemplateViewState
                   ),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            spacing: 8,
-            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '最大数量',
@@ -252,6 +254,12 @@ class _GameObjectLootTemplateViewState
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '备注',
@@ -356,6 +364,9 @@ class _GameObjectLootTemplateViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('新增掉落'),
         description: Text('新增一条掉落记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -369,6 +380,9 @@ class _GameObjectLootTemplateViewState
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑掉落'),
         description: Text('编辑选中的掉落记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

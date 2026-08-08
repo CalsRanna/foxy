@@ -63,46 +63,60 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Creature ID
-          FoxyFormItem(
-            label: '生物ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIDController,
-              placeholder: 'CreatureID',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '生物ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.creatureIDController,
+                    placeholder: 'CreatureID',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '索引',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.indexController,
+                    placeholder: 'Index',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '技能',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
+                    controller: viewModel.spellController,
+                    placeholder: 'Spell',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
-          // Index (primary-key sequence)
-          FoxyFormItem(
-            label: '索引',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.indexController,
-              placeholder: 'Index',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Spell
-          FoxyFormItem(
-            label: '技能',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.spell,
-              controller: viewModel.spellController,
-              placeholder: 'Spell',
-            ),
-          ),
-          SizedBox(height: 16),
-          // VerifiedBuild
-          FoxyFormItem(
-            label: '验证版本',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
-              placeholder: 'VerifiedBuild',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '验证版本',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.verifiedBuildController,
+                    placeholder: 'VerifiedBuild',
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+            ],
           ),
           SizedBox(height: 24),
           // Button row
@@ -185,6 +199,12 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           cell: (_, spell) => Text(spell.verifiedBuild.toString()),
         ),
       ],
+      onRowDoubleTap: (spell) async {
+        viewModel.selectedKey.value = spell.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (spell, details) {
         viewModel.selectedKey.value = spell.key;
         showFoxyContextMenu(
@@ -279,6 +299,9 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增技能'),
         description: Text('新增一条技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -291,6 +314,9 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑技能'),
         description: Text('编辑选中的技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

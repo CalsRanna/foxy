@@ -59,13 +59,13 @@ class _SpellRankViewState extends State<SpellRankView> {
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 960),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            spacing: 16,
+            spacing: 8,
             children: [
               Expanded(
                 child: FoxyFormItem(
@@ -96,7 +96,6 @@ class _SpellRankViewState extends State<SpellRankView> {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),
@@ -186,6 +185,12 @@ class _SpellRankViewState extends State<SpellRankView> {
           cell: (_, item) => Text(item.rank.toString()),
         ),
       ],
+      onRowDoubleTap: (item) async {
+        viewModel.selectedKey.value = item.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
         showFoxyContextMenu(
@@ -263,6 +268,9 @@ class _SpellRankViewState extends State<SpellRankView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增技能排行'),
         description: Text('新增一条技能排行记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -274,6 +282,9 @@ class _SpellRankViewState extends State<SpellRankView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑技能排行'),
         description: Text('编辑选中的技能排行记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

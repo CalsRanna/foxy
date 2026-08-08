@@ -61,46 +61,60 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Creature ID
-          FoxyFormItem(
-            label: '生物ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.creatureEntryController,
-              placeholder: 'CreatureEntry',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '生物ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.creatureEntryController,
+                    placeholder: 'CreatureEntry',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '索引',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.idxController,
+                    placeholder: 'Idx',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '物品',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemTemplate,
+                    controller: viewModel.itemIdController,
+                    placeholder: 'ItemId',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
-          // Index (primary-key sequence)
-          FoxyFormItem(
-            label: '索引',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.idxController,
-              placeholder: 'Idx',
-            ),
-          ),
-          SizedBox(height: 16),
-          // Item
-          FoxyFormItem(
-            label: '物品',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemIdController,
-              placeholder: 'ItemId',
-            ),
-          ),
-          SizedBox(height: 16),
-          // VerifiedBuild
-          FoxyFormItem(
-            label: '验证版本',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
-              placeholder: 'VerifiedBuild',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '验证版本',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.verifiedBuildController,
+                    placeholder: 'VerifiedBuild',
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+            ],
           ),
           SizedBox(height: 24),
           // Button row
@@ -177,9 +191,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           label: '物品名称',
           cell: (_, questItem) => Text(
             questItem.displayName,
-            style: TextStyle(
-              color: getItemQualityColor(questItem.itemQuality),
-            ),
+            style: TextStyle(color: getItemQualityColor(questItem.itemQuality)),
           ),
         ),
         FoxyTableColumn.fixed(
@@ -188,6 +200,12 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           cell: (_, questItem) => Text(questItem.verifiedBuild.toString()),
         ),
       ],
+      onRowDoubleTap: (questItem) async {
+        viewModel.selectedKey.value = questItem.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (questItem, details) {
         showFoxyContextMenu(
           context: context,
@@ -288,6 +306,9 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增任务物品'),
         description: Text('新增一条任务物品记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -300,6 +321,9 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑任务物品'),
         description: Text('编辑选中的任务物品记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

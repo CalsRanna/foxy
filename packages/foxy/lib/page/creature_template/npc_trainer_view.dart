@@ -61,144 +61,174 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500, maxHeight: 680),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FoxyFormItem(
-              label: '训练师ID',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.trainerIdController,
-                placeholder: 'TrainerId',
-              ),
-            ),
-            SizedBox(height: 16),
-            // Spell
-            FoxyFormItem(
-              label: '技能',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.spell,
-                controller: viewModel.spellIdController,
-                placeholder: 'SpellId',
-              ),
-            ),
-            SizedBox(height: 16),
-            // Gold cost
-            FoxyFormItem(
-              label: '金币花费',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.moneyCostController,
-                placeholder: 'MoneyCost',
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Text(
-                '需求条件',
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-            ),
-            const SizedBox(height: 8),
-            // Required skill line
-            FoxyFormItem(
-              label: '需要技能线',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.skillLine,
-                controller: viewModel.reqSkillLineController,
-                placeholder: 'ReqSkillLine',
-              ),
-            ),
-            SizedBox(height: 16),
-            // Required skill rank
-            FoxyFormItem(
-              label: '需要技能等级',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.reqSkillRankController,
-                placeholder: 'ReqSkillRank',
-              ),
-            ),
-            SizedBox(height: 16),
-            FoxyFormItem(
-              label: '前置技能 1',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.spell,
-                controller: viewModel.reqAbility1Controller,
-                placeholder: 'ReqAbility1 (0=无)',
-              ),
-            ),
-            SizedBox(height: 16),
-            FoxyFormItem(
-              label: '前置技能 2',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.spell,
-                controller: viewModel.reqAbility2Controller,
-                placeholder: 'ReqAbility2 (0=无)',
-              ),
-            ),
-            SizedBox(height: 16),
-            FoxyFormItem(
-              label: '前置技能 3',
-              child: FoxyEntityPicker(
-                delegate: FoxyEntityPickerDelegates.spell,
-                controller: viewModel.reqAbility3Controller,
-                placeholder: 'ReqAbility3 (0=无)',
-              ),
-            ),
-            SizedBox(height: 16),
-            FoxyFormItem(
-              label: '需要等级',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.reqLevelController,
-                placeholder: 'ReqLevel',
-              ),
-            ),
-            SizedBox(height: 16),
-            FoxyFormItem(
-              label: '验证版本',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.verifiedBuildController,
-                placeholder: 'VerifiedBuild',
-              ),
-            ),
-            SizedBox(height: 24),
-            // Button row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ShadButton.outline(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  child: Text('取消'),
-                ),
-                SizedBox(width: 8),
-                Watch(
-                  (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () async {
-                      try {
-                        await viewModel.persist();
-                      } catch (error) {
-                        if (!mounted) return;
-                        DialogUtil.instance.error(
-                          '保存失败：${foxyErrorMessage(error)}',
-                        );
-                        return;
-                      }
-                      if (!dialogContext.mounted) return;
-                      ShadSonner.of(
-                        dialogContext,
-                      ).show(const ShadToast(description: Text('保存成功')));
-                      Navigator.of(dialogContext).pop();
-                    },
-                    child: Text(isEditing ? '更新' : '保存'),
+      constraints: BoxConstraints(maxWidth: 720),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '训练师ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.trainerIdController,
+                    placeholder: 'TrainerId',
                   ),
                 ),
-              ],
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '技能',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
+                    controller: viewModel.spellIdController,
+                    placeholder: 'SpellId',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '金币花费',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.moneyCostController,
+                    placeholder: 'MoneyCost',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Text(
+              '需求条件',
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '需要技能线',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.skillLine,
+                    controller: viewModel.reqSkillLineController,
+                    placeholder: 'ReqSkillLine',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '需要技能等级',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.reqSkillRankController,
+                    placeholder: 'ReqSkillRank',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '前置技能 1',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
+                    controller: viewModel.reqAbility1Controller,
+                    placeholder: 'ReqAbility1',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '前置技能 2',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
+                    controller: viewModel.reqAbility2Controller,
+                    placeholder: 'ReqAbility2',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '前置技能 3',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
+                    controller: viewModel.reqAbility3Controller,
+                    placeholder: 'ReqAbility3',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '需要等级',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.reqLevelController,
+                    placeholder: 'ReqLevel',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '验证版本',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.verifiedBuildController,
+                    placeholder: 'VerifiedBuild',
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+            ],
+          ),
+          SizedBox(height: 24),
+          // Button row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShadButton.outline(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text('取消'),
+              ),
+              SizedBox(width: 8),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error(
+                        '保存失败：${foxyErrorMessage(error)}',
+                      );
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -253,6 +283,12 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           cell: (_, trainer) => Text(trainer.reqLevel.toString()),
         ),
       ],
+      onRowDoubleTap: (trainer) async {
+        viewModel.selectedKey.value = trainer.key;
+        if (!await _load(trainer.key)) return;
+        if (!mounted) return;
+        _showEditDialog();
+      },
       onRowSecondaryTapDownWithDetails: (trainer, details) {
         viewModel.selectedKey.value = trainer.key;
         showFoxyContextMenu(
@@ -348,6 +384,9 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增训练师技能'),
         description: Text('新增一条训练师技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -360,6 +399,9 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑训练师技能'),
         description: Text('编辑选中的训练师技能记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

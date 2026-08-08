@@ -193,8 +193,11 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text(viewModel.editingKey.value == null ? '新增本地化' : '编辑本地化'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 760),
+          constraints: const BoxConstraints(maxWidth: 720),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -229,6 +232,12 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                       ),
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                spacing: 8,
+                children: [
                   Expanded(
                     child: FoxyFormItem(
                       label: '验证版本',
@@ -238,6 +247,8 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                       ),
                     ),
                   ),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
               const SizedBox(height: 24),

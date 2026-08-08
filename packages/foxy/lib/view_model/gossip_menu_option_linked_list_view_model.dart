@@ -101,7 +101,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> create() async {
+  Future<void> create({bool showForm = true}) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final link = linkKey.value;
     if (link == null) {
@@ -115,7 +115,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       editingKey.value = null;
       selectedKey.value = null;
       _applyCandidate(candidate);
-      formVisible.value = true;
+      if (showForm) formVisible.value = true;
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
         return;
@@ -157,7 +157,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
 
   void dispose() => disposeControllers();
 
-  Future<void> edit(GossipMenuOptionKey key) async {
+  Future<void> edit(GossipMenuOptionKey key, {bool showForm = true}) async {
     if (submitting.value) throw BusyException('operation already in progress');
     final link = linkKey.value;
     if (link == null) {
@@ -175,7 +175,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
         throw RecordNotFoundException('record not found');
       }
       _applyCandidate(candidate);
-      formVisible.value = true;
+      if (showForm) formVisible.value = true;
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
         return;

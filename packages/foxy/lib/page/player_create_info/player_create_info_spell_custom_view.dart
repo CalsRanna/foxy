@@ -123,11 +123,9 @@ class _PlayerCreateInfoSpellCustomViewState
           width: 120,
           cell: (_, item) => Text(item.spell.toString()),
         ),
-        FoxyTableColumn.flex(
-          label: '备注',
-          cell: (_, item) => Text(item.note),
-        ),
+        FoxyTableColumn.flex(label: '备注', cell: (_, item) => Text(item.note)),
       ],
+      onRowDoubleTap: (item) => _showEditDialog(item),
       onRowSecondaryTapDownWithDetails: (item, details) {
         showFoxyContextMenu(
           context: context,
@@ -235,6 +233,11 @@ class _PlayerCreateInfoSpellCustomViewState
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
                 Expanded(
                   child: FoxyFormItem(
                     label: '备注',
@@ -244,6 +247,8 @@ class _PlayerCreateInfoSpellCustomViewState
                     ),
                   ),
                 ),
+                const Expanded(child: SizedBox()),
+                const Expanded(child: SizedBox()),
               ],
             ),
             Row(

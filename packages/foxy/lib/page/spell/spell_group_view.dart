@@ -57,13 +57,13 @@ class _SpellGroupViewState extends State<SpellGroupView> {
     final isEditing = viewModel.selectedKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 960),
+      constraints: BoxConstraints(maxWidth: 720),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            spacing: 16,
+            spacing: 8,
             children: [
               Expanded(
                 child: FoxyFormItem(
@@ -83,7 +83,6 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
               Expanded(child: SizedBox()),
             ],
           ),
@@ -155,6 +154,12 @@ class _SpellGroupViewState extends State<SpellGroupView> {
           cell: (_, item) => Text(item.id.toString()),
         ),
       ],
+      onRowDoubleTap: (item) async {
+        viewModel.selectedKey.value = item.key;
+        if (!await _load(viewModel.selectedKey.value!)) return;
+        if (!mounted) return;
+        _showEditDialog(context);
+      },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
         showFoxyContextMenu(
@@ -248,6 +253,9 @@ class _SpellGroupViewState extends State<SpellGroupView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('新增技能组'),
         description: Text('新增一条技能组记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -259,6 +267,9 @@ class _SpellGroupViewState extends State<SpellGroupView> {
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑技能组'),
         description: Text('编辑选中的技能组记录'),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
