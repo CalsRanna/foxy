@@ -19,7 +19,7 @@ Monorepo (Dart pub workspace, root `pubspec.yaml`):
 | `packages/foxy` | `foxy` (v1.1.1+665) | The Flutter app — the only runnable package |
 | `packages/foxy_annotation` | `foxy_annotation` | Annotation definitions (`@Foxy*`) consumed by the generators |
 | `packages/foxy_generator` | `foxy_generator` | source_gen builders that read annotations and emit `.g.dart` parts |
-| `packages/foxy_lint` | `foxy_lint` | Project-specific **analyzer plugin** (8 rules) |
+| `packages/foxy_lint` | `foxy_lint` | Project-specific **analyzer plugin** (9 rules) |
 
 Run Flutter commands from `packages/foxy`; run generator/lint tests from their own packages (`dart test`).
 
@@ -29,7 +29,7 @@ Run Flutter commands from `packages/foxy`; run generator/lint tests from their o
 cd packages/foxy
 flutter pub get                          # install deps (workspace resolution)
 dart run build_runner build --delete-conflicting-outputs   # regenerate .g.dart (SLOW, can take many minutes)
-flutter analyze                          # includes the 8 foxy_lint plugin rules
+flutter analyze                          # includes the 9 foxy_lint plugin rules
 flutter test                             # ~91 test files; can take a while
 flutter run -d windows                   # run (reads config.yaml for DB connection)
 ```
@@ -108,10 +108,11 @@ laconic query builder ──► MySQL (AzerothCore `world` DB + `foxy` meta DB)
 - Handwritten classes must mix in the generated mixin and declare `part 'xxx.g.dart';`.
 - `lib/entity/` holds ~130 `*_entity.dart` files (125 generated); hand-written-only ones: `activity_log_entity.dart`, `dbc_locale.dart`, `feature_entity.dart`, `version_entity.dart`, composite-key DTOs (`condition_entity` … are generated, keys are hand-written `*_key.dart`).
 
-### foxy_lint rules (enforced by `flutter analyze` — analyzer plugin, 8 rules in `packages/foxy_lint/lib/rules/`, registered in `lib/main.dart`)
+### foxy_lint rules (enforced by `flutter analyze` — analyzer plugin, 9 rules in `packages/foxy_lint/lib/rules/`, registered in `lib/main.dart`)
 
 | Rule | Meaning |
 | --- | --- |
+| `annotation_file_mismatch` | `@Foxy*`-annotated classes must live in the file name matching the generator glob (`**_entity.dart` / `**_repository.dart` / `**_view_model.dart`), or the builder silently skips them |
 | `entity_scalar_only` | Entities only contain scalar fields (no `List`/`Map`/`Set`) |
 | `entity_no_flutter_import` | Entity layer must not import Flutter / UI packages |
 | `repository_no_save` | Repositories never expose direct `save*`; use generated store/update/destroy |

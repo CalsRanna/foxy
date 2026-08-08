@@ -69,6 +69,44 @@ final class SourceShape {
     return false;
   }
 
+  /// Whether any top-level class in [unit] carries an annotation named
+  /// [annotationName] (e.g. `FoxyListViewModel`, without the `@`).
+  ///
+  /// AST-level: the annotation must actually be applied to a declaration —
+  /// occurrences in comments or string literals do not count (a raw text
+  /// scan would mis-detect those).
+  bool hasAnnotation(CompilationUnit unit, String annotationName) {
+    for (final declaration in unit.declarations) {
+      if (declaration is! ClassDeclaration) continue;
+      for (final metadata in declaration.metadata) {
+        if (metadata.name.name == annotationName) return true;
+      }
+    }
+    return false;
+  }
+
+  /// Whether the library at [assetId] declares a top-level class annotated
+  /// with [annotationName].
+  ///
+  /// Used for cross-layer presence checks (e.g. "does the matching list
+  /// ViewModel exist?") where the probed file is not the builder's input.
+  Future<bool> fileHasAnnotation(
+    BuildStep buildStep,
+    AssetId assetId,
+    String annotationName,
+  ) async {
+    if (!await buildStep.canRead(assetId)) return false;
+    final source = await buildStep.readAsString(assetId);
+    final result = parseString(
+      content: source,
+      path: assetId.path,
+      // Same tolerance as [parseInput]: diagnostics are irrelevant, only
+      // the annotation names are read.
+      throwIfDiagnostics: false,
+    );
+    return hasAnnotation(result.unit, annotationName);
+  }
+
   /// Whether the class itself declares a member (method, getter, setter, or
   /// field) named [memberName].
   ///

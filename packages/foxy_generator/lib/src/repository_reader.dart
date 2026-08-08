@@ -9,6 +9,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/naming.dart';
+import 'package:foxy_generator/src/source_shape.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
 import 'package:foxy_generator/src/repository_filter_reader.dart';
 import 'package:foxy_generator/src/repository_model.dart';
@@ -133,18 +134,19 @@ final class RepositoryReader {
     // for two kinds of repositories: main-table ones with a list page, and
     // child-table ones declaring linkKey (detail-page tabs).
     //
-    // Presence is a *shape* check, not just file existence: a stale or
-    // placeholder list-VM file (e.g. one whose annotation was removed)
-    // must not silently enable/disable the generated query layer.
+    // Presence is an AST-level *shape* check, not just file existence: a
+    // stale or placeholder list-VM file (e.g. one whose annotation was
+    // removed) must not silently enable/disable the generated query layer,
+    // and an annotation mentioned in a comment must not count.
     final listViewModelAssetId = AssetId(
       buildStep.inputId.package,
       'lib/view_model/${toSnakeCase(baseName)}_list_view_model.dart',
     );
-    final listViewModelPresent = await buildStep.canRead(
-      listViewModelAssetId,
-    ) &&
-        (await buildStep.readAsString(listViewModelAssetId)).contains(
-          '@FoxyListViewModel',
+    final listViewModelPresent =
+        await const SourceShape().fileHasAnnotation(
+          buildStep,
+          listViewModelAssetId,
+          'FoxyListViewModel',
         );
     final declaredLinkKeys = <String>[];
     final linkKeyReader = annotation.peek('linkKey');

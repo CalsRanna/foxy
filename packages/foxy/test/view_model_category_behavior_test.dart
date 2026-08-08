@@ -162,6 +162,11 @@ final class _ConditionRepository extends ConditionRepository {
     return 0;
   }
 
+  // The generated destroy() fetches the record for the activity-log name
+  // before deleting; the activity log is a no-op in this test.
+  @override
+  Future<ConditionEntity?> getCondition(ConditionKey key) async => null;
+
   @override
   Future<void> destroyCondition(ConditionKey key) async {
     if (!destroyStarted.isCompleted) destroyStarted.complete();

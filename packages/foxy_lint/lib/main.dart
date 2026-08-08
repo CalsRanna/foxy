@@ -1,6 +1,7 @@
 import 'package:analysis_server_plugin/plugin.dart';
 import 'package:analysis_server_plugin/registry.dart';
 
+import 'package:foxy_lint/rules/annotation_file_mismatch.dart';
 import 'package:foxy_lint/rules/entity_no_flutter_import.dart';
 import 'package:foxy_lint/rules/entity_scalar_only.dart';
 import 'package:foxy_lint/rules/no_chinese_throw.dart';
@@ -21,6 +22,7 @@ class _FoxyLintPlugin extends Plugin {
   @override
   void register(PluginRegistry registry) {
     registry
+      ..registerWarningRule(AnnotationFileMismatch())
       ..registerWarningRule(EntityScalarOnly())
       ..registerWarningRule(NoCollectionLoops())
       ..registerWarningRule(EntityNoFlutterImport())

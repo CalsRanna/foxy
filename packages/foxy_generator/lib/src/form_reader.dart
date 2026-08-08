@@ -257,8 +257,14 @@ final class FormReader {
           buildStep.inputId.package,
           'lib/repository/$fileName',
         );
-        final present = await buildStep.canRead(assetId) &&
-            (await buildStep.readAsString(assetId)).contains('@FoxyRepository');
+        // AST-level presence check: the same-named repository must actually
+        // carry the @FoxyRepository annotation (a comment/string mention or
+        // a stale file must not enable the behavior skeleton).
+        final present = await const SourceShape().fileHasAnnotation(
+          buildStep,
+          assetId,
+          'FoxyRepository',
+        );
         if (present) {
           repositoryClassName = derived;
         }

@@ -40,7 +40,7 @@ foxy/
 │   │   └── windows|linux|macos/  # 平台工程
 │   ├── foxy_annotation/      # 代码生成注解定义(Entity/Repository/ViewModel)
 │   ├── foxy_generator/       # source_gen 代码生成器(读注解,产出 .g.dart)
-│   └── foxy_lint/            # 项目专属 analyzer 插件(8 条 lint 规则)
+│   └── foxy_lint/            # 项目专属 analyzer 插件(9 条 lint 规则)
 ├── doc/codegen/              # 代码生成系统文档
 └── pubspec.yaml              # workspace 根
 ```

@@ -18,21 +18,34 @@ class ConfigUtil {
     if (content.trim().isEmpty) return {};
     try {
       final yaml = loadYaml(content);
-      if (yaml is! Map) return {};
+      if (yaml is! Map) {
+        // Parseable YAML of the wrong shape (scalar/list): the file is not
+        // usable as a config, and update() would otherwise merge onto an
+        // empty map and overwrite the original content forever — back it up
+        // like the unparseable case.
+        return _backupCorruptFile(file, 'config.yaml 顶层不是配置映射,已备份为 config.yaml.bak');
+      }
       return Map<String, dynamic>.from(yaml);
     } on YamlException catch (error) {
-      // Self-heal on corrupted config: back up the broken file and return an
-      // empty config, so loading and saving keep working instead of the app
-      // being permanently unrecoverable.
-      LoggerUtil.instance.w('config.yaml 解析失败,已备份为 config.yaml.bak: $error');
-      try {
-        await file.rename('${file.path}.bak');
-      } catch (_) {
-        // A failed backup does not block continuing with an empty config
-        // this time.
-      }
-      return {};
+      return _backupCorruptFile(
+        file,
+        'config.yaml 解析失败,已备份为 config.yaml.bak: $error',
+      );
     }
+  }
+
+  /// Self-heal on corrupted config: back up the broken file and return an
+  /// empty config, so loading and saving keep working instead of the app
+  /// being permanently unrecoverable.
+  Future<Map<String, dynamic>> _backupCorruptFile(File file, String log) async {
+    LoggerUtil.instance.w(log);
+    try {
+      await file.rename('${file.path}.bak');
+    } catch (_) {
+      // A failed backup does not block continuing with an empty config
+      // this time.
+    }
+    return {};
   }
 
   Future<void> update(Map<String, dynamic> values) {

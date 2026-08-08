@@ -21,7 +21,21 @@ final class FormEmitter {
   /// _logActivity).
   String emit(FormGenerationModel model) {
     final buffer = StringBuffer()
-      ..writeln('mixin ${model.mixinName} on FieldControllerMixin {');
+      ..writeln('mixin ${model.mixinName} on FieldControllerMixin {')
+      ..write(emitBody(model))
+      ..writeln('}');
+    return buffer.toString();
+  }
+
+  /// The mixin body only — everything between the `mixin ... {` declaration
+  /// and its closing brace, without the wrapper.
+  ///
+  /// Linked List/Detail emitters splice this into their own mixin
+  /// declaration; emitting the body structurally (instead of extracting it
+  /// from [emit]'s output by brace positions) keeps the two emitters
+  /// robust to shape changes in the form output.
+  String emitBody(FormGenerationModel model) {
+    final buffer = StringBuffer();
     if (model.skeletonEnabled) {
       _emitSkeletonFields(buffer, model);
     }
@@ -49,7 +63,6 @@ final class FormEmitter {
       buffer.writeln();
       _emitLogActivity(buffer, model);
     }
-    buffer.writeln('}');
     return buffer.toString();
   }
 

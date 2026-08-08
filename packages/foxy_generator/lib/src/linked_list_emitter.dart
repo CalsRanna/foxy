@@ -47,7 +47,8 @@ final class LinkedListEmitter {
       ..writeln();
 
     // Controller boilerplate reuses FormEmitter (with the behavior skeleton
-    // disabled).
+    // disabled). The body is spliced in structurally via emitBody, keeping
+    // the output stable against shape changes in the form emitter.
     final form = FormGenerationModel(
       className: model.className,
       entityClassName: model.entityClassName,
@@ -60,10 +61,8 @@ final class LinkedListEmitter {
       table: model.table,
       emitLogActivity: false,
     );
-    final formMixin = const FormEmitter().emit(form);
-    final bodyStart = formMixin.indexOf('{') + 1;
-    final bodyEnd = formMixin.lastIndexOf('}');
-    buffer.write(formMixin.substring(bodyStart, bodyEnd));
+    buffer.writeln();
+    buffer.write(const FormEmitter().emitBody(form));
 
     buffer
       ..writeln('  int _refreshToken = 0;')

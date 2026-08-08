@@ -41,9 +41,19 @@ void main() {
     expect((await configUtil.load())['host'], '127.0.0.1');
   });
 
-  test('非 Map 的顶层 YAML(如纯字符串)按空配置处理', () async {
-    await File(configUtil.configPath).writeAsString('just a string');
-    expect(await configUtil.load(), isEmpty);
+  test('非 Map 的顶层 YAML(如纯字符串)自愈:返回空配置并备份 .bak', () async {
+    final file = File(configUtil.configPath);
+    await file.writeAsString('just a string');
+
+    final loaded = await configUtil.load();
+
+    expect(loaded, isEmpty);
+    expect(await File('${configUtil.configPath}.bak').exists(), isTrue);
+    // The backup preserves the original content; saving still works and
+    // never overwrites the backed-up data.
+    expect(await File('${configUtil.configPath}.bak').readAsString(), 'just a string');
+    await configUtil.update({'host': '127.0.0.1'});
+    expect((await configUtil.load())['host'], '127.0.0.1');
   });
 }
 
