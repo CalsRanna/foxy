@@ -1,3 +1,4 @@
+import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'scaling_stat_distribution_entity.g.dart';
@@ -121,48 +122,98 @@ class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
   factory ScalingStatDistributionEntity.fromJson(Map<String, dynamic> json) =>
       _ScalingStatDistributionEntityMixin.fromJson(json);
 
-  String get displayStats {
-    final result = StringBuffer();
-    void append(int statId, int bonus) {
-      if (statId < 0) return;
-      if (result.isNotEmpty) result.write(', ');
-      result.write('$statId+$bonus');
-    }
+  /// 属性分布展示文本，如 `敏捷(300), 生命值(300)`。
+  ///
+  /// - `-1` 空槽不显示；
+  /// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示；
+  /// - 常量表外的未知属性回退为数字，保证信息不丢失。
+  String get displayStats => formatStats(
+    [
+      statId0,
+      statId1,
+      statId2,
+      statId3,
+      statId4,
+      statId5,
+      statId6,
+      statId7,
+      statId8,
+      statId9,
+    ],
+    [
+      bonus0,
+      bonus1,
+      bonus2,
+      bonus3,
+      bonus4,
+      bonus5,
+      bonus6,
+      bonus7,
+      bonus8,
+      bonus9,
+    ],
+  );
+}
 
-    append(statId0, bonus0);
-    append(statId1, bonus1);
-    append(statId2, bonus2);
-    append(statId3, bonus3);
-    append(statId4, bonus4);
-    append(statId5, bonus5);
-    append(statId6, bonus6);
-    append(statId7, bonus7);
-    append(statId8, bonus8);
-    append(statId9, bonus9);
-    return result.isEmpty ? '-' : result.toString();
+/// 有效属性槽位列表，entity 与 brief entity 共用。
+///
+/// - `-1` 空槽不显示；
+/// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示。
+List<(int, int)> statEntries(List<int> statIds, List<int> bonuses) {
+  final entries = <(int, int)>[];
+  for (var i = 0; i < statIds.length; i++) {
+    final statId = statIds[i];
+    if (statId < 0) continue; // 空槽
+    if (statId == 0 && bonuses[i] == 0) continue; // 无效的 0+0 占位
+    entries.add((statId, bonuses[i]));
   }
+  return entries;
+}
+
+/// 汇总一组属性槽位为展示文本，如 `敏捷(300), 生命值(300)`。
+///
+/// 常量表外的未知属性回退为数字，保证信息不丢失。
+String formatStats(List<int> statIds, List<int> bonuses) {
+  final result = StringBuffer();
+  for (final (statId, bonus) in statEntries(statIds, bonuses)) {
+    final name = kScalingStatDistributionStatOptions[statId];
+    if (result.isNotEmpty) result.write(', ');
+    result.write('${name ?? '$statId'}($bonus)');
+  }
+  return result.isEmpty ? '-' : result.toString();
 }
 
 extension BriefScalingStatDistributionEntityDisplay
     on BriefScalingStatDistributionEntity {
-  String get displayStats {
-    final result = StringBuffer();
-    void append(int statId, int bonus) {
-      if (statId < 0) return;
-      if (result.isNotEmpty) result.write(', ');
-      result.write('$statId+$bonus');
-    }
-
-    append(statId0, bonus0);
-    append(statId1, bonus1);
-    append(statId2, bonus2);
-    append(statId3, bonus3);
-    append(statId4, bonus4);
-    append(statId5, bonus5);
-    append(statId6, bonus6);
-    append(statId7, bonus7);
-    append(statId8, bonus8);
-    append(statId9, bonus9);
-    return result.isEmpty ? '-' : result.toString();
-  }
+  /// 属性分布展示文本，如 `敏捷(300), 生命值(300)`。
+  ///
+  /// - `-1` 空槽不显示；
+  /// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示；
+  /// - 常量表外的未知属性回退为数字，保证信息不丢失。
+  String get displayStats => formatStats(
+    [
+      statId0,
+      statId1,
+      statId2,
+      statId3,
+      statId4,
+      statId5,
+      statId6,
+      statId7,
+      statId8,
+      statId9,
+    ],
+    [
+      bonus0,
+      bonus1,
+      bonus2,
+      bonus3,
+      bonus4,
+      bonus5,
+      bonus6,
+      bonus7,
+      bonus8,
+      bonus9,
+    ],
+  );
 }

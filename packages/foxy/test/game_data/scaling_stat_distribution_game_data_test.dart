@@ -24,9 +24,54 @@ void main() {
       statId0: 0,
       bonus0: 10000,
     );
-    expect(entity.displayStats, '0+10000');
+    expect(entity.displayStats, '法力值(10000)');
     expect(const ScalingStatDistributionEntity().statId9, -1);
     expect(const ScalingStatDistributionEntity().maxlevel, 80);
+  });
+
+  test('属性分布用属性名显示并过滤无效槽位', () {
+    const entity = ScalingStatDistributionEntity(
+      id: 1,
+      statId0: 0,
+      bonus0: 0, // 无效的 0+0 占位（旧数据把 0 当"无"）
+      statId1: 3,
+      bonus1: 300,
+      statId3: 1,
+      bonus3: 300,
+    );
+    expect(entity.displayStats, '敏捷(300), 生命值(300)');
+  });
+
+  test('全部槽位为空时显示 -', () {
+    const entity = ScalingStatDistributionEntity(id: 1);
+    expect(entity.displayStats, '-');
+  });
+
+  test('常量表外的未知属性回退为数字', () {
+    const entity = ScalingStatDistributionEntity(
+      id: 1,
+      statId1: 2, // 旧版遗留的"法力值"编号，新版常量表无此值
+      bonus1: 300,
+    );
+    expect(entity.displayStats, '2(300)');
+  });
+
+  test('statEntries 返回过滤后的槽位列表', () {
+    const entity = ScalingStatDistributionEntity(
+      id: 1,
+      statId0: -1, // 空槽
+      statId1: 0,
+      bonus1: 0, // 0+0 占位
+      statId2: 3,
+      bonus2: 300,
+    );
+    expect(
+      statEntries(
+        [entity.statId0, entity.statId1, entity.statId2],
+        [entity.bonus0, entity.bonus1, entity.bonus2],
+      ),
+      [(3, 300)],
+    );
   });
 
   test('DBC definition 与 AzerothCore 3.3.5a 的 22 列格式一致', () {
