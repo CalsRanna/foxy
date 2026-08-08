@@ -78,17 +78,13 @@ jobs:
       # build_resolvers SDK cache (`.dart_tool/build_resolvers/sdk.sum`)
       # per test file, and parallel files hit a file-lock race on Windows
       # (PathAccessException: Access is denied). `-j 1` removes the
-      # concurrency; a step retry absorbs any remaining flake.
+      # concurrency.
       - name: Test generator package
         working-directory: packages/foxy_generator
-        retry:
-          max-attempts: 2
         run: dart test -j 1
 
       - name: Test lint package
         working-directory: packages/foxy_lint
-        retry:
-          max-attempts: 2
         run: dart test -j 1
 
       - name: Determine version
