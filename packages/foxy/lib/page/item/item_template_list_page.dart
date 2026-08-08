@@ -11,8 +11,8 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
-import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/item_quality_color.dart';
@@ -63,25 +63,6 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       padding: const EdgeInsets.all(16),
       child: _buildSearchInputs(),
     );
-  }
-
-  Widget _buildIconAndName(BriefItemTemplateEntity item, Color qualityColor) {
-    var children = [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: FoxyGameAssetIcon(rawPath: item.inventoryIcon),
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: Text(
-          item.displayName,
-          style: TextStyle(color: qualityColor),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    ];
-    return Row(children: children);
   }
 
   Widget _buildSearchInputs() {
@@ -151,7 +132,11 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
           cell: (context, item) {
             final qualityColor =
                 kItemQualityColors[item.quality] ?? Colors.black;
-            return _buildIconAndName(item, qualityColor);
+            return FoxyIconText(
+              iconPath: item.inventoryIcon,
+              name: item.displayName,
+              nameColor: qualityColor,
+            );
           },
         ),
         FoxyTableColumn.fixed(

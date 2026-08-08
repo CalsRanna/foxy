@@ -9,10 +9,10 @@ import 'package:foxy/view_model/spell_list_view_model.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/foxy_game_asset_icon.dart';
-import 'package:foxy/widget/foxy_header.dart';
-import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
+import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -87,23 +87,6 @@ class _SpellListPageState extends State<SpellListPage> {
     );
   }
 
-  Widget _buildIconAndName(BriefSpellEntity spell) {
-    var children = [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: FoxyGameAssetIcon(rawPath: spell.textureFilename),
-      ),
-      Expanded(
-        child: Text(
-          spell.displayName,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    ];
-    return Row(spacing: 8, children: children);
-  }
-
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
@@ -135,7 +118,10 @@ class _SpellListPageState extends State<SpellListPage> {
         ),
         FoxyTableColumn.flex(
           label: '名称',
-          cell: (_, spell) => _buildIconAndName(spell),
+          cell: (_, spell) => FoxyIconText(
+            iconPath: spell.textureFilename,
+            name: spell.displayName,
+          ),
         ),
         FoxyTableColumn.fixed(
           label: '子名称',

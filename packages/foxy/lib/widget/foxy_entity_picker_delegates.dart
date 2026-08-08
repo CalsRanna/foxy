@@ -141,7 +141,7 @@ import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/repository/zone_intro_music_repository.dart';
 import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/foxy_game_asset_icon.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 
@@ -1459,7 +1459,10 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '图标',
-            text: (BriefItemDisplayInfoEntity t) => t.inventoryIcon0,
+            cell: (BriefItemDisplayInfoEntity t) => FoxyIconText(
+              iconPath: t.inventoryIcon0,
+              name: t.inventoryIcon0,
+            ),
           ),
         ],
         idOf: (BriefItemDisplayInfoEntity t) => t.id,
@@ -1973,11 +1976,10 @@ class FoxyEntityPickerDelegates {
         header: '名称',
         cell: (BriefItemTemplateEntity t) {
           final color = kItemQualityColors[t.quality] ?? Colors.white;
-          return Text(
-            t.displayName,
-            style: TextStyle(color: color),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          return FoxyIconText(
+            iconPath: t.inventoryIcon,
+            name: t.displayName,
+            nameColor: color,
           );
         },
       ),
@@ -2480,15 +2482,9 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '图标文件',
-        cell: (entity) => Row(
-          spacing: 8,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: FoxyGameAssetIcon(rawPath: entity.textureFilename),
-            ),
-            Expanded(child: Text(entity.textureFilename)),
-          ],
+        cell: (entity) => FoxyIconText(
+          iconPath: entity.textureFilename,
+          name: entity.textureFilename,
         ),
       ),
     ],
@@ -2516,7 +2512,10 @@ class FoxyEntityPickerDelegates {
       FoxyEntityPickerColumn(
         header: '名称',
         width: 240,
-        text: (BriefSpellEntity t) => t.displayName,
+        cell: (BriefSpellEntity t) => FoxyIconText(
+          iconPath: t.textureFilename,
+          name: t.displayName,
+        ),
       ),
       FoxyEntityPickerColumn(
         header: '子名称',
