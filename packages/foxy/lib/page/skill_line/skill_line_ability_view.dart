@@ -99,6 +99,12 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '最低技能等级',
@@ -108,11 +114,6 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
                   ),
                 ),
               ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '种族掩码',
@@ -135,6 +136,12 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '排除种族',
@@ -157,11 +164,6 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
                   ),
                 ),
               ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '取代法术',
@@ -172,6 +174,12 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '高等级上限',
@@ -201,6 +209,7 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
               ),
             ],
           ),
+          SizedBox(height: 16),
           Row(
             spacing: 8,
             children: [
@@ -213,9 +222,8 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
-              Expanded(child: SizedBox()),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),
