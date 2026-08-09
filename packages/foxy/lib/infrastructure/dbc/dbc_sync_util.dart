@@ -10,6 +10,7 @@ import 'package:foxy/infrastructure/dbc/mpq_export_worker.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import 'package:signals/signals.dart';
 
 class DbcSyncUtil {
   /// Isolate entry for DBC export; injectable so tests can script worker
@@ -28,14 +29,19 @@ class DbcSyncUtil {
   _ImportJobHandle? _activeImportJob;
   String? _activeJobId;
   _ExportJobHandle? _activeExportJob;
-  bool _running = false;
+
+  /// Whether a DBC task (import/export/MPQ) is currently running. A signal
+  /// (not a plain bool) so UI watchers can subscribe to task start/end —
+  /// busy-state computations that short-circuit on `||` would otherwise lose
+  /// the dependency and never rebuild when the task ends.
+  final running = signal(false);
   DbcSyncOperation? _operation;
 
-  bool get isRunning => _running;
+  bool get isRunning => running.value;
   DbcSyncOperation? get operation => _operation;
 
   Future<void> cancel() async {
-    if (!_running) return;
+    if (!running.value) return;
     if (_operation == DbcSyncOperation.export) {
       final job = _activeExportJob;
       if (job == null) return;
@@ -273,7 +279,7 @@ class DbcSyncUtil {
     final controller = StreamController<DbcSyncProgress>();
     final immutable = List<DbcDefinition>.unmodifiable(definitions);
 
-    if (_running) {
+    if (running.value) {
       controller
         ..add(
           const DbcSyncResult(
@@ -306,7 +312,7 @@ class DbcSyncUtil {
       return controller.stream;
     }
 
-    _running = true;
+    running.value = true;
     _operation = DbcSyncOperation.export;
     final job = _ExportJobHandle();
     _activeExportJob = job;
@@ -343,7 +349,7 @@ class DbcSyncUtil {
     final controller = StreamController<DbcSyncProgress>();
     final immutable = List<DbcDefinition>.unmodifiable(definitions);
 
-    if (_running) {
+    if (running.value) {
       controller
         ..add(
           const DbcSyncResult(
@@ -376,7 +382,7 @@ class DbcSyncUtil {
       return controller.stream;
     }
 
-    _running = true;
+    running.value = true;
     _operation = DbcSyncOperation.export;
     final job = _ExportJobHandle();
     _activeExportJob = job;
@@ -409,7 +415,7 @@ class DbcSyncUtil {
   }) {
     final controller = StreamController<DbcSyncProgress>();
 
-    if (_running) {
+    if (running.value) {
       controller
         ..add(
           DbcSyncResult(
@@ -428,7 +434,7 @@ class DbcSyncUtil {
       return controller.stream;
     }
 
-    _running = true;
+    running.value = true;
     _operation = DbcSyncOperation.import;
     final jobId = DateTime.now().microsecondsSinceEpoch.toString();
     final job = _ImportJobHandle(jobId);
@@ -470,7 +476,7 @@ class DbcSyncUtil {
     _activeJobId = null;
     _activeExportJob = null;
     _operation = null;
-    _running = false;
+    running.value = false;
   }
 
   /// Runs an export-style isolate task (DBC export or MPQ patch export) and

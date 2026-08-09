@@ -155,10 +155,15 @@ class _SettingPageState extends State<SettingPage> {
     return Watch((_) {
       // DBC tasks share the single DbcSyncUtil: nothing may run while an
       // import/export/MPQ-export is in flight.
-      final busy =
-          importViewModel.isRunning ||
-          exportViewModel.isRunning ||
-          mpqViewModel.isRunning;
+      //
+      // Each isRunning is read into its own local first: a `||` chain would
+      // short-circuit once any task is busy, so the signals read later in
+      // the chain would be dropped from this Watch's dependency tracking
+      // and the buttons would never re-enable when that task finishes.
+      final importBusy = importViewModel.isRunning;
+      final exportBusy = exportViewModel.isRunning;
+      final mpqBusy = mpqViewModel.isRunning;
+      final busy = importBusy || exportBusy || mpqBusy;
       return _SettingSection(
         title: 'DBC 数据管理',
         children: [
@@ -199,11 +204,12 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildMpqSection() {
     return Watch((_) {
       // DBC tasks share the single DbcSyncUtil: the MPQ export must not run
-      // while an import/export is in flight.
-      final busy =
-          mpqViewModel.isRunning ||
-          importViewModel.isRunning ||
-          exportViewModel.isRunning;
+      // while an import/export is in flight. Same non-short-circuit pattern
+      // as the DBC section: keep every isRunning read in the dependency set.
+      final mpqBusy = mpqViewModel.isRunning;
+      final importBusy = importViewModel.isRunning;
+      final exportBusy = exportViewModel.isRunning;
+      final busy = mpqBusy || importBusy || exportBusy;
       return _SettingSection(
         title: 'MPQ 管理',
         children: [

@@ -307,13 +307,22 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
         }
 
         if (exporting) {
-          return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.fileOutput, '正在导出 DBC'),
-            child: settingDialogProgressPanel(
-              context,
-              ratio: _vm.progress.value,
-              label: _vm.progressLabel.value,
-              detail: _vm.progressDetail.value,
+          // While a task is in flight, block every way out (Esc, back
+          // gesture): closing the dialog mid-run would leave the task
+          // running in the background with no visible state.
+          return PopScope(
+            canPop: false,
+            child: SettingDialogShell(
+              title: settingDialogTitleRow(
+                LucideIcons.fileOutput,
+                '正在导出 DBC',
+              ),
+              child: settingDialogProgressPanel(
+                context,
+                ratio: _vm.progress.value,
+                label: _vm.progressLabel.value,
+                detail: _vm.progressDetail.value,
+              ),
             ),
           );
         }
@@ -577,22 +586,31 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
         }
 
         if (importing) {
-          return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.fileInput, '正在导入 DBC'),
-            child: settingDialogProgressPanel(
-              context,
-              ratio: _vm.progress.value,
-              label: _vm.progressLabel.value,
-              detail: _vm.progressDetail.value,
-              trailing: ShadButton.outline(
-                size: ShadButtonSize.sm,
-                onPressed: workflowStatus == WorkflowStatus.cancelling
-                    ? null
-                    : _vm.cancel,
-                child: Text(
-                  workflowStatus == WorkflowStatus.cancelling
-                      ? '正在取消…'
-                      : '取消导入',
+          // Block Esc/back while a task is in flight: closing mid-run would
+          // leave the import running in the background with no visible
+          // state. Cancel (the only exit shown here) is in-dialog.
+          return PopScope(
+            canPop: false,
+            child: SettingDialogShell(
+              title: settingDialogTitleRow(
+                LucideIcons.fileInput,
+                '正在导入 DBC',
+              ),
+              child: settingDialogProgressPanel(
+                context,
+                ratio: _vm.progress.value,
+                label: _vm.progressLabel.value,
+                detail: _vm.progressDetail.value,
+                trailing: ShadButton.outline(
+                  size: ShadButtonSize.sm,
+                  onPressed: workflowStatus == WorkflowStatus.cancelling
+                      ? null
+                      : _vm.cancel,
+                  child: Text(
+                    workflowStatus == WorkflowStatus.cancelling
+                        ? '正在取消…'
+                        : '取消导入',
+                  ),
                 ),
               ),
             ),
