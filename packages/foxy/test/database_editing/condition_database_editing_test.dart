@@ -181,7 +181,11 @@ void main() {
       );
       expect(
         MysqlErrorUtil.isDuplicateEntry(
-          LaconicException('transaction failed', cause: duplicate),
+          LaconicException(
+            'MysqlTransactionException: Transaction failed: '
+            'MysqlServerException [1062]: duplicate; '
+            'rollback also failed: MysqlClientException: ...',
+          ),
         ),
         isTrue,
       );

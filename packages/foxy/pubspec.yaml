@@ -22,8 +22,8 @@ dependencies:
     path: ../foxy_annotation
   get_it: ^9.0.5
   http: ^1.6.0
-  laconic: ^3.0.0
-  laconic_mysql: ^3.1.0
+  laconic: ^4.0.0
+  laconic_mysql: ^3.3.0
   logger: ^2.4.0
   lucide_icons_flutter: ^3.1.14
   meta: ^1.17.0
