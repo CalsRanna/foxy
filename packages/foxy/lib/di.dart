@@ -148,6 +148,7 @@ import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
+import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/create_gossip_menu_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_npc_text_use_case.dart';
@@ -179,6 +180,7 @@ import 'package:foxy/view_model/currency_type_list_view_model.dart';
 import 'package:foxy/view_model/dashboard_read_view_model.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/disenchant_loot_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/emote_text_detail_view_model.dart';
 import 'package:foxy/view_model/emote_text_list_view_model.dart';
@@ -307,6 +309,7 @@ class DI {
   static void _registerInteractionViewModels() {
     _instance.registerFactory(() => BootstrapWorkflowViewModel());
     _instance.registerFactory(() => DbcExportWorkflowViewModel());
+    _instance.registerFactory(() => MpqExportWorkflowViewModel());
     _instance.registerFactory(() => DashboardReadViewModel());
     _instance.registerFactory(() => MoreReadViewModel());
     _instance.registerFactory(() => CreatureTemplateListViewModel());
@@ -636,6 +639,14 @@ class DI {
       () => ExportDbcUseCase(
         registry: _instance.get<DbcExportRegistry>(),
         dbcSyncUtil: _instance.get<DbcSyncUtil>(),
+        configUtil: _instance.get<ConfigUtil>(),
+      ),
+    );
+    _instance.registerFactory(
+      () => MpqExportUseCase(
+        registry: _instance.get<DbcExportRegistry>(),
+        dbcSyncUtil: _instance.get<DbcSyncUtil>(),
+        configUtil: _instance.get<ConfigUtil>(),
       ),
     );
     _instance.registerFactory(

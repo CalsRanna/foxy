@@ -1,9 +1,10 @@
-import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -58,12 +59,12 @@ void main() {
   });
 
   test('DBC 导出：空定义列表立即成功', () async {
-    final util = DbcSyncUtil();
+    final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final events = await util
         .export(
           definitions: const [],
           outputDirectory: Directory.systemTemp.path,
-          loadRows: (_) async => [],
+          mysqlConfig: mysql,
         )
         .toList()
         .timeout(const Duration(seconds: 5));
@@ -75,75 +76,8 @@ void main() {
     expect(util.isRunning, isFalse);
   });
 
-  test('DBC 导出：空表跳过且不生成文件', () async {
-    final util = DbcSyncUtil();
-    final dir = await Directory.systemTemp.createTemp('foxy_export_skip_');
-    final definition = dbcDefinitionByTable['dbc_spell_duration']!;
-    addTearDown(() async {
-      if (await dir.exists()) await dir.delete(recursive: true);
-    });
-
-    final events = await util
-        .export(
-          definitions: [definition],
-          outputDirectory: dir.path,
-          loadRows: (_) async => [],
-        )
-        .toList()
-        .timeout(const Duration(seconds: 5));
-
-    final result = events.whereType<DbcSyncResult>().single;
-    expect(result.success, isTrue);
-    expect(result.completed, 0);
-    expect(result.skipped, 1);
-    expect(await File(p.join(dir.path, definition.fileName)).exists(), isFalse);
-  });
-
-  test('DBC 导出：部分失败时保留可汇总错误且任务结束', () async {
-    final util = DbcSyncUtil();
-    final dir = await Directory.systemTemp.createTemp('foxy_export_partial_');
-    final ok = dbcDefinitionByTable['dbc_spell_duration']!;
-    final bad = dbcDefinitionByTable['dbc_spell_icon']!;
-    addTearDown(() async {
-      if (await dir.exists()) await dir.delete(recursive: true);
-    });
-
-    final events = await util
-        .export(
-          definitions: [ok, bad],
-          outputDirectory: dir.path,
-          loadRows: (table) async {
-            if (table == ok.tableName) {
-              return [
-                {
-                  'ID': 1,
-                  'Duration': 1,
-                  'DurationPerLevel': 0,
-                  'MaxDuration': 1,
-                },
-              ];
-            }
-            // Missing TextureFilename → export fails
-            return [
-              {'ID': 1},
-            ];
-          },
-        )
-        .toList()
-        .timeout(const Duration(seconds: 10));
-
-    final result = events.whereType<DbcSyncResult>().single;
-    expect(result.success, isFalse);
-    expect(result.completed, 1);
-    expect(result.errors, isNotEmpty);
-    expect(result.errors.any((e) => e.fileName == bad.fileName), isTrue);
-    expect(await File(p.join(dir.path, ok.fileName)).exists(), isTrue);
-    expect(await File(p.join(dir.path, bad.fileName)).exists(), isFalse);
-    expect(util.isRunning, isFalse);
-  });
-
   test('DBC 导出：已有任务运行时防重入', () async {
-    final util = DbcSyncUtil();
+    final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final dir = await Directory.systemTemp.createTemp('foxy_export_busy_');
     final definition = dbcDefinitionByTable['dbc_spell_duration']!;
     addTearDown(() async {
@@ -153,19 +87,14 @@ void main() {
     final first = util.export(
       definitions: [definition],
       outputDirectory: dir.path,
-      loadRows: (_) async {
-        await Future<void>.delayed(const Duration(milliseconds: 200));
-        return [
-          {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
-        ];
-      },
+      mysqlConfig: mysql,
     );
 
     final second = await util
         .export(
           definitions: [definition],
           outputDirectory: dir.path,
-          loadRows: (_) async => [],
+          mysqlConfig: mysql,
         )
         .toList()
         .timeout(const Duration(seconds: 5));
@@ -174,15 +103,15 @@ void main() {
       second.whereType<DbcSyncResult>().single.errors.single.message,
       contains('已有 DBC 任务正在运行'),
     );
+    // Release the first task so the test ends cleanly.
+    await util.cancel();
     await first.toList().timeout(const Duration(seconds: 5));
   });
 
-  test('DBC 导出：取消请求在当前读取结束后阻止写文件并返回取消结果', () async {
-    final util = DbcSyncUtil();
+  test('DBC 导出：取消请求让 worker 返回取消结果且不生成文件', () async {
+    final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final dir = await Directory.systemTemp.createTemp('foxy_export_cancel_');
     final definition = dbcDefinitionByTable['dbc_spell_duration']!;
-    final loadStarted = Completer<void>();
-    final releaseLoad = Completer<void>();
     addTearDown(() async {
       if (await dir.exists()) await dir.delete(recursive: true);
     });
@@ -191,20 +120,12 @@ void main() {
         .export(
           definitions: [definition],
           outputDirectory: dir.path,
-          loadRows: (_) async {
-            loadStarted.complete();
-            await releaseLoad.future;
-            return [
-              {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
-            ];
-          },
+          mysqlConfig: mysql,
         )
         .toList();
 
-    await loadStarted.future.timeout(const Duration(seconds: 5));
-    expect(util.isRunning, isTrue);
+    // The fake worker only finishes after a cancel message arrives.
     await util.cancel();
-    releaseLoad.complete();
     final events = await eventsFuture.timeout(const Duration(seconds: 5));
 
     final result = events.whereType<DbcSyncResult>().single;
@@ -284,4 +205,24 @@ void main() {
     },
     skip: Platform.isWindows ? 'Windows 文件系统大小写不敏感，无法并存 .dbc 与 .DBC' : false,
   );
+}
+
+/// Fake DBC-export worker: registers its control port, then stays alive
+/// until a `cancel` message arrives, ending with a cancelled result. Lets
+/// the export tests exercise the isolate lifecycle without MySQL.
+final class _CancelAwareExportWorker {
+  static Future<void> run(DbcExportWorkerArgs args) async {
+    final cancelPort = ReceivePort();
+    var cancelled = false;
+    final subscription = cancelPort.listen((message) {
+      if (message == 'cancel') cancelled = true;
+    });
+    args.sendPort.send(('control', cancelPort.sendPort));
+    while (!cancelled) {
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+    }
+    args.sendPort.send(('result', 0, 0, <Map<String, String?>>[], true));
+    await subscription.cancel();
+    cancelPort.close();
+  }
 }

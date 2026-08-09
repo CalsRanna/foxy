@@ -2,12 +2,35 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
 enum DbcExportPhase { writing, validating, committing }
 
 class DbcExportUtil {
+  /// Probes whether files can be created in [path] (e.g. macOS sandbox or
+  /// permission failures surface here as an explicit Chinese error instead
+  /// of a cryptic "Cannot open file" from inside the worker).
+  static Future<void> ensureWritableDirectory(String path) async {
+    final probe = File(
+      p.join(path, '.foxy_write_test_${DateTime.now().microsecondsSinceEpoch}'),
+    );
+    try {
+      await probe.writeAsString('');
+    } catch (error) {
+      throw ValidationException(
+        '输出目录不可写，请检查权限或更换目录后重试: $path ($error)',
+      );
+    } finally {
+      try {
+        await probe.delete();
+      } catch (_) {
+        // A failed cleanup of the probe file does not affect the result.
+      }
+    }
+  }
+
   /// For unit tests validating the type-normalization rules (uint8 / bool /
   /// strings, etc.).
   @visibleForTesting

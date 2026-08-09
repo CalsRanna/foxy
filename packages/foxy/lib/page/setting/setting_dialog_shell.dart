@@ -448,79 +448,12 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   ),
                 ],
               ),
-              Container(
-                height: 300,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: theme.colorScheme.border),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      color: theme.colorScheme.muted.withValues(alpha: 0.35),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 28),
-                          Expanded(
-                            child: Text(
-                              '文件',
-                              style: theme.textTheme.muted.copyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 96,
-                            child: Text(
-                              '记录数',
-                              textAlign: TextAlign.end,
-                              style: theme.textTheme.muted.copyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: items.isEmpty
-                          ? Center(
-                              child: Text(
-                                _query.value.isEmpty ? '没有可导出的表' : '没有匹配的表',
-                                style: theme.textTheme.muted,
-                              ),
-                            )
-                          : ListView.separated(
-                              itemCount: items.length,
-                              separatorBuilder: (_, _) => Divider(
-                                height: 1,
-                                color: theme.colorScheme.border.withValues(
-                                  alpha: 0.6,
-                                ),
-                              ),
-                              itemBuilder: (context, index) {
-                                final item = items[index];
-                                return _ExportTableRow(
-                                  key: ValueKey(
-                                    '${item.tableName}:${item.selected}:${item.recordCountLabel}',
-                                  ),
-                                  item: item,
-                                  onChanged: (value) => _vm.setItemSelected(
-                                    item.tableName,
-                                    value,
-                                  ),
-                                );
-                              },
-                            ),
-                    ),
-                  ],
+              DbcTableSelectList(
+                items: items,
+                emptyText: _query.value.isEmpty ? '没有可导出的表' : '没有匹配的表',
+                onToggle: (item) => _vm.setItemSelected(
+                  item.tableName,
+                  !item.selected,
                 ),
               ),
             ],
@@ -746,11 +679,95 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
   }
 }
 
-class _ExportTableRow extends StatelessWidget {
+/// Table-picker list shared by the DBC-export and MPQ-export dialogs:
+/// "文件 / 记录数" header, empty state, and one row per item.
+class DbcTableSelectList extends StatelessWidget {
+  final List<DbcExportItem> items;
+  final ValueChanged<DbcExportItem> onToggle;
+
+  /// Shown when [items] is empty (search with no hits vs. nothing at all).
+  final String emptyText;
+
+  const DbcTableSelectList({
+    super.key,
+    required this.items,
+    required this.onToggle,
+    this.emptyText = '没有可导出的表',
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.border),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            color: theme.colorScheme.muted.withValues(alpha: 0.35),
+            child: Row(
+              children: [
+                const SizedBox(width: 28),
+                Expanded(
+                  child: Text(
+                    '文件',
+                    style: theme.textTheme.muted.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 96,
+                  child: Text(
+                    '记录数',
+                    textAlign: TextAlign.end,
+                    style: theme.textTheme.muted.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: items.isEmpty
+                ? Center(child: Text(emptyText, style: theme.textTheme.muted))
+                : ListView.separated(
+                    itemCount: items.length,
+                    separatorBuilder: (_, _) => Divider(
+                      height: 1,
+                      color: theme.colorScheme.border.withValues(alpha: 0.6),
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return DbcExportTableRow(
+                        key: ValueKey(
+                          '${item.tableName}:${item.selected}:${item.recordCountLabel}',
+                        ),
+                        item: item,
+                        onChanged: (value) => onToggle(item),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DbcExportTableRow extends StatelessWidget {
   final DbcExportItem item;
   final ValueChanged<bool> onChanged;
 
-  const _ExportTableRow({
+  const DbcExportTableRow({
     super.key,
     required this.item,
     required this.onChanged,

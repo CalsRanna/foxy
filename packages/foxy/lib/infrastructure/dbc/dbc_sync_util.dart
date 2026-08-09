@@ -1,25 +1,33 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/database/database.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_import_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/dbc/mpq_export_worker.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
-typedef DbcExportRowLoader =
-    Future<List<Map<String, dynamic>>> Function(String tableName);
-
 class DbcSyncUtil {
-  final _exportUtil = DbcExportUtil();
+  /// Isolate entry for DBC export; injectable so tests can script worker
+  /// behavior without a database.
+  final DbcExportWorkerEntry exportWorkerEntry;
+
+  /// Isolate entry for MPQ-patch export; injectable for tests.
+  final MpqExportWorkerEntry mpqWorkerEntry;
+
+  DbcSyncUtil({
+    DbcExportWorkerEntry? exportWorkerEntry,
+    MpqExportWorkerEntry? mpqWorkerEntry,
+  }) : exportWorkerEntry = exportWorkerEntry ?? runDbcExportWorker,
+       mpqWorkerEntry = mpqWorkerEntry ?? runMpqExportWorker;
 
   _ImportJobHandle? _activeImportJob;
   String? _activeJobId;
-  bool _exportCancelRequested = false;
+  _ExportJobHandle? _activeExportJob;
   bool _running = false;
   DbcSyncOperation? _operation;
 
@@ -29,7 +37,39 @@ class DbcSyncUtil {
   Future<void> cancel() async {
     if (!_running) return;
     if (_operation == DbcSyncOperation.export) {
-      _exportCancelRequested = true;
+      final job = _activeExportJob;
+      if (job == null) return;
+
+      job.cancelRequested = true;
+      job.controlPort?.send('cancel');
+      if (job.done.isCompleted) return;
+
+      try {
+        await job.done.future.timeout(const Duration(seconds: 3));
+        return;
+      } on TimeoutException {
+        job.forceCancelTerminal = true;
+        // spawn may have just completed: re-read job.isolate
+        job.isolate?.kill(priority: Isolate.immediate);
+        // Brief polling covers the window where the isolate is not yet
+        // assigned at cancel time
+        for (var i = 0; i < 10 && job.isolate == null; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+        }
+        job.isolate?.kill(priority: Isolate.immediate);
+        final finish = job.finish;
+        if (finish != null) {
+          await finish(
+            const DbcSyncResult(
+              operation: DbcSyncOperation.export,
+              completed: 0,
+              skipped: 0,
+              errors: [],
+              cancelled: true,
+            ),
+          );
+        }
+      }
       return;
     }
     if (_operation != DbcSyncOperation.import) return;
@@ -228,9 +268,10 @@ class DbcSyncUtil {
   Stream<DbcSyncProgress> export({
     required List<DbcDefinition> definitions,
     required String outputDirectory,
-    required DbcExportRowLoader loadRows,
+    required MysqlConfig mysqlConfig,
   }) {
     final controller = StreamController<DbcSyncProgress>();
+    final immutable = List<DbcDefinition>.unmodifiable(definitions);
 
     if (_running) {
       controller
@@ -251,7 +292,7 @@ class DbcSyncUtil {
       return controller.stream;
     }
 
-    if (definitions.isEmpty) {
+    if (immutable.isEmpty) {
       controller
         ..add(
           const DbcSyncResult(
@@ -267,13 +308,96 @@ class DbcSyncUtil {
 
     _running = true;
     _operation = DbcSyncOperation.export;
-    _exportCancelRequested = false;
+    final job = _ExportJobHandle();
+    _activeExportJob = job;
     unawaited(
-      _runExport(
+      _startExport(
         controller: controller,
-        definitions: List.unmodifiable(definitions),
-        outputDirectory: outputDirectory,
-        loadRows: loadRows,
+        workerEntry: exportWorkerEntry,
+        buildArgs: (sendPort) => (
+          sendPort: sendPort,
+          tableNames: [
+            for (final definition in immutable) definition.tableName,
+          ],
+          outputDirectory: outputDirectory,
+          host: mysqlConfig.host,
+          port: mysqlConfig.port,
+          database: mysqlConfig.database,
+          username: mysqlConfig.username,
+          password: mysqlConfig.password,
+          useSsl: mysqlConfig.useSsl,
+        ),
+        job: job,
+      ),
+    );
+    return controller.stream;
+  }
+
+  /// Exports the selected DBC tables as a WoW patch MPQ (see
+  /// `mpq_export_worker.dart` for the in-archive layout).
+  Stream<DbcSyncProgress> exportMpq({
+    required List<DbcDefinition> definitions,
+    required String mpqFilePath,
+    required MysqlConfig mysqlConfig,
+  }) {
+    final controller = StreamController<DbcSyncProgress>();
+    final immutable = List<DbcDefinition>.unmodifiable(definitions);
+
+    if (_running) {
+      controller
+        ..add(
+          const DbcSyncResult(
+            operation: DbcSyncOperation.export,
+            completed: 0,
+            skipped: 0,
+            errors: [
+              DbcSyncError(
+                stage: DbcSyncStage.preparing,
+                message: '已有 DBC 任务正在运行',
+              ),
+            ],
+          ),
+        )
+        ..close();
+      return controller.stream;
+    }
+
+    if (immutable.isEmpty) {
+      controller
+        ..add(
+          const DbcSyncResult(
+            operation: DbcSyncOperation.export,
+            completed: 0,
+            skipped: 0,
+            errors: [],
+          ),
+        )
+        ..close();
+      return controller.stream;
+    }
+
+    _running = true;
+    _operation = DbcSyncOperation.export;
+    final job = _ExportJobHandle();
+    _activeExportJob = job;
+    unawaited(
+      _startExport(
+        controller: controller,
+        workerEntry: mpqWorkerEntry,
+        buildArgs: (sendPort) => (
+          sendPort: sendPort,
+          tableNames: [
+            for (final definition in immutable) definition.tableName,
+          ],
+          mpqFilePath: mpqFilePath,
+          host: mysqlConfig.host,
+          port: mysqlConfig.port,
+          database: mysqlConfig.database,
+          username: mysqlConfig.username,
+          password: mysqlConfig.password,
+          useSsl: mysqlConfig.useSsl,
+        ),
+        job: job,
       ),
     );
     return controller.stream;
@@ -344,122 +468,201 @@ class DbcSyncUtil {
   void _clearActiveTask() {
     _activeImportJob = null;
     _activeJobId = null;
-    _exportCancelRequested = false;
+    _activeExportJob = null;
     _operation = null;
     _running = false;
   }
 
-  Future<void> _runExport({
+  /// Runs an export-style isolate task (DBC export or MPQ patch export) and
+  /// relays the worker's `status`/`count`/`result` messages onto the stream.
+  /// The worker entry is injected so tests can fake the whole worker.
+  Future<void> _startExport<T>({
     required StreamController<DbcSyncProgress> controller,
-    required List<DbcDefinition> definitions,
-    required String outputDirectory,
-    required DbcExportRowLoader loadRows,
+    required Future<void> Function(T args) workerEntry,
+    required T Function(SendPort sendPort) buildArgs,
+    required _ExportJobHandle job,
   }) async {
-    var completed = 0;
-    var skipped = 0;
-    final errors = <DbcSyncError>[];
+    final receivePort = ReceivePort();
+    final errorPort = ReceivePort();
+    final exitPort = ReceivePort();
+    var terminal = false;
+    StreamSubscription<dynamic>? messageSubscription;
+    StreamSubscription<dynamic>? errorSubscription;
+    StreamSubscription<dynamic>? exitSubscription;
+
+    Future<void> finish(DbcSyncResult result) async {
+      if (terminal) return;
+      terminal = true;
+      if (!controller.isClosed) controller.add(result);
+      await messageSubscription?.cancel();
+      await errorSubscription?.cancel();
+      await exitSubscription?.cancel();
+      receivePort.close();
+      errorPort.close();
+      exitPort.close();
+      _clearActiveTask();
+      if (!job.done.isCompleted) {
+        job.done.complete();
+      }
+      if (!controller.isClosed) await controller.close();
+    }
+
+    job.finish = finish;
 
     try {
-      if (!await Directory(outputDirectory).exists()) {
-        throw FileSystemException(
-          'output directory does not exist',
-          outputDirectory,
-        );
-      }
+      messageSubscription = receivePort.listen((message) {
+        switch (message) {
+          case ('control', SendPort controlPort):
+            job.controlPort = controlPort;
+            if (job.cancelRequested) controlPort.send('cancel');
+          case ('status', String stage, String text, String? fileName):
+            if (!controller.isClosed) {
+              controller.add(
+                DbcSyncStatus(
+                  operation: DbcSyncOperation.export,
+                  stage: _parseStage(stage),
+                  message: text,
+                  fileName: fileName,
+                ),
+              );
+            }
+          case (
+            'count',
+            String fileName,
+            int completedFiles,
+            int totalFiles,
+            int processedRows,
+            int? totalRows,
+          ):
+            if (!controller.isClosed) {
+              controller.add(
+                DbcSyncCount(
+                  operation: DbcSyncOperation.export,
+                  fileName: fileName,
+                  completedFiles: completedFiles,
+                  totalFiles: totalFiles,
+                  processedRows: processedRows,
+                  totalRows: totalRows,
+                ),
+              );
+            }
+          case (
+            'result',
+            int completed,
+            int skipped,
+            List errors,
+            bool cancelled,
+          ):
+            unawaited(
+              finish(
+                DbcSyncResult(
+                  operation: DbcSyncOperation.export,
+                  completed: completed,
+                  skipped: skipped,
+                  errors: [
+                    for (final error in errors) _parseWorkerError(error),
+                  ],
+                  cancelled: cancelled,
+                ),
+              ),
+            );
+        }
+      });
 
-      for (var index = 0; index < definitions.length; index++) {
-        if (_exportCancelRequested) break;
-        final definition = definitions[index];
-        var stage = DbcSyncStage.reading;
-        var rowCount = 0;
-
-        controller.add(
-          DbcSyncStatus(
-            operation: DbcSyncOperation.export,
-            stage: stage,
-            message: '正在读取 ${definition.fileName}...',
-            fileName: definition.fileName,
+      errorSubscription = errorPort.listen((message) {
+        if (job.forceCancelTerminal || job.cancelRequested) {
+          unawaited(
+            finish(
+              const DbcSyncResult(
+                operation: DbcSyncOperation.export,
+                completed: 0,
+                skipped: 0,
+                errors: [],
+                cancelled: true,
+              ),
+            ),
+          );
+          return;
+        }
+        final text = message is List && message.isNotEmpty
+            ? message.first.toString()
+            : message.toString();
+        unawaited(
+          finish(
+            DbcSyncResult(
+              operation: DbcSyncOperation.export,
+              completed: 0,
+              skipped: 0,
+              errors: [
+                DbcSyncError(
+                  stage: DbcSyncStage.writing,
+                  message: 'Worker 异常退出: $text',
+                ),
+              ],
+            ),
           ),
         );
+      });
 
-        try {
-          final rows = await loadRows(definition.tableName);
-          if (_exportCancelRequested) break;
-          rowCount = rows.length;
-          if (rows.isEmpty) {
-            skipped++;
-          } else {
-            stage = DbcSyncStage.writing;
-            await _exportUtil.write(
-              definition: definition,
-              rows: rows,
-              outputDirectory: outputDirectory,
-              onPhase: (phase) {
-                stage = switch (phase) {
-                  DbcExportPhase.writing => DbcSyncStage.writing,
-                  DbcExportPhase.validating => DbcSyncStage.validating,
-                  DbcExportPhase.committing => DbcSyncStage.committing,
-                };
-                final action = switch (phase) {
-                  DbcExportPhase.writing => '写入',
-                  DbcExportPhase.validating => '验证',
-                  DbcExportPhase.committing => '提交',
-                };
-                controller.add(
-                  DbcSyncStatus(
-                    operation: DbcSyncOperation.export,
-                    stage: stage,
-                    message: '正在$action ${definition.fileName}...',
-                    fileName: definition.fileName,
-                  ),
-                );
-              },
+      exitSubscription = exitPort.listen((_) async {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        if (!terminal) {
+          if (job.forceCancelTerminal || job.cancelRequested) {
+            await finish(
+              const DbcSyncResult(
+                operation: DbcSyncOperation.export,
+                completed: 0,
+                skipped: 0,
+                errors: [],
+                cancelled: true,
+              ),
             );
-            completed++;
+            return;
           }
-        } catch (error) {
-          LoggerUtil.instance.e('${definition.fileName} 导出异常: $error');
-          errors.add(
-            DbcSyncError(
-              tableName: definition.tableName,
-              fileName: definition.fileName,
-              stage: stage,
-              message: error.toString(),
+          await finish(
+            const DbcSyncResult(
+              operation: DbcSyncOperation.export,
+              completed: 0,
+              skipped: 0,
+              errors: [
+                DbcSyncError(
+                  stage: DbcSyncStage.writing,
+                  message: 'Worker 未返回结果就已退出',
+                ),
+              ],
             ),
           );
         }
+      });
 
-        controller.add(
-          DbcSyncCount(
-            operation: DbcSyncOperation.export,
-            fileName: definition.fileName,
-            completedFiles: index + 1,
-            totalFiles: definitions.length,
-            processedRows: rowCount,
-            totalRows: rowCount,
-          ),
-        );
-        if (_exportCancelRequested) break;
+      final isolate = await Isolate.spawn(
+        workerEntry,
+        buildArgs(receivePort.sendPort),
+        onError: errorPort.sendPort,
+        onExit: exitPort.sendPort,
+        errorsAreFatal: true,
+      );
+      job.isolate = isolate;
+      // If a forced cancel was requested before spawn completed, kill
+      // immediately.
+      if (job.forceCancelTerminal || job.cancelRequested) {
+        isolate.kill(priority: Isolate.immediate);
       }
     } catch (error) {
       LoggerUtil.instance.e('DBC 导出异常: $error');
-      errors.add(
-        DbcSyncError(stage: DbcSyncStage.preparing, message: error.toString()),
+      await finish(
+        DbcSyncResult(
+          operation: DbcSyncOperation.export,
+          completed: 0,
+          skipped: 0,
+          errors: [
+            DbcSyncError(
+              stage: DbcSyncStage.preparing,
+              message: error.toString(),
+            ),
+          ],
+        ),
       );
-    } finally {
-      if (!controller.isClosed) {
-        controller.add(
-          DbcSyncResult(
-            operation: DbcSyncOperation.export,
-            completed: completed,
-            skipped: skipped,
-            errors: errors,
-            cancelled: _exportCancelRequested,
-          ),
-        );
-      }
-      _clearActiveTask();
-      if (!controller.isClosed) await controller.close();
     }
   }
 
@@ -704,4 +907,15 @@ class _ImportJobHandle {
   bool forceCancelTerminal = false;
 
   _ImportJobHandle(this.jobId);
+}
+
+/// Handle for a single export-style task (DBC export / MPQ patch export),
+/// mirroring [_ImportJobHandle] minus the staging-table job id.
+class _ExportJobHandle {
+  final Completer<void> done = Completer<void>();
+  Isolate? isolate;
+  SendPort? controlPort;
+  Future<void> Function(DbcSyncResult result)? finish;
+  bool cancelRequested = false;
+  bool forceCancelTerminal = false;
 }

@@ -1,42 +1,40 @@
+import 'dart:io';
+
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import 'package:path/path.dart' as p;
 
-final class DbcExportTable {
-  final DbcDefinition definition;
-  final int? recordCount;
-  final Object? countError;
-
-  const DbcExportTable({
-    required this.definition,
-    this.recordCount,
-    this.countError,
-  });
-}
-
-final class ExportDbcInput {
+final class MpqExportInput {
   final List<DbcDefinition> definitions;
-  final String outputDirectory;
+  final String mpqFilePath;
   final void Function(DbcSyncProgress progress)? onProgress;
 
-  const ExportDbcInput({
+  const MpqExportInput({
     required this.definitions,
-    required this.outputDirectory,
+    required this.mpqFilePath,
     this.onProgress,
   });
 }
 
-final class ExportDbcUseCase {
-  final DbcExportRegistry _registry;
-  final DbcSyncUtil _dbcSyncUtil;
-  final ConfigUtil _configUtil;
+/// Exports selected DBC tables as a WoW patch MPQ (default file name
+/// `patch-zhCN-5.mpq`) into the client's MPQ directory.
+///
+/// Table statistics for the picker come from [loadTables]; the actual work
+/// runs on a dedicated isolate via [DbcSyncUtil.exportMpq], with the MySQL
+/// connection parameters read from config.
+class MpqExportUseCase {
+  late final DbcExportRegistry _registry;
+  late final DbcSyncUtil _dbcSyncUtil;
+  late final ConfigUtil _configUtil;
 
-  ExportDbcUseCase({
+  MpqExportUseCase({
     required DbcExportRegistry registry,
     required DbcSyncUtil dbcSyncUtil,
     required ConfigUtil configUtil,
@@ -44,18 +42,29 @@ final class ExportDbcUseCase {
        _dbcSyncUtil = dbcSyncUtil,
        _configUtil = configUtil;
 
+  /// For test subclasses that stub [execute]/[loadTables] and never touch
+  /// the injected fields (late-final fields stay uninitialized until read).
+  MpqExportUseCase.protected();
+
   bool get isRunning => _dbcSyncUtil.isRunning;
 
   Future<void> cancel() => _dbcSyncUtil.cancel();
 
-  Future<DbcSyncResult> execute(ExportDbcInput input) async {
-    final outputDirectory = input.outputDirectory.trim();
-    if (outputDirectory.isEmpty) {
+  Future<DbcSyncResult> execute(MpqExportInput input) async {
+    final mpqFilePath = input.mpqFilePath.trim();
+    if (mpqFilePath.isEmpty) {
       throw ArgumentError.value(
-        outputDirectory,
-        'outputDirectory',
-        'select the DBC output directory first',
+        mpqFilePath,
+        'mpqFilePath',
+        'select the MPQ output path first',
       );
+    }
+    if (!mpqFilePath.toLowerCase().endsWith('.mpq')) {
+      throw ValidationException('the MPQ file name must end with .mpq');
+    }
+    final outputDirectory = p.dirname(mpqFilePath);
+    if (outputDirectory.isEmpty || !await Directory(outputDirectory).exists()) {
+      throw ValidationException('the MPQ output directory does not exist');
     }
     if (input.definitions.isEmpty) {
       throw ValidationException('select at least one DBC table to export');
@@ -77,9 +86,9 @@ final class ExportDbcUseCase {
     );
 
     DbcSyncResult? result;
-    await for (final progress in _dbcSyncUtil.export(
+    await for (final progress in _dbcSyncUtil.exportMpq(
       definitions: List.unmodifiable(input.definitions),
-      outputDirectory: outputDirectory,
+      mpqFilePath: mpqFilePath,
       mysqlConfig: mysqlConfig,
     )) {
       input.onProgress?.call(progress);
@@ -88,7 +97,7 @@ final class ExportDbcUseCase {
       }
     }
     return result ??
-        (throw StateError('DBC export task ended without a result'));
+        (throw StateError('MPQ export task ended without a result'));
   }
 
   Future<List<DbcExportTable>> loadTables() async {

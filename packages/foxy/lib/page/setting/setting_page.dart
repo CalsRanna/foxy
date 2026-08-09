@@ -2,11 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
+import 'package:foxy/page/setting/mpq_export_dialog.dart';
 import 'package:foxy/page/setting/setting_dialog_shell.dart';
 import 'package:foxy/page/setting/update_dialog.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
+import 'package:foxy/view_model/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -99,6 +101,7 @@ class _SettingPageState extends State<SettingPage> {
   final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
+  final mpqViewModel = GetIt.instance.get<MpqExportWorkflowViewModel>();
   final iconViewModel = GetIt.instance.get<IconExtractWorkflowViewModel>();
   final updateViewModel = GetIt.instance.get<UpdateViewModel>();
 
@@ -134,6 +137,8 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 const SizedBox(height: 24),
                 _buildDbcSection(),
+                const SizedBox(height: 24),
+                _buildMpqSection(),
                 const SizedBox(height: 24),
                 _buildIconSection(),
                 const SizedBox(height: 24),
@@ -178,6 +183,41 @@ class _SettingPageState extends State<SettingPage> {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
                 children: [Icon(LucideIcons.fileOutput, size: 15), Text('导出')],
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget _buildMpqSection() {
+    return Watch((_) {
+      // DBC tasks share the single DbcSyncUtil: the MPQ export must not run
+      // while an import/export is in flight.
+      final busy =
+          mpqViewModel.isRunning ||
+          importViewModel.isRunning ||
+          exportViewModel.isRunning;
+      return _SettingSection(
+        title: 'MPQ 管理',
+        children: [
+          _SettingItem(
+            title: '导出 MPQ 补丁',
+            description:
+                '将选中的 DBC 表打包为 MPQ 补丁（默认 patch-zhCN-5.mpq），'
+                '输出到客户端 MPQ 目录（如 Data\\zhCN）。'
+                '客户端启动时自动加载补丁，覆盖原始 DBC 文件。',
+            trailing: ShadButton(
+              size: ShadButtonSize.sm,
+              onPressed: busy ? null : _showMpqExportDialog,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6,
+                children: [
+                  Icon(LucideIcons.archive, size: 15),
+                  Text('导出'),
+                ],
               ),
             ),
           ),
@@ -281,6 +321,14 @@ class _SettingPageState extends State<SettingPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => IconExtractDialog(vm: iconViewModel),
+    );
+  }
+
+  void _showMpqExportDialog() {
+    showFoxyDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => MpqExportDialog(vm: mpqViewModel),
     );
   }
 
