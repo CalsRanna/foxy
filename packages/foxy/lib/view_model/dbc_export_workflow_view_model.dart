@@ -105,7 +105,7 @@ class DbcExportWorkflowViewModel {
     try {
       final config = await _configUtil.load();
       if (token != _attemptToken) return;
-      final configuredPath = config['dbc_path']?.toString().trim();
+      final configuredPath = config['dbc_dir']?.toString().trim();
       outputDirectory.value = configuredPath == null || configuredPath.isEmpty
           ? null
           : configuredPath;

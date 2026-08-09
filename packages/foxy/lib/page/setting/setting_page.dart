@@ -128,7 +128,7 @@ class _SettingPageState extends State<SettingPage> {
                     const SizedBox(height: 16),
                     DirectorySettingRow(
                       vm: setupViewModel,
-                      target: DirectoryConfigTarget.dbcPath,
+                      target: DirectoryConfigTarget.serverDir,
                     ),
                   ],
                 ),
@@ -155,7 +155,7 @@ class _SettingPageState extends State<SettingPage> {
           _SettingItem(
             title: '导入 DBC 文件',
             description:
-                '从配置的服务端 DBC 目录导入数据，以 DBC 为准写入 foxy 库并覆盖对应表。'
+                '从服务端目录自动检测的 DBC 目录导入数据，以 DBC 为准写入 foxy 库并覆盖对应表。'
                 '若需保留库内数据请先自行备份。',
             trailing: ShadButton(
               size: ShadButtonSize.sm,

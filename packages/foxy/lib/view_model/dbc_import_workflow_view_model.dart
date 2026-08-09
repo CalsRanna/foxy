@@ -109,7 +109,7 @@ class DbcImportWorkflowViewModel {
     try {
       final config = await _configUtil.load();
       if (token != _attemptToken) return;
-      final configuredPath = config['dbc_path']?.toString().trim();
+      final configuredPath = config['dbc_dir']?.toString().trim();
       path.value = configuredPath == null || configuredPath.isEmpty
           ? null
           : configuredPath;

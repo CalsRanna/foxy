@@ -178,7 +178,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   Widget _buildDirectoryStep(int stepIndex) {
     final target = stepIndex == 0
         ? DirectoryConfigTarget.clientDir
-        : DirectoryConfigTarget.dbcPath;
+        : DirectoryConfigTarget.serverDir;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -337,7 +337,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
 
   Widget _buildStepIndicator() {
     final theme = ShadTheme.of(context);
-    final labels = ['客户端目录', '服务端 DBC 目录', '导入与提取'];
+    final labels = ['客户端目录', '服务端目录', '导入与提取'];
     return Row(
       children: [
         for (var i = 0; i < labels.length; i++) ...[
@@ -408,7 +408,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     _importDoneAtCheck = _importVm.tablesReady;
     _step.value = !_setupVm.isClientDirConfigured
         ? 0
-        : !_setupVm.isDbcPathConfigured
+        : !_setupVm.isServerDirConfigured
         ? 1
         : 2;
     _checked.value = true;
@@ -423,7 +423,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
 
   bool _isStepDone(int index) => switch (index) {
     0 => _setupVm.isClientDirConfigured,
-    1 => _setupVm.isDbcPathConfigured,
+    1 => _setupVm.isServerDirConfigured,
     _ => _importCompleted && _iconVm.status.value == WorkflowStatus.succeeded,
   };
 

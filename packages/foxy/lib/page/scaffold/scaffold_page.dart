@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foxy/page/setting/dbc_reminder_dialog.dart';
+import 'package:foxy/page/setting/server_dir_reminder_dialog.dart';
 import 'package:foxy/page/setting/setup_wizard_dialog.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -185,6 +186,12 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   /// unconfigured or icons not extracted), opens the non-dismissable
   /// three-step wizard; completed steps are detected and skipped inside
   /// the wizard.
+  ///
+  /// Exception: when the client directory is already configured but the
+  /// server directory is missing (e.g. an existing installation upgraded
+  /// before `server_dir` existed), a lighter dismissable reminder opens
+  /// instead, guiding the user to the settings page. First-install and
+  /// icons-only paths behave exactly as before.
   Future<void> _checkSetup() async {
     try {
       await setupViewModel.prepare();
@@ -194,6 +201,14 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     }
     if (!mounted) return;
     if (!setupViewModel.isSetupComplete) {
+      if (!setupViewModel.isClientDirConfigured) {
+        _showSetupWizard();
+        return;
+      }
+      if (!setupViewModel.isServerDirConfigured) {
+        _showServerDirReminderDialog();
+        return;
+      }
       _showSetupWizard();
       return;
     }
@@ -218,6 +233,13 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     showFoxyDialog(
       context: context,
       builder: (ctx) => DbcReminderDialog(result: result),
+    );
+  }
+
+  void _showServerDirReminderDialog() {
+    showFoxyDialog(
+      context: context,
+      builder: (ctx) => const ServerDirReminderDialog(),
     );
   }
 

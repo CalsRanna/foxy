@@ -70,7 +70,7 @@ final class ImportDbcUseCase {
         return _cancelledResult;
       }
 
-      await _configUtil.update({'dbc_path': directory});
+      await _configUtil.update({'dbc_dir': directory});
       if (cancelGeneration != _cancelGeneration) {
         return _cancelledResult;
       }

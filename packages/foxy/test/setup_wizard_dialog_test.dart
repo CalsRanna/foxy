@@ -23,7 +23,7 @@ import 'package:warcrafty/warcrafty.dart';
 void main() {
   late Directory tempDir;
   late Directory clientRoot;
-  late Directory dbcDir;
+  late Directory serverRoot;
   late Directory outputDir;
   late Map<String, dynamic> configData;
   late _MemoryConfigUtil configUtil;
@@ -37,7 +37,12 @@ void main() {
     Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
         .createSync(recursive: true);
     _createFakeClientMpq(p.join(clientRoot.path, 'Data', 'zhCN'));
-    dbcDir = Directory(p.join(tempDir.path, 'dbc'))..createSync();
+    // Server root with a standard data/dbc layout, so the real
+    // ServerDirResolver finds it when the wizard step 2 saves.
+    serverRoot = Directory(p.join(tempDir.path, 'server'))..createSync();
+    Directory(p.join(serverRoot.path, 'data', 'dbc'))
+        .createSync(recursive: true);
+    File(p.join(serverRoot.path, 'data', 'dbc', 'Spell.dbc')).createSync();
     outputDir = Directory(p.join(tempDir.path, 'out'))..createSync();
 
     configData = {};
@@ -88,7 +93,7 @@ void main() {
 
     expect(find.text('首次设置引导'), findsOneWidget);
     expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
-    expect(find.text('第 2 步：设置服务端 DBC 目录'), findsNothing);
+    expect(find.text('第 2 步：设置服务端目录'), findsNothing);
 
     // No close button (closeIcon hidden); PopScope blocks exit.
     expect(find.byIcon(LucideIcons.x), findsNothing);
@@ -135,7 +140,7 @@ void main() {
       await _waitFor(() => setupVm.clientDir.value != null);
       await tester.pump();
     });
-    expect(find.text('第 2 步：设置服务端 DBC 目录'), findsOneWidget);
+    expect(find.text('第 2 步：设置服务端目录'), findsOneWidget);
     expect(configData['client_dir'], clientRoot.path);
   });
 
@@ -149,13 +154,14 @@ void main() {
       await _waitFor(() => setupVm.clientDir.value != null);
       await tester.pump();
     });
-    expect(find.text('第 2 步：设置服务端 DBC 目录'), findsOneWidget);
+    expect(find.text('第 2 步：设置服务端目录'), findsOneWidget);
 
-    // Step 2: server DBC directory.
+    // Step 2: server root directory — the real resolver auto-detects
+    // data/dbc inside it.
     await tester.runAsync(() async {
-      await tester.enterText(find.byType(ShadInput), dbcDir.path);
+      await tester.enterText(find.byType(ShadInput), serverRoot.path);
       await tester.tap(find.text('下一步'));
-      await _waitFor(() => setupVm.dbcPath.value != null);
+      await _waitFor(() => setupVm.serverDir.value != null);
       await tester.pump();
     });
 
@@ -183,7 +189,8 @@ void main() {
     // Regression: the button must use pop(), not maybePop() — otherwise
     // PopScope intercepts it and the wizard cannot be closed.
     configData['client_dir'] = clientRoot.path;
-    configData['dbc_path'] = dbcDir.path;
+    configData['server_dir'] = serverRoot.path;
+    configData['dbc_dir'] = p.join(serverRoot.path, 'data', 'dbc');
 
     await tester.runAsync(() async {
       await tester.pumpWidget(
@@ -225,7 +232,8 @@ void main() {
 
   testWidgets('目录已配置且 DBC 已导入时跳过步骤 1/2，直达步骤 3 并自动提取', (tester) async {
     configData['client_dir'] = clientRoot.path;
-    configData['dbc_path'] = dbcDir.path;
+    configData['server_dir'] = serverRoot.path;
+    configData['dbc_dir'] = p.join(serverRoot.path, 'data', 'dbc');
 
     await tester.runAsync(() async {
       await tester.pumpWidget(buildWizard());
@@ -236,7 +244,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('第 1 步：设置客户端目录'), findsNothing);
-    expect(find.text('第 2 步：设置服务端 DBC 目录'), findsNothing);
+    expect(find.text('第 2 步：设置服务端目录'), findsNothing);
     expect(find.text('第 3 步：导入 DBC 数据并提取游戏图标'), findsOneWidget);
     expect(find.text('进入应用'), findsOneWidget);
   });
@@ -244,7 +252,8 @@ void main() {
   testWidgets('图标提取失败时显示错误、重试与退出应用', (tester) async {
     final noDataClient = Directory(p.join(tempDir.path, 'noData'))..createSync();
     configData['client_dir'] = noDataClient.path;
-    configData['dbc_path'] = dbcDir.path;
+    configData['server_dir'] = serverRoot.path;
+    configData['dbc_dir'] = p.join(serverRoot.path, 'data', 'dbc');
 
     await tester.runAsync(() async {
       await tester.pumpWidget(buildWizard());

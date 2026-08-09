@@ -7,7 +7,7 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-/// Directory-config targets: client directory / server DBC directory.
+/// Directory-config targets: client directory / server directory.
 ///
 /// Centralizes the mapping of both config items to
 /// [SetupStatusViewModel] (path/completeness/error/save), shared by the
@@ -16,14 +16,16 @@ enum DirectoryConfigTarget {
   clientDir(
     title: '客户端目录',
     icon: LucideIcons.folderCog,
-    description: '魔兽客户端根目录（含 Data 目录），用于从 MPQ 归档提取游戏图标。',
+    description:
+        '魔兽客户端根目录（含 Data 目录），用于从 MPQ 归档提取游戏图标。'
+        '保存时自动检测 MPQ 归档所在位置。',
   ),
-  dbcPath(
-    title: '服务端 DBC 目录',
+  serverDir(
+    title: '服务端目录',
     icon: LucideIcons.hardDrive,
     description:
-        '包含 Spell.dbc、Faction.dbc 等 .dbc 文件的目录，'
-        '用于导入 DBC 数据到 foxy 库（以 DBC 为准覆盖对应表）。',
+        '服务端根目录（如 AzerothCore）。保存时自动在其中搜索 DBC 文件所在目录，'
+        '用于导入/导出 DBC 数据到 foxy 库。',
   );
 
   final String title;
@@ -36,25 +38,34 @@ enum DirectoryConfigTarget {
     required this.description,
   });
 
+  /// Label for the auto-detected subdirectory shown under the row's path.
+  String get resolvedLabel =>
+      this == clientDir ? 'MPQ 归档目录' : 'DBC 目录';
+
   void clearError(SetupStatusViewModel vm) {
     if (this == clientDir) {
       vm.clientDirError.value = null;
     } else {
-      vm.dbcPathError.value = null;
+      vm.serverDirError.value = null;
     }
   }
 
   bool configuredOf(SetupStatusViewModel vm) =>
-      this == clientDir ? vm.isClientDirConfigured : vm.isDbcPathConfigured;
+      this == clientDir ? vm.isClientDirConfigured : vm.isServerDirConfigured;
 
   String? errorOf(SetupStatusViewModel vm) =>
-      this == clientDir ? vm.clientDirError.value : vm.dbcPathError.value;
+      this == clientDir ? vm.clientDirError.value : vm.serverDirError.value;
 
   String? pathOf(SetupStatusViewModel vm) =>
-      this == clientDir ? vm.clientDir.value : vm.dbcPath.value;
+      this == clientDir ? vm.clientDir.value : vm.serverDir.value;
+
+  /// Auto-detected subdirectory (MPQ archives for the client, DBC files
+  /// for the server), null when not yet detected.
+  String? resolvedPathOf(SetupStatusViewModel vm) =>
+      this == clientDir ? vm.mpqDir.value : vm.dbcPath.value;
 
   Future<bool> save(SetupStatusViewModel vm, String path) =>
-      this == clientDir ? vm.saveClientDir(path) : vm.saveDbcPath(path);
+      this == clientDir ? vm.saveClientDir(path) : vm.saveServerDir(path);
 }
 
 /// Config dialog for a single directory: based on [DirectoryPathForm],
@@ -172,6 +183,7 @@ class DirectorySettingRow extends StatelessWidget {
       final path = target.pathOf(vm);
       final configured = target.configuredOf(vm);
       final missing = path != null && !configured;
+      final resolved = configured ? target.resolvedPathOf(vm) : null;
       return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -210,6 +222,14 @@ class DirectorySettingRow extends StatelessWidget {
                       fontSize: 12,
                       color: theme.colorScheme.destructive,
                     ),
+                  ),
+                ],
+                if (resolved != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    '已找到${target.resolvedLabel}: $resolved',
+                    style: theme.textTheme.muted.copyWith(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ],
