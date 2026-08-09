@@ -199,6 +199,57 @@ void main() {
     expect(find.text('mpq:free'), findsOneWidget);
   });
 
+  testWidgets('进度中不可关闭对话框，任务结束后可关闭', (tester) async {
+    await tester.pumpWidget(
+      const ShadApp(home: Scaffold(body: SettingPage())),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    // Esc/系统返回最终走 Navigator.maybePop（DismissAction 的机制），
+    // 这里直接验证 PopScope 对路由弹出的拦截。
+    final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+
+    // idle 状态：无 PopScope，可正常关闭。
+    await tester.tap(dbcImportButton());
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('导入 DBC'), findsOneWidget);
+    await nav.maybePop();
+    await tester.pumpAndSettle();
+    expect(find.text('导入 DBC'), findsNothing);
+
+    // 重新打开，进入进度状态。
+    await tester.tap(dbcImportButton());
+    await tester.pump();
+    await tester.pump();
+    importVm.status.value = WorkflowStatus.running;
+    await tester.pump();
+    expect(find.text('正在导入 DBC'), findsOneWidget);
+
+    // 进度中 must be blocked: closing mid-run would leave the task running
+    // in the background with no visible state.
+    await nav.maybePop();
+    await tester.pump();
+    await tester.pump();
+    expect(
+      find.text('正在导入 DBC'),
+      findsOneWidget,
+      reason: '进度中不得关闭对话框',
+    );
+
+    // 任务完成：关闭恢复。
+    importVm.status.value = WorkflowStatus.succeeded;
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('导入完成'), findsOneWidget);
+
+    await nav.maybePop();
+    await tester.pumpAndSettle();
+    expect(find.text('导入完成'), findsNothing);
+    expect(find.text('导入 DBC'), findsNothing);
+  });
+
   testWidgets('MPQ 导出完成后 DBC 导入/导出按钮恢复可用', (tester) async {
     await tester.pumpWidget(
       const ShadApp(home: Scaffold(body: SettingPage())),

@@ -78,22 +78,28 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
         }
 
         if (extracting) {
-          return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.image, '正在提取图标'),
-            child: settingDialogProgressPanel(
-              context,
-              ratio: _vm.progress.value,
-              label: _vm.progressLabel.value,
-              detail: _vm.progressDetail.value,
-              trailing: ShadButton.outline(
-                size: ShadButtonSize.sm,
-                onPressed: workflowStatus == WorkflowStatus.cancelling
-                    ? null
-                    : _vm.cancel,
-                child: Text(
-                  workflowStatus == WorkflowStatus.cancelling
-                      ? '正在取消…'
-                      : '取消提取',
+          // Block Esc/back while a task is in flight: closing mid-run would
+          // leave the extraction running in the background with no visible
+          // state. Cancel (the only exit shown here) is in-dialog.
+          return PopScope(
+            canPop: false,
+            child: SettingDialogShell(
+              title: settingDialogTitleRow(LucideIcons.image, '正在提取图标'),
+              child: settingDialogProgressPanel(
+                context,
+                ratio: _vm.progress.value,
+                label: _vm.progressLabel.value,
+                detail: _vm.progressDetail.value,
+                trailing: ShadButton.outline(
+                  size: ShadButtonSize.sm,
+                  onPressed: workflowStatus == WorkflowStatus.cancelling
+                      ? null
+                      : _vm.cancel,
+                  child: Text(
+                    workflowStatus == WorkflowStatus.cancelling
+                        ? '正在取消…'
+                        : '取消提取',
+                  ),
                 ),
               ),
             ),
