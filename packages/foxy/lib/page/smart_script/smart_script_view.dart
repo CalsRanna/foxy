@@ -263,34 +263,21 @@ class SmartScriptView extends StatelessWidget {
     });
   }
 
-  FoxyEntityPickerDelegate<Object?> _delegateFor(
-    SmartParameterReference reference,
-  ) {
-    return switch (reference) {
-      SmartParameterReference.area => FoxyEntityPickerDelegates.areaTable,
-      SmartParameterReference.cinematicSequence =>
-        FoxyEntityPickerDelegates.cinematicSequence,
-      SmartParameterReference.creature =>
-        FoxyEntityPickerDelegates.creatureTemplate,
-      SmartParameterReference.creatureDisplay =>
-        FoxyEntityPickerDelegates.creatureDisplayInfo,
-      SmartParameterReference.emote => FoxyEntityPickerDelegates.dbcEmote,
-      SmartParameterReference.factionTemplate =>
-        FoxyEntityPickerDelegates.dbcFactionTemplate,
-      SmartParameterReference.gameObject =>
-        FoxyEntityPickerDelegates.gameObjectTemplate,
-      SmartParameterReference.gossipMenu =>
-        FoxyEntityPickerDelegates.gossipMenu,
-      SmartParameterReference.item => FoxyEntityPickerDelegates.itemTemplate,
-      SmartParameterReference.map => FoxyEntityPickerDelegates.map,
-      SmartParameterReference.npcText => FoxyEntityPickerDelegates.npcText,
-      SmartParameterReference.quest => FoxyEntityPickerDelegates.questTemplate,
-      SmartParameterReference.spell => FoxyEntityPickerDelegates.spell,
-      SmartParameterReference.taxiPath => FoxyEntityPickerDelegates.taxiPath,
-      SmartParameterReference.textEmote => FoxyEntityPickerDelegates.emote,
-      SmartParameterReference.waypointPath =>
-        FoxyEntityPickerDelegates.waypointData,
-    };
+  /// Reference-field picker built from [delegate]: the concrete row type
+  /// follows from the delegate, so each reference branch instantiates the
+  /// picker at the call site with no type erasure.
+  Widget _referencePicker<T>(
+    String column,
+    IntFieldControllerGroup controllers,
+    FoxyEntityPickerDelegate<T> delegate, {
+    required bool readOnly,
+  }) {
+    return FoxyEntityPicker<T>(
+      controller: controllers.numberController,
+      delegate: delegate,
+      placeholder: column,
+      readOnly: readOnly,
+    );
   }
 
   FoxyFormItem _doubleItem(
@@ -345,12 +332,104 @@ class SmartScriptView extends StatelessWidget {
         title: spec.label,
         placeholder: column,
       ),
-      IntegerReferenceFieldSpec(:final reference) => FoxyEntityPicker(
-        controller: controllers.numberController,
-        delegate: _delegateFor(reference),
-        placeholder: column,
-        readOnly: !spec.editable,
-      ),
+      IntegerReferenceFieldSpec(:final reference) => switch (reference) {
+        SmartParameterReference.area => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.areaTable,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.cinematicSequence => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.cinematicSequence,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.creature => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.creatureTemplate,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.creatureDisplay => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.creatureDisplayInfo,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.emote => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.dbcEmote,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.factionTemplate => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.dbcFactionTemplate,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.gameObject => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.gameObjectTemplate,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.gossipMenu => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.gossipMenu,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.item => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.itemTemplate,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.map => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.map,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.npcText => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.npcText,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.quest => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.questTemplate,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.spell => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.spell,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.taxiPath => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.taxiPath,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.textEmote => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.emote,
+          readOnly: !spec.editable,
+        ),
+        SmartParameterReference.waypointPath => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.waypointData,
+          readOnly: !spec.editable,
+        ),
+      },
     };
   }
 

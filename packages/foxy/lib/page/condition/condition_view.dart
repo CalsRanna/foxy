@@ -221,25 +221,21 @@ class ConditionView extends StatelessWidget {
     });
   }
 
-  FoxyEntityPickerDelegate<Object?> _delegateFor(
-    ConditionValueReference reference,
-  ) {
-    return switch (reference) {
-      ConditionValueReference.achievement =>
-        FoxyEntityPickerDelegates.achievement,
-      ConditionValueReference.area => FoxyEntityPickerDelegates.areaTable,
-      ConditionValueReference.creature =>
-        FoxyEntityPickerDelegates.creatureTemplate,
-      ConditionValueReference.faction => FoxyEntityPickerDelegates.dbcFaction,
-      ConditionValueReference.gameObject =>
-        FoxyEntityPickerDelegates.gameObjectTemplate,
-      ConditionValueReference.item => FoxyEntityPickerDelegates.itemTemplate,
-      ConditionValueReference.map => FoxyEntityPickerDelegates.map,
-      ConditionValueReference.quest => FoxyEntityPickerDelegates.questTemplate,
-      ConditionValueReference.skill => FoxyEntityPickerDelegates.skillLine,
-      ConditionValueReference.spell => FoxyEntityPickerDelegates.spell,
-      ConditionValueReference.title => FoxyEntityPickerDelegates.charTitle,
-    };
+  /// Reference-field picker built from [delegate]: the concrete row type
+  /// follows from the delegate, so each reference branch instantiates the
+  /// picker at the call site with no type erasure.
+  Widget _referencePicker<T>(
+    String column,
+    IntFieldControllerGroup controllers,
+    FoxyEntityPickerDelegate<T> delegate, {
+    required bool readOnly,
+  }) {
+    return FoxyEntityPicker<T>(
+      controller: controllers.numberController,
+      delegate: delegate,
+      placeholder: column,
+      readOnly: readOnly,
+    );
   }
 
   void _goBack() {
@@ -292,15 +288,15 @@ class ConditionView extends StatelessWidget {
     int sourceGroup, {
     required bool referenceTemplate,
   }) {
-    final delegate = switch (sourceType) {
-      13 || 17 || 18 || 21 || 24 => FoxyEntityPickerDelegates.spell,
-      16 || 20 || 29 => FoxyEntityPickerDelegates.creatureTemplate,
-      19 => FoxyEntityPickerDelegates.questTemplate,
-      23 => FoxyEntityPickerDelegates.itemTemplate,
-      30 when sourceGroup == 0 => FoxyEntityPickerDelegates.creatureTemplate,
-      30 when sourceGroup == 1 => FoxyEntityPickerDelegates.gameObjectTemplate,
-      _ => null,
-    };
+    Widget entryPicker<T>(FoxyEntityPickerDelegate<T> delegate) {
+      return FoxyEntityPicker<T>(
+        controller: viewModel.sourceEntryController,
+        delegate: delegate,
+        placeholder: 'SourceEntry',
+        readOnly: referenceTemplate,
+      );
+    }
+
     final label = switch (sourceType) {
       >= 1 && <= 12 || 28 => '物品/引用',
       13 || 17 || 18 || 21 || 24 => '法术 ID',
@@ -313,23 +309,24 @@ class ConditionView extends StatelessWidget {
       30 => sourceGroup == 0 ? '生物 Entry' : '游戏对象',
       _ => '来源条目',
     };
-    if (delegate != null) {
-      return FoxyFormItem(
-        label: label,
-        child: FoxyEntityPicker(
-          controller: viewModel.sourceEntryController,
-          delegate: delegate,
-          placeholder: 'SourceEntry',
-          readOnly: referenceTemplate,
-        ),
-      );
-    }
-    return _numberItem(
-      label,
-      'SourceEntry',
-      viewModel.sourceEntryController,
-      readOnly: referenceTemplate,
-    );
+    // Dispatch by source type to the concrete-row-type picker; no erasure.
+    final editor = switch (sourceType) {
+      13 || 17 || 18 || 21 || 24 =>
+        entryPicker(FoxyEntityPickerDelegates.spell),
+      16 || 20 || 29 => entryPicker(FoxyEntityPickerDelegates.creatureTemplate),
+      19 => entryPicker(FoxyEntityPickerDelegates.questTemplate),
+      23 => entryPicker(FoxyEntityPickerDelegates.itemTemplate),
+      30 when sourceGroup == 0 =>
+        entryPicker(FoxyEntityPickerDelegates.creatureTemplate),
+      30 when sourceGroup == 1 =>
+        entryPicker(FoxyEntityPickerDelegates.gameObjectTemplate),
+      _ => FoxyNumberInput<int>(
+        controller: viewModel.sourceEntryController,
+        placeholder: 'SourceEntry',
+        readOnly: referenceTemplate,
+      ),
+    };
+    return FoxyFormItem(label: label, child: editor);
   }
 
   FoxyFormItem _sourceGroupItem(
@@ -418,12 +415,74 @@ class ConditionView extends StatelessWidget {
         title: spec.label,
         placeholder: column,
       ),
-      IntegerReferenceFieldSpec(:final reference) => FoxyEntityPicker(
-        controller: controllers.numberController,
-        delegate: _delegateFor(reference),
-        placeholder: column,
-        readOnly: !spec.editable,
-      ),
+      IntegerReferenceFieldSpec(:final reference) => switch (reference) {
+        ConditionValueReference.achievement => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.achievement,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.area => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.areaTable,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.creature => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.creatureTemplate,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.faction => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.dbcFaction,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.gameObject => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.gameObjectTemplate,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.item => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.itemTemplate,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.map => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.map,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.quest => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.questTemplate,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.skill => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.skillLine,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.spell => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.spell,
+          readOnly: !spec.editable,
+        ),
+        ConditionValueReference.title => _referencePicker(
+          column,
+          controllers,
+          FoxyEntityPickerDelegates.charTitle,
+          readOnly: !spec.editable,
+        ),
+      },
     };
   }
 
