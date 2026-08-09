@@ -4,6 +4,10 @@ import 'package:path/path.dart' as p;
 const _entityUtilities = {
   'dbc_locale.dart',
   'dbc_locale_field_definition.dart',
+  // `scaling_stat_distribution_entity.dart` carries file-level helper
+  // functions (`statEntries`, `formatStats`) that iterate over dynamic
+  // result lists, not entity fields — exempt like the other utility files.
+  'scaling_stat_distribution_entity.dart',
 };
 
 String? collectionLoopScope(String path) {
