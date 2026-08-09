@@ -29,6 +29,7 @@ const _kFeatureIconMap = <String, IconData>{
   'layers': LucideIcons.layers,
   'ruler': LucideIcons.ruler,
   'sparkles': LucideIcons.sparkles,
+  'hammer': LucideIcons.hammer,
 };
 
 class FoxyFeatureCard extends StatefulWidget {

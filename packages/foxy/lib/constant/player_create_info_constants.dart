@@ -24,7 +24,8 @@ const kPlayerClassOptions = {
   11: '德鲁伊',
 };
 
-/// Class masks used only by the three mask-based player-create tables.
+/// Class masks shared by the three mask-based player-create tables and
+/// SkillLineAbility.dbc.
 const kPlayerCreateClassMaskFlags = [
   FlagItem(1, '战士'),
   FlagItem(2, '圣骑士'),
@@ -42,7 +43,8 @@ const kPlayerCreatePlayableClassMask = 1535;
 
 const kPlayerCreatePlayableRaceMask = 1791;
 
-/// Race masks used only by the three mask-based player-create tables.
+/// Race masks shared by the three mask-based player-create tables and
+/// SkillLineAbility.dbc.
 const kPlayerCreateRaceMaskFlags = [
   FlagItem(1, '人类'),
   FlagItem(2, '兽人'),

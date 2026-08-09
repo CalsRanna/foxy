@@ -159,6 +159,26 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(tableName: 'dbc_spell_range', schema: Definitions.spellRange),
   DbcDefinition(tableName: 'dbc_skill_line', schema: Definitions.skillLine),
   DbcDefinition(
+    tableName: 'dbc_skill_line_ability',
+    schema: Definitions.skillLineAbility,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_skill_line_category',
+    schema: Definitions.skillLineCategory,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_skill_costs_data',
+    schema: Definitions.skillCostsData,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_skill_tiers',
+    schema: Definitions.skillTiers,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_skill_race_class_info',
+    schema: Definitions.skillRaceClassInfo,
+  ),
+  DbcDefinition(
     tableName: 'dbc_sound_ambience',
     schema: Definitions.soundAmbience,
   ),

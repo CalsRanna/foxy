@@ -33,6 +33,8 @@ import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_request_items_locale_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
+import 'package:foxy/repository/skill_line_category_repository.dart';
+import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
@@ -613,6 +615,35 @@ class FoxyLocalePickerDelegates {
     () => GetIt.instance.get<TalentTabRepository>(),
     (repo, id, field) => repo.getTalentTabLocales(id, field),
     (repo, id, field, values) => repo.saveTalentTabLocales(id, field, values),
+  );
+
+  static final dbcSkillLineDisplayName = _dbc(
+    DbcLocaleFields.skillLineDisplayName,
+    () => GetIt.instance.get<SkillLineRepository>(),
+    (repo, id, field) => repo.getSkillLineLocales(id, field),
+    (repo, id, field, values) => repo.saveSkillLineLocales(id, field, values),
+  );
+
+  static final dbcSkillLineDescription = _dbc(
+    DbcLocaleFields.skillLineDescription,
+    () => GetIt.instance.get<SkillLineRepository>(),
+    (repo, id, field) => repo.getSkillLineLocales(id, field),
+    (repo, id, field, values) => repo.saveSkillLineLocales(id, field, values),
+  );
+
+  static final dbcSkillLineAlternateVerb = _dbc(
+    DbcLocaleFields.skillLineAlternateVerb,
+    () => GetIt.instance.get<SkillLineRepository>(),
+    (repo, id, field) => repo.getSkillLineLocales(id, field),
+    (repo, id, field, values) => repo.saveSkillLineLocales(id, field, values),
+  );
+
+  static final dbcSkillLineCategoryName = _dbc(
+    DbcLocaleFields.skillLineCategoryName,
+    () => GetIt.instance.get<SkillLineCategoryRepository>(),
+    (repo, id, field) => repo.getSkillLineCategoryLocales(id, field),
+    (repo, id, field, values) =>
+        repo.saveSkillLineCategoryLocales(id, field, values),
   );
 
   static final dbcSpellItemEnchantmentName = _dbc(

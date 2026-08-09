@@ -52,6 +52,7 @@ import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
+import 'package:foxy/entity/skill_line_category_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
@@ -121,6 +122,7 @@ import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
+import 'package:foxy/repository/skill_line_category_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:foxy/repository/sound_ambience_repository.dart';
@@ -394,11 +396,11 @@ class FoxyEntityPickerDelegates {
       );
 
   static final skillLine = FoxyEntityPickerDelegate<BriefSkillLineEntity>(
-    title: '技能线',
-    errorLabel: '搜索技能线失败',
+    title: '专业技能',
+    errorLabel: '搜索专业技能失败',
     filters: const [
-      FoxyEntityPickerFilter('技能线 ID'),
-      FoxyEntityPickerFilter('技能线名称'),
+      FoxyEntityPickerFilter('专业技能 ID'),
+      FoxyEntityPickerFilter('专业技能名称'),
     ],
     columns: [
       FoxyEntityPickerColumn(
@@ -426,6 +428,39 @@ class FoxyEntityPickerDelegates {
       filter: SkillLineFilter(id: v[0], name: v[1]),
     ),
   );
+
+  static final skillLineCategory =
+      FoxyEntityPickerDelegate<BriefSkillLineCategoryEntity>(
+        title: '专业技能分类',
+        errorLabel: '搜索专业技能分类失败',
+        filters: const [
+          FoxyEntityPickerFilter('分类 ID'),
+          FoxyEntityPickerFilter('分类名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefSkillLineCategoryEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefSkillLineCategoryEntity t) => t.nameLangZhCN,
+          ),
+        ],
+        idOf: (BriefSkillLineCategoryEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<SkillLineCategoryRepository>()
+            .getBriefSkillLineCategories(
+              page: page,
+              filter: SkillLineCategoryFilter(id: v[0], name: v[1]),
+            ),
+        count: (v) => GetIt.instance
+            .get<SkillLineCategoryRepository>()
+            .countSkillLineCategories(
+              filter: SkillLineCategoryFilter(id: v[0], name: v[1]),
+            ),
+      );
 
   static final creatureDisplayInfo =
       FoxyEntityPickerDelegate<BriefCreatureDisplayInfoEntity>(

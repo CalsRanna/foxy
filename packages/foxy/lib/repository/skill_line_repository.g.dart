@@ -24,7 +24,26 @@ final class SkillLineFilter {
   }
 }
 
-mixin _SkillLineRepositoryMixin on RepositoryMixin {
+mixin _SkillLineRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  Future<int> copySkillLine(int key) async {
+    final source = await getSkillLine(key);
+    if (source == null) {
+      throw RecordNotFoundException('foxy.dbc_skill_line record not found');
+    }
+    final blank = await createSkillLine();
+    final copied = source.copyWith(id: blank.id);
+    await storeSkillLine(copied);
+    return copied.id;
+  }
+
+  Future<int> countSkillLines({SkillLineFilter? filter}) async {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<SkillLineEntity> createSkillLine() async {
+    return SkillLineEntity(id: await nextMaxPlusOne(_table, '`ID`'));
+  }
+
   Future<void> destroySkillLine(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -38,6 +57,38 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return SkillLineEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<BriefSkillLineEntity>> getBriefSkillLines({
+    int page = 1,
+    SkillLineFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table).select(['`ID`', '`CategoryID`']);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefSkillLineEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<SkillLineEntity>> getSkillLines() async {
+    var builder = laconic.table(_table).orderBy('`ID`');
+    final results = await builder.get();
+    return results.map((e) => SkillLineEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<List<DbcLocaleFieldValue>> getSkillLineLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveSkillLineLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeSkillLine(SkillLineEntity skillLine) async {
     if (skillLine.id <= 0) {
@@ -90,6 +141,17 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_skill_line record not found');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, SkillLineFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where('`DisplayName_lang_zhCN`', filter.name);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

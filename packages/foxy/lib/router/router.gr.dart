@@ -9,13 +9,13 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i58;
-import 'package:flutter/material.dart' as _i59;
-import 'package:foxy/entity/condition_entity.dart' as _i60;
-import 'package:foxy/entity/gossip_menu_entity.dart' as _i61;
-import 'package:foxy/entity/player_create_info_entity.dart' as _i62;
-import 'package:foxy/entity/reference_loot_template_entity.dart' as _i63;
-import 'package:foxy/entity/smart_script_entity.dart' as _i64;
+import 'package:auto_route/auto_route.dart' as _i60;
+import 'package:flutter/material.dart' as _i61;
+import 'package:foxy/entity/condition_entity.dart' as _i62;
+import 'package:foxy/entity/gossip_menu_entity.dart' as _i63;
+import 'package:foxy/entity/player_create_info_entity.dart' as _i64;
+import 'package:foxy/entity/reference_loot_template_entity.dart' as _i65;
+import 'package:foxy/entity/smart_script_entity.dart' as _i66;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -82,25 +82,27 @@ import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_page.dart
 import 'package:foxy/page/scaling_stat_value/scaling_stat_value_list_page.dart'
     as _i48;
 import 'package:foxy/page/setting/setting_page.dart' as _i49;
-import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i50;
-import 'package:foxy/page/smart_script/smart_script_list_page.dart' as _i51;
-import 'package:foxy/page/spell/spell_detail_page.dart' as _i52;
-import 'package:foxy/page/spell/spell_list_page.dart' as _i55;
+import 'package:foxy/page/skill_line/skill_line_detail_page.dart' as _i50;
+import 'package:foxy/page/skill_line/skill_line_list_page.dart' as _i51;
+import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i52;
+import 'package:foxy/page/smart_script/smart_script_list_page.dart' as _i53;
+import 'package:foxy/page/spell/spell_detail_page.dart' as _i54;
+import 'package:foxy/page/spell/spell_list_page.dart' as _i57;
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_page.dart'
-    as _i53;
+    as _i55;
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_list_page.dart'
-    as _i54;
-import 'package:foxy/page/talent/talent_detail_page.dart' as _i56;
-import 'package:foxy/page/talent/talent_list_page.dart' as _i57;
+    as _i56;
+import 'package:foxy/page/talent/talent_detail_page.dart' as _i58;
+import 'package:foxy/page/talent/talent_list_page.dart' as _i59;
 
 /// generated route for
 /// [_i1.AchievementDetailPage]
 class AchievementDetailRoute
-    extends _i58.PageRouteInfo<AchievementDetailRouteArgs> {
+    extends _i60.PageRouteInfo<AchievementDetailRouteArgs> {
   AchievementDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? achievementKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          AchievementDetailRoute.name,
          args: AchievementDetailRouteArgs(
@@ -112,7 +114,7 @@ class AchievementDetailRoute
 
   static const String name = 'AchievementDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<AchievementDetailRouteArgs>(
@@ -129,7 +131,7 @@ class AchievementDetailRoute
 class AchievementDetailRouteArgs {
   const AchievementDetailRouteArgs({this.key, this.achievementKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? achievementKey;
 
@@ -151,13 +153,13 @@ class AchievementDetailRouteArgs {
 
 /// generated route for
 /// [_i2.AchievementListPage]
-class AchievementListRoute extends _i58.PageRouteInfo<void> {
-  const AchievementListRoute({List<_i58.PageRouteInfo>? children})
+class AchievementListRoute extends _i60.PageRouteInfo<void> {
+  const AchievementListRoute({List<_i60.PageRouteInfo>? children})
     : super(AchievementListRoute.name, initialChildren: children);
 
   static const String name = 'AchievementListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i2.AchievementListPage();
@@ -168,11 +170,11 @@ class AchievementListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i3.AreaTableDetailPage]
 class AreaTableDetailRoute
-    extends _i58.PageRouteInfo<AreaTableDetailRouteArgs> {
+    extends _i60.PageRouteInfo<AreaTableDetailRouteArgs> {
   AreaTableDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? areaTableKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          AreaTableDetailRoute.name,
          args: AreaTableDetailRouteArgs(key: key, areaTableKey: areaTableKey),
@@ -181,7 +183,7 @@ class AreaTableDetailRoute
 
   static const String name = 'AreaTableDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<AreaTableDetailRouteArgs>(
@@ -198,7 +200,7 @@ class AreaTableDetailRoute
 class AreaTableDetailRouteArgs {
   const AreaTableDetailRouteArgs({this.key, this.areaTableKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? areaTableKey;
 
@@ -220,13 +222,13 @@ class AreaTableDetailRouteArgs {
 
 /// generated route for
 /// [_i4.AreaTableListPage]
-class AreaTableListRoute extends _i58.PageRouteInfo<void> {
-  const AreaTableListRoute({List<_i58.PageRouteInfo>? children})
+class AreaTableListRoute extends _i60.PageRouteInfo<void> {
+  const AreaTableListRoute({List<_i60.PageRouteInfo>? children})
     : super(AreaTableListRoute.name, initialChildren: children);
 
   static const String name = 'AreaTableListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i4.AreaTableListPage();
@@ -236,13 +238,13 @@ class AreaTableListRoute extends _i58.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i5.BootstrapPage]
-class BootstrapRoute extends _i58.PageRouteInfo<void> {
-  const BootstrapRoute({List<_i58.PageRouteInfo>? children})
+class BootstrapRoute extends _i60.PageRouteInfo<void> {
+  const BootstrapRoute({List<_i60.PageRouteInfo>? children})
     : super(BootstrapRoute.name, initialChildren: children);
 
   static const String name = 'BootstrapRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i5.BootstrapPage();
@@ -253,11 +255,11 @@ class BootstrapRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i6.ConditionDetailPage]
 class ConditionDetailRoute
-    extends _i58.PageRouteInfo<ConditionDetailRouteArgs> {
+    extends _i60.PageRouteInfo<ConditionDetailRouteArgs> {
   ConditionDetailRoute({
-    _i59.Key? key,
-    _i60.ConditionKey? conditionKey,
-    List<_i58.PageRouteInfo>? children,
+    _i61.Key? key,
+    _i62.ConditionKey? conditionKey,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          ConditionDetailRoute.name,
          args: ConditionDetailRouteArgs(key: key, conditionKey: conditionKey),
@@ -266,7 +268,7 @@ class ConditionDetailRoute
 
   static const String name = 'ConditionDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ConditionDetailRouteArgs>(
@@ -283,9 +285,9 @@ class ConditionDetailRoute
 class ConditionDetailRouteArgs {
   const ConditionDetailRouteArgs({this.key, this.conditionKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
-  final _i60.ConditionKey? conditionKey;
+  final _i62.ConditionKey? conditionKey;
 
   @override
   String toString() {
@@ -305,13 +307,13 @@ class ConditionDetailRouteArgs {
 
 /// generated route for
 /// [_i7.ConditionListPage]
-class ConditionListRoute extends _i58.PageRouteInfo<void> {
-  const ConditionListRoute({List<_i58.PageRouteInfo>? children})
+class ConditionListRoute extends _i60.PageRouteInfo<void> {
+  const ConditionListRoute({List<_i60.PageRouteInfo>? children})
     : super(ConditionListRoute.name, initialChildren: children);
 
   static const String name = 'ConditionListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i7.ConditionListPage();
@@ -322,11 +324,11 @@ class ConditionListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i8.CreatureTemplateDetailPage]
 class CreatureTemplateDetailRoute
-    extends _i58.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
+    extends _i60.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
   CreatureTemplateDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? creatureTemplateKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          CreatureTemplateDetailRoute.name,
          args: CreatureTemplateDetailRouteArgs(
@@ -338,7 +340,7 @@ class CreatureTemplateDetailRoute
 
   static const String name = 'CreatureTemplateDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<CreatureTemplateDetailRouteArgs>(
@@ -355,7 +357,7 @@ class CreatureTemplateDetailRoute
 class CreatureTemplateDetailRouteArgs {
   const CreatureTemplateDetailRouteArgs({this.key, this.creatureTemplateKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? creatureTemplateKey;
 
@@ -377,13 +379,13 @@ class CreatureTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i9.CreatureTemplateListPage]
-class CreatureTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const CreatureTemplateListRoute({List<_i58.PageRouteInfo>? children})
+class CreatureTemplateListRoute extends _i60.PageRouteInfo<void> {
+  const CreatureTemplateListRoute({List<_i60.PageRouteInfo>? children})
     : super(CreatureTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'CreatureTemplateListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i9.CreatureTemplateListPage();
@@ -394,11 +396,11 @@ class CreatureTemplateListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i10.CurrencyTypeDetailPage]
 class CurrencyTypeDetailRoute
-    extends _i58.PageRouteInfo<CurrencyTypeDetailRouteArgs> {
+    extends _i60.PageRouteInfo<CurrencyTypeDetailRouteArgs> {
   CurrencyTypeDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? currencyTypeKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          CurrencyTypeDetailRoute.name,
          args: CurrencyTypeDetailRouteArgs(
@@ -410,7 +412,7 @@ class CurrencyTypeDetailRoute
 
   static const String name = 'CurrencyTypeDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<CurrencyTypeDetailRouteArgs>(
@@ -427,7 +429,7 @@ class CurrencyTypeDetailRoute
 class CurrencyTypeDetailRouteArgs {
   const CurrencyTypeDetailRouteArgs({this.key, this.currencyTypeKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? currencyTypeKey;
 
@@ -449,13 +451,13 @@ class CurrencyTypeDetailRouteArgs {
 
 /// generated route for
 /// [_i11.CurrencyTypeListPage]
-class CurrencyTypeListRoute extends _i58.PageRouteInfo<void> {
-  const CurrencyTypeListRoute({List<_i58.PageRouteInfo>? children})
+class CurrencyTypeListRoute extends _i60.PageRouteInfo<void> {
+  const CurrencyTypeListRoute({List<_i60.PageRouteInfo>? children})
     : super(CurrencyTypeListRoute.name, initialChildren: children);
 
   static const String name = 'CurrencyTypeListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i11.CurrencyTypeListPage();
@@ -465,13 +467,13 @@ class CurrencyTypeListRoute extends _i58.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i12.DashboardPage]
-class DashboardRoute extends _i58.PageRouteInfo<void> {
-  const DashboardRoute({List<_i58.PageRouteInfo>? children})
+class DashboardRoute extends _i60.PageRouteInfo<void> {
+  const DashboardRoute({List<_i60.PageRouteInfo>? children})
     : super(DashboardRoute.name, initialChildren: children);
 
   static const String name = 'DashboardRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i12.DashboardPage();
@@ -482,11 +484,11 @@ class DashboardRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i13.EmoteTextDetailPage]
 class EmoteTextDetailRoute
-    extends _i58.PageRouteInfo<EmoteTextDetailRouteArgs> {
+    extends _i60.PageRouteInfo<EmoteTextDetailRouteArgs> {
   EmoteTextDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? emoteTextKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          EmoteTextDetailRoute.name,
          args: EmoteTextDetailRouteArgs(key: key, emoteTextKey: emoteTextKey),
@@ -495,7 +497,7 @@ class EmoteTextDetailRoute
 
   static const String name = 'EmoteTextDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<EmoteTextDetailRouteArgs>(
@@ -512,7 +514,7 @@ class EmoteTextDetailRoute
 class EmoteTextDetailRouteArgs {
   const EmoteTextDetailRouteArgs({this.key, this.emoteTextKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? emoteTextKey;
 
@@ -534,13 +536,13 @@ class EmoteTextDetailRouteArgs {
 
 /// generated route for
 /// [_i14.EmoteTextListPage]
-class EmoteTextListRoute extends _i58.PageRouteInfo<void> {
-  const EmoteTextListRoute({List<_i58.PageRouteInfo>? children})
+class EmoteTextListRoute extends _i60.PageRouteInfo<void> {
+  const EmoteTextListRoute({List<_i60.PageRouteInfo>? children})
     : super(EmoteTextListRoute.name, initialChildren: children);
 
   static const String name = 'EmoteTextListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i14.EmoteTextListPage();
@@ -551,11 +553,11 @@ class EmoteTextListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i15.GameObjectTemplateDetailPage]
 class GameObjectTemplateDetailRoute
-    extends _i58.PageRouteInfo<GameObjectTemplateDetailRouteArgs> {
+    extends _i60.PageRouteInfo<GameObjectTemplateDetailRouteArgs> {
   GameObjectTemplateDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? gameObjectTemplateKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          GameObjectTemplateDetailRoute.name,
          args: GameObjectTemplateDetailRouteArgs(
@@ -567,7 +569,7 @@ class GameObjectTemplateDetailRoute
 
   static const String name = 'GameObjectTemplateDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GameObjectTemplateDetailRouteArgs>(
@@ -587,7 +589,7 @@ class GameObjectTemplateDetailRouteArgs {
     this.gameObjectTemplateKey,
   });
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? gameObjectTemplateKey;
 
@@ -610,13 +612,13 @@ class GameObjectTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i16.GameObjectTemplateListPage]
-class GameObjectTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const GameObjectTemplateListRoute({List<_i58.PageRouteInfo>? children})
+class GameObjectTemplateListRoute extends _i60.PageRouteInfo<void> {
+  const GameObjectTemplateListRoute({List<_i60.PageRouteInfo>? children})
     : super(GameObjectTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'GameObjectTemplateListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i16.GameObjectTemplateListPage();
@@ -627,11 +629,11 @@ class GameObjectTemplateListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i17.GemPropertyDetailPage]
 class GemPropertyDetailRoute
-    extends _i58.PageRouteInfo<GemPropertyDetailRouteArgs> {
+    extends _i60.PageRouteInfo<GemPropertyDetailRouteArgs> {
   GemPropertyDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? gemPropertyKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          GemPropertyDetailRoute.name,
          args: GemPropertyDetailRouteArgs(
@@ -643,7 +645,7 @@ class GemPropertyDetailRoute
 
   static const String name = 'GemPropertyDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GemPropertyDetailRouteArgs>(
@@ -660,7 +662,7 @@ class GemPropertyDetailRoute
 class GemPropertyDetailRouteArgs {
   const GemPropertyDetailRouteArgs({this.key, this.gemPropertyKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? gemPropertyKey;
 
@@ -682,13 +684,13 @@ class GemPropertyDetailRouteArgs {
 
 /// generated route for
 /// [_i18.GemPropertyListPage]
-class GemPropertyListRoute extends _i58.PageRouteInfo<void> {
-  const GemPropertyListRoute({List<_i58.PageRouteInfo>? children})
+class GemPropertyListRoute extends _i60.PageRouteInfo<void> {
+  const GemPropertyListRoute({List<_i60.PageRouteInfo>? children})
     : super(GemPropertyListRoute.name, initialChildren: children);
 
   static const String name = 'GemPropertyListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i18.GemPropertyListPage();
@@ -699,11 +701,11 @@ class GemPropertyListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i19.GlyphPropertyDetailPage]
 class GlyphPropertyDetailRoute
-    extends _i58.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
+    extends _i60.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
   GlyphPropertyDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? glyphPropertyKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          GlyphPropertyDetailRoute.name,
          args: GlyphPropertyDetailRouteArgs(
@@ -715,7 +717,7 @@ class GlyphPropertyDetailRoute
 
   static const String name = 'GlyphPropertyDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GlyphPropertyDetailRouteArgs>(
@@ -732,7 +734,7 @@ class GlyphPropertyDetailRoute
 class GlyphPropertyDetailRouteArgs {
   const GlyphPropertyDetailRouteArgs({this.key, this.glyphPropertyKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? glyphPropertyKey;
 
@@ -754,13 +756,13 @@ class GlyphPropertyDetailRouteArgs {
 
 /// generated route for
 /// [_i20.GlyphPropertyListPage]
-class GlyphPropertyListRoute extends _i58.PageRouteInfo<void> {
-  const GlyphPropertyListRoute({List<_i58.PageRouteInfo>? children})
+class GlyphPropertyListRoute extends _i60.PageRouteInfo<void> {
+  const GlyphPropertyListRoute({List<_i60.PageRouteInfo>? children})
     : super(GlyphPropertyListRoute.name, initialChildren: children);
 
   static const String name = 'GlyphPropertyListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i20.GlyphPropertyListPage();
@@ -771,11 +773,11 @@ class GlyphPropertyListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i21.GossipMenuDetailPage]
 class GossipMenuDetailRoute
-    extends _i58.PageRouteInfo<GossipMenuDetailRouteArgs> {
+    extends _i60.PageRouteInfo<GossipMenuDetailRouteArgs> {
   GossipMenuDetailRoute({
-    _i59.Key? key,
-    _i61.GossipMenuKey? gossipMenuKey,
-    List<_i58.PageRouteInfo>? children,
+    _i61.Key? key,
+    _i63.GossipMenuKey? gossipMenuKey,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          GossipMenuDetailRoute.name,
          args: GossipMenuDetailRouteArgs(
@@ -787,7 +789,7 @@ class GossipMenuDetailRoute
 
   static const String name = 'GossipMenuDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GossipMenuDetailRouteArgs>(
@@ -804,9 +806,9 @@ class GossipMenuDetailRoute
 class GossipMenuDetailRouteArgs {
   const GossipMenuDetailRouteArgs({this.key, this.gossipMenuKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
-  final _i61.GossipMenuKey? gossipMenuKey;
+  final _i63.GossipMenuKey? gossipMenuKey;
 
   @override
   String toString() {
@@ -826,13 +828,13 @@ class GossipMenuDetailRouteArgs {
 
 /// generated route for
 /// [_i22.GossipMenuListPage]
-class GossipMenuListRoute extends _i58.PageRouteInfo<void> {
-  const GossipMenuListRoute({List<_i58.PageRouteInfo>? children})
+class GossipMenuListRoute extends _i60.PageRouteInfo<void> {
+  const GossipMenuListRoute({List<_i60.PageRouteInfo>? children})
     : super(GossipMenuListRoute.name, initialChildren: children);
 
   static const String name = 'GossipMenuListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i22.GossipMenuListPage();
@@ -843,11 +845,11 @@ class GossipMenuListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i23.ItemExtendedCostDetailPage]
 class ItemExtendedCostDetailRoute
-    extends _i58.PageRouteInfo<ItemExtendedCostDetailRouteArgs> {
+    extends _i60.PageRouteInfo<ItemExtendedCostDetailRouteArgs> {
   ItemExtendedCostDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? itemExtendedCostKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          ItemExtendedCostDetailRoute.name,
          args: ItemExtendedCostDetailRouteArgs(
@@ -859,7 +861,7 @@ class ItemExtendedCostDetailRoute
 
   static const String name = 'ItemExtendedCostDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ItemExtendedCostDetailRouteArgs>(
@@ -876,7 +878,7 @@ class ItemExtendedCostDetailRoute
 class ItemExtendedCostDetailRouteArgs {
   const ItemExtendedCostDetailRouteArgs({this.key, this.itemExtendedCostKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? itemExtendedCostKey;
 
@@ -898,13 +900,13 @@ class ItemExtendedCostDetailRouteArgs {
 
 /// generated route for
 /// [_i24.ItemExtendedCostListPage]
-class ItemExtendedCostListRoute extends _i58.PageRouteInfo<void> {
-  const ItemExtendedCostListRoute({List<_i58.PageRouteInfo>? children})
+class ItemExtendedCostListRoute extends _i60.PageRouteInfo<void> {
+  const ItemExtendedCostListRoute({List<_i60.PageRouteInfo>? children})
     : super(ItemExtendedCostListRoute.name, initialChildren: children);
 
   static const String name = 'ItemExtendedCostListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i24.ItemExtendedCostListPage();
@@ -914,11 +916,11 @@ class ItemExtendedCostListRoute extends _i58.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i25.ItemSetDetailPage]
-class ItemSetDetailRoute extends _i58.PageRouteInfo<ItemSetDetailRouteArgs> {
+class ItemSetDetailRoute extends _i60.PageRouteInfo<ItemSetDetailRouteArgs> {
   ItemSetDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? itemSetKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          ItemSetDetailRoute.name,
          args: ItemSetDetailRouteArgs(key: key, itemSetKey: itemSetKey),
@@ -927,7 +929,7 @@ class ItemSetDetailRoute extends _i58.PageRouteInfo<ItemSetDetailRouteArgs> {
 
   static const String name = 'ItemSetDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ItemSetDetailRouteArgs>(
@@ -941,7 +943,7 @@ class ItemSetDetailRoute extends _i58.PageRouteInfo<ItemSetDetailRouteArgs> {
 class ItemSetDetailRouteArgs {
   const ItemSetDetailRouteArgs({this.key, this.itemSetKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? itemSetKey;
 
@@ -963,13 +965,13 @@ class ItemSetDetailRouteArgs {
 
 /// generated route for
 /// [_i26.ItemSetListPage]
-class ItemSetListRoute extends _i58.PageRouteInfo<void> {
-  const ItemSetListRoute({List<_i58.PageRouteInfo>? children})
+class ItemSetListRoute extends _i60.PageRouteInfo<void> {
+  const ItemSetListRoute({List<_i60.PageRouteInfo>? children})
     : super(ItemSetListRoute.name, initialChildren: children);
 
   static const String name = 'ItemSetListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i26.ItemSetListPage();
@@ -980,11 +982,11 @@ class ItemSetListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i27.ItemTemplateDetailPage]
 class ItemTemplateDetailRoute
-    extends _i58.PageRouteInfo<ItemTemplateDetailRouteArgs> {
+    extends _i60.PageRouteInfo<ItemTemplateDetailRouteArgs> {
   ItemTemplateDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? itemTemplateKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          ItemTemplateDetailRoute.name,
          args: ItemTemplateDetailRouteArgs(
@@ -996,7 +998,7 @@ class ItemTemplateDetailRoute
 
   static const String name = 'ItemTemplateDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ItemTemplateDetailRouteArgs>(
@@ -1013,7 +1015,7 @@ class ItemTemplateDetailRoute
 class ItemTemplateDetailRouteArgs {
   const ItemTemplateDetailRouteArgs({this.key, this.itemTemplateKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? itemTemplateKey;
 
@@ -1035,13 +1037,13 @@ class ItemTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i28.ItemTemplateListPage]
-class ItemTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const ItemTemplateListRoute({List<_i58.PageRouteInfo>? children})
+class ItemTemplateListRoute extends _i60.PageRouteInfo<void> {
+  const ItemTemplateListRoute({List<_i60.PageRouteInfo>? children})
     : super(ItemTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'ItemTemplateListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i28.ItemTemplateListPage();
@@ -1051,13 +1053,13 @@ class ItemTemplateListRoute extends _i58.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i29.MorePage]
-class MoreRoute extends _i58.PageRouteInfo<void> {
-  const MoreRoute({List<_i58.PageRouteInfo>? children})
+class MoreRoute extends _i60.PageRouteInfo<void> {
+  const MoreRoute({List<_i60.PageRouteInfo>? children})
     : super(MoreRoute.name, initialChildren: children);
 
   static const String name = 'MoreRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i29.MorePage();
@@ -1068,11 +1070,11 @@ class MoreRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i30.PageTextDetailPage]
 class RouteTextDetailRoute
-    extends _i58.PageRouteInfo<RouteTextDetailRouteArgs> {
+    extends _i60.PageRouteInfo<RouteTextDetailRouteArgs> {
   RouteTextDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? pageTextKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          RouteTextDetailRoute.name,
          args: RouteTextDetailRouteArgs(key: key, pageTextKey: pageTextKey),
@@ -1081,7 +1083,7 @@ class RouteTextDetailRoute
 
   static const String name = 'RouteTextDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<RouteTextDetailRouteArgs>(
@@ -1098,7 +1100,7 @@ class RouteTextDetailRoute
 class RouteTextDetailRouteArgs {
   const RouteTextDetailRouteArgs({this.key, this.pageTextKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? pageTextKey;
 
@@ -1120,13 +1122,13 @@ class RouteTextDetailRouteArgs {
 
 /// generated route for
 /// [_i31.PageTextListPage]
-class RouteTextListRoute extends _i58.PageRouteInfo<void> {
-  const RouteTextListRoute({List<_i58.PageRouteInfo>? children})
+class RouteTextListRoute extends _i60.PageRouteInfo<void> {
+  const RouteTextListRoute({List<_i60.PageRouteInfo>? children})
     : super(RouteTextListRoute.name, initialChildren: children);
 
   static const String name = 'RouteTextListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i31.PageTextListPage();
@@ -1137,11 +1139,11 @@ class RouteTextListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i32.PlayerCreateInfoDetailPage]
 class PlayerCreateInfoDetailRoute
-    extends _i58.PageRouteInfo<PlayerCreateInfoDetailRouteArgs> {
+    extends _i60.PageRouteInfo<PlayerCreateInfoDetailRouteArgs> {
   PlayerCreateInfoDetailRoute({
-    _i59.Key? key,
-    _i62.PlayerCreateInfoKey? playerCreateInfoKey,
-    List<_i58.PageRouteInfo>? children,
+    _i61.Key? key,
+    _i64.PlayerCreateInfoKey? playerCreateInfoKey,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          PlayerCreateInfoDetailRoute.name,
          args: PlayerCreateInfoDetailRouteArgs(
@@ -1153,7 +1155,7 @@ class PlayerCreateInfoDetailRoute
 
   static const String name = 'PlayerCreateInfoDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<PlayerCreateInfoDetailRouteArgs>(
@@ -1170,9 +1172,9 @@ class PlayerCreateInfoDetailRoute
 class PlayerCreateInfoDetailRouteArgs {
   const PlayerCreateInfoDetailRouteArgs({this.key, this.playerCreateInfoKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
-  final _i62.PlayerCreateInfoKey? playerCreateInfoKey;
+  final _i64.PlayerCreateInfoKey? playerCreateInfoKey;
 
   @override
   String toString() {
@@ -1192,13 +1194,13 @@ class PlayerCreateInfoDetailRouteArgs {
 
 /// generated route for
 /// [_i33.PlayerCreateInfoListPage]
-class PlayerCreateInfoListRoute extends _i58.PageRouteInfo<void> {
-  const PlayerCreateInfoListRoute({List<_i58.PageRouteInfo>? children})
+class PlayerCreateInfoListRoute extends _i60.PageRouteInfo<void> {
+  const PlayerCreateInfoListRoute({List<_i60.PageRouteInfo>? children})
     : super(PlayerCreateInfoListRoute.name, initialChildren: children);
 
   static const String name = 'PlayerCreateInfoListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i33.PlayerCreateInfoListPage();
@@ -1209,11 +1211,11 @@ class PlayerCreateInfoListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i34.QuestFactionRewardDetailPage]
 class QuestFactionRewardDetailRoute
-    extends _i58.PageRouteInfo<QuestFactionRewardDetailRouteArgs> {
+    extends _i60.PageRouteInfo<QuestFactionRewardDetailRouteArgs> {
   QuestFactionRewardDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? questFactionRewardKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          QuestFactionRewardDetailRoute.name,
          args: QuestFactionRewardDetailRouteArgs(
@@ -1225,7 +1227,7 @@ class QuestFactionRewardDetailRoute
 
   static const String name = 'QuestFactionRewardDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestFactionRewardDetailRouteArgs>(
@@ -1245,7 +1247,7 @@ class QuestFactionRewardDetailRouteArgs {
     this.questFactionRewardKey,
   });
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? questFactionRewardKey;
 
@@ -1268,13 +1270,13 @@ class QuestFactionRewardDetailRouteArgs {
 
 /// generated route for
 /// [_i35.QuestFactionRewardListPage]
-class QuestFactionRewardListRoute extends _i58.PageRouteInfo<void> {
-  const QuestFactionRewardListRoute({List<_i58.PageRouteInfo>? children})
+class QuestFactionRewardListRoute extends _i60.PageRouteInfo<void> {
+  const QuestFactionRewardListRoute({List<_i60.PageRouteInfo>? children})
     : super(QuestFactionRewardListRoute.name, initialChildren: children);
 
   static const String name = 'QuestFactionRewardListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i35.QuestFactionRewardListPage();
@@ -1285,11 +1287,11 @@ class QuestFactionRewardListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i36.QuestInfoDetailPage]
 class QuestInfoDetailRoute
-    extends _i58.PageRouteInfo<QuestInfoDetailRouteArgs> {
+    extends _i60.PageRouteInfo<QuestInfoDetailRouteArgs> {
   QuestInfoDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? questInfoKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          QuestInfoDetailRoute.name,
          args: QuestInfoDetailRouteArgs(key: key, questInfoKey: questInfoKey),
@@ -1298,7 +1300,7 @@ class QuestInfoDetailRoute
 
   static const String name = 'QuestInfoDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestInfoDetailRouteArgs>(
@@ -1315,7 +1317,7 @@ class QuestInfoDetailRoute
 class QuestInfoDetailRouteArgs {
   const QuestInfoDetailRouteArgs({this.key, this.questInfoKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? questInfoKey;
 
@@ -1337,13 +1339,13 @@ class QuestInfoDetailRouteArgs {
 
 /// generated route for
 /// [_i37.QuestInfoListPage]
-class QuestInfoListRoute extends _i58.PageRouteInfo<void> {
-  const QuestInfoListRoute({List<_i58.PageRouteInfo>? children})
+class QuestInfoListRoute extends _i60.PageRouteInfo<void> {
+  const QuestInfoListRoute({List<_i60.PageRouteInfo>? children})
     : super(QuestInfoListRoute.name, initialChildren: children);
 
   static const String name = 'QuestInfoListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i37.QuestInfoListPage();
@@ -1354,11 +1356,11 @@ class QuestInfoListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i38.QuestSortDetailPage]
 class QuestSortDetailRoute
-    extends _i58.PageRouteInfo<QuestSortDetailRouteArgs> {
+    extends _i60.PageRouteInfo<QuestSortDetailRouteArgs> {
   QuestSortDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? questSortKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          QuestSortDetailRoute.name,
          args: QuestSortDetailRouteArgs(key: key, questSortKey: questSortKey),
@@ -1367,7 +1369,7 @@ class QuestSortDetailRoute
 
   static const String name = 'QuestSortDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestSortDetailRouteArgs>(
@@ -1384,7 +1386,7 @@ class QuestSortDetailRoute
 class QuestSortDetailRouteArgs {
   const QuestSortDetailRouteArgs({this.key, this.questSortKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? questSortKey;
 
@@ -1406,13 +1408,13 @@ class QuestSortDetailRouteArgs {
 
 /// generated route for
 /// [_i39.QuestSortListPage]
-class QuestSortListRoute extends _i58.PageRouteInfo<void> {
-  const QuestSortListRoute({List<_i58.PageRouteInfo>? children})
+class QuestSortListRoute extends _i60.PageRouteInfo<void> {
+  const QuestSortListRoute({List<_i60.PageRouteInfo>? children})
     : super(QuestSortListRoute.name, initialChildren: children);
 
   static const String name = 'QuestSortListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i39.QuestSortListPage();
@@ -1423,11 +1425,11 @@ class QuestSortListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i40.QuestTemplateDetailPage]
 class QuestTemplateDetailRoute
-    extends _i58.PageRouteInfo<QuestTemplateDetailRouteArgs> {
+    extends _i60.PageRouteInfo<QuestTemplateDetailRouteArgs> {
   QuestTemplateDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? questTemplateKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          QuestTemplateDetailRoute.name,
          args: QuestTemplateDetailRouteArgs(
@@ -1439,7 +1441,7 @@ class QuestTemplateDetailRoute
 
   static const String name = 'QuestTemplateDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestTemplateDetailRouteArgs>(
@@ -1456,7 +1458,7 @@ class QuestTemplateDetailRoute
 class QuestTemplateDetailRouteArgs {
   const QuestTemplateDetailRouteArgs({this.key, this.questTemplateKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? questTemplateKey;
 
@@ -1478,13 +1480,13 @@ class QuestTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i41.QuestTemplateListPage]
-class QuestTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const QuestTemplateListRoute({List<_i58.PageRouteInfo>? children})
+class QuestTemplateListRoute extends _i60.PageRouteInfo<void> {
+  const QuestTemplateListRoute({List<_i60.PageRouteInfo>? children})
     : super(QuestTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'QuestTemplateListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i41.QuestTemplateListPage();
@@ -1495,11 +1497,11 @@ class QuestTemplateListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i42.ReferenceLootTemplateDetailPage]
 class ReferenceLootTemplateDetailRoute
-    extends _i58.PageRouteInfo<ReferenceLootTemplateDetailRouteArgs> {
+    extends _i60.PageRouteInfo<ReferenceLootTemplateDetailRouteArgs> {
   ReferenceLootTemplateDetailRoute({
-    _i59.Key? key,
-    _i63.ReferenceLootTemplateKey? referenceLootTemplateKey,
-    List<_i58.PageRouteInfo>? children,
+    _i61.Key? key,
+    _i65.ReferenceLootTemplateKey? referenceLootTemplateKey,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          ReferenceLootTemplateDetailRoute.name,
          args: ReferenceLootTemplateDetailRouteArgs(
@@ -1511,7 +1513,7 @@ class ReferenceLootTemplateDetailRoute
 
   static const String name = 'ReferenceLootTemplateDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ReferenceLootTemplateDetailRouteArgs>(
@@ -1531,9 +1533,9 @@ class ReferenceLootTemplateDetailRouteArgs {
     this.referenceLootTemplateKey,
   });
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
-  final _i63.ReferenceLootTemplateKey? referenceLootTemplateKey;
+  final _i65.ReferenceLootTemplateKey? referenceLootTemplateKey;
 
   @override
   String toString() {
@@ -1554,13 +1556,13 @@ class ReferenceLootTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i43.ReferenceLootTemplateListPage]
-class ReferenceLootTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const ReferenceLootTemplateListRoute({List<_i58.PageRouteInfo>? children})
+class ReferenceLootTemplateListRoute extends _i60.PageRouteInfo<void> {
+  const ReferenceLootTemplateListRoute({List<_i60.PageRouteInfo>? children})
     : super(ReferenceLootTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'ReferenceLootTemplateListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i43.ReferenceLootTemplateListPage();
@@ -1570,13 +1572,13 @@ class ReferenceLootTemplateListRoute extends _i58.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i44.ScaffoldPage]
-class ScaffoldRoute extends _i58.PageRouteInfo<void> {
-  const ScaffoldRoute({List<_i58.PageRouteInfo>? children})
+class ScaffoldRoute extends _i60.PageRouteInfo<void> {
+  const ScaffoldRoute({List<_i60.PageRouteInfo>? children})
     : super(ScaffoldRoute.name, initialChildren: children);
 
   static const String name = 'ScaffoldRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i44.ScaffoldPage();
@@ -1587,11 +1589,11 @@ class ScaffoldRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i45.ScalingStatDistributionDetailPage]
 class ScalingStatDistributionDetailRoute
-    extends _i58.PageRouteInfo<ScalingStatDistributionDetailRouteArgs> {
+    extends _i60.PageRouteInfo<ScalingStatDistributionDetailRouteArgs> {
   ScalingStatDistributionDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? scalingStatDistributionKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          ScalingStatDistributionDetailRoute.name,
          args: ScalingStatDistributionDetailRouteArgs(
@@ -1603,7 +1605,7 @@ class ScalingStatDistributionDetailRoute
 
   static const String name = 'ScalingStatDistributionDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ScalingStatDistributionDetailRouteArgs>(
@@ -1623,7 +1625,7 @@ class ScalingStatDistributionDetailRouteArgs {
     this.scalingStatDistributionKey,
   });
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? scalingStatDistributionKey;
 
@@ -1646,13 +1648,13 @@ class ScalingStatDistributionDetailRouteArgs {
 
 /// generated route for
 /// [_i46.ScalingStatDistributionListPage]
-class ScalingStatDistributionListRoute extends _i58.PageRouteInfo<void> {
-  const ScalingStatDistributionListRoute({List<_i58.PageRouteInfo>? children})
+class ScalingStatDistributionListRoute extends _i60.PageRouteInfo<void> {
+  const ScalingStatDistributionListRoute({List<_i60.PageRouteInfo>? children})
     : super(ScalingStatDistributionListRoute.name, initialChildren: children);
 
   static const String name = 'ScalingStatDistributionListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i46.ScalingStatDistributionListPage();
@@ -1663,11 +1665,11 @@ class ScalingStatDistributionListRoute extends _i58.PageRouteInfo<void> {
 /// generated route for
 /// [_i47.ScalingStatValueDetailPage]
 class ScalingStatValueDetailRoute
-    extends _i58.PageRouteInfo<ScalingStatValueDetailRouteArgs> {
+    extends _i60.PageRouteInfo<ScalingStatValueDetailRouteArgs> {
   ScalingStatValueDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? scalingStatValueKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          ScalingStatValueDetailRoute.name,
          args: ScalingStatValueDetailRouteArgs(
@@ -1679,7 +1681,7 @@ class ScalingStatValueDetailRoute
 
   static const String name = 'ScalingStatValueDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ScalingStatValueDetailRouteArgs>(
@@ -1696,7 +1698,7 @@ class ScalingStatValueDetailRoute
 class ScalingStatValueDetailRouteArgs {
   const ScalingStatValueDetailRouteArgs({this.key, this.scalingStatValueKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? scalingStatValueKey;
 
@@ -1718,13 +1720,13 @@ class ScalingStatValueDetailRouteArgs {
 
 /// generated route for
 /// [_i48.ScalingStatValueListPage]
-class ScalingStatValueListRoute extends _i58.PageRouteInfo<void> {
-  const ScalingStatValueListRoute({List<_i58.PageRouteInfo>? children})
+class ScalingStatValueListRoute extends _i60.PageRouteInfo<void> {
+  const ScalingStatValueListRoute({List<_i60.PageRouteInfo>? children})
     : super(ScalingStatValueListRoute.name, initialChildren: children);
 
   static const String name = 'ScalingStatValueListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i48.ScalingStatValueListPage();
@@ -1734,13 +1736,13 @@ class ScalingStatValueListRoute extends _i58.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i49.SettingPage]
-class SettingRoute extends _i58.PageRouteInfo<void> {
-  const SettingRoute({List<_i58.PageRouteInfo>? children})
+class SettingRoute extends _i60.PageRouteInfo<void> {
+  const SettingRoute({List<_i60.PageRouteInfo>? children})
     : super(SettingRoute.name, initialChildren: children);
 
   static const String name = 'SettingRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       return const _i49.SettingPage();
@@ -1749,13 +1751,82 @@ class SettingRoute extends _i58.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i50.SmartScriptDetailPage]
+/// [_i50.SkillLineDetailPage]
+class SkillLineDetailRoute
+    extends _i60.PageRouteInfo<SkillLineDetailRouteArgs> {
+  SkillLineDetailRoute({
+    _i61.Key? key,
+    int? skillLineKey,
+    List<_i60.PageRouteInfo>? children,
+  }) : super(
+         SkillLineDetailRoute.name,
+         args: SkillLineDetailRouteArgs(key: key, skillLineKey: skillLineKey),
+         initialChildren: children,
+       );
+
+  static const String name = 'SkillLineDetailRoute';
+
+  static _i60.PageInfo page = _i60.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SkillLineDetailRouteArgs>(
+        orElse: () => const SkillLineDetailRouteArgs(),
+      );
+      return _i50.SkillLineDetailPage(
+        key: args.key,
+        skillLineKey: args.skillLineKey,
+      );
+    },
+  );
+}
+
+class SkillLineDetailRouteArgs {
+  const SkillLineDetailRouteArgs({this.key, this.skillLineKey});
+
+  final _i61.Key? key;
+
+  final int? skillLineKey;
+
+  @override
+  String toString() {
+    return 'SkillLineDetailRouteArgs{key: $key, skillLineKey: $skillLineKey}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SkillLineDetailRouteArgs) return false;
+    return key == other.key && skillLineKey == other.skillLineKey;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ skillLineKey.hashCode;
+}
+
+/// generated route for
+/// [_i51.SkillLineListPage]
+class SkillLineListRoute extends _i60.PageRouteInfo<void> {
+  const SkillLineListRoute({List<_i60.PageRouteInfo>? children})
+    : super(SkillLineListRoute.name, initialChildren: children);
+
+  static const String name = 'SkillLineListRoute';
+
+  static _i60.PageInfo page = _i60.PageInfo(
+    name,
+    builder: (data) {
+      return const _i51.SkillLineListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i52.SmartScriptDetailPage]
 class SmartScriptDetailRoute
-    extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
+    extends _i60.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
-    _i59.Key? key,
-    _i64.SmartScriptKey? scriptKey,
-    List<_i58.PageRouteInfo>? children,
+    _i61.Key? key,
+    _i66.SmartScriptKey? scriptKey,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
          args: SmartScriptDetailRouteArgs(key: key, scriptKey: scriptKey),
@@ -1764,13 +1835,13 @@ class SmartScriptDetailRoute
 
   static const String name = 'SmartScriptDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SmartScriptDetailRouteArgs>(
         orElse: () => const SmartScriptDetailRouteArgs(),
       );
-      return _i50.SmartScriptDetailPage(
+      return _i52.SmartScriptDetailPage(
         key: args.key,
         scriptKey: args.scriptKey,
       );
@@ -1781,9 +1852,9 @@ class SmartScriptDetailRoute
 class SmartScriptDetailRouteArgs {
   const SmartScriptDetailRouteArgs({this.key, this.scriptKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
-  final _i64.SmartScriptKey? scriptKey;
+  final _i66.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1802,28 +1873,28 @@ class SmartScriptDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i51.SmartScriptListPage]
-class SmartScriptListRoute extends _i58.PageRouteInfo<void> {
-  const SmartScriptListRoute({List<_i58.PageRouteInfo>? children})
+/// [_i53.SmartScriptListPage]
+class SmartScriptListRoute extends _i60.PageRouteInfo<void> {
+  const SmartScriptListRoute({List<_i60.PageRouteInfo>? children})
     : super(SmartScriptListRoute.name, initialChildren: children);
 
   static const String name = 'SmartScriptListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
-      return const _i51.SmartScriptListPage();
+      return const _i53.SmartScriptListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i52.SpellDetailPage]
-class SpellDetailRoute extends _i58.PageRouteInfo<SpellDetailRouteArgs> {
+/// [_i54.SpellDetailPage]
+class SpellDetailRoute extends _i60.PageRouteInfo<SpellDetailRouteArgs> {
   SpellDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? spellKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          SpellDetailRoute.name,
          args: SpellDetailRouteArgs(key: key, spellKey: spellKey),
@@ -1832,13 +1903,13 @@ class SpellDetailRoute extends _i58.PageRouteInfo<SpellDetailRouteArgs> {
 
   static const String name = 'SpellDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SpellDetailRouteArgs>(
         orElse: () => const SpellDetailRouteArgs(),
       );
-      return _i52.SpellDetailPage(key: args.key, spellKey: args.spellKey);
+      return _i54.SpellDetailPage(key: args.key, spellKey: args.spellKey);
     },
   );
 }
@@ -1846,7 +1917,7 @@ class SpellDetailRoute extends _i58.PageRouteInfo<SpellDetailRouteArgs> {
 class SpellDetailRouteArgs {
   const SpellDetailRouteArgs({this.key, this.spellKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? spellKey;
 
@@ -1867,13 +1938,13 @@ class SpellDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i53.SpellItemEnchantmentDetailPage]
+/// [_i55.SpellItemEnchantmentDetailPage]
 class SpellItemEnchantmentDetailRoute
-    extends _i58.PageRouteInfo<SpellItemEnchantmentDetailRouteArgs> {
+    extends _i60.PageRouteInfo<SpellItemEnchantmentDetailRouteArgs> {
   SpellItemEnchantmentDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? spellItemEnchantmentKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          SpellItemEnchantmentDetailRoute.name,
          args: SpellItemEnchantmentDetailRouteArgs(
@@ -1885,13 +1956,13 @@ class SpellItemEnchantmentDetailRoute
 
   static const String name = 'SpellItemEnchantmentDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SpellItemEnchantmentDetailRouteArgs>(
         orElse: () => const SpellItemEnchantmentDetailRouteArgs(),
       );
-      return _i53.SpellItemEnchantmentDetailPage(
+      return _i55.SpellItemEnchantmentDetailPage(
         key: args.key,
         spellItemEnchantmentKey: args.spellItemEnchantmentKey,
       );
@@ -1905,7 +1976,7 @@ class SpellItemEnchantmentDetailRouteArgs {
     this.spellItemEnchantmentKey,
   });
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? spellItemEnchantmentKey;
 
@@ -1927,44 +1998,44 @@ class SpellItemEnchantmentDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i54.SpellItemEnchantmentListPage]
-class SpellItemEnchantmentListRoute extends _i58.PageRouteInfo<void> {
-  const SpellItemEnchantmentListRoute({List<_i58.PageRouteInfo>? children})
+/// [_i56.SpellItemEnchantmentListPage]
+class SpellItemEnchantmentListRoute extends _i60.PageRouteInfo<void> {
+  const SpellItemEnchantmentListRoute({List<_i60.PageRouteInfo>? children})
     : super(SpellItemEnchantmentListRoute.name, initialChildren: children);
 
   static const String name = 'SpellItemEnchantmentListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
-      return const _i54.SpellItemEnchantmentListPage();
+      return const _i56.SpellItemEnchantmentListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i55.SpellListPage]
-class SpellListRoute extends _i58.PageRouteInfo<void> {
-  const SpellListRoute({List<_i58.PageRouteInfo>? children})
+/// [_i57.SpellListPage]
+class SpellListRoute extends _i60.PageRouteInfo<void> {
+  const SpellListRoute({List<_i60.PageRouteInfo>? children})
     : super(SpellListRoute.name, initialChildren: children);
 
   static const String name = 'SpellListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
-      return const _i55.SpellListPage();
+      return const _i57.SpellListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i56.TalentDetailPage]
-class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
+/// [_i58.TalentDetailPage]
+class TalentDetailRoute extends _i60.PageRouteInfo<TalentDetailRouteArgs> {
   TalentDetailRoute({
-    _i59.Key? key,
+    _i61.Key? key,
     int? talentKey,
-    List<_i58.PageRouteInfo>? children,
+    List<_i60.PageRouteInfo>? children,
   }) : super(
          TalentDetailRoute.name,
          args: TalentDetailRouteArgs(key: key, talentKey: talentKey),
@@ -1973,13 +2044,13 @@ class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
 
   static const String name = 'TalentDetailRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TalentDetailRouteArgs>(
         orElse: () => const TalentDetailRouteArgs(),
       );
-      return _i56.TalentDetailPage(key: args.key, talentKey: args.talentKey);
+      return _i58.TalentDetailPage(key: args.key, talentKey: args.talentKey);
     },
   );
 }
@@ -1987,7 +2058,7 @@ class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
 class TalentDetailRouteArgs {
   const TalentDetailRouteArgs({this.key, this.talentKey});
 
-  final _i59.Key? key;
+  final _i61.Key? key;
 
   final int? talentKey;
 
@@ -2008,17 +2079,17 @@ class TalentDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i57.TalentListPage]
-class TalentListRoute extends _i58.PageRouteInfo<void> {
-  const TalentListRoute({List<_i58.PageRouteInfo>? children})
+/// [_i59.TalentListPage]
+class TalentListRoute extends _i60.PageRouteInfo<void> {
+  const TalentListRoute({List<_i60.PageRouteInfo>? children})
     : super(TalentListRoute.name, initialChildren: children);
 
   static const String name = 'TalentListRoute';
 
-  static _i58.PageInfo page = _i58.PageInfo(
+  static _i60.PageInfo page = _i60.PageInfo(
     name,
     builder: (data) {
-      return const _i57.TalentListPage();
+      return const _i59.TalentListPage();
     },
   );
 }

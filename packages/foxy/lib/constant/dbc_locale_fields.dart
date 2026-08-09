@@ -225,19 +225,24 @@ class DbcLocaleFields {
   static final skillLineDisplayName = DbcLocaleFieldDefinition(
     tableName: 'dbc_skill_line',
     columnPrefix: 'DisplayName_lang',
-    label: '技能线名称',
+    label: '专业技能名称',
   );
 
   static final skillLineDescription = DbcLocaleFieldDefinition(
     tableName: 'dbc_skill_line',
     columnPrefix: 'Description_lang',
-    label: '技能线描述',
+    label: '专业技能描述',
     multiline: true,
   );
   static final skillLineAlternateVerb = DbcLocaleFieldDefinition(
     tableName: 'dbc_skill_line',
     columnPrefix: 'AlternateVerb_lang',
     label: '备选动词',
+  );
+  static final skillLineCategoryName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_skill_line_category',
+    columnPrefix: 'Name_lang',
+    label: '专业技能分类名称',
   );
   // --- talent_tab ---
   static final talentTabName = DbcLocaleFieldDefinition(
@@ -291,6 +296,7 @@ class DbcLocaleFields {
     skillLineDisplayName,
     skillLineDescription,
     skillLineAlternateVerb,
+    skillLineCategoryName,
     talentTabName,
     totemCategoryName,
   ];

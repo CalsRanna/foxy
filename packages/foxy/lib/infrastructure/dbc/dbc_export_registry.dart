@@ -42,7 +42,12 @@ import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
+import 'package:foxy/repository/skill_line_ability_repository.dart';
+import 'package:foxy/repository/skill_line_category_repository.dart';
+import 'package:foxy/repository/skill_costs_data_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
+import 'package:foxy/repository/skill_race_class_info_repository.dart';
+import 'package:foxy/repository/skill_tiers_repository.dart';
 import 'package:foxy/repository/sound_ambience_repository.dart';
 import 'package:foxy/repository/sound_provider_preferences_repository.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
@@ -182,6 +187,11 @@ class DbcExportRegistry {
     final scalingValue = getIt.get<ScalingStatValueRepository>();
     final spell = getIt.get<SpellRepository>();
     final skillLine = getIt.get<SkillLineRepository>();
+    final skillLineAbility = getIt.get<SkillLineAbilityRepository>();
+    final skillLineCategory = getIt.get<SkillLineCategoryRepository>();
+    final skillCostsData = getIt.get<SkillCostsDataRepository>();
+    final skillTiers = getIt.get<SkillTiersRepository>();
+    final skillRaceClassInfo = getIt.get<SkillRaceClassInfoRepository>();
     final soundAmbience = getIt.get<SoundAmbienceRepository>();
     final soundProviderPreferences = getIt
         .get<SoundProviderPreferencesRepository>();
@@ -434,6 +444,31 @@ class DbcExportRegistry {
       'dbc_skill_line': DbcExportDelegate.typed(
         load: skillLine.getSkillLines,
         count: () => skillLine.countSkillLines(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_skill_line_ability': DbcExportDelegate.typed(
+        load: skillLineAbility.getAllSkillLineAbilities,
+        count: () => skillLineAbility.countAllSkillLineAbilities(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_skill_line_category': DbcExportDelegate.typed(
+        load: skillLineCategory.getSkillLineCategories,
+        count: () => skillLineCategory.countSkillLineCategories(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_skill_costs_data': DbcExportDelegate.typed(
+        load: skillCostsData.getSkillCostsDatas,
+        count: () => skillCostsData.countSkillCostsDatas(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_skill_tiers': DbcExportDelegate.typed(
+        load: skillTiers.getAllSkillTiers,
+        count: () => skillTiers.countAllSkillTiers(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_skill_race_class_info': DbcExportDelegate.typed(
+        load: skillRaceClassInfo.getSkillRaceClassInfos,
+        count: () => skillRaceClassInfo.countSkillRaceClassInfos(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_sound_ambience': DbcExportDelegate.typed(

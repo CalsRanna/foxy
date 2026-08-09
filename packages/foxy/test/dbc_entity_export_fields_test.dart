@@ -44,7 +44,12 @@ import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
+import 'package:foxy/entity/skill_costs_data_entity.dart';
+import 'package:foxy/entity/skill_line_ability_entity.dart';
+import 'package:foxy/entity/skill_line_category_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
+import 'package:foxy/entity/skill_race_class_info_entity.dart';
+import 'package:foxy/entity/skill_tiers_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/spell_duration_entity.dart';
@@ -65,7 +70,7 @@ import 'package:warcrafty/warcrafty.dart';
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(61));
+    expect(dbcDefinitions, hasLength(66));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);
@@ -162,6 +167,11 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
       const SpellItemEnchantmentConditionEntity().toJson(),
     'dbc_spell_range' => const SpellRangeEntity().toJson(),
     'dbc_skill_line' => const SkillLineEntity().toJson(),
+    'dbc_skill_line_ability' => const SkillLineAbilityEntity().toJson(),
+    'dbc_skill_line_category' => const SkillLineCategoryEntity().toJson(),
+    'dbc_skill_costs_data' => const SkillCostsDataEntity().toJson(),
+    'dbc_skill_tiers' => const SkillTiersEntity().toJson(),
+    'dbc_skill_race_class_info' => const SkillRaceClassInfoEntity().toJson(),
     'dbc_sound_ambience' => const SoundAmbienceEntity().toJson(),
     'dbc_sound_provider_preferences' =>
       const SoundProviderPreferencesEntity().toJson(),
@@ -253,6 +263,12 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
       SpellItemEnchantmentConditionEntity.fromJson(row).toJson(),
     'dbc_spell_range' => SpellRangeEntity.fromJson(row).toJson(),
     'dbc_skill_line' => SkillLineEntity.fromJson(row).toJson(),
+    'dbc_skill_line_ability' => SkillLineAbilityEntity.fromJson(row).toJson(),
+    'dbc_skill_line_category' => SkillLineCategoryEntity.fromJson(row).toJson(),
+    'dbc_skill_costs_data' => SkillCostsDataEntity.fromJson(row).toJson(),
+    'dbc_skill_tiers' => SkillTiersEntity.fromJson(row).toJson(),
+    'dbc_skill_race_class_info' =>
+      SkillRaceClassInfoEntity.fromJson(row).toJson(),
     'dbc_sound_ambience' => SoundAmbienceEntity.fromJson(row).toJson(),
     'dbc_sound_provider_preferences' => SoundProviderPreferencesEntity.fromJson(
       row,

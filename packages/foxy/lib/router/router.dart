@@ -102,6 +102,10 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: TalentListRoute.page),
       AutoRoute(page: TalentDetailRoute.page),
 
+      /// Skill Line
+      AutoRoute(page: SkillLineListRoute.page),
+      AutoRoute(page: SkillLineDetailRoute.page),
+
       /// Scaling Stat Value
       AutoRoute(page: ScalingStatValueListRoute.page),
       AutoRoute(page: ScalingStatValueDetailRoute.page),
