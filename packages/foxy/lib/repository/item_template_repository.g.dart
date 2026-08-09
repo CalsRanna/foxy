@@ -5,36 +5,25 @@ part of 'item_template_repository.dart';
 final class ItemTemplateFilter {
   final String entry;
   final String name;
-  final String description;
 
-  const ItemTemplateFilter({
-    this.entry = '',
-    this.name = '',
-    this.description = '',
-  });
+  const ItemTemplateFilter({this.entry = '', this.name = ''});
 
   factory ItemTemplateFilter.fromJson(Map<String, dynamic> json) {
     return ItemTemplateFilter(
       entry: json['entry']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
-      description: json['description']?.toString() ?? '',
     );
   }
 
-  ItemTemplateFilter copyWith({
-    String? entry,
-    String? name,
-    String? description,
-  }) {
+  ItemTemplateFilter copyWith({String? entry, String? name}) {
     return ItemTemplateFilter(
       entry: entry ?? this.entry,
       name: name ?? this.name,
-      description: description ?? this.description,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'entry': entry, 'name': name, 'description': description};
+    return {'entry': entry, 'name': name};
   }
 }
 
@@ -161,9 +150,6 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where('`name`', filter.name);
-    }
-    if (filter.description.isNotEmpty) {
-      builder = builder.where('`description`', filter.description);
     }
     return builder;
   }

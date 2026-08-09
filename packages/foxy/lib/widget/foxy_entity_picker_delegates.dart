@@ -1964,7 +1964,6 @@ class FoxyEntityPickerDelegates {
     filters: const [
       FoxyEntityPickerFilter('编号'),
       FoxyEntityPickerFilter('名称'),
-      FoxyEntityPickerFilter('描述'),
     ],
     columns: [
       FoxyEntityPickerColumn(
@@ -2000,7 +1999,6 @@ class FoxyEntityPickerDelegates {
           filter: ItemTemplateFilter(
             entry: v[0],
             name: v[1],
-            description: v[2],
           ),
           page: page,
         ),
@@ -2009,7 +2007,6 @@ class FoxyEntityPickerDelegates {
           filter: ItemTemplateFilter(
             entry: v[0],
             name: v[1],
-            description: v[2],
           ),
         ),
   );

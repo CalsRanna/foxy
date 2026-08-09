@@ -10,7 +10,6 @@ part 'item_template_repository.g.dart';
 @FoxyRepository()
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
-@FoxyFilter.text('description')
 class ItemTemplateRepository
     with RepositoryMixin, _ItemTemplateRepositoryMixin {
   static const _localeTable = 'item_template_locale';
@@ -31,9 +30,7 @@ class ItemTemplateRepository
   @override
   Future<int> countItemTemplates({ItemTemplateFilter? filter}) async {
     final needsLocaleJoin =
-        localeEnabled &&
-        filter != null &&
-        (filter.name.isNotEmpty || filter.description.isNotEmpty);
+        localeEnabled && filter != null && filter.name.isNotEmpty;
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null) {
@@ -44,13 +41,6 @@ class ItemTemplateRepository
           builder = builder.where(
             'name',
             '%${escapeLike(filter.name)}%',
-            comparator: 'like',
-          );
-        }
-        if (filter.description.isNotEmpty) {
-          builder = builder.where(
-            'description',
-            '%${escapeLike(filter.description)}%',
             comparator: 'like',
           );
         }
@@ -133,21 +123,6 @@ class ItemTemplateRepository
         builder = builder.where(
           'it.name',
           '%${escapeLike(filter.name)}%',
-          comparator: 'like',
-        );
-      }
-    }
-    if (filter.description.isNotEmpty) {
-      if (localeEnabled) {
-        builder = builder.whereAny(
-          ['it.description', 'itl.Description'],
-          '%${escapeLike(filter.description)}%',
-          comparator: 'like',
-        );
-      } else {
-        builder = builder.where(
-          'it.description',
-          '%${escapeLike(filter.description)}%',
           comparator: 'like',
         );
       }

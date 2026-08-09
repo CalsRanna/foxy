@@ -74,10 +74,6 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       controller: viewModel.nameController,
       placeholder: '名称（name）',
     );
-    var descriptionInput = FoxyStringInput(
-      controller: viewModel.descriptionController,
-      placeholder: '描述（description）',
-    );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
       size: ShadButtonSize.sm,
@@ -92,8 +88,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     final children = [
       Expanded(child: entryInput),
       Expanded(child: nameInput),
-      Expanded(child: descriptionInput),
-      Expanded(child: row),
+      Expanded(flex: 2, child: row),
     ];
     return Row(spacing: 16, children: children);
   }
@@ -147,7 +142,8 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
         FoxyTableColumn.fixed(
           label: '子类别',
           width: 120,
-          cell: (_, item) => Text(getItemSubclassName(item.classId, item.subclass)),
+          cell: (_, item) =>
+              Text(getItemSubclassName(item.classId, item.subclass)),
         ),
         FoxyTableColumn.fixed(
           label: '佩戴位置',

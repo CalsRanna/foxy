@@ -23,10 +23,6 @@ mixin _ItemTemplateListViewModelMixin
 
   late final nameController = registerController(StringFieldController());
 
-  late final descriptionController = registerController(
-    StringFieldController(),
-  );
-
   int _refreshToken = 0;
 
   Future<void> copy(int key) async {
@@ -84,7 +80,6 @@ mixin _ItemTemplateListViewModelMixin
   Future<void> reset() async {
     entryController.init('');
     nameController.init('');
-    descriptionController.init('');
     page.value = 1;
     markQueryVersion();
     await _refresh();
@@ -100,7 +95,6 @@ mixin _ItemTemplateListViewModelMixin
     return ItemTemplateFilter(
       entry: entryController.collect(),
       name: nameController.collect(),
-      description: descriptionController.collect(),
     );
   }
 
