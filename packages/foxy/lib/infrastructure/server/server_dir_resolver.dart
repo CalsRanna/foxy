@@ -30,12 +30,13 @@ class ServerDirResolver {
   };
 
   /// Returns the first directory directly containing `.dbc` files, or null
-  /// when none is found.
+  /// when none is found. Returned paths are normalized to the platform
+  /// separator (Windows `Directory.path` can otherwise mix `\` and `/`).
   static Future<String?> findDbcDir(String serverRoot) async {
     // Common locations first: shallow, fast to check.
     for (final relative in const ['data/dbc', 'dbc']) {
       final candidate = Directory(p.join(serverRoot, relative));
-      if (await _containsDbc(candidate)) return candidate.path;
+      if (await _containsDbc(candidate)) return p.normalize(candidate.path);
     }
     return _search(serverRoot, 0);
   }
@@ -48,7 +49,7 @@ class ServerDirResolver {
         if (entity is! Directory) continue;
         final name = p.basename(entity.path).toLowerCase();
         if (_skipNames.contains(name)) continue;
-        if (await _containsDbc(entity)) return entity.path;
+        if (await _containsDbc(entity)) return p.normalize(entity.path);
         final found = await _search(entity.path, depth + 1);
         if (found != null) return found;
       }
