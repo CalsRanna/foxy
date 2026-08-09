@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
@@ -19,8 +18,11 @@ class DbcExportUtil {
     try {
       await probe.writeAsString('');
     } catch (error) {
-      throw ValidationException(
-        '输出目录不可写，请检查权限或更换目录后重试: $path ($error)',
+      // FileSystemException has a dedicated foxyErrorMessage mapping;
+      // English message (Chinese copy comes from the mapping by type).
+      throw FileSystemException(
+        'output directory is not writable: $path ($error)',
+        path,
       );
     } finally {
       try {
