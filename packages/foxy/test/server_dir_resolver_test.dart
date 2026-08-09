@@ -23,21 +23,29 @@ void main() {
   File dbc(String relative) => File(p.join(root, relative))
     ..createSync(recursive: true);
 
+  /// 期望路径:findDbcDir 返回的路径来自 Directory 遍历(Windows 上为
+  /// 正斜杠),这里同样用 root 拼接 + normalize,避免与 p.join 的
+  /// 反斜杠在 Windows 上不一致。
+  String expected(String relative) => p.normalize('$root/$relative');
+
   test('标准位置 data/dbc 命中', () async {
     dbc('data/dbc/Spell.dbc');
-    expect(await ServerDirResolver.findDbcDir(root), p.join(root, 'data', 'dbc'));
+    expect(
+      await ServerDirResolver.findDbcDir(root),
+      expected('data/dbc'),
+    );
   });
 
   test('备选位置 dbc 命中', () async {
     dbc('dbc/Spell.dbc');
-    expect(await ServerDirResolver.findDbcDir(root), p.join(root, 'dbc'));
+    expect(await ServerDirResolver.findDbcDir(root), expected('dbc'));
   });
 
   test('深层目录递归命中', () async {
     dbc('x/y/data/dbc/Spell.dbc');
     expect(
       await ServerDirResolver.findDbcDir(root),
-      p.join(root, 'x', 'y', 'data', 'dbc'),
+      expected('x/y/data/dbc'),
     );
   });
 
@@ -52,7 +60,7 @@ void main() {
     dbc('custom/dbc/Spell.dbc');
     expect(
       await ServerDirResolver.findDbcDir(root),
-      p.join(root, 'custom', 'dbc'),
+      expected('custom/dbc'),
     );
   });
 
@@ -71,6 +79,6 @@ void main() {
   test('返回第一个含 .dbc 的目录(先浅后深)', () async {
     dbc('a/Spell.dbc');
     dbc('a/b/deep/Spell.dbc');
-    expect(await ServerDirResolver.findDbcDir(root), p.join(root, 'a'));
+    expect(await ServerDirResolver.findDbcDir(root), expected('a'));
   });
 }
