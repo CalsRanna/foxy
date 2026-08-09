@@ -38,6 +38,43 @@ void main() {
     },
   ];
 
+  List<Map<String, dynamic>> iconRows() => [
+    {
+      'ID': 1,
+      'Name': 'TestIcon',
+      'TextureFilename': 'INV_Foo',
+      'TextureFilename2': '',
+      'TextureFilename3': '',
+      'TextureFilename4': '',
+      'TextureFilename5': '',
+      'TextureFilename6': '',
+      'TextureFilename7': '',
+      'TextureFilename8': '',
+      'TextureFilename9': '',
+      'TextureFilename10': '',
+      'TextureFilename11': '',
+      'TextureFilename12': '',
+      'TextureFilename13': '',
+      'TextureFilename14': '',
+      'TextureFilename15': '',
+      'TextureFilename16': '',
+      'TextureFilename17': '',
+      'TextureFilename18': '',
+      'TextureFilename19': '',
+      'TextureFilename20': '',
+      'TextureFilename21': '',
+      'TextureFilename22': '',
+      'TextureFilename23': '',
+      'TextureFilename24': '',
+      'TextureFilename25': '',
+      'TextureFilename26': '',
+      'TextureFilename27': '',
+      'TextureFilename28': '',
+      'TextureFilename29': '',
+      'TextureFilename30': '',
+    },
+  ];
+
   /// Reads a DBC back out of the generated MPQ and verifies its rows.
   void expectArchiveDbc(String mpqPath, String dbcName, int expectedRecords) {
     final archive = MpqArchive.open(mpqPath);
@@ -57,45 +94,8 @@ void main() {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
     final summary = await buildMpqPatch(
       definitions: [duration, icon],
-      loadRows: (table) async {
-        if (table == duration.tableName) return durationRows();
-        return [
-          {
-            'ID': 1,
-            'Name': 'TestIcon',
-            'TextureFilename': 'INV_Foo',
-            'TextureFilename2': '',
-            'TextureFilename3': '',
-            'TextureFilename4': '',
-            'TextureFilename5': '',
-            'TextureFilename6': '',
-            'TextureFilename7': '',
-            'TextureFilename8': '',
-            'TextureFilename9': '',
-            'TextureFilename10': '',
-            'TextureFilename11': '',
-            'TextureFilename12': '',
-            'TextureFilename13': '',
-            'TextureFilename14': '',
-            'TextureFilename15': '',
-            'TextureFilename16': '',
-            'TextureFilename17': '',
-            'TextureFilename18': '',
-            'TextureFilename19': '',
-            'TextureFilename20': '',
-            'TextureFilename21': '',
-            'TextureFilename22': '',
-            'TextureFilename23': '',
-            'TextureFilename24': '',
-            'TextureFilename25': '',
-            'TextureFilename26': '',
-            'TextureFilename27': '',
-            'TextureFilename28': '',
-            'TextureFilename29': '',
-            'TextureFilename30': '',
-          },
-        ];
-      },
+      loadRows: (table) async =>
+          table == duration.tableName ? durationRows() : iconRows(),
       mpqFilePath: mpqPath,
       isCancelled: () => false,
     );
@@ -154,6 +154,30 @@ void main() {
 
     expect(summary.completed, 0);
     expect(await File(mpqPath).exists(), isFalse);
+  });
+
+  test('buildMpqPatch 打包阶段中途取消 → 无目标文件且 tmp 清理', () async {
+    final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
+    // 写表阶段放行前 4 次检查;打包阶段 addFile 循环的第 2 个文件时取消。
+    var checks = 0;
+    final summary = await buildMpqPatch(
+      definitions: [duration, icon],
+      loadRows: (table) async =>
+          table == duration.tableName ? durationRows() : iconRows(),
+      mpqFilePath: mpqPath,
+      isCancelled: () => ++checks >= 6,
+    );
+
+    // 两表都在取消前写完;打包中断 → target 不存在,tmp 被清理。
+    expect(summary.completed, 2);
+    expect(await File(mpqPath).exists(), isFalse);
+    final leftovers = outDir
+        .listSync()
+        .where(
+          (entity) =>
+              entity is File && entity.path.toLowerCase().contains('.tmp'),
+        );
+    expect(leftovers, isEmpty);
   });
 
   test('buildMpqPatch 输出目录不存在时抛错', () async {

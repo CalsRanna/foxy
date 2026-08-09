@@ -153,7 +153,12 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildDbcSection() {
     return Watch((_) {
-      final busy = importViewModel.isRunning || exportViewModel.isRunning;
+      // DBC tasks share the single DbcSyncUtil: nothing may run while an
+      // import/export/MPQ-export is in flight.
+      final busy =
+          importViewModel.isRunning ||
+          exportViewModel.isRunning ||
+          mpqViewModel.isRunning;
       return _SettingSection(
         title: 'DBC 数据管理',
         children: [
@@ -298,6 +303,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void dispose() {
     exportViewModel.dispose();
+    mpqViewModel.dispose();
     super.dispose();
   }
 
