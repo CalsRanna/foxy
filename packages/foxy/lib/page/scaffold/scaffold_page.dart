@@ -4,9 +4,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foxy/page/setting/dbc_reminder_dialog.dart';
 import 'package:foxy/page/setting/setup_wizard_dialog.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
@@ -193,7 +195,30 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     if (!mounted) return;
     if (!setupViewModel.isSetupComplete) {
       _showSetupWizard();
+      return;
     }
+    await _checkDbcReminder();
+  }
+
+  /// Startup reminder for DBC tables that were never imported (e.g. after
+  /// an upgrade adds new definitions). Best-effort: any failure is silently
+  /// ignored so it never disturbs startup.
+  Future<void> _checkDbcReminder() async {
+    try {
+      final reminder =
+          await GetIt.instance.get<CheckDbcReminderUseCase>().execute();
+      if (!mounted || !reminder.shouldRemind) return;
+      _showDbcReminderDialog(reminder);
+    } catch (_) {
+      // The reminder is best-effort; failures must not affect startup.
+    }
+  }
+
+  void _showDbcReminderDialog(DbcReminderCheckResult result) {
+    showFoxyDialog(
+      context: context,
+      builder: (ctx) => DbcReminderDialog(result: result),
+    );
   }
 
   void _showSetupWizard() {

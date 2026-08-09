@@ -144,6 +144,7 @@ import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/use_case/bootstrap/bootstrap_application_use_case.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
+import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
@@ -643,6 +644,12 @@ class DI {
         featureRepository: _instance.get<FeatureRepository>(),
         settingRepository: _instance.get<SettingRepository>(),
         versionRepository: _instance.get<VersionRepository>(),
+      ),
+    );
+    _instance.registerLazySingleton(
+      () => CheckDbcReminderUseCase(
+        checkTables: () => _instance.get<DbcSyncUtil>().checkTables(),
+        configUtil: _instance.get<ConfigUtil>(),
       ),
     );
     _instance.registerFactory(
