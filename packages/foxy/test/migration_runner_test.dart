@@ -27,8 +27,8 @@ void main() {
         isEmpty,
       );
       expect(driver.sqlLog, contains(contains('create table if not exists')));
-      // All 7 migrations run and are recorded in foxy.migrations.
-      expect(driver.appliedMigrations, hasLength(9));
+      // All migrations run and are recorded in foxy.migrations.
+      expect(driver.appliedMigrations, hasLength(10));
       expect(
         driver.appliedMigrations,
         containsAll([
@@ -38,6 +38,7 @@ void main() {
           'migration_202608030000',
           'migration_202608090000',
           'migration_202608090001',
+          'migration_202608090002',
         ]),
       );
       // With an empty information_schema driver, 202607190000 takes the
@@ -76,7 +77,7 @@ void main() {
           .length;
       // A second run produces no INSERTs (all skipped).
       expect(insertCountAfterSecondRun, insertCountAfterFirstRun);
-      expect(driver.appliedMigrations, hasLength(9));
+      expect(driver.appliedMigrations, hasLength(10));
     });
 
     test('存在非 utf8mb4 存量表时,引导段逐个转换后仍跑完迁移', () async {
@@ -96,7 +97,7 @@ void main() {
       expect(converts.first, contains('`features`'));
       expect(converts.last, contains('`activity_log`'));
       // Existing legacy tables do not affect migration execution.
-      expect(driver.appliedMigrations, hasLength(9));
+      expect(driver.appliedMigrations, hasLength(10));
     });
 
     test('迁移执行失败时不记录版本,后续迁移不执行', () async {

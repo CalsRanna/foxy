@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -12,6 +13,50 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 /// the export core can be unit-tested without a database.
 typedef DbcExportRowLoader =
     Future<List<Map<String, dynamic>>> Function(String tableName);
+
+/// Whether [tableName] carries the hidden row-order column (see
+/// [dbcRowOrderColumn]); tables imported before the column existed do not
+/// have it.
+Future<bool> dbcTableHasRowOrderColumn(Laconic laconic, String tableName) async {
+  final rows = await laconic.select(
+    "select column_name from information_schema.columns "
+    "where table_schema = 'foxy' and table_name = '$tableName' "
+    "and column_name = '$dbcRowOrderColumn'",
+  );
+  return rows.isNotEmpty;
+}
+
+/// SELECT used to load one DBC table for export, in the original DBC file
+/// order when [hasRowOrder]: imported rows by their stored file position,
+/// app-created rows (NULL) appended last in ID order. Order-sensitive DBCs
+/// such as Talent.dbc rely on this — the 3.3.5 client derives the
+/// talent-tree layout from the file row order. Legacy tables fall back to
+/// the historical unordered scan (InnoDB primary-key order).
+String dbcExportSelectSql(String tableName, {required bool hasRowOrder}) {
+  final orderBy = hasRowOrder
+      ? ' order by ($dbcRowOrderColumn is null) asc, '
+            '$dbcRowOrderColumn asc, `ID` asc'
+      : '';
+  return 'select * from foxy.$tableName$orderBy';
+}
+
+/// Loads one DBC table for export, preserving the original file row order
+/// when the table stores it. Shared by the plain DBC-export worker and the
+/// MPQ-patch worker. The hidden row-order column is stripped from the
+/// returned rows so consumers only ever see schema fields.
+Future<List<Map<String, dynamic>>> loadDbcRowsForExport(
+  Laconic laconic,
+  String tableName,
+) async {
+  final hasRowOrder = await dbcTableHasRowOrderColumn(laconic, tableName);
+  final rows = await laconic.select(
+    dbcExportSelectSql(tableName, hasRowOrder: hasRowOrder),
+  );
+  return [
+    for (final row in rows)
+      Map<String, dynamic>.from(row.toMap())..remove(dbcRowOrderColumn),
+  ];
+}
 
 /// Aggregated result of [writeDbcFiles]; `errors` uses the worker wire
 /// format (map list) so it can travel back through the SendPort as-is.
@@ -153,10 +198,7 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
 
     final summary = await writeDbcFiles(
       definitions: definitions,
-      loadRows: (table) async {
-        final rows = await laconic!.select('select * from foxy.$table');
-        return [for (final row in rows) Map<String, dynamic>.from(row.toMap())];
-      },
+      loadRows: (table) => loadDbcRowsForExport(laconic!, table),
       outputDirectory: outputDirectory,
       isCancelled: () => cancelled,
       onProgress: (fileName, completedFiles, totalFiles, processed, total) {

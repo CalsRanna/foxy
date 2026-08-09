@@ -37,6 +37,21 @@ void main() {
     },
   ];
 
+  test('导出 SQL: 有行序列时按原文件顺序排序,新行(NULL)排在末尾', () {
+    expect(
+      dbcExportSelectSql('dbc_talent', hasRowOrder: true),
+      'select * from foxy.dbc_talent order by (__dbc_order is null) asc, '
+      '__dbc_order asc, `ID` asc',
+    );
+  });
+
+  test('导出 SQL: 无行序列的旧表保持原样(无 ORDER BY)', () {
+    expect(
+      dbcExportSelectSql('dbc_talent', hasRowOrder: false),
+      'select * from foxy.dbc_talent',
+    );
+  });
+
   test('writeDbcFiles 写出文件且可回读', () async {
     final summary = await writeDbcFiles(
       definitions: [duration],

@@ -50,6 +50,22 @@ void main() {
     expect(loader.getRecord(0).getInt(1), 1000);
   });
 
+  test('DbcExportUtil 按传入行顺序写入,不重排 ID', () async {
+    // Order-sensitive DBCs (Talent.dbc) require the file to keep the
+    // original row order; the writer must never re-sort by ID.
+    await util.write(
+      definition: definition,
+      rows: [sampleRow(id: 2), sampleRow(id: 1)],
+      outputDirectory: directory.path,
+    );
+
+    final path = p.join(directory.path, definition.fileName);
+    final loader = DbcLoader(path, definition.schema.format);
+    expect(loader.recordCount, 2);
+    expect(loader.getRecord(0).getInt(0), 2);
+    expect(loader.getRecord(1).getInt(0), 1);
+  });
+
   test('DbcExportUtil 遇到缺失字段时失败且不生成目标文件', () async {
     final target = File(p.join(directory.path, definition.fileName));
 

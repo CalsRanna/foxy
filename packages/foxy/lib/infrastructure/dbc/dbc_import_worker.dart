@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/dbc/dbc_header_guard.dart';
+import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -117,7 +118,8 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
         }
       }
 
-      final staging = 'foxy.${tableShort}__staging_$jobId';
+      final stagingShort = '${tableShort}__staging_$jobId';
+      final staging = 'foxy.$stagingShort';
       final backup = 'foxy.${tableShort}__backup_$jobId';
       var stagingExists = false;
       var committed = false;
@@ -141,6 +143,10 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           await _createTable(connection, staging, file.fields);
         }
         stagingExists = true;
+        // LIKE from a legacy table (created before the row-order column
+        // existed) inherits the missing column; the import still needs it
+        // to store the original DBC file position.
+        await _ensureRowOrderColumn(connection, stagingShort);
 
         final importedRows = await connection.transaction(
           () => _importFile(
@@ -265,6 +271,19 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
   }
 }
 
+/// Column list for the batched import INSERT; the hidden row-order column
+/// is appended last so each value tuple can carry the original DBC file
+/// position (see [dbcRowOrderColumn]).
+String dbcImportInsertColumns(List<String> fieldNames) => [
+  for (final name in fieldNames) '`$name`',
+  '`$dbcRowOrderColumn`',
+].join(', ');
+
+/// One `(v1, ..., vn, rowOrder)` value tuple for the batched import INSERT;
+/// [rowOrder] is the record's position in the DBC file (0-based).
+String dbcImportValueTuple(List<String> values, int rowOrder) =>
+    '(${values.join(',')},$rowOrder)';
+
 int _asInt(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
@@ -276,16 +295,37 @@ Future<void> _createTable(
   String table,
   List<_FieldDef> fields,
 ) async {
-  final columns = fields
-      .map((field) => '`${field.name}` ${field.sqlType}')
-      .join(',\n  ');
-  if (columns.isEmpty) {
+  final columns = [
+    for (final field in fields) '`${field.name}` ${field.sqlType}',
+    '`$dbcRowOrderColumn` bigint null',
+  ].join(',\n  ');
+  if (fields.isEmpty) {
     throw ValidationException('$table has no importable fields');
   }
   await laconic.statement(
     'create table $table (\n  $columns\n) '
     'engine=innodb default charset=utf8mb4',
   );
+}
+
+/// Adds the hidden row-order column to [tableShort] if it is missing (a
+/// staging table cloned from a legacy source table). Imported rows carry
+/// their DBC file position here; see [dbcRowOrderColumn].
+Future<void> _ensureRowOrderColumn(
+  Laconic laconic,
+  String tableShort,
+) async {
+  final rows = await laconic.select(
+    "select column_name from information_schema.columns "
+    "where table_schema = 'foxy' and table_name = '$tableShort' "
+    "and column_name = '$dbcRowOrderColumn'",
+  );
+  if (rows.isEmpty) {
+    await laconic.statement(
+      'alter table foxy.`$tableShort` '
+      'add column `$dbcRowOrderColumn` bigint null',
+    );
+  }
 }
 
 String _escapeString(String value) {
@@ -323,7 +363,9 @@ Future<int> _importFile(
   if (recordCount == 0) return 0;
 
   const maxBatchBytes = 1 << 20;
-  final columns = file.fields.map((field) => '`${field.name}`').join(', ');
+  final columns = dbcImportInsertColumns([
+    for (final field in file.fields) field.name,
+  ]);
   final sqlPrefix = 'insert into $table ($columns) values ';
   final prefixBytes = utf8.encode(sqlPrefix).length;
   final rows = <String>[];
@@ -348,7 +390,7 @@ Future<int> _importFile(
 
   for (final record in loader.records) {
     _throwIfCancelled(isCancelled());
-    final row = _recordSql(record, file.fields);
+    final row = _recordSql(record, file.fields, record.index);
     final rowBytes = utf8.encode(row).length + (rows.isEmpty ? 0 : 1);
     if (rows.isEmpty && prefixBytes + rowBytes > maxBatchBytes) {
       throw ValidationException(
@@ -408,12 +450,12 @@ String _readAndEscape(dynamic record, int index, String type) {
 // warcrafty 1.0.2's public entry point does not actually export DbcRecord;
 // keep dynamic here to avoid depending on private paths under
 // package:warcrafty/src.
-String _recordSql(dynamic record, List<_FieldDef> fields) {
+String _recordSql(dynamic record, List<_FieldDef> fields, int rowOrder) {
   final values = <String>[];
   for (final field in fields) {
     values.add(_readAndEscape(record, field.index, field.type));
   }
-  return '(${values.join(',')})';
+  return dbcImportValueTuple(values, rowOrder);
 }
 
 Future<List<_FileDef>> _scanDirectory(String directory) async {

@@ -187,10 +187,7 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
 
     final summary = await buildMpqPatch(
       definitions: definitions,
-      loadRows: (table) async {
-        final rows = await laconic!.select('select * from foxy.$table');
-        return [for (final row in rows) Map<String, dynamic>.from(row.toMap())];
-      },
+      loadRows: (table) => loadDbcRowsForExport(laconic!, table),
       mpqFilePath: mpqFilePath,
       isCancelled: () => cancelled,
       onStatus: (stage, message) => _sendStatus(sendPort, stage, message),
