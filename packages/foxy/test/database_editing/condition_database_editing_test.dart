@@ -166,6 +166,8 @@ void main() {
     test('重复键按 MySQL 错误码转换且其他错误继续传播', () async {
       final duplicate = LaconicException(
         'MysqlServerException [1062]: duplicate',
+        driver: 'mysql',
+        code: '1062',
       );
       final repository = _TestConditionRepository(
         Laconic(_RecordingDriver(error: duplicate)),
@@ -175,20 +177,28 @@ void main() {
       expect(MysqlErrorUtil.isDuplicateEntry(duplicate), isTrue);
       expect(
         MysqlErrorUtil.isDuplicateEntry(
-          LaconicException('MysqlServerException [1452]: other'),
+          LaconicException(
+            'MysqlServerException [1452]: other',
+            driver: 'mysql',
+            code: '1452',
+          ),
         ),
         isFalse,
       );
+      // Same numeric code on another driver must not be treated as a
+      // MySQL duplicate entry.
       expect(
         MysqlErrorUtil.isDuplicateEntry(
           LaconicException(
-            'MysqlTransactionException: Transaction failed: '
-            'MysqlServerException [1062]: duplicate; '
-            'rollback also failed: MysqlClientException: ...',
+            'MysqlServerException [1062]: duplicate',
+            driver: 'postgres',
+            code: '1062',
           ),
         ),
-        isTrue,
+        isFalse,
       );
+      // Hand-thrown errors without structured driver/code fields never
+      // match, even when the message mentions 1062.
       expect(
         MysqlErrorUtil.isDuplicateEntry(
           LaconicException('request 1062 failed'),

@@ -601,18 +601,18 @@ packages:
     dependency: transitive
     description:
       name: laconic
-      sha256: "8911752044c499dd76abdc35674fe829f75214dad5ae739576c460475b41aecd"
+      sha256: ed6beeb40d8d037c0683e4ee8d4c81b38cdad663e8fb160ec6edb21f9dfcaecf
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.0"
   laconic_mysql:
     dependency: transitive
     description:
       name: laconic_mysql
-      sha256: ef1a693c68e809f190678dba97d4935e044106b6d4e668fca43b6260b979b8ed
+      sha256: "4597453246f464459746ac18ebb8fe2488eb7525c685acda08ee2b449909652a"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.4.0"
   leak_tracker:
     dependency: transitive
     description:

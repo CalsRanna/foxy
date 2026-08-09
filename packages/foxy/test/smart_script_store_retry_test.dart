@@ -89,6 +89,8 @@ final class _DuplicateRetryDriver implements DatabaseDriver {
   static final _duplicateError = LaconicException(
     'MysqlServerException [1062]: Duplicate entry '
     "'10-1-2-3' for key 'PRIMARY'",
+    driver: 'mysql',
+    code: '1062',
   );
 
   /// laconic routes inserts without auto-increment columns through
