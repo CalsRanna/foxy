@@ -18,11 +18,9 @@ class SpellItemEnchantmentEntity with _SpellItemEnchantmentEntityMixin {
   @FoxyFullField('Effect0')
   final int effect0;
 
-  @FoxyBriefField()
   @FoxyFullField('Effect1')
   final int effect1;
 
-  @FoxyBriefField()
   @FoxyFullField('Effect2')
   final int effect2;
 
@@ -178,16 +176,4 @@ extension BriefSpellItemEnchantmentEntityLabel
       SpellItemEnchantmentConstants
           .spellItemEnchantmentEffectTypeOptions[effect0] ??
       effect0.toString();
-
-  /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
-  String get effect1Label =>
-      SpellItemEnchantmentConstants
-          .spellItemEnchantmentEffectTypeOptions[effect1] ??
-      effect1.toString();
-
-  /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
-  String get effect2Label =>
-      SpellItemEnchantmentConstants
-          .spellItemEnchantmentEffectTypeOptions[effect2] ??
-      effect2.toString();
 }

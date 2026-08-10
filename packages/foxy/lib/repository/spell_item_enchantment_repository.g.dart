@@ -77,8 +77,6 @@ mixin _SpellItemEnchantmentRepositoryMixin
       '`ID`',
       '`Charges`',
       '`Effect0`',
-      '`Effect1`',
-      '`Effect2`',
       '`Name_lang_zhCN`',
     ]);
     builder = _applyFilter(builder, filter);

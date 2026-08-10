@@ -32,9 +32,11 @@ void main() {
   });
 
   test('效果类型映射为标签，未知值回退', () {
-    const item = BriefSpellItemEnchantmentEntity(effect0: 1, effect1: 3, effect2: 99);
+    const item = BriefSpellItemEnchantmentEntity(effect0: 1);
     expect(item.effect0Label, '战斗触发法术');
-    expect(item.effect1Label, '装备法术');
-    expect(item.effect2Label, '99');
+    expect(
+      const BriefSpellItemEnchantmentEntity(effect0: 99).effect0Label,
+      '99',
+    );
   });
 }

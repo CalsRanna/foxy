@@ -6,16 +6,12 @@ final class BriefSpellItemEnchantmentEntity {
   final int id;
   final int charges;
   final int effect0;
-  final int effect1;
-  final int effect2;
   final String nameLangZhCN;
 
   const BriefSpellItemEnchantmentEntity({
     this.id = 0,
     this.charges = 0,
     this.effect0 = 0,
-    this.effect1 = 0,
-    this.effect2 = 0,
     this.nameLangZhCN = '',
   });
 
@@ -36,23 +32,12 @@ final class BriefSpellItemEnchantmentEntity {
           : json['Effect0'] == false
           ? 0
           : (json['Effect0'] as num?)?.toInt() ?? 0,
-      effect1: json['Effect1'] == true
-          ? 1
-          : json['Effect1'] == false
-          ? 0
-          : (json['Effect1'] as num?)?.toInt() ?? 0,
-      effect2: json['Effect2'] == true
-          ? 1
-          : json['Effect2'] == false
-          ? 0
-          : (json['Effect2'] as num?)?.toInt() ?? 0,
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([id, charges, effect0, effect1, effect2, nameLangZhCN]);
+  int get hashCode => Object.hashAll([id, charges, effect0, nameLangZhCN]);
 
   int get key => id;
 
@@ -63,8 +48,6 @@ final class BriefSpellItemEnchantmentEntity {
             id == other.id &&
             charges == other.charges &&
             effect0 == other.effect0 &&
-            effect1 == other.effect1 &&
-            effect2 == other.effect2 &&
             nameLangZhCN == other.nameLangZhCN;
   }
 
@@ -74,8 +57,6 @@ final class BriefSpellItemEnchantmentEntity {
         'id: $id, '
         'charges: $charges, '
         'effect0: $effect0, '
-        'effect1: $effect1, '
-        'effect2: $effect2, '
         'nameLangZhCN: $nameLangZhCN'
         ')';
   }
