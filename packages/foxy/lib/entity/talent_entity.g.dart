@@ -8,6 +8,11 @@ final class BriefTalentEntity {
   final int tierId;
   final int columnIndex;
   final int spellRank0;
+  final String tabNameEnUS;
+  final String tabNameZhCN;
+  final String spellNameEnUS;
+  final String spellNameZhCN;
+  final String textureFilename;
 
   const BriefTalentEntity({
     this.id = 0,
@@ -15,6 +20,11 @@ final class BriefTalentEntity {
     this.tierId = 0,
     this.columnIndex = 0,
     this.spellRank0 = 0,
+    this.tabNameEnUS = '',
+    this.tabNameZhCN = '',
+    this.spellNameEnUS = '',
+    this.spellNameZhCN = '',
+    this.textureFilename = '',
   });
 
   factory BriefTalentEntity.fromJson(Map<String, dynamic> json) {
@@ -44,12 +54,27 @@ final class BriefTalentEntity {
           : json['SpellRank0'] == false
           ? 0
           : (json['SpellRank0'] as num?)?.toInt() ?? 0,
+      tabNameEnUS: json['tabNameEnUS']?.toString() ?? '',
+      tabNameZhCN: json['tabNameZhCN']?.toString() ?? '',
+      spellNameEnUS: json['spellNameEnUS']?.toString() ?? '',
+      spellNameZhCN: json['spellNameZhCN']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([id, tabId, tierId, columnIndex, spellRank0]);
+  int get hashCode => Object.hashAll([
+    id,
+    tabId,
+    tierId,
+    columnIndex,
+    spellRank0,
+    tabNameEnUS,
+    tabNameZhCN,
+    spellNameEnUS,
+    spellNameZhCN,
+    textureFilename,
+  ]);
 
   int get key => id;
 
@@ -61,7 +86,12 @@ final class BriefTalentEntity {
             tabId == other.tabId &&
             tierId == other.tierId &&
             columnIndex == other.columnIndex &&
-            spellRank0 == other.spellRank0;
+            spellRank0 == other.spellRank0 &&
+            tabNameEnUS == other.tabNameEnUS &&
+            tabNameZhCN == other.tabNameZhCN &&
+            spellNameEnUS == other.spellNameEnUS &&
+            spellNameZhCN == other.spellNameZhCN &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -71,7 +101,12 @@ final class BriefTalentEntity {
         'tabId: $tabId, '
         'tierId: $tierId, '
         'columnIndex: $columnIndex, '
-        'spellRank0: $spellRank0'
+        'spellRank0: $spellRank0, '
+        'tabNameEnUS: $tabNameEnUS, '
+        'tabNameZhCN: $tabNameZhCN, '
+        'spellNameEnUS: $spellNameEnUS, '
+        'spellNameZhCN: $spellNameZhCN, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

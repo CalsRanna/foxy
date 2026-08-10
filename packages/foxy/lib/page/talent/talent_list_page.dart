@@ -11,6 +11,7 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -119,8 +120,8 @@ class _TalentListPageState extends State<TalentListPage> {
         ),
         FoxyTableColumn.fixed(
           label: '天赋页',
-          width: 120,
-          cell: (_, item) => Text(item.tabId.toString()),
+          width: 160,
+          cell: (_, item) => Text(item.displayTabName),
         ),
         FoxyTableColumn.fixed(
           label: '层',
@@ -133,8 +134,11 @@ class _TalentListPageState extends State<TalentListPage> {
           cell: (_, item) => Text(item.columnIndex.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '第 1 级法术',
-          cell: (_, item) => Text(item.spellRank0.toString()),
+          label: '法术',
+          cell: (_, item) => FoxyIconText(
+            iconPath: item.textureFilename,
+            name: item.displaySpellName,
+          ),
         ),
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),

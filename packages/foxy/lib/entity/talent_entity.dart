@@ -3,6 +3,11 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'talent_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('tabNameEnUS')
+@FoxyBriefField.text('tabNameZhCN')
+@FoxyBriefField.text('spellNameEnUS')
+@FoxyBriefField.text('spellNameZhCN')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_talent')
 class TalentEntity with _TalentEntityMixin {
   @FoxyBriefField()
@@ -107,4 +112,11 @@ class TalentEntity with _TalentEntityMixin {
 
   factory TalentEntity.fromJson(Map<String, dynamic> json) =>
       _TalentEntityMixin.fromJson(json);
+}
+
+extension BriefTalentEntityDisplay on BriefTalentEntity {
+  String get displayTabName => tabNameZhCN.isNotEmpty ? tabNameZhCN : tabNameEnUS;
+
+  String get displaySpellName =>
+      spellNameZhCN.isNotEmpty ? spellNameZhCN : spellNameEnUS;
 }

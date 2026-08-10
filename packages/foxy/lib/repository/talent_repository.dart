@@ -27,23 +27,69 @@ class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
   }
 
   @override
+  Future<int> countTalents({TalentFilter? filter}) async {
+    var builder = laconic.table('$_table as dt');
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  @override
+  Future<List<BriefTalentEntity>> getBriefTalents({
+    int page = 1,
+    TalentFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table as dt');
+    const fields = [
+      'dt.ID',
+      'dt.TabID',
+      'dt.TierID',
+      'dt.ColumnIndex',
+      'dt.SpellRank0',
+      'dtt.Name_lang_enUS as tabNameEnUS',
+      'dtt.Name_lang_zhCN as tabNameZhCN',
+      'ds.Name_lang_enUS as spellNameEnUS',
+      'ds.Name_lang_zhCN as spellNameZhCN',
+      'dsi.TextureFilename as textureFilename',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'foxy.dbc_talent_tab as dtt',
+      (join) => join.on('dt.TabID', 'dtt.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell as ds',
+      (join) => join.on('dt.SpellRank0', 'ds.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_icon as dsi',
+      (join) => join.on('ds.SpellIconID', 'dsi.ID'),
+    );
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('dt.ID');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results.map((e) => BriefTalentEntity.fromJson(e.toMap())).toList();
+  }
+
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, TalentFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+      builder = builder.where('dt.ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.spell.isNotEmpty) {
       builder = builder.whereNested(
         (query) => query
-            .where('SpellRank0', int.tryParse(filter.spell) ?? 0)
-            .orWhere('SpellRank1', filter.spell)
-            .orWhere('SpellRank2', filter.spell)
-            .orWhere('SpellRank3', filter.spell)
-            .orWhere('SpellRank4', filter.spell)
-            .orWhere('SpellRank5', filter.spell)
-            .orWhere('SpellRank6', filter.spell)
-            .orWhere('SpellRank7', filter.spell)
-            .orWhere('SpellRank8', filter.spell),
+            .where('dt.SpellRank0', int.tryParse(filter.spell) ?? 0)
+            .orWhere('dt.SpellRank1', filter.spell)
+            .orWhere('dt.SpellRank2', filter.spell)
+            .orWhere('dt.SpellRank3', filter.spell)
+            .orWhere('dt.SpellRank4', filter.spell)
+            .orWhere('dt.SpellRank5', filter.spell)
+            .orWhere('dt.SpellRank6', filter.spell)
+            .orWhere('dt.SpellRank7', filter.spell)
+            .orWhere('dt.SpellRank8', filter.spell),
       );
     }
     return builder;
