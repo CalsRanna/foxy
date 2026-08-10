@@ -10,4 +10,6 @@
 /// The column is never part of a DBC schema: the export writer ignores it,
 /// and rows created through the app (generated repositories) leave it
 /// NULL, which orders them after the imported rows on export.
-const String dbcRowOrderColumn = '__dbc_order';
+abstract final class DbcRowOrder {
+  static const column = '__dbc_order';
+}

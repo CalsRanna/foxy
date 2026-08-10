@@ -17,7 +17,6 @@ class MailTemplateRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _MailTemplateRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -75,7 +74,7 @@ class MailTemplateRepository
     if (filter.subject.isNotEmpty) {
       builder = builder.where(
         'Subject_lang_zhCN',
-        '%${escapeLike(filter.subject)}%',
+        '%${ParseUtil.escapeLike(filter.subject)}%',
         comparator: 'like',
       );
     }

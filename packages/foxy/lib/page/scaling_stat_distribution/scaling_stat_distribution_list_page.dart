@@ -124,7 +124,7 @@ class _ScalingStatDistributionListPageState
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
       onRowSecondaryTapDownWithDetails: (item, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -165,11 +165,9 @@ class _ScalingStatDistributionListPageState
 
   /// Badge 内部的固定文本样式（shadcn Badge 实现为 small + 12px + w600）。
   /// 宽度测量必须与渲染完全一致——加粗会影响字形宽度。
-  TextStyle _badgeTextStyle(BuildContext context) =>
-      ShadTheme.of(context).textTheme.small.copyWith(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-      );
+  TextStyle _badgeTextStyle(BuildContext context) => ShadTheme.of(
+    context,
+  ).textTheme.small.copyWith(fontSize: 12, fontWeight: FontWeight.w600);
 
   /// 属性分布列：每个有效属性一个 Badge，按列实际宽度实时计算可容纳
   /// 数量，超出部分合并为 `+N`。
@@ -177,7 +175,7 @@ class _ScalingStatDistributionListPageState
     BriefScalingStatDistributionEntity item,
     double maxWidth,
   ) {
-    final entries = statEntries(
+    final entries = ScalingStatDistributionEntity.statEntries(
       [
         item.statId0,
         item.statId1,
@@ -209,7 +207,7 @@ class _ScalingStatDistributionListPageState
       for (final (statId, bonus) in entries)
         _badgeWidth(context, _statLabel(statId, bonus), direction),
     ];
-    final count = fittingBadgeCount(
+    final count = TableLayoutUtil.fittingBadgeCount(
       widths,
       (hidden) => _badgeWidth(context, '+$hidden', direction),
       _badgeSpacing,
@@ -227,16 +225,13 @@ class _ScalingStatDistributionListPageState
             child: Text(_statLabel(statId, bonus)),
           ),
         if (hidden > 0)
-          ShadBadge.outline(
-            padding: _badgePadding,
-            child: Text('+$hidden'),
-          ),
+          ShadBadge.outline(padding: _badgePadding, child: Text('+$hidden')),
       ],
     );
   }
 
   String _statLabel(int statId, int bonus) =>
-      '${kScalingStatDistributionStatOptions[statId] ?? statId}($bonus)';
+      '${ScalingStatDistributionConstants.scalingStatDistributionStatOptions[statId] ?? statId}($bonus)';
 
   /// 一个 Badge 的总宽度：文本 + 左右 padding。测量使用的字体样式和
   /// padding 与渲染完全一致，保证计数与实际布局吻合。
@@ -266,7 +261,7 @@ class _ScalingStatDistributionListPageState
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -284,7 +279,7 @@ class _ScalingStatDistributionListPageState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

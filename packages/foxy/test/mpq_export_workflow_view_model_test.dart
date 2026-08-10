@@ -24,14 +24,14 @@ void main() {
     final mpqDir = r'D:\client\Data\zhCN';
     await configUtil.update({'mpq_dir': mpqDir});
     useCase.tables = [
-      DbcExportTable(definition: dbcDefinitionByTable['dbc_spell_duration']!),
+      DbcExportTable(definition: DbcDefinitions.byTable['dbc_spell_duration']!),
     ];
 
     final vm = buildVm();
     await vm.prepare();
 
     expect(vm.outputDirectory.value, mpqDir);
-    expect(vm.fileName.value, defaultMpqPatchFileName);
+    expect(vm.fileName.value, MpqExportWorkflowViewModel.defaultPatchFileName);
     expect(vm.items.value, hasLength(1));
     expect(vm.items.value.single.canSelect, isTrue);
     expect(vm.status.value, WorkflowStatus.idle);
@@ -39,7 +39,7 @@ void main() {
 
   test('prepare 无 mpq_dir 时输出目录为 null', () async {
     useCase.tables = [
-      DbcExportTable(definition: dbcDefinitionByTable['dbc_spell_duration']!),
+      DbcExportTable(definition: DbcDefinitions.byTable['dbc_spell_duration']!),
     ];
 
     final vm = buildVm();
@@ -74,7 +74,7 @@ void main() {
     final mpqDir = r'D:\client\Data\zhCN';
     await configUtil.update({'mpq_dir': mpqDir});
     useCase.tables = [
-      DbcExportTable(definition: dbcDefinitionByTable['dbc_spell_duration']!),
+      DbcExportTable(definition: DbcDefinitions.byTable['dbc_spell_duration']!),
     ];
 
     final vm = buildVm();
@@ -93,7 +93,7 @@ void main() {
   test('setFileName 空值回退默认文件名', () async {
     final vm = buildVm();
     vm.setFileName('   ');
-    expect(vm.fileName.value, defaultMpqPatchFileName);
+    expect(vm.fileName.value, MpqExportWorkflowViewModel.defaultPatchFileName);
   });
 }
 

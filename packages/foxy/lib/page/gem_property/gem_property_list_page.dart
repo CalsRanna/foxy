@@ -128,7 +128,8 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
         FoxyTableColumn.flex(
           label: '宝石颜色',
           cell: (_, item) => Text(
-            kGemPropertyColorOptions[item.type] ?? item.type.toString(),
+            GemPropertyConstants.gemPropertyColorOptions[item.type] ??
+                item.type.toString(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -136,7 +137,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
       onRowSecondaryTapDownWithDetails: (item, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -185,7 +186,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -203,7 +204,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

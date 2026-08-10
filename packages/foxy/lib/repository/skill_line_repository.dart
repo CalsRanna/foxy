@@ -14,7 +14,6 @@ part 'skill_line_repository.g.dart';
 @FoxyFilter.text('name', column: 'DisplayName_lang_zhCN')
 class SkillLineRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _SkillLineRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -88,7 +87,7 @@ class SkillLineRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'DisplayName_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

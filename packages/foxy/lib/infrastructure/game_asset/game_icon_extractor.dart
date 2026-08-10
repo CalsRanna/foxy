@@ -241,7 +241,11 @@ class GameIconExtractor {
   /// Within a group, remaining files sort by name for determinism; patches
   /// not matching the locale name (e.g. patch-Z) fall into custom →
   /// opened last.
-  static List<String> archiveChain(String dataRoot, String localeDataDir, String locale) {
+  static List<String> archiveChain(
+    String dataRoot,
+    String localeDataDir,
+    String locale,
+  ) {
     final archives = <({String path, int category, int order})>[];
     void collect(String dir) {
       final Directory directory;
@@ -357,8 +361,7 @@ class GameIconExtractor {
   static bool _hasMpq(String dirPath) {
     try {
       return Directory(dirPath).listSync().any(
-        (entry) =>
-            entry is File && entry.path.toLowerCase().endsWith('.mpq'),
+        (entry) => entry is File && entry.path.toLowerCase().endsWith('.mpq'),
       );
     } on FileSystemException {
       return false;

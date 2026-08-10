@@ -1,1 +1,3 @@
-const kLootTemplateValidLootModeMask = 0x803f;
+abstract final class LootTemplateConstants {
+  static const lootTemplateValidLootModeMask = 0x803f;
+}

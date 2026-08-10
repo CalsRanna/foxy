@@ -11,7 +11,6 @@ part 'scaling_stat_value_repository.g.dart';
 @FoxyFilter.text('charlevel')
 class ScalingStatValueRepository
     with RepositoryMixin, _ScalingStatValueRepositoryMixin {
-
   @override
   Future<int> copyScalingStatValue(int key) async {
     final source = await getScalingStatValue(key);

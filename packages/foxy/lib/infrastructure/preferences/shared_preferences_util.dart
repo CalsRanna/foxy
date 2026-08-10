@@ -39,7 +39,9 @@ class SharedPreferencesUtil {
   }
 
   Future<void> setLastUpdateCheckAt(DateTime time) async {
-    await (await _preferences)
-        .setString(_keyLastUpdateCheckAt, time.toIso8601String());
+    await (await _preferences).setString(
+      _keyLastUpdateCheckAt,
+      time.toIso8601String(),
+    );
   }
 }

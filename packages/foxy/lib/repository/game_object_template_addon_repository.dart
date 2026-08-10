@@ -9,7 +9,6 @@ part 'game_object_template_addon_repository.g.dart';
 @FoxyRepository()
 class GameObjectTemplateAddonRepository
     with RepositoryMixin, _GameObjectTemplateAddonRepositoryMixin {
-
   Future<void> copyGameObjectTemplateAddon(int key) {
     throw CopyNotSupportedException(
       'addon data has a one-to-one relationship with game object templates and cannot be copied independently',

@@ -10,7 +10,6 @@ part 'player_create_info_skill_repository.g.dart';
 @FoxyRepository(linkKey: ['raceMask', 'classMask'])
 class PlayerCreateInfoSkillRepository
     with RepositoryMixin, _PlayerCreateInfoSkillRepositoryMixin {
-
   @override
   Future<PlayerCreateInfoSkillKey> copyPlayerCreateInfoSkill(
     PlayerCreateInfoSkillKey key,
@@ -22,8 +21,8 @@ class PlayerCreateInfoSkillRepository
 
   @override
   Future<int> countPlayerCreateInfoSkills(int raceMask, int classMask) {
-    final raceBit = playerCreateRaceBit(raceMask);
-    final classBit = playerCreateClassBit(classMask);
+    final raceBit = PlayerCreateInfoConstants.raceBit(raceMask);
+    final classBit = PlayerCreateInfoConstants.classBit(classMask);
     return laconic
         .table(_table)
         .whereRaw('(`raceMask` = 0 OR (`raceMask` & ?) <> 0)', [raceBit])
@@ -36,8 +35,8 @@ class PlayerCreateInfoSkillRepository
     int raceMask,
     int classMask,
   ) async => PlayerCreateInfoSkillEntity(
-    raceMask: playerCreateRaceBit(raceMask),
-    classMask: playerCreateClassBit(classMask),
+    raceMask: PlayerCreateInfoConstants.raceBit(raceMask),
+    classMask: PlayerCreateInfoConstants.classBit(classMask),
   );
 
   @override
@@ -46,8 +45,8 @@ class PlayerCreateInfoSkillRepository
     int classMask, {
     int page = 1,
   }) async {
-    final raceBit = playerCreateRaceBit(raceMask);
-    final classBit = playerCreateClassBit(classMask);
+    final raceBit = PlayerCreateInfoConstants.raceBit(raceMask);
+    final classBit = PlayerCreateInfoConstants.classBit(classMask);
     final rows = await laconic
         .table(_table)
         .select(['raceMask', 'classMask', 'skill', 'rank', 'comment'])

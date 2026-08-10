@@ -14,4 +14,7 @@ part 'skill_line_list_view_model.g.dart';
 
 @FoxyListViewModel()
 class SkillLineListViewModel
-    with FieldControllerMixin, QueryVersionMixin, _SkillLineListViewModelMixin {}
+    with
+        FieldControllerMixin,
+        QueryVersionMixin,
+        _SkillLineListViewModelMixin {}

@@ -2,17 +2,17 @@ import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'item_extended_cost_entity.g.dart';
 
-String _appendDisplayItem(String current, int itemId, int count) {
-  if (itemId == 0) return current;
-  final value = '${itemId}x$count';
-  return current.isEmpty ? value : '$current, $value';
-}
-
 /// Extended cost
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_item_extended_cost')
 class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
+  static String _appendDisplayItem(String current, int itemId, int count) {
+    if (itemId == 0) return current;
+    final value = '${itemId}x$count';
+    return current.isEmpty ? value : '$current, $value';
+  }
+
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
@@ -101,11 +101,31 @@ class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
 extension BriefItemExtendedCostEntityDisplay on BriefItemExtendedCostEntity {
   String get displayItems {
     var result = '';
-    result = _appendDisplayItem(result, itemID0, itemCount0);
-    result = _appendDisplayItem(result, itemID1, itemCount1);
-    result = _appendDisplayItem(result, itemID2, itemCount2);
-    result = _appendDisplayItem(result, itemID3, itemCount3);
-    result = _appendDisplayItem(result, itemID4, itemCount4);
+    result = ItemExtendedCostEntity._appendDisplayItem(
+      result,
+      itemID0,
+      itemCount0,
+    );
+    result = ItemExtendedCostEntity._appendDisplayItem(
+      result,
+      itemID1,
+      itemCount1,
+    );
+    result = ItemExtendedCostEntity._appendDisplayItem(
+      result,
+      itemID2,
+      itemCount2,
+    );
+    result = ItemExtendedCostEntity._appendDisplayItem(
+      result,
+      itemID3,
+      itemCount3,
+    );
+    result = ItemExtendedCostEntity._appendDisplayItem(
+      result,
+      itemID4,
+      itemCount4,
+    );
     return result.isEmpty ? '-' : result;
   }
 }

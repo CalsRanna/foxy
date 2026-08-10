@@ -78,7 +78,7 @@ class SmartScriptDetailViewModel
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -116,7 +116,9 @@ class SmartScriptDetailViewModel
   }
 
   void _refreshActionEditors() {
-    final config = smartActionParameterConfig(selectedActionType.value);
+    final config = SmartScriptConstants.actionParameterConfig(
+      selectedActionType.value,
+    );
     actionParam1Controller.configure(config.param1.editor);
     actionParam2Controller.configure(config.param2.editor);
     actionParam3Controller.configure(config.param3.editor);
@@ -126,7 +128,9 @@ class SmartScriptDetailViewModel
   }
 
   void _refreshEventEditors() {
-    final config = smartEventParameterConfig(selectedEventType.value);
+    final config = SmartScriptConstants.eventParameterConfig(
+      selectedEventType.value,
+    );
     eventParam1Controller.configure(config.param1.editor);
     eventParam2Controller.configure(config.param2.editor);
     eventParam3Controller.configure(config.param3.editor);
@@ -142,7 +146,9 @@ class SmartScriptDetailViewModel
   }
 
   void _refreshTargetEditors() {
-    final config = smartTargetParameterConfig(selectedTargetType.value);
+    final config = SmartScriptConstants.targetParameterConfig(
+      selectedTargetType.value,
+    );
     targetParam1Controller.configure(config.param1.editor);
     targetParam2Controller.configure(config.param2.editor);
     targetParam3Controller.configure(config.param3.editor);

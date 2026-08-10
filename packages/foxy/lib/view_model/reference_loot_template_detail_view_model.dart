@@ -45,7 +45,7 @@ class ReferenceLootTemplateDetailViewModel
       persistedKey.value = ReferenceLootTemplateKey.fromEntity(candidate);
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;

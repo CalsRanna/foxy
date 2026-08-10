@@ -102,7 +102,7 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
       await viewModel.initSignals(key: widget.spellKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 }

@@ -9,7 +9,6 @@ part 'taxi_path_repository.g.dart';
 @FoxyRepository()
 @FoxyFilter.text('id')
 class TaxiPathRepository with RepositoryMixin, _TaxiPathRepositoryMixin {
-
   Future<int> copyTaxiPath(int key) async {
     final source = await getTaxiPath(key);
     if (source == null) {

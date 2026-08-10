@@ -8,174 +8,6 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-const _kDialogWidth = kDialogWidth;
-
-// ─── Common shell ──────────────────────────────────────────────────────────
-
-/// Result banner (success/error/warning, with color and icon).
-Widget settingDialogBanner(
-  BuildContext context, {
-  required String text,
-  required Color color,
-  IconData? icon,
-}) {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.08),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color.withValues(alpha: 0.22)),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10,
-      children: [
-        if (icon != null) Icon(icon, size: 16, color: color),
-        Expanded(
-          child: SelectableText(
-            text,
-            style: TextStyle(fontSize: 13, color: color, height: 1.4),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-/// Muted hint text.
-Widget settingDialogMutedHint(BuildContext context, String text) {
-  final theme = ShadTheme.of(context);
-  return Text(text, style: theme.textTheme.muted.copyWith(fontSize: 13));
-}
-
-/// Path input row (input box + browse button).
-Widget settingDialogPathField({
-  required StringFieldController controller,
-  required String placeholder,
-  required VoidCallback onBrowse,
-  ValueChanged<String>? onChanged,
-  ValueChanged<String>? onSubmitted,
-  bool enabled = true,
-}) {
-  return Row(
-    spacing: 8,
-    children: [
-      Expanded(
-        child: ShadInput(
-          controller: controller.controller,
-          placeholder: Text(placeholder),
-          enabled: enabled,
-          leading: const Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Icon(LucideIcons.folderSearch, size: 16),
-          ),
-          onChanged: onChanged,
-          onSubmitted: onSubmitted,
-        ),
-      ),
-      ShadButton.outline(
-        size: ShadButtonSize.sm,
-        onPressed: enabled ? onBrowse : null,
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 6,
-          children: [Icon(LucideIcons.folderOpen, size: 15), Text('浏览')],
-        ),
-      ),
-    ],
-  );
-}
-
-/// Progress panel (ratio bar or spinner + label + details).
-Widget settingDialogProgressPanel(
-  BuildContext context, {
-  required double? ratio,
-  required String label,
-  required String detail,
-  String idleText = '正在准备...',
-  Widget? trailing,
-}) {
-  final theme = ShadTheme.of(context);
-  final muted = theme.textTheme.muted.copyWith(fontSize: 12);
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    spacing: 12,
-    children: [
-      if (ratio != null) ...[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('进度', style: muted),
-            Text(
-              '${(ratio * 100).clamp(0, 100).toStringAsFixed(0)}%',
-              style: muted,
-            ),
-          ],
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(value: ratio, minHeight: 8),
-        ),
-      ] else
-        const Center(
-          child: SizedBox.square(
-            dimension: 28,
-            child: CircularProgressIndicator(strokeWidth: 2.5),
-          ),
-        ),
-      if (label.isNotEmpty)
-        Text(
-          label,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-        ),
-      if (detail.isNotEmpty) Text(detail, style: muted),
-      if (ratio == null && label.isEmpty) Text(idleText, style: muted),
-      if (trailing != null)
-        Align(alignment: Alignment.centerRight, child: trailing),
-    ],
-  );
-}
-
-/// Read-only path display box (directory config comes from the settings
-/// page; action dialogs no longer edit it directly).
-Widget settingDialogReadonlyPath(BuildContext context, String path) {
-  final theme = ShadTheme.of(context);
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: theme.colorScheme.border),
-    ),
-    child: Row(
-      spacing: 8,
-      children: [
-        Icon(
-          LucideIcons.folder,
-          size: 15,
-          color: theme.colorScheme.mutedForeground,
-        ),
-        Expanded(
-          child: SelectableText(path, style: const TextStyle(fontSize: 13)),
-        ),
-      ],
-    ),
-  );
-}
-
-/// Dialog title row (icon + text).
-Widget settingDialogTitleRow(IconData icon, String text, {Color? iconColor}) {
-  return Row(
-    spacing: 10,
-    children: [
-      Icon(icon, size: 20, color: iconColor),
-      Text(text),
-    ],
-  );
-}
-
 // ─── Export dialog ─────────────────────────────────────────────────────────
 
 class DbcExportDialog extends StatefulWidget {
@@ -198,6 +30,176 @@ class DbcImportDialog extends StatefulWidget {
 
 /// Common shell for settings-related dialogs (title + content + actions).
 class SettingDialogShell extends StatelessWidget {
+  // ─── Common shell helpers ─────────────────────────────────────────
+
+  static const _dialogWidth = DialogUtil.width;
+
+  // ─── Common shell ──────────────────────────────────────────────────────────
+
+  /// Result banner (success/error/warning, with color and icon).
+  static Widget banner(
+    BuildContext context, {
+    required String text,
+    required Color color,
+    IconData? icon,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.22)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10,
+        children: [
+          if (icon != null) Icon(icon, size: 16, color: color),
+          Expanded(
+            child: SelectableText(
+              text,
+              style: TextStyle(fontSize: 13, color: color, height: 1.4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Muted hint text.
+  static Widget mutedHint(BuildContext context, String text) {
+    final theme = ShadTheme.of(context);
+    return Text(text, style: theme.textTheme.muted.copyWith(fontSize: 13));
+  }
+
+  /// Path input row (input box + browse button).
+  static Widget pathField({
+    required StringFieldController controller,
+    required String placeholder,
+    required VoidCallback onBrowse,
+    ValueChanged<String>? onChanged,
+    ValueChanged<String>? onSubmitted,
+    bool enabled = true,
+  }) {
+    return Row(
+      spacing: 8,
+      children: [
+        Expanded(
+          child: ShadInput(
+            controller: controller.controller,
+            placeholder: Text(placeholder),
+            enabled: enabled,
+            leading: const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(LucideIcons.folderSearch, size: 16),
+            ),
+            onChanged: onChanged,
+            onSubmitted: onSubmitted,
+          ),
+        ),
+        ShadButton.outline(
+          size: ShadButtonSize.sm,
+          onPressed: enabled ? onBrowse : null,
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 6,
+            children: [Icon(LucideIcons.folderOpen, size: 15), Text('浏览')],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Progress panel (ratio bar or spinner + label + details).
+  static Widget progressPanel(
+    BuildContext context, {
+    required double? ratio,
+    required String label,
+    required String detail,
+    String idleText = '正在准备...',
+    Widget? trailing,
+  }) {
+    final theme = ShadTheme.of(context);
+    final muted = theme.textTheme.muted.copyWith(fontSize: 12);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 12,
+      children: [
+        if (ratio != null) ...[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('进度', style: muted),
+              Text(
+                '${(ratio * 100).clamp(0, 100).toStringAsFixed(0)}%',
+                style: muted,
+              ),
+            ],
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(value: ratio, minHeight: 8),
+          ),
+        ] else
+          const Center(
+            child: SizedBox.square(
+              dimension: 28,
+              child: CircularProgressIndicator(strokeWidth: 2.5),
+            ),
+          ),
+        if (label.isNotEmpty)
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          ),
+        if (detail.isNotEmpty) Text(detail, style: muted),
+        if (ratio == null && label.isEmpty) Text(idleText, style: muted),
+        if (trailing != null)
+          Align(alignment: Alignment.centerRight, child: trailing),
+      ],
+    );
+  }
+
+  /// Read-only path display box (directory config comes from the settings
+  /// page; action dialogs no longer edit it directly).
+  static Widget readonlyPath(BuildContext context, String path) {
+    final theme = ShadTheme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.border),
+      ),
+      child: Row(
+        spacing: 8,
+        children: [
+          Icon(
+            LucideIcons.folder,
+            size: 15,
+            color: theme.colorScheme.mutedForeground,
+          ),
+          Expanded(
+            child: SelectableText(path, style: const TextStyle(fontSize: 13)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Dialog title row (icon + text).
+  static Widget titleRow(IconData icon, String text, {Color? iconColor}) {
+    return Row(
+      spacing: 10,
+      children: [
+        Icon(icon, size: 20, color: iconColor),
+        Text(text),
+      ],
+    );
+  }
+
   final Widget title;
   final Widget child;
   final List<Widget> actions;
@@ -214,7 +216,7 @@ class SettingDialogShell extends StatelessWidget {
     return ShadDialog(
       closeIcon: const SizedBox.shrink(),
       titlePinned: true,
-      constraints: foxyDialogConstraints(context),
+      constraints: DialogUtil.constraints(context),
       title: title,
       actions: actions,
       child: child,
@@ -237,7 +239,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: _kDialogWidth,
+      width: SettingDialogShell._dialogWidth,
       child: Watch((_) {
         // Explicitly subscribe to the list signal so select-all/deselect
         // refreshes the whole table.
@@ -253,7 +255,10 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
 
         if (!_loaded.value && !exporting) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.fileOutput, '导出 DBC'),
+            title: SettingDialogShell.titleRow(
+              LucideIcons.fileOutput,
+              '导出 DBC',
+            ),
             child: const SizedBox(
               height: 140,
               child: Center(
@@ -275,7 +280,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
 
         if (success) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(
+            title: SettingDialogShell.titleRow(
               LucideIcons.circleCheck,
               '导出完成',
               iconColor: theme.colorScheme.primary,
@@ -291,7 +296,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                settingDialogBanner(
+                SettingDialogShell.banner(
                   context,
                   text:
                       '成功导出 ${_vm.result.value?.completed ?? 0} 个文件'
@@ -300,7 +305,10 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   icon: LucideIcons.circleCheck,
                 ),
                 if (_outputDir.value != null)
-                  settingDialogMutedHint(context, '输出目录：${_outputDir.value}'),
+                  SettingDialogShell.mutedHint(
+                    context,
+                    '输出目录：${_outputDir.value}',
+                  ),
               ],
             ),
           );
@@ -313,11 +321,11 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
           return PopScope(
             canPop: false,
             child: SettingDialogShell(
-              title: settingDialogTitleRow(
+              title: SettingDialogShell.titleRow(
                 LucideIcons.fileOutput,
                 '正在导出 DBC',
               ),
-              child: settingDialogProgressPanel(
+              child: SettingDialogShell.progressPanel(
                 context,
                 ratio: _vm.progress.value,
                 label: _vm.progressLabel.value,
@@ -340,7 +348,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
         final failureCount = allItems.where((item) => item.countFailed).length;
 
         return SettingDialogShell(
-          title: settingDialogTitleRow(LucideIcons.fileOutput, '导出 DBC'),
+          title: SettingDialogShell.titleRow(LucideIcons.fileOutput, '导出 DBC'),
           actions: [
             ShadButton.outline(
               onPressed: () => Navigator.of(context).maybePop(),
@@ -369,7 +377,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
-              settingDialogMutedHint(
+              SettingDialogShell.mutedHint(
                 context,
                 '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。',
               ),
@@ -379,7 +387,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              settingDialogPathField(
+              SettingDialogShell.pathField(
                 controller: _dirController,
                 placeholder: '选择导出目录',
                 onBrowse: _browse,
@@ -394,7 +402,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: 8,
                   children: [
-                    settingDialogBanner(
+                    SettingDialogShell.banner(
                       context,
                       text: error,
                       color: theme.colorScheme.destructive,
@@ -423,7 +431,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   ],
                 ),
               if (failureCount > 0)
-                settingDialogBanner(
+                SettingDialogShell.banner(
                   context,
                   text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
                   color: theme.colorScheme.destructive,
@@ -460,10 +468,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
               DbcTableSelectList(
                 items: items,
                 emptyText: _query.value.isEmpty ? '没有可导出的表' : '没有匹配的表',
-                onToggle: (item) => _vm.setItemSelected(
-                  item.tableName,
-                  !item.selected,
-                ),
+                onToggle: (item) =>
+                    _vm.setItemSelected(item.tableName, !item.selected),
               ),
             ],
           ),
@@ -535,11 +541,11 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: _kDialogWidth,
+      width: SettingDialogShell._dialogWidth,
       child: Watch((_) {
         if (!_ready.value) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
+            title: SettingDialogShell.titleRow(LucideIcons.fileInput, '导入 DBC'),
             child: const SizedBox(
               height: 120,
               child: Center(
@@ -563,7 +569,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
 
         if (success) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(
+            title: SettingDialogShell.titleRow(
               LucideIcons.circleCheck,
               '导入完成',
               iconColor: theme.colorScheme.primary,
@@ -574,7 +580,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                 child: const Text('完成'),
               ),
             ],
-            child: settingDialogBanner(
+            child: SettingDialogShell.banner(
               context,
               text:
                   '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
@@ -592,11 +598,11 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
           return PopScope(
             canPop: false,
             child: SettingDialogShell(
-              title: settingDialogTitleRow(
+              title: SettingDialogShell.titleRow(
                 LucideIcons.fileInput,
                 '正在导入 DBC',
               ),
-              child: settingDialogProgressPanel(
+              child: SettingDialogShell.progressPanel(
                 context,
                 ratio: _vm.progress.value,
                 label: _vm.progressLabel.value,
@@ -620,7 +626,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
         final path = _vm.path.value;
         final configured = path != null && path.trim().isNotEmpty;
         return SettingDialogShell(
-          title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
+          title: SettingDialogShell.titleRow(LucideIcons.fileInput, '导入 DBC'),
           actions: [
             ShadButton.outline(
               onPressed: () => Navigator.of(context).maybePop(),
@@ -640,7 +646,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 14,
             children: [
-              settingDialogMutedHint(
+              SettingDialogShell.mutedHint(
                 context,
                 '从配置的服务端 DBC 目录导入。导入以 DBC 为准：将覆盖数据库中'
                 '对应表的数据；若需保留库内数据请先自行备份。',
@@ -652,14 +658,14 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                 ),
               ),
               if (configured)
-                settingDialogReadonlyPath(context, path)
+                SettingDialogShell.readonlyPath(context, path)
               else
-                settingDialogMutedHint(
+                SettingDialogShell.mutedHint(
                   context,
                   '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
                 ),
               if (error != null)
-                settingDialogBanner(
+                SettingDialogShell.banner(
                   context,
                   text: error,
                   color: theme.colorScheme.destructive,

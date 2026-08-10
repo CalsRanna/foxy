@@ -37,7 +37,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 0',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId0Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID0'),
       ),
     );
@@ -52,7 +53,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 1',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId1Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID1'),
       ),
     );
@@ -67,7 +69,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 2',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId2Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID2'),
       ),
     );
@@ -82,7 +85,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 3',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId3Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID3'),
       ),
     );
@@ -97,7 +101,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 4',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId4Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID4'),
       ),
     );
@@ -112,7 +117,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 5',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId5Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID5'),
       ),
     );
@@ -127,7 +133,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 6',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId6Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID6'),
       ),
     );
@@ -142,7 +149,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 7',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId7Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID7'),
       ),
     );
@@ -157,7 +165,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 8',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId8Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID8'),
       ),
     );
@@ -172,7 +181,8 @@ class ScalingStatDistributionView extends StatelessWidget {
       label: '属性类型 9',
       child: FoxyShadSelect<int>(
         controller: viewModel.statId9Controller,
-        options: kScalingStatDistributionStatOptions,
+        options:
+            ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
         placeholder: const Text('StatID9'),
       ),
     );
@@ -284,7 +294,7 @@ class ScalingStatDistributionView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

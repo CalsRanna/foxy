@@ -12,7 +12,6 @@ part 'creature_model_data_repository.g.dart';
 @FoxyFilter.text('modelName')
 class CreatureModelDataRepository
     with RepositoryMixin, _CreatureModelDataRepositoryMixin {
-
   Future<int> copyCreatureModelData(int key) async {
     final source = await getCreatureModelData(key);
     if (source == null) {
@@ -76,7 +75,7 @@ class CreatureModelDataRepository
     if (filter.modelName.isNotEmpty) {
       builder = builder.where(
         'ModelName',
-        '%${escapeLike(filter.modelName)}%',
+        '%${ParseUtil.escapeLike(filter.modelName)}%',
         comparator: 'like',
       );
     }

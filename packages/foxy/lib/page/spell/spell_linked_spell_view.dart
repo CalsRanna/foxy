@@ -91,7 +91,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                   label: '类型',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.typeController,
-                    options: kSpellLinkedTypeOptions,
+                    options: SpellEnums.spellLinkedTypeOptions,
                     placeholder: Text('type'),
                   ),
                 ),
@@ -133,7 +133,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -201,7 +201,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -246,7 +246,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -264,7 +264,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -273,7 +273,8 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -283,32 +284,32 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增链接技能'),
         description: Text('新增一条链接技能记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
   }
 
   void _showEditDialog(BuildContext context) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑链接技能'),
         description: Text('编辑选中的链接技能记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

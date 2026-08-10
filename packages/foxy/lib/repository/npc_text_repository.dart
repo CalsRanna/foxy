@@ -11,7 +11,6 @@ part 'npc_text_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('text')
 class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
-
   Future<int> copyNpcText(int key) async {
     final source = await getNpcText(key);
     if (source == null) {
@@ -65,7 +64,7 @@ class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
     if (filter.text.isNotEmpty) {
       builder = builder.whereAny(
         ['text0_0', 'text0_1'],
-        '%${escapeLike(filter.text)}%',
+        '%${ParseUtil.escapeLike(filter.text)}%',
         comparator: 'like',
       );
     }

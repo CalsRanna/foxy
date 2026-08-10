@@ -46,14 +46,23 @@ import 'package:get_it/get_it.dart';
 /// Registry of locale-picker delegates, centralizing each module's
 /// load/save config.
 ///
-/// Follows the [EntityPickerDelegates] pattern: one `static final`
-/// delegate per entity, pure data + closures, no mutable state, shareable
-/// by multiple [FoxyLocalePicker]s.
+/// Follows the [FoxyEntityPickerDelegates] pattern: one instance delegate
+/// per entity, pure data + closures, no mutable state, shareable by
+/// multiple [FoxyLocalePicker]s. Static getters forward to the singleton
+/// so call sites stay unchanged.
 class FoxyLocalePickerDelegates {
-  static final creatureTemplateName = _creatureTemplateField('name', '名称');
-  static final creatureTemplateTitle = _creatureTemplateField('title', '称号');
+  static final instance = FoxyLocalePickerDelegates._();
 
-  static final gameObjectName = DatabaseLocaleEditorDelegate(
+  FoxyLocalePickerDelegates._();
+
+  late final _creatureTemplateName = _creatureTemplateField('name', '名称');
+  static DatabaseLocaleEditorDelegate get creatureTemplateName =>
+      instance._creatureTemplateName;
+  late final _creatureTemplateTitle = _creatureTemplateField('title', '称号');
+  static DatabaseLocaleEditorDelegate get creatureTemplateTitle =>
+      instance._creatureTemplateTitle;
+
+  late final _gameObjectName = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'name'],
     fieldLabels: ['语言', '名称'],
     onLoad: (entry) => _loadGameObjectTemplateLocaleRows(
@@ -103,50 +112,86 @@ class FoxyLocalePickerDelegates {
       );
     },
   );
+  static DatabaseLocaleEditorDelegate get gameObjectName =>
+      instance._gameObjectName;
 
-  static final npcTextText00 = _npcTextField('text00', '文本0-0');
-  static final npcTextText01 = _npcTextField('text01', '文本0-1');
-  static final npcTextText10 = _npcTextField('text10', '文本1-0');
-  static final npcTextText11 = _npcTextField('text11', '文本1-1');
-  static final npcTextText20 = _npcTextField('text20', '文本2-0');
-  static final npcTextText21 = _npcTextField('text21', '文本2-1');
-  static final npcTextText30 = _npcTextField('text30', '文本3-0');
-  static final npcTextText31 = _npcTextField('text31', '文本3-1');
-  static final npcTextText40 = _npcTextField('text40', '文本4-0');
-  static final npcTextText41 = _npcTextField('text41', '文本4-1');
-  static final npcTextText50 = _npcTextField('text50', '文本5-0');
-  static final npcTextText51 = _npcTextField('text51', '文本5-1');
-  static final npcTextText60 = _npcTextField('text60', '文本6-0');
-  static final npcTextText61 = _npcTextField('text61', '文本6-1');
-  static final npcTextText70 = _npcTextField('text70', '文本7-0');
-  static final npcTextText71 = _npcTextField('text71', '文本7-1');
+  late final _npcTextText00 = _npcTextField('text00', '文本0-0');
+  static DatabaseLocaleEditorDelegate get npcTextText00 =>
+      instance._npcTextText00;
+  late final _npcTextText01 = _npcTextField('text01', '文本0-1');
+  static DatabaseLocaleEditorDelegate get npcTextText01 =>
+      instance._npcTextText01;
+  late final _npcTextText10 = _npcTextField('text10', '文本1-0');
+  static DatabaseLocaleEditorDelegate get npcTextText10 =>
+      instance._npcTextText10;
+  late final _npcTextText11 = _npcTextField('text11', '文本1-1');
+  static DatabaseLocaleEditorDelegate get npcTextText11 =>
+      instance._npcTextText11;
+  late final _npcTextText20 = _npcTextField('text20', '文本2-0');
+  static DatabaseLocaleEditorDelegate get npcTextText20 =>
+      instance._npcTextText20;
+  late final _npcTextText21 = _npcTextField('text21', '文本2-1');
+  static DatabaseLocaleEditorDelegate get npcTextText21 =>
+      instance._npcTextText21;
+  late final _npcTextText30 = _npcTextField('text30', '文本3-0');
+  static DatabaseLocaleEditorDelegate get npcTextText30 =>
+      instance._npcTextText30;
+  late final _npcTextText31 = _npcTextField('text31', '文本3-1');
+  static DatabaseLocaleEditorDelegate get npcTextText31 =>
+      instance._npcTextText31;
+  late final _npcTextText40 = _npcTextField('text40', '文本4-0');
+  static DatabaseLocaleEditorDelegate get npcTextText40 =>
+      instance._npcTextText40;
+  late final _npcTextText41 = _npcTextField('text41', '文本4-1');
+  static DatabaseLocaleEditorDelegate get npcTextText41 =>
+      instance._npcTextText41;
+  late final _npcTextText50 = _npcTextField('text50', '文本5-0');
+  static DatabaseLocaleEditorDelegate get npcTextText50 =>
+      instance._npcTextText50;
+  late final _npcTextText51 = _npcTextField('text51', '文本5-1');
+  static DatabaseLocaleEditorDelegate get npcTextText51 =>
+      instance._npcTextText51;
+  late final _npcTextText60 = _npcTextField('text60', '文本6-0');
+  static DatabaseLocaleEditorDelegate get npcTextText60 =>
+      instance._npcTextText60;
+  late final _npcTextText61 = _npcTextField('text61', '文本6-1');
+  static DatabaseLocaleEditorDelegate get npcTextText61 =>
+      instance._npcTextText61;
+  late final _npcTextText70 = _npcTextField('text70', '文本7-0');
+  static DatabaseLocaleEditorDelegate get npcTextText70 =>
+      instance._npcTextText70;
+  late final _npcTextText71 = _npcTextField('text71', '文本7-1');
+  static DatabaseLocaleEditorDelegate get npcTextText71 =>
+      instance._npcTextText71;
 
-  static final gossipMenuOptionOptionText = CompositeKeyLocaleEditorDelegate(
+  late final _gossipMenuOptionOptionText = CompositeKeyLocaleEditorDelegate(
     fields: ['locale', 'optionText'],
     fieldLabels: ['语言', '选项文本'],
-    onLoad: (key) => _loadGossipMenuOptionLocaleRows(
-      key as GossipMenuOptionKey,
-    ),
+    onLoad: (key) =>
+        _loadGossipMenuOptionLocaleRows(key as GossipMenuOptionKey),
     onSave: (key, changes) => _saveGossipMenuOptionLocaleField(
       key as GossipMenuOptionKey,
       changes,
       'optionText',
     ),
   );
-  static final gossipMenuOptionBoxText = CompositeKeyLocaleEditorDelegate(
+  static CompositeKeyLocaleEditorDelegate get gossipMenuOptionOptionText =>
+      instance._gossipMenuOptionOptionText;
+  late final _gossipMenuOptionBoxText = CompositeKeyLocaleEditorDelegate(
     fields: ['locale', 'boxText'],
     fieldLabels: ['语言', '确认文本'],
-    onLoad: (key) => _loadGossipMenuOptionLocaleRows(
-      key as GossipMenuOptionKey,
-    ),
+    onLoad: (key) =>
+        _loadGossipMenuOptionLocaleRows(key as GossipMenuOptionKey),
     onSave: (key, changes) => _saveGossipMenuOptionLocaleField(
       key as GossipMenuOptionKey,
       changes,
       'boxText',
     ),
   );
+  static CompositeKeyLocaleEditorDelegate get gossipMenuOptionBoxText =>
+      instance._gossipMenuOptionBoxText;
 
-  static final gameObjectCaption = DatabaseLocaleEditorDelegate(
+  late final _gameObjectCaption = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'castBarCaption'],
     fieldLabels: ['语言', '使用说明'],
     onLoad: (entry) => _loadGameObjectTemplateLocaleRows(
@@ -199,8 +244,10 @@ class FoxyLocalePickerDelegates {
       );
     },
   );
+  static DatabaseLocaleEditorDelegate get gameObjectCaption =>
+      instance._gameObjectCaption;
 
-  static final itemName = DatabaseLocaleEditorDelegate(
+  late final _itemName = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'name'],
     fieldLabels: ['语言', '名称'],
     onLoad: (entry) => _loadItemTemplateLocaleRows(
@@ -246,8 +293,9 @@ class FoxyLocalePickerDelegates {
       );
     },
   );
+  static DatabaseLocaleEditorDelegate get itemName => instance._itemName;
 
-  static final itemDescription = DatabaseLocaleEditorDelegate(
+  late final _itemDescription = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'description'],
     fieldLabels: ['语言', '描述'],
     onLoad: (entry) => _loadItemTemplateLocaleRows(
@@ -293,36 +341,53 @@ class FoxyLocalePickerDelegates {
       );
     },
   );
+  static DatabaseLocaleEditorDelegate get itemDescription =>
+      instance._itemDescription;
 
-  static final questTemplateTitle = _questTemplateField('title', '标题');
-  static final questTemplateDetails = _questTemplateField('details', '详情');
-  static final questTemplateObjectives = _questTemplateField(
-    'objectives',
-    '目标',
-  );
-  static final questTemplateEndText = _questTemplateField('endText', '结束文本');
-  static final questTemplateCompletedText = _questTemplateField(
+  late final _questTemplateTitle = _questTemplateField('title', '标题');
+  static DatabaseLocaleEditorDelegate get questTemplateTitle =>
+      instance._questTemplateTitle;
+  late final _questTemplateDetails = _questTemplateField('details', '详情');
+  static DatabaseLocaleEditorDelegate get questTemplateDetails =>
+      instance._questTemplateDetails;
+  late final _questTemplateObjectives = _questTemplateField('objectives', '目标');
+  static DatabaseLocaleEditorDelegate get questTemplateObjectives =>
+      instance._questTemplateObjectives;
+  late final _questTemplateEndText = _questTemplateField('endText', '结束文本');
+  static DatabaseLocaleEditorDelegate get questTemplateEndText =>
+      instance._questTemplateEndText;
+  late final _questTemplateCompletedText = _questTemplateField(
     'completedText',
     '完成文本',
   );
-  static final questTemplateObjectiveText1 = _questTemplateField(
+  static DatabaseLocaleEditorDelegate get questTemplateCompletedText =>
+      instance._questTemplateCompletedText;
+  late final _questTemplateObjectiveText1 = _questTemplateField(
     'objectiveText1',
     '目标文本1',
   );
-  static final questTemplateObjectiveText2 = _questTemplateField(
+  static DatabaseLocaleEditorDelegate get questTemplateObjectiveText1 =>
+      instance._questTemplateObjectiveText1;
+  late final _questTemplateObjectiveText2 = _questTemplateField(
     'objectiveText2',
     '目标文本2',
   );
-  static final questTemplateObjectiveText3 = _questTemplateField(
+  static DatabaseLocaleEditorDelegate get questTemplateObjectiveText2 =>
+      instance._questTemplateObjectiveText2;
+  late final _questTemplateObjectiveText3 = _questTemplateField(
     'objectiveText3',
     '目标文本3',
   );
-  static final questTemplateObjectiveText4 = _questTemplateField(
+  static DatabaseLocaleEditorDelegate get questTemplateObjectiveText3 =>
+      instance._questTemplateObjectiveText3;
+  late final _questTemplateObjectiveText4 = _questTemplateField(
     'objectiveText4',
     '目标文本4',
   );
+  static DatabaseLocaleEditorDelegate get questTemplateObjectiveText4 =>
+      instance._questTemplateObjectiveText4;
 
-  static final questOfferReward = DatabaseLocaleEditorDelegate(
+  late final _questOfferReward = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'rewardText'],
     fieldLabels: ['语言', '奖励文本'],
     onLoad: _loadQuestOfferRewardLocaleRows,
@@ -368,8 +433,10 @@ class FoxyLocalePickerDelegates {
       );
     },
   );
+  static DatabaseLocaleEditorDelegate get questOfferReward =>
+      instance._questOfferReward;
 
-  static final questRequestItems = DatabaseLocaleEditorDelegate(
+  late final _questRequestItems = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'completionText'],
     fieldLabels: ['语言', '完成文本'],
     onLoad: _loadQuestRequestItemsLocaleRows,
@@ -415,258 +482,328 @@ class FoxyLocalePickerDelegates {
       );
     },
   );
+  static DatabaseLocaleEditorDelegate get questRequestItems =>
+      instance._questRequestItems;
 
   // ---------------------------------------------------------------------------
   // DBC wide-table locale fields (one independent Delegate per field)
   // ---------------------------------------------------------------------------
 
-  static final dbcAchievementTitle = _dbc(
+  late final _dbcAchievementTitle = _dbc(
     DbcLocaleFields.achievementTitle,
     () => GetIt.instance.get<AchievementRepository>(),
     (repo, id, field) => repo.getAchievementLocales(id, field),
     (repo, id, field, values) => repo.saveAchievementLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcAchievementTitle =>
+      instance._dbcAchievementTitle;
 
-  static final dbcAchievementDescription = _dbc(
+  late final _dbcAchievementDescription = _dbc(
     DbcLocaleFields.achievementDescription,
     () => GetIt.instance.get<AchievementRepository>(),
     (repo, id, field) => repo.getAchievementLocales(id, field),
     (repo, id, field, values) => repo.saveAchievementLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcAchievementDescription =>
+      instance._dbcAchievementDescription;
 
-  static final dbcAchievementReward = _dbc(
+  late final _dbcAchievementReward = _dbc(
     DbcLocaleFields.achievementReward,
     () => GetIt.instance.get<AchievementRepository>(),
     (repo, id, field) => repo.getAchievementLocales(id, field),
     (repo, id, field, values) => repo.saveAchievementLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcAchievementReward =>
+      instance._dbcAchievementReward;
 
-  static final dbcAchievementCategoryName = _dbc(
+  late final _dbcAchievementCategoryName = _dbc(
     DbcLocaleFields.achievementCategoryName,
     () => GetIt.instance.get<AchievementCategoryRepository>(),
     (repo, id, field) => repo.getAchievementCategoryLocales(id, field),
     (repo, id, field, values) =>
         repo.saveAchievementCategoryLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcAchievementCategoryName =>
+      instance._dbcAchievementCategoryName;
 
-  static final dbcAchievementCriteriaDescription = _dbc(
+  late final _dbcAchievementCriteriaDescription = _dbc(
     DbcLocaleFields.achievementCriteriaDescription,
     () => GetIt.instance.get<AchievementCriteriaRepository>(),
     (repo, id, field) => repo.getAchievementCriteriaLocales(id, field),
     (repo, id, field, values) =>
         repo.saveAchievementCriteriaLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcAchievementCriteriaDescription =>
+      instance._dbcAchievementCriteriaDescription;
 
-  static final dbcAreaTableAreaName = _dbc(
+  late final _dbcAreaTableAreaName = _dbc(
     DbcLocaleFields.areaTableAreaName,
     () => GetIt.instance.get<AreaTableRepository>(),
     (repo, id, field) => repo.getAreaTableLocales(id, field),
     (repo, id, field, values) => repo.saveAreaTableLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcAreaTableAreaName =>
+      instance._dbcAreaTableAreaName;
 
-  static final dbcCharTitlesName = _dbc(
+  late final _dbcCharTitlesName = _dbc(
     DbcLocaleFields.charTitlesName,
     () => GetIt.instance.get<CharTitleRepository>(),
     (repo, id, field) => repo.getCharTitleLocales(id, field),
     (repo, id, field, values) => repo.saveCharTitleLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcCharTitlesName =>
+      instance._dbcCharTitlesName;
 
-  static final dbcCharTitlesName1 = _dbc(
+  late final _dbcCharTitlesName1 = _dbc(
     DbcLocaleFields.charTitlesName1,
     () => GetIt.instance.get<CharTitleRepository>(),
     (repo, id, field) => repo.getCharTitleLocales(id, field),
     (repo, id, field, values) => repo.saveCharTitleLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcCharTitlesName1 =>
+      instance._dbcCharTitlesName1;
 
-  static final dbcCurrencyCategoryName = _dbc(
+  late final _dbcCurrencyCategoryName = _dbc(
     DbcLocaleFields.currencyCategoryName,
     () => GetIt.instance.get<CurrencyCategoryRepository>(),
     (repo, id, field) => repo.getCurrencyCategoryLocales(id, field),
     (repo, id, field, values) =>
         repo.saveCurrencyCategoryLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcCurrencyCategoryName =>
+      instance._dbcCurrencyCategoryName;
 
-  static final dbcFactionName = _dbc(
+  late final _dbcFactionName = _dbc(
     DbcLocaleFields.factionName,
     () => GetIt.instance.get<DbcFactionRepository>(),
     (repo, id, field) => repo.getDbcFactionLocales(id, field),
     (repo, id, field, values) => repo.saveDbcFactionLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcFactionName =>
+      instance._dbcFactionName;
 
-  static final dbcFactionDescription = _dbc(
+  late final _dbcFactionDescription = _dbc(
     DbcLocaleFields.factionDescription,
     () => GetIt.instance.get<DbcFactionRepository>(),
     (repo, id, field) => repo.getDbcFactionLocales(id, field),
     (repo, id, field, values) => repo.saveDbcFactionLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcFactionDescription =>
+      instance._dbcFactionDescription;
 
-  static final dbcEmotesTextDataText = _dbc(
+  late final _dbcEmotesTextDataText = _dbc(
     DbcLocaleFields.emotesTextDataText,
     () => GetIt.instance.get<EmoteTextDataRepository>(),
     (repo, id, field) => repo.getEmoteTextDataLocales(id, field),
     (repo, id, field, values) =>
         repo.saveEmoteTextDataLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcEmotesTextDataText =>
+      instance._dbcEmotesTextDataText;
 
-  static final dbcMailTemplateSubject = _dbc(
+  late final _dbcMailTemplateSubject = _dbc(
     DbcLocaleFields.mailTemplateSubject,
     () => GetIt.instance.get<MailTemplateRepository>(),
     (repo, id, field) => repo.getMailTemplateLocales(id, field),
     (repo, id, field, values) =>
         repo.saveMailTemplateLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcMailTemplateSubject =>
+      instance._dbcMailTemplateSubject;
 
-  static final dbcMailTemplateBody = _dbc(
+  late final _dbcMailTemplateBody = _dbc(
     DbcLocaleFields.mailTemplateBody,
     () => GetIt.instance.get<MailTemplateRepository>(),
     (repo, id, field) => repo.getMailTemplateLocales(id, field),
     (repo, id, field, values) =>
         repo.saveMailTemplateLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcMailTemplateBody =>
+      instance._dbcMailTemplateBody;
 
-  static final dbcItemRandomPropertiesName = _dbc(
+  late final _dbcItemRandomPropertiesName = _dbc(
     DbcLocaleFields.itemRandomPropertiesName,
     () => GetIt.instance.get<ItemRandomPropertiesRepository>(),
     (repo, id, field) => repo.getItemRandomPropertiesLocales(id, field),
     (repo, id, field, values) =>
         repo.saveItemRandomPropertiesLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcItemRandomPropertiesName =>
+      instance._dbcItemRandomPropertiesName;
 
-  static final dbcItemRandomSuffixName = _dbc(
+  late final _dbcItemRandomSuffixName = _dbc(
     DbcLocaleFields.itemRandomSuffixName,
     () => GetIt.instance.get<ItemRandomSuffixRepository>(),
     (repo, id, field) => repo.getItemRandomSuffixLocales(id, field),
     (repo, id, field, values) =>
         repo.saveItemRandomSuffixLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcItemRandomSuffixName =>
+      instance._dbcItemRandomSuffixName;
 
-  static final dbcItemSetName = _dbc(
+  late final _dbcItemSetName = _dbc(
     DbcLocaleFields.itemSetName,
     () => GetIt.instance.get<ItemSetRepository>(),
     (repo, id, field) => repo.getItemSetLocales(id, field),
     (repo, id, field, values) => repo.saveItemSetLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcItemSetName =>
+      instance._dbcItemSetName;
 
-  static final dbcMapMapName = _dbc(
+  late final _dbcMapMapName = _dbc(
     DbcLocaleFields.mapMapName,
     () => GetIt.instance.get<MapInfoRepository>(),
     (repo, id, field) => repo.getMapInfoLocales(id, field),
     (repo, id, field, values) => repo.saveMapInfoLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcMapMapName =>
+      instance._dbcMapMapName;
 
-  static final dbcMapMapDescription0 = _dbc(
+  late final _dbcMapMapDescription0 = _dbc(
     DbcLocaleFields.mapMapDescription0,
     () => GetIt.instance.get<MapInfoRepository>(),
     (repo, id, field) => repo.getMapInfoLocales(id, field),
     (repo, id, field, values) => repo.saveMapInfoLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcMapMapDescription0 =>
+      instance._dbcMapMapDescription0;
 
-  static final dbcMapMapDescription1 = _dbc(
+  late final _dbcMapMapDescription1 = _dbc(
     DbcLocaleFields.mapMapDescription1,
     () => GetIt.instance.get<MapInfoRepository>(),
     (repo, id, field) => repo.getMapInfoLocales(id, field),
     (repo, id, field, values) => repo.saveMapInfoLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcMapMapDescription1 =>
+      instance._dbcMapMapDescription1;
 
-  static final dbcQuestInfoInfoName = _dbc(
+  late final _dbcQuestInfoInfoName = _dbc(
     DbcLocaleFields.questInfoInfoName,
     () => GetIt.instance.get<QuestInfoRepository>(),
     (repo, id, field) => repo.getQuestInfoLocales(id, field),
     (repo, id, field, values) => repo.saveQuestInfoLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcQuestInfoInfoName =>
+      instance._dbcQuestInfoInfoName;
 
-  static final dbcQuestSortSortName = _dbc(
+  late final _dbcQuestSortSortName = _dbc(
     DbcLocaleFields.questSortSortName,
     () => GetIt.instance.get<QuestSortRepository>(),
     (repo, id, field) => repo.getQuestSortLocales(id, field),
     (repo, id, field, values) => repo.saveQuestSortLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcQuestSortSortName =>
+      instance._dbcQuestSortSortName;
 
-  static final dbcSpellName = _dbc(
+  late final _dbcSpellName = _dbc(
     DbcLocaleFields.spellName,
     () => GetIt.instance.get<SpellRepository>(),
     (repo, id, field) => repo.getSpellLocales(id, field),
     (repo, id, field, values) => repo.saveSpellLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSpellName =>
+      instance._dbcSpellName;
 
-  static final dbcSpellNameSubtext = _dbc(
+  late final _dbcSpellNameSubtext = _dbc(
     DbcLocaleFields.spellNameSubtext,
     () => GetIt.instance.get<SpellRepository>(),
     (repo, id, field) => repo.getSpellLocales(id, field),
     (repo, id, field, values) => repo.saveSpellLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSpellNameSubtext =>
+      instance._dbcSpellNameSubtext;
 
-  static final dbcSpellDescription = _dbc(
+  late final _dbcSpellDescription = _dbc(
     DbcLocaleFields.spellDescription,
     () => GetIt.instance.get<SpellRepository>(),
     (repo, id, field) => repo.getSpellLocales(id, field),
     (repo, id, field, values) => repo.saveSpellLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSpellDescription =>
+      instance._dbcSpellDescription;
 
-  static final dbcSpellAuraDescription = _dbc(
+  late final _dbcSpellAuraDescription = _dbc(
     DbcLocaleFields.spellAuraDescription,
     () => GetIt.instance.get<SpellRepository>(),
     (repo, id, field) => repo.getSpellLocales(id, field),
     (repo, id, field, values) => repo.saveSpellLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSpellAuraDescription =>
+      instance._dbcSpellAuraDescription;
 
-  static final dbcTalentTabName = _dbc(
+  late final _dbcTalentTabName = _dbc(
     DbcLocaleFields.talentTabName,
     () => GetIt.instance.get<TalentTabRepository>(),
     (repo, id, field) => repo.getTalentTabLocales(id, field),
     (repo, id, field, values) => repo.saveTalentTabLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcTalentTabName =>
+      instance._dbcTalentTabName;
 
-  static final dbcSkillLineDisplayName = _dbc(
+  late final _dbcSkillLineDisplayName = _dbc(
     DbcLocaleFields.skillLineDisplayName,
     () => GetIt.instance.get<SkillLineRepository>(),
     (repo, id, field) => repo.getSkillLineLocales(id, field),
     (repo, id, field, values) => repo.saveSkillLineLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSkillLineDisplayName =>
+      instance._dbcSkillLineDisplayName;
 
-  static final dbcSkillLineDescription = _dbc(
+  late final _dbcSkillLineDescription = _dbc(
     DbcLocaleFields.skillLineDescription,
     () => GetIt.instance.get<SkillLineRepository>(),
     (repo, id, field) => repo.getSkillLineLocales(id, field),
     (repo, id, field, values) => repo.saveSkillLineLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSkillLineDescription =>
+      instance._dbcSkillLineDescription;
 
-  static final dbcSkillLineAlternateVerb = _dbc(
+  late final _dbcSkillLineAlternateVerb = _dbc(
     DbcLocaleFields.skillLineAlternateVerb,
     () => GetIt.instance.get<SkillLineRepository>(),
     (repo, id, field) => repo.getSkillLineLocales(id, field),
     (repo, id, field, values) => repo.saveSkillLineLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSkillLineAlternateVerb =>
+      instance._dbcSkillLineAlternateVerb;
 
-  static final dbcSkillLineCategoryName = _dbc(
+  late final _dbcSkillLineCategoryName = _dbc(
     DbcLocaleFields.skillLineCategoryName,
     () => GetIt.instance.get<SkillLineCategoryRepository>(),
     (repo, id, field) => repo.getSkillLineCategoryLocales(id, field),
     (repo, id, field, values) =>
         repo.saveSkillLineCategoryLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSkillLineCategoryName =>
+      instance._dbcSkillLineCategoryName;
 
-  static final dbcSpellItemEnchantmentName = _dbc(
+  late final _dbcSpellItemEnchantmentName = _dbc(
     DbcLocaleFields.spellItemEnchantmentName,
     () => GetIt.instance.get<SpellItemEnchantmentRepository>(),
     (repo, id, field) => repo.getSpellItemEnchantmentLocales(id, field),
     (repo, id, field, values) =>
         repo.saveSpellItemEnchantmentLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSpellItemEnchantmentName =>
+      instance._dbcSpellItemEnchantmentName;
 
-  static final dbcSpellRangeDisplayName = _dbc(
+  late final _dbcSpellRangeDisplayName = _dbc(
     DbcLocaleFields.spellRangeDisplayName,
     () => GetIt.instance.get<SpellRangeRepository>(),
     (repo, id, field) => repo.getSpellRangeLocales(id, field),
     (repo, id, field, values) => repo.saveSpellRangeLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSpellRangeDisplayName =>
+      instance._dbcSpellRangeDisplayName;
 
-  static final dbcSpellRangeDisplayNameShort = _dbc(
+  late final _dbcSpellRangeDisplayNameShort = _dbc(
     DbcLocaleFields.spellRangeDisplayNameShort,
     () => GetIt.instance.get<SpellRangeRepository>(),
     (repo, id, field) => repo.getSpellRangeLocales(id, field),
     (repo, id, field, values) => repo.saveSpellRangeLocales(id, field, values),
   );
+  static DbcLocaleFieldEditorDelegate get dbcSpellRangeDisplayNameShort =>
+      instance._dbcSpellRangeDisplayNameShort;
 
   static DbcLocaleFieldEditorDelegate _dbc<T>(
     DbcLocaleFieldDefinition field,

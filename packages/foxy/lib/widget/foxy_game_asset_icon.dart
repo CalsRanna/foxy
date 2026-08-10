@@ -33,9 +33,7 @@ class FoxyGameAssetIcon extends StatelessWidget {
       height: size,
       fit: BoxFit.cover,
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        return frame == null
-            ? SizedBox.square(dimension: size)
-            : child;
+        return frame == null ? SizedBox.square(dimension: size) : child;
       },
       errorBuilder: (context, error, stackTrace) {
         return Icon(

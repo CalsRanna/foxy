@@ -82,7 +82,7 @@ class DashboardReadViewModel {
       featureCount.value = featureTotal;
       activityCount.value = activityTotal;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
+      if (token == _refreshToken) errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

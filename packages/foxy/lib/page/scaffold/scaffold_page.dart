@@ -220,8 +220,9 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   /// ignored so it never disturbs startup.
   Future<void> _checkDbcReminder() async {
     try {
-      final reminder =
-          await GetIt.instance.get<CheckDbcReminderUseCase>().execute();
+      final reminder = await GetIt.instance
+          .get<CheckDbcReminderUseCase>()
+          .execute();
       if (!mounted || !reminder.shouldRemind) return;
       _showDbcReminderDialog(reminder);
     } catch (_) {
@@ -230,21 +231,21 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   void _showDbcReminderDialog(DbcReminderCheckResult result) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (ctx) => DbcReminderDialog(result: result),
     );
   }
 
   void _showServerDirReminderDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (ctx) => const ServerDirReminderDialog(),
     );
   }
 
   void _showSetupWizard() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => SetupWizardDialog(

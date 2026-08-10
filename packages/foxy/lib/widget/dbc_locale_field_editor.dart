@@ -48,11 +48,11 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     } catch (e, s) {
       LoggerUtil.instance.e('加载 DBC 本地化失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
-      _showErrorToast(context, '加载失败: ${foxyErrorMessage(e)}');
+      _showErrorToast(context, '加载失败: ${FoxyError.message(e)}');
       return null;
     }
     if (!context.mounted) return null;
-    return showFoxyDialog<List<DbcLocaleFieldValue>>(
+    return DialogUtil.show<List<DbcLocaleFieldValue>>(
       context: context,
       builder: (_) => DbcLocaleFieldEditor(
         title: title,
@@ -86,7 +86,7 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
       title: Text(widget.title),
       scrollable: false,
       titlePinned: true,
-      constraints: foxyDialogConstraints(context),
+      constraints: DialogUtil.constraints(context),
       actions: [
         ShadButton.outline(
           onPressed: _saving ? null : () => Navigator.of(context).pop(),
@@ -206,8 +206,11 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: ${foxyErrorMessage(e)}');
-      DbcLocaleFieldEditor._showErrorToast(context, '保存失败: ${foxyErrorMessage(e)}');
+      setState(() => _errorMessage = '保存失败: ${FoxyError.message(e)}');
+      DbcLocaleFieldEditor._showErrorToast(
+        context,
+        '保存失败: ${FoxyError.message(e)}',
+      );
     } finally {
       if (mounted) {
         setState(() => _saving = false);

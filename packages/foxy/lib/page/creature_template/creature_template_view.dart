@@ -78,7 +78,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '单位职业',
       child: FoxyShadSelect<int>(
         controller: viewModel.unitClassController,
-        options: kUnitClassOptions,
+        options: CreatureEnums.unitClassOptions,
         placeholder: const Text('unit_class'),
       ),
     );
@@ -86,7 +86,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '稀有等级',
       child: FoxyShadSelect<int>(
         controller: viewModel.rankController,
-        options: kRankOptions,
+        options: CreatureEnums.rankOptions,
         placeholder: const Text('rank'),
       ),
     );
@@ -94,7 +94,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '种族领袖',
       child: FoxyShadSelect<int>(
         controller: viewModel.racialLeaderController,
-        options: kBooleanOptions,
+        options: CreatureEnums.booleanOptions,
         placeholder: const Text('RacialLeader'),
       ),
     );
@@ -110,7 +110,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '生物族群',
       child: FoxyShadSelect<int>(
         controller: viewModel.familyController,
-        options: kCreatureFamilyOptions,
+        options: CreatureEnums.creatureFamilyOptions,
         placeholder: const Text('family'),
       ),
     );
@@ -118,7 +118,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '生物类型',
       child: FoxyShadSelect<int>(
         controller: viewModel.typeController,
-        options: kCreatureTypeOptions,
+        options: CreatureEnums.creatureTypeOptions,
         placeholder: const Text('type'),
       ),
     );
@@ -126,7 +126,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '自动回复生命',
       child: FoxyShadSelect<int>(
         controller: viewModel.regenHealthController,
-        options: kBooleanOptions,
+        options: CreatureEnums.booleanOptions,
         placeholder: const Text('RegenHealth'),
       ),
     );
@@ -191,7 +191,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '属性资料片',
       child: FoxyShadSelect<int>(
         controller: viewModel.expController,
-        options: kExpansionOptions,
+        options: CreatureEnums.expansionOptions,
         placeholder: const Text('exp'),
       ),
     );
@@ -223,7 +223,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: 'NPC 功能标志',
       child: FoxyFlagPicker(
         controller: viewModel.npcFlagController,
-        flags: kNpcFlagOptions,
+        flags: CreatureFlags.npcFlagOptions,
         title: 'NPC 功能标志',
         placeholder: 'npcflag',
       ),
@@ -232,7 +232,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '生物类型标志',
       child: FoxyFlagPicker(
         controller: viewModel.typeFlagsController,
-        flags: kCreatureTypeFlagOptions,
+        flags: CreatureFlags.creatureTypeFlagOptions,
         title: '生物类型标志',
         placeholder: 'type_flags',
       ),
@@ -241,7 +241,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '动态状态标志',
       child: FoxyFlagPicker(
         controller: viewModel.dynamicFlagsController,
-        flags: kDynamicFlagOptions,
+        flags: CreatureFlags.dynamicFlagOptions,
         title: '动态状态标志',
         placeholder: 'dynamicflags',
       ),
@@ -250,7 +250,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '服务端标志',
       child: FoxyFlagPicker(
         controller: viewModel.flagsExtraController,
-        flags: kFlagsExtraOptions,
+        flags: CreatureFlags.flagsExtraOptions,
         title: '服务端额外标志',
         placeholder: 'flags_extra',
       ),
@@ -259,7 +259,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '单位标志',
       child: FoxyFlagPicker(
         controller: viewModel.unitFlagsController,
-        flags: kUnitFlagOptions,
+        flags: CreatureFlags.unitFlagOptions,
         title: '单位标志',
         placeholder: 'unit_flags',
       ),
@@ -268,7 +268,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '单位标志 2',
       child: FoxyFlagPicker(
         controller: viewModel.unitFlags2Controller,
-        flags: kUnitFlag2Options,
+        flags: CreatureFlags.unitFlag2Options,
         title: '单位标志 2',
         placeholder: 'unit_flags2',
       ),
@@ -279,7 +279,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '近战伤害学派',
       child: FoxyShadSelect<int>(
         controller: viewModel.damageSchoolController,
-        options: kDamageSchoolOptions,
+        options: CreatureEnums.damageSchoolOptions,
         placeholder: const Text('dmgschool'),
       ),
     );
@@ -459,7 +459,7 @@ class CreatureTemplateView extends StatelessWidget {
       label: '默认移动方式',
       child: FoxyShadSelect<int>(
         controller: viewModel.movementTypeController,
-        options: kMovementTypeOptions,
+        options: CreatureEnums.movementTypeOptions,
         placeholder: const Text('movementType'),
       ),
     );
@@ -685,7 +685,7 @@ class CreatureTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

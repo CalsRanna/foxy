@@ -271,18 +271,21 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
   }
 }
 
-/// Column list for the batched import INSERT; the hidden row-order column
-/// is appended last so each value tuple can carry the original DBC file
-/// position (see [dbcRowOrderColumn]).
-String dbcImportInsertColumns(List<String> fieldNames) => [
-  for (final name in fieldNames) '`$name`',
-  '`$dbcRowOrderColumn`',
-].join(', ');
+/// DbcImportWorker helper functions.
+abstract final class DbcImportWorker {
+  /// Column list for the batched import INSERT; the hidden row-order column
+  /// is appended last so each value tuple can carry the original DBC file
+  /// position (see [DbcRowOrder.column]).
+  static String insertColumns(List<String> fieldNames) => [
+    for (final name in fieldNames) '`$name`',
+    '`${DbcRowOrder.column}`',
+  ].join(', ');
 
-/// One `(v1, ..., vn, rowOrder)` value tuple for the batched import INSERT;
-/// [rowOrder] is the record's position in the DBC file (0-based).
-String dbcImportValueTuple(List<String> values, int rowOrder) =>
-    '(${values.join(',')},$rowOrder)';
+  /// One `(v1, ..., vn, rowOrder)` value tuple for the batched import INSERT;
+  /// [rowOrder] is the record's position in the DBC file (0-based).
+  static String valueTuple(List<String> values, int rowOrder) =>
+      '(${values.join(',')},$rowOrder)';
+}
 
 int _asInt(Object? value) {
   if (value is int) return value;
@@ -297,7 +300,7 @@ Future<void> _createTable(
 ) async {
   final columns = [
     for (final field in fields) '`${field.name}` ${field.sqlType}',
-    '`$dbcRowOrderColumn` bigint null',
+    '`${DbcRowOrder.column}` bigint null',
   ].join(',\n  ');
   if (fields.isEmpty) {
     throw ValidationException('$table has no importable fields');
@@ -310,20 +313,17 @@ Future<void> _createTable(
 
 /// Adds the hidden row-order column to [tableShort] if it is missing (a
 /// staging table cloned from a legacy source table). Imported rows carry
-/// their DBC file position here; see [dbcRowOrderColumn].
-Future<void> _ensureRowOrderColumn(
-  Laconic laconic,
-  String tableShort,
-) async {
+/// their DBC file position here; see [DbcRowOrder.column].
+Future<void> _ensureRowOrderColumn(Laconic laconic, String tableShort) async {
   final rows = await laconic.select(
     "select column_name from information_schema.columns "
     "where table_schema = 'foxy' and table_name = '$tableShort' "
-    "and column_name = '$dbcRowOrderColumn'",
+    "and column_name = '${DbcRowOrder.column}'",
   );
   if (rows.isEmpty) {
     await laconic.statement(
       'alter table foxy.`$tableShort` '
-      'add column `$dbcRowOrderColumn` bigint null',
+      'add column `${DbcRowOrder.column}` bigint null',
     );
   }
 }
@@ -357,13 +357,13 @@ Future<int> _importFile(
   int totalFiles,
   bool Function() isCancelled,
 ) async {
-  assertDbcPayloadSafe(file.path);
+  DbcHeaderGuard.assertPayloadSafe(file.path);
   final loader = DbcLoader(file.path, file.format);
   final recordCount = loader.recordCount;
   if (recordCount == 0) return 0;
 
   const maxBatchBytes = 1 << 20;
-  final columns = dbcImportInsertColumns([
+  final columns = DbcImportWorker.insertColumns([
     for (final field in file.fields) field.name,
   ]);
   final sqlPrefix = 'insert into $table ($columns) values ';
@@ -455,7 +455,7 @@ String _recordSql(dynamic record, List<_FieldDef> fields, int rowOrder) {
   for (final field in fields) {
     values.add(_readAndEscape(record, field.index, field.type));
   }
-  return dbcImportValueTuple(values, rowOrder);
+  return DbcImportWorker.valueTuple(values, rowOrder);
 }
 
 Future<List<_FileDef>> _scanDirectory(String directory) async {
@@ -469,7 +469,7 @@ Future<List<_FileDef>> _scanDirectory(String directory) async {
     if (entry is! File) continue;
     final fileName = p.basename(entry.path);
     if (!fileName.toLowerCase().endsWith('.dbc')) continue;
-    final definition = dbcDefinitionByFileName[fileName.toLowerCase()];
+    final definition = DbcDefinitions.byFileName[fileName.toLowerCase()];
     if (definition == null) continue;
     if (matched.containsKey(definition.tableName)) {
       throw ValidationException(

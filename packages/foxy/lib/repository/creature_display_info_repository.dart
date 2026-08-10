@@ -87,7 +87,7 @@ class CreatureDisplayInfoRepository
     if (filter.modelName.isNotEmpty) {
       builder = builder.where(
         'cmd.ModelName',
-        '%${escapeLike(filter.modelName)}%',
+        '%${ParseUtil.escapeLike(filter.modelName)}%',
         comparator: 'like',
       );
     }

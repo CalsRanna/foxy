@@ -14,7 +14,6 @@ part 'item_set_repository.g.dart';
 @FoxyFilter.text('name', column: 'Name_lang_zhCN')
 class ItemSetRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _ItemSetRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -43,7 +42,7 @@ class ItemSetRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

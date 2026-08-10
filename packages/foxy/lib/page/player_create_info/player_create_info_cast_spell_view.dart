@@ -131,7 +131,7 @@ class _PlayerCreateInfoCastSpellViewState
         _showDialog('编辑登录施法');
       },
       onRowSecondaryTapDownWithDetails: (row, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -169,7 +169,7 @@ class _PlayerCreateInfoCastSpellViewState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -178,7 +178,8 @@ class _PlayerCreateInfoCastSpellViewState
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -188,20 +189,20 @@ class _PlayerCreateInfoCastSpellViewState
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (mounted) _showDialog('新增登录施法');
   }
 
   void _showDialog(String title) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text(title),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
@@ -215,7 +216,8 @@ class _PlayerCreateInfoCastSpellViewState
                     label: '种族掩码',
                     child: FoxyFlagPicker(
                       controller: viewModel.raceMaskController,
-                      flags: kPlayerCreateRaceMaskFlags,
+                      flags:
+                          PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
                       title: '种族掩码',
                     ),
                   ),
@@ -225,7 +227,8 @@ class _PlayerCreateInfoCastSpellViewState
                     label: '职业掩码',
                     child: FoxyFlagPicker(
                       controller: viewModel.classMaskController,
-                      flags: kPlayerCreateClassMaskFlags,
+                      flags:
+                          PlayerCreateInfoConstants.playerCreateClassMaskFlags,
                       title: '职业掩码',
                     ),
                   ),
@@ -275,8 +278,8 @@ class _PlayerCreateInfoCastSpellViewState
                       } catch (error) {
                         if (!mounted) return;
                         setState(
-                          () =>
-                              _errorMessage = '保存失败：${foxyErrorMessage(error)}',
+                          () => _errorMessage =
+                              '保存失败：${FoxyError.message(error)}',
                         );
                         return;
                       }

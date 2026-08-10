@@ -24,10 +24,7 @@ class DatabaseTransaction {
       // 已在外层事务中:合并执行,不新开事务。
       return action();
     }
-    return runZoned(
-      () => runTransaction(action),
-      zoneValues: {_txKey: true},
-    );
+    return runZoned(() => runTransaction(action), zoneValues: {_txKey: true});
   }
 
   /// Opens the underlying database transaction. Override point for tests

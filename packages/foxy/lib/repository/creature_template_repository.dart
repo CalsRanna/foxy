@@ -13,7 +13,6 @@ part 'creature_template_repository.g.dart';
 @FoxyFilter.text('subName')
 class CreatureTemplateRepository
     with RepositoryMixin, _CreatureTemplateRepositoryMixin {
-
   @override
   Future<int> copyCreatureTemplate(int key) async {
     final source = await getCreatureTemplate(key);
@@ -41,14 +40,14 @@ class CreatureTemplateRepository
       if (filter != null && filter.name.isNotEmpty) {
         builder = builder.where(
           'name',
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }
       if (filter != null && filter.subName.isNotEmpty) {
         builder = builder.where(
           'subname',
-          '%${escapeLike(filter.subName)}%',
+          '%${ParseUtil.escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       }
@@ -123,13 +122,13 @@ class CreatureTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['ct.name', 'ctl.Name'],
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'ct.name',
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }
@@ -138,13 +137,13 @@ class CreatureTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['ct.subname', 'ctl.Title'],
-          '%${escapeLike(filter.subName)}%',
+          '%${ParseUtil.escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'ct.subname',
-          '%${escapeLike(filter.subName)}%',
+          '%${ParseUtil.escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       }

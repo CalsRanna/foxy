@@ -69,8 +69,7 @@ final class BootstrapApplicationUseCase {
     // hosts: a self-signed remote certificate would then fail strict
     // verification, and users who want encryption opt in via config.
     final savedConfig = await _configUtil.load();
-    final useSsl =
-        input.useSsl ?? savedConfig['use_ssl'] == true;
+    final useSsl = input.useSsl ?? savedConfig['use_ssl'] == true;
     final config = MysqlConfig(
       host: input.host,
       port: input.port,

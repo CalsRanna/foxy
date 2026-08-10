@@ -34,10 +34,7 @@ class DatabaseLocaleEditor extends StatefulWidget {
          fields.length == fieldLabels.length,
          'fields 与 fieldLabels 长度必须一致',
        ),
-       assert(
-         fields.length == 2,
-         'DatabaseLocaleEditor 仅支持两列：语言 + 单字段',
-       );
+       assert(fields.length == 2, 'DatabaseLocaleEditor 仅支持两列：语言 + 单字段');
 
   @override
   State<DatabaseLocaleEditor> createState() => _DatabaseLocaleEditorState();
@@ -63,14 +60,14 @@ class DatabaseLocaleEditor extends StatefulWidget {
       LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
       try {
-        ShadSonner.of(context).show(
-          ShadToast(description: Text('加载失败: ${foxyErrorMessage(e)}')),
-        );
+        ShadSonner.of(
+          context,
+        ).show(ShadToast(description: Text('加载失败: ${FoxyError.message(e)}')));
       } catch (_) {}
       return null;
     }
     if (!context.mounted) return null;
-    return showFoxyDialog<bool>(
+    return DialogUtil.show<bool>(
       context: context,
       builder: (_) => DatabaseLocaleEditor(
         title: title,
@@ -113,7 +110,7 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       title: Text(widget.title),
       scrollable: false,
       titlePinned: true,
-      constraints: foxyDialogConstraints(context),
+      constraints: DialogUtil.constraints(context),
       actions: [
         ShadButton.outline(onPressed: _addRow, child: const Text('添加')),
         const Spacer(),
@@ -273,11 +270,11 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: ${foxyErrorMessage(e)}');
+      setState(() => _errorMessage = '保存失败: ${FoxyError.message(e)}');
       try {
-        ShadSonner.of(context).show(
-          ShadToast(description: Text('保存失败: ${foxyErrorMessage(e)}')),
-        );
+        ShadSonner.of(
+          context,
+        ).show(ShadToast(description: Text('保存失败: ${FoxyError.message(e)}')));
       } catch (_) {}
     } finally {
       if (mounted) {

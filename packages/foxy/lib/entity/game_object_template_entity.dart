@@ -165,5 +165,6 @@ extension BriefGameObjectTemplateEntityDisplay
 
 extension BriefGameObjectTemplateEntityLabel on BriefGameObjectTemplateEntity {
   /// 游戏对象类型标签（门/按钮/任务发放者/…），未知值回退为原始数字。
-  String get typeLabel => kGameObjectTypeOptions[type] ?? type.toString();
+  String get typeLabel =>
+      GameObjectConstants.gameObjectTypeOptions[type] ?? type.toString();
 }

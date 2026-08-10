@@ -12,7 +12,6 @@ part 'item_display_info_repository.g.dart';
 @FoxyFilter.text('name')
 class ItemDisplayInfoRepository
     with RepositoryMixin, _ItemDisplayInfoRepositoryMixin {
-
   Future<int> copyItemDisplayInfo(int key) async {
     final source = await getItemDisplayInfo(key);
     if (source == null) {
@@ -70,7 +69,7 @@ class ItemDisplayInfoRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'ModelName0',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

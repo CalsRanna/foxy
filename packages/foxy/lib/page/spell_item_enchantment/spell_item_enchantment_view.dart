@@ -112,7 +112,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
       label: '附魔标志',
       child: FoxyFlagPicker(
         controller: viewModel.flagsController,
-        flags: kSpellItemEnchantmentFlagOptions,
+        flags: SpellItemEnchantmentConstants.spellItemEnchantmentFlagOptions,
         title: '附魔标志',
         placeholder: 'Flags',
       ),
@@ -315,7 +315,8 @@ class SpellItemEnchantmentView extends StatelessWidget {
             label: '抗性系别 $slot',
             child: FoxyShadSelect<int>(
               controller: argumentController.selectController,
-              options: kSpellItemEnchantmentSchoolOptions,
+              options: SpellItemEnchantmentConstants
+                  .spellItemEnchantmentSchoolOptions,
               placeholder: Text('EffectArg$slot'),
             ),
           );
@@ -325,7 +326,8 @@ class SpellItemEnchantmentView extends StatelessWidget {
             label: '附魔属性 $slot',
             child: FoxyShadSelect<int>(
               controller: argumentController.selectController,
-              options: kSpellItemEnchantmentStatOptions,
+              options:
+                  SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
               placeholder: Text('EffectArg$slot'),
             ),
           );
@@ -349,7 +351,8 @@ class SpellItemEnchantmentView extends StatelessWidget {
       label: '效果类型 $slot',
       child: FoxyShadSelect<int>(
         controller: controller,
-        options: kSpellItemEnchantmentEffectTypeOptions,
+        options:
+            SpellItemEnchantmentConstants.spellItemEnchantmentEffectTypeOptions,
         placeholder: Text('Effect$slot'),
       ),
     );
@@ -370,7 +373,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

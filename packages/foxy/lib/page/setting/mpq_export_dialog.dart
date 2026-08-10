@@ -35,7 +35,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: kDialogWidth,
+      width: DialogUtil.width,
       child: Watch((_) {
         // Explicitly subscribe to the list signal so select-all/deselect
         // refreshes the whole table.
@@ -51,7 +51,10 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
 
         if (!_loaded.value && !exporting) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.archive, '导出 MPQ 补丁'),
+            title: SettingDialogShell.titleRow(
+              LucideIcons.archive,
+              '导出 MPQ 补丁',
+            ),
             child: const SizedBox(
               height: 140,
               child: Center(
@@ -78,7 +81,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
               ? p.join(directory, name)
               : null;
           return SettingDialogShell(
-            title: settingDialogTitleRow(
+            title: SettingDialogShell.titleRow(
               LucideIcons.circleCheck,
               '导出完成',
               iconColor: theme.colorScheme.primary,
@@ -94,16 +97,17 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                settingDialogBanner(
+                SettingDialogShell.banner(
                   context,
-                  text: '已生成 MPQ 补丁'
+                  text:
+                      '已生成 MPQ 补丁'
                       '${(_vm.result.value?.completed ?? 0) > 0 ? '，打包 ${_vm.result.value!.completed} 张 DBC 表' : ''}'
                       '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}。',
                   color: theme.colorScheme.primary,
                   icon: LucideIcons.circleCheck,
                 ),
                 if (target != null)
-                  settingDialogMutedHint(context, '已生成: $target'),
+                  SettingDialogShell.mutedHint(context, '已生成: $target'),
               ],
             ),
           );
@@ -116,11 +120,11 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
           return PopScope(
             canPop: false,
             child: SettingDialogShell(
-              title: settingDialogTitleRow(
+              title: SettingDialogShell.titleRow(
                 LucideIcons.archive,
                 '正在导出 MPQ 补丁',
               ),
-              child: settingDialogProgressPanel(
+              child: SettingDialogShell.progressPanel(
                 context,
                 ratio: _vm.progress.value,
                 label: _vm.progressLabel.value,
@@ -156,14 +160,15 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
         final fileNameReady = _fileName.value.trim().isNotEmpty;
 
         return SettingDialogShell(
-          title: settingDialogTitleRow(LucideIcons.archive, '导出 MPQ 补丁'),
+          title: SettingDialogShell.titleRow(LucideIcons.archive, '导出 MPQ 补丁'),
           actions: [
             ShadButton.outline(
               onPressed: () => Navigator.of(context).maybePop(),
               child: const Text('关闭'),
             ),
             ShadButton(
-              onPressed: selectedCount == 0 || targetDir == null || !fileNameReady
+              onPressed:
+                  selectedCount == 0 || targetDir == null || !fileNameReady
                   ? null
                   : () async {
                       _vm.setOutputDirectory(targetDir);
@@ -186,7 +191,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
-              settingDialogMutedHint(
+              SettingDialogShell.mutedHint(
                 context,
                 '将选中的 DBC 表打包为 MPQ 补丁，放入客户端 MPQ 目录后，'
                 '客户端启动时自动加载以覆盖原始 DBC。',
@@ -197,7 +202,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              settingDialogPathField(
+              SettingDialogShell.pathField(
                 controller: _dirController,
                 placeholder: '客户端 MPQ 目录（如 Data\\zhCN）',
                 onBrowse: _browse,
@@ -215,7 +220,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
               ),
               ShadInput(
                 controller: _fileNameController.controller,
-                placeholder: const Text(defaultMpqPatchFileName),
+                placeholder: const Text(MpqExportWorkflowViewModel.defaultPatchFileName),
                 leading: const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Icon(LucideIcons.fileArchive, size: 16),
@@ -231,7 +236,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: 8,
                   children: [
-                    settingDialogBanner(
+                    SettingDialogShell.banner(
                       context,
                       text: error,
                       color: theme.colorScheme.destructive,
@@ -261,7 +266,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
                   ],
                 ),
               if (failureCount > 0)
-                settingDialogBanner(
+                SettingDialogShell.banner(
                   context,
                   text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
                   color: theme.colorScheme.destructive,
@@ -298,10 +303,8 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
               DbcTableSelectList(
                 items: items,
                 emptyText: _query.value.isEmpty ? '没有可导出的表' : '没有匹配的表',
-                onToggle: (item) => _vm.setItemSelected(
-                  item.tableName,
-                  !item.selected,
-                ),
+                onToggle: (item) =>
+                    _vm.setItemSelected(item.tableName, !item.selected),
               ),
             ],
           ),

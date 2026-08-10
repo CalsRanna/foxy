@@ -13,7 +13,7 @@ void main() {
     test('DXT1 4 色模式：全部像素为 c0 色', () {
       final block = dxtColorBlock(255, 0, 0, 0); // c0=red, all pixels use index 0
       final blp = buildBlp2(tile(block, 256));
-      final image = decodeBlp(blp);
+      final image = BlpDecoder.decode(blp);
       expect(image.width, 64);
       expect(image.height, 64);
       expect(image.rgba.length, 64 * 64 * 4);
@@ -33,7 +33,7 @@ void main() {
         alphaDepth: 8,
         alphaEncoding: 1,
       );
-      final image = decodeBlp(blp);
+      final image = BlpDecoder.decode(blp);
       for (var i = 0; i < 64 * 64; i++) {
         expect(image.rgba[i * 4 + 3], 136, reason: 'DXT3 alpha 8→136');
         expect(image.rgba[i * 4 + 1], 255);
@@ -48,7 +48,7 @@ void main() {
         alphaDepth: 8,
         alphaEncoding: 7,
       );
-      final image = decodeBlp(blp);
+      final image = BlpDecoder.decode(blp);
       for (var i = 0; i < 64 * 64; i++) {
         expect(image.rgba[i * 4 + 3], 255);
         expect(image.rgba[i * 4 + 2], 255);
@@ -71,17 +71,17 @@ void main() {
         alphaDepth: 8,
         alphaEncoding: 7,
       );
-      expect(decodeBlp(blp6).rgba[3], 0);
-      expect(decodeBlp(blp7).rgba[3], 255);
+      expect(BlpDecoder.decode(blp6).rgba[3], 0);
+      expect(BlpDecoder.decode(blp7).rgba[3], 255);
     });
 
     test('损坏输入抛 BlpFormatException', () {
       expect(
-        () => decodeBlp(Uint8List.fromList('BLP1'.codeUnits)),
+        () => BlpDecoder.decode(Uint8List.fromList('BLP1'.codeUnits)),
         throwsA(isA<BlpFormatException>()),
       );
       expect(
-        () => decodeBlp(Uint8List.fromList('nonsense'.codeUnits)), // header too short
+        () => BlpDecoder.decode(Uint8List.fromList('nonsense'.codeUnits)), // header too short
         throwsA(isA<BlpFormatException>()),
       );
     });
@@ -92,7 +92,7 @@ void main() {
       test('$variant RGB 与对应 PNG 逐像素一致', () async {
         final blpBytes = File('test/fixture/icons/fixture_$variant.blp')
             .readAsBytesSync();
-        final image = decodeBlp(blpBytes);
+        final image = BlpDecoder.decode(blpBytes);
         expect(image.width, 64);
         expect(image.height, 64);
 

@@ -73,7 +73,7 @@ class AreaTableView extends StatelessWidget {
       child: FoxyFlagPicker(
         placeholder: 'Flags',
         controller: viewModel.flagsController,
-        flags: kAreaFlagOptions,
+        flags: AreaTableConstants.areaFlagOptions,
         title: '区域标志',
       ),
     );
@@ -81,7 +81,7 @@ class AreaTableView extends StatelessWidget {
       label: '区域阵营',
       child: FoxyShadSelect<int>(
         controller: viewModel.factionGroupMaskController,
-        options: kAreaTeamOptions,
+        options: AreaTableConstants.areaTeamOptions,
         placeholder: const Text('FactionGroupMask'),
       ),
     );
@@ -306,7 +306,7 @@ class AreaTableView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

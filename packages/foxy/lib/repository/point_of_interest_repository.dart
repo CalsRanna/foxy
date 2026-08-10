@@ -78,7 +78,7 @@ class PointOfInterestRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'poi.Name',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

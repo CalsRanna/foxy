@@ -2,66 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// Uniform dialog max width (consistent across the project).
-const kDialogWidth = 720.0;
-
-/// Dialog max height = screen height × this ratio.
-const kFoxyDialogMaxHeightRatio = 0.8;
-
-/// Uniform dialog constraints: maxWidth fixed to [kDialogWidth],
-/// maxHeight by screen ratio.
+/// Foxy dialog entry point: uniform sizing, project-wide behaviors, and
+/// singleton dialog service.
 ///
-/// Every business dialog's [ShadDialog.constraints] should use this
-/// function, keeping width and max height consistent project-wide.
-BoxConstraints foxyDialogConstraints(BuildContext context) {
-  return BoxConstraints(
-    maxWidth: kDialogWidth,
-    maxHeight: MediaQuery.of(context).size.height * kFoxyDialogMaxHeightRatio,
-  );
-}
-
-/// Foxy dialog entry point, wrapping [showShadDialog] with the project's
-/// default behavior.
-///
-/// ## Differences from [showShadDialog]
-/// - **`opaque` defaults to `false`**: keeps the page below visible, the
-///   barrier being a mere translucent overlay. `shadcn_ui` 0.55+ changed
-///   the default to `true`, which stops the whole background from drawing
-///   — looking like "black screen + dialog only".
-///
-/// Business code should call this function instead of [showShadDialog]
-/// directly.
-Future<T?> showFoxyDialog<T>({
-  required BuildContext context,
-  required WidgetBuilder builder,
-  bool barrierDismissible = true,
-  Color barrierColor = const Color(0xcc000000),
-  String barrierLabel = '',
-  bool useRootNavigator = true,
-  RouteSettings? routeSettings,
-  Offset? anchorPoint,
-  ShadDialogVariant variant = ShadDialogVariant.primary,
-
-  /// Whether the route below is obscured. Foxy defaults to `false` (see
-  /// the function docs).
-  bool opaque = false,
-}) {
-  return showShadDialog<T>(
-    context: context,
-    builder: builder,
-    barrierDismissible: barrierDismissible,
-    barrierColor: barrierColor,
-    barrierLabel: barrierLabel,
-    useRootNavigator: useRootNavigator,
-    routeSettings: routeSettings,
-    anchorPoint: anchorPoint,
-    variant: variant,
-    opaque: opaque,
-  );
-}
-
+/// Static members are the shared dialog toolkit ([constraints], [show]);
+/// instance members are the dialog service ([alert], [confirm], [error]...).
 class DialogUtil {
-  static final DialogUtil instance = DialogUtil._();
+  static final instance = DialogUtil._();
+
+  /// Uniform dialog max width (consistent across the project).
+  static const width = 720.0;
+
+  /// Dialog max height = screen height × this ratio.
+  static const maxHeightRatio = 0.8;
+
+  /// Uniform dialog constraints: maxWidth fixed to [width], maxHeight by
+  /// screen ratio.
+  ///
+  /// Every business dialog's [ShadDialog.constraints] should use this
+  /// function, keeping width and max height consistent project-wide.
+  static BoxConstraints constraints(BuildContext context) {
+    return BoxConstraints(
+      maxWidth: width,
+      maxHeight: MediaQuery.of(context).size.height * maxHeightRatio,
+    );
+  }
+
+  /// Shows a dialog, wrapping [showShadDialog] with the project's default
+  /// behavior.
+  ///
+  /// ## Differences from [showShadDialog]
+  /// - **`opaque` defaults to `false`**: keeps the page below visible, the
+  ///   barrier being a mere translucent overlay. `shadcn_ui` 0.55+ changed
+  ///   the default to `true`, which stops the whole background from drawing
+  ///   — looking like "black screen + dialog only".
+  ///
+  /// Business code should call this function instead of [showShadDialog]
+  /// directly.
+  static Future<T?> show<T>({
+    required BuildContext context,
+    required WidgetBuilder builder,
+    bool barrierDismissible = true,
+    Color barrierColor = const Color(0xcc000000),
+    String barrierLabel = '',
+    bool useRootNavigator = true,
+    RouteSettings? routeSettings,
+    Offset? anchorPoint,
+    ShadDialogVariant variant = ShadDialogVariant.primary,
+
+    /// Whether the route below is obscured. Foxy defaults to `false` (see
+    /// the function docs).
+    bool opaque = false,
+  }) {
+    return showShadDialog<T>(
+      context: context,
+      builder: builder,
+      barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor,
+      barrierLabel: barrierLabel,
+      useRootNavigator: useRootNavigator,
+      routeSettings: routeSettings,
+      anchorPoint: anchorPoint,
+      variant: variant,
+      opaque: opaque,
+    );
+  }
 
   DialogUtil._();
 
@@ -73,13 +78,13 @@ class DialogUtil {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
-    await showFoxyDialog<void>(
+    await show<void>(
       context: context,
       builder: (context) {
         return ShadDialog.alert(
           title: Text(title),
           description: Text(message),
-          constraints: foxyDialogConstraints(context),
+          constraints: constraints(context),
           actions: [
             ShadButton(
               child: const Text('确定'),
@@ -99,13 +104,13 @@ class DialogUtil {
     bool destructive = false,
   }) async {
     final context = router.navigatorKey.currentContext!;
-    final result = await showFoxyDialog<bool>(
+    final result = await show<bool>(
       context: context,
       builder: (context) {
         return ShadDialog.alert(
           title: Text(title),
           description: description != null ? Text(description) : null,
-          constraints: foxyDialogConstraints(context),
+          constraints: constraints(context),
           actions: [
             ShadButton.outline(
               child: Text(cancelText),
@@ -151,13 +156,13 @@ class DialogUtil {
     // as loading, they should dismiss explicitly first, so a real page is
     // never popped by accident (historically an unconditional pop flung the
     // list page out).
-    showFoxyDialog(
+    show(
       context: context,
       builder: (context) {
         return ShadDialog.alert(
           title: Text('错误'),
           description: Text(error),
-          constraints: foxyDialogConstraints(context),
+          constraints: constraints(context),
           actions: [
             ShadButton(
               child: Text('确定'),
@@ -171,7 +176,7 @@ class DialogUtil {
 
   void loading() {
     final context = router.navigatorKey.currentContext!;
-    showFoxyDialog(
+    show(
       barrierDismissible: false,
       context: context,
       builder: (context) {

@@ -213,6 +213,5 @@ final class ExtractGameIconsUseCase {
 
 /// Isolate entry point for [ExtractGameIconsUseCase]; defaults to the real
 /// [runGameIconExtractWorker]. Injectable for deterministic tests.
-typedef GameIconExtractWorkerEntry = Future<void> Function(
-  GameIconExtractWorkerArgs args,
-);
+typedef GameIconExtractWorkerEntry =
+    Future<void> Function(GameIconExtractWorkerArgs args);

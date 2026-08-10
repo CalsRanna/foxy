@@ -25,11 +25,11 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: kDialogWidth,
+      width: DialogUtil.width,
       child: Watch((_) {
         if (!_ready.value) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.image, '提取游戏图标'),
+            title: SettingDialogShell.titleRow(LucideIcons.image, '提取游戏图标'),
             child: const SizedBox(
               height: 120,
               child: Center(
@@ -54,7 +54,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
         if (success) {
           final result = _vm.result.value;
           return SettingDialogShell(
-            title: settingDialogTitleRow(
+            title: SettingDialogShell.titleRow(
               LucideIcons.circleCheck,
               '提取完成',
               iconColor: theme.colorScheme.primary,
@@ -65,7 +65,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
                 child: const Text('完成'),
               ),
             ],
-            child: settingDialogBanner(
+            child: SettingDialogShell.banner(
               context,
               text:
                   '提取完成：成功 ${result?.extracted ?? 0} 个'
@@ -84,8 +84,8 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
           return PopScope(
             canPop: false,
             child: SettingDialogShell(
-              title: settingDialogTitleRow(LucideIcons.image, '正在提取图标'),
-              child: settingDialogProgressPanel(
+              title: SettingDialogShell.titleRow(LucideIcons.image, '正在提取图标'),
+              child: SettingDialogShell.progressPanel(
                 context,
                 ratio: _vm.progress.value,
                 label: _vm.progressLabel.value,
@@ -109,7 +109,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
         final path = _vm.path.value;
         final configured = path != null && path.trim().isNotEmpty;
         return SettingDialogShell(
-          title: settingDialogTitleRow(LucideIcons.image, '提取游戏图标'),
+          title: SettingDialogShell.titleRow(LucideIcons.image, '提取游戏图标'),
           actions: [
             ShadButton.outline(
               onPressed: () => Navigator.of(context).maybePop(),
@@ -129,7 +129,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 14,
             children: [
-              settingDialogMutedHint(
+              SettingDialogShell.mutedHint(
                 context,
                 '从配置的客户端目录的 Data\\<语言> 下 MPQ 归档提取全部图标'
                 '（BLP 格式，约 6300 个），不内置在应用中。',
@@ -141,11 +141,14 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
                 ),
               ),
               if (configured)
-                settingDialogReadonlyPath(context, path)
+                SettingDialogShell.readonlyPath(context, path)
               else
-                settingDialogMutedHint(context, '尚未配置客户端目录，请先前往设置页「目录设置」中配置。'),
+                SettingDialogShell.mutedHint(
+                  context,
+                  '尚未配置客户端目录，请先前往设置页「目录设置」中配置。',
+                ),
               if (error != null)
-                settingDialogBanner(
+                SettingDialogShell.banner(
                   context,
                   text: error,
                   color: theme.colorScheme.destructive,

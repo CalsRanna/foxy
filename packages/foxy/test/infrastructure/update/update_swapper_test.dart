@@ -132,7 +132,7 @@ void main() {
     // Simulate: payload under .update_tmp/Foxy, with other leftovers in
     // .update_tmp.
     final updateTemp =
-        Directory(p.join(appDir.path, kUpdateTempDirName))..createSync();
+        Directory(p.join(appDir.path, UpdateSwapper.tempDirName))..createSync();
     final nested = Directory(p.join(updateTemp.path, 'Foxy'))..createSync();
     File(p.join(nested.path, 'foxy.exe')).writeAsStringSync('nested-exe');
     File(p.join(updateTemp.path, 'junk.bin')).writeAsStringSync('junk');

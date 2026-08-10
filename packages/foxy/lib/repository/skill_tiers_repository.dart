@@ -8,7 +8,6 @@ part 'skill_tiers_repository.g.dart';
 
 @FoxyRepository()
 class SkillTiersRepository with RepositoryMixin, _SkillTiersRepositoryMixin {
-
   Future<int> countAllSkillTiers() async {
     return laconic.table(_table).count();
   }

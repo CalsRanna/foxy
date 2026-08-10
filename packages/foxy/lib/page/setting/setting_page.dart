@@ -225,10 +225,7 @@ class _SettingPageState extends State<SettingPage> {
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
-                children: [
-                  Icon(LucideIcons.archive, size: 15),
-                  Text('导出'),
-                ],
+                children: [Icon(LucideIcons.archive, size: 15), Text('导出')],
               ),
             ),
           ),
@@ -321,7 +318,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showExportDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => DbcExportDialog(vm: exportViewModel),
@@ -329,7 +326,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showIconExtractDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => IconExtractDialog(vm: iconViewModel),
@@ -337,7 +334,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showMpqExportDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => MpqExportDialog(vm: mpqViewModel),
@@ -345,7 +342,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showImportDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => DbcImportDialog(vm: importViewModel),
@@ -356,7 +353,7 @@ class _SettingPageState extends State<SettingPage> {
   /// synchronously), then opens a dialog that live-updates with the state.
   void _showUpdateDialog() {
     updateViewModel.checkManually();
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => UpdateDialog(vm: updateViewModel),

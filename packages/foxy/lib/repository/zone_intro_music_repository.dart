@@ -12,7 +12,6 @@ part 'zone_intro_music_repository.g.dart';
 @FoxyFilter.text('name')
 class ZoneIntroMusicRepository
     with RepositoryMixin, _ZoneIntroMusicRepositoryMixin {
-
   Future<int> copyZoneIntroMusic(int key) async {
     final source = await getZoneIntroMusic(key);
     if (source == null) {
@@ -60,7 +59,7 @@ class ZoneIntroMusicRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

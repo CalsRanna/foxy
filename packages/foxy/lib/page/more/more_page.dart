@@ -137,7 +137,7 @@ class _MorePageState extends State<MorePage> {
     FeatureEntity feature,
     Offset position,
   ) {
-    showFoxyContextMenu(
+    ContextMenu.show(
       context: context,
       position: position,
       items: [
@@ -166,7 +166,7 @@ class _MorePageState extends State<MorePage> {
       await featureState.toggleFavorite(feature.id);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('更新收藏状态失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('更新收藏状态失败：${FoxyError.message(error)}');
     }
   }
 
@@ -175,7 +175,7 @@ class _MorePageState extends State<MorePage> {
       await featureState.togglePinned(feature.id);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('更新固定状态失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('更新固定状态失败：${FoxyError.message(error)}');
     }
   }
 }

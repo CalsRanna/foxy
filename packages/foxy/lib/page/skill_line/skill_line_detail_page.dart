@@ -38,10 +38,7 @@ class _SkillLineDetailPageState extends State<SkillLineDetailPage> {
           final key = viewModel.persistedKey.value;
           final skillLineId = key ?? 0;
           return FoxyTab(
-            tabs: const [
-              Text('基本信息'),
-              Text('技能能力'),
-            ],
+            tabs: const [Text('基本信息'), Text('技能能力')],
             contents: [
               SkillLineView(viewModel: viewModel),
               SkillLineAbilityView(
@@ -73,7 +70,7 @@ class _SkillLineDetailPageState extends State<SkillLineDetailPage> {
       await viewModel.initSignals(key: widget.skillLineKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 }

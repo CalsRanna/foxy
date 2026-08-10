@@ -13,16 +13,20 @@ part 'skill_line_category_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SkillLineCategoryRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin, _SkillLineCategoryRepositoryMixin {
-
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _SkillLineCategoryRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  @override
   Future<List<DbcLocaleFieldValue>> getSkillLineCategoryLocales(
     int id,
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
+  @override
   Future<void> saveSkillLineCategoryLocales(
     int id,
     DbcLocaleFieldDefinition field,
@@ -65,7 +69,7 @@ class SkillLineCategoryRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

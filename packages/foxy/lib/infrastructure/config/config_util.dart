@@ -23,7 +23,10 @@ class ConfigUtil {
         // usable as a config, and update() would otherwise merge onto an
         // empty map and overwrite the original content forever — back it up
         // like the unparseable case.
-        return _backupCorruptFile(file, 'config.yaml 顶层不是配置映射,已备份为 config.yaml.bak');
+        return _backupCorruptFile(
+          file,
+          'config.yaml 顶层不是配置映射,已备份为 config.yaml.bak',
+        );
       }
       return Map<String, dynamic>.from(yaml);
     } on YamlException catch (error) {

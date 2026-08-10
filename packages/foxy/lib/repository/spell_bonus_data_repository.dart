@@ -9,7 +9,6 @@ part 'spell_bonus_data_repository.g.dart';
 @FoxyRepository()
 class SpellBonusDataRepository
     with RepositoryMixin, _SpellBonusDataRepositoryMixin {
-
   Future<void> copySpellBonusData(int key) async {
     throw CopyNotSupportedException(
       'spell bonus data cannot be auto-copied; add a new record for a valid spell',

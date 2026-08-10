@@ -64,7 +64,7 @@ class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
     if (filter.comment.isNotEmpty) {
       builder = builder.where(
         'comment',
-        '%${escapeLike(filter.comment)}%',
+        '%${ParseUtil.escapeLike(filter.comment)}%',
         comparator: 'like',
       );
     }

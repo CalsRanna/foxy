@@ -69,8 +69,10 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                 FoxyTableColumn.fixed(
                   label: '语言',
                   width: 120,
-                  cell: (_, item) =>
-                      Text(kPageTextLocaleOptions[item.locale] ?? item.locale),
+                  cell: (_, item) => Text(
+                    PageTextConstants.pageTextLocaleOptions[item.locale] ??
+                        item.locale,
+                  ),
                 ),
                 FoxyTableColumn.fixed(
                   label: '文本',
@@ -90,7 +92,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
               onRowDoubleTap: (item) => _edit(item.key),
               onRowSecondaryTapDownWithDetails: (item, details) {
                 final key = item.key;
-                showFoxyContextMenu(
+                ContextMenu.show(
                   context: context,
                   position: details.globalPosition,
                   items: [
@@ -143,7 +145,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       _showEditor();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
     }
   }
 
@@ -161,7 +163,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -172,7 +174,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       _showEditor();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 
@@ -184,18 +186,18 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       DialogUtil.instance.success('保存成功');
     } catch (error) {
       if (!dialogContext.mounted) return;
-      DialogUtil.instance.error('保存失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('保存失败：${FoxyError.message(error)}');
     }
   }
 
   void _showEditor() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text(viewModel.editingKey.value == null ? '新增本地化' : '编辑本地化'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
           child: Column(
@@ -218,7 +220,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                       label: '语言',
                       child: FoxyShadSelect<String>(
                         controller: viewModel.localeController,
-                        options: kPageTextLocaleOptions,
+                        options: PageTextConstants.pageTextLocaleOptions,
                         placeholder: const Text('locale'),
                       ),
                     ),

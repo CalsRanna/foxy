@@ -158,7 +158,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -173,7 +173,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

@@ -10,7 +10,6 @@ part 'destructible_model_data_repository.g.dart';
 @FoxyFilter.text('id')
 class DestructibleModelDataRepository
     with RepositoryMixin, _DestructibleModelDataRepositoryMixin {
-
   Future<int> copyDestructibleModelData(int key) async {
     final source = await getDestructibleModelData(key);
     if (source == null) {

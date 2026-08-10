@@ -9,7 +9,6 @@ part 'quest_offer_reward_repository.g.dart';
 @FoxyRepository()
 class QuestOfferRewardRepository
     with RepositoryMixin, _QuestOfferRewardRepositoryMixin {
-
   Future<int> copyQuestOfferReward(int key) async {
     final source = await getQuestOfferReward(key);
     if (source == null) {

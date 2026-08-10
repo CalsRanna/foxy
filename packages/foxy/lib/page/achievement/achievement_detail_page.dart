@@ -63,7 +63,7 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
       await viewModel.initSignals(key: widget.achievementKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 }

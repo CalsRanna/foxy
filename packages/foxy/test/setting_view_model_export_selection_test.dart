@@ -5,9 +5,9 @@ import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 /// GetIt-free selection-logic verification: build the items list directly
 /// and reuse the VM's filtering semantics.
 void main() {
-  final spellDuration = dbcDefinitionByTable['dbc_spell_duration']!;
-  final spellIcon = dbcDefinitionByTable['dbc_spell_icon']!;
-  final talent = dbcDefinitionByTable['dbc_talent']!;
+  final spellDuration = DbcDefinitions.byTable['dbc_spell_duration']!;
+  final spellIcon = DbcDefinitions.byTable['dbc_spell_icon']!;
+  final talent = DbcDefinitions.byTable['dbc_talent']!;
 
   List<DbcExportItem> sampleItems() => [
     DbcExportItem(definition: spellDuration, recordCount: 3, selected: true),

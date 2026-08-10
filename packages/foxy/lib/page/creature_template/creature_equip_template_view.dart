@@ -155,7 +155,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -211,21 +211,21 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           label: '主手武器',
           cell: (_, equip) => Text(
             equip.displayName1,
-            style: TextStyle(color: getItemQualityColor(equip.quality1)),
+            style: TextStyle(color: ItemQualityColor.of(equip.quality1)),
           ),
         ),
         FoxyTableColumn.flex(
           label: '副手武器',
           cell: (_, equip) => Text(
             equip.displayName2,
-            style: TextStyle(color: getItemQualityColor(equip.quality2)),
+            style: TextStyle(color: ItemQualityColor.of(equip.quality2)),
           ),
         ),
         FoxyTableColumn.flex(
           label: '远程武器',
           cell: (_, equip) => Text(
             equip.displayName3,
-            style: TextStyle(color: getItemQualityColor(equip.quality3)),
+            style: TextStyle(color: ItemQualityColor.of(equip.quality3)),
           ),
         ),
         FoxyTableColumn.fixed(
@@ -241,7 +241,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
         _showEditDialog(context);
       },
       onRowSecondaryTapDownWithDetails: (equip, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -293,7 +293,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -311,7 +311,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -320,7 +320,8 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -331,18 +332,18 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增装备模板'),
         description: Text('新增一条装备模板记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -350,14 +351,14 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
 
   /// Shows the edit dialog
   void _showEditDialog(BuildContext context) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑装备模板'),
         description: Text('编辑选中的装备模板记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

@@ -40,7 +40,7 @@ Future<void> main(List<String> args) async {
   final appDir = options['--app-dir'];
   final updateDir = options['--update-dir'];
   final waitPid = int.tryParse(options['--wait-pid'] ?? '');
-  final appExe = options['--app-exe'] ?? kAppExeName;
+  final appExe = options['--app-exe'] ?? UpdateSwapper.appExeName;
   if (appDir == null || updateDir == null || waitPid == null) {
     log.e(
       'Usage: foxy_updater --app-dir <dir> --update-dir <dir> '
@@ -86,7 +86,7 @@ Future<void> main(List<String> args) async {
   }
 
   // 5. Delete the update temp directory.
-  await _deleteWithRetry(Directory(p.join(appDir, kUpdateTempDirName)), log);
+  await _deleteWithRetry(Directory(p.join(appDir, UpdateSwapper.tempDirName)), log);
 
   // 6. Restart the main program.
   await _relaunchApp(log, appDir, appExe);

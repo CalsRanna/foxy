@@ -10,7 +10,6 @@ part 'glyph_property_repository.g.dart';
 @FoxyFilter.text('id')
 class GlyphPropertyRepository
     with RepositoryMixin, _GlyphPropertyRepositoryMixin {
-
   @override
   Future<int> copyGlyphProperty(int key) async {
     final source = await getGlyphProperty(key);

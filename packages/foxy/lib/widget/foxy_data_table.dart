@@ -160,8 +160,11 @@ class _FoxyDataTableState<T> extends State<FoxyDataTable<T>> {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Remaining width for flex columns; floors at 120 in windows
-        // narrower than the fixed columns (same rule as flexColumnWidth).
-        final remaining = flexColumnWidth(constraints.maxWidth, fixedTotal);
+        // narrower than the fixed columns (same rule as TableLayoutUtil.flexColumnWidth).
+        final remaining = TableLayoutUtil.flexColumnWidth(
+          constraints.maxWidth,
+          fixedTotal,
+        );
         final rows = widget.rows;
 
         Widget table = ShadTable(
@@ -296,10 +299,7 @@ class _FoxyDataTableState<T> extends State<FoxyDataTable<T>> {
     if (position == null) return;
     widget.onRowSecondaryTapDownWithDetails?.call(
       widget.rows[dataRow],
-      TapDownDetails(
-        globalPosition: position,
-        localPosition: position,
-      ),
+      TapDownDetails(globalPosition: position, localPosition: position),
     );
   }
 

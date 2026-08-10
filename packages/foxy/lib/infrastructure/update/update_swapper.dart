@@ -21,17 +21,6 @@ library;
 
 import 'dart:io';
 
-/// Update temp directory name (under the app directory; deleted after the
-/// swap completes).
-const kUpdateTempDirName = '.update_tmp';
-
-/// Update-helper program file name (distributed with the app, under the
-/// app directory).
-const kUpdaterExeName = 'foxy_updater.exe';
-
-/// App main-program file name.
-const kAppExeName = 'foxy.exe';
-
 /// Records per-file operation failures; the overall swap is not aborted,
 /// keeping the app usable.
 class UpdateSwapFailure {
@@ -55,14 +44,22 @@ class UpdateSwapResult {
 /// Mirrors the new-version payload into the app directory, preserving user
 /// data.
 class UpdateSwapper {
+  /// Update temp directory name (under the app directory; deleted after
+  /// the swap completes).
+  static const tempDirName = '.update_tmp';
+
+  /// Update-helper program file name (distributed with the app, under the
+  /// app directory).
+  static const updaterExeName = 'foxy_updater.exe';
+
+  /// App main-program file name.
+  static const appExeName = 'foxy.exe';
+
   /// Preserve list of relative paths (forward-slash separated): never
   /// deleted or overwritten during an update.
   ///
   /// These are user-generated data and never appear in the release zip.
-  static const List<String> preservedRelPaths = [
-    'config.yaml',
-    'data/icon',
-  ];
+  static const List<String> preservedRelPaths = ['config.yaml', 'data/icon'];
 
   /// Whether [relPath] hits the preserve list (itself or a subtree).
   static bool isPreserved(String relPath) {
@@ -119,8 +116,7 @@ class UpdateSwapper {
       appDir,
       onFile: (file, relPath) {
         if (isPreserved(relPath)) return;
-        if (relPath == kUpdateTempDirName ||
-            relPath.startsWith('$kUpdateTempDirName/')) {
+        if (relPath == tempDirName || relPath.startsWith('$tempDirName/')) {
           return;
         }
         if (!payloadFiles.contains(relPath)) {
@@ -203,7 +199,7 @@ class UpdateSwapper {
     for (final dir in dirs) {
       final relPath = _relative(dir.path, appDir.path);
       if (isPreserved(relPath)) continue;
-      if (relPath == kUpdateTempDirName) continue;
+      if (relPath == tempDirName) continue;
       final hasPayloadFile = payloadFiles.any(
         (path) => path == relPath || path.startsWith('$relPath/'),
       );

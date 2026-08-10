@@ -43,14 +43,14 @@ void main() {
   });
 
   test('Gossip option 类型、图标和语言枚举与当前 core 一致', () {
-    expect(kGossipOptionTypes.keys.toSet(), {
+    expect(GossipMenuOptionConstants.gossipOptionTypes.keys.toSet(), {
       for (var value = 0; value <= 20; value++) value,
     });
-    expect(kGossipOptionIcons.keys.toSet(), {
+    expect(GossipMenuOptionConstants.gossipOptionIcons.keys.toSet(), {
       for (var value = 0; value <= 13; value++) value,
       for (var value = 16; value <= 20; value++) value,
     });
-    expect(kNpcTextLanguages.keys.toSet(), {
+    expect(GossipMenuOptionConstants.npcTextLanguages.keys.toSet(), {
       0,
       1,
       2,
@@ -70,7 +70,7 @@ void main() {
       37,
       38,
     });
-    expect(kGossipBooleanOptions, {0: '否', 1: '是'});
+    expect(GossipMenuOptionConstants.gossipBooleanOptions, {0: '否', 1: '是'});
   });
 
   test('NPC 标识掩码展开为标签，未命中回退', () {

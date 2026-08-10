@@ -115,7 +115,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   label: '需要任务',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
-                    options: kBooleanOptions,
+                    options: CreatureEnums.booleanOptions,
                     placeholder: Text('QuestRequired'),
                   ),
                 ),
@@ -199,7 +199,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -295,7 +295,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -342,7 +342,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -351,7 +351,8 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -361,32 +362,32 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增技能掉落'),
         description: Text('新增一条技能掉落记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
   }
 
   void _showEditDialog(BuildContext context) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑技能掉落'),
         description: Text('编辑选中的技能掉落记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

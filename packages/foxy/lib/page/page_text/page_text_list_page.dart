@@ -133,7 +133,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
       ],
       onRowDoubleTap: (pageText) => _navigateToDetail(key: pageText.key),
       onRowSecondaryTapDownWithDetails: (pageText, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -186,7 +186,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -204,7 +204,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

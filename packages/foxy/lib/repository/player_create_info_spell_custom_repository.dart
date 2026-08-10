@@ -10,7 +10,6 @@ part 'player_create_info_spell_custom_repository.g.dart';
 @FoxyRepository(linkKey: ['raceMask', 'classMask'])
 class PlayerCreateInfoSpellCustomRepository
     with RepositoryMixin, _PlayerCreateInfoSpellCustomRepositoryMixin {
-
   @override
   Future<PlayerCreateInfoSpellCustomKey> copyPlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomKey key,
@@ -22,8 +21,8 @@ class PlayerCreateInfoSpellCustomRepository
 
   @override
   Future<int> countPlayerCreateInfoSpellCustoms(int raceMask, int classMask) {
-    final raceBit = playerCreateRaceBit(raceMask);
-    final classBit = playerCreateClassBit(classMask);
+    final raceBit = PlayerCreateInfoConstants.raceBit(raceMask);
+    final classBit = PlayerCreateInfoConstants.classBit(classMask);
     return laconic
         .table(_table)
         .whereRaw('(racemask = 0 OR (racemask & ?) <> 0)', [raceBit])
@@ -36,8 +35,8 @@ class PlayerCreateInfoSpellCustomRepository
     int raceMask,
     int classMask,
   ) async => PlayerCreateInfoSpellCustomEntity(
-    raceMask: playerCreateRaceBit(raceMask),
-    classMask: playerCreateClassBit(classMask),
+    raceMask: PlayerCreateInfoConstants.raceBit(raceMask),
+    classMask: PlayerCreateInfoConstants.classBit(classMask),
   );
 
   @override
@@ -47,8 +46,8 @@ class PlayerCreateInfoSpellCustomRepository
     int classMask, {
     int page = 1,
   }) async {
-    final raceBit = playerCreateRaceBit(raceMask);
-    final classBit = playerCreateClassBit(classMask);
+    final raceBit = PlayerCreateInfoConstants.raceBit(raceMask);
+    final classBit = PlayerCreateInfoConstants.classBit(classMask);
     final results = await laconic
         .table(_table)
         .select(['racemask', 'classmask', 'Spell', 'Note'])

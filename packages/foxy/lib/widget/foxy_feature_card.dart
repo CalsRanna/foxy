@@ -2,37 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-const _kFeatureIconMap = <String, IconData>{
-  'pawPrint': LucideIcons.pawPrint,
-  'swords': LucideIcons.swords,
-  'badgeQuestionMark': LucideIcons.badgeQuestionMark,
-  'mapPin': LucideIcons.mapPin,
-  'messageCircle': LucideIcons.messageCircle,
-  'code': LucideIcons.code,
-  'shell': LucideIcons.shell,
-  'list': LucideIcons.list,
-  'bookOpen': LucideIcons.bookOpen,
-  'listFilter': LucideIcons.listFilter,
-  'userPlus': LucideIcons.userPlus,
-  'map': LucideIcons.map,
-  'laugh': LucideIcons.laugh,
-  'trophy': LucideIcons.trophy,
-  'arrowUpDown': LucideIcons.arrowUpDown,
-  'trendingUp': LucideIcons.trendingUp,
-  'info': LucideIcons.info,
-  'coins': LucideIcons.coins,
-  'wand': LucideIcons.wand,
-  'gem': LucideIcons.gem,
-  'triangle': LucideIcons.triangle,
-  'award': LucideIcons.award,
-  'banknote': LucideIcons.banknote,
-  'layers': LucideIcons.layers,
-  'ruler': LucideIcons.ruler,
-  'sparkles': LucideIcons.sparkles,
-  'hammer': LucideIcons.hammer,
-};
-
 class FoxyFeatureCard extends StatefulWidget {
+  static const _featureIconMap = <String, IconData>{
+    'pawPrint': LucideIcons.pawPrint,
+    'swords': LucideIcons.swords,
+    'badgeQuestionMark': LucideIcons.badgeQuestionMark,
+    'mapPin': LucideIcons.mapPin,
+    'messageCircle': LucideIcons.messageCircle,
+    'code': LucideIcons.code,
+    'shell': LucideIcons.shell,
+    'list': LucideIcons.list,
+    'bookOpen': LucideIcons.bookOpen,
+    'listFilter': LucideIcons.listFilter,
+    'userPlus': LucideIcons.userPlus,
+    'map': LucideIcons.map,
+    'laugh': LucideIcons.laugh,
+    'trophy': LucideIcons.trophy,
+    'arrowUpDown': LucideIcons.arrowUpDown,
+    'trendingUp': LucideIcons.trendingUp,
+    'info': LucideIcons.info,
+    'coins': LucideIcons.coins,
+    'wand': LucideIcons.wand,
+    'gem': LucideIcons.gem,
+    'triangle': LucideIcons.triangle,
+    'award': LucideIcons.award,
+    'banknote': LucideIcons.banknote,
+    'layers': LucideIcons.layers,
+    'ruler': LucideIcons.ruler,
+    'sparkles': LucideIcons.sparkles,
+    'hammer': LucideIcons.hammer,
+  };
+
   final FeatureEntity feature;
   final bool seamless;
   final Border? border;
@@ -76,7 +76,8 @@ class _FoxyFeatureCardState extends State<FoxyFeatureCard> {
 
   Widget _buildContent() {
     final iconData =
-        _kFeatureIconMap[widget.feature.icon] ?? LucideIcons.circleAlert;
+        FoxyFeatureCard._featureIconMap[widget.feature.icon] ??
+        LucideIcons.circleAlert;
     final tag = Text(
       widget.feature.category.toUpperCase(),
       style: const TextStyle(

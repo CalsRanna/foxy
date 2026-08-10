@@ -14,7 +14,6 @@ part 'area_table_repository.g.dart';
 @FoxyFilter.text('name', column: 'AreaName_lang_zhCN')
 class AreaTableRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _AreaTableRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -58,7 +57,7 @@ class AreaTableRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'AreaName_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

@@ -25,19 +25,19 @@ import 'package:foxy/repository/skinning_loot_template_repository.dart';
 
 void main() {
   test('creature_template 枚举选项与 AzerothCore 服务端取值集一致', () {
-    expect(kUnitClassOptions.keys.toSet(), {1, 2, 4, 8});
-    expect(kRankOptions.keys.toSet(), {0, 1, 2, 3, 4, 5});
-    expect(kCreatureTypeOptions.keys.toSet(), {
+    expect(CreatureEnums.unitClassOptions.keys.toSet(), {1, 2, 4, 8});
+    expect(CreatureEnums.rankOptions.keys.toSet(), {0, 1, 2, 3, 4, 5});
+    expect(CreatureEnums.creatureTypeOptions.keys.toSet(), {
       for (var value = 0; value <= 13; value++) value,
     });
-    expect(kBooleanOptions.keys.toSet(), {0, 1});
-    expect(kExpansionOptions.keys.toSet(), {0, 1, 2});
-    expect(kDamageSchoolOptions.keys.toSet(), {
+    expect(CreatureEnums.booleanOptions.keys.toSet(), {0, 1});
+    expect(CreatureEnums.expansionOptions.keys.toSet(), {0, 1, 2});
+    expect(CreatureEnums.damageSchoolOptions.keys.toSet(), {
       for (var value = 0; value <= 6; value++) value,
     });
-    expect(kMovementTypeOptions.keys.toSet(), {0, 1, 2});
-    expect(kVisibilityDistanceTypeOptions.keys.toSet(), {0, 1, 2, 3, 4, 5});
-    expect(kCreatureFamilyOptions.keys.toSet(), {
+    expect(CreatureEnums.movementTypeOptions.keys.toSet(), {0, 1, 2});
+    expect(CreatureEnums.visibilityDistanceTypeOptions.keys.toSet(), {0, 1, 2, 3, 4, 5});
+    expect(CreatureEnums.creatureFamilyOptions.keys.toSet(), {
       0,
       1,
       2,
@@ -84,20 +84,20 @@ void main() {
   });
 
   test('creature_template 位标志选项覆盖服务端定义的全部可编辑位', () {
-    expect(_valuesOf(kNpcFlagOptions), _bits(0, 26));
-    expect(_valuesOf(kUnitFlagOptions), _bits(0, 31));
-    expect(_valuesOf(kUnitFlag2Options), {
+    expect(_valuesOf(CreatureFlags.npcFlagOptions), _bits(0, 26));
+    expect(_valuesOf(CreatureFlags.unitFlagOptions), _bits(0, 31));
+    expect(_valuesOf(CreatureFlags.unitFlag2Options), {
       ..._bits(0, 8),
       ..._bits(10, 18),
       1 << 24,
     });
-    expect(_valuesOf(kCreatureTypeFlagOptions), _bits(0, 31));
-    expect(_valuesOf(kDynamicFlagOptions), _bits(0, 7));
-    expect(_valuesOf(kLootModeFlagOptions), {1, 2, 4, 8, 16, 32, 0x8000});
+    expect(_valuesOf(CreatureFlags.creatureTypeFlagOptions), _bits(0, 31));
+    expect(_valuesOf(CreatureFlags.dynamicFlagOptions), _bits(0, 7));
+    expect(_valuesOf(CreatureFlags.lootModeFlagOptions), {1, 2, 4, 8, 16, 32, 0x8000});
 
     final dbAllowedExtraFlags = _bits(0, 31)..remove(1 << 28);
-    expect(_valuesOf(kFlagsExtraOptions), dbAllowedExtraFlags);
-    expect(_valuesOf(kFlagsExtraOptions), isNot(contains(1 << 28)));
+    expect(_valuesOf(CreatureFlags.flagsExtraOptions), dbAllowedExtraFlags);
+    expect(_valuesOf(CreatureFlags.flagsExtraOptions), isNot(contains(1 << 28)));
   });
 
   test('11 个关联 Tab 的 Entity 写出字段与目标 SQL 列一致', () {
@@ -267,13 +267,13 @@ void main() {
   });
 
   test('主记录落库前禁用全部 11 个关联 Tab', () {
-    expect(creatureTemplateDisabledTabIndexes(null, 12), {
+    expect(CreatureTemplateDetailPage.disabledTabIndexes(null, 12), {
       for (var index = 1; index < 12; index++) index,
     });
-    expect(creatureTemplateDisabledTabIndexes(0, 12), {
+    expect(CreatureTemplateDetailPage.disabledTabIndexes(0, 12), {
       for (var index = 1; index < 12; index++) index,
     });
-    expect(creatureTemplateDisabledTabIndexes(1, 12), isEmpty);
+    expect(CreatureTemplateDetailPage.disabledTabIndexes(1, 12), isEmpty);
   });
 }
 

@@ -10,7 +10,6 @@ part 'item_extended_cost_repository.g.dart';
 @FoxyFilter.text('id')
 class ItemExtendedCostRepository
     with RepositoryMixin, _ItemExtendedCostRepositoryMixin {
-
   @override
   Future<int> copyItemExtendedCost(int key) async {
     final source = await getItemExtendedCost(key);

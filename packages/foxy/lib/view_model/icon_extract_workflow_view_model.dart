@@ -61,7 +61,7 @@ class IconExtractWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '加载客户端配置失败: ${foxyErrorMessage(error)}';
+      errorMessage.value = '加载客户端配置失败: ${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -93,7 +93,7 @@ class IconExtractWorkflowViewModel {
     final directory = path.value?.trim();
     if (directory == null || directory.isEmpty) {
       final error = ValidationException('select the client directory first');
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -134,7 +134,9 @@ class IconExtractWorkflowViewModel {
         BlpIconCache.instance.clear();
         status.value = WorkflowStatus.succeeded;
       } else {
-        errorMessage.value = formatIconExtractionFailureSummary(nextResult);
+        errorMessage.value = DbcSyncSummary.iconExtractionFailureSummary(
+          nextResult,
+        );
         status.value = WorkflowStatus.failed;
       }
     } catch (error) {
@@ -142,7 +144,7 @@ class IconExtractWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '提取出错：${foxyErrorMessage(error)}';
+      errorMessage.value = '提取出错：${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

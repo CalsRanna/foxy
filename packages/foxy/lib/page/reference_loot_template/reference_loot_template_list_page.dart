@@ -122,7 +122,7 @@ class _ReferenceLootTemplateListPageState
           label: '物品/行标识',
           cell: (context, template) {
             final qualityColor =
-                kItemQualityColors[template.itemQuality] ?? Colors.white;
+                ItemQualityColor.colors[template.itemQuality] ?? Colors.white;
             return Text(
               template.reference == 0
                   ? (template.displayName.isEmpty
@@ -161,7 +161,7 @@ class _ReferenceLootTemplateListPageState
       ],
       onRowDoubleTap: (template) => _navigateToDetail(key: template.key),
       onRowSecondaryTapDownWithDetails: (template, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -210,7 +210,7 @@ class _ReferenceLootTemplateListPageState
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -228,7 +228,7 @@ class _ReferenceLootTemplateListPageState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

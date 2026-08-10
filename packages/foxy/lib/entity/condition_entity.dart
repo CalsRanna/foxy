@@ -94,7 +94,7 @@ extension BriefConditionEntityLabel on BriefConditionEntity {
   String get conditionTypeLabel {
     final id = conditionTypeOrReference;
     if (id < 0) return '引用 $id';
-    return kConditionTypeLabels[id] ?? id.toString();
+    return ConditionType.conditionTypeLabels[id] ?? id.toString();
   }
 
   /// Source-type labels: non-negative values map to enums, negative values
@@ -102,7 +102,7 @@ extension BriefConditionEntityLabel on BriefConditionEntity {
   String get sourceTypeLabel {
     final id = sourceTypeOrReferenceId;
     if (id < 0) return '引用 $id';
-    return kConditionSourceTypeLabels[id] ?? id.toString();
+    return ConditionSourceTypes.conditionSourceTypeLabels[id] ?? id.toString();
   }
 
   /// 参数1 标签：按条件类型解析字段规格后映射为可读文本。
@@ -113,11 +113,17 @@ extension BriefConditionEntityLabel on BriefConditionEntity {
   String get conditionValue1Label {
     final type = conditionTypeOrReference;
     if (type < 0) return conditionValue1.toString();
-    final spec = conditionValueConfig(type, value1: conditionValue1).value1;
+    final spec = ConditionValueConfig.forType(
+      type,
+      value1: conditionValue1,
+    ).value1;
     return switch (spec) {
       IntegerSelectFieldSpec(:final options) =>
         options[conditionValue1] ?? conditionValue1.toString(),
-      IntegerFlagsFieldSpec(:final flags) => flagMaskLabel(conditionValue1, flags),
+      IntegerFlagsFieldSpec(:final flags) => FlagItem.maskLabel(
+        conditionValue1,
+        flags,
+      ),
       IntegerNumberFieldSpec() => conditionValue1.toString(),
       IntegerReferenceFieldSpec() => conditionValue1.toString(),
     };

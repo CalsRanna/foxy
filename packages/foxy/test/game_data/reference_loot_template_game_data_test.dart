@@ -49,7 +49,7 @@ void main() {
   });
 
   test('LootMode Flags 覆盖 SharedDefines.h 及 core base 数据专用位', () {
-    expect(kLootModeFlagOptions.map((flag) => flag.value).toSet(), {
+    expect(CreatureFlags.lootModeFlagOptions.map((flag) => flag.value).toSet(), {
       0x0001,
       0x0002,
       0x0004,
@@ -58,7 +58,7 @@ void main() {
       0x0020,
       0x8000,
     });
-    expect(kLootTemplateValidLootModeMask, 0x803f);
+    expect(LootTemplateConstants.lootTemplateValidLootModeMask, 0x803f);
   });
 
 }

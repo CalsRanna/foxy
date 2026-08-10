@@ -1,78 +1,81 @@
 // GossipMenuOption enum constant definitions
+
+abstract final class GossipMenuOptionConstants {
+  /// Server languages storable in npc_text.lang0..lang7.
+  /// Source: AzerothCore SharedDefines.h `Language`; LANG_ADDON exceeds the
+  /// tinyint range.
+  static const npcTextLanguages = <int, String>{
+    0: '全语言',
+    1: '兽人语',
+    2: '达纳苏斯语',
+    3: '牛头人语',
+    6: '矮人语',
+    7: '通用语（人类）',
+    8: '恶魔语',
+    9: '泰坦语',
+    10: '萨拉斯语',
+    11: '龙语',
+    12: '卡利姆多语',
+    13: '侏儒语',
+    14: '巨魔语',
+    33: '亡灵语',
+    35: '德莱尼语',
+    36: '僵尸语',
+    37: '侏儒二进制语',
+    38: '地精二进制语',
+  };
+
+  /// GossipMenuOption type names (OptionType value → name)
+  /// Source: AzerothCore Gossip_Option enum
+  static const gossipOptionTypes = {
+    0: '无', // None
+    1: '对话', // Gossip
+    2: '交接任务', // Questgiver
+    3: '商人', // Vendor
+    4: '飞行管理员', // Taxivendor
+    5: '训练师', // Trainer
+    6: '灵魂治愈', // Spirithealer
+    7: '灵魂使者', // Spiritguide
+    8: '旅店老板', // Innkeeper
+    9: '银行职员', // Banker
+    10: '请愿者', // Petitioner
+    11: '战袍设计', // Tabarddesigner
+    12: '战场军官', // Battlefield
+    13: '拍卖师', // Auctioneer
+    14: '宠物管理员', // Stablepet
+    15: '装备修理', // Armorer
+    16: '遗忘天赋', // Unlearntalents
+    17: '遗忘宠物天赋', // Unlearnpettalents
+    18: '学习双天赋', // LearnDualspec
+    19: '户外PVP', // OutdoorPVP
+    20: '双天赋信息', // DualspecInfo
+  };
+
+  /// GossipMenuOption icon names (OptionIcon value → name)
+  /// Source: AzerothCore GossipOptionIcon enum
+  static const gossipOptionIcons = {
+    0: '白色气泡', // Chat
+    1: '棕色袋', // Vendor
+    2: '飞行', // Taxi
+    3: '书本', // Trainer
+    4: '齿轮', // Interact
+    5: '齿轮', // Interact
+    6: '带黄点的棕色袋', // Money Bag
+    7: '带黑点的白色气泡', // Talk
+    8: '战袍', // Tabard
+    9: '两把剑', // Battle
+    10: '黄色点', // Dot
+    11: '白色气泡', // Chat
+    12: '白色气泡', // Chat
+    13: '白色气泡', // Chat
+    16: '白色气泡', // Chat
+    17: '白色气泡', // Chat
+    18: '白色气泡', // Chat
+    19: '白色气泡', // Chat
+    20: '白色气泡', // Chat
+  };
+
+  static const gossipBooleanOptions = <int, String>{0: '否', 1: '是'};
+}
+
 // Source: AzerothCore GossipDef.h
-
-const kGossipBooleanOptions = <int, String>{0: '否', 1: '是'};
-
-/// GossipMenuOption icon names (OptionIcon value → name)
-/// Source: AzerothCore GossipOptionIcon enum
-const kGossipOptionIcons = {
-  0: '白色气泡', // Chat
-  1: '棕色袋', // Vendor
-  2: '飞行', // Taxi
-  3: '书本', // Trainer
-  4: '齿轮', // Interact
-  5: '齿轮', // Interact
-  6: '带黄点的棕色袋', // Money Bag
-  7: '带黑点的白色气泡', // Talk
-  8: '战袍', // Tabard
-  9: '两把剑', // Battle
-  10: '黄色点', // Dot
-  11: '白色气泡', // Chat
-  12: '白色气泡', // Chat
-  13: '白色气泡', // Chat
-  16: '白色气泡', // Chat
-  17: '白色气泡', // Chat
-  18: '白色气泡', // Chat
-  19: '白色气泡', // Chat
-  20: '白色气泡', // Chat
-};
-
-/// GossipMenuOption type names (OptionType value → name)
-/// Source: AzerothCore Gossip_Option enum
-const kGossipOptionTypes = {
-  0: '无', // None
-  1: '对话', // Gossip
-  2: '交接任务', // Questgiver
-  3: '商人', // Vendor
-  4: '飞行管理员', // Taxivendor
-  5: '训练师', // Trainer
-  6: '灵魂治愈', // Spirithealer
-  7: '灵魂使者', // Spiritguide
-  8: '旅店老板', // Innkeeper
-  9: '银行职员', // Banker
-  10: '请愿者', // Petitioner
-  11: '战袍设计', // Tabarddesigner
-  12: '战场军官', // Battlefield
-  13: '拍卖师', // Auctioneer
-  14: '宠物管理员', // Stablepet
-  15: '装备修理', // Armorer
-  16: '遗忘天赋', // Unlearntalents
-  17: '遗忘宠物天赋', // Unlearnpettalents
-  18: '学习双天赋', // LearnDualspec
-  19: '户外PVP', // OutdoorPVP
-  20: '双天赋信息', // DualspecInfo
-};
-
-/// Server languages storable in npc_text.lang0..lang7.
-/// Source: AzerothCore SharedDefines.h `Language`; LANG_ADDON exceeds the
-/// tinyint range.
-const kNpcTextLanguages = <int, String>{
-  0: '全语言',
-  1: '兽人语',
-  2: '达纳苏斯语',
-  3: '牛头人语',
-  6: '矮人语',
-  7: '通用语（人类）',
-  8: '恶魔语',
-  9: '泰坦语',
-  10: '萨拉斯语',
-  11: '龙语',
-  12: '卡利姆多语',
-  13: '侏儒语',
-  14: '巨魔语',
-  33: '亡灵语',
-  35: '德莱尼语',
-  36: '僵尸语',
-  37: '侏儒二进制语',
-  38: '地精二进制语',
-};

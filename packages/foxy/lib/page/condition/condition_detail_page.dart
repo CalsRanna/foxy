@@ -58,7 +58,7 @@ class _ConditionDetailPageState extends State<ConditionDetailPage> {
       await viewModel.initSignals(key: widget.conditionKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 }

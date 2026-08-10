@@ -39,8 +39,7 @@ enum DirectoryConfigTarget {
   });
 
   /// Label for the auto-detected subdirectory shown under the row's path.
-  String get resolvedLabel =>
-      this == clientDir ? 'MPQ 归档目录' : 'DBC 目录';
+  String get resolvedLabel => this == clientDir ? 'MPQ 归档目录' : 'DBC 目录';
 
   void clearError(SetupStatusViewModel vm) {
     if (this == clientDir) {
@@ -116,18 +115,18 @@ class DirectoryPathFormState extends State<DirectoryPathForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 14,
         children: [
-          settingDialogMutedHint(context, target.description),
+          SettingDialogShell.mutedHint(context, target.description),
           Text(
             '目录路径',
             style: theme.textTheme.small.copyWith(fontWeight: FontWeight.w600),
           ),
-          settingDialogPathField(
+          SettingDialogShell.pathField(
             controller: controller,
             placeholder: '选择或输入${target.title}路径',
             onBrowse: _browse,
           ),
           if (error != null)
-            settingDialogBanner(
+            SettingDialogShell.banner(
               context,
               text: error,
               color: theme.colorScheme.destructive,
@@ -238,7 +237,7 @@ class DirectorySettingRow extends StatelessWidget {
           const SizedBox(width: 16),
           ShadButton.outline(
             size: ShadButtonSize.sm,
-            onPressed: () => showFoxyDialog(
+            onPressed: () => DialogUtil.show(
               context: context,
               barrierDismissible: false,
               builder: (dialogContext) =>
@@ -262,7 +261,7 @@ class _DirectoryPathConfigDialogState extends State<DirectoryPathConfigDialog> {
   @override
   Widget build(BuildContext context) {
     return SettingDialogShell(
-      title: settingDialogTitleRow(
+      title: SettingDialogShell.titleRow(
         widget.target.icon,
         '设置${widget.target.title}',
       ),

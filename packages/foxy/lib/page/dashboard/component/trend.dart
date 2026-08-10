@@ -3,18 +3,18 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/widget/foxy_card.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-final _kCopyColor = ShadOrangeColorScheme.light().primary;
-
-/// Action icon colors come from each shadcn scheme's `primary` (light),
-/// staying consistent with the shadcn palette and replacing the previously
-/// hard-coded Material `Colors.green/blue/red/orange`.
-final _kCreateColor = ShadGreenColorScheme.light().primary;
-
-final _kDeleteColor = ShadRedColorScheme.light().primary;
-
-final _kUpdateColor = ShadBlueColorScheme.light().primary;
-
 class Trend extends StatelessWidget {
+  static final _copyColor = ShadOrangeColorScheme.light().primary;
+
+  /// Action icon colors come from each shadcn scheme's `primary` (light),
+  /// staying consistent with the shadcn palette and replacing the previously
+  /// hard-coded Material `Colors.green/blue/red/orange`.
+  static final _createColor = ShadGreenColorScheme.light().primary;
+
+  static final _deleteColor = ShadRedColorScheme.light().primary;
+
+  static final _updateColor = ShadBlueColorScheme.light().primary;
+
   final List<ActivityLogEntity> activities;
 
   const Trend({super.key, required this.activities});
@@ -109,10 +109,10 @@ class _TrendItem extends StatelessWidget {
 
   Color _actionColor(ActivityActionType type) {
     return switch (type) {
-      ActivityActionType.create => _kCreateColor,
-      ActivityActionType.update => _kUpdateColor,
-      ActivityActionType.delete => _kDeleteColor,
-      ActivityActionType.copy => _kCopyColor,
+      ActivityActionType.create => Trend._createColor,
+      ActivityActionType.update => Trend._updateColor,
+      ActivityActionType.delete => Trend._deleteColor,
+      ActivityActionType.copy => Trend._copyColor,
     };
   }
 

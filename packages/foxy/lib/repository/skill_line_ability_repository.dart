@@ -9,7 +9,6 @@ part 'skill_line_ability_repository.g.dart';
 @FoxyRepository(linkKey: ['skillLine'])
 class SkillLineAbilityRepository
     with RepositoryMixin, _SkillLineAbilityRepositoryMixin {
-
   Future<int> countAllSkillLineAbilities() async {
     return laconic.table(_table).count();
   }

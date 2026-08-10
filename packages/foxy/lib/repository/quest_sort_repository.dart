@@ -14,7 +14,6 @@ part 'quest_sort_repository.g.dart';
 @FoxyFilter.text('name', column: 'SortName_lang_zhCN')
 class QuestSortRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _QuestSortRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -43,7 +42,7 @@ class QuestSortRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'SortName_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

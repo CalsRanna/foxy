@@ -9,7 +9,6 @@ part 'spell_custom_attr_repository.g.dart';
 @FoxyRepository()
 class SpellCustomAttrRepository
     with RepositoryMixin, _SpellCustomAttrRepositoryMixin {
-
   Future<void> copySpellCustomAttr(int key) async {
     throw CopyNotSupportedException(
       'spell custom attribute records cannot be auto-copied; add a new record for a valid spell',

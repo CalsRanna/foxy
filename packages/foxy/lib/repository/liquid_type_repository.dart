@@ -11,7 +11,6 @@ part 'liquid_type_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class LiquidTypeRepository with RepositoryMixin, _LiquidTypeRepositoryMixin {
-
   Future<int> copyLiquidType(int key) async {
     final source = await getLiquidType(key);
     if (source == null) {
@@ -63,7 +62,7 @@ class LiquidTypeRepository with RepositoryMixin, _LiquidTypeRepositoryMixin {
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

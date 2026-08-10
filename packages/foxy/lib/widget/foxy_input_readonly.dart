@@ -21,6 +21,7 @@ class FoxyReadonlyInput {
   final ShadDecoration? decoration;
   final MouseCursor? mouseCursor;
   final bool? showCursor;
+
   /// Resolves the style from [readOnly] and [role].
   ///
   /// Returns an empty config (all null) when [readOnly] is false.

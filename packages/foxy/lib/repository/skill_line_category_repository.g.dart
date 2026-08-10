@@ -24,7 +24,8 @@ final class SkillLineCategoryFilter {
   }
 }
 
-mixin _SkillLineCategoryRepositoryMixin on RepositoryMixin {
+mixin _SkillLineCategoryRepositoryMixin
+    on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> destroySkillLineCategory(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -40,6 +41,17 @@ mixin _SkillLineCategoryRepositoryMixin on RepositoryMixin {
     if (results.isEmpty) return null;
     return SkillLineCategoryEntity.fromJson(results.first.toMap());
   }
+
+  Future<List<DbcLocaleFieldValue>> getSkillLineCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveSkillLineCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeSkillLineCategory(
     SkillLineCategoryEntity skillLineCategory,

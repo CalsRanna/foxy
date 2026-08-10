@@ -12,7 +12,6 @@ part 'game_object_template_repository.g.dart';
 @FoxyFilter.text('name')
 class GameObjectTemplateRepository
     with RepositoryMixin, _GameObjectTemplateRepositoryMixin {
-
   @override
   Future<int> copyGameObjectTemplate(int key) async {
     final source = await getGameObjectTemplate(key);
@@ -40,7 +39,7 @@ class GameObjectTemplateRepository
       if (filter != null && filter.name.isNotEmpty) {
         builder = builder.where(
           'name',
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }
@@ -112,13 +111,13 @@ class GameObjectTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['gt.name', 'gtl.name'],
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'gt.name',
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }

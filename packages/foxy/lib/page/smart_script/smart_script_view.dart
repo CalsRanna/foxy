@@ -24,13 +24,13 @@ class SmartScriptView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      final eventConfig = smartEventParameterConfig(
+      final eventConfig = SmartScriptConstants.eventParameterConfig(
         viewModel.selectedEventType.value,
       );
-      final actionConfig = smartActionParameterConfig(
+      final actionConfig = SmartScriptConstants.actionParameterConfig(
         viewModel.selectedActionType.value,
       );
-      final targetConfig = smartTargetParameterConfig(
+      final targetConfig = SmartScriptConstants.targetParameterConfig(
         viewModel.selectedTargetType.value,
       );
 
@@ -53,7 +53,7 @@ class SmartScriptView extends StatelessWidget {
                     label: '源类型',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.sourceTypeController,
-                      options: kSourceTypes,
+                      options: SmartScriptConstants.sourceTypes,
                       placeholder: const Text('source_type'),
                     ),
                   ),
@@ -82,7 +82,7 @@ class SmartScriptView extends StatelessWidget {
                     label: '事件类型',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.eventTypeController,
-                      options: smartEventTypesForSource(
+                      options: SmartScriptConstants.eventTypesForSource(
                         viewModel.selectedSourceType.value,
                       ),
                       placeholder: const Text('event_type'),
@@ -92,7 +92,7 @@ class SmartScriptView extends StatelessWidget {
                     label: '阶段掩码',
                     child: FoxyFlagPicker(
                       controller: viewModel.eventPhaseMaskController,
-                      flags: kEventPhaseFlagItems,
+                      flags: SmartScriptConstants.eventPhaseFlagItems,
                       title: '事件阶段掩码',
                       placeholder: 'event_phase_mask',
                     ),
@@ -106,7 +106,7 @@ class SmartScriptView extends StatelessWidget {
                     label: '事件标志',
                     child: FoxyFlagPicker(
                       controller: viewModel.eventFlagsController,
-                      flags: kEventFlagItems,
+                      flags: SmartScriptConstants.eventFlagItems,
                       title: '事件标志',
                       placeholder: 'event_flags',
                     ),
@@ -158,7 +158,7 @@ class SmartScriptView extends StatelessWidget {
                     label: '动作类型',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.actionTypeController,
-                      options: kActionTypes,
+                      options: SmartScriptConstants.actionTypes,
                       placeholder: const Text('action_type'),
                     ),
                   ),
@@ -206,7 +206,7 @@ class SmartScriptView extends StatelessWidget {
                     label: '目标类型',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.targetTypeController,
-                      options: kTargetTypes,
+                      options: SmartScriptConstants.targetTypes,
                       placeholder: const Text('target_type'),
                     ),
                   ),
@@ -455,7 +455,7 @@ class SmartScriptView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 

@@ -55,8 +55,10 @@ class PlayerCreateInfoEntity with _PlayerCreateInfoEntityMixin {
 
 extension BriefPlayerCreateInfoEntityLabel on BriefPlayerCreateInfoEntity {
   /// 种族标签（人类/兽人/…），未知值回退为原始数字。
-  String get raceLabel => kPlayerRaceOptions[race] ?? race.toString();
+  String get raceLabel =>
+      PlayerCreateInfoConstants.playerRaceOptions[race] ?? race.toString();
 
   /// 职业标签（战士/圣骑士/…），未知值回退为原始数字。
-  String get classLabel => kPlayerClassOptions[class_] ?? class_.toString();
+  String get classLabel =>
+      PlayerCreateInfoConstants.playerClassOptions[class_] ?? class_.toString();
 }

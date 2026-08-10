@@ -71,7 +71,7 @@ class _GameObjectTemplateAddonViewState
                         label: '标志位',
                         child: FoxyFlagPicker(
                           controller: viewModel.flagsController,
-                          flags: kGameObjectFlagItems,
+                          flags: GameObjectConstants.gameObjectFlagItems,
                           title: '游戏对象标志位',
                           placeholder: 'flags',
                         ),
@@ -190,7 +190,7 @@ class _GameObjectTemplateAddonViewState
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -205,7 +205,7 @@ class _GameObjectTemplateAddonViewState
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

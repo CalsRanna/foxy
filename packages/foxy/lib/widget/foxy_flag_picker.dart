@@ -72,7 +72,7 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
 
     return ShadDialog(
       scrollable: false,
-      constraints: foxyDialogConstraints(context),
+      constraints: DialogUtil.constraints(context),
       title: Text(widget.title),
       description: Text('当前值: $_displayValue  |  已选: $_selectedCount 项'),
       actions: [
@@ -182,7 +182,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
   }
 
   Future<void> _openDialog() async {
-    final result = await showFoxyDialog<int>(
+    final result = await DialogUtil.show<int>(
       context: context,
       builder: (context) {
         return _FlagPickerDialog(

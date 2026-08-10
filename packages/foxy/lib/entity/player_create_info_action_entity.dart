@@ -42,5 +42,6 @@ extension BriefPlayerCreateInfoActionEntityLabel
     on BriefPlayerCreateInfoActionEntity {
   /// 动作按钮类型标签（法术/宏/…），未知值回退为原始数字。
   String get typeLabel =>
-      kPlayerActionButtonTypeOptions[type] ?? type.toString();
+      PlayerCreateInfoConstants.playerActionButtonTypeOptions[type] ??
+      type.toString();
 }

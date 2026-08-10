@@ -54,7 +54,7 @@ class CreatureTemplateSpellRepository
           'cts.`Index`',
           'cts.Spell',
           'cts.VerifiedBuild',
-          'ds.Name_lang_zhCN as spellName',
+          'ds.Name_lang_zhCN as kSpellName',
           'ds.NameSubtext_lang_zhCN as spellSubtext',
         ])
         .leftJoin(

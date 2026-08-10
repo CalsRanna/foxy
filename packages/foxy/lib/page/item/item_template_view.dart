@@ -20,70 +20,61 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-const Map<int, String> _kAmmoTypeOptions = {0: '无', 2: '箭', 3: '子弹'};
-
-const Map<int, String> _kLanguageOptions = {
-  0: '通用语',
-  1: '兽人语',
-  2: '矮人语',
-  3: '达纳苏斯语',
-  6: '亡灵语',
-  7: '牛头人语',
-  8: '侏儒语',
-  10: '血精灵语',
-  11: '德莱尼语',
-  12: '龙语',
-  13: '恶魔语',
-  14: '泰坦语',
-  33: '纳迦语',
-  35: '亡灵语',
-};
-
-const Map<int, String> _kPageMaterialOptions = {
-  0: '纸质',
-  1: '石头',
-  2: '大理石',
-  3: '银质',
-  4: '青铜',
-  5: '铁质',
-  6: '铜质',
-  7: '未知',
-};
-
-final Map<int, String> _kInventoryTypeOptions = kItemInventoryTypes.asMap();
-
 // Module-level constant option tables: stable references so FoxyShadSelect
 // can cache its ShadOption lists. (They used to be getters rebuilding a Map
 // on every build, which broke the dropdown option cache.)
-final Map<int, String> _kItemClassOptions = kItemClasses.asMap();
-
 class ItemTemplateView extends StatelessWidget {
+  static const Map<int, String> _ammoTypeOptions = {0: '无', 2: '箭', 3: '子弹'};
+
+  static const Map<int, String> _languageOptions = {
+    0: '通用语',
+    1: '兽人语',
+    2: '矮人语',
+    3: '达纳苏斯语',
+    6: '亡灵语',
+    7: '牛头人语',
+    8: '侏儒语',
+    10: '血精灵语',
+    11: '德莱尼语',
+    12: '龙语',
+    13: '恶魔语',
+    14: '泰坦语',
+    33: '纳迦语',
+    35: '亡灵语',
+  };
+
+  static const Map<int, String> _pageMaterialOptions = {
+    0: '纸质',
+    1: '石头',
+    2: '大理石',
+    3: '银质',
+    4: '青铜',
+    5: '铁质',
+    6: '铜质',
+    7: '未知',
+  };
+
+  static final Map<int, String> _inventoryTypeOptions =
+      ItemConstants.itemInventoryTypes.asMap();
+
+  static final Map<int, String> _itemClassOptions = ItemConstants.itemClasses.asMap();
+
   final ItemTemplateDetailViewModel viewModel;
 
   const ItemTemplateView({super.key, required this.viewModel});
 
-  // Ammo type options
-  Map<int, String> get _ammoTypeOptions => _kAmmoTypeOptions;
 
   // Get subclass options based on selected class
   Map<int, String> get _currentSubclassOptions {
     final classId = viewModel.classNameController.collect();
-    if (classId < 0 || classId >= kItemSubclasses.length) return {};
-    final subclasses = kItemSubclasses[classId];
+    if (classId < 0 || classId >= ItemConstants.itemSubclasses.length) return {};
+    final subclasses = ItemConstants.itemSubclasses[classId];
     return subclasses.asMap().map((k, v) => MapEntry(k, v));
   }
 
-  // Convert kItemInventoryTypes List<String> to Map<int, String>
-  Map<int, String> get _inventoryTypeOptions => _kInventoryTypeOptions;
 
-  // Convert kItemClasses List<String> to Map<int, String>
-  Map<int, String> get _itemClassOptions => _kItemClassOptions;
 
-  // Language options
-  Map<int, String> get _languageOptions => _kLanguageOptions;
 
-  // Page material options
-  Map<int, String> get _pageMaterialOptions => _kPageMaterialOptions;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +110,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '品质',
       child: FoxyShadSelect<int>(
         controller: viewModel.qualityController,
-        options: kItemQualityOptions,
+        options: ItemEnums.itemQualityOptions,
         placeholder: const Text('Quality'),
       ),
     );
@@ -152,7 +143,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '材质',
       child: FoxyShadSelect<int>(
         controller: viewModel.materialController,
-        options: kItemMaterialOptions,
+        options: ItemEnums.itemMaterialOptions,
         placeholder: const Text('Material'),
       ),
     );
@@ -176,7 +167,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '挂载类型',
       child: FoxyShadSelect<int>(
         controller: viewModel.sheathController,
-        options: kItemSheathOptions,
+        options: ItemEnums.itemSheathOptions,
         placeholder: const Text('sheath'),
       ),
     );
@@ -184,7 +175,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '绑定类型',
       child: FoxyShadSelect<int>(
         controller: viewModel.bondingController,
-        options: kItemBondingOptions,
+        options: ItemEnums.itemBondingOptions,
         placeholder: const Text('bonding'),
       ),
     );
@@ -298,7 +289,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '食物类型',
       child: FoxyShadSelect<int>(
         controller: viewModel.foodTypeController,
-        options: kItemFoodTypeOptions,
+        options: ItemEnums.itemFoodTypeOptions,
         placeholder: const Text('FoodType'),
       ),
     );
@@ -306,7 +297,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '背包类别',
       child: FoxyFlagPicker(
         controller: viewModel.bagFamilyController,
-        flags: kItemBagFamilyOptions,
+        flags: ItemFlags.itemBagFamilyOptions,
         title: '背包类别',
         placeholder: 'BagFamily',
       ),
@@ -444,7 +435,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '物品标识',
       child: FoxyFlagPicker(
         controller: viewModel.flagsController,
-        flags: kItemFlagOptions,
+        flags: ItemFlags.itemFlagOptions,
         title: '物品标识',
         placeholder: 'flags',
       ),
@@ -453,7 +444,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '额外标识',
       child: FoxyFlagPicker(
         controller: viewModel.flagsExtraController,
-        flags: kItemFlagsExtraOptions,
+        flags: ItemFlags.itemFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flagsExtra',
       ),
@@ -462,7 +453,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '自定义标识',
       child: FoxyFlagPicker(
         controller: viewModel.flagsCustomController,
-        flags: kItemFlagsCustomOptions,
+        flags: ItemFlags.itemFlagsCustomOptions,
         title: '自定义标识',
         placeholder: 'flagsCustom',
       ),
@@ -514,7 +505,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '伤害类型1',
       child: FoxyShadSelect<int>(
         controller: viewModel.dmgType1Controller,
-        options: kDamageSchoolOptions,
+        options: CreatureEnums.damageSchoolOptions,
         placeholder: const Text('dmg_type1'),
       ),
     );
@@ -536,7 +527,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '伤害类型2',
       child: FoxyShadSelect<int>(
         controller: viewModel.dmgType2Controller,
-        options: kDamageSchoolOptions,
+        options: CreatureEnums.damageSchoolOptions,
         placeholder: const Text('dmg_type2'),
       ),
     );
@@ -612,7 +603,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '缩放值',
       child: FoxyFlagPicker(
         controller: viewModel.scalingStatValueController,
-        flags: kItemScalingStatValueOptions,
+        flags: ItemFlags.itemScalingStatValueOptions,
         title: '缩放值',
         placeholder: 'ScalingStatValue',
       ),
@@ -700,7 +691,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '允许职业',
       child: FoxyFlagPicker(
         controller: viewModel.allowableClassController,
-        flags: kAllowableClassOptions,
+        flags: ItemFlags.allowableClassOptions,
         title: '允许职业',
         placeholder: 'AllowableClass',
       ),
@@ -709,7 +700,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '允许种族',
       child: FoxyFlagPicker(
         controller: viewModel.allowableRaceController,
-        flags: kAllowableRaceOptions,
+        flags: ItemFlags.allowableRaceOptions,
         title: '允许种族',
         placeholder: 'AllowableRace',
       ),
@@ -776,7 +767,7 @@ class ItemTemplateView extends StatelessWidget {
     final requiredReputationRankInput = FoxyFormItem(
       label: '声望等级',
       child: FoxyShadSelect<int>(
-        options: kItemReputationRankOptions,
+        options: ItemEnums.itemReputationRankOptions,
         placeholder: const Text('RequiredReputationRank'),
         controller: viewModel.requiredReputationRankController,
       ),
@@ -881,7 +872,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '插槽颜色1',
       child: FoxyFlagPicker(
         controller: viewModel.socketColor1Controller,
-        flags: kItemSocketColorFlagOptions,
+        flags: ItemFlags.itemSocketColorFlagOptions,
         title: '插槽颜色1',
         placeholder: 'socketColor_1',
       ),
@@ -890,7 +881,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '插槽颜色2',
       child: FoxyFlagPicker(
         controller: viewModel.socketColor2Controller,
-        flags: kItemSocketColorFlagOptions,
+        flags: ItemFlags.itemSocketColorFlagOptions,
         title: '插槽颜色2',
         placeholder: 'socketColor_2',
       ),
@@ -899,7 +890,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '插槽颜色3',
       child: FoxyFlagPicker(
         controller: viewModel.socketColor3Controller,
-        flags: kItemSocketColorFlagOptions,
+        flags: ItemFlags.itemSocketColorFlagOptions,
         title: '插槽颜色3',
         placeholder: 'socketColor_3',
       ),
@@ -1183,7 +1174,7 @@ class ItemTemplateView extends StatelessWidget {
               label: '触发类型',
               child: FoxyShadSelect<int>(
                 controller: triggerController,
-                options: kItemSpellTriggerOptions,
+                options: ItemEnums.itemSpellTriggerOptions,
                 placeholder: Text('spelltrigger_$number'),
               ),
             ),
@@ -1260,7 +1251,7 @@ class ItemTemplateView extends StatelessWidget {
             label: '属性类型$firstNumber',
             child: FoxyShadSelect<int>(
               controller: firstTypeController,
-              options: kItemStatTypeOptions,
+              options: ItemEnums.itemStatTypeOptions,
               placeholder: Text('stat_type$firstNumber'),
             ),
           ),
@@ -1279,7 +1270,7 @@ class ItemTemplateView extends StatelessWidget {
             label: '属性类型$secondNumber',
             child: FoxyShadSelect<int>(
               controller: secondTypeController,
-              options: kItemStatTypeOptions,
+              options: ItemEnums.itemStatTypeOptions,
               placeholder: Text('stat_type$secondNumber'),
             ),
           ),
@@ -1312,7 +1303,7 @@ class ItemTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

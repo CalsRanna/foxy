@@ -40,7 +40,7 @@ void main() {
   test('巨大 recordCount × recordSize 声明被拒绝', () {
     writeHeader('evil.dbc', recordCount: 1 << 30, recordSize: 1 << 20);
     expect(
-      () => assertDbcPayloadSafe(p.join(tempDir.path, 'evil.dbc')),
+      () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'evil.dbc')),
       throwsA(isA<ValidationException>()),
     );
   });
@@ -48,7 +48,7 @@ void main() {
   test('巨大 stringBlockSize 声明被拒绝', () {
     writeHeader('evil2.dbc', recordCount: 1, recordSize: 4, stringBlockSize: 1 << 30);
     expect(
-      () => assertDbcPayloadSafe(p.join(tempDir.path, 'evil2.dbc')),
+      () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'evil2.dbc')),
       throwsA(isA<ValidationException>()),
     );
   });
@@ -62,7 +62,7 @@ void main() {
       stringBlockSize: 1 << 20,
     );
     expect(
-      () => assertDbcPayloadSafe(p.join(tempDir.path, 'ok.dbc')),
+      () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'ok.dbc')),
       returnsNormally,
     );
   });
@@ -70,22 +70,22 @@ void main() {
   test('边界:恰好等于上限放行,超 1 字节拒绝', () {
     writeHeader(
       'boundary_ok.dbc',
-      recordCount: maxDbcPayloadBytes ~/ 4,
+      recordCount: DbcHeaderGuard.maxPayloadBytes ~/ 4,
       recordSize: 4,
       stringBlockSize: 0,
     );
     expect(
-      () => assertDbcPayloadSafe(p.join(tempDir.path, 'boundary_ok.dbc')),
+      () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'boundary_ok.dbc')),
       returnsNormally,
     );
     writeHeader(
       'boundary_bad.dbc',
-      recordCount: maxDbcPayloadBytes ~/ 4 + 1,
+      recordCount: DbcHeaderGuard.maxPayloadBytes ~/ 4 + 1,
       recordSize: 4,
       stringBlockSize: 0,
     );
     expect(
-      () => assertDbcPayloadSafe(p.join(tempDir.path, 'boundary_bad.dbc')),
+      () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'boundary_bad.dbc')),
       throwsA(isA<ValidationException>()),
     );
   });
@@ -94,7 +94,7 @@ void main() {
     final file = File(p.join(tempDir.path, 'tiny.dbc'));
     file.writeAsBytesSync([1, 2, 3]);
     expect(
-      () => assertDbcPayloadSafe(file.path),
+      () => DbcHeaderGuard.assertPayloadSafe(file.path),
       returnsNormally,
     );
   });

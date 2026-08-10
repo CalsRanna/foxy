@@ -32,7 +32,7 @@ class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
       'ts.MoneyCost',
       'ts.ReqSkillLine',
       'ts.ReqLevel',
-      'ds.Name_lang_zhCN as spellName',
+      'ds.Name_lang_zhCN as kSpellName',
       'ds.NameSubtext_lang_zhCN as spellSubtext',
     ]);
     builder = builder.leftJoin(

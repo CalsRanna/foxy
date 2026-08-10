@@ -70,7 +70,7 @@ mixin _SpellRankLinkedListViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -95,7 +95,7 @@ mixin _SpellRankLinkedListViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     }
   }
@@ -123,7 +123,7 @@ mixin _SpellRankLinkedListViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -155,7 +155,7 @@ mixin _SpellRankLinkedListViewModelMixin on FieldControllerMixin {
         return;
       }
       editingKey.value = null;
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
@@ -202,7 +202,7 @@ mixin _SpellRankLinkedListViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -256,7 +256,7 @@ mixin _SpellRankLinkedListViewModelMixin on FieldControllerMixin {
       selectedKey.value = null;
     } catch (error) {
       if (token == _refreshToken) {
-        errorMessage.value = foxyErrorMessage(error);
+        errorMessage.value = FoxyError.message(error);
         LoggerUtil.instance.e('刷新子表列表失败: $error');
       }
     } finally {

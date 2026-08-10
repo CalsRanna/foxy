@@ -120,7 +120,7 @@ class _PlayerCreateInfoActionViewState
       title: Text(isEditing ? '编辑动作' : '新增动作'),
       titlePinned: true,
       descriptionPinned: true,
-      constraints: foxyDialogConstraints(dialogContext),
+      constraints: DialogUtil.constraints(dialogContext),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 720),
         child: Column(
@@ -135,7 +135,7 @@ class _PlayerCreateInfoActionViewState
                     label: '种族',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.raceController,
-                      options: kPlayerRaceOptions,
+                      options: PlayerCreateInfoConstants.playerRaceOptions,
                       placeholder: const Text('race'),
                     ),
                   ),
@@ -145,7 +145,7 @@ class _PlayerCreateInfoActionViewState
                     label: '职业',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.classController,
-                      options: kPlayerClassOptions,
+                      options: PlayerCreateInfoConstants.playerClassOptions,
                       placeholder: const Text('class'),
                     ),
                   ),
@@ -175,7 +175,8 @@ class _PlayerCreateInfoActionViewState
                     label: '类型',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.typeController,
-                      options: kPlayerActionButtonTypeOptions,
+                      options: PlayerCreateInfoConstants
+                          .playerActionButtonTypeOptions,
                       placeholder: const Text('type'),
                     ),
                   ),
@@ -200,7 +201,7 @@ class _PlayerCreateInfoActionViewState
                       } catch (error) {
                         if (!mounted) return;
                         DialogUtil.instance.error(
-                          '保存失败：${foxyErrorMessage(error)}',
+                          '保存失败：${FoxyError.message(error)}',
                         );
                         return;
                       }
@@ -249,7 +250,7 @@ class _PlayerCreateInfoActionViewState
         _showDialog(isEditing: true);
       },
       onRowSecondaryTapDownWithDetails: (item, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -287,7 +288,7 @@ class _PlayerCreateInfoActionViewState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -296,7 +297,8 @@ class _PlayerCreateInfoActionViewState
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -306,7 +308,7 @@ class _PlayerCreateInfoActionViewState
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
@@ -314,7 +316,7 @@ class _PlayerCreateInfoActionViewState
   }
 
   void _showDialog({required bool isEditing}) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (c) => _buildDialog(c, isEditing: isEditing),
     );

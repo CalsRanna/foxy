@@ -11,7 +11,6 @@ part 'dbc_emote_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('command')
 class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
-
   Future<int> copyDbcEmote(int key) async {
     final source = await getDbcEmote(key);
     if (source == null) {
@@ -63,7 +62,7 @@ class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
     if (filter.command.isNotEmpty) {
       builder = builder.where(
         'EmoteSlashCommand',
-        '%${escapeLike(filter.command)}%',
+        '%${ParseUtil.escapeLike(filter.command)}%',
         comparator: 'like',
       );
     }

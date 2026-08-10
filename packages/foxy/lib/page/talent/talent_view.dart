@@ -53,7 +53,7 @@ class TalentView extends StatelessWidget {
       label: '加入法术书',
       child: FoxyShadSelect<int>(
         controller: viewModel.flagsController,
-        options: kTalentAddToSpellBookOptions,
+        options: TalentConstants.talentAddToSpellBookOptions,
         placeholder: const Text('Flags'),
       ),
     );
@@ -333,7 +333,7 @@ class TalentView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

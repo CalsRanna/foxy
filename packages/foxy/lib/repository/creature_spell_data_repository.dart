@@ -98,7 +98,7 @@ class CreatureSpellDataRepository
           'ds_3.Name_lang_zhCN',
           'ds_4.Name_lang_zhCN',
         ],
-        '%${escapeLike(filter.spell)}%',
+        '%${ParseUtil.escapeLike(filter.spell)}%',
         comparator: 'like',
       );
     }

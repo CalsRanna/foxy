@@ -17,7 +17,6 @@ class ItemRandomSuffixRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _ItemRandomSuffixRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -75,7 +74,7 @@ class ItemRandomSuffixRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

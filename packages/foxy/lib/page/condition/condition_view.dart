@@ -35,7 +35,7 @@ class ConditionView extends StatelessWidget {
       final errorType = viewModel.selectedErrorType.value;
       final referenceTemplate = viewModel.selectedSourceMode.value == 1;
       final referenceCondition = viewModel.selectedConditionMode.value == 1;
-      final valueConfig = conditionValueConfig(
+      final valueConfig = ConditionValueConfig.forType(
         referenceCondition ? -1 : conditionType,
         value1: conditionValue1,
       );
@@ -54,7 +54,7 @@ class ConditionView extends StatelessWidget {
                     label: '来源模式',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.sourceModeController,
-                      options: kConditionModeOptions,
+                      options: ConditionDetailViewModel.modeOptions,
                       placeholder: const Text('模式'),
                     ),
                   ),
@@ -67,7 +67,8 @@ class ConditionView extends StatelessWidget {
                           )
                         : FoxyShadSelect<int>(
                             controller: viewModel.sourceTypeController,
-                            options: kConditionSourceTypeLabels,
+                            options:
+                                ConditionSourceTypes.conditionSourceTypeLabels,
                             placeholder: const Text('SourceTypeOrReferenceId'),
                           ),
                   ),
@@ -104,7 +105,7 @@ class ConditionView extends StatelessWidget {
                     label: '条件模式',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.conditionModeController,
-                      options: kConditionModeOptions,
+                      options: ConditionDetailViewModel.modeOptions,
                       placeholder: const Text('模式'),
                     ),
                   ),
@@ -118,7 +119,7 @@ class ConditionView extends StatelessWidget {
                           )
                         : FoxyShadSelect<int>(
                             controller: viewModel.conditionTypeController,
-                            options: kConditionTypeLabels,
+                            options: ConditionType.conditionTypeLabels,
                             placeholder: const Text('ConditionTypeOrReference'),
                           ),
                   ),
@@ -135,7 +136,7 @@ class ConditionView extends StatelessWidget {
                     label: '否定条件',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.negativeConditionController,
-                      options: kConditionBooleanOptions,
+                      options: ConditionValueConfig.conditionBooleanOptions,
                       placeholder: const Text('NegativeCondition'),
                       enabled: !referenceCondition,
                     ),
@@ -169,7 +170,7 @@ class ConditionView extends StatelessWidget {
                     label: '法术失败类型',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.errorTypeController,
-                      options: kConditionErrorTypeOptions,
+                      options: ConditionErrorTypes.conditionErrorTypeOptions,
                       placeholder: const Text('ErrorType'),
                       enabled: sourceType == 17,
                       maxHeight: 360,
@@ -179,7 +180,7 @@ class ConditionView extends StatelessWidget {
                     label: '自定义错误',
                     child: FoxyShadSelect<int>(
                       controller: viewModel.errorTextIdController,
-                      options: kConditionCustomErrorOptions,
+                      options: ConditionErrorTypes.conditionCustomErrorOptions,
                       placeholder: const Text('ErrorTextId'),
                       enabled: sourceType == 17 && errorType == 172,
                       maxHeight: 360,
@@ -267,7 +268,7 @@ class ConditionView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -311,15 +312,20 @@ class ConditionView extends StatelessWidget {
     };
     // Dispatch by source type to the concrete-row-type picker; no erasure.
     final editor = switch (sourceType) {
-      13 || 17 || 18 || 21 || 24 =>
-        entryPicker(FoxyEntityPickerDelegates.spell),
+      13 ||
+      17 ||
+      18 ||
+      21 ||
+      24 => entryPicker(FoxyEntityPickerDelegates.spell),
       16 || 20 || 29 => entryPicker(FoxyEntityPickerDelegates.creatureTemplate),
       19 => entryPicker(FoxyEntityPickerDelegates.questTemplate),
       23 => entryPicker(FoxyEntityPickerDelegates.itemTemplate),
-      30 when sourceGroup == 0 =>
-        entryPicker(FoxyEntityPickerDelegates.creatureTemplate),
-      30 when sourceGroup == 1 =>
-        entryPicker(FoxyEntityPickerDelegates.gameObjectTemplate),
+      30 when sourceGroup == 0 => entryPicker(
+        FoxyEntityPickerDelegates.creatureTemplate,
+      ),
+      30 when sourceGroup == 1 => entryPicker(
+        FoxyEntityPickerDelegates.gameObjectTemplate,
+      ),
       _ => FoxyNumberInput<int>(
         controller: viewModel.sourceEntryController,
         placeholder: 'SourceEntry',
@@ -354,7 +360,9 @@ class ConditionView extends StatelessWidget {
       23 => '商人生物',
       _ => '来源组',
     };
-    final canEdit = kConditionSourceTypesWithGroup.contains(sourceType);
+    final canEdit = ConditionSourceTypes.conditionSourceTypesWithGroup.contains(
+      sourceType,
+    );
     return _numberItem(
       label,
       'SourceGroup',
@@ -372,7 +380,7 @@ class ConditionView extends StatelessWidget {
         label: 'SmartAI类型',
         child: FoxyShadSelect<int>(
           controller: viewModel.sourceIdController.selectController,
-          options: kSourceTypes,
+          options: SmartScriptConstants.sourceTypes,
           placeholder: const Text('SourceId'),
         ),
       );
@@ -383,12 +391,16 @@ class ConditionView extends StatelessWidget {
       viewModel.sourceIdController.numberController,
       readOnly:
           referenceTemplate ||
-          !kConditionSourceTypesWithSourceId.contains(sourceType),
+          !ConditionSourceTypes.conditionSourceTypesWithSourceId.contains(
+            sourceType,
+          ),
     );
   }
 
   Map<int, String> _targetOptions(int sourceType) {
-    final count = sourceType < 0 ? 1 : conditionTargetCount(sourceType);
+    final count = sourceType < 0
+        ? 1
+        : ConditionSourceTypes.targetCount(sourceType);
     return {0: '目标 0', if (count > 1) 1: '目标 1', if (count > 2) 2: '目标 2'};
   }
 

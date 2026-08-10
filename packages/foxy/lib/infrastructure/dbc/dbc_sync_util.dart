@@ -156,7 +156,7 @@ class DbcSyncUtil {
       existing.addAll(rows.map((row) => row['TABLE_NAME'] as String));
     } catch (error) {
       return [
-        for (final definition in dbcDefinitions)
+        for (final definition in DbcDefinitions.all)
           DbcTableCheckResult(
             tableName: definition.tableName,
             state: DbcTableState.error,
@@ -167,7 +167,7 @@ class DbcSyncUtil {
 
     final results = <DbcTableCheckResult>[];
     final present = <String>[];
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       if (existing.contains(definition.tableName)) {
         present.add(definition.tableName);
       } else {
@@ -195,7 +195,7 @@ class DbcSyncUtil {
         columnsByTable.putIfAbsent(table, () => <String>{}).add(column);
       }
       for (final table in present) {
-        final definition = dbcDefinitionByTable[table]!;
+        final definition = DbcDefinitions.byTable[table]!;
         final expected = {
           for (final field in definition.schema.fields)
             if (!field.type.isSkip) field.name.toLowerCase(),
@@ -456,7 +456,7 @@ class DbcSyncUtil {
       // Clean up both __staging_ and __backup_ tables: a hard-kill window
       // (after rename, before drop) can leave backup tables behind, which
       // checkTables' LIKE 'dbc_%' would otherwise match.
-      final tables = dbcDefinitions
+      final tables = DbcDefinitions.all
           .map(
             (definition) => [
               '${definition.qualifiedTableName}__staging_$jobId',

@@ -167,8 +167,8 @@ void main() {
 
   group('DbcLocaleFields coverage', () {
     test('所有 Schema 本地化字段都已注册编辑器', () {
-      for (final definition in dbcDefinitions) {
-        final prefixes = discoverDbcLocaleColumnPrefixes(definition.schema);
+      for (final definition in DbcDefinitions.all) {
+        final prefixes = DbcLocale.discoverColumnPrefixes(definition.schema);
         for (final prefix in prefixes) {
           final registered = DbcLocaleFields.all.any(
             (field) =>

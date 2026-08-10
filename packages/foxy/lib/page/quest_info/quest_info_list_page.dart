@@ -123,7 +123,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
       onRowSecondaryTapDownWithDetails: (item, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -172,7 +172,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -190,7 +190,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

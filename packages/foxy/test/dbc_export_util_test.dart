@@ -13,7 +13,7 @@ void main() {
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('foxy_dbc_export_test_');
-    definition = dbcDefinitionByTable['dbc_spell_duration']!;
+    definition = DbcDefinitions.byTable['dbc_spell_duration']!;
     util = DbcExportUtil();
   });
 
@@ -179,7 +179,7 @@ void main() {
   });
 
   test('DbcExportUtil 支持中文、空字符串与重复字符串', () async {
-    final icon = dbcDefinitionByTable['dbc_spell_icon']!;
+    final icon = DbcDefinitions.byTable['dbc_spell_icon']!;
     final rows = [
       {'ID': 1, 'TextureFilename': ''},
       {'ID': 2, 'TextureFilename': '法术/图标_测试'},

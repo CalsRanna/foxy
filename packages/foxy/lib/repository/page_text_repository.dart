@@ -12,7 +12,6 @@ part 'page_text_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('text')
 class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
-
   static const _localeTable = 'page_text_locale';
 
   @override
@@ -40,7 +39,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
       if (filter != null && filter.text.isNotEmpty) {
         builder = builder.where(
           'Text',
-          '%${escapeLike(filter.text)}%',
+          '%${ParseUtil.escapeLike(filter.text)}%',
           comparator: 'like',
         );
       }
@@ -103,13 +102,13 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
       if (localeEnabled) {
         builder = builder.whereAny(
           ['pt.Text', 'ptl.Text'],
-          '%${escapeLike(filter.text)}%',
+          '%${ParseUtil.escapeLike(filter.text)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'pt.Text',
-          '%${escapeLike(filter.text)}%',
+          '%${ParseUtil.escapeLike(filter.text)}%',
           comparator: 'like',
         );
       }
@@ -127,7 +126,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > kPageTextMaxUnsignedInt) {
+    if (id > PageTextConstants.pageTextMaxUnsignedInt) {
       throw IdExhaustedException('no free uint32 ID left in page_text');
     }
     return id;

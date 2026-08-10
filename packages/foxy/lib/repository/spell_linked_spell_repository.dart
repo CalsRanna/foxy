@@ -9,7 +9,6 @@ part 'spell_linked_spell_repository.g.dart';
 @FoxyRepository(linkKey: ['spellTrigger'])
 class SpellLinkedSpellRepository
     with RepositoryMixin, _SpellLinkedSpellRepositoryMixin {
-
   @override
   Future<SpellLinkedSpellKey> copySpellLinkedSpell(
     SpellLinkedSpellKey key,

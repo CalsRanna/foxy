@@ -76,7 +76,7 @@ class GameObjectTemplateDetailViewModel
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -91,29 +91,77 @@ class GameObjectTemplateDetailViewModel
 
   void _refreshDataFieldEditors() {
     final type = selectedType.value;
-    data0Controller.configure(gameObjectDataFieldSpec(type, 0).editor);
-    data1Controller.configure(gameObjectDataFieldSpec(type, 1).editor);
-    data2Controller.configure(gameObjectDataFieldSpec(type, 2).editor);
-    data3Controller.configure(gameObjectDataFieldSpec(type, 3).editor);
-    data4Controller.configure(gameObjectDataFieldSpec(type, 4).editor);
-    data5Controller.configure(gameObjectDataFieldSpec(type, 5).editor);
-    data6Controller.configure(gameObjectDataFieldSpec(type, 6).editor);
-    data7Controller.configure(gameObjectDataFieldSpec(type, 7).editor);
-    data8Controller.configure(gameObjectDataFieldSpec(type, 8).editor);
-    data9Controller.configure(gameObjectDataFieldSpec(type, 9).editor);
-    data10Controller.configure(gameObjectDataFieldSpec(type, 10).editor);
-    data11Controller.configure(gameObjectDataFieldSpec(type, 11).editor);
-    data12Controller.configure(gameObjectDataFieldSpec(type, 12).editor);
-    data13Controller.configure(gameObjectDataFieldSpec(type, 13).editor);
-    data14Controller.configure(gameObjectDataFieldSpec(type, 14).editor);
-    data15Controller.configure(gameObjectDataFieldSpec(type, 15).editor);
-    data16Controller.configure(gameObjectDataFieldSpec(type, 16).editor);
-    data17Controller.configure(gameObjectDataFieldSpec(type, 17).editor);
-    data18Controller.configure(gameObjectDataFieldSpec(type, 18).editor);
-    data19Controller.configure(gameObjectDataFieldSpec(type, 19).editor);
-    data20Controller.configure(gameObjectDataFieldSpec(type, 20).editor);
-    data21Controller.configure(gameObjectDataFieldSpec(type, 21).editor);
-    data22Controller.configure(gameObjectDataFieldSpec(type, 22).editor);
-    data23Controller.configure(gameObjectDataFieldSpec(type, 23).editor);
+    data0Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 0).editor,
+    );
+    data1Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 1).editor,
+    );
+    data2Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 2).editor,
+    );
+    data3Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 3).editor,
+    );
+    data4Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 4).editor,
+    );
+    data5Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 5).editor,
+    );
+    data6Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 6).editor,
+    );
+    data7Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 7).editor,
+    );
+    data8Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 8).editor,
+    );
+    data9Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 9).editor,
+    );
+    data10Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 10).editor,
+    );
+    data11Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 11).editor,
+    );
+    data12Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 12).editor,
+    );
+    data13Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 13).editor,
+    );
+    data14Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 14).editor,
+    );
+    data15Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 15).editor,
+    );
+    data16Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 16).editor,
+    );
+    data17Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 17).editor,
+    );
+    data18Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 18).editor,
+    );
+    data19Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 19).editor,
+    );
+    data20Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 20).editor,
+    );
+    data21Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 21).editor,
+    );
+    data22Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 22).editor,
+    );
+    data23Controller.configure(
+      GameObjectConstants.dataFieldSpec(type, 23).editor,
+    );
   }
 }

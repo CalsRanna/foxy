@@ -11,7 +11,6 @@ part 'spell_icon_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class SpellIconRepository with RepositoryMixin, _SpellIconRepositoryMixin {
-
   Future<int> copySpellIcon(int key) async {
     final source = await getSpellIcon(key);
     if (source == null) {
@@ -61,7 +60,7 @@ class SpellIconRepository with RepositoryMixin, _SpellIconRepositoryMixin {
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'TextureFilename',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

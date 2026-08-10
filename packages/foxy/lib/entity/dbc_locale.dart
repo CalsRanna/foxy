@@ -1,30 +1,30 @@
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:warcrafty/warcrafty.dart';
 
-/// Discovers all locale-field prefixes (e.g. `Name_lang`) from
-/// [DbcSchema].
-///
-/// Inferred by matching `*_lang_enUS` string columns; used by the
-/// coverage-completeness tests.
-Set<String> discoverDbcLocaleColumnPrefixes(DbcSchema schema) {
-  final prefixes = <String>{};
-  for (final field in schema.fields) {
-    if (!field.type.isString) continue;
-    const suffix = '_enUS';
-    if (!field.name.endsWith(suffix)) continue;
-    // Name_lang_enUS → Name_lang
-    final withoutLocale = field.name.substring(
-      0,
-      field.name.length - suffix.length,
-    );
-    if (!withoutLocale.endsWith('_lang')) continue;
-    prefixes.add(withoutLocale);
-  }
-  return prefixes;
-}
-
 /// DBC fixed language slots (matching warcrafty's `localeNames` order).
 class DbcLocale {
+  /// Discovers all locale-field prefixes (e.g. `Name_lang`) from
+  /// [DbcSchema].
+  ///
+  /// Inferred by matching `*_lang_enUS` string columns; used by the
+  /// coverage-completeness tests.
+  static Set<String> discoverColumnPrefixes(DbcSchema schema) {
+    final prefixes = <String>{};
+    for (final field in schema.fields) {
+      if (!field.type.isString) continue;
+      const suffix = '_enUS';
+      if (!field.name.endsWith(suffix)) continue;
+      // Name_lang_enUS → Name_lang
+      final withoutLocale = field.name.substring(
+        0,
+        field.name.length - suffix.length,
+      );
+      if (!withoutLocale.endsWith('_lang')) continue;
+      prefixes.add(withoutLocale);
+    }
+    return prefixes;
+  }
+
   static const enUS = DbcLocale(index: 0, code: 'enUS', label: '美式英语');
   static const koKR = DbcLocale(index: 1, code: 'koKR', label: '韩语');
   static const frFR = DbcLocale(index: 2, code: 'frFR', label: '法语');
@@ -99,7 +99,7 @@ class DbcLocaleFieldDefinition {
     required String label,
     bool multiline = false,
   }) {
-    final definition = dbcDefinitionByTable[tableName];
+    final definition = DbcDefinitions.byTable[tableName];
     if (definition == null) {
       throw ArgumentError('unknown DBC table: $tableName');
     }

@@ -1,12 +1,14 @@
 import 'dart:typed_data';
 
+/// BLP2 image decoder (main mipmap only).
+abstract final class BlpDecoder {
 /// Decodes a BLP2 image to RGBA (main mipmap only).
 ///
 /// All 3.3.5a client icons are BLP2 64×64, encoded as DXT1/DXT3/DXT5
 /// (measured distribution DXT1 2210 / DXT3 1922 / DXT5 2175; no JPEG, no
 /// palette variants). Supports both compressed-texture and raw-BGRA
 /// encodings; the JPEG variant throws [BlpFormatException].
-BlpImage decodeBlp(Uint8List bytes) {
+  static BlpImage decode(Uint8List bytes) {
   if (bytes.length < 84 ||
       bytes[0] != 0x42 ||
       bytes[1] != 0x4C ||
@@ -68,7 +70,7 @@ BlpImage decodeBlp(Uint8List bytes) {
 }
 
 /// Decodes a DXT1/3/5 block into [dst] (RGBA, non-premultiplied alpha).
-void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
+  static void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
   final blocksX = (w + 3) >> 2;
   final blocksY = (h + 3) >> 2;
   final blockBytes = mode == 1 ? 8 : 16;
@@ -135,7 +137,7 @@ void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
 }
 
 /// DXT5 8-value alpha interpolation lookup.
-int _dxt5Alpha(Uint8List src, int base, int index) {
+  static int _dxt5Alpha(Uint8List src, int base, int index) {
   final a0 = src[base], a1 = src[base + 1];
   var bits = 0;
   for (var k = 0; k < 6; k++) {
@@ -150,13 +152,24 @@ int _dxt5Alpha(Uint8List src, int base, int index) {
   return ((6 - code) * a0 + (code - 1) * a1) ~/ 5;
 }
 
-void _unpack565(int v, Uint8List out, int at) {
+
+  static void _unpack565(int v, Uint8List out, int at) {
   final r = (v >> 11) & 0x1F, g = (v >> 5) & 0x3F, b = v & 0x1F;
   out[at] = (r << 3) | (r >> 2);
   out[at + 1] = (g << 2) | (g >> 4);
   out[at + 2] = (b << 3) | (b >> 2);
   out[at + 3] = 255;
 }
+}
+
+
+
+
+
+
+
+
+
 
 /// Unsupported BLP format or corrupted data.
 final class BlpFormatException implements Exception {

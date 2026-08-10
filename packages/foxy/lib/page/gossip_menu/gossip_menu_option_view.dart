@@ -94,7 +94,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   label: '类型',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.optionTypeController,
-                    options: kGossipOptionTypes,
+                    options: GossipMenuOptionConstants.gossipOptionTypes,
                     placeholder: const Text('OptionType'),
                   ),
                 ),
@@ -110,7 +110,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   label: '图标',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.optionIconController,
-                    options: kGossipOptionIcons,
+                    options: GossipMenuOptionConstants.gossipOptionIcons,
                     placeholder: const Text('OptionIcon'),
                   ),
                 ),
@@ -120,7 +120,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   label: 'NPC标识',
                   child: FoxyFlagPicker(
                     controller: viewModel.optionNpcFlagController,
-                    flags: kNpcFlagOptions,
+                    flags: CreatureFlags.npcFlagOptions,
                     title: 'Npc标识编辑器',
                     placeholder: 'OptionNpcFlag',
                   ),
@@ -157,7 +157,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   label: '输入密码',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.boxCodedController,
-                    options: kGossipBooleanOptions,
+                    options: GossipMenuOptionConstants.gossipBooleanOptions,
                     placeholder: const Text('BoxCoded'),
                   ),
                 ),
@@ -260,7 +260,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                     } catch (error) {
                       if (!dialogContext.mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -314,8 +314,10 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
         FoxyTableColumn.fixed(
           label: '图标',
           width: 120,
-          cell: (_, o) =>
-              Text(kGossipOptionIcons[o.optionIcon] ?? o.optionIcon.toString()),
+          cell: (_, o) => Text(
+            GossipMenuOptionConstants.gossipOptionIcons[o.optionIcon] ??
+                o.optionIcon.toString(),
+          ),
         ),
         FoxyTableColumn.flex(
           label: '文本',
@@ -325,8 +327,10 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
         FoxyTableColumn.fixed(
           label: '类型',
           width: 120,
-          cell: (_, o) =>
-              Text(kGossipOptionTypes[o.optionType] ?? o.optionType.toString()),
+          cell: (_, o) => Text(
+            GossipMenuOptionConstants.gossipOptionTypes[o.optionType] ??
+                o.optionType.toString(),
+          ),
         ),
         FoxyTableColumn.fixed(
           label: 'NPC标识',
@@ -341,7 +345,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       ],
       onRowDoubleTap: (o) => _showEditDialog(o.key),
       onRowSecondaryTapDownWithDetails: (o, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -395,7 +399,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -404,18 +408,18 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       await viewModel.create(showForm: false);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: const Text('新增选项'),
         description: const Text('新增一条选项记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -435,7 +439,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -444,18 +448,18 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       await viewModel.edit(key, showForm: false);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: const Text('编辑选项'),
         description: const Text('编辑选中的选项记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

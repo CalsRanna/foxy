@@ -67,10 +67,14 @@ class SpellAreaEntity with _SpellAreaEntityMixin {
 
 extension BriefSpellAreaEntityLabel on BriefSpellAreaEntity {
   /// 开始任务状态掩码标签（未接取/已完成/…），未命中回退为原始掩码。
-  String get questStartStatusLabel =>
-      flagMaskLabel(questStartStatus, kSpellAreaQuestStatusOptions);
+  String get questStartStatusLabel => FlagItem.maskLabel(
+    questStartStatus,
+    SpellFlags.spellAreaQuestStatusOptions,
+  );
 
   /// 结束任务状态掩码标签（未接取/已完成/…），未命中回退为原始掩码。
-  String get questEndStatusLabel =>
-      flagMaskLabel(questEndStatus, kSpellAreaQuestStatusOptions);
+  String get questEndStatusLabel => FlagItem.maskLabel(
+    questEndStatus,
+    SpellFlags.spellAreaQuestStatusOptions,
+  );
 }

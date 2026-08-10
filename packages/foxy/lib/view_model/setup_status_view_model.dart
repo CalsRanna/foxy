@@ -120,14 +120,10 @@ class SetupStatusViewModel {
     if (!await _validatePath(serverDirError, '服务端目录', path)) return false;
     final dbc = await _findDbcDir(path.trim());
     if (dbc == null) {
-      serverDirError.value =
-          '在服务端目录中未找到 DBC 文件(如 data/dbc),请确认 DBC 数据已放置';
+      serverDirError.value = '在服务端目录中未找到 DBC 文件(如 data/dbc),请确认 DBC 数据已放置';
       return false;
     }
-    await _configUtil.update({
-      'server_dir': path.trim(),
-      'dbc_dir': dbc,
-    });
+    await _configUtil.update({'server_dir': path.trim(), 'dbc_dir': dbc});
     serverDir.value = path.trim();
     serverDirExists.value = true;
     dbcPath.value = dbc;

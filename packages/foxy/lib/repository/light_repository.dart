@@ -10,7 +10,6 @@ part 'light_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('continentId')
 class LightRepository with RepositoryMixin, _LightRepositoryMixin {
-
   Future<int> copyLight(int key) async {
     final source = await getLight(key);
     if (source == null) {

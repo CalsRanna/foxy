@@ -11,7 +11,6 @@ part 'gossip_menu_repository.g.dart';
 @FoxyFilter.text('menuId')
 @FoxyFilter.text('text', column: 'nt.text0_0')
 class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
-
   @override
   Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
     final source = await getGossipMenu(key);
@@ -113,7 +112,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
           : ['nt.text0_0', 'nt.text0_1'];
       builder = builder.whereAny(
         textColumns,
-        '%${escapeLike(filter.text)}%',
+        '%${ParseUtil.escapeLike(filter.text)}%',
         comparator: 'like',
       );
     }

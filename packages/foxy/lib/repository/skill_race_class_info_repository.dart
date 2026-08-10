@@ -9,7 +9,6 @@ part 'skill_race_class_info_repository.g.dart';
 @FoxyRepository()
 class SkillRaceClassInfoRepository
     with RepositoryMixin, _SkillRaceClassInfoRepositoryMixin {
-
   Future<int> countSkillRaceClassInfos() async {
     return laconic.table(_table).count();
   }

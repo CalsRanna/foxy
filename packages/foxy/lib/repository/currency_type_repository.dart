@@ -12,7 +12,6 @@ part 'currency_type_repository.g.dart';
 @FoxyFilter.text('name', column: 'it.name')
 class CurrencyTypeRepository
     with RepositoryMixin, _CurrencyTypeRepositoryMixin {
-
   @override
   Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) {
     final joinLocale = localeEnabled;
@@ -93,13 +92,13 @@ class CurrencyTypeRepository
       builder = builder.whereNested((query) {
         query.where(
           'it.name',
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
         if (joinLocale) {
           query.orWhere(
             'itl.Name',
-            '%${escapeLike(filter.name)}%',
+            '%${ParseUtil.escapeLike(filter.name)}%',
             comparator: 'like',
           );
         }

@@ -17,7 +17,6 @@ class CurrencyCategoryRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _CurrencyCategoryRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -77,7 +76,7 @@ class CurrencyCategoryRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

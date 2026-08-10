@@ -8,56 +8,56 @@ void main() {
   setUpAll(DI.ensureInitialized);
 
   test('DBC 定义的表名和文件名唯一', () {
-    final tableNames = dbcDefinitions
+    final tableNames = DbcDefinitions.all
         .map((definition) => definition.tableName)
         .toSet();
-    final fileNames = dbcDefinitions
+    final fileNames = DbcDefinitions.all
         .map((definition) => definition.fileName.toLowerCase())
         .toSet();
 
-    expect(tableNames, hasLength(dbcDefinitions.length));
-    expect(fileNames, hasLength(dbcDefinitions.length));
-    expect(dbcDefinitionByTable, hasLength(dbcDefinitions.length));
-    expect(dbcDefinitionByFileName, hasLength(dbcDefinitions.length));
+    expect(tableNames, hasLength(DbcDefinitions.all.length));
+    expect(fileNames, hasLength(DbcDefinitions.all.length));
+    expect(DbcDefinitions.byTable, hasLength(DbcDefinitions.all.length));
+    expect(DbcDefinitions.byFileName, hasLength(DbcDefinitions.all.length));
   });
 
   test('DBC 定义可以通过表名和文件名查找', () {
-    final spell = dbcDefinitionByTable['dbc_spell'];
+    final spell = DbcDefinitions.byTable['dbc_spell'];
 
     expect(spell, isNotNull);
     expect(spell!.fileName, 'Spell.dbc');
-    expect(dbcDefinitionByFileName['spell.dbc'], same(spell));
+    expect(DbcDefinitions.byFileName['spell.dbc'], same(spell));
     expect(spell.qualifiedTableName, 'foxy.dbc_spell');
-    expect(dbcDefinitionByTable['dbc_emotes']?.fileName, 'Emotes.dbc');
+    expect(DbcDefinitions.byTable['dbc_emotes']?.fileName, 'Emotes.dbc');
     expect(
-      dbcDefinitionByTable['dbc_emotes_text_data']?.fileName,
+      DbcDefinitions.byTable['dbc_emotes_text_data']?.fileName,
       'EmotesTextData.dbc',
     );
-    expect(dbcDefinitionByTable['dbc_item']?.fileName, 'Item.dbc');
-    expect(dbcDefinitionByTable['dbc_skill_line']?.fileName, 'SkillLine.dbc');
+    expect(DbcDefinitions.byTable['dbc_item']?.fileName, 'Item.dbc');
+    expect(DbcDefinitions.byTable['dbc_skill_line']?.fileName, 'SkillLine.dbc');
     expect(
-      dbcDefinitionByTable['dbc_mail_template']?.fileName,
+      DbcDefinitions.byTable['dbc_mail_template']?.fileName,
       'MailTemplate.dbc',
     );
     expect(
-      dbcDefinitionByTable['dbc_sound_provider_preferences']?.fileName,
+      DbcDefinitions.byTable['dbc_sound_provider_preferences']?.fileName,
       'SoundProviderPreferences.dbc',
     );
     expect(
-      dbcDefinitionByTable['dbc_sound_ambience']?.fileName,
+      DbcDefinitions.byTable['dbc_sound_ambience']?.fileName,
       'SoundAmbience.dbc',
     );
-    expect(dbcDefinitionByTable['dbc_zone_music']?.fileName, 'ZoneMusic.dbc');
+    expect(DbcDefinitions.byTable['dbc_zone_music']?.fileName, 'ZoneMusic.dbc');
     expect(
-      dbcDefinitionByTable['dbc_zone_intro_music_table']?.fileName,
+      DbcDefinitions.byTable['dbc_zone_intro_music_table']?.fileName,
       'ZoneIntroMusicTable.dbc',
     );
-    expect(dbcDefinitionByTable['dbc_liquid_type']?.fileName, 'LiquidType.dbc');
-    expect(dbcDefinitionByTable['dbc_light']?.fileName, 'Light.dbc');
+    expect(DbcDefinitions.byTable['dbc_liquid_type']?.fileName, 'LiquidType.dbc');
+    expect(DbcDefinitions.byTable['dbc_light']?.fileName, 'Light.dbc');
   });
 
   test('所有 DBC 定义都包含 ID 字段', () {
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       expect(
         definition.schema.fields.any((field) => field.name == 'ID'),
         isTrue,
@@ -69,7 +69,7 @@ void main() {
   test('所有 DBC 定义都已注册导出 Repository', () {
     final registry = GetIt.instance.get<DbcExportRegistry>();
 
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       expect(
         registry.contains(definition.tableName),
         isTrue,
@@ -79,7 +79,7 @@ void main() {
   });
 
   test('所有 DBC 定义都有非空 Schema 与 format', () {
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       expect(
         definition.schema.fields,
         isNotEmpty,

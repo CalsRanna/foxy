@@ -37,5 +37,6 @@ class SpellLinkedSpellEntity with _SpellLinkedSpellEntityMixin {
 
 extension BriefSpellLinkedSpellEntityLabel on BriefSpellLinkedSpellEntity {
   /// 链接类型标签（施放/命中/光环），未知值回退为原始数字。
-  String get typeLabel => kSpellLinkedTypeOptions[type] ?? type.toString();
+  String get typeLabel =>
+      SpellEnums.spellLinkedTypeOptions[type] ?? type.toString();
 }

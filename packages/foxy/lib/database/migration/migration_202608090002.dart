@@ -16,7 +16,7 @@ class Migration202608090002 implements Migration {
 
   @override
   Future<void> migrate(Laconic laconic) async {
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       final tableCount = await laconic
           .table('information_schema.tables')
           .where('table_schema', 'foxy')
@@ -28,13 +28,13 @@ class Migration202608090002 implements Migration {
           .table('information_schema.columns')
           .where('table_schema', 'foxy')
           .where('table_name', definition.tableName)
-          .where('column_name', dbcRowOrderColumn)
+          .where('column_name', DbcRowOrder.column)
           .count();
       if (columnCount > 0) continue;
 
       await laconic.statement(
         'alter table foxy.`${definition.tableName}` '
-        'add column `$dbcRowOrderColumn` bigint null',
+        'add column `${DbcRowOrder.column}` bigint null',
       );
     }
   }

@@ -79,7 +79,7 @@ void main() {
   test('DBC 导出：已有任务运行时防重入', () async {
     final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final dir = await Directory.systemTemp.createTemp('foxy_export_busy_');
-    final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+    final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
     addTearDown(() async {
       if (await dir.exists()) await dir.delete(recursive: true);
     });
@@ -111,7 +111,7 @@ void main() {
   test('DBC 导出：取消请求让 worker 返回取消结果且不生成文件', () async {
     final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final dir = await Directory.systemTemp.createTemp('foxy_export_cancel_');
-    final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+    final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
     addTearDown(() async {
       if (await dir.exists()) await dir.delete(recursive: true);
     });
@@ -144,7 +144,7 @@ void main() {
         if (await dir.exists()) await dir.delete(recursive: true);
       });
 
-      final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+      final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
       await DbcExportUtil().write(
         definition: definition,
         rows: [
@@ -182,7 +182,7 @@ void main() {
         if (await dir.exists()) await dir.delete(recursive: true);
       });
 
-      final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+      final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
       await DbcExportUtil().write(
         definition: definition,
         rows: [

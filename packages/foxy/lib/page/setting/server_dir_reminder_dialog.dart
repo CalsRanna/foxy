@@ -19,7 +19,7 @@ class ServerDirReminderDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     return SettingDialogShell(
-      title: settingDialogTitleRow(LucideIcons.hardDrive, '未配置服务端目录'),
+      title: SettingDialogShell.titleRow(LucideIcons.hardDrive, '未配置服务端目录'),
       actions: [
         ShadButton.outline(
           onPressed: () => Navigator.of(context).maybePop(),
@@ -28,9 +28,9 @@ class ServerDirReminderDialog extends StatelessWidget {
         ShadButton(
           onPressed: () {
             Navigator.of(context).maybePop();
-            GetIt.instance
-                .get<RouterFacade>()
-                .navigateToMenu(RouterMenu.setting);
+            GetIt.instance.get<RouterFacade>().navigateToMenu(
+              RouterMenu.setting,
+            );
           },
           child: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -44,13 +44,13 @@ class ServerDirReminderDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12,
         children: [
-          settingDialogBanner(
+          SettingDialogShell.banner(
             context,
             text: '未检测到服务端 DBC 目录配置，DBC 导入/导出功能不可用。',
             color: theme.colorScheme.primary,
             icon: LucideIcons.hardDrive,
           ),
-          settingDialogMutedHint(
+          SettingDialogShell.mutedHint(
             context,
             '请前往「设置 → 目录设置」配置服务端目录，'
             '程序会自动搜索 DBC 文件所在位置。',

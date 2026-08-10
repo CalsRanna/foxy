@@ -68,11 +68,11 @@ class _FoxySignedEntityPickerState extends State<FoxySignedEntityPicker> {
       currentValue = widget.controller.collect();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error(foxyErrorMessage(error));
+      DialogUtil.instance.error(FoxyError.message(error));
       return;
     }
     if (!mounted) return;
-    final result = await showFoxyDialog<int>(
+    final result = await DialogUtil.show<int>(
       context: context,
       builder: (context) => _SignedEntityDialog(
         positiveSource: widget.positiveSource,
@@ -118,7 +118,11 @@ class SignedEntitySource {
 /// Built-in data sources: creatures / game objects / quest sorts / quest
 /// areas.
 class SignedEntitySources {
-  static final creature = SignedEntitySource(
+  static final instance = SignedEntitySources._();
+
+  SignedEntitySources._();
+
+  late final _creature = SignedEntitySource(
     title: '生物模板',
     errorLabel: '搜索生物模板失败',
     fetch: (page, id, name) async {
@@ -137,7 +141,9 @@ class SignedEntitySources {
         ),
   );
 
-  static final gameObject = SignedEntitySource(
+  static SignedEntitySource get creature => instance._creature;
+
+  late final _gameObject = SignedEntitySource(
     title: '游戏对象模板',
     errorLabel: '搜索游戏对象模板失败',
     fetch: (page, id, name) async {
@@ -157,7 +163,9 @@ class SignedEntitySources {
         ),
   );
 
-  static final questSort = SignedEntitySource(
+  static SignedEntitySource get gameObject => instance._gameObject;
+
+  late final _questSort = SignedEntitySource(
     title: '任务排序',
     errorLabel: '搜索任务排序失败',
     fetch: (page, id, name) async {
@@ -176,7 +184,9 @@ class SignedEntitySources {
         ),
   );
 
-  static final areaTable = SignedEntitySource(
+  static SignedEntitySource get questSort => instance._questSort;
+
+  late final _areaTable = SignedEntitySource(
     title: '区域',
     errorLabel: '搜索区域失败',
     fetch: (page, id, name) async {
@@ -194,6 +204,8 @@ class SignedEntitySources {
           filter: AreaTableFilter(id: id, name: name),
         ),
   );
+
+  static SignedEntitySource get areaTable => instance._areaTable;
 }
 
 class _SignedEntityDialog extends StatefulWidget {
@@ -265,7 +277,7 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
       ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
-      constraints: foxyDialogConstraints(context),
+      constraints: DialogUtil.constraints(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         spacing: 8,
@@ -382,11 +394,8 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
           ),
           FoxyTableColumn.flex(
             label: '名称',
-            cell: (_, row) => Text(
-              row.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            cell: (_, row) =>
+                Text(row.name, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
         ],
       ),
@@ -435,7 +444,7 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
       LoggerUtil.instance.e('${_source.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
       setState(
-        () => _errorMessage = '${_source.errorLabel}: ${foxyErrorMessage(e)}',
+        () => _errorMessage = '${_source.errorLabel}: ${FoxyError.message(e)}',
       );
     }
   }

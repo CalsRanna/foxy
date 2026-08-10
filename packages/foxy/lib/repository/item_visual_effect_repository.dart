@@ -12,7 +12,6 @@ part 'item_visual_effect_repository.g.dart';
 @FoxyFilter.text('model')
 class ItemVisualEffectRepository
     with RepositoryMixin, _ItemVisualEffectRepositoryMixin {
-
   Future<int> copyItemVisualEffect(int key) async {
     final source = await getItemVisualEffect(key);
     if (source == null) {
@@ -67,7 +66,7 @@ class ItemVisualEffectRepository
     if (filter.model.isNotEmpty) {
       builder = builder.where(
         'Model',
-        '%${escapeLike(filter.model)}%',
+        '%${ParseUtil.escapeLike(filter.model)}%',
         comparator: 'like',
       );
     }

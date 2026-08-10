@@ -15,7 +15,7 @@ class Migration202608030000 implements Migration {
 
   @override
   Future<void> migrate(Laconic laconic) async {
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       final unsignedColumns = definition.schema.fields
           .where(
             (field) =>

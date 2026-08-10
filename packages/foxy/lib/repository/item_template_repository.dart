@@ -40,7 +40,7 @@ class ItemTemplateRepository
         if (filter.name.isNotEmpty) {
           builder = builder.where(
             'name',
-            '%${escapeLike(filter.name)}%',
+            '%${ParseUtil.escapeLike(filter.name)}%',
             comparator: 'like',
           );
         }
@@ -116,13 +116,13 @@ class ItemTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['it.name', 'itl.Name'],
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'it.name',
-          '%${escapeLike(filter.name)}%',
+          '%${ParseUtil.escapeLike(filter.name)}%',
           comparator: 'like',
         );
       }

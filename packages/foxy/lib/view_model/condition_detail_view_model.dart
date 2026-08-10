@@ -14,9 +14,11 @@ import 'package:signals/signals.dart';
 
 /// "Normal type | reference template" mode options for the source/condition
 /// columns.
-const kConditionModeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
+
 
 class ConditionDetailViewModel with FieldControllerMixin {
+  static const modeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
+
   void _logActivity(ActivityActionType action, ConditionEntity c) {
     try {
       final log = ActivityLogEntity(
@@ -143,7 +145,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -177,7 +179,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
         data,
       );
     } catch (error) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -304,7 +306,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
     final type = conditionModeController.collect() == 1
         ? -1
         : conditionTypeController.collect();
-    final config = conditionValueConfig(
+    final config = ConditionValueConfig.forType(
       type,
       value1: conditionValue1Controller.collect(),
     );
@@ -338,7 +340,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
   void _requireWriteableType(ConditionEntity condition) {
     final source = condition.sourceTypeOrReferenceId;
     if (source >= 0) {
-      if (!kConditionSourceTypeLabels.containsKey(source)) {
+      if (!ConditionSourceTypes.conditionSourceTypeLabels.containsKey(source)) {
         throw ArgumentError.value(
           source,
           'SourceTypeOrReferenceId',
@@ -351,7 +353,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
       );
     }
     final type = condition.conditionTypeOrReference;
-    if (type >= 0 && !kConditionTypeLabels.containsKey(type)) {
+    if (type >= 0 && !ConditionType.conditionTypeLabels.containsKey(type)) {
       throw ArgumentError.value(
         type,
         'ConditionTypeOrReference',

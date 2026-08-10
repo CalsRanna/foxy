@@ -37,7 +37,7 @@ class PlayerCreateInfoView extends StatelessWidget {
                       label: '种族',
                       child: FoxyShadSelect<int>(
                         controller: viewModel.raceController,
-                        options: kPlayerRaceOptions,
+                        options: PlayerCreateInfoConstants.playerRaceOptions,
                         placeholder: const Text('race'),
                       ),
                     ),
@@ -47,7 +47,7 @@ class PlayerCreateInfoView extends StatelessWidget {
                       label: '职业',
                       child: FoxyShadSelect<int>(
                         controller: viewModel.classController,
-                        options: kPlayerClassOptions,
+                        options: PlayerCreateInfoConstants.playerClassOptions,
                         placeholder: const Text('class'),
                       ),
                     ),
@@ -148,7 +148,7 @@ class PlayerCreateInfoView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

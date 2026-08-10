@@ -59,11 +59,14 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     return PopScope(
       canPop: false,
       child: SizedBox(
-        width: kDialogWidth,
+        width: DialogUtil.width,
         child: Watch((_) {
           if (!_checked.value) {
             return SettingDialogShell(
-              title: settingDialogTitleRow(LucideIcons.wandSparkles, '首次设置'),
+              title: SettingDialogShell.titleRow(
+                LucideIcons.wandSparkles,
+                '首次设置',
+              ),
               child: const SizedBox(
                 height: 140,
                 child: Center(
@@ -76,7 +79,10 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
             );
           }
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.wandSparkles, '首次设置引导'),
+            title: SettingDialogShell.titleRow(
+              LucideIcons.wandSparkles,
+              '首次设置引导',
+            ),
             actions: _buildActions(),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -209,7 +215,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       icon: LucideIcons.image,
       title: '提取游戏图标',
       child: switch ((running, iconSucceeded, failed)) {
-        (true, _, _) => settingDialogProgressPanel(
+        (true, _, _) => SettingDialogShell.progressPanel(
           context,
           ratio: _iconVm.progress.value,
           label: _iconVm.progressLabel.value,
@@ -220,13 +226,13 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
             child: Text(cancelling ? '正在取消…' : '取消提取'),
           ),
         ),
-        (_, true, _) => settingDialogBanner(
+        (_, true, _) => SettingDialogShell.banner(
           context,
           text: '提取完成：图标已缓存到应用数据目录，直接显示在列表页。',
           color: theme.colorScheme.primary,
           icon: LucideIcons.circleCheck,
         ),
-        (_, _, true) => settingDialogBanner(
+        (_, _, true) => SettingDialogShell.banner(
           context,
           text: error ?? '提取失败',
           color: theme.colorScheme.destructive,
@@ -237,14 +243,14 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 8,
           children: [
-            settingDialogMutedHint(
+            SettingDialogShell.mutedHint(
               context,
               _importCompleted
                   ? '自动开始提取图标（约 6300 个，BLP 原始格式），完成后显示在列表页。'
                   : '导入完成后自动开始提取图标。',
             ),
             if (clientDir != null)
-              settingDialogMutedHint(context, '客户端目录：$clientDir'),
+              SettingDialogShell.mutedHint(context, '客户端目录：$clientDir'),
           ],
         ),
       },
@@ -263,7 +269,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       icon: LucideIcons.fileInput,
       title: '导入 DBC 数据',
       child: switch ((running, _importCompleted, failed)) {
-        (true, _, _) => settingDialogProgressPanel(
+        (true, _, _) => SettingDialogShell.progressPanel(
           context,
           ratio: _importVm.progress.value,
           label: _importVm.progressLabel.value,
@@ -274,7 +280,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
             child: Text(cancelling ? '正在取消…' : '取消导入'),
           ),
         ),
-        (_, true, _) => settingDialogBanner(
+        (_, true, _) => SettingDialogShell.banner(
           context,
           text:
               '导入完成：写入 ${_importVm.result.value?.completed ?? 0} 个文件'
@@ -287,13 +293,13 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 8,
           children: [
-            settingDialogBanner(
+            SettingDialogShell.banner(
               context,
               text: error ?? '导入失败',
               color: theme.colorScheme.destructive,
               icon: LucideIcons.triangleAlert,
             ),
-            settingDialogMutedHint(
+            SettingDialogShell.mutedHint(
               context,
               '导入以 DBC 为准，将覆盖 foxy 库中对应表的数据。可重试。',
             ),
@@ -304,12 +310,12 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 8,
           children: [
-            settingDialogMutedHint(
+            SettingDialogShell.mutedHint(
               context,
               '导入以 DBC 为准：将覆盖 foxy 库中对应表的数据；若需保留库内数据请先自行备份。',
             ),
             if (dbcPath != null)
-              settingDialogMutedHint(context, '服务端 DBC 目录：$dbcPath'),
+              SettingDialogShell.mutedHint(context, '服务端 DBC 目录：$dbcPath'),
           ],
         ),
       },

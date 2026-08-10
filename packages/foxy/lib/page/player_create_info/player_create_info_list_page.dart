@@ -153,7 +153,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       ],
       onRowDoubleTap: (info) => _navigateToDetail(info: info),
       onRowSecondaryTapDownWithDetails: (info, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -201,7 +201,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

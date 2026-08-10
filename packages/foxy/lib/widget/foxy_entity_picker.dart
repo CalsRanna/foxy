@@ -142,7 +142,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
-      constraints: foxyDialogConstraints(context),
+      constraints: DialogUtil.constraints(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         spacing: 8,
@@ -297,11 +297,11 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
     } catch (e) {
       LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
-      // The UI only shows user copy mapped by foxyErrorMessage; raw
+      // The UI only shows user copy mapped by FoxyError.message; raw
       // exception strings go to the log.
       setState(
         () => _errorMessage =
-            '${widget.delegate.errorLabel}: ${foxyErrorMessage(e)}',
+            '${widget.delegate.errorLabel}: ${FoxyError.message(e)}',
       );
     }
   }
@@ -348,11 +348,11 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
       currentId = widget.controller.collect();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error(foxyErrorMessage(error));
+      DialogUtil.instance.error(FoxyError.message(error));
       return;
     }
     if (!mounted) return;
-    final result = await showFoxyDialog<int>(
+    final result = await DialogUtil.show<int>(
       context: context,
       builder: (context) => _EntityPickerDialog<T>(
         delegate: widget.delegate,

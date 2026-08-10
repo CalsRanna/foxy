@@ -33,10 +33,7 @@ class FoxyCard extends StatelessWidget {
   List<Widget> _buildTitle(BuildContext context) {
     if (title == null) return [];
     const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
-    final titleWidget = DefaultTextStyle.merge(
-      style: textStyle,
-      child: title!,
-    );
+    final titleWidget = DefaultTextStyle.merge(style: textStyle, child: title!);
     final padding = Padding(padding: EdgeInsets.all(16), child: titleWidget);
     return [padding, const _Divider()];
   }

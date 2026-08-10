@@ -6,12 +6,12 @@ import 'package:foxy/constant/scaling_stat_value_constants.dart';
 void main() {
 
   test('物品缩放位精确对应 ScalingStatValuesEntry 当前消费列', () {
-    expect(kScalingStatValueBudgetMask, 0x0004001F);
-    expect(kScalingStatValueArmorMask, 0x00F801E0);
-    expect(kScalingStatValueDpsMask, 0x00007E00);
-    expect(kScalingStatValueSpellPowerMask, 0x00008000);
-    expect(kScalingStatValueSupportedMask, 0x00FCFFFF);
-    expect(kItemScalingStatValueOptions.map((item) => item.value).toList(), [
+    expect(ScalingStatValueConstants.scalingStatValueBudgetMask, 0x0004001F);
+    expect(ScalingStatValueConstants.scalingStatValueArmorMask, 0x00F801E0);
+    expect(ScalingStatValueConstants.scalingStatValueDpsMask, 0x00007E00);
+    expect(ScalingStatValueConstants.scalingStatValueSpellPowerMask, 0x00008000);
+    expect(ScalingStatValueConstants.scalingStatValueSupportedMask, 0x00FCFFFF);
+    expect(ItemFlags.itemScalingStatValueOptions.map((item) => item.value).toList(), [
       0x00000001,
       0x00000002,
       0x00000004,
@@ -38,7 +38,7 @@ void main() {
   });
 
   test('DBC definition 使用 3.3.5.12340 的 24 列物理格式', () {
-    final definition = dbcDefinitionByTable['dbc_scaling_stat_values']!;
+    final definition = DbcDefinitions.byTable['dbc_scaling_stat_values']!;
     expect(definition.fileName, 'ScalingStatValues.dbc');
     expect(definition.schema.format, 'niiiiiiiiiiiiiiiiiiiiiii');
     expect(definition.schema.fields, hasLength(24));

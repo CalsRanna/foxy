@@ -10,7 +10,6 @@ part 'spell_duration_repository.g.dart';
 @FoxyFilter.text('id')
 class SpellDurationRepository
     with RepositoryMixin, _SpellDurationRepositoryMixin {
-
   Future<int> copySpellDuration(int key) async {
     final source = await getSpellDuration(key);
     if (source == null) {

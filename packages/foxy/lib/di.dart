@@ -320,54 +320,38 @@ class DI {
     _instance.registerFactory(
       () => CreatureOnKillReputationLinkedDetailViewModel(),
     );
-    _instance.registerFactory(
-      () => CreatureEquipTemplateLinkedListViewModel(),
-    );
-    _instance.registerFactory(
-      () => CreatureQuestItemLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => CreatureEquipTemplateLinkedListViewModel());
+    _instance.registerFactory(() => CreatureQuestItemLinkedListViewModel());
     _instance.registerFactory(
       () => CreatureTemplateResistanceLinkedListViewModel(),
     );
-    _instance.registerFactory(
-      () => CreatureTemplateSpellLinkedListViewModel(),
-    );
-    _instance.registerFactory(
-      () => CreatureLootTemplateLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => CreatureTemplateSpellLinkedListViewModel());
+    _instance.registerFactory(() => CreatureLootTemplateLinkedListViewModel());
     _instance.registerFactory(() => NpcTrainerLinkedListViewModel());
     _instance.registerFactory(() => NpcVendorLinkedListViewModel());
     _instance.registerFactory(
       () => PickpocketingLootTemplateLinkedListViewModel(),
     );
-    _instance.registerFactory(
-      () => SkinningLootTemplateLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => SkinningLootTemplateLinkedListViewModel());
     _instance.registerFactory(() => GameObjectTemplateListViewModel());
     _instance.registerFactory(() => GameObjectTemplateDetailViewModel());
     _instance.registerFactory(
       () => GameObjectTemplateAddonLinkedDetailViewModel(),
     );
-    _instance.registerFactory(
-      () => GameObjectQuestItemLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => GameObjectQuestItemLinkedListViewModel());
     _instance.registerFactory(
       () => GameObjectLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(() => ItemTemplateListViewModel());
     _instance.registerFactory(() => ItemTemplateDetailViewModel());
-    _instance.registerFactory(
-      () => ItemLootTemplateLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => ItemLootTemplateLinkedListViewModel());
     _instance.registerFactory(
       () => DisenchantLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(
       () => ProspectingLootTemplateLinkedListViewModel(),
     );
-    _instance.registerFactory(
-      () => MillingLootTemplateLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => MillingLootTemplateLinkedListViewModel());
     _instance.registerFactory(
       () => ItemEnchantmentTemplateLinkedListViewModel(),
     );
@@ -377,23 +361,15 @@ class DI {
     _instance.registerFactory(() => QuestTemplateAddonLinkedDetailViewModel());
     _instance.registerFactory(() => QuestRequestItemsLinkedDetailViewModel());
     _instance.registerFactory(() => QuestOfferRewardLinkedDetailViewModel());
-    _instance.registerFactory(
-      () => CreatureQuestStarterLinkedListViewModel(),
-    );
-    _instance.registerFactory(
-      () => CreatureQuestEnderLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => CreatureQuestStarterLinkedListViewModel());
+    _instance.registerFactory(() => CreatureQuestEnderLinkedListViewModel());
     _instance.registerFactory(
       () => GameObjectQuestStarterLinkedListViewModel(),
     );
-    _instance.registerFactory(
-      () => GameObjectQuestEnderLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => GameObjectQuestEnderLinkedListViewModel());
     _instance.registerFactory(() => GossipMenuDetailViewModel());
     _instance.registerFactory(() => NpcTextLinkedDetailViewModel());
-    _instance.registerFactory(
-      () => GossipMenuOptionLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => GossipMenuOptionLinkedListViewModel());
     _instance.registerFactory(() => SmartScriptListViewModel());
     _instance.registerFactory(() => SmartScriptDetailViewModel());
     _instance.registerFactory(() => SpellListViewModel());
@@ -402,13 +378,9 @@ class DI {
     _instance.registerFactory(() => SpellCustomAttrLinkedDetailViewModel());
     _instance.registerFactory(() => SpellAreaLinkedListViewModel());
     _instance.registerFactory(() => SpellGroupLinkedListViewModel());
-    _instance.registerFactory(
-      () => SpellLinkedSpellLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => SpellLinkedSpellLinkedListViewModel());
     _instance.registerFactory(() => SpellRankLinkedListViewModel());
-    _instance.registerFactory(
-      () => SpellLootTemplateLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => SpellLootTemplateLinkedListViewModel());
     _instance.registerFactory(() => ReferenceLootTemplateListViewModel());
     _instance.registerFactory(() => ReferenceLootTemplateDetailViewModel());
     _instance.registerFactory(() => PageTextListViewModel());
@@ -424,15 +396,11 @@ class DI {
     _instance.registerFactory(
       () => PlayerCreateInfoCastSpellLinkedListViewModel(),
     );
-    _instance.registerFactory(
-      () => PlayerCreateInfoItemLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => PlayerCreateInfoItemLinkedListViewModel());
     _instance.registerFactory(
       () => PlayerCreateInfoSpellCustomLinkedListViewModel(),
     );
-    _instance.registerFactory(
-      () => PlayerCreateInfoSkillLinkedListViewModel(),
-    );
+    _instance.registerFactory(() => PlayerCreateInfoSkillLinkedListViewModel());
     _instance.registerFactory(() => AreaTableListViewModel());
     _instance.registerFactory(() => AreaTableDetailViewModel());
     _instance.registerFactory(() => EmoteTextListViewModel());
@@ -631,9 +599,7 @@ class DI {
       ),
     );
     _instance.registerLazySingleton(
-      () => ExtractGameIconsUseCase(
-        configUtil: _instance.get<ConfigUtil>(),
-      ),
+      () => ExtractGameIconsUseCase(configUtil: _instance.get<ConfigUtil>()),
     );
     _instance.registerFactory(
       () => ExportDbcUseCase(

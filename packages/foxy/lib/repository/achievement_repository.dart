@@ -17,7 +17,6 @@ class AchievementRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _AchievementRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -46,7 +45,7 @@ class AchievementRepository
     if (filter.title.isNotEmpty) {
       builder = builder.where(
         'Title_lang_zhCN',
-        '%${escapeLike(filter.title)}%',
+        '%${ParseUtil.escapeLike(filter.title)}%',
         comparator: 'like',
       );
     }

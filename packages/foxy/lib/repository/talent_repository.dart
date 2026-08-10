@@ -10,7 +10,6 @@ part 'talent_repository.g.dart';
 @FoxyFilter.text('id')
 @FoxyFilter.text('spell', column: 'SpellRank0')
 class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
-
   @override
   Future<int> copyTalent(int key) async {
     final source = await getTalent(key);

@@ -17,7 +17,6 @@ class SpellFocusObjectRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _SpellFocusObjectRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -71,7 +70,7 @@ class SpellFocusObjectRepository
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(
         ['Name_lang_zhCN', 'Name_lang_enUS'],
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

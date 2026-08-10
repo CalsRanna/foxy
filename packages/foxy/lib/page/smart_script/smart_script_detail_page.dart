@@ -56,7 +56,7 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
       await viewModel.initSignals(key: widget.scriptKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 }

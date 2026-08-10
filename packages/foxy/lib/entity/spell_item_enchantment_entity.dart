@@ -175,13 +175,19 @@ extension BriefSpellItemEnchantmentEntityLabel
     on BriefSpellItemEnchantmentEntity {
   /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
   String get effect0Label =>
-      kSpellItemEnchantmentEffectTypeOptions[effect0] ?? effect0.toString();
+      SpellItemEnchantmentConstants
+          .spellItemEnchantmentEffectTypeOptions[effect0] ??
+      effect0.toString();
 
   /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
   String get effect1Label =>
-      kSpellItemEnchantmentEffectTypeOptions[effect1] ?? effect1.toString();
+      SpellItemEnchantmentConstants
+          .spellItemEnchantmentEffectTypeOptions[effect1] ??
+      effect1.toString();
 
   /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
   String get effect2Label =>
-      kSpellItemEnchantmentEffectTypeOptions[effect2] ?? effect2.toString();
+      SpellItemEnchantmentConstants
+          .spellItemEnchantmentEffectTypeOptions[effect2] ??
+      effect2.toString();
 }

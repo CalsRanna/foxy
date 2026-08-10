@@ -14,7 +14,6 @@ part 'spell_repository.g.dart';
 @FoxyFilter.text('name', column: 'ds.Name_lang_zhCN')
 class SpellRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _SpellRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -91,7 +90,7 @@ class SpellRepository
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(
         ['ds.Name_lang_zhCN', 'ds.Name_lang_enUS'],
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

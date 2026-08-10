@@ -101,7 +101,7 @@ class _DashboardPageRoute extends State<DashboardPage> {
       await viewModel.initSignals();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载仪表板数据失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载仪表板数据失败：${FoxyError.message(error)}');
     }
     _checkForUpdate();
   }
@@ -112,7 +112,7 @@ class _DashboardPageRoute extends State<DashboardPage> {
     final updateViewModel = GetIt.instance.get<UpdateViewModel>();
     final found = await updateViewModel.checkSilently();
     if (!mounted || !found) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => UpdateDialog(vm: updateViewModel),

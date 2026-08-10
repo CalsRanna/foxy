@@ -132,7 +132,7 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
       ],
       onRowDoubleTap: (row) => _showEditDialog(row),
       onRowSecondaryTapDownWithDetails: (row, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -166,7 +166,7 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -186,7 +186,9 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
               await viewModel.persist();
             } catch (error) {
               if (!mounted) return;
-              setState(() => _errorMessage = '保存失败：${foxyErrorMessage(error)}');
+              setState(
+                () => _errorMessage = '保存失败：${FoxyError.message(error)}',
+              );
               return;
             }
             if (!dialogContext.mounted) return;
@@ -206,7 +208,8 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -216,7 +219,7 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
@@ -224,13 +227,13 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
   }
 
   void _showDialog(String title) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text(title),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
@@ -244,7 +247,8 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
                     label: '种族掩码',
                     child: FoxyFlagPicker(
                       controller: viewModel.raceMaskController,
-                      flags: kPlayerCreateRaceMaskFlags,
+                      flags:
+                          PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
                       title: '种族掩码',
                     ),
                   ),
@@ -254,7 +258,8 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
                     label: '职业掩码',
                     child: FoxyFlagPicker(
                       controller: viewModel.classMaskController,
-                      flags: kPlayerCreateClassMaskFlags,
+                      flags:
+                          PlayerCreateInfoConstants.playerCreateClassMaskFlags,
                       title: '职业掩码',
                     ),
                   ),

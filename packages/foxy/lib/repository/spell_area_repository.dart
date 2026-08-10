@@ -8,7 +8,6 @@ part 'spell_area_repository.g.dart';
 
 @FoxyRepository(linkKey: ['spell'])
 class SpellAreaRepository with RepositoryMixin, _SpellAreaRepositoryMixin {
-
   @override
   Future<SpellAreaKey> copySpellArea(SpellAreaKey key) async {
     throw CopyNotSupportedException(

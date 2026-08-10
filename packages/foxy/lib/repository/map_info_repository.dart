@@ -14,7 +14,6 @@ part 'map_info_repository.g.dart';
 @FoxyFilter.text('name')
 class MapInfoRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _MapInfoRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -83,7 +82,7 @@ class MapInfoRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'MapName_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

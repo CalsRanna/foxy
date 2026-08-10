@@ -9,7 +9,6 @@ part 'player_create_info_item_repository.g.dart';
 @FoxyRepository(linkKey: ['race', 'class_'])
 class PlayerCreateInfoItemRepository
     with RepositoryMixin, _PlayerCreateInfoItemRepositoryMixin {
-
   @override
   Future<PlayerCreateInfoItemKey> copyPlayerCreateInfoItem(
     PlayerCreateInfoItemKey key,

@@ -24,7 +24,7 @@ class EmoteTextRepository with RepositoryMixin, _EmoteTextRepositoryMixin {
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

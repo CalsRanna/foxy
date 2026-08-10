@@ -8,7 +8,6 @@ part 'spell_rank_repository.g.dart';
 
 @FoxyRepository(linkKey: ['firstSpellId'])
 class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
-
   @override
   Future<SpellRankKey> copySpellRank(SpellRankKey key) async {
     throw CopyNotSupportedException(
@@ -51,7 +50,7 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
           'sr.`rank` as rank',
           'fds.Name_lang_zhCN as firstSpellName',
           'fds.NameSubtext_lang_zhCN as firstSpellSubtext',
-          'ds.Name_lang_zhCN as spellName',
+          'ds.Name_lang_zhCN as kSpellName',
           'ds.NameSubtext_lang_zhCN as spellSubtext',
         ])
         .leftJoin(

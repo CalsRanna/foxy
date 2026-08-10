@@ -14,8 +14,9 @@ class FoxyNumberInput<T extends num> extends StatelessWidget {
   // final for reuse.
   static final _floatRegExp = RegExp(r'[0-9.\-]');
   static final _intRegExp = RegExp(r'[0-9\-]');
-  static final _floatFormatter =
-      FilteringTextInputFormatter.allow(_floatRegExp);
+  static final _floatFormatter = FilteringTextInputFormatter.allow(
+    _floatRegExp,
+  );
   static final _intFormatter = FilteringTextInputFormatter.allow(_intRegExp);
 
   final NumberFieldController<T> controller;
@@ -47,9 +48,7 @@ class FoxyNumberInput<T extends num> extends StatelessWidget {
           decimal: _isFloat,
           signed: true,
         ),
-        inputFormatters: [
-          _isFloat ? _floatFormatter : _intFormatter,
-        ],
+        inputFormatters: [_isFloat ? _floatFormatter : _intFormatter],
       ),
     );
   }

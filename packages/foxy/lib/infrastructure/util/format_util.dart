@@ -13,22 +13,25 @@
 /// centralizes one implementation and uses manual trimming (no regex) to
 /// remove the per-call compilation cost — every numeric field invokes it
 /// while populating a detail form, which adds up noticeably.
-String formatNum(num v) {
-  if (v is! double) return v.toString();
-  final s = v.toString();
-  // Scientific notation: the exponent may end in 0 (e.g. e-10, e+30), so
-  // never trim zeros from the end of the whole string.
-  if (s.contains('e') || s.contains('E')) return s;
-  // Only "x.y...0" shapes need trimming; otherwise (no decimal point, or
-  // not ending in 0) return as-is.
-  final dot = s.indexOf('.');
-  if (dot < 0 || !s.endsWith('0')) return s;
-  // Trim redundant zeros from the end; if the fractional part is all
-  // zeros, drop the decimal point too.
-  var end = s.length;
-  while (end > dot + 1 && s.codeUnitAt(end - 1) == 0x30) {
-    end--;
+abstract final class FormatUtil {
+  static String formatNum(num v) {
+    if (v is! double) return v.toString();
+    final s = v.toString();
+    // Scientific notation: the exponent may end in 0 (e.g. e-10, e+30), so
+    // never trim zeros from the end of the whole string.
+    if (s.contains('e') || s.contains('E')) return s;
+    // Only "x.y...0" shapes need trimming; otherwise (no decimal point, or
+    // not ending in 0) return as-is.
+    final dot = s.indexOf('.');
+    if (dot < 0 || !s.endsWith('0')) return s;
+    // Trim redundant zeros from the end; if the fractional part is all
+    // zeros, drop the decimal point too.
+    var end = s.length;
+    while (end > dot + 1 && s.codeUnitAt(end - 1) == 0x30) {
+      end--;
+    }
+    if (end == dot + 1)
+      end = dot; // fractional part trimmed away → drop the dot
+    return s.substring(0, end);
   }
-  if (end == dot + 1) end = dot; // fractional part trimmed away → drop the dot
-  return s.substring(0, end);
 }

@@ -10,9 +10,11 @@ import 'package:path/path.dart' as p;
 import 'package:signals/signals.dart';
 
 /// Default patch MPQ file name (editable in the export dialog).
-const defaultMpqPatchFileName = 'patch-zhCN-5.mpq';
+
 
 class MpqExportWorkflowViewModel {
+  static const defaultPatchFileName = 'patch-zhCN-5.mpq';
+
   final MpqExportUseCase _useCase;
   final ConfigUtil _configUtil;
 
@@ -23,7 +25,7 @@ class MpqExportWorkflowViewModel {
   final errorMessage = signal<String?>(null);
   final items = signal<List<DbcExportItem>>([]);
   final outputDirectory = signal<String?>(null);
-  final fileName = signal(defaultMpqPatchFileName);
+  final fileName = signal(defaultPatchFileName);
   final result = signal<DbcSyncResult?>(null);
 
   var _attemptToken = 0;
@@ -92,7 +94,7 @@ class MpqExportWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '读取 DBC 表统计失败：${foxyErrorMessage(error)}';
+      errorMessage.value = '读取 DBC 表统计失败：${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -136,7 +138,7 @@ class MpqExportWorkflowViewModel {
 
   void setFileName(String value) {
     final trimmed = value.trim();
-    fileName.value = trimmed.isEmpty ? defaultMpqPatchFileName : trimmed;
+    fileName.value = trimmed.isEmpty ? defaultPatchFileName : trimmed;
   }
 
   Future<void> start() async {
@@ -148,13 +150,15 @@ class MpqExportWorkflowViewModel {
       final error = ValidationException(
         'select at least one DBC table to export',
       );
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
     if (directory == null || directory.isEmpty) {
-      final error = ValidationException('select the MPQ output directory first');
-      errorMessage.value = foxyErrorMessage(error);
+      final error = ValidationException(
+        'select the MPQ output directory first',
+      );
+      errorMessage.value = FoxyError.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -185,7 +189,10 @@ class MpqExportWorkflowViewModel {
       } else if (nextResult.success) {
         status.value = WorkflowStatus.succeeded;
       } else {
-        errorMessage.value = formatDbcSyncFailureSummary(nextResult, '导出');
+        errorMessage.value = DbcSyncSummary.dbcSyncFailureSummary(
+          nextResult,
+          '导出',
+        );
         status.value = WorkflowStatus.failed;
       }
     } catch (error) {
@@ -193,7 +200,7 @@ class MpqExportWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '导出出错：${foxyErrorMessage(error)}';
+      errorMessage.value = '导出出错：${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

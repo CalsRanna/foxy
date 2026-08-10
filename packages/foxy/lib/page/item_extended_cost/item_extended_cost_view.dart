@@ -46,7 +46,7 @@ class ItemExtendedCostView extends StatelessWidget {
       label: '最低竞技槽位',
       child: FoxyShadSelect<int>(
         controller: viewModel.arenaBracketController,
-        options: kItemExtendedCostArenaSlotOptions,
+        options: ItemExtendedCostConstants.arenaSlotOptions,
         placeholder: const Text('ArenaBracket'),
       ),
     );
@@ -258,7 +258,7 @@ class ItemExtendedCostView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

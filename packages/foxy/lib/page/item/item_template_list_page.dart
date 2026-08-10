@@ -126,7 +126,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
           label: '名称',
           cell: (context, item) {
             final qualityColor =
-                kItemQualityColors[item.quality] ?? Colors.black;
+                ItemQualityColor.colors[item.quality] ?? Colors.black;
             return FoxyIconText(
               iconPath: item.inventoryIcon,
               name: item.displayName,
@@ -137,18 +137,20 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
         FoxyTableColumn.fixed(
           label: '类别',
           width: 120,
-          cell: (_, item) => Text(getItemClassName(item.classId)),
+          cell: (_, item) => Text(ItemHelpers.getItemClassName(item.classId)),
         ),
         FoxyTableColumn.fixed(
           label: '子类别',
           width: 120,
-          cell: (_, item) =>
-              Text(getItemSubclassName(item.classId, item.subclass)),
+          cell: (_, item) => Text(
+            ItemHelpers.getItemSubclassName(item.classId, item.subclass),
+          ),
         ),
         FoxyTableColumn.fixed(
           label: '佩戴位置',
           width: 120,
-          cell: (_, item) => Text(getItemInventoryTypeName(item.inventoryType)),
+          cell: (_, item) =>
+              Text(ItemHelpers.getItemInventoryTypeName(item.inventoryType)),
         ),
         FoxyTableColumn.fixed(
           label: '物品等级',
@@ -163,7 +165,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
       onRowSecondaryTapDownWithDetails: (item, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -212,7 +214,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -230,7 +232,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

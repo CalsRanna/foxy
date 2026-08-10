@@ -12,7 +12,6 @@ part 'broadcast_text_repository.g.dart';
 @FoxyFilter.text('text')
 class BroadcastTextRepository
     with RepositoryMixin, _BroadcastTextRepositoryMixin {
-
   Future<int> copyBroadcastText(int key) async {
     final source = await getBroadcastText(key);
     if (source == null) {
@@ -69,7 +68,7 @@ class BroadcastTextRepository
     if (filter.text.isNotEmpty) {
       builder = builder.whereAny(
         ['MaleText', 'FemaleText'],
-        '%${escapeLike(filter.text)}%',
+        '%${ParseUtil.escapeLike(filter.text)}%',
         comparator: 'like',
       );
     }

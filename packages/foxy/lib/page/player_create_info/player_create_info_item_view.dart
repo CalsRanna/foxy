@@ -125,7 +125,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       ],
       onRowDoubleTap: (item) => _showEditDialog(item),
       onRowSecondaryTapDownWithDetails: (item, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -159,7 +159,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -168,7 +168,8 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -178,7 +179,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
@@ -186,13 +187,13 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
   }
 
   void _showDialog({required bool isEditing}) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text(isEditing ? '编辑起始物品' : '新增起始物品'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
           child: Column(
@@ -207,7 +208,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                       label: '种族',
                       child: FoxyShadSelect<int>(
                         controller: viewModel.raceController,
-                        options: kPlayerRaceOptions,
+                        options: PlayerCreateInfoConstants.playerRaceOptions,
                         placeholder: const Text('race'),
                       ),
                     ),
@@ -217,7 +218,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                       label: '职业',
                       child: FoxyShadSelect<int>(
                         controller: viewModel.classController,
-                        options: kPlayerClassOptions,
+                        options: PlayerCreateInfoConstants.playerClassOptions,
                         placeholder: const Text('class'),
                       ),
                     ),
@@ -275,7 +276,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                         } catch (error) {
                           if (!mounted) return;
                           DialogUtil.instance.error(
-                            '保存失败：${foxyErrorMessage(error)}',
+                            '保存失败：${FoxyError.message(error)}',
                           );
                           return;
                         }

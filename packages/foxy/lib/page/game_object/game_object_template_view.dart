@@ -98,7 +98,7 @@ class GameObjectTemplateView extends StatelessWidget {
                         label: '类型',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.typeController,
-                          options: kGameObjectTypeOptions,
+                          options: GameObjectConstants.gameObjectTypeOptions,
                           placeholder: const Text('type'),
                         ),
                       ),
@@ -360,7 +360,10 @@ class GameObjectTemplateView extends StatelessWidget {
   }
 
   FoxyFormItem _dataInput(int index, IntFieldControllerGroup controllers) {
-    final spec = gameObjectDataFieldSpec(viewModel.selectedType.value, index);
+    final spec = GameObjectConstants.dataFieldSpec(
+      viewModel.selectedType.value,
+      index,
+    );
     return FoxyFormItem(
       label: spec.label,
       child: _dataEditor(spec, controllers, index),
@@ -411,7 +414,7 @@ class GameObjectTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

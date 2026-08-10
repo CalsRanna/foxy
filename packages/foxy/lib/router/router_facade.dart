@@ -50,7 +50,8 @@ class RouterFacade {
   void navigateToBreadcrumb(int index) {
     final currentPath = path.value;
     if (index >= currentPath.length) return;
-    if (index == currentPath.length - 1) return; // clicking the current page is a no-op
+    if (index == currentPath.length - 1)
+      return; // clicking the current page is a no-op
 
     final targetNode = currentPath[index];
 

@@ -7,7 +7,11 @@ import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-String formatDbcCheckBlockingMessage(List<DbcTableCheckResult> blocking) {
+
+
+class DbcImportWorkflowViewModel {
+
+  static String formatBlockingMessage(List<DbcTableCheckResult> blocking) {
   final hasIncompatible = blocking.any(
     (result) => result.state == DbcTableState.incompatible,
   );
@@ -26,7 +30,6 @@ String formatDbcCheckBlockingMessage(List<DbcTableCheckResult> blocking) {
   return '$title\n$details$suffix';
 }
 
-class DbcImportWorkflowViewModel {
   final ImportDbcUseCase _useCase;
   final ConfigUtil _configUtil;
 
@@ -85,14 +88,14 @@ class DbcImportWorkflowViewModel {
       tableCheckResults.value = List.unmodifiable(checks);
       final blocking = blockingTableChecks;
       if (blocking.isNotEmpty) {
-        errorMessage.value = formatDbcCheckBlockingMessage(blocking);
+        errorMessage.value = formatBlockingMessage(blocking);
         status.value = WorkflowStatus.failed;
       } else {
         status.value = WorkflowStatus.idle;
       }
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '检查 DBC 导入状态失败: ${foxyErrorMessage(error)}';
+      errorMessage.value = '检查 DBC 导入状态失败: ${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
     }
   }
@@ -116,7 +119,7 @@ class DbcImportWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '加载 DBC 配置失败: ${foxyErrorMessage(error)}';
+      errorMessage.value = '加载 DBC 配置失败: ${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -148,7 +151,7 @@ class DbcImportWorkflowViewModel {
     final directory = path.value?.trim();
     if (directory == null || directory.isEmpty) {
       final error = ValidationException('select the DBC file directory first');
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -178,7 +181,10 @@ class DbcImportWorkflowViewModel {
       } else if (nextResult.success) {
         status.value = WorkflowStatus.succeeded;
       } else {
-        errorMessage.value = formatDbcSyncFailureSummary(nextResult, '导入');
+        errorMessage.value = DbcSyncSummary.dbcSyncFailureSummary(
+          nextResult,
+          '导入',
+        );
         status.value = WorkflowStatus.failed;
       }
     } catch (error) {
@@ -186,7 +192,7 @@ class DbcImportWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '导入出错：${foxyErrorMessage(error)}';
+      errorMessage.value = '导入出错：${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

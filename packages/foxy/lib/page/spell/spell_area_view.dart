@@ -123,7 +123,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '开始任务掩码',
                   child: FoxyFlagPicker(
                     controller: viewModel.questStartStatusController,
-                    flags: kSpellAreaQuestStatusOptions,
+                    flags: SpellFlags.spellAreaQuestStatusOptions,
                     title: '开始任务状态',
                     placeholder: 'quest_start_status',
                   ),
@@ -134,7 +134,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '结束任务掩码',
                   child: FoxyFlagPicker(
                     controller: viewModel.questEndStatusController,
-                    flags: kSpellAreaQuestStatusOptions,
+                    flags: SpellFlags.spellAreaQuestStatusOptions,
                     title: '结束任务状态',
                     placeholder: 'quest_end_status',
                   ),
@@ -160,7 +160,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '种族掩码',
                   child: FoxyFlagPicker(
                     controller: viewModel.racemaskController,
-                    flags: kAllowableRaceOptions,
+                    flags: ItemFlags.allowableRaceOptions,
                     title: '种族掩码',
                     placeholder: 'racemask',
                   ),
@@ -171,7 +171,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '性别',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.genderController,
-                    options: kSpellAreaGenderOptions,
+                    options: SpellEnums.spellAreaGenderOptions,
                     placeholder: Text('gender'),
                   ),
                 ),
@@ -187,7 +187,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '自动施放',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.autocastController,
-                    options: kBooleanOptions,
+                    options: CreatureEnums.booleanOptions,
                     placeholder: Text('autocast'),
                   ),
                 ),
@@ -214,7 +214,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -297,7 +297,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -344,7 +344,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -353,7 +353,8 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -363,32 +364,32 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增区域技能'),
         description: Text('新增一条区域技能记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
   }
 
   void _showEditDialog(BuildContext context) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑区域技能'),
         description: Text('编辑选中的区域技能记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

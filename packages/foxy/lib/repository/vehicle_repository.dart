@@ -9,7 +9,6 @@ part 'vehicle_repository.g.dart';
 @FoxyRepository()
 @FoxyFilter.text('id')
 class VehicleRepository with RepositoryMixin, _VehicleRepositoryMixin {
-
   Future<int> copyVehicle(int key) async {
     final source = await getVehicle(key);
     if (source == null) {

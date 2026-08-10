@@ -19,13 +19,16 @@ import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-Set<int> creatureTemplateDisabledTabIndexes(int? entry, int tabCount) {
+
+
+@RoutePage()
+class CreatureTemplateDetailPage extends StatefulWidget {
+
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
   if (entry != null && entry > 0) return const {};
   return {for (var index = 1; index < tabCount; index++) index};
 }
 
-@RoutePage()
-class CreatureTemplateDetailPage extends StatefulWidget {
   final int? creatureTemplateKey;
 
   const CreatureTemplateDetailPage({super.key, this.creatureTemplateKey});
@@ -121,7 +124,7 @@ class _CreatureTemplateDetailPageState
                 linkKey: template?.skinLoot ?? 0,
               ),
             ],
-            disabledIndexes: creatureTemplateDisabledTabIndexes(
+            disabledIndexes: CreatureTemplateDetailPage.disabledTabIndexes(
               key,
               tabs.length,
             ),
@@ -148,7 +151,7 @@ class _CreatureTemplateDetailPageState
       await viewModel.initSignals(key: widget.creatureTemplateKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 }

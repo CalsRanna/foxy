@@ -14,8 +14,8 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
   }
 
   Future<int> countPlayerCreateInfoCastSpells(int race, int playerClass) {
-    final raceBit = playerCreateRaceBit(race);
-    final classBit = playerCreateClassBit(playerClass);
+    final raceBit = PlayerCreateInfoConstants.raceBit(race);
+    final classBit = PlayerCreateInfoConstants.classBit(playerClass);
     return laconic
         .table(_table)
         .whereRaw('(`raceMask` = 0 OR (`raceMask` & ?) <> 0)', [raceBit])
@@ -27,8 +27,8 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
     int race,
     int playerClass,
   ) async => PlayerCreateInfoCastSpellEntity(
-    raceMask: playerCreateRaceBit(race),
-    classMask: playerCreateClassBit(playerClass),
+    raceMask: PlayerCreateInfoConstants.raceBit(race),
+    classMask: PlayerCreateInfoConstants.classBit(playerClass),
   );
 
   Future<void> destroyPlayerCreateInfoCastSpell(
@@ -55,8 +55,8 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
     int playerClass, {
     int page = 1,
   }) async {
-    final raceBit = playerCreateRaceBit(race);
-    final classBit = playerCreateClassBit(playerClass);
+    final raceBit = PlayerCreateInfoConstants.raceBit(race);
+    final classBit = PlayerCreateInfoConstants.classBit(playerClass);
     final rows = await laconic
         .table(_table)
         .select(['raceMask', 'classMask', 'spell', 'note'])

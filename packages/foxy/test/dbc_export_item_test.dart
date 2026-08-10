@@ -3,7 +3,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 
 void main() {
-  final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+  final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
 
   group('DbcExportItem', () {
     test('成功计数：空表与有数据', () {

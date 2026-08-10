@@ -90,7 +90,7 @@ class DbcFactionTemplateRepository
     if (filter.name.isNotEmpty) {
       builder = builder.whereAny(
         ['df.Name_lang_zhCN', 'df.Name_lang_enUS'],
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

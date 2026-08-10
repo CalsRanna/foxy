@@ -9,7 +9,6 @@ part 'quest_template_addon_repository.g.dart';
 @FoxyRepository()
 class QuestTemplateAddonRepository
     with RepositoryMixin, _QuestTemplateAddonRepositoryMixin {
-
   Future<int> copyQuestTemplateAddon(int key) async {
     final source = await getQuestTemplateAddon(key);
     if (source == null) {

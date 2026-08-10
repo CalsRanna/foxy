@@ -58,7 +58,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                         label: '属性',
                         child: FoxyFlagPicker(
                           controller: viewModel.attributesController,
-                          flags: kSpellCustomAttributeOptions,
+                          flags: SpellFlags.spellCustomAttributeOptions,
                           title: '自定义属性',
                           placeholder: 'attributes',
                         ),
@@ -120,7 +120,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -135,7 +135,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

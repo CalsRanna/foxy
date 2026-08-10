@@ -9,7 +9,6 @@ part 'skill_costs_data_repository.g.dart';
 @FoxyRepository()
 class SkillCostsDataRepository
     with RepositoryMixin, _SkillCostsDataRepositoryMixin {
-
   Future<int> countSkillCostsDatas() async {
     return laconic.table(_table).count();
   }

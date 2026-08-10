@@ -20,8 +20,7 @@ class BlpIconKey {
   const BlpIconKey(this.name);
 
   @override
-  bool operator ==(Object other) =>
-      other is BlpIconKey && other.name == name;
+  bool operator ==(Object other) => other is BlpIconKey && other.name == name;
 
   @override
   int get hashCode => name.hashCode;
@@ -103,18 +102,16 @@ class BlpIconProvider extends ImageProvider<BlpIconKey> {
     this.iconDir,
   }) : negativeCache = negativeCache ?? BlpIconCache.instance;
 
-  String _pathFor(String name) =>
-      iconDir == null ? GameIconPaths.blpPath(name) : p.join(iconDir!, '$name.blp');
+  String _pathFor(String name) => iconDir == null
+      ? GameIconPaths.blpPath(name)
+      : p.join(iconDir!, '$name.blp');
 
   @override
   Future<BlpIconKey> obtainKey(ImageConfiguration configuration) async =>
       BlpIconKey(GameIconPaths.normalizeIconName(rawPath));
 
   @override
-  ImageStreamCompleter loadImage(
-    BlpIconKey key,
-    ImageDecoderCallback decode,
-  ) =>
+  ImageStreamCompleter loadImage(BlpIconKey key, ImageDecoderCallback decode) =>
       OneFrameImageStreamCompleter(_load(key));
 
   Future<ImageInfo> _load(BlpIconKey key) async {
@@ -130,7 +127,7 @@ class BlpIconProvider extends ImageProvider<BlpIconKey> {
     final bytes = await file.readAsBytes();
     final BlpImage decoded;
     try {
-      decoded = decodeBlp(bytes);
+      decoded = BlpDecoder.decode(bytes);
     } on Object {
       // Corrupt/unsupported BLP: record and treat as missing.
       negativeCache.add(name);

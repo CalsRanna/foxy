@@ -56,7 +56,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               child: FoxyFlagPicker(
                 controller: vm.allowableClassesController,
                 placeholder: 'AllowableClasses',
-                flags: kAllowableClassOptions,
+                flags: ItemFlags.allowableClassOptions,
                 title: '允许职业',
               ),
             ),
@@ -231,7 +231,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               child: FoxyFlagPicker(
                 controller: vm.specialFlagsController,
                 placeholder: 'SpecialFlags',
-                flags: kQuestSpecialFlagOptions,
+                flags: QuestFlags.questSpecialFlagOptions,
                 title: '任务特殊标志',
               ),
             ),
@@ -303,7 +303,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -318,7 +318,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

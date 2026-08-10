@@ -138,7 +138,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
       onRowSecondaryTapDownWithDetails: (item, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -182,7 +182,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

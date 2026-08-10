@@ -85,7 +85,7 @@ class _CreatureTemplateResistanceViewState
                   label: '抗性类型',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.schoolController,
-                    options: kResistanceSchoolOptions,
+                    options: CreatureEnums.resistanceSchoolOptions,
                     placeholder: Text('School'),
                   ),
                 ),
@@ -137,7 +137,7 @@ class _CreatureTemplateResistanceViewState
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -187,7 +187,7 @@ class _CreatureTemplateResistanceViewState
         FoxyTableColumn.flex(
           label: '抗性类型',
           cell: (_, resistance) => Text(
-            kResistanceSchoolOptions[resistance.school] ??
+            CreatureEnums.resistanceSchoolOptions[resistance.school] ??
                 '未知 (${resistance.school})',
           ),
         ),
@@ -208,7 +208,7 @@ class _CreatureTemplateResistanceViewState
         _showEditDialog(context);
       },
       onRowSecondaryTapDownWithDetails: (resistance, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -260,7 +260,7 @@ class _CreatureTemplateResistanceViewState
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -278,7 +278,7 @@ class _CreatureTemplateResistanceViewState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -287,7 +287,8 @@ class _CreatureTemplateResistanceViewState
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -298,18 +299,18 @@ class _CreatureTemplateResistanceViewState
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增抗性'),
         description: Text('新增一条抗性记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -317,14 +318,14 @@ class _CreatureTemplateResistanceViewState
 
   /// Shows the edit dialog
   void _showEditDialog(BuildContext context) {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑抗性'),
         description: Text('编辑选中的抗性记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

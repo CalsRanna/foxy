@@ -8,7 +8,6 @@ part 'spell_group_repository.g.dart';
 
 @FoxyRepository(linkKey: ['spellId'])
 class SpellGroupRepository with RepositoryMixin, _SpellGroupRepositoryMixin {
-
   @override
   Future<SpellGroupKey> copySpellGroup(SpellGroupKey key) async {
     final source = await getSpellGroup(key);

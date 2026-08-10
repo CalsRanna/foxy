@@ -117,7 +117,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
                   label: '需要任务',
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
-                    options: kBooleanOptions,
+                    options: CreatureEnums.booleanOptions,
                     placeholder: Text('QuestRequired'),
                   ),
                 ),
@@ -127,7 +127,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
                   label: '掉落模式',
                   child: FoxyFlagPicker(
                     controller: viewModel.lootModeController,
-                    flags: kLootModeFlagOptions,
+                    flags: CreatureFlags.lootModeFlagOptions,
                     title: '掉落模式',
                     placeholder: 'LootMode',
                   ),
@@ -203,7 +203,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -258,7 +258,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
         FoxyTableColumn.flex(
           label: '物品名称',
           cell: (context, loot) {
-            final qualityColor = getItemQualityColor(loot.itemQuality);
+            final qualityColor = ItemQualityColor.of(loot.itemQuality);
             return loot.reference != 0
                 ? Text(
                     '关联掉落',
@@ -299,7 +299,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
         _showEditDialog();
       },
       onRowSecondaryTapDownWithDetails: (loot, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -347,7 +347,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -356,7 +356,8 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -366,32 +367,32 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增掉落'),
         description: Text('新增一条掉落记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
   }
 
   void _showEditDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑掉落'),
         description: Text('编辑选中的掉落记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

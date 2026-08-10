@@ -10,7 +10,6 @@ part 'spell_item_enchantment_condition_repository.g.dart';
 @FoxyFilter.text('id')
 class SpellItemEnchantmentConditionRepository
     with RepositoryMixin, _SpellItemEnchantmentConditionRepositoryMixin {
-
   Future<int> copySpellItemEnchantmentCondition(int key) async {
     final source = await getSpellItemEnchantmentCondition(key);
     if (source == null) {

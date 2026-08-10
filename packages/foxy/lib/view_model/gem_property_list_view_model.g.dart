@@ -34,7 +34,7 @@ mixin _GemPropertyListViewModelMixin
       _logActivity(ActivityActionType.copy, key);
       await _refresh();
     } catch (error) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -53,7 +53,7 @@ mixin _GemPropertyListViewModelMixin
       normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -123,7 +123,7 @@ mixin _GemPropertyListViewModelMixin
     } catch (error) {
       if (token != _refreshToken) return;
       LoggerUtil.instance.e('刷新列表失败: $error');
-      errorMessage.value = '刷新列表失败: ${foxyErrorMessage(error)}';
+      errorMessage.value = '刷新列表失败: ${FoxyError.message(error)}';
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

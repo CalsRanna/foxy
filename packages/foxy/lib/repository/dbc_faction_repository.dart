@@ -14,7 +14,6 @@ part 'dbc_faction_repository.g.dart';
 @FoxyFilter.text('name')
 class DbcFactionRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _DbcFactionRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -67,7 +66,7 @@ class DbcFactionRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

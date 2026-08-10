@@ -66,7 +66,7 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '加载连接配置失败: ${foxyErrorMessage(error)}';
+      errorMessage.value = '加载连接配置失败: ${FoxyError.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -90,12 +90,12 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
 
   Future<void> start() async {
     if (_isActive) return;
-    final port = parseMysqlPort(portController.collect());
+    final port = BootstrapPort.parse(portController.collect());
     if (port == null) {
       final error = ValidationException(
         'invalid port: enter an integer between 1 and 65535',
       );
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -127,7 +127,7 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
     } catch (error) {
       if (token != _attemptToken) return;
       progressLabel.value = '';
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       status.value = WorkflowStatus.failed;
       rethrow;
     }

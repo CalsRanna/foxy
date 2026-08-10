@@ -69,7 +69,7 @@ class ReferenceLootTemplateView extends StatelessWidget {
       label: '需要任务',
       child: FoxyShadSelect<int>(
         controller: viewModel.questRequiredController,
-        options: kBooleanOptions,
+        options: CreatureEnums.booleanOptions,
         placeholder: Text('QuestRequired'),
         enabled: !viewModel.hasReference.value,
       ),
@@ -79,7 +79,7 @@ class ReferenceLootTemplateView extends StatelessWidget {
       child: FoxyFlagPicker(
         placeholder: 'LootMode',
         controller: viewModel.lootModeController,
-        flags: kLootModeFlagOptions,
+        flags: CreatureFlags.lootModeFlagOptions,
         title: '掉落模式',
       ),
     );
@@ -180,7 +180,7 @@ class ReferenceLootTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

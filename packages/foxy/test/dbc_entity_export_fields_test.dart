@@ -70,9 +70,9 @@ import 'package:warcrafty/warcrafty.dart';
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(66));
+    expect(DbcDefinitions.all, hasLength(66));
 
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       final json = _emptyEntityJson(definition.tableName);
       final missing = <String>[];
       for (final field in definition.schema.fields) {
@@ -88,7 +88,7 @@ void main() {
   });
 
   test('全部 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       final sample = _sampleRow(definition);
       final json = _roundTrip(definition.tableName, sample);
       for (final field in definition.schema.fields) {
@@ -301,7 +301,7 @@ Map<String, dynamic> _sampleRow(DbcDefinition definition) {
 }
 
 Map<String, dynamic> _schemaDefaults(String tableName) {
-  final definition = dbcDefinitionByTable[tableName]!;
+  final definition = DbcDefinitions.byTable[tableName]!;
   return {
     for (final field in definition.schema.fields)
       if (!field.type.isSkip && field.type != FieldType.sort)

@@ -98,7 +98,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                         child: FoxyShadSelect<int>(
                           controller:
                               viewModel.visibilityDistanceTypeController,
-                          options: kVisibilityDistanceTypeOptions,
+                          options: CreatureEnums.visibilityDistanceTypeOptions,
                           placeholder: Text('visibilityDistanceType'),
                         ),
                       ),
@@ -198,7 +198,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -213,7 +213,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

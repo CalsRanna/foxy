@@ -32,7 +32,7 @@ void main() {
 
   group('DBC 导出工具（无 DB 副作用）', () {
     late Directory workDir;
-    final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+    final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
 
     setUp(() async {
       workDir = await Directory.systemTemp.createTemp('foxy_dbc_safe_');

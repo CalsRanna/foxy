@@ -10,7 +10,6 @@ part 'scaling_stat_distribution_repository.g.dart';
 @FoxyFilter.text('id')
 class ScalingStatDistributionRepository
     with RepositoryMixin, _ScalingStatDistributionRepositoryMixin {
-
   @override
   Future<int> copyScalingStatDistribution(int key) async {
     final source = await getScalingStatDistribution(key);

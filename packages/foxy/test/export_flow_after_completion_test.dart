@@ -70,7 +70,7 @@ void main() {
     final result = await dbcUseCase
         .execute(
           ExportDbcInput(
-            definitions: [dbcDefinitionByTable['dbc_spell_duration']!],
+            definitions: [DbcDefinitions.byTable['dbc_spell_duration']!],
             outputDirectory: tempDir.path,
           ),
         )

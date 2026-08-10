@@ -164,7 +164,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${foxyErrorMessage(error)}',
+                        '保存失败：${FoxyError.message(error)}',
                       );
                       return;
                     }
@@ -211,7 +211,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           label: '物品名称',
           cell: (_, vendor) {
             final qualityColor =
-                kItemQualityColors[vendor.itemQuality] ?? Colors.white;
+                ItemQualityColor.colors[vendor.itemQuality] ?? Colors.white;
             return Text(
               vendor.displayName,
               style: TextStyle(color: qualityColor),
@@ -246,7 +246,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
       },
       onRowSecondaryTapDownWithDetails: (vendor, details) {
         viewModel.selectedKey.value = vendor.key;
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -288,7 +288,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 
@@ -297,7 +297,8 @@ class _NpcVendorViewState extends State<NpcVendorView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      if (mounted)
+        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
       return false;
     }
   }
@@ -307,32 +308,32 @@ class _NpcVendorViewState extends State<NpcVendorView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
       return;
     }
     if (!mounted) return;
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: const Text('新增商品'),
         description: const Text('新增一条商品记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );
   }
 
   void _showEditDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: const Text('编辑商品'),
         description: const Text('编辑选中的商品记录'),
         titlePinned: true,
         descriptionPinned: true,
-        constraints: foxyDialogConstraints(dialogContext),
+        constraints: DialogUtil.constraints(dialogContext),
         child: _buildDialogForm(dialogContext),
       ),
     );

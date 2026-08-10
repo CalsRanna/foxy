@@ -23,7 +23,7 @@ class DbcReminderDialog extends StatelessWidget {
         ? '\n...等 ${result.missingTables.length} 张表'
         : '';
     return SettingDialogShell(
-      title: settingDialogTitleRow(
+      title: SettingDialogShell.titleRow(
         LucideIcons.fileInput,
         '发现未导入的 DBC 数据',
       ),
@@ -35,9 +35,9 @@ class DbcReminderDialog extends StatelessWidget {
         ShadButton(
           onPressed: () {
             Navigator.of(context).maybePop();
-            GetIt.instance
-                .get<RouterFacade>()
-                .navigateToMenu(RouterMenu.setting);
+            GetIt.instance.get<RouterFacade>().navigateToMenu(
+              RouterMenu.setting,
+            );
           },
           child: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -51,7 +51,7 @@ class DbcReminderDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12,
         children: [
-          settingDialogBanner(
+          SettingDialogShell.banner(
             context,
             text:
                 '检测到 ${result.missingTables.length} 张 DBC 表尚未导入数据库，'
@@ -63,7 +63,7 @@ class DbcReminderDialog extends StatelessWidget {
             shown + suffix,
             style: const TextStyle(fontSize: 13, height: 1.4),
           ),
-          settingDialogMutedHint(
+          SettingDialogShell.mutedHint(
             context,
             '请前往「设置 → DBC 数据管理」导入最新的 DBC 文件。',
           ),

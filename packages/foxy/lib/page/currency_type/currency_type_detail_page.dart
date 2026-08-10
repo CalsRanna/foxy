@@ -57,7 +57,7 @@ class _CurrencyTypeDetailPageState extends State<CurrencyTypeDetailPage> {
       await viewModel.initSignals(key: widget.currencyTypeKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
     }
   }
 }

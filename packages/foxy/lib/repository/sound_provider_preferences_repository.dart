@@ -12,7 +12,6 @@ part 'sound_provider_preferences_repository.g.dart';
 @FoxyFilter.text('description')
 class SoundProviderPreferencesRepository
     with RepositoryMixin, _SoundProviderPreferencesRepositoryMixin {
-
   Future<int> copySoundProviderPreference(int key) async {
     final source = await getSoundProviderPreferences(key);
     if (source == null) {
@@ -67,7 +66,7 @@ class SoundProviderPreferencesRepository
     if (filter.description.isNotEmpty) {
       builder = builder.where(
         'Description',
-        '%${escapeLike(filter.description)}%',
+        '%${ParseUtil.escapeLike(filter.description)}%',
         comparator: 'like',
       );
     }

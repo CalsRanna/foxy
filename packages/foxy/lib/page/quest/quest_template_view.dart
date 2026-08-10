@@ -44,7 +44,7 @@ class QuestTemplateView extends StatelessWidget {
               label: '任务方式',
               child: FoxyShadSelect<int>(
                 controller: vm.questTypeController,
-                options: kQuestMethodOptions,
+                options: QuestEnums.questMethodOptions,
                 placeholder: const Text('QuestType'),
               ),
             ),
@@ -110,7 +110,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyFlagPicker(
                 placeholder: 'Flags',
                 controller: vm.flagsController,
-                flags: kQuestFlagOptions,
+                flags: QuestFlags.questFlagOptions,
                 title: '任务标志',
               ),
             ),
@@ -426,7 +426,7 @@ class QuestTemplateView extends StatelessWidget {
               label: '经验难度',
               child: FoxyShadSelect<int>(
                 controller: vm.rewardXpDifficultyController,
-                options: kQuestRewardDifficultyOptions,
+                options: QuestEnums.questRewardDifficultyOptions,
                 placeholder: const Text('RewardXPDifficulty'),
               ),
             ),
@@ -445,7 +445,7 @@ class QuestTemplateView extends StatelessWidget {
               label: '金币难度',
               child: FoxyShadSelect<int>(
                 controller: vm.rewardMoneyDifficultyController,
-                options: kQuestRewardDifficultyOptions,
+                options: QuestEnums.questRewardDifficultyOptions,
                 placeholder: const Text('RewardMoneyDifficulty'),
               ),
             ),
@@ -1229,7 +1229,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyFlagPicker(
                 placeholder: 'AllowableRaces',
                 controller: vm.allowableRacesController,
-                flags: kAllowableRaceOptions,
+                flags: ItemFlags.allowableRaceOptions,
                 title: '允许种族',
               ),
             ),
@@ -1303,7 +1303,7 @@ class QuestTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

@@ -94,7 +94,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -120,7 +120,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     }
   }
@@ -148,7 +148,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -181,7 +181,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
         return;
       }
       _clearEditingState();
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
@@ -234,7 +234,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -315,7 +315,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       _clearEditingState();
     } catch (error) {
       if (token == _refreshToken) {
-        errorMessage.value = foxyErrorMessage(error);
+        errorMessage.value = FoxyError.message(error);
         LoggerUtil.instance.e('刷新子表列表失败: $error');
       }
     } finally {

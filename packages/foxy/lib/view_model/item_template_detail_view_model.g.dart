@@ -315,7 +315,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -345,7 +345,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       rethrow;
     } finally {
       submitting.value = false;

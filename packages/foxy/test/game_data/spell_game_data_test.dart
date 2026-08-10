@@ -27,7 +27,7 @@ void main() {
   });
 
   test('SpellCustomAttributes 覆盖全部独立位且不加入组合别名', () {
-    final values = kSpellCustomAttributeOptions.map((item) => item.value);
+    final values = SpellFlags.spellCustomAttributeOptions.map((item) => item.value);
     expect(values.toSet(), hasLength(32));
     expect(
       values.every((value) => value > 0 && value & (value - 1) == 0),
@@ -38,13 +38,13 @@ void main() {
   });
 
   test('关联表闭集值严格来自对应核心枚举', () {
-    expect(kSpellAreaGenderOptions.keys, orderedEquals([0, 1, 2]));
-    expect(kSpellLinkedTypeOptions.keys, orderedEquals([0, 1, 2]));
+    expect(SpellEnums.spellAreaGenderOptions.keys, orderedEquals([0, 1, 2]));
+    expect(SpellEnums.spellLinkedTypeOptions.keys, orderedEquals([0, 1, 2]));
     expect(
-      kSpellAreaQuestStatusOptions.map((item) => item.value),
+      SpellFlags.spellAreaQuestStatusOptions.map((item) => item.value),
       orderedEquals([0x01, 0x02, 0x08, 0x20, 0x40]),
     );
-    expect(kSpellPowerTypeOptions.keys, containsAll([127, 0xFFFFFFFE]));
+    expect(SpellEnums.spellPowerTypeOptions.keys, containsAll([127, 0xFFFFFFFE]));
   });
 
   test('父键型关联记录禁止通过 MAX+1 复制出无效引用', () async {

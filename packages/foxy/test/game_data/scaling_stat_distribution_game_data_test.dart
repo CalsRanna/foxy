@@ -6,16 +6,16 @@ import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 void main() {
 
   test('属性类型使用本表的空槽和实际 ItemModType 域', () {
-    expect(kScalingStatDistributionStatOptions, containsPair(-1, '空槽'));
-    expect(kScalingStatDistributionStatOptions, containsPair(0, '法力值'));
+    expect(ScalingStatDistributionConstants.scalingStatDistributionStatOptions, containsPair(-1, '空槽'));
+    expect(ScalingStatDistributionConstants.scalingStatDistributionStatOptions, containsPair(0, '法力值'));
     expect(
-      kScalingStatDistributionStatOptions,
+      ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
       containsPair(40, '野性攻击强度（客户端兼容）'),
     );
-    expect(kScalingStatDistributionStatOptions, containsPair(48, '格挡值'));
-    expect(kScalingStatDistributionStatOptions, isNot(contains(2)));
-    expect(kScalingStatDistributionStatOptions, isNot(contains(8)));
-    expect(kScalingStatDistributionStatOptions, isNot(contains(11)));
+    expect(ScalingStatDistributionConstants.scalingStatDistributionStatOptions, containsPair(48, '格挡值'));
+    expect(ScalingStatDistributionConstants.scalingStatDistributionStatOptions, isNot(contains(2)));
+    expect(ScalingStatDistributionConstants.scalingStatDistributionStatOptions, isNot(contains(8)));
+    expect(ScalingStatDistributionConstants.scalingStatDistributionStatOptions, isNot(contains(11)));
   });
 
   test('空槽为 -1 且属性类型 0 能正常显示', () {
@@ -66,7 +66,7 @@ void main() {
       bonus2: 300,
     );
     expect(
-      statEntries(
+      ScalingStatDistributionEntity.statEntries(
         [entity.statId0, entity.statId1, entity.statId2],
         [entity.bonus0, entity.bonus1, entity.bonus2],
       ),
@@ -75,7 +75,7 @@ void main() {
   });
 
   test('DBC definition 与 AzerothCore 3.3.5a 的 22 列格式一致', () {
-    final definition = dbcDefinitionByTable['dbc_scaling_stat_distribution']!;
+    final definition = DbcDefinitions.byTable['dbc_scaling_stat_distribution']!;
     expect(definition.fileName, 'ScalingStatDistribution.dbc');
     expect(definition.schema.format, 'niiiiiiiiiiiiiiiiiiiii');
     expect(definition.schema.fields, hasLength(22));

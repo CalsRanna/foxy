@@ -248,7 +248,7 @@ class _NpcTextViewState extends State<NpcTextView> {
                 label: '语言',
                 child: FoxyShadSelect<int>(
                   controller: languageController,
-                  options: kNpcTextLanguages,
+                  options: GossipMenuOptionConstants.npcTextLanguages,
                   placeholder: Text('lang$index'),
                 ),
               ),
@@ -405,7 +405,7 @@ class _NpcTextViewState extends State<NpcTextView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -418,7 +418,7 @@ class _NpcTextViewState extends State<NpcTextView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

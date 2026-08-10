@@ -11,7 +11,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 ///
 /// The [ShadOption] list is built once and cached; it is only rebuilt when the
 /// [options] map identity changes. Call sites pass compile-time `const` maps
-/// (e.g. `kItemStatTypeOptions`), so without this cache every rebuild would
+/// (e.g. `ItemEnums.itemStatTypeOptions`), so without this cache every rebuild would
 /// re-allocate the entire option widget list — wasteful on detail forms that
 /// hold dozens of selects.
 class FoxyShadSelect<T> extends StatefulWidget {

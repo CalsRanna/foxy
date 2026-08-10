@@ -4,7 +4,7 @@ import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 
 void main() {
   test('结构不兼容时使用对应标题并列出详情', () {
-    final message = formatDbcCheckBlockingMessage([
+    final message = DbcImportWorkflowViewModel.formatBlockingMessage([
       const DbcTableCheckResult(
         tableName: 'dbc_spell',
         state: DbcTableState.incompatible,
@@ -23,7 +23,7 @@ void main() {
   });
 
   test('仅查询错误时使用检查失败标题', () {
-    final message = formatDbcCheckBlockingMessage([
+    final message = DbcImportWorkflowViewModel.formatBlockingMessage([
       const DbcTableCheckResult(
         tableName: 'dbc_spell',
         state: DbcTableState.error,
@@ -44,7 +44,7 @@ void main() {
         message: 'e$index',
       ),
     );
-    final message = formatDbcCheckBlockingMessage(blocking);
+    final message = DbcImportWorkflowViewModel.formatBlockingMessage(blocking);
 
     expect(message, contains('...等 6 张表'));
     expect(message, isNot(contains('dbc_table_5:')));

@@ -20,8 +20,8 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  final duration = dbcDefinitionByTable['dbc_spell_duration']!;
-  final icon = dbcDefinitionByTable['dbc_spell_icon']!;
+  final duration = DbcDefinitions.byTable['dbc_spell_duration']!;
+  final icon = DbcDefinitions.byTable['dbc_spell_icon']!;
 
   List<Map<String, dynamic>> durationRows() => [
     {
@@ -79,7 +79,7 @@ void main() {
   void expectArchiveDbc(String mpqPath, String dbcName, int expectedRecords) {
     final archive = MpqArchive.open(mpqPath);
     try {
-      final inArchive = '$mpqDbcArchivePath$dbcName';
+      final inArchive = '${MpqExportWorker.dbcArchivePath}$dbcName';
       expect(archive.files, contains(inArchive));
       final bytes = archive.extract(inArchive);
       final tmp = File(p.join(tempDir.path, 'verify.dbc'))..writeAsBytesSync(bytes);
@@ -90,9 +90,9 @@ void main() {
     }
   }
 
-  test('buildMpqPatch 打包 DBC 到 DBFilesClient 路径并可回读', () async {
+  test('MpqExportWorker.buildPatch 打包 DBC 到 DBFilesClient 路径并可回读', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-    final summary = await buildMpqPatch(
+    final summary = await MpqExportWorker.buildPatch(
       definitions: [duration, icon],
       loadRows: (table) async =>
           table == duration.tableName ? durationRows() : iconRows(),
@@ -106,14 +106,14 @@ void main() {
     expectArchiveDbc(mpqPath, duration.fileName, 2);
   });
 
-  test('buildMpqPatch 已存在同名 MPQ 时覆盖', () async {
+  test('MpqExportWorker.buildPatch 已存在同名 MPQ 时覆盖', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
     // Pre-create a stale archive (one file, no DBCs).
     final stale = MpqArchive.create(mpqPath, maxFileCount: 4);
     stale.addFile(r'stale.txt', Uint8List(16));
     stale.close();
 
-    final summary = await buildMpqPatch(
+    final summary = await MpqExportWorker.buildPatch(
       definitions: [duration],
       loadRows: (_) async => durationRows(),
       mpqFilePath: mpqPath,
@@ -124,15 +124,15 @@ void main() {
     final archive = MpqArchive.open(mpqPath);
     try {
       expect(archive.files, isNot(contains('stale.txt')));
-      expect(archive.files, contains('$mpqDbcArchivePath${duration.fileName}'));
+      expect(archive.files, contains('${MpqExportWorker.dbcArchivePath}${duration.fileName}'));
     } finally {
       archive.close();
     }
   });
 
-  test('buildMpqPatch 全部空表时不生成 MPQ', () async {
+  test('MpqExportWorker.buildPatch 全部空表时不生成 MPQ', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-    final summary = await buildMpqPatch(
+    final summary = await MpqExportWorker.buildPatch(
       definitions: [duration, icon],
       loadRows: (_) async => [],
       mpqFilePath: mpqPath,
@@ -143,9 +143,9 @@ void main() {
     expect(await File(mpqPath).exists(), isFalse);
   });
 
-  test('buildMpqPatch 取消时不留下目标文件', () async {
+  test('MpqExportWorker.buildPatch 取消时不留下目标文件', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-    final summary = await buildMpqPatch(
+    final summary = await MpqExportWorker.buildPatch(
       definitions: [duration, icon],
       loadRows: (_) async => durationRows(),
       mpqFilePath: mpqPath,
@@ -156,11 +156,11 @@ void main() {
     expect(await File(mpqPath).exists(), isFalse);
   });
 
-  test('buildMpqPatch 打包阶段中途取消 → 无目标文件且 tmp 清理', () async {
+  test('MpqExportWorker.buildPatch 打包阶段中途取消 → 无目标文件且 tmp 清理', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
     // 写表阶段放行前 4 次检查;打包阶段 addFile 循环的第 2 个文件时取消。
     var checks = 0;
-    final summary = await buildMpqPatch(
+    final summary = await MpqExportWorker.buildPatch(
       definitions: [duration, icon],
       loadRows: (table) async =>
           table == duration.tableName ? durationRows() : iconRows(),
@@ -180,9 +180,9 @@ void main() {
     expect(leftovers, isEmpty);
   });
 
-  test('buildMpqPatch 输出目录不存在时抛错', () async {
+  test('MpqExportWorker.buildPatch 输出目录不存在时抛错', () async {
     await expectLater(
-      buildMpqPatch(
+      MpqExportWorker.buildPatch(
         definitions: [duration],
         loadRows: (_) async => durationRows(),
         mpqFilePath: p.join(outDir.path, 'missing', 'patch.mpq'),

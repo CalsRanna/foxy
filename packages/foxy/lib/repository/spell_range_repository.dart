@@ -14,7 +14,6 @@ part 'spell_range_repository.g.dart';
 @FoxyFilter.text('name')
 class SpellRangeRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _SpellRangeRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -75,7 +74,7 @@ class SpellRangeRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'DisplayName_lang_zhCN',
-        '%${escapeLike(filter.name)}%',
+        '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );
     }

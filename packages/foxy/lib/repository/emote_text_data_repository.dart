@@ -17,7 +17,6 @@ class EmoteTextDataRepository
         RepositoryMixin,
         DbcLocaleRepositoryMixin,
         _EmoteTextDataRepositoryMixin {
-
   @override
   String get dbcLocaleTableName => _table;
 
@@ -73,7 +72,7 @@ class EmoteTextDataRepository
     if (filter.text.isNotEmpty) {
       builder = builder.where(
         'Text_lang_zhCN',
-        '%${escapeLike(filter.text)}%',
+        '%${ParseUtil.escapeLike(filter.text)}%',
         comparator: 'like',
       );
     }

@@ -12,7 +12,6 @@ part 'game_object_display_info_repository.g.dart';
 @FoxyFilter.text('modelName')
 class GameObjectDisplayInfoRepository
     with RepositoryMixin, _GameObjectDisplayInfoRepositoryMixin {
-
   Future<int> copyGameObjectDisplayInfo(int key) async {
     final source = await getGameObjectDisplayInfo(key);
     if (source == null) {
@@ -70,7 +69,7 @@ class GameObjectDisplayInfoRepository
     if (filter.modelName.isNotEmpty) {
       builder = builder.where(
         'ModelName',
-        '%${escapeLike(filter.modelName)}%',
+        '%${ParseUtil.escapeLike(filter.modelName)}%',
         comparator: 'like',
       );
     }

@@ -128,8 +128,8 @@ class UpdateCancelToken {
 
 class UpdateService {
   UpdateService({http.Client? client, String? manifestUrl})
-      : _client = client ?? http.Client(),
-        _manifestUrl = Uri.parse(manifestUrl ?? defaultManifestUrl);
+    : _client = client ?? http.Client(),
+      _manifestUrl = Uri.parse(manifestUrl ?? defaultManifestUrl);
 
   /// Manifest URL: a GitHub Releases asset; `latest` always points at the
   /// newest release.
@@ -239,7 +239,9 @@ class UpdateService {
       cancelToken: cancelToken,
     );
     try {
-      final updateDir = Directory(p.join(appDir.path, kUpdateTempDirName));
+      final updateDir = Directory(
+        p.join(appDir.path, UpdateSwapper.tempDirName),
+      );
       if (await updateDir.exists()) {
         await updateDir.delete(recursive: true);
       }
@@ -374,10 +376,7 @@ class UpdateService {
         'Update zip contains too many entries: ${archive.length}',
       );
     }
-    final totalBytes = archive.fold<int>(
-      0,
-      (sum, file) => sum + file.size,
-    );
+    final totalBytes = archive.fold<int>(0, (sum, file) => sum + file.size);
     if (totalBytes > 2 * 1024 * 1024 * 1024) {
       throw UpdateException(
         UpdateErrorKind.fileSystem,
@@ -457,9 +456,7 @@ class UpdateService {
         'Update manifest has no releases',
       );
     }
-    return [
-      for (final release in releases) _parseRelease(release),
-    ];
+    return [for (final release in releases) _parseRelease(release)];
   }
 
   /// Parses one release entry; missing or mistyped fields throw

@@ -12,7 +12,6 @@ part 'game_object_art_kit_repository.g.dart';
 @FoxyFilter.text('path')
 class GameObjectArtKitRepository
     with RepositoryMixin, _GameObjectArtKitRepositoryMixin {
-
   Future<int> copyGameObjectArtKit(int key) async {
     final source = await getGameObjectArtKit(key);
     if (source == null) {
@@ -68,7 +67,7 @@ class GameObjectArtKitRepository
     if (filter.path.isNotEmpty) {
       builder = builder.whereAny(
         ['TextureVariation0', 'AttachModel0'],
-        '%${escapeLike(filter.path)}%',
+        '%${ParseUtil.escapeLike(filter.path)}%',
         comparator: 'like',
       );
     }

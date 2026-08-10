@@ -34,7 +34,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: kDialogWidth,
+      width: DialogUtil.width,
       child: Watch((_) {
         final vm = _vm;
         final checking = vm.checking.value;
@@ -47,7 +47,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
         if (checking) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.refreshCw, '检查更新'),
+            title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
             child: SizedBox(
               height: 120,
               child: Center(
@@ -75,8 +75,8 @@ class _UpdateDialogState extends State<UpdateDialog> {
         if (downloading) {
           final progress = vm.downloadProgress.value ?? 0;
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.download, '正在下载更新'),
-            child: settingDialogProgressPanel(
+            title: SettingDialogShell.titleRow(LucideIcons.download, '正在下载更新'),
+            child: SettingDialogShell.progressPanel(
               context,
               ratio: progress,
               label: '正在下载 Foxy ${update?.version ?? ''}',
@@ -96,8 +96,10 @@ class _UpdateDialogState extends State<UpdateDialog> {
           // here instead of silently keeping the "ready" view.
           final restartFailed = error != null;
           return SettingDialogShell(
-            title: settingDialogTitleRow(
-              restartFailed ? LucideIcons.triangleAlert : LucideIcons.circleCheck,
+            title: SettingDialogShell.titleRow(
+              restartFailed
+                  ? LucideIcons.triangleAlert
+                  : LucideIcons.circleCheck,
               restartFailed ? '重启更新失败' : '更新已就绪',
               iconColor: restartFailed
                   ? theme.colorScheme.destructive
@@ -121,7 +123,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   ),
                 ),
             ],
-            child: settingDialogBanner(
+            child: SettingDialogShell.banner(
               context,
               text: restartFailed
                   ? error
@@ -139,7 +141,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
         if (update != null) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(
+            title: SettingDialogShell.titleRow(
               LucideIcons.sparkles,
               '发现新版本 ${update.version}',
               iconColor: theme.colorScheme.primary,
@@ -166,14 +168,14 @@ class _UpdateDialogState extends State<UpdateDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                settingDialogMutedHint(
+                SettingDialogShell.mutedHint(
                   context,
                   '当前版本 ${_currentVersion.value ?? '未知'} → '
                   '新版本 ${update.version}（${update.buildNumber}）',
                 ),
                 _ReleaseNotes(notes: update.notes),
                 if (error != null)
-                  settingDialogBanner(
+                  SettingDialogShell.banner(
                     context,
                     text: error,
                     color: theme.colorScheme.destructive,
@@ -186,7 +188,10 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
         if (error != null) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.triangleAlert, '检查更新失败'),
+            title: SettingDialogShell.titleRow(
+              LucideIcons.triangleAlert,
+              '检查更新失败',
+            ),
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -201,7 +206,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 ),
               ),
             ],
-            child: settingDialogBanner(
+            child: SettingDialogShell.banner(
               context,
               text: error,
               color: theme.colorScheme.destructive,
@@ -212,7 +217,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
         if (upToDate) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(
+            title: SettingDialogShell.titleRow(
               LucideIcons.circleCheck,
               '已是最新版本',
               iconColor: theme.colorScheme.primary,
@@ -223,7 +228,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 child: const Text('完成'),
               ),
             ],
-            child: settingDialogBanner(
+            child: SettingDialogShell.banner(
               context,
               text: '当前已是最新版本，无需更新。',
               color: theme.colorScheme.primary,
@@ -235,7 +240,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
         // Fallback: theoretically unreachable (check not triggered yet or
         // state was reset).
         return SettingDialogShell(
-          title: settingDialogTitleRow(LucideIcons.refreshCw, '检查更新'),
+          title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
           child: const SizedBox(height: 120),
         );
       }),

@@ -61,7 +61,7 @@ class _CreatureOnKillReputationViewState
                         label: '区分阵营',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.teamDependentController,
-                          options: kBooleanOptions,
+                          options: CreatureEnums.booleanOptions,
                           placeholder: Text('TeamDependent'),
                         ),
                       ),
@@ -130,7 +130,7 @@ class _CreatureOnKillReputationViewState
                         label: '最高声望1',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.maxStanding1Controller,
-                          options: kMaxStandingOptions,
+                          options: CreatureEnums.maxStandingOptions,
                           placeholder: Text('MaxStanding1'),
                         ),
                       ),
@@ -140,7 +140,7 @@ class _CreatureOnKillReputationViewState
                         label: '最高声望2',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.maxStanding2Controller,
-                          options: kMaxStandingOptions,
+                          options: CreatureEnums.maxStandingOptions,
                           placeholder: Text('MaxStanding2'),
                         ),
                       ),
@@ -157,7 +157,7 @@ class _CreatureOnKillReputationViewState
                         label: '包括声望组1',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.isTeamAward1Controller,
-                          options: kBooleanOptions,
+                          options: CreatureEnums.booleanOptions,
                           placeholder: Text('IsTeamAward1'),
                         ),
                       ),
@@ -167,7 +167,7 @@ class _CreatureOnKillReputationViewState
                         label: '包括声望组2',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.isTeamAward2Controller,
-                          options: kBooleanOptions,
+                          options: CreatureEnums.booleanOptions,
                           placeholder: Text('IsTeamAward2'),
                         ),
                       ),
@@ -228,7 +228,7 @@ class _CreatureOnKillReputationViewState
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 
@@ -243,7 +243,7 @@ class _CreatureOnKillReputationViewState
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

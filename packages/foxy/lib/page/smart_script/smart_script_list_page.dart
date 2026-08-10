@@ -125,7 +125,8 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
           label: '事件类型',
           width: 120,
           cell: (_, script) => Text(
-            kEventTypes[script.eventType] ?? script.eventType.toString(),
+            SmartScriptConstants.eventTypes[script.eventType] ??
+                script.eventType.toString(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -134,7 +135,8 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
           label: '动作类型',
           width: 120,
           cell: (_, script) => Text(
-            kActionTypes[script.actionType] ?? script.actionType.toString(),
+            SmartScriptConstants.actionTypes[script.actionType] ??
+                script.actionType.toString(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -143,7 +145,8 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
           label: '目标类型',
           width: 120,
           cell: (_, script) => Text(
-            kTargetTypes[script.targetType] ?? script.targetType.toString(),
+            SmartScriptConstants.targetTypes[script.targetType] ??
+                script.targetType.toString(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -159,7 +162,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
       ],
       onRowDoubleTap: (script) => _navigateToDetail(key: script.key),
       onRowSecondaryTapDownWithDetails: (script, details) {
-        showFoxyContextMenu(
+        ContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [
@@ -208,7 +211,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
     }
   }
 
@@ -226,7 +229,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
     }
   }
 

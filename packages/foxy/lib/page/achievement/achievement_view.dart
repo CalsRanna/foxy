@@ -66,7 +66,7 @@ class AchievementView extends StatelessWidget {
       label: '阵营',
       child: FoxyShadSelect<int>(
         controller: viewModel.factionController,
-        options: kAchievementFactionOptions,
+        options: AchievementConstants.achievementFactionOptions,
         placeholder: const Text('Faction'),
       ),
     );
@@ -194,7 +194,7 @@ class AchievementView extends StatelessWidget {
       child: FoxyFlagPicker(
         placeholder: 'Flags',
         controller: viewModel.flagsController,
-        flags: kAchievementFlagOptions,
+        flags: AchievementConstants.achievementFlagOptions,
         title: '成就标志',
       ),
     );
@@ -262,7 +262,7 @@ class AchievementView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

@@ -12,7 +12,6 @@ part 'quest_template_repository.g.dart';
 @FoxyFilter.text('title', column: 'qt.LogTitle')
 class QuestTemplateRepository
     with RepositoryMixin, _QuestTemplateRepositoryMixin {
-
   @override
   Future<int> copyQuestTemplate(int key) async {
     final source = await getQuestTemplate(key);
@@ -37,7 +36,7 @@ class QuestTemplateRepository
       if (filter != null && filter.title.isNotEmpty) {
         builder = builder.where(
           'LogTitle',
-          '%${escapeLike(filter.title)}%',
+          '%${ParseUtil.escapeLike(filter.title)}%',
           comparator: 'like',
         );
       }
@@ -107,13 +106,13 @@ class QuestTemplateRepository
       if (localeEnabled) {
         builder = builder.whereAny(
           ['qt.LogTitle', 'qtl.Title'],
-          '%${escapeLike(filter.title)}%',
+          '%${ParseUtil.escapeLike(filter.title)}%',
           comparator: 'like',
         );
       } else {
         builder = builder.where(
           'qt.LogTitle',
-          '%${escapeLike(filter.title)}%',
+          '%${ParseUtil.escapeLike(filter.title)}%',
           comparator: 'like',
         );
       }

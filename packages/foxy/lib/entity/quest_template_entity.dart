@@ -450,5 +450,6 @@ extension BriefQuestTemplateEntityDisplay on BriefQuestTemplateEntity {
 
 extension BriefQuestTemplateEntityLabel on BriefQuestTemplateEntity {
   /// 任务类型标签（自动完成等），未知值回退为原始数字。
-  String get typeLabel => kQuestMethodOptions[questType] ?? questType.toString();
+  String get typeLabel =>
+      QuestEnums.questMethodOptions[questType] ?? questType.toString();
 }

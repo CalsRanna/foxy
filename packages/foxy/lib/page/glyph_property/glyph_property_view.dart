@@ -42,7 +42,7 @@ class GlyphPropertyView extends StatelessWidget {
       label: '雕文类型',
       child: FoxyShadSelect<int>(
         controller: viewModel.glyphSlotFlagsController,
-        options: kGlyphPropertySlotTypeOptions,
+        options: GlyphPropertyConstants.glyphPropertySlotTypeOptions,
         placeholder: const Text('GlyphSlotFlags'),
       ),
     );
@@ -108,7 +108,7 @@ class GlyphPropertyView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

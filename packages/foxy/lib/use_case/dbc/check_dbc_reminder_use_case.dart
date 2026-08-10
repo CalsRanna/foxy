@@ -42,19 +42,20 @@ class CheckDbcReminderUseCase {
   CheckDbcReminderUseCase({
     Future<List<DbcTableCheckResult>> Function()? checkTables,
     ConfigUtil? configUtil,
-  }) : _checkTables =
-           checkTables ?? (() => DbcSyncUtil().checkTables()),
+  }) : _checkTables = checkTables ?? (() => DbcSyncUtil().checkTables()),
        _configUtil = configUtil ?? GetIt.instance.get<ConfigUtil>();
 
   Future<DbcReminderCheckResult> execute() async {
     final results = await _checkTables();
-    final missing = results
-        .where((result) => result.state == DbcTableState.missing)
-        .map((result) => result.tableName)
-        .toList()
-      ..sort();
+    final missing =
+        results
+            .where((result) => result.state == DbcTableState.missing)
+            .map((result) => result.tableName)
+            .toList()
+          ..sort();
     final config = await _configUtil.load();
-    final notified = (config[notifiedKey] as List?)
+    final notified =
+        (config[notifiedKey] as List?)
             ?.map((name) => name.toString())
             .toSet() ??
         const <String>{};
@@ -62,9 +63,6 @@ class CheckDbcReminderUseCase {
     if (newly.isNotEmpty) {
       await _configUtil.update({notifiedKey: missing});
     }
-    return DbcReminderCheckResult(
-      missingTables: missing,
-      newlyMissing: newly,
-    );
+    return DbcReminderCheckResult(missingTables: missing, newlyMissing: newly);
   }
 }

@@ -10,94 +10,108 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
+/// MpqExportWorker helper functions.
+abstract final class MpqExportWorker {
 /// In-archive directory for DBC files, matching the WoW 3.3.5 client layout.
-const mpqDbcArchivePath = r'DBFilesClient\';
+  static const dbcArchivePath = r'DBFilesClient\';
 
-/// Builds a WoW patch MPQ from database DBC tables.
-///
-/// Writes the selected tables as `.dbc` files into a staging directory
-/// (reusing [writeDbcFiles]), then packs them into [mpqFilePath] under
-/// `DBFilesClient\`, the path the client looks for DBC overrides in.
-/// The archive is written to a `.tmp` sibling first and atomically renamed
-/// over the target (an existing patch of the same name is replaced).
-///
-/// Returns the DBC-write aggregation; packing failures are appended to
-/// [DbcExportSummary.errors]. Cancellation between files leaves no target
-/// file behind and the caller reports `cancelled: true`.
-Future<DbcExportSummary> buildMpqPatch({
-  required List<DbcDefinition> definitions,
-  required DbcExportRowLoader loadRows,
-  required String mpqFilePath,
-  required bool Function() isCancelled,
-  void Function(String stage, String message)? onStatus,
-  void Function(
-    String fileName,
-    int completedFiles,
-    int totalFiles,
-    int processedRows,
-    int? totalRows,
-  )? onProgress,
-}) async {
-  final outputDirectory = Directory(mpqFilePath).parent.path;
-  if (!await Directory(outputDirectory).exists()) {
-    throw FileSystemException('output directory does not exist', outputDirectory);
-  }
+  /// Builds a WoW patch MPQ from database DBC tables.
+  ///
+  /// Writes the selected tables as `.dbc` files into a staging directory
+  /// (reusing [DbcExportWorker.writeFiles]), then packs them into [mpqFilePath] under
+  /// `DBFilesClient\`, the path the client looks for DBC overrides in.
+  /// The archive is written to a `.tmp` sibling first and atomically renamed
+  /// over the target (an existing patch of the same name is replaced).
+  ///
+  /// Returns the DBC-write aggregation; packing failures are appended to
+  /// [DbcExportSummary.errors]. Cancellation between files leaves no target
+  /// file behind and the caller reports `cancelled: true`.
+  static Future<DbcExportSummary> buildPatch({
+    required List<DbcDefinition> definitions,
+    required DbcExportRowLoader loadRows,
+    required String mpqFilePath,
+    required bool Function() isCancelled,
+    void Function(String stage, String message)? onStatus,
+    void Function(
+      String fileName,
+      int completedFiles,
+      int totalFiles,
+      int processedRows,
+      int? totalRows,
+    )?
+    onProgress,
+  }) async {
+    final outputDirectory = Directory(mpqFilePath).parent.path;
+    if (!await Directory(outputDirectory).exists()) {
+      throw FileSystemException(
+        'output directory does not exist',
+        outputDirectory,
+      );
+    }
 
-  final staging = await Directory.systemTemp.createTemp('foxy_mpq_export_');
-  try {
-    final summary = await writeDbcFiles(
-      definitions: definitions,
-      loadRows: loadRows,
-      outputDirectory: staging.path,
-      isCancelled: isCancelled,
-      onProgress: onProgress,
-    );
-    if (isCancelled()) return summary;
-
-    onStatus?.call('packing', '正在打包 MPQ 补丁...');
-    final files = <File>[
-      await for (final entity in staging.list(followLinks: false))
-        if (entity is File && entity.path.toLowerCase().endsWith('.dbc')) entity,
-    ]..sort((left, right) => left.path.compareTo(right.path));
-    if (files.isEmpty) return summary;
-
-    final tmpPath = '$mpqFilePath.foxy.${DateTime.now().microsecondsSinceEpoch}.tmp';
-    var replaced = false;
+    final staging = await Directory.systemTemp.createTemp('foxy_mpq_export_');
     try {
-      final archive = MpqArchive.create(tmpPath, maxFileCount: files.length + 2);
-      try {
-        for (final file in files) {
-          if (isCancelled()) break;
-          archive.addFile(
-            '$mpqDbcArchivePath${p.basename(file.path)}',
-            file.readAsBytesSync(),
-          );
-        }
-      } finally {
-        archive.close();
-      }
+      final summary = await DbcExportWorker.writeFiles(
+        definitions: definitions,
+        loadRows: loadRows,
+        outputDirectory: staging.path,
+        isCancelled: isCancelled,
+        onProgress: onProgress,
+      );
       if (isCancelled()) return summary;
 
-      await _replaceFile(targetPath: mpqFilePath, temporaryPath: tmpPath);
-      replaced = true;
-    } finally {
-      if (!replaced) {
+      onStatus?.call('packing', '正在打包 MPQ 补丁...');
+      final files = <File>[
+        await for (final entity in staging.list(followLinks: false))
+          if (entity is File && entity.path.toLowerCase().endsWith('.dbc'))
+            entity,
+      ]..sort((left, right) => left.path.compareTo(right.path));
+      if (files.isEmpty) return summary;
+
+      final tmpPath =
+          '$mpqFilePath.foxy.${DateTime.now().microsecondsSinceEpoch}.tmp';
+      var replaced = false;
+      try {
+        final archive = MpqArchive.create(
+          tmpPath,
+          maxFileCount: files.length + 2,
+        );
         try {
-          await File(tmpPath).delete();
-        } catch (_) {
-          // A leftover tmp file never shadows the real archive.
+          for (final file in files) {
+            if (isCancelled()) break;
+            archive.addFile(
+              '${MpqExportWorker.dbcArchivePath}${p.basename(file.path)}',
+              file.readAsBytesSync(),
+            );
+          }
+        } finally {
+          archive.close();
+        }
+        if (isCancelled()) return summary;
+
+        await _replaceFile(targetPath: mpqFilePath, temporaryPath: tmpPath);
+        replaced = true;
+      } finally {
+        if (!replaced) {
+          try {
+            await File(tmpPath).delete();
+          } catch (_) {
+            // A leftover tmp file never shadows the real archive.
+          }
         }
       }
-    }
-    return summary;
-  } finally {
-    try {
-      await staging.delete(recursive: true);
-    } catch (_) {
-      // A failed staging cleanup must not fail the export.
+      return summary;
+    } finally {
+      try {
+        await staging.delete(recursive: true);
+      } catch (_) {
+        // A failed staging cleanup must not fail the export.
+      }
     }
   }
 }
+
+
 
 /// Atomic three-step replacement (target → .bak, tmp → target, drop .bak),
 /// the same pattern as DbcExportUtil's file commit.
@@ -106,7 +120,8 @@ Future<void> _replaceFile({
   required String temporaryPath,
 }) async {
   final targetFile = File(targetPath);
-  final backupPath = '$targetPath.foxy.${DateTime.now().microsecondsSinceEpoch}.bak';
+  final backupPath =
+      '$targetPath.foxy.${DateTime.now().microsecondsSinceEpoch}.bak';
   final backupFile = File(backupPath);
   final temporaryFile = File(temporaryPath);
 
@@ -163,7 +178,7 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
 
     final definitions = <DbcDefinition>[
       for (final table in tableNames)
-        dbcDefinitionByTable[table] ??
+        DbcDefinitions.byTable[table] ??
             (throw ValidationException('unknown DBC table: $table')),
     ];
     if (definitions.isEmpty) {
@@ -185,9 +200,9 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
       ),
     );
 
-    final summary = await buildMpqPatch(
+    final summary = await MpqExportWorker.buildPatch(
       definitions: definitions,
-      loadRows: (table) => loadDbcRowsForExport(laconic!, table),
+      loadRows: (table) => DbcExportWorker.loadRows(laconic!, table),
       mpqFilePath: mpqFilePath,
       isCancelled: () => cancelled,
       onStatus: (stage, message) => _sendStatus(sendPort, stage, message),
@@ -211,13 +226,9 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
       cancelled,
     );
   } catch (error) {
-    _sendResult(
-      sendPort,
-      0,
-      0,
-      [_workerError(stage: workerStage, message: 'Worker 错误: $error')],
-      false,
-    );
+    _sendResult(sendPort, 0, 0, [
+      _workerError(stage: workerStage, message: 'Worker 错误: $error'),
+    ], false);
   } finally {
     await laconic?.close();
     await cancelSubscription.cancel();

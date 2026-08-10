@@ -3,7 +3,7 @@
 ///
 /// Shared by the update dialog ([UpdateDialog]) and the startup auto-check
 /// ([DashboardPage]).
-/// Failure messages are mapped to Chinese copy via [foxyErrorMessage] and
+/// Failure messages are mapped to Chinese copy via [FoxyError.message] and
 /// written into [errorMessage].
 library;
 
@@ -51,7 +51,7 @@ class UpdateViewModel {
   final readyToRestart = signal<bool>(false);
 
   /// Failure message (Chinese copy already mapped via
-  /// [foxyErrorMessage]).
+  /// [FoxyError.message]).
   final errorMessage = signal<String?>(null);
 
   /// Extracted new-version payload root (passed to the helper program on
@@ -104,7 +104,7 @@ class UpdateViewModel {
       }
     } catch (error) {
       availableUpdate.value = null;
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       if (!manual) {
         LoggerUtil.instance.w('自动检查更新失败: $error');
       }
@@ -135,7 +135,7 @@ class UpdateViewModel {
       return true;
     } catch (error) {
       downloadProgress.value = null;
-      errorMessage.value = foxyErrorMessage(error);
+      errorMessage.value = FoxyError.message(error);
       return false;
     }
   }
@@ -150,7 +150,7 @@ class UpdateViewModel {
   /// [errorMessage] and keeps the app running.
   Future<void> restartToApply() async {
     final appDir = Directory.current;
-    final updaterExe = File(p.join(appDir.path, kUpdaterExeName));
+    final updaterExe = File(p.join(appDir.path, UpdateSwapper.updaterExeName));
     if (!await updaterExe.exists()) {
       errorMessage.value = '更新程序文件缺失，请重新下载完整版本';
       LoggerUtil.instance.e('更新辅助程序缺失: ${updaterExe.path}');
@@ -161,11 +161,11 @@ class UpdateViewModel {
         '--app-dir',
         appDir.path,
         '--update-dir',
-        _payloadRoot?.path ?? p.join(appDir.path, kUpdateTempDirName),
+        _payloadRoot?.path ?? p.join(appDir.path, UpdateSwapper.tempDirName),
         '--wait-pid',
         '$pid',
         '--app-exe',
-        kAppExeName,
+        UpdateSwapper.appExeName,
       ]);
       exit(0);
     } catch (error) {

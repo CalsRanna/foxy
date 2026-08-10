@@ -183,7 +183,7 @@ class SpellView extends StatelessWidget {
       label: '法术类型掩码',
       child: FoxyFlagPicker(
         controller: vm.schoolMaskFlagController,
-        flags: kSpellSchoolMaskOptions,
+        flags: SpellFlags.spellSchoolMaskOptions,
         title: '法术类型掩码',
         placeholder: 'SchoolMask',
       ),
@@ -192,7 +192,7 @@ class SpellView extends StatelessWidget {
       label: '机制',
       child: FoxyShadSelect<int>(
         controller: vm.mechanicController,
-        options: kSpellMechanicOptions,
+        options: SpellEnums.spellMechanicOptions,
         placeholder: const Text('Mechanic'),
       ),
     );
@@ -200,7 +200,7 @@ class SpellView extends StatelessWidget {
       label: '伤害类型',
       child: FoxyShadSelect<int>(
         controller: vm.defenseTypeController,
-        options: kSpellDmgClassOptions,
+        options: SpellEnums.spellDmgClassOptions,
         placeholder: const Text('DefenseType'),
       ),
     );
@@ -208,7 +208,7 @@ class SpellView extends StatelessWidget {
       label: '驱散类型',
       child: FoxyShadSelect<int>(
         controller: vm.dispelTypeController,
-        options: kSpellDispelTypeOptions,
+        options: SpellEnums.spellDispelTypeOptions,
         placeholder: const Text('DispelType'),
       ),
     );
@@ -216,7 +216,7 @@ class SpellView extends StatelessWidget {
       label: '防止类型',
       child: FoxyShadSelect<int>(
         controller: vm.preventionTypeController,
-        options: kSpellPreventionTypeOptions,
+        options: SpellEnums.spellPreventionTypeOptions,
         placeholder: const Text('PreventionType'),
       ),
     );
@@ -318,7 +318,7 @@ class SpellView extends StatelessWidget {
       label: '目标生物类型',
       child: FoxyShadSelect<int>(
         controller: vm.targetCreatureTypeController,
-        options: kCreatureTypeOptions,
+        options: CreatureEnums.creatureTypeOptions,
         placeholder: const Text('TargetCreatureType'),
       ),
     );
@@ -326,7 +326,7 @@ class SpellView extends StatelessWidget {
       label: '目标限制',
       child: FoxyFlagPicker(
         controller: vm.targetsController,
-        flags: kSpellCastTargetFlagsOptions,
+        flags: SpellFlags.spellCastTargetFlagsOptions,
         title: '目标限制',
         placeholder: 'Targets',
       ),
@@ -351,7 +351,7 @@ class SpellView extends StatelessWidget {
       label: '施法者状态',
       child: FoxyShadSelect<int>(
         controller: vm.casterAuraStateController,
-        options: kAuraStateTypeOptions,
+        options: SpellEnums.auraStateTypeOptions,
         placeholder: Text('CasterAuraState'),
       ),
     );
@@ -359,7 +359,7 @@ class SpellView extends StatelessWidget {
       label: '目标状态',
       child: FoxyShadSelect<int>(
         controller: vm.targetAuraStateController,
-        options: kAuraStateTypeOptions,
+        options: SpellEnums.auraStateTypeOptions,
         placeholder: Text('TargetAuraState'),
       ),
     );
@@ -397,7 +397,7 @@ class SpellView extends StatelessWidget {
       label: '施法朝向',
       child: FoxyFlagPicker(
         controller: vm.facingCasterFlagsController,
-        flags: kSpellFacingFlagsOptions,
+        flags: SpellFlags.spellFacingFlagsOptions,
         title: '施法朝向',
         placeholder: 'FacingCasterFlags',
       ),
@@ -415,7 +415,7 @@ class SpellView extends StatelessWidget {
       label: '能量类型',
       child: FoxyShadSelect<int>(
         controller: vm.powerTypeController,
-        options: kSpellPowerTypeOptions,
+        options: SpellEnums.spellPowerTypeOptions,
         placeholder: const Text('PowerType'),
       ),
     );
@@ -467,7 +467,7 @@ class SpellView extends StatelessWidget {
       label: '打断标志',
       child: FoxyFlagPicker(
         controller: vm.interruptFlagsController,
-        flags: kSpellInterruptFlagsOptions,
+        flags: SpellFlags.spellInterruptFlagsOptions,
         title: '打断标志',
         placeholder: 'InterruptFlags',
       ),
@@ -476,7 +476,7 @@ class SpellView extends StatelessWidget {
       label: '光环打断标志',
       child: FoxyFlagPicker(
         controller: vm.auraInterruptFlagsController,
-        flags: kSpellAuraInterruptFlagsOptions,
+        flags: SpellFlags.spellAuraInterruptFlagsOptions,
         title: '光环打断标志',
         placeholder: 'AuraInterruptFlags',
       ),
@@ -485,7 +485,7 @@ class SpellView extends StatelessWidget {
       label: '引导打断标志',
       child: FoxyFlagPicker(
         controller: vm.channelInterruptFlagsController,
-        flags: kSpellChannelInterruptFlagsOptions,
+        flags: SpellFlags.spellChannelInterruptFlagsOptions,
         title: '引导打断标志',
         placeholder: 'ChannelInterruptFlags',
       ),
@@ -494,7 +494,7 @@ class SpellView extends StatelessWidget {
       label: '属性',
       child: FoxyFlagPicker(
         controller: vm.attributesController,
-        flags: kSpellAttr0Options,
+        flags: SpellFlags.spellAttr0Options,
         title: '属性 (Attributes)',
         placeholder: 'Attributes',
       ),
@@ -503,7 +503,7 @@ class SpellView extends StatelessWidget {
       label: '属性Ex',
       child: FoxyFlagPicker(
         controller: vm.attributesExController,
-        flags: kSpellAttr1Options,
+        flags: SpellFlags.spellAttr1Options,
         title: '属性Ex (AttributesEx)',
         placeholder: 'AttributesEx',
       ),
@@ -512,7 +512,7 @@ class SpellView extends StatelessWidget {
       label: '属性ExB',
       child: FoxyFlagPicker(
         controller: vm.attributesExBController,
-        flags: kSpellAttr2Options,
+        flags: SpellFlags.spellAttr2Options,
         title: '属性ExB (AttributesExB)',
         placeholder: 'AttributesExB',
       ),
@@ -521,7 +521,7 @@ class SpellView extends StatelessWidget {
       label: '属性ExC',
       child: FoxyFlagPicker(
         controller: vm.attributesExCController,
-        flags: kSpellAttr3Options,
+        flags: SpellFlags.spellAttr3Options,
         title: '属性ExC (AttributesExC)',
         placeholder: 'AttributesExC',
       ),
@@ -530,7 +530,7 @@ class SpellView extends StatelessWidget {
       label: '属性ExD',
       child: FoxyFlagPicker(
         controller: vm.attributesExDController,
-        flags: kSpellAttr4Options,
+        flags: SpellFlags.spellAttr4Options,
         title: '属性ExD (AttributesExD)',
         placeholder: 'AttributesExD',
       ),
@@ -539,7 +539,7 @@ class SpellView extends StatelessWidget {
       label: '属性ExE',
       child: FoxyFlagPicker(
         controller: vm.attributesExEController,
-        flags: kSpellAttr5Options,
+        flags: SpellFlags.spellAttr5Options,
         title: '属性ExE (AttributesExE)',
         placeholder: 'AttributesExE',
       ),
@@ -548,7 +548,7 @@ class SpellView extends StatelessWidget {
       label: '属性ExF',
       child: FoxyFlagPicker(
         controller: vm.attributesExFController,
-        flags: kSpellAttr6Options,
+        flags: SpellFlags.spellAttr6Options,
         title: '属性ExF (AttributesExF)',
         placeholder: 'AttributesExF',
       ),
@@ -557,7 +557,7 @@ class SpellView extends StatelessWidget {
       label: '属性ExG',
       child: FoxyFlagPicker(
         controller: vm.attributesExGController,
-        flags: kSpellAttr7Options,
+        flags: SpellFlags.spellAttr7Options,
         title: '属性ExG (AttributesExG)',
         placeholder: 'AttributesExG',
       ),
@@ -568,7 +568,7 @@ class SpellView extends StatelessWidget {
       label: '触发类型掩码',
       child: FoxyFlagPicker(
         controller: vm.procTypeMaskController,
-        flags: kSpellProcFlagsOptions,
+        flags: SpellFlags.spellProcFlagsOptions,
         title: '触发类型掩码',
         placeholder: 'ProcTypeMask',
       ),
@@ -593,7 +593,7 @@ class SpellView extends StatelessWidget {
       label: '法术族',
       child: FoxyShadSelect<int>(
         controller: vm.spellClassSetController,
-        options: kSpellFamilyNameOptions,
+        options: SpellEnums.spellFamilyNameOptions,
         placeholder: const Text('SpellClassSet'),
       ),
     );
@@ -606,7 +606,7 @@ class SpellView extends StatelessWidget {
       label: '装备类型',
       child: FoxyShadSelect<int>(
         controller: vm.equippedItemClassController,
-        options: kSpellItemClassOptions,
+        options: SpellEnums.spellItemClassOptions,
         placeholder: const Text('EquippedItemClass'),
       ),
     );
@@ -621,7 +621,7 @@ class SpellView extends StatelessWidget {
       label: '装备栏位',
       child: FoxyFlagPicker(
         controller: vm.equippedItemInvTypesController,
-        flags: kInventoryTypeOptions,
+        flags: SpellFlags.inventoryTypeOptions,
         title: '装备栏位',
         placeholder: 'EquippedItemInvTypes',
       ),
@@ -800,7 +800,7 @@ class SpellView extends StatelessWidget {
       label: '最低声望等级',
       child: FoxyShadSelect<int>(
         controller: vm.minReputationController,
-        options: kSpellReputationRankOptions,
+        options: SpellEnums.spellReputationRankOptions,
         placeholder: const Text('MinReputation'),
       ),
     );
@@ -844,7 +844,7 @@ class SpellView extends StatelessWidget {
       label: '变形低32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftMask0Controller,
-        flags: kShapeshiftFormMaskOptions,
+        flags: SpellFlags.shapeshiftFormMaskOptions,
         title: '变形掩码',
         placeholder: 'ShapeshiftMask0',
       ),
@@ -853,7 +853,7 @@ class SpellView extends StatelessWidget {
       label: '变形高32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftMask1Controller,
-        flags: kSpellClassMaskBits,
+        flags: SpellFlags.spellClassMaskBits,
         title: '变形掩码高32位',
         placeholder: 'ShapeshiftMask1',
       ),
@@ -862,7 +862,7 @@ class SpellView extends StatelessWidget {
       label: '排除低32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftExclude0Controller,
-        flags: kShapeshiftFormMaskOptions,
+        flags: SpellFlags.shapeshiftFormMaskOptions,
         title: '变形排除',
         placeholder: 'ShapeshiftExclude0',
       ),
@@ -871,7 +871,7 @@ class SpellView extends StatelessWidget {
       label: '排除高32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftExclude1Controller,
-        flags: kSpellClassMaskBits,
+        flags: SpellFlags.spellClassMaskBits,
         title: '变形排除高32位',
         placeholder: 'ShapeshiftExclude1',
       ),
@@ -880,7 +880,7 @@ class SpellView extends StatelessWidget {
       label: '排除自身状态',
       child: FoxyShadSelect<int>(
         controller: vm.excludeCasterAuraStateController,
-        options: kAuraStateTypeOptions,
+        options: SpellEnums.auraStateTypeOptions,
         placeholder: Text('ExcludeCasterAuraState'),
       ),
     );
@@ -888,7 +888,7 @@ class SpellView extends StatelessWidget {
       label: '排除目标状态',
       child: FoxyShadSelect<int>(
         controller: vm.excludeTargetAuraStateController,
-        options: kAuraStateTypeOptions,
+        options: SpellEnums.auraStateTypeOptions,
         placeholder: Text('ExcludeTargetAuraState'),
       ),
     );
@@ -979,7 +979,7 @@ class SpellView extends StatelessWidget {
                 label: '分类掩码1',
                 child: FoxyFlagPicker(
                   controller: vm.spellClassMask0Controller,
-                  flags: kSpellClassMaskBits,
+                  flags: SpellFlags.spellClassMaskBits,
                   title: '分类掩码1',
                   placeholder: 'SpellClassMask0',
                 ),
@@ -990,7 +990,7 @@ class SpellView extends StatelessWidget {
                 label: '分类掩码2',
                 child: FoxyFlagPicker(
                   controller: vm.spellClassMask1Controller,
-                  flags: kSpellClassMaskBits,
+                  flags: SpellFlags.spellClassMaskBits,
                   title: '分类掩码2',
                   placeholder: 'SpellClassMask1',
                 ),
@@ -1001,7 +1001,7 @@ class SpellView extends StatelessWidget {
                 label: '分类掩码3',
                 child: FoxyFlagPicker(
                   controller: vm.spellClassMask2Controller,
-                  flags: kSpellClassMaskBits,
+                  flags: SpellFlags.spellClassMaskBits,
                   title: '分类掩码3',
                   placeholder: 'SpellClassMask2',
                 ),
@@ -1518,7 +1518,7 @@ class SpellView extends StatelessWidget {
                   label: '类型',
                   child: FoxyShadSelect<int>(
                     controller: effCtrl,
-                    options: kSpellEffectOptions,
+                    options: SpellEnums.spellEffectOptions,
                     placeholder: const Text('Effect'),
                   ),
                 ),
@@ -1563,7 +1563,7 @@ class SpellView extends StatelessWidget {
                   label: '机制',
                   child: FoxyShadSelect<int>(
                     controller: mechanicCtrl,
-                    options: kSpellMechanicOptions,
+                    options: SpellEnums.spellMechanicOptions,
                     placeholder: const Text('Mechanic'),
                     enabled: effectActive,
                   ),
@@ -1584,7 +1584,7 @@ class SpellView extends StatelessWidget {
                   label: '光环',
                   child: FoxyShadSelect<int>(
                     controller: auraCtrl,
-                    options: kSpellAuraTypeOptions,
+                    options: SpellEnums.spellAuraTypeOptions,
                     placeholder: const Text('Aura'),
                     enabled: needsAura,
                   ),
@@ -1620,7 +1620,7 @@ class SpellView extends StatelessWidget {
                   label: '目标A',
                   child: FoxyShadSelect<int>(
                     controller: targetACtrl,
-                    options: kSpellImplicitTargetOptions,
+                    options: SpellEnums.spellImplicitTargetOptions,
                     placeholder: const Text('TargetA'),
                     enabled: effectActive,
                   ),
@@ -1631,7 +1631,7 @@ class SpellView extends StatelessWidget {
                   label: '目标B',
                   child: FoxyShadSelect<int>(
                     controller: targetBCtrl,
-                    options: kSpellImplicitTargetOptions,
+                    options: SpellEnums.spellImplicitTargetOptions,
                     placeholder: const Text('TargetB'),
                     enabled: effectActive,
                   ),
@@ -1740,7 +1740,7 @@ class SpellView extends StatelessWidget {
                   label: '分类掩码A',
                   child: FoxyFlagPicker(
                     controller: maskAController,
-                    flags: kSpellClassMaskBits,
+                    flags: SpellFlags.spellClassMaskBits,
                     title: '分类掩码A',
                     placeholder: 'MaskA',
                   ),
@@ -1751,7 +1751,7 @@ class SpellView extends StatelessWidget {
                   label: '分类掩码B',
                   child: FoxyFlagPicker(
                     controller: maskBController,
-                    flags: kSpellClassMaskBits,
+                    flags: SpellFlags.spellClassMaskBits,
                     title: '分类掩码B',
                     placeholder: 'MaskB',
                   ),
@@ -1762,7 +1762,7 @@ class SpellView extends StatelessWidget {
                   label: '分类掩码C',
                   child: FoxyFlagPicker(
                     controller: maskCController,
-                    flags: kSpellClassMaskBits,
+                    flags: SpellFlags.spellClassMaskBits,
                     title: '分类掩码C',
                     placeholder: 'MaskC',
                   ),
@@ -1799,7 +1799,7 @@ class SpellView extends StatelessWidget {
     return switch (effect) {
       6 => switch (aura) {
         174 => MiscValueDropdown(
-          kStatsEnumOptions,
+          SpellEnums.statsEnumOptions,
         ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — uses the Stats enum!
         _ => null,
       },
@@ -1862,25 +1862,24 @@ class SpellView extends StatelessWidget {
     if (effect == 6) {
       return switch (aura) {
         13 || 87 || 174 || 237 || 238 => MiscValueFlagPicker(
-          kSpellSchoolMaskOptions,
+          SpellFlags.spellSchoolMaskOptions,
         ), // school mask → FlagPicker!
-        22 || 83 => MiscValueDropdown(kDamageSchoolOptions), // single resistance → dropdown
-        29 ||
-        137 ||
-        175 ||
-        182 ||
-        212 ||
-        268 => MiscValueDropdown(kStatTypeOptions), // single stat → dropdown
+        22 || 83 => MiscValueDropdown(
+          CreatureEnums.damageSchoolOptions,
+        ), // single resistance → dropdown
+        29 || 137 || 175 || 182 || 212 || 268 => MiscValueDropdown(
+          SpellEnums.statTypeOptions,
+        ), // single stat → dropdown
         30 || 98 => null, // spell ID → number
-        31 => MiscValueDropdown(kSpeedTypeOptions),
-        36 => MiscValueDropdown(kShapeshiftFormOptions),
-        99 => MiscValueDropdown(kAttackPowerTypeOptions),
-        107 || 108 => MiscValueDropdown(kSpellModOpOptions),
+        31 => MiscValueDropdown(SpellEnums.speedTypeOptions),
+        36 => MiscValueDropdown(SpellEnums.shapeshiftFormOptions),
+        99 => MiscValueDropdown(SpellEnums.attackPowerTypeOptions),
+        107 || 108 => MiscValueDropdown(SpellEnums.spellModOpOptions),
         _ => null,
       };
     }
     return switch (effect) {
-      30 => MiscValueDropdown(kEnergizePowerTypeOptions), // ENERGIZE
+      30 => MiscValueDropdown(SpellEnums.energizePowerTypeOptions), // ENERGIZE
       _ => null,
     };
   }
@@ -1896,7 +1895,7 @@ class SpellView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
+      ).show(ShadToast(description: Text(FoxyError.message(error))));
     }
   }
 }

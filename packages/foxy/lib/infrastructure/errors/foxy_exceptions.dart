@@ -5,7 +5,7 @@
 /// scattered across 327 files and callers relying on string matching to
 /// infer semantics. This file converges exceptions into sealed semantic
 /// types plus English diagnostics; Chinese copy is mapped by type through
-/// [foxyErrorMessage] — Chinese is forbidden inside exceptions.
+/// [FoxyError.message] — Chinese is forbidden inside exceptions.
 library;
 
 import 'dart:io';
@@ -13,7 +13,7 @@ import 'dart:io';
 /// Base class of Foxy business exceptions.
 ///
 /// [message] is an English diagnostic for log tracing only; user-facing
-/// Chinese copy always goes through [foxyErrorMessage]. implements (not
+/// Chinese copy always goes through [FoxyError.message]. implements (not
 /// extends) Exception so the `Exception: ` prefix never pollutes the UI.
 sealed class FoxyException implements Exception {
   const FoxyException(this.message);
@@ -110,28 +110,30 @@ enum UpdateErrorKind {
 /// unknown/driver exceptions display `$error` verbatim (matching legacy
 /// behavior). Diagnostic info destined only for logs should use
 /// `error.toString()` (English) directly, not this function.
-String foxyErrorMessage(Object error) => switch (error) {
-  RecordNotFoundException() => '记录不存在，可能已被其他操作修改或删除',
-  DuplicateKeyException() => '相同主键的记录已存在',
-  InvalidPrimaryKeyException() => '主键必须在新建时显式分配',
-  BusyException() => '操作正在执行，请稍候',
-  LinkNotLoadedException() => '关联记录尚未加载',
-  IdExhaustedException() => '记录 ID 已用尽，无法继续新增',
-  ValidationException() => '输入不合法，请检查后重试',
-  CopyNotSupportedException() => '该操作不支持自动复制，请新增记录',
-  DatabaseNotConnectedException() => '数据库未连接，请先连接数据库',
-  UpdateException(:final code) => switch (code) {
-    UpdateErrorKind.network => '无法连接更新服务器，请检查网络后重试',
-    UpdateErrorKind.invalidManifest => '更新信息无效，请稍后重试',
-    UpdateErrorKind.verification => '更新文件校验失败，请重试',
-    UpdateErrorKind.fileSystem => '更新文件写入失败，请检查磁盘空间后重试',
-    UpdateErrorKind.canceled => '更新已取消',
-  },
-  // Internal encode/decode or argument errors and invariant violations:
-  // semantically correct Dart core types.
-  ArgumentError() => '输入或参数不合法，请检查后重试',
-  StateError() => '内部状态异常，请重试',
-  FormatException() => '输入格式不正确，请检查后重试',
-  FileSystemException() => '文件系统错误，请检查路径后重试',
-  _ => '$error',
-};
+abstract final class FoxyError {
+  static String message(Object error) => switch (error) {
+    RecordNotFoundException() => '记录不存在，可能已被其他操作修改或删除',
+    DuplicateKeyException() => '相同主键的记录已存在',
+    InvalidPrimaryKeyException() => '主键必须在新建时显式分配',
+    BusyException() => '操作正在执行，请稍候',
+    LinkNotLoadedException() => '关联记录尚未加载',
+    IdExhaustedException() => '记录 ID 已用尽，无法继续新增',
+    ValidationException() => '输入不合法，请检查后重试',
+    CopyNotSupportedException() => '该操作不支持自动复制，请新增记录',
+    DatabaseNotConnectedException() => '数据库未连接，请先连接数据库',
+    UpdateException(:final code) => switch (code) {
+      UpdateErrorKind.network => '无法连接更新服务器，请检查网络后重试',
+      UpdateErrorKind.invalidManifest => '更新信息无效，请稍后重试',
+      UpdateErrorKind.verification => '更新文件校验失败，请重试',
+      UpdateErrorKind.fileSystem => '更新文件写入失败，请检查磁盘空间后重试',
+      UpdateErrorKind.canceled => '更新已取消',
+    },
+    // Internal encode/decode or argument errors and invariant violations:
+    // semantically correct Dart core types.
+    ArgumentError() => '输入或参数不合法，请检查后重试',
+    StateError() => '内部状态异常，请重试',
+    FormatException() => '输入格式不正确，请检查后重试',
+    FileSystemException() => '文件系统错误，请检查路径后重试',
+    _ => '$error',
+  };
+}

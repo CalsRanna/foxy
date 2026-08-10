@@ -26,7 +26,9 @@ void main() async {
 /// before the swap, this cleanup covers the leftovers and the next update
 /// check rediscovers the new version.
 void _cleanupStaleUpdateTemp() {
-  final dir = Directory(p.join(Directory.current.path, kUpdateTempDirName));
+  final dir = Directory(
+    p.join(Directory.current.path, UpdateSwapper.tempDirName),
+  );
   if (!dir.existsSync()) return;
   Future<void>.delayed(Duration.zero, () async {
     try {

@@ -199,7 +199,7 @@ void main() {
             body: Builder(
               builder: (context) => Center(
                 child: ShadButton(
-                  onPressed: () => showFoxyDialog(
+                  onPressed: () => DialogUtil.show(
                     context: context,
                     barrierDismissible: false,
                     builder: (_) => SetupWizardDialog(
@@ -300,7 +300,7 @@ Future<void> _waitFor(bool Function() condition) async {
 final class _FakeDbcSyncUtil extends DbcSyncUtil {
   @override
   Future<List<DbcTableCheckResult>> checkTables() async => [
-        for (final definition in dbcDefinitions)
+        for (final definition in DbcDefinitions.all)
           DbcTableCheckResult(
             tableName: definition.tableName,
             state: DbcTableState.ready,

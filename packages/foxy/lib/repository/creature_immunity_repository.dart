@@ -12,7 +12,6 @@ part 'creature_immunity_repository.g.dart';
 @FoxyFilter.text('comment')
 class CreatureImmunityRepository
     with RepositoryMixin, _CreatureImmunityRepositoryMixin {
-
   Future<int> copyCreatureImmunity(int key) async {
     final source = await getCreatureImmunity(key);
     if (source == null) {
@@ -77,7 +76,7 @@ class CreatureImmunityRepository
     if (filter.comment.isNotEmpty) {
       builder = builder.where(
         'Comment',
-        '%${escapeLike(filter.comment)}%',
+        '%${ParseUtil.escapeLike(filter.comment)}%',
         comparator: 'like',
       );
     }
