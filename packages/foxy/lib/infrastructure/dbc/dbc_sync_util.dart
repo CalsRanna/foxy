@@ -492,6 +492,7 @@ class DbcSyncUtil {
     final errorPort = ReceivePort();
     final exitPort = ReceivePort();
     var terminal = false;
+    var pendingWarnings = <DbcSyncWarning>[];
     StreamSubscription<dynamic>? messageSubscription;
     StreamSubscription<dynamic>? errorSubscription;
     StreamSubscription<dynamic>? exitSubscription;
@@ -568,10 +569,20 @@ class DbcSyncUtil {
                   errors: [
                     for (final error in errors) _parseWorkerError(error),
                   ],
+                  warnings: pendingWarnings,
                   cancelled: cancelled,
                 ),
               ),
             );
+          case ('warning', List<String> missingRowOrder):
+            pendingWarnings = [
+              DbcSyncWarning(
+                fileName: missingRowOrder.join(', '),
+                message:
+                    '以下 DBC 表缺少行顺序数据（未在更新后重新导入），'
+                    '导出的行序可能不正确：\n${missingRowOrder.join('\n')}',
+              ),
+            ];
         }
       });
 

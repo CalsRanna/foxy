@@ -137,6 +137,26 @@ abstract final class DbcExportWorker {
         Map<String, dynamic>.from(row.toMap())..remove(DbcRowOrder.column),
     ];
   }
+
+  /// Whether the rows of [tableName] still carry a NULL row-order column
+  /// (i.e. never re-imported after the row-order migration). Shared by the
+  /// export workers so the UI can warn before order-sensitive DBCs export
+  /// scrambled.
+  static Future<bool> hasMissingRowOrder(Laconic laconic, String tableName) async {
+    final hasColumn = await DbcExportWorker.tableHasRowOrderColumn(
+      laconic,
+      tableName,
+    );
+    if (!hasColumn) return true;
+    final rows = await laconic.select(
+      'select count(*) as c from foxy.$tableName '
+      'where `${DbcRowOrder.column}` is null',
+    );
+    final count = rows.isNotEmpty
+        ? (rows.first.toMap()['c'] as num?)?.toInt() ?? 0
+        : 0;
+    return count > 0;
+  }
 }
 
 /// Loads the rows of one DBC table (table name → rows). Kept injectable so
@@ -231,6 +251,20 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
         );
       },
     );
+
+    // Warn about tables whose row-order data is missing (never re-imported
+    // after the row-order migration), so the UI can prompt a re-import.
+    final missingRowOrder = <String>[];
+    for (final definition in definitions) {
+      final hasMissing = await DbcExportWorker.hasMissingRowOrder(
+        laconic,
+        definition.tableName,
+      );
+      if (hasMissing) missingRowOrder.add(definition.fileName);
+    }
+    if (missingRowOrder.isNotEmpty) {
+      sendPort.send(('warning', missingRowOrder));
+    }
 
     _sendResult(
       sendPort,

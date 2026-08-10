@@ -1,5 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
@@ -279,6 +280,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
         }
 
         if (success) {
+          final result = _vm.result.value;
+          final warnings = result?.warnings ?? const <DbcSyncWarning>[];
           return SettingDialogShell(
             title: SettingDialogShell.titleRow(
               LucideIcons.circleCheck,
@@ -299,11 +302,18 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                 SettingDialogShell.banner(
                   context,
                   text:
-                      '成功导出 ${_vm.result.value?.completed ?? 0} 个文件'
-                      '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}。',
+                      '成功导出 ${result?.completed ?? 0} 个文件'
+                      '${(result?.skipped ?? 0) > 0 ? '，跳过 ${result!.skipped} 个空表' : ''}。',
                   color: theme.colorScheme.primary,
                   icon: LucideIcons.circleCheck,
                 ),
+                if (warnings.isNotEmpty)
+                  SettingDialogShell.banner(
+                    context,
+                    text: warnings.map((w) => w.message).join('\n\n'),
+                    color: theme.colorScheme.destructive,
+                    icon: LucideIcons.alertTriangle,
+                  ),
                 if (_outputDir.value != null)
                   SettingDialogShell.mutedHint(
                     context,

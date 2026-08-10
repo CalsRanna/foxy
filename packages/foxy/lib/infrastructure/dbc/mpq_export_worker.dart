@@ -218,6 +218,20 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
       },
     );
 
+    // Warn about tables whose row-order data is missing (never re-imported
+    // after the row-order migration), so the UI can prompt a re-import.
+    final missingRowOrder = <String>[];
+    for (final definition in definitions) {
+      final hasMissing = await DbcExportWorker.hasMissingRowOrder(
+        laconic,
+        definition.tableName,
+      );
+      if (hasMissing) missingRowOrder.add(definition.fileName);
+    }
+    if (missingRowOrder.isNotEmpty) {
+      sendPort.send(('warning', missingRowOrder));
+    }
+
     _sendResult(
       sendPort,
       summary.completed,

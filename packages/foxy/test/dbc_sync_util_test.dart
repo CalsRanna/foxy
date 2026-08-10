@@ -76,6 +76,25 @@ void main() {
     expect(util.isRunning, isFalse);
   });
 
+  test('DBC 导出：行顺序缺失时返回警告但不视为失败', () async {
+    final util = DbcSyncUtil(exportWorkerEntry: _WarningExportWorker.run);
+    final events = await util
+        .export(
+          definitions: [DbcDefinitions.byTable['dbc_talent']!],
+          outputDirectory: Directory.systemTemp.path,
+          mysqlConfig: mysql,
+        )
+        .toList()
+        .timeout(const Duration(seconds: 5));
+
+    final result = events.whereType<DbcSyncResult>().single;
+    expect(result.success, isTrue);
+    expect(result.completed, 1);
+    expect(result.warnings, hasLength(1));
+    expect(result.warnings.single.message, contains('重新导入'));
+    expect(util.isRunning, isFalse);
+  });
+
   test('DBC 导出：已有任务运行时防重入', () async {
     final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final dir = await Directory.systemTemp.createTemp('foxy_export_busy_');
@@ -222,6 +241,21 @@ final class _CancelAwareExportWorker {
       await Future<void>.delayed(const Duration(milliseconds: 20));
     }
     args.sendPort.send(('result', 0, 0, <Map<String, String?>>[], true));
+    await subscription.cancel();
+    cancelPort.close();
+  }
+}
+
+/// Fake DBC-export worker emitting a row-order warning before its result,
+/// mirroring the real worker's `('warning', tableNames)` message. Lets the
+/// export tests verify warning propagation without MySQL.
+final class _WarningExportWorker {
+  static Future<void> run(DbcExportWorkerArgs args) async {
+    final cancelPort = ReceivePort();
+    final subscription = cancelPort.listen((_) {});
+    args.sendPort.send(('control', cancelPort.sendPort));
+    args.sendPort.send(('warning', ['Talent.dbc']));
+    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
     await subscription.cancel();
     cancelPort.close();
   }
