@@ -121,7 +121,7 @@ final class FormEmitter {
       ..writeln('      _applyCandidate(result);')
       ..writeln('      persistedKey.value = key;')
       ..writeln('    } catch (error, stackTrace) {')
-      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
+      ..writeln('      errorMessage.value = FoxyError.message(error);')
       ..writeln(
         "      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);",
       )
@@ -176,7 +176,7 @@ final class FormEmitter {
       ..writeln('      entity.value = candidate;')
       ..writeln('      _logActivity(action, candidate);')
       ..writeln('    } catch (error) {')
-      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
+      ..writeln('      errorMessage.value = FoxyError.message(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')

@@ -106,7 +106,7 @@ final class LinkedDetailEmitter {
       )
       ..writeln('        return;')
       ..writeln('      }')
-      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
+      ..writeln('      errorMessage.value = FoxyError.message(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -175,7 +175,7 @@ final class LinkedDetailEmitter {
       )
       ..writeln('        return;')
       ..writeln('      }')
-      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
+      ..writeln('      errorMessage.value = FoxyError.message(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -225,7 +225,7 @@ final class LinkedDetailEmitter {
       ..writeln('      _applyCandidate(candidate);')
       ..writeln('    } catch (error, stackTrace) {')
       ..writeln('      if (token != _refreshToken || isDisposed) return;')
-      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
+      ..writeln('      errorMessage.value = FoxyError.message(error);')
       ..writeln(
         '      LoggerUtil.instance.e('
         "'加载单行编辑器失败', error: error, stackTrace: stackTrace);",

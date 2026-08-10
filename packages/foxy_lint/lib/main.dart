@@ -2,11 +2,14 @@ import 'package:analysis_server_plugin/plugin.dart';
 import 'package:analysis_server_plugin/registry.dart';
 
 import 'package:foxy_lint/rules/annotation_file_mismatch.dart';
+import 'package:foxy_lint/rules/avoid_top_level_declarations.dart';
+import 'package:foxy_lint/rules/class_file_name_match.dart';
 import 'package:foxy_lint/rules/entity_no_flutter_import.dart';
 import 'package:foxy_lint/rules/entity_scalar_only.dart';
 import 'package:foxy_lint/rules/no_chinese_throw.dart';
 import 'package:foxy_lint/rules/no_collection_loops.dart';
 import 'package:foxy_lint/rules/no_flex_readonly_in_view.dart';
+import 'package:foxy_lint/rules/no_k_prefixed_static_member.dart';
 import 'package:foxy_lint/rules/repository_no_save.dart';
 import 'package:foxy_lint/rules/view_model_no_router_facade.dart';
 
@@ -30,6 +33,9 @@ class _FoxyLintPlugin extends Plugin {
       ..registerWarningRule(RepositoryNoSave())
       ..registerWarningRule(NoFlexInView())
       ..registerWarningRule(NoReadOnlyInView())
-      ..registerWarningRule(NoChineseThrow());
+      ..registerWarningRule(NoChineseThrow())
+      ..registerWarningRule(AvoidTopLevelDeclarations())
+      ..registerWarningRule(NoKPrefixedStaticMember())
+      ..registerWarningRule(ClassFileNameMatch());
   }
 }
