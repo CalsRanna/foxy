@@ -6,6 +6,7 @@ import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
+import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_locale_entity.dart';
 import 'package:foxy/entity/quest_request_items_locale_entity.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
@@ -28,6 +29,7 @@ import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
+import 'package:foxy/repository/page_text_locale_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_request_items_locale_repository.dart';
@@ -343,6 +345,52 @@ class FoxyLocalePickerDelegates {
   );
   static DatabaseLocaleEditorDelegate get itemDescription =>
       instance._itemDescription;
+
+  late final _pageTextText = DatabaseLocaleEditorDelegate(
+    fields: ['locale', 'text'],
+    fieldLabels: ['语言', '文本'],
+    onLoad: _loadPageTextLocaleRows,
+    onSave: (entry, changes) async {
+      final repo = GetIt.instance.get<PageTextLocaleRepository>();
+      final creations = <PageTextLocaleEntity>[];
+      final updates = <PageTextLocaleKey, PageTextLocaleEntity>{};
+      for (final row in changes.rows) {
+        final d = row.values;
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            PageTextLocaleEntity(
+              id: entry,
+              locale: d['locale'] ?? '',
+              text: d['text'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = PageTextLocaleKey(
+          id: entry,
+          locale: originalLocale,
+        );
+        final existing = await repo.getPageTextLocale(originalKey);
+        if (existing == null) {
+          throw RecordNotFoundException('record not found');
+        }
+        updates[originalKey] = existing.copyWith(
+          locale: d['locale'] ?? '',
+          text: d['text'] ?? '',
+        );
+      }
+      await repo.applyPageTextLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map((locale) => PageTextLocaleKey(id: entry, locale: locale))
+            .toList(),
+        updates: updates,
+      );
+    },
+  );
+  static DatabaseLocaleEditorDelegate get pageTextText =>
+      instance._pageTextText;
 
   late final _questTemplateTitle = _questTemplateField('title', '标题');
   static DatabaseLocaleEditorDelegate get questTemplateTitle =>
@@ -962,6 +1010,33 @@ class FoxyLocalePickerDelegates {
           'text61': locale.text61,
           'text70': locale.text70,
           'text71': locale.text71,
+        });
+      }),
+    );
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadPageTextLocaleRows(
+    int entry,
+  ) async {
+    final repo = GetIt.instance.get<PageTextLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefPageTextLocales(id: entry),
+      repo.countPageTextLocales(entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getPageTextLocale(brief.key);
+        if (locale == null) {
+          throw RecordNotFoundException('record not found');
+        }
+        return DatabaseLocaleRow.persisted({
+          'locale': locale.locale,
+          'text': locale.text,
         });
       }),
     );

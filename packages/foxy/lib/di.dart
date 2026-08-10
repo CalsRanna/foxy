@@ -216,7 +216,6 @@ import 'package:foxy/view_model/npc_trainer_linked_list_view_model.dart';
 import 'package:foxy/view_model/npc_vendor_linked_list_view_model.dart';
 import 'package:foxy/view_model/page_text_detail_view_model.dart';
 import 'package:foxy/view_model/page_text_list_view_model.dart';
-import 'package:foxy/view_model/page_text_locale_linked_list_view_model.dart';
 import 'package:foxy/view_model/pickpocketing_loot_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/player_create_info_action_linked_list_view_model.dart';
 import 'package:foxy/view_model/player_create_info_cast_spell_linked_list_view_model.dart';
@@ -385,7 +384,6 @@ class DI {
     _instance.registerFactory(() => ReferenceLootTemplateDetailViewModel());
     _instance.registerFactory(() => PageTextListViewModel());
     _instance.registerFactory(() => PageTextDetailViewModel());
-    _instance.registerFactory(() => PageTextLocaleLinkedListViewModel());
     _instance.registerFactory(() => ConditionListViewModel());
     _instance.registerFactory(() => ConditionDetailViewModel());
     _instance.registerFactory(() => PlayerCreateInfoListViewModel());

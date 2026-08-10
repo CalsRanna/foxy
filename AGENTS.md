@@ -10,6 +10,15 @@ Guidance for AI coding assistants working in this repository. Read this before m
 - **Code comments are English** (`//`, `///`, yaml `#`). UI strings, log messages, and docs (README/AGENTS/doc) stay in Chinese; exception messages must be English (see lint rules).
 - Git branch: `main`. Commit style: `type(scope): description` (e.g. `feat(codegen): ...`, `fix(ui): ...`).
 
+## ⭐ Working Principles
+
+**不要自行发挥 —— 任何改动都必须以项目中已有的设计为参照,而不是发明新的做法。**
+
+1. 动手前先在代码库中找到**最相似的同类型模块**作为样板,严格复制其模式:UI 结构、ViewModel 形态、命名、代码组织、持久化方式、交互行为。同样的情况必须用同样的写法(例如:本地化字段一律用 `FoxyLocalePicker` 嵌入式地球按钮,详情页一律用 `FoxyTab` 包裹,子表列表一律用 linked-list ViewModel)。
+2. 多个先例并存时,以**最近、规模最大、覆盖最全的模块群**为准(如 `quest_template` / `item_template` / `creature_template`),而不是零散的特例。
+3. **删除或精简任何现有结构前,先确认它没有承担隐性职责** —— 例如 signal 读取同时驱动着页面重建,组件被删后依赖它的交互会失效。删之前先查引用和依赖。
+4. 不确定时,先搜索相似先例(git 历史中的同类重构、`lib/widget/` 下的复用组件、旧项目 `foxy_archive`),再动手。
+
 ## Repository Layout
 
 Monorepo (Dart pub workspace, root `pubspec.yaml`):

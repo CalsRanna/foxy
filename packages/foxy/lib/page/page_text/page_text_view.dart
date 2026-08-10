@@ -6,8 +6,9 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -35,9 +36,14 @@ class _PageTextViewState extends State<PageTextView> {
     );
     final textInput = FoxyFormItem(
       label: '文本',
-      child: FoxyStringInput(
-        controller: viewModel.textController,
-        placeholder: 'Text',
+      child: Watch(
+        (_) => FoxyLocalePicker(
+          entry: viewModel.persistedKey.value,
+          controller: viewModel.textController,
+          delegate: FoxyLocalePickerDelegates.pageTextText,
+          placeholder: 'Text',
+          title: '文本',
+        ),
       ),
     );
     final nextPageIdInput = FoxyFormItem(

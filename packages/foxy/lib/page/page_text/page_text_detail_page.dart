@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/page/page_text/page_text_locale_view.dart';
 import 'package:foxy/page/page_text/page_text_view.dart';
 import 'package:foxy/view_model/page_text_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -25,7 +24,6 @@ class _PageTextDetailPageState extends State<PageTextDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      final key = viewModel.persistedKey.value;
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -37,12 +35,8 @@ class _PageTextDetailPageState extends State<PageTextDetailPage> {
             ),
           ),
           FoxyTab(
-            tabs: const [Text('页面文本'), Text('本地化')],
-            disabledIndexes: key == null ? const {1} : const {},
-            contents: [
-              PageTextView(viewModel: viewModel),
-              PageTextLocaleView(id: key),
-            ],
+            tabs: const [Text('页面文本')],
+            contents: [PageTextView(viewModel: viewModel)],
           ),
         ],
       );
