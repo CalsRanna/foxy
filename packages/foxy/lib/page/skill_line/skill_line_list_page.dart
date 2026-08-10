@@ -11,6 +11,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
@@ -117,12 +118,15 @@ class _SkillLineListPageState extends State<SkillLineListPage> {
         ),
         FoxyTableColumn.fixed(
           label: '分类',
-          width: 120,
-          cell: (_, item) => Text(item.categoryId.toString()),
+          width: 160,
+          cell: (_, item) => Text(item.displayCategoryName),
         ),
         FoxyTableColumn.flex(
           label: '名称',
-          cell: (_, item) => Text(item.displayNameZhCN),
+          cell: (_, item) => FoxyIconText(
+            iconPath: item.textureFilename,
+            name: item.displayName,
+          ),
         ),
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),

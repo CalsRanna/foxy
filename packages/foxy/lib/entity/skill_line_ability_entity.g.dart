@@ -6,11 +6,25 @@ final class BriefSkillLineAbilityEntity {
   final int id;
   final int skillLine;
   final int spell;
+  final int minSkillLineRank;
+  final int acquireMethod;
+  final String spellNameEnUS;
+  final String spellNameZhCN;
+  final String spellDescriptionEnUS;
+  final String spellDescriptionZhCN;
+  final String textureFilename;
 
   const BriefSkillLineAbilityEntity({
     this.id = 0,
     this.skillLine = 0,
     this.spell = 0,
+    this.minSkillLineRank = 0,
+    this.acquireMethod = 0,
+    this.spellNameEnUS = '',
+    this.spellNameZhCN = '',
+    this.spellDescriptionEnUS = '',
+    this.spellDescriptionZhCN = '',
+    this.textureFilename = '',
   });
 
   factory BriefSkillLineAbilityEntity.fromJson(Map<String, dynamic> json) {
@@ -30,11 +44,37 @@ final class BriefSkillLineAbilityEntity {
           : json['Spell'] == false
           ? 0
           : (json['Spell'] as num?)?.toInt() ?? 0,
+      minSkillLineRank: json['MinSkillLineRank'] == true
+          ? 1
+          : json['MinSkillLineRank'] == false
+          ? 0
+          : (json['MinSkillLineRank'] as num?)?.toInt() ?? 0,
+      acquireMethod: json['AcquireMethod'] == true
+          ? 1
+          : json['AcquireMethod'] == false
+          ? 0
+          : (json['AcquireMethod'] as num?)?.toInt() ?? 0,
+      spellNameEnUS: json['spellNameEnUS']?.toString() ?? '',
+      spellNameZhCN: json['spellNameZhCN']?.toString() ?? '',
+      spellDescriptionEnUS: json['spellDescriptionEnUS']?.toString() ?? '',
+      spellDescriptionZhCN: json['spellDescriptionZhCN']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode => Object.hashAll([id, skillLine, spell]);
+  int get hashCode => Object.hashAll([
+    id,
+    skillLine,
+    spell,
+    minSkillLineRank,
+    acquireMethod,
+    spellNameEnUS,
+    spellNameZhCN,
+    spellDescriptionEnUS,
+    spellDescriptionZhCN,
+    textureFilename,
+  ]);
 
   SkillLineAbilityKey get key {
     return SkillLineAbilityKey(id: id, skillLine: skillLine);
@@ -46,7 +86,14 @@ final class BriefSkillLineAbilityEntity {
         other is BriefSkillLineAbilityEntity &&
             id == other.id &&
             skillLine == other.skillLine &&
-            spell == other.spell;
+            spell == other.spell &&
+            minSkillLineRank == other.minSkillLineRank &&
+            acquireMethod == other.acquireMethod &&
+            spellNameEnUS == other.spellNameEnUS &&
+            spellNameZhCN == other.spellNameZhCN &&
+            spellDescriptionEnUS == other.spellDescriptionEnUS &&
+            spellDescriptionZhCN == other.spellDescriptionZhCN &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -54,7 +101,14 @@ final class BriefSkillLineAbilityEntity {
     return 'BriefSkillLineAbilityEntity('
         'id: $id, '
         'skillLine: $skillLine, '
-        'spell: $spell'
+        'spell: $spell, '
+        'minSkillLineRank: $minSkillLineRank, '
+        'acquireMethod: $acquireMethod, '
+        'spellNameEnUS: $spellNameEnUS, '
+        'spellNameZhCN: $spellNameZhCN, '
+        'spellDescriptionEnUS: $spellDescriptionEnUS, '
+        'spellDescriptionZhCN: $spellDescriptionZhCN, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

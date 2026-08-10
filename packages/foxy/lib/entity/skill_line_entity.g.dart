@@ -6,11 +6,19 @@ final class BriefSkillLineEntity {
   final int id;
   final int categoryId;
   final String displayNameZhCN;
+  final String displayNameEnUS;
+  final String categoryNameZhCN;
+  final String categoryNameEnUS;
+  final String textureFilename;
 
   const BriefSkillLineEntity({
     this.id = 0,
     this.categoryId = 0,
     this.displayNameZhCN = '',
+    this.displayNameEnUS = '',
+    this.categoryNameZhCN = '',
+    this.categoryNameEnUS = '',
+    this.textureFilename = '',
   });
 
   factory BriefSkillLineEntity.fromJson(Map<String, dynamic> json) {
@@ -26,11 +34,23 @@ final class BriefSkillLineEntity {
           ? 0
           : (json['CategoryID'] as num?)?.toInt() ?? 0,
       displayNameZhCN: json['displayNameZhCN']?.toString() ?? '',
+      displayNameEnUS: json['displayNameEnUS']?.toString() ?? '',
+      categoryNameZhCN: json['categoryNameZhCN']?.toString() ?? '',
+      categoryNameEnUS: json['categoryNameEnUS']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode => Object.hashAll([id, categoryId, displayNameZhCN]);
+  int get hashCode => Object.hashAll([
+    id,
+    categoryId,
+    displayNameZhCN,
+    displayNameEnUS,
+    categoryNameZhCN,
+    categoryNameEnUS,
+    textureFilename,
+  ]);
 
   int get key => id;
 
@@ -40,7 +60,11 @@ final class BriefSkillLineEntity {
         other is BriefSkillLineEntity &&
             id == other.id &&
             categoryId == other.categoryId &&
-            displayNameZhCN == other.displayNameZhCN;
+            displayNameZhCN == other.displayNameZhCN &&
+            displayNameEnUS == other.displayNameEnUS &&
+            categoryNameZhCN == other.categoryNameZhCN &&
+            categoryNameEnUS == other.categoryNameEnUS &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -48,7 +72,11 @@ final class BriefSkillLineEntity {
     return 'BriefSkillLineEntity('
         'id: $id, '
         'categoryId: $categoryId, '
-        'displayNameZhCN: $displayNameZhCN'
+        'displayNameZhCN: $displayNameZhCN, '
+        'displayNameEnUS: $displayNameEnUS, '
+        'categoryNameZhCN: $categoryNameZhCN, '
+        'categoryNameEnUS: $categoryNameEnUS, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

@@ -4,6 +4,10 @@ part 'skill_line_entity.g.dart';
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('displayNameZhCN')
+@FoxyBriefField.text('displayNameEnUS')
+@FoxyBriefField.text('categoryNameZhCN')
+@FoxyBriefField.text('categoryNameEnUS')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_skill_line')
 class SkillLineEntity with _SkillLineEntityMixin {
   @FoxyBriefField()
@@ -237,4 +241,14 @@ class SkillLineEntity with _SkillLineEntityMixin {
 
   factory SkillLineEntity.fromJson(Map<String, dynamic> json) =>
       _SkillLineEntityMixin.fromJson(json);
+}
+
+extension BriefSkillLineEntityDisplay on BriefSkillLineEntity {
+  String get displayName => displayNameZhCN.isNotEmpty
+      ? displayNameZhCN
+      : displayNameEnUS;
+
+  String get displayCategoryName => categoryNameZhCN.isNotEmpty
+      ? categoryNameZhCN
+      : categoryNameEnUS;
 }

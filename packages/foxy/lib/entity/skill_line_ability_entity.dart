@@ -4,6 +4,11 @@ part 'skill_line_ability_entity.g.dart';
 
 /// SkillLineAbility — links spells to a skill line (recipes, training)
 @FoxyBriefEntity()
+@FoxyBriefField.text('spellNameEnUS')
+@FoxyBriefField.text('spellNameZhCN')
+@FoxyBriefField.text('spellDescriptionEnUS')
+@FoxyBriefField.text('spellDescriptionZhCN')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_skill_line_ability')
 class SkillLineAbilityEntity with _SkillLineAbilityEntityMixin {
   @FoxyBriefField()
@@ -30,12 +35,14 @@ class SkillLineAbilityEntity with _SkillLineAbilityEntityMixin {
   @FoxyFullField('ExcludeClass')
   final int excludeClass;
 
+  @FoxyBriefField()
   @FoxyFullField('MinSkillLineRank')
   final int minSkillLineRank;
 
   @FoxyFullField('SupercededBySpell')
   final int supercededBySpell;
 
+  @FoxyBriefField()
   @FoxyFullField('AcquireMethod')
   final int acquireMethod;
 
@@ -70,4 +77,13 @@ class SkillLineAbilityEntity with _SkillLineAbilityEntityMixin {
 
   factory SkillLineAbilityEntity.fromJson(Map<String, dynamic> json) =>
       _SkillLineAbilityEntityMixin.fromJson(json);
+}
+
+extension BriefSkillLineAbilityEntityDisplay on BriefSkillLineAbilityEntity {
+  String get displaySpellName =>
+      spellNameZhCN.isNotEmpty ? spellNameZhCN : spellNameEnUS;
+
+  String get displaySpellDescription => spellDescriptionZhCN.isNotEmpty
+      ? spellDescriptionZhCN
+      : spellDescriptionEnUS;
 }

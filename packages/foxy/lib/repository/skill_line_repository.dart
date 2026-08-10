@@ -45,8 +45,10 @@ class SkillLineRepository
   }
 
   @override
-  Future<int> countSkillLines({SkillLineFilter? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
+  Future<int> countSkillLines({SkillLineFilter? filter}) async {
+    var builder = laconic.table('$_table as sl');
+    return _applyFilter(builder, filter).count();
+  }
 
   @override
   Future<SkillLineEntity> createSkillLine() async =>
@@ -57,12 +59,26 @@ class SkillLineRepository
     int page = 1,
     SkillLineFilter? filter,
   }) async {
-    var builder = laconic.table(_table).select([
-      'ID',
-      'CategoryID',
-      'DisplayName_lang_zhCN as displayNameZhCN',
-    ]);
-    builder = _applyFilter(builder, filter).orderBy('ID');
+    var builder = laconic.table('$_table as sl');
+    const fields = [
+      'sl.ID',
+      'sl.CategoryID',
+      'sl.DisplayName_lang_zhCN as displayNameZhCN',
+      'sl.DisplayName_lang_enUS as displayNameEnUS',
+      'slc.Name_lang_zhCN as categoryNameZhCN',
+      'slc.Name_lang_enUS as categoryNameEnUS',
+      'dsi.TextureFilename as textureFilename',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'foxy.dbc_skill_line_category as slc',
+      (join) => join.on('sl.CategoryID', 'slc.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_icon as dsi',
+      (join) => join.on('sl.SpellIconID', 'dsi.ID'),
+    );
+    builder = _applyFilter(builder, filter).orderBy('sl.ID');
     final rows = await builder
         .limit(kPageSize)
         .offset((page - 1) * kPageSize)
@@ -82,11 +98,11 @@ class SkillLineRepository
   QueryBuilder _applyFilter(QueryBuilder builder, SkillLineFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+      builder = builder.where('sl.ID', int.tryParse(filter.id) ?? 0);
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where(
-        'DisplayName_lang_zhCN',
+        'sl.DisplayName_lang_zhCN',
         '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );

@@ -60,6 +60,8 @@ mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
       '`ID`',
       '`SkillLine`',
       '`Spell`',
+      '`MinSkillLineRank`',
+      '`AcquireMethod`',
     ]);
     builder = builder.where('`SkillLine`', skillLine);
     builder = builder.orderBy('`ID`').orderBy('`SkillLine`');

@@ -8,6 +8,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
@@ -294,9 +295,33 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
           width: 120,
           cell: (_, item) => Text(item.id.toString()),
         ),
+        FoxyTableColumn.fixed(
+          label: '获得方式',
+          width: 100,
+          cell: (_, item) => Text(
+            SkillLineConstants.skillAcquireMethodOptions[item.acquireMethod] ??
+                item.acquireMethod.toString(),
+          ),
+        ),
+        FoxyTableColumn.fixed(
+          label: '最低技能等级',
+          width: 140,
+          cell: (_, item) => Text(item.minSkillLineRank.toString()),
+        ),
         FoxyTableColumn.flex(
           label: '法术',
-          cell: (_, item) => Text(item.spell.toString()),
+          cell: (_, item) => FoxyIconText(
+            iconPath: item.textureFilename,
+            name: item.displaySpellName,
+          ),
+        ),
+        FoxyTableColumn.flex(
+          label: '描述',
+          cell: (_, item) => Text(
+            item.displaySpellDescription,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
       onRowDoubleTap: (item) async {
