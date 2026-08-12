@@ -149,13 +149,12 @@ List<LaconicQuery> _dbcQueries(List<LaconicQuery> queries) {
 class _RecordingDriver implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
+  final int affectedRows = 1;
   final List<Map<String, Object?>> selectResult;
   final bool Function(String sql)? selectThrowsFor;
   final int Function(String sql)? affectingRowsFor;
 
   _RecordingDriver({
-    this.affectedRows = 1,
     this.selectResult = const [],
     this.selectThrowsFor,
     this.affectingRowsFor,
