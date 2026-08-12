@@ -216,7 +216,7 @@ class _SettingPageState extends State<SettingPage> {
           _SettingItem(
             title: '导出 MPQ 补丁',
             description:
-                '将选中的 DBC 表打包为 MPQ 补丁（默认 patch-zhCN-5.mpq），'
+                '将选中的 DBC 表打包为 MPQ 补丁（默认 patch-zhCN-5.MPQ），'
                 '输出到客户端 MPQ 目录（如 Data\\zhCN）。'
                 '客户端启动时自动加载补丁，覆盖原始 DBC 文件。',
             trailing: ShadButton(

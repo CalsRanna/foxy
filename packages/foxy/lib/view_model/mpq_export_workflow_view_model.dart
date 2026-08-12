@@ -10,10 +10,8 @@ import 'package:path/path.dart' as p;
 import 'package:signals/signals.dart';
 
 /// Default patch MPQ file name (editable in the export dialog).
-
-
 class MpqExportWorkflowViewModel {
-  static const defaultPatchFileName = 'patch-zhCN-5.mpq';
+  static const defaultPatchFileName = 'patch-zhCN-5.MPQ';
 
   final MpqExportUseCase _useCase;
   final ConfigUtil _configUtil;
