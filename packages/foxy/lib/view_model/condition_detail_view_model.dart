@@ -1,4 +1,4 @@
-import 'package:foxy/constant/condition_source_type.dart';
+import 'package:foxy/constant/condition_source_types.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/constant/condition_type.dart';

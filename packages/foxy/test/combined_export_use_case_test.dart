@@ -40,7 +40,7 @@ void main() {
     args.sendPort.send(('control', cancelPort.sendPort));
     args.sendPort.send(('status', 'scanning', 'ok', null));
     await DbcExportUtil().write(
-      definition: dbcDefinitionByTable['dbc_spell_duration']!,
+      definition: DbcDefinitions.byTable['dbc_spell_duration']!,
       rows: const [
         {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
       ],
@@ -109,7 +109,7 @@ void main() {
 
     final result = await useCase.execute(
       CombinedExportInput(
-        definitions: [dbcDefinitionByTable['dbc_spell_duration']!],
+        definitions: [DbcDefinitions.byTable['dbc_spell_duration']!],
         dbcOutputDirectory: dbcDir.path,
         mpqFilePath: mpqPath,
       ),
@@ -152,7 +152,7 @@ void main() {
 
     final result = await useCase.execute(
       CombinedExportInput(
-        definitions: [dbcDefinitionByTable['dbc_spell_duration']!],
+        definitions: [DbcDefinitions.byTable['dbc_spell_duration']!],
         dbcOutputDirectory: dbcDir.path,
         mpqFilePath: p.join(mpqDir.path, 'patch-zhCN-5.MPQ'),
       ),
@@ -178,7 +178,7 @@ void main() {
         final sub = cancelPort.listen((_) {});
         args.sendPort.send(('control', cancelPort.sendPort));
         await DbcExportUtil().write(
-          definition: dbcDefinitionByTable['dbc_spell_duration']!,
+          definition: DbcDefinitions.byTable['dbc_spell_duration']!,
           rows: const [
             {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
           ],
@@ -211,7 +211,7 @@ void main() {
 
     final result = await useCase.execute(
       CombinedExportInput(
-        definitions: [dbcDefinitionByTable['dbc_spell_duration']!],
+        definitions: [DbcDefinitions.byTable['dbc_spell_duration']!],
         dbcOutputDirectory: dbcDir.path,
         mpqFilePath: p.join(mpqDir.path, 'patch-zhCN-5.MPQ'),
       ),
@@ -237,7 +237,7 @@ void main() {
     await expectLater(
       useCase.execute(
         CombinedExportInput(
-          definitions: [dbcDefinitionByTable['dbc_spell_duration']!],
+          definitions: [DbcDefinitions.byTable['dbc_spell_duration']!],
           dbcOutputDirectory: dbcDir.path,
           mpqFilePath: p.join(mpqDir.path, 'patch.txt'),
         ),

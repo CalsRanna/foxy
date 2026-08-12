@@ -1,4 +1,4 @@
-import 'package:foxy/constant/condition_source_type.dart';
+import 'package:foxy/constant/condition_source_types.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/constant/flag_item.dart';

@@ -16,8 +16,9 @@ abstract final class ItemHelpers {
   }
 
   static String getItemSubclassName(int classId, int subclass) {
-    if (classId < 0 || classId >= ItemConstants.itemSubclasses.length)
+    if (classId < 0 || classId >= ItemConstants.itemSubclasses.length) {
       return '未知';
+    }
     final subclasses = ItemConstants.itemSubclasses[classId];
     if (subclass < 0 || subclass >= subclasses.length) return '未知';
     return subclasses[subclass];

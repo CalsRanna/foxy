@@ -38,7 +38,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: kDialogWidth,
+      width: DialogUtil.width,
       child: Watch((_) {
         // Explicitly subscribe to the list signal so select-all/deselect
         // refreshes the whole table.
@@ -54,7 +54,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
 
         if (!_loaded.value && !exporting) {
           return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.zap, '一键导出 DBC + MPQ'),
+            title: SettingDialogShell.titleRow(LucideIcons.zap, '一键导出 DBC + MPQ'),
             child: const SizedBox(
               height: 140,
               child: Center(
@@ -82,7 +82,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
               ? p.join(mpqDirectory, name)
               : null;
           return SettingDialogShell(
-            title: settingDialogTitleRow(
+            title: SettingDialogShell.titleRow(
               LucideIcons.circleCheck,
               '导出完成',
               iconColor: theme.colorScheme.primary,
@@ -98,7 +98,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                settingDialogBanner(
+                SettingDialogShell.banner(
                   context,
                   text:
                       '已导出 ${_vm.result.value?.completed ?? 0} 个 DBC 文件'
@@ -108,9 +108,9 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
                   icon: LucideIcons.circleCheck,
                 ),
                 if (dbcDirectory != null)
-                  settingDialogMutedHint(context, 'DBC 输出目录：$dbcDirectory'),
+                  SettingDialogShell.mutedHint(context, 'DBC 输出目录：$dbcDirectory'),
                 if (mpqTarget != null)
-                  settingDialogMutedHint(context, '已生成: $mpqTarget'),
+                  SettingDialogShell.mutedHint(context, '已生成: $mpqTarget'),
               ],
             ),
           );
@@ -123,8 +123,8 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
           return PopScope(
             canPop: false,
             child: SettingDialogShell(
-              title: settingDialogTitleRow(LucideIcons.zap, '正在一键导出 DBC + MPQ'),
-              child: settingDialogProgressPanel(
+              title: SettingDialogShell.titleRow(LucideIcons.zap, '正在一键导出 DBC + MPQ'),
+              child: SettingDialogShell.progressPanel(
                 context,
                 ratio: _vm.progress.value,
                 label: _vm.progressLabel.value,
@@ -161,7 +161,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
         final fileNameReady = _fileName.value.trim().isNotEmpty;
 
         return SettingDialogShell(
-          title: settingDialogTitleRow(LucideIcons.zap, '一键导出 DBC + MPQ'),
+          title: SettingDialogShell.titleRow(LucideIcons.zap, '一键导出 DBC + MPQ'),
           actions: [
             ShadButton.outline(
               onPressed: () => Navigator.of(context).maybePop(),
@@ -197,7 +197,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                settingDialogMutedHint(
+                SettingDialogShell.mutedHint(
                   context,
                   '同时导出 DBC 文件并打包 MPQ 补丁：MPQ 直接复用本次导出的 DBC 文件，'
                   '全程只读取一次数据库。',
@@ -208,7 +208,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                settingDialogPathField(
+                SettingDialogShell.pathField(
                   controller: _dbcDirController,
                   placeholder: '服务端 DBC 目录',
                   onBrowse: _browseDbc,
@@ -224,7 +224,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                settingDialogPathField(
+                SettingDialogShell.pathField(
                   controller: _mpqDirController,
                   placeholder: '客户端 MPQ 目录（如 Data\\zhCN）',
                   onBrowse: _browseMpq,
@@ -242,7 +242,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
                 ),
                 ShadInput(
                   controller: _fileNameController.controller,
-                  placeholder: const Text(defaultMpqPatchFileName),
+                  placeholder: const Text(MpqExportWorkflowViewModel.defaultPatchFileName),
                   leading: const Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Icon(LucideIcons.fileArchive, size: 16),
@@ -258,7 +258,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: 8,
                     children: [
-                      settingDialogBanner(
+                      SettingDialogShell.banner(
                         context,
                         text: error,
                         color: theme.colorScheme.destructive,
@@ -290,7 +290,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
                     ],
                   ),
                 if (failureCount > 0)
-                  settingDialogBanner(
+                  SettingDialogShell.banner(
                     context,
                     text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
                     color: theme.colorScheme.destructive,

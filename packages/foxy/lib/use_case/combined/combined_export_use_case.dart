@@ -169,7 +169,7 @@ class CombinedExportUseCase {
 
   Future<List<DbcExportTable>> loadTables() async {
     final tables = <DbcExportTable>[];
-    for (final definition in dbcDefinitions) {
+    for (final definition in DbcDefinitions.all) {
       final result = await _registry.countRows(definition.tableName);
       tables.add(
         DbcExportTable(

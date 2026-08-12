@@ -30,8 +30,9 @@ abstract final class FormatUtil {
     while (end > dot + 1 && s.codeUnitAt(end - 1) == 0x30) {
       end--;
     }
-    if (end == dot + 1)
+    if (end == dot + 1) {
       end = dot; // fractional part trimmed away → drop the dot
+    }
     return s.substring(0, end);
   }
 }

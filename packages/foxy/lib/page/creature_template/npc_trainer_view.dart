@@ -347,8 +347,9 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted)
+      if (mounted) {
         DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
+      }
       return false;
     }
   }

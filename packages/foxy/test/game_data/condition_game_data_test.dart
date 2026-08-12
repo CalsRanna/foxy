@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/condition_error_types.dart';
-import 'package:foxy/constant/condition_source_type.dart';
+import 'package:foxy/constant/condition_source_types.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/constant/integer_field_spec.dart';

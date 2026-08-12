@@ -385,7 +385,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showCombinedExportDialog() {
-    showFoxyDialog(
+    DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => CombinedExportDialog(vm: combinedViewModel),
