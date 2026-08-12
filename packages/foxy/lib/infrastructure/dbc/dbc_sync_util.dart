@@ -20,11 +20,17 @@ class DbcSyncUtil {
   /// Isolate entry for MPQ-patch export; injectable for tests.
   final MpqExportWorkerEntry mpqWorkerEntry;
 
+  /// Isolate entry for packing an existing DBC directory into an MPQ patch
+  /// (the combined DBC+MPQ export); injectable for tests.
+  final MpqPackWorkerEntry mpqPackWorkerEntry;
+
   DbcSyncUtil({
     DbcExportWorkerEntry? exportWorkerEntry,
     MpqExportWorkerEntry? mpqWorkerEntry,
+    MpqPackWorkerEntry? mpqPackWorkerEntry,
   }) : exportWorkerEntry = exportWorkerEntry ?? runDbcExportWorker,
-       mpqWorkerEntry = mpqWorkerEntry ?? runMpqExportWorker;
+       mpqWorkerEntry = mpqWorkerEntry ?? runMpqExportWorker,
+       mpqPackWorkerEntry = mpqPackWorkerEntry ?? runMpqPackWorker;
 
   _ImportJobHandle? _activeImportJob;
   String? _activeJobId;
@@ -402,6 +408,54 @@ class DbcSyncUtil {
           username: mysqlConfig.username,
           password: mysqlConfig.password,
           useSsl: mysqlConfig.useSsl,
+        ),
+        job: job,
+      ),
+    );
+    return controller.stream;
+  }
+
+  /// Packs the `.dbc` files already exported into [directory] as a WoW patch
+  /// MPQ at [mpqFilePath] — no database read. Used by the combined DBC+MPQ
+  /// export so the MPQ reuses the files just exported (see
+  /// `mpq_export_worker.dart` for the in-archive layout).
+  Stream<DbcSyncProgress> exportMpqFromDirectory({
+    required String directory,
+    required String mpqFilePath,
+  }) {
+    final controller = StreamController<DbcSyncProgress>();
+
+    if (running.value) {
+      controller
+        ..add(
+          const DbcSyncResult(
+            operation: DbcSyncOperation.export,
+            completed: 0,
+            skipped: 0,
+            errors: [
+              DbcSyncError(
+                stage: DbcSyncStage.preparing,
+                message: '已有 DBC 任务正在运行',
+              ),
+            ],
+          ),
+        )
+        ..close();
+      return controller.stream;
+    }
+
+    running.value = true;
+    _operation = DbcSyncOperation.export;
+    final job = _ExportJobHandle();
+    _activeExportJob = job;
+    unawaited(
+      _startExport(
+        controller: controller,
+        workerEntry: mpqPackWorkerEntry,
+        buildArgs: (sendPort) => (
+          sendPort: sendPort,
+          directory: directory,
+          mpqFilePath: mpqFilePath,
         ),
         job: job,
       ),

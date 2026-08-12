@@ -18,10 +18,11 @@ abstract final class MpqExportWorker {
   /// Builds a WoW patch MPQ from database DBC tables.
   ///
   /// Writes the selected tables as `.dbc` files into a staging directory
-  /// (reusing [DbcExportWorker.writeFiles]), then packs them into [mpqFilePath] under
-  /// `DBFilesClient\`, the path the client looks for DBC overrides in.
-  /// The archive is written to a `.tmp` sibling first and atomically renamed
-  /// over the target (an existing patch of the same name is replaced).
+  /// (reusing [DbcExportWorker.writeFiles]), then packs them into
+  /// [mpqFilePath] under `DBFilesClient\`, the path the client looks for DBC
+  /// overrides in (reusing [MpqExportWorker.packDbcFiles]). The archive is
+  /// written to a `.tmp` sibling first and atomically renamed over the target
+  /// (an existing patch of the same name is replaced).
   ///
   /// Returns the DBC-write aggregation; packing failures are appended to
   /// [DbcExportSummary.errors]. Cancellation between files leaves no target
@@ -60,47 +61,18 @@ abstract final class MpqExportWorker {
       );
       if (isCancelled()) return summary;
 
-      onStatus?.call('packing', '正在打包 MPQ 补丁...');
-      final files = <File>[
-        await for (final entity in staging.list(followLinks: false))
-          if (entity is File && entity.path.toLowerCase().endsWith('.dbc'))
-            entity,
-      ]..sort((left, right) => left.path.compareTo(right.path));
-      if (files.isEmpty) return summary;
-
-      final tmpPath =
-          '$mpqFilePath.foxy.${DateTime.now().microsecondsSinceEpoch}.tmp';
-      var replaced = false;
-      try {
-        final archive = MpqArchive.create(
-          tmpPath,
-          maxFileCount: files.length + 2,
-        );
-        try {
-          for (final file in files) {
-            if (isCancelled()) break;
-            archive.addFile(
-              '${MpqExportWorker.dbcArchivePath}${p.basename(file.path)}',
-              file.readAsBytesSync(),
-            );
-          }
-        } finally {
-          archive.close();
-        }
-        if (isCancelled()) return summary;
-
-        await _replaceFile(targetPath: mpqFilePath, temporaryPath: tmpPath);
-        replaced = true;
-      } finally {
-        if (!replaced) {
-          try {
-            await File(tmpPath).delete();
-          } catch (_) {
-            // A leftover tmp file never shadows the real archive.
-          }
-        }
-      }
-      return summary;
+      final packSummary = await MpqExportWorker.packDbcFiles(
+        directory: staging.path,
+        mpqFilePath: mpqFilePath,
+        isCancelled: isCancelled,
+        onStatus: onStatus,
+        onProgress: onProgress,
+      );
+      return DbcExportSummary(
+        completed: summary.completed,
+        skipped: summary.skipped,
+        errors: [...summary.errors, ...packSummary.errors],
+      );
     } finally {
       try {
         await staging.delete(recursive: true);
@@ -109,9 +81,91 @@ abstract final class MpqExportWorker {
       }
     }
   }
+
+  /// Packs every `.dbc` file in [directory] into a WoW patch MPQ at
+  /// [mpqFilePath] under `DBFilesClient\`.
+  ///
+  /// Shared by [MpqExportWorker.buildPatch] (files just written into a
+  /// staging dir) and the combined DBC+MPQ export (files already exported
+  /// into a shared temp dir, avoiding a second database read). Files are
+  /// packed in sorted order; an empty directory produces no archive. The
+  /// archive is written to a `.tmp` sibling first and atomically renamed
+  /// over the target.
+  static Future<DbcExportSummary> packDbcFiles({
+    required String directory,
+    required String mpqFilePath,
+    required bool Function() isCancelled,
+    void Function(String stage, String message)? onStatus,
+    void Function(
+      String fileName,
+      int completedFiles,
+      int totalFiles,
+      int processedRows,
+      int? totalRows,
+    )?
+    onProgress,
+  }) async {
+    final source = Directory(directory);
+    if (!await source.exists()) {
+      throw FileSystemException('directory does not exist', directory);
+    }
+
+    final files = <File>[
+      await for (final entity in source.list(followLinks: false))
+        if (entity is File && entity.path.toLowerCase().endsWith('.dbc'))
+          entity,
+    ]..sort((left, right) => left.path.compareTo(right.path));
+    if (files.isEmpty) {
+      return const DbcExportSummary(completed: 0, skipped: 0, errors: []);
+    }
+
+    onStatus?.call('packing', '正在打包 MPQ 补丁...');
+    final tmpPath =
+        '$mpqFilePath.foxy.${DateTime.now().microsecondsSinceEpoch}.tmp';
+    var replaced = false;
+    try {
+      final archive = MpqArchive.create(
+        tmpPath,
+        maxFileCount: files.length + 2,
+      );
+      var packed = 0;
+      try {
+        for (final file in files) {
+          if (isCancelled()) break;
+          archive.addFile(
+            '${MpqExportWorker.dbcArchivePath}${p.basename(file.path)}',
+            file.readAsBytesSync(),
+          );
+          packed++;
+          onProgress?.call(
+            p.basename(file.path),
+            packed,
+            files.length,
+            0,
+            null,
+          );
+        }
+      } finally {
+        archive.close();
+      }
+      if (isCancelled()) {
+        return DbcExportSummary(completed: packed, skipped: 0, errors: []);
+      }
+
+      await _replaceFile(targetPath: mpqFilePath, temporaryPath: tmpPath);
+      replaced = true;
+      return DbcExportSummary(completed: packed, skipped: 0, errors: []);
+    } finally {
+      if (!replaced) {
+        try {
+          await File(tmpPath).delete();
+        } catch (_) {
+          // A leftover tmp file never shadows the real archive.
+        }
+      }
+    }
+  }
 }
-
-
 
 /// Atomic three-step replacement (target → .bak, tmp → target, drop .bak),
 /// the same pattern as DbcExportUtil's file commit.
@@ -316,3 +370,63 @@ typedef MpqExportWorkerArgs = ({
 /// Isolate entry signature, injectable for tests (a fake entry replaces the
 /// real worker without touching MySQL).
 typedef MpqExportWorkerEntry = Future<void> Function(MpqExportWorkerArgs args);
+
+/// Isolate entry point for packing an already-exported DBC directory into an
+/// MPQ patch — the combined DBC+MPQ export flow, where the `.dbc` files come
+/// from the shared temp dir instead of a second database read. No MySQL
+/// connection is made. Message protocol matches the other workers.
+Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
+  final (:sendPort, :directory, :mpqFilePath) = args;
+  final cancelPort = ReceivePort();
+  var cancelled = false;
+  final cancelSubscription = cancelPort.listen((message) {
+    if (message == 'cancel') cancelled = true;
+  });
+  sendPort.send(('control', cancelPort.sendPort));
+
+  var workerStage = 'packing';
+
+  try {
+    final summary = await MpqExportWorker.packDbcFiles(
+      directory: directory,
+      mpqFilePath: mpqFilePath,
+      isCancelled: () => cancelled,
+      onStatus: (stage, message) => _sendStatus(sendPort, stage, message),
+      onProgress: (fileName, completedFiles, totalFiles, processed, total) {
+        _sendCount(
+          sendPort,
+          fileName,
+          completedFiles,
+          totalFiles,
+          processed,
+          total,
+        );
+      },
+    );
+
+    _sendResult(
+      sendPort,
+      summary.completed,
+      summary.skipped,
+      summary.errors,
+      cancelled,
+    );
+  } catch (error) {
+    _sendResult(sendPort, 0, 0, [
+      _workerError(stage: workerStage, message: 'Worker 错误: $error'),
+    ], false);
+  } finally {
+    await cancelSubscription.cancel();
+    cancelPort.close();
+  }
+}
+
+typedef MpqPackWorkerArgs = ({
+  SendPort sendPort,
+  String directory,
+  String mpqFilePath,
+});
+
+/// Isolate entry signature, injectable for tests (a fake entry replaces the
+/// real pack worker).
+typedef MpqPackWorkerEntry = Future<void> Function(MpqPackWorkerArgs args);

@@ -252,4 +252,79 @@ void main() {
       DbcExportPhase.committing,
     ]);
   });
+
+  group('copyDbcFiles', () {
+    late Directory sourceDir;
+    late Directory targetDir;
+
+    setUp(() async {
+      sourceDir = await Directory.systemTemp.createTemp('foxy_copy_src_');
+      targetDir = await Directory.systemTemp.createTemp('foxy_copy_dst_');
+    });
+
+    tearDown(() async {
+      if (await sourceDir.exists()) await sourceDir.delete(recursive: true);
+      if (await targetDir.exists()) await targetDir.delete(recursive: true);
+    });
+
+    test('拷贝 .dbc 文件到目标目录并保留源文件', () async {
+      final src = File(p.join(sourceDir.path, 'SpellDuration.dbc'))
+        ..writeAsBytesSync([1, 2, 3]);
+      File(p.join(sourceDir.path, 'notes.txt')).writeAsBytesSync([4]);
+
+      final errors = await DbcExportUtil.copyDbcFiles(
+        sourceDirectory: sourceDir.path,
+        targetDirectory: targetDir.path,
+      );
+
+      expect(errors, isEmpty);
+      final copied = File(p.join(targetDir.path, 'SpellDuration.dbc'));
+      expect(await copied.exists(), isTrue);
+      expect(copied.readAsBytesSync(), [1, 2, 3]);
+      expect(await src.exists(), isTrue, reason: '源文件必须保留');
+      // 非 .dbc 文件不拷贝。
+      expect(File(p.join(targetDir.path, 'notes.txt')).existsSync(), isFalse);
+      // 不残留 tmp/bak 中间文件。
+      final leftovers = targetDir
+          .listSync()
+          .where((entity) => entity.path.contains('.foxy.'))
+          .toList();
+      expect(leftovers, isEmpty);
+    });
+
+    test('拷贝覆盖目标目录中已有的同名文件', () async {
+      File(
+        p.join(sourceDir.path, 'SpellDuration.dbc'),
+      ).writeAsBytesSync([1, 2, 3]);
+      File(
+        p.join(targetDir.path, 'SpellDuration.dbc'),
+      ).writeAsBytesSync([9, 9]);
+
+      final errors = await DbcExportUtil.copyDbcFiles(
+        sourceDirectory: sourceDir.path,
+        targetDirectory: targetDir.path,
+      );
+
+      expect(errors, isEmpty);
+      expect(
+        File(p.join(targetDir.path, 'SpellDuration.dbc')).readAsBytesSync(),
+        [1, 2, 3],
+      );
+    });
+
+    test('isCancelled 为 true 时跳过拷贝', () async {
+      File(p.join(sourceDir.path, 'A.dbc')).writeAsBytesSync([1]);
+      File(p.join(sourceDir.path, 'B.dbc')).writeAsBytesSync([2]);
+
+      final errors = await DbcExportUtil.copyDbcFiles(
+        sourceDirectory: sourceDir.path,
+        targetDirectory: targetDir.path,
+        isCancelled: () => true,
+      );
+
+      expect(errors, isEmpty);
+      expect(File(p.join(targetDir.path, 'A.dbc')).existsSync(), isFalse);
+      expect(File(p.join(targetDir.path, 'B.dbc')).existsSync(), isFalse);
+    });
+  });
 }

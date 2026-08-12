@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
@@ -31,6 +32,56 @@ class DbcExportUtil {
         // A failed cleanup of the probe file does not affect the result.
       }
     }
+  }
+
+  /// Copies every `.dbc` file from [sourceDirectory] into [targetDirectory].
+  ///
+  /// Each file is copied to a `.tmp` sibling first and atomically renamed
+  /// over the target (mirroring [write]'s commit), so a crash never leaves a
+  /// truncated DBC in place. Used after exporting into a temp directory (the
+  /// DBC export and the combined DBC+MPQ export both land files in the
+  /// target this way). Copying continues across individual failures, which
+  /// are returned as committing-stage [DbcSyncError]s.
+  static Future<List<DbcSyncError>> copyDbcFiles({
+    required String sourceDirectory,
+    required String targetDirectory,
+    bool Function()? isCancelled,
+  }) async {
+    final files = <File>[
+      await for (final entity in Directory(
+        sourceDirectory,
+      ).list(followLinks: false))
+        if (entity is File && entity.path.toLowerCase().endsWith('.dbc'))
+          entity,
+    ]..sort((left, right) => left.path.compareTo(right.path));
+
+    final errors = <DbcSyncError>[];
+    for (final file in files) {
+      if (isCancelled?.call() ?? false) break;
+      final targetPath = p.join(targetDirectory, p.basename(file.path));
+      final suffix = DateTime.now().microsecondsSinceEpoch;
+      final temporaryFile = File('$targetPath.foxy.$suffix.tmp');
+      final backupFile = File('$targetPath.foxy.$suffix.bak');
+      try {
+        await file.copy(temporaryFile.path);
+        await _replaceFile(
+          temporaryFile: temporaryFile,
+          targetFile: File(targetPath),
+          backupFile: backupFile,
+        );
+      } catch (error) {
+        errors.add(
+          DbcSyncError(
+            fileName: p.basename(file.path),
+            stage: DbcSyncStage.committing,
+            message: error.toString(),
+          ),
+        );
+      } finally {
+        if (await temporaryFile.exists()) await temporaryFile.delete();
+      }
+    }
+    return errors;
   }
 
   /// For unit tests validating the type-normalization rules (uint8 / bool /
@@ -168,7 +219,7 @@ class DbcExportUtil {
     };
   }
 
-  Future<void> _replaceFile({
+  static Future<void> _replaceFile({
     required File temporaryFile,
     required File targetFile,
     required File backupFile,

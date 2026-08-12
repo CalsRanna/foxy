@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/page/setting/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/mpq_export_dialog.dart';
 import 'package:foxy/page/setting/setting_dialog_shell.dart';
 import 'package:foxy/page/setting/update_dialog.dart';
+import 'package:foxy/view_model/combined_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
@@ -102,6 +104,8 @@ class _SettingPageState extends State<SettingPage> {
   final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
   final mpqViewModel = GetIt.instance.get<MpqExportWorkflowViewModel>();
+  final combinedViewModel = GetIt.instance
+      .get<CombinedExportWorkflowViewModel>();
   final iconViewModel = GetIt.instance.get<IconExtractWorkflowViewModel>();
   final updateViewModel = GetIt.instance.get<UpdateViewModel>();
 
@@ -136,6 +140,8 @@ class _SettingPageState extends State<SettingPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
+                _buildCombinedExportSection(),
+                const SizedBox(height: 24),
                 _buildDbcSection(),
                 const SizedBox(height: 24),
                 _buildMpqSection(),
@@ -163,7 +169,8 @@ class _SettingPageState extends State<SettingPage> {
       final importBusy = importViewModel.isRunning;
       final exportBusy = exportViewModel.isRunning;
       final mpqBusy = mpqViewModel.isRunning;
-      final busy = importBusy || exportBusy || mpqBusy;
+      final combinedBusy = combinedViewModel.isRunning;
+      final busy = importBusy || exportBusy || mpqBusy || combinedBusy;
       return _SettingSection(
         title: 'DBC 数据管理',
         children: [
@@ -193,6 +200,41 @@ class _SettingPageState extends State<SettingPage> {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
                 children: [Icon(LucideIcons.fileOutput, size: 15), Text('导出')],
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget _buildCombinedExportSection() {
+    return Watch((_) {
+      // The combined export drives the shared DbcSyncUtil, so it must not run
+      // while an import/export/MPQ-export is in flight. Same non-short-circuit
+      // pattern as the other sections: keep every isRunning read in the
+      // dependency set.
+      final combinedBusy = combinedViewModel.isRunning;
+      final importBusy = importViewModel.isRunning;
+      final exportBusy = exportViewModel.isRunning;
+      final mpqBusy = mpqViewModel.isRunning;
+      final busy = combinedBusy || importBusy || exportBusy || mpqBusy;
+      return _SettingSection(
+        title: '一键导出',
+        children: [
+          _SettingItem(
+            title: '同时导出 DBC 与 MPQ',
+            description:
+                '将选中的 DBC 表一次导出为 .dbc 文件到服务端目录，并打包 MPQ 补丁'
+                '（默认 patch-zhCN-5.MPQ）到客户端目录。MPQ 直接复用本次导出的'
+                ' DBC 文件，全程只读取一次数据库。',
+            trailing: ShadButton(
+              size: ShadButtonSize.sm,
+              onPressed: busy ? null : _showCombinedExportDialog,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6,
+                children: [Icon(LucideIcons.zap, size: 15), Text('一键导出')],
               ),
             ),
           ),
@@ -307,6 +349,7 @@ class _SettingPageState extends State<SettingPage> {
   void dispose() {
     exportViewModel.dispose();
     mpqViewModel.dispose();
+    combinedViewModel.dispose();
     super.dispose();
   }
 
@@ -338,6 +381,14 @@ class _SettingPageState extends State<SettingPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => MpqExportDialog(vm: mpqViewModel),
+    );
+  }
+
+  void _showCombinedExportDialog() {
+    showFoxyDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => CombinedExportDialog(vm: combinedViewModel),
     );
   }
 

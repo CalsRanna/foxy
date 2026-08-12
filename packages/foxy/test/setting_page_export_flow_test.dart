@@ -9,10 +9,12 @@ import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/dbc/mpq_export_worker.dart';
 import 'package:foxy/page/setting/setting_page.dart';
+import 'package:foxy/use_case/combined/combined_export_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
+import 'package:foxy/view_model/combined_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
@@ -41,6 +43,7 @@ void main() {
   late DbcImportWorkflowViewModel importVm;
   late DbcExportWorkflowViewModel exportVm;
   late MpqExportWorkflowViewModel mpqVm;
+  late CombinedExportWorkflowViewModel combinedVm;
 
   setUp(() {
     tempDir = Directory.systemTemp.createTempSync('foxy_setting_flow_');
@@ -59,16 +62,18 @@ void main() {
     GetIt.instance.registerSingleton<DbcSyncUtil>(util);
     GetIt.instance.registerSingleton<DbcExportRegistry>(registry);
 
-    final importUseCase = ImportDbcUseCase(
-      configUtil: cfg,
-      dbcSyncUtil: util,
-    );
+    final importUseCase = ImportDbcUseCase(configUtil: cfg, dbcSyncUtil: util);
     final exportUseCase = ExportDbcUseCase(
       registry: registry,
       dbcSyncUtil: util,
       configUtil: cfg,
     );
     final mpqUseCase = MpqExportUseCase(
+      registry: registry,
+      dbcSyncUtil: util,
+      configUtil: cfg,
+    );
+    final combinedUseCase = CombinedExportUseCase(
       registry: registry,
       dbcSyncUtil: util,
       configUtil: cfg,
@@ -87,8 +92,9 @@ void main() {
       useCase: exportUseCase,
       configUtil: cfg,
     );
-    mpqVm = MpqExportWorkflowViewModel(
-      useCase: mpqUseCase,
+    mpqVm = MpqExportWorkflowViewModel(useCase: mpqUseCase, configUtil: cfg);
+    combinedVm = CombinedExportWorkflowViewModel(
+      useCase: combinedUseCase,
       configUtil: cfg,
     );
     final iconVm = IconExtractWorkflowViewModel(
@@ -99,6 +105,7 @@ void main() {
     GetIt.instance.registerSingleton(importVm);
     GetIt.instance.registerSingleton(exportVm);
     GetIt.instance.registerSingleton(mpqVm);
+    GetIt.instance.registerSingleton(combinedVm);
     GetIt.instance.registerSingleton(iconVm);
     GetIt.instance.registerSingleton(
       SetupStatusViewModel(
@@ -138,6 +145,13 @@ void main() {
       )
       .first;
 
+  Finder combinedExportButton() => find
+      .ancestor(
+        of: find.byIcon(LucideIcons.zap),
+        matching: find.byType(ShadButton),
+      )
+      .first;
+
   ShadButton buttonOf(WidgetTester tester, Finder finder) =>
       tester.widget<ShadButton>(finder);
 
@@ -151,16 +165,18 @@ void main() {
               // 与设置页 DBC 区相同的 busy 组合。
               Watch((_) {
                 rebuilds++;
-                final busy = importVm.isRunning ||
+                final busy =
+                    importVm.isRunning ||
                     exportVm.isRunning ||
-                    mpqVm.isRunning;
+                    mpqVm.isRunning ||
+                    combinedVm.isRunning;
                 return Text('dbc:${busy ? 'busy' : 'free'}');
               }),
-              // 与设置页 MPQ 区相同的组合（双 Watch 共享信号）。
+              // 与设置页 MPQ 区相同的组合（双 Watch 共享信号；组合任务
+              // 运行时通过共享 util 使 mpqVm 忙,无需单独读取）。
               Watch((_) {
-                final busy = mpqVm.isRunning ||
-                    importVm.isRunning ||
-                    exportVm.isRunning;
+                final busy =
+                    mpqVm.isRunning || importVm.isRunning || exportVm.isRunning;
                 return Text('mpq:${busy ? 'busy' : 'free'}');
               }),
             ],
@@ -200,9 +216,7 @@ void main() {
   });
 
   testWidgets('进度中不可关闭对话框，任务结束后可关闭', (tester) async {
-    await tester.pumpWidget(
-      const ShadApp(home: Scaffold(body: SettingPage())),
-    );
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
     await tester.pump();
     await tester.pump();
 
@@ -210,7 +224,10 @@ void main() {
     // 这里直接验证 PopScope 对路由弹出的拦截。
     final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
 
-    // idle 状态：无 PopScope，可正常关闭。
+    // idle 状态：无 PopScope，可正常关闭。（导入按钮在「一键导出」区块
+    // 之下，600px 测试视口内可能不可见，先滚动到可见。）
+    await tester.ensureVisible(dbcImportButton());
+    await tester.pumpAndSettle();
     await tester.tap(dbcImportButton());
     await tester.pump();
     await tester.pump();
@@ -232,11 +249,7 @@ void main() {
     await nav.maybePop();
     await tester.pump();
     await tester.pump();
-    expect(
-      find.text('正在导入 DBC'),
-      findsOneWidget,
-      reason: '进度中不得关闭对话框',
-    );
+    expect(find.text('正在导入 DBC'), findsOneWidget, reason: '进度中不得关闭对话框');
 
     // 任务完成：关闭恢复。
     importVm.status.value = WorkflowStatus.succeeded;
@@ -251,16 +264,15 @@ void main() {
   });
 
   testWidgets('MPQ 导出完成后 DBC 导入/导出按钮恢复可用', (tester) async {
-    await tester.pumpWidget(
-      const ShadApp(home: Scaffold(body: SettingPage())),
-    );
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
     await tester.pump();
     await tester.pump();
 
-    // 初始状态：三个按钮均可点击。
+    // 初始状态：四个按钮均可点击。
     expect(buttonOf(tester, dbcImportButton()).onPressed, isNotNull);
     expect(buttonOf(tester, dbcExportButton()).onPressed, isNotNull);
     expect(buttonOf(tester, mpqExportButton()).onPressed, isNotNull);
+    expect(buttonOf(tester, combinedExportButton()).onPressed, isNotNull);
 
     // 直接驱动 MPQ 工作流完整跑一遍（真实 isolate + 脚本化成功 worker）。
     await tester.runAsync(() async {
@@ -295,12 +307,38 @@ void main() {
       reason: 'MPQ 导出完成后「导出 DBC」按钮必须恢复可用',
     );
     expect(buttonOf(tester, mpqExportButton()).onPressed, isNotNull);
+    expect(
+      buttonOf(tester, combinedExportButton()).onPressed,
+      isNotNull,
+      reason: 'MPQ 导出完成后「一键导出」按钮必须恢复可用',
+    );
 
-    // 点击「导出 DBC」应能打开对话框。
+    // 点击「导出 DBC」应能打开对话框（按钮在「一键导出」区块之下，
+    // 先滚动到可见）。
+    await tester.ensureVisible(dbcExportButton());
+    await tester.pumpAndSettle();
     await tester.tap(dbcExportButton());
     await tester.pump();
     await tester.pump();
     expect(find.text('导出 DBC'), findsOneWidget);
+
+    // 关闭后点击「一键导出」应能打开组合导出对话框（区块在页面最上，
+    // 先滚动回顶部）。
+    await tester.tap(find.text('关闭'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(combinedExportButton());
+    await tester.pumpAndSettle();
+    await tester.tap(combinedExportButton());
+    await tester.pump();
+    await tester.pump();
+    expect(
+      find.descendant(
+        of: find.byType(ShadDialog),
+        matching: find.text('一键导出 DBC + MPQ'),
+      ),
+      findsOneWidget,
+      reason: '点击「一键导出」必须打开组合导出对话框',
+    );
   });
 }
 

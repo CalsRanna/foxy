@@ -144,6 +144,7 @@ import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/use_case/bootstrap/bootstrap_application_use_case.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
+import 'package:foxy/use_case/combined/combined_export_use_case.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
@@ -178,6 +179,7 @@ import 'package:foxy/view_model/creature_template_spell_linked_list_view_model.d
 import 'package:foxy/view_model/currency_type_detail_view_model.dart';
 import 'package:foxy/view_model/currency_type_list_view_model.dart';
 import 'package:foxy/view_model/dashboard_read_view_model.dart';
+import 'package:foxy/view_model/combined_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/mpq_export_workflow_view_model.dart';
@@ -309,6 +311,7 @@ class DI {
     _instance.registerFactory(() => BootstrapWorkflowViewModel());
     _instance.registerFactory(() => DbcExportWorkflowViewModel());
     _instance.registerFactory(() => MpqExportWorkflowViewModel());
+    _instance.registerFactory(() => CombinedExportWorkflowViewModel());
     _instance.registerFactory(() => DashboardReadViewModel());
     _instance.registerFactory(() => MoreReadViewModel());
     _instance.registerFactory(() => CreatureTemplateListViewModel());
@@ -608,6 +611,13 @@ class DI {
     );
     _instance.registerFactory(
       () => MpqExportUseCase(
+        registry: _instance.get<DbcExportRegistry>(),
+        dbcSyncUtil: _instance.get<DbcSyncUtil>(),
+        configUtil: _instance.get<ConfigUtil>(),
+      ),
+    );
+    _instance.registerFactory(
+      () => CombinedExportUseCase(
         registry: _instance.get<DbcExportRegistry>(),
         dbcSyncUtil: _instance.get<DbcSyncUtil>(),
         configUtil: _instance.get<ConfigUtil>(),
