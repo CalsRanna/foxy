@@ -48,9 +48,20 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!isRepositoryFile(context.definingUnit.file.path)) return;
+    // Members sit inside a BlockClassBody in the analyzer 10.x AST; older
+    // analyzers expose the class directly as the method's parent, so both
+    // shapes are tolerated.
     final parent = node.parent;
-    if (parent is! ClassDeclaration) return;
-    if (!parent.namePart.typeName.lexeme.endsWith('Repository')) return;
+    ClassDeclaration? enclosingClass;
+    if (parent is ClassDeclaration) {
+      enclosingClass = parent;
+    } else if (parent is BlockClassBody && parent.parent is ClassDeclaration) {
+      enclosingClass = parent.parent as ClassDeclaration;
+    }
+    if (enclosingClass == null) return;
+    if (!enclosingClass.namePart.typeName.lexeme.endsWith('Repository')) {
+      return;
+    }
 
     final name = node.name.lexeme;
     if ((name.startsWith('save') || name == 'insertAndGetId') &&

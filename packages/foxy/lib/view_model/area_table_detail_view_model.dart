@@ -141,12 +141,14 @@ class AreaTableDetailViewModel with FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeAreaTable(candidate);
+        // store returns the actual written key: a duplicate-key retry may
+        // reallocate it, so persistedKey must reflect reality.
+        final storedKey = await _repository.storeAreaTable(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateAreaTable(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      final newKey = candidate.id;
-      persistedKey.value = newKey;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

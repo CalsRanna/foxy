@@ -47,9 +47,18 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     if (!isEntityFile(context.definingUnit.file.path)) return;
+    // Members sit inside a BlockClassBody in the analyzer 10.x AST; older
+    // analyzers expose the class directly as the field's parent, so both
+    // shapes are tolerated.
     final parent = node.parent;
-    if (parent is! ClassDeclaration) return;
-    if (!parent.namePart.typeName.lexeme.endsWith('Entity')) return;
+    ClassDeclaration? enclosingClass;
+    if (parent is ClassDeclaration) {
+      enclosingClass = parent;
+    } else if (parent is BlockClassBody && parent.parent is ClassDeclaration) {
+      enclosingClass = parent.parent as ClassDeclaration;
+    }
+    if (enclosingClass == null) return;
+    if (!enclosingClass.namePart.typeName.lexeme.endsWith('Entity')) return;
     final type = node.fields.type;
     if (type is! NamedType) return;
     if (!const {'List', 'Map', 'Set'}.contains(type.name.lexeme)) return;

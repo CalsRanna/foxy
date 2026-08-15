@@ -117,21 +117,24 @@ laconic query builder ──► MySQL (AzerothCore `world` DB + `foxy` meta DB)
 - Handwritten classes must mix in the generated mixin and declare `part 'xxx.g.dart';`.
 - `lib/entity/` holds ~130 `*_entity.dart` files (125 generated); hand-written-only ones: `activity_log_entity.dart`, `dbc_locale.dart`, `feature_entity.dart`, `version_entity.dart`, composite-key DTOs (`condition_entity` … are generated, keys are hand-written `*_key.dart`).
 
-### foxy_lint rules (enforced by `flutter analyze` — analyzer plugin, 9 rules in `packages/foxy_lint/lib/rules/`, registered in `lib/main.dart`)
+### foxy_lint rules (analyzer plugin; 12 rules registered in `packages/foxy_lint/lib/main.dart`)
+
+**Enabled diagnostics (8)** — listed in the **workspace root** `analysis_options.yaml` `plugins.foxy_lint.diagnostics` (absolute path, see dart-lang/sdk#61477); `packages/foxy/analysis_options.yaml` includes it and adds `always_use_package_imports`.
+
+Note: analyzer plugins run in the **IDE analysis server only** — the `flutter analyze`/`dart analyze` CLI does not execute plugins, so CI's analyze gate does not cover these rules. Enforcement happens via the rules' own tests (`packages/foxy_lint/test/`, official `analyzer_testing` harness), which exercise the real rules end-to-end.
 
 | Rule | Meaning |
 | --- | --- |
-| `annotation_file_mismatch` | `@Foxy*`-annotated classes must live in the file name matching the generator glob (`**_entity.dart` / `**_repository.dart` / `**_view_model.dart`), or the builder silently skips them |
 | `entity_scalar_only` | Entities only contain scalar fields (no `List`/`Map`/`Set`) |
 | `entity_no_flutter_import` | Entity layer must not import Flutter / UI packages |
 | `repository_no_save` | Repositories never expose direct `save*`; use generated store/update/destroy |
 | `view_model_no_router_facade` | ViewModels don't reach into routing |
 | `no_collection_loops` | No hand-written `List.generate`/`for-in` collection loops — use collection methods (`map/where/...`) |
-| `no_flex_in_view` | No `flex:` named args in views — uniform spacing uses `Expanded` |
+| `no_flex_in_view` | No `flex:` named args in views — uniform spacing uses `Expanded` (defined together with `no_readonly_in_view` in `no_flex_readonly_in_view.dart`) |
 | `no_readonly_in_view` | Don't instantiate read-only inputs directly (use `FoxyInputReadonly`) |
 | `no_chinese_throw` | **Exception messages must be English** — Chinese UI text is not allowed in throws |
 
-The plugin is declared in the **workspace root** `analysis_options.yaml` (absolute path, see dart-lang/sdk#61477); `packages/foxy/analysis_options.yaml` includes it and adds `always_use_package_imports`.
+**Registered but not enabled (4):** `annotation_file_mismatch` and `class_file_name_match` (equivalent checks are enforced at codegen build time by the readers), `avoid_top_level_declarations`, `no_k_prefixed_static_member`.
 
 ### Error handling
 
@@ -139,7 +142,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 - Exceptions carry **English** diagnostic messages (logs only).
 - User-facing **Chinese** copy is mapped centrally by `foxyErrorMessage(error)` (same file) — the **only** entry point for displaying errors in the UI.
-- `MysqlErrorUtil.isDuplicateEntry` walks the `cause` chain for MySQL error 1062.
+- `MysqlErrorUtil.isDuplicateEntry` classifies at the driver boundary: `LaconicException.driver == 'mysql' && code == '1062'` (no cause-chain walk, no message parsing).
 
 ## State Management & UI
 
@@ -170,7 +173,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 - **Distribution**: portable zip (no installer) — `foxy.exe` + `foxy_updater.exe`. Update chain: check manifest → download with SHA-256 verification → extract to `.update_tmp/` → relaunch into `foxy_updater.exe` (self-copies to `%TEMP%`, waits for app exit, mirrors payload over app dir) → relaunch app. `preservedRelPaths = ['config.yaml', 'data/icon']` (user data never overwritten; `data/` also holds `flutter_assets`, so only the `data/icon/` subtree is excluded).
 - **Release flow** (triggers: pushing a `v*` tag, or `workflow_dispatch` with the tag input for re-runs): 1) manually bump `version` in `packages/foxy/pubspec.yaml` and add a `## vX.Y.Z` section to `CHANGELOG.md`, commit; 2) `git tag v1.x.y && git push origin v1.x.y`. The single job in CI (`.github/workflows/release.yml`) prepares the Windows environment once, then gates on analyze + tests (app, generator, lint) before building the Windows release, compiling the updater, zipping, generating `latest.yaml` (SHA-256, keeps the 3 most recent releases, `appId: com.calsranna.foxy`), and publishing the GitHub Release. A `concurrency` group cancels stale runs when a tag is re-pushed. `latest.yaml` is the fixed update entry point.
-- Prerelease tags (`v1.1.0-beta`): the prerelease suffix lives **only in the tag, never in `pubspec.yaml`** — `make_update_manifest.dart` strips it and requires the main version to equal the pubspec version, so pubspec must stay `1.1.0+NNN` while the tag is `v1.1.0-beta`. The zip name uses the suffix-stripped version, the Release is marked prerelease and never displaces `releases/latest`; the app skips prerelease entries (`_isNewer` in `update_service.dart`).
+- Prerelease tags (`v1.1.0-beta`): the prerelease suffix lives **only in the tag, never in `pubspec.yaml`** — `make_update_manifest.dart` strips it and requires the main version to equal the pubspec version, so pubspec must stay `1.1.0+NNN` while the tag is `v1.1.0-beta`. The zip name uses the suffix-stripped version, the Release is marked prerelease and never displaces `releases/latest`; the app skips prerelease entries in the newest-first scan loop of `checkForUpdates` (`update_service.dart`) — `_isNewer` itself only compares versions.
 
 ## Testing
 

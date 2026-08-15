@@ -152,8 +152,7 @@ class _FoxyTabState extends State<FoxyTab> {
   @override
   void initState() {
     super.initState();
-    keys = widget.tabs.map((e) => GlobalKey()).toList();
-    width = List.generate(widget.tabs.length, (index) => 0.0);
+    _resetTabState();
     _scrollController = ScrollController()
       ..addListener(() {
         // 标签栏滚动时同步偏移,驱动指示条跟随
@@ -162,6 +161,30 @@ class _FoxyTabState extends State<FoxyTab> {
           setState(() => _scrollOffset = offset);
         }
       });
+    _scheduleMeasureTabWidths();
+  }
+
+  @override
+  void didUpdateWidget(covariant FoxyTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // All current call sites use a const tab list with dynamic
+    // disabledIndexes, so this only matters for a hypothetical dynamic tab
+    // list — without a rebuild the keys/width arrays would go stale and
+    // index out of range.
+    if (widget.tabs.length == oldWidget.tabs.length) return;
+    _resetTabState();
+    _scheduleMeasureTabWidths();
+  }
+
+  void _resetTabState() {
+    keys = widget.tabs.map((e) => GlobalKey()).toList();
+    width = List.generate(widget.tabs.length, (index) => 0.0);
+    if (index >= widget.tabs.length) {
+      index = widget.tabs.isEmpty ? 0 : widget.tabs.length - 1;
+    }
+  }
+
+  void _scheduleMeasureTabWidths() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // The widget may already be removed before the first frame renders
       // (e.g. a quick pop from the detail page); setState after dispose

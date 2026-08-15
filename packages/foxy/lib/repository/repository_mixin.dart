@@ -89,21 +89,23 @@ mixin RepositoryMixin {
   /// Defensive identifier whitelist: identifiers are spliced verbatim into
   /// SQL (laconic does not escape them), so anything that flows into
   /// [nextMaxPlusOne] / [prepareWriteJson] must be a plain identifier.
-  /// Allowed: letters/digits/underscore, backtick-quoted column names (the
-  /// generated code passes `` `id` `` via `_column`) and dotted table names
-  /// (`foxy.dbc_x`). Quotes and whitespace — the SQL-breaking characters —
-  /// are rejected. All current call sites pass code constants; this guards
+  /// Allowed: dotted chains (`foxy.dbc_x`) of plain identifier segments,
+  /// each optionally wrapped in a *complete* pair of backticks (the
+  /// generated code passes `` `id` `` via `_column`). Quotes, whitespace and
+  /// the SQL-breaking characters are rejected; a backtick can never appear
+  /// mid-segment. All current call sites pass code constants; this guards
   /// against future user-controlled columns/tables.
   String _assertIdentifier(String identifier) {
-    if (!_identifierPattern.hasMatch(identifier)) {
+    if (!identifier.split('.').every(_identifierSegment.hasMatch)) {
       throw ArgumentError.value(
         identifier,
         'identifier',
-        'expected a plain [A-Za-z0-9_.`] identifier',
+        'expected dotted [A-Za-z_][A-Za-z0-9_]* segments, each optionally '
+            'wrapped in one pair of backticks',
       );
     }
     return identifier;
   }
 
-  static final _identifierPattern = RegExp(r'^[A-Za-z0-9_.`]+$');
+  static final _identifierSegment = RegExp(r'^`?[A-Za-z_][A-Za-z0-9_]*`?$');
 }

@@ -630,11 +630,14 @@ class SpellDetailViewModel with FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeSpell(candidate);
+        // store returns the actual written key: a duplicate-key retry may
+        // reallocate it, so persistedKey must reflect reality.
+        final storedKey = await _repository.storeSpell(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateSpell(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      persistedKey.value = candidate.id;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

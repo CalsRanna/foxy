@@ -365,11 +365,19 @@ class UpdateService {
   /// Extracts [zipFile] into [targetDir] (zip-slip protection is built
   /// into the archive package's [extractArchiveToDisk]).
   static Future<void> _extractZip(File zipFile, Directory targetDir) async {
+    // Defensive caps against malformed/malicious zips: real update packages
+    // have only dozens of files and tens of MB, so the caps sit far above
+    // normal values and only block obvious anomalies. The file-size cap is
+    // checked *before* loading the archive into memory; the entry-count and
+    // inflated-size caps necessarily follow the decode.
+    final fileBytes = await zipFile.length();
+    if (fileBytes > 2 * 1024 * 1024 * 1024) {
+      throw UpdateException(
+        UpdateErrorKind.fileSystem,
+        'Update zip is too large: $fileBytes bytes',
+      );
+    }
     final archive = ZipDecoder().decodeBytes(await zipFile.readAsBytes());
-    // Defensive cap against malformed/malicious zips: real update packages
-    // have only dozens of files and tens of MB, so the cap sits far above
-    // normal values and only blocks obvious anomalies (guarding against
-    // memory spikes during extraction).
     if (archive.length > 2000) {
       throw UpdateException(
         UpdateErrorKind.fileSystem,

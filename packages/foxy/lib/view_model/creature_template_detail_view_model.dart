@@ -52,11 +52,14 @@ class CreatureTemplateDetailViewModel
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeCreatureTemplate(candidate);
+        // store returns the actual written key: a duplicate-key retry may
+        // reallocate it, so persistedKey must reflect reality.
+        final storedKey = await _repository.storeCreatureTemplate(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateCreatureTemplate(originalKey, candidate);
+        persistedKey.value = candidate.entry;
       }
-      persistedKey.value = candidate.entry;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

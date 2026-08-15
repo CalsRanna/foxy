@@ -5,7 +5,6 @@ import 'package:warcrafty/warcrafty.dart';
 /// Read-only abstraction over an MPQ archive, injected into the icon
 /// extractor (tests substitute an in-memory fake).
 abstract interface class GameMpqSource {
-
   /// All file paths inside the archive (`\`-separated).
   List<String> get files;
 
@@ -15,6 +14,8 @@ abstract interface class GameMpqSource {
   Uint8List extract(String name);
 }
 
+/// Implementation of [GameMpqSource] based on warcrafty (pure-Dart MPQ).
+///
 /// Hard cap on a single extracted in-archive file. warcrafty's sector reader
 /// allocates `block.fileSize` (a hostile uint32, up to 4 GiB) before
 /// checking the real data; this wrapper rejects the result once it exceeds
@@ -23,9 +24,6 @@ abstract interface class GameMpqSource {
 /// oversized payloads from flowing into the rest of the pipeline. Icons are
 /// BLP files of a few hundred KB at most, so the cap is far above any
 /// legitimate file.
-
-
-/// Implementation based on warcrafty (pure-Dart MPQ).
 final class WarcraftyMpqSource implements GameMpqSource {
   static const _maxExtractedBytes = 64 << 20; // 64 MiB
 

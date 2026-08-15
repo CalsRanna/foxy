@@ -8,7 +8,6 @@ import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 
 final class CombinedExportInput {
@@ -93,16 +92,7 @@ class CombinedExportUseCase {
     await DbcExportUtil.ensureWritableDirectory(dbcOutputDirectory);
     await DbcExportUtil.ensureWritableDirectory(mpqDirectory);
 
-    final config = await _configUtil.load();
-    final mysqlConfig = MysqlConfig(
-      host: config['host']?.toString() ?? '127.0.0.1',
-      port: _parsePort(config['port']),
-      database: config['database']?.toString() ?? 'acore_world',
-      username: config['username']?.toString() ?? 'acore',
-      password: config['password']?.toString() ?? 'acore',
-      useSsl: config['use_ssl'] == true,
-      allowPublicKeyRetrieval: config['use_ssl'] != true,
-    );
+    final mysqlConfig = await mysqlConfigFromSaved(_configUtil);
 
     final tempDir = await Directory.systemTemp.createTemp('foxy_dbc_export_');
     try {
@@ -167,27 +157,5 @@ class CombinedExportUseCase {
     }
   }
 
-  Future<List<DbcExportTable>> loadTables() async {
-    final tables = <DbcExportTable>[];
-    for (final definition in DbcDefinitions.all) {
-      final result = await _registry.countRows(definition.tableName);
-      tables.add(
-        DbcExportTable(
-          definition: definition,
-          recordCount: result.count,
-          countError: result.error,
-        ),
-      );
-    }
-    tables.sort(
-      (left, right) =>
-          left.definition.fileName.compareTo(right.definition.fileName),
-    );
-    return tables;
-  }
-
-  static int _parsePort(Object? value) {
-    if (value is int) return value;
-    return int.tryParse(value?.toString() ?? '') ?? 3306;
-  }
+  Future<List<DbcExportTable>> loadTables() => loadDbcExportTables(_registry);
 }

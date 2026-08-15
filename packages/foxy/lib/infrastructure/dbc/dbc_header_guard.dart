@@ -18,14 +18,17 @@ abstract final class DbcHeaderGuard {
     final file = File(path);
     final header = file.openSync();
     try {
-      if (header.lengthSync() < 20) return; // DbcLoader 自会报 header 过短
+      if (header.lengthSync() < 20) {
+        // DbcLoader reports the short header itself.
+        return;
+      }
       header.setPositionSync(0);
       final bytes = header.readSync(20);
       final view = ByteData.sublistView(bytes);
       final recordCount = view.getInt32(4, Endian.little);
       final recordSize = view.getInt32(12, Endian.little);
       final stringBlockSize = view.getInt32(16, Endian.little);
-      // int32 × int32 + int32 最大 2^62,64 位 int 内不会溢出。
+      // int32 * int32 + int32 is at most 2^62, which fits a 64-bit int.
       final payload = recordCount * recordSize + stringBlockSize;
       final safe =
           recordCount <= 0 ||

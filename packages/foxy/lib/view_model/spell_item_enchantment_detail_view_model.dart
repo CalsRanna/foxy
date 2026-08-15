@@ -160,11 +160,14 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeSpellItemEnchantment(candidate);
+        // store returns the actual written key: a duplicate-key retry may
+        // reallocate it, so persistedKey must reflect reality.
+        final storedKey = await _repository.storeSpellItemEnchantment(candidate);
+        persistedKey.value = storedKey;
       } else {
         await _repository.updateSpellItemEnchantment(originalKey, candidate);
+        persistedKey.value = candidate.id;
       }
-      persistedKey.value = candidate.id;
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {

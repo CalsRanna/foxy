@@ -324,6 +324,9 @@ final class LinkedListEmitter {
       ..writeln('    loading.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
+      // count runs first by design: the page clamp (lastPage/nextPage)
+      // depends on it, so unlike the main-table list VM the two queries
+      // cannot be issued in parallel via .wait.
       ..writeln(
         '      final count = await _repository.count${pluralize(model.baseName)}(link);',
       )

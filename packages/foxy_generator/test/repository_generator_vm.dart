@@ -28,10 +28,10 @@ void main() {
                   'Future<void> updateSample('
                   'int originalKey, SampleEntity sample)',
                 ),
-                // The table name is generated as a library-level const
+                // The table name is generated as an instance getter
                 // (single source of truth from the Entity annotation).
                 contains('laconic.table(_table)'),
-                contains("const _table = 'foxy.sample';"),
+                contains("String get _table => 'foxy.sample';"),
                 contains('MysqlErrorUtil.isDuplicateEntry(error)'),
                 contains('prepareWriteJson(sample.toJson())'),
                 contains('Future<void> _beforeDestroy(int key) async {}'),
@@ -96,7 +96,7 @@ class SampleRepository with _SampleRepositoryMixin {
                 // count: goes through _applyFilter
                 contains('Future<int> countSamples({SampleFilter? filter})'),
                 contains('_applyFilter(laconic.table(_table), filter)'),
-                contains("const _table = 'foxy.sample';"),
+                contains("String get _table => 'foxy.sample';"),
                 // create: key field prefilled via nextMaxPlusOne
                 contains('Future<SampleEntity> createSample() async {'),
                 contains("id: await nextMaxPlusOne(_table, '`ID`')"),
@@ -412,7 +412,7 @@ class SampleEntity {
                 // backticked (`it`.`name`), never a single `it.name` id.
                 contains("'`it`.`name`'"),
                 contains('filter.name'),
-                contains("const _table = 'foxy.sample';"),
+                contains("String get _table => 'foxy.sample';"),
               ]),
             ),
       },
@@ -524,7 +524,7 @@ class SampleRepository with _SampleRepositoryMixin {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('Remove static const _table')),
+      logs.any((log) => log.contains('Remove the _table member')),
       isTrue,
     );
   });

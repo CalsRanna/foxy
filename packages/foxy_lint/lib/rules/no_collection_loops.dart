@@ -34,31 +34,44 @@ class NoCollectionLoops extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    final scope = collectionLoopScope(context.definingUnit.file.path);
-    if (scope == null) return;
-    registry.addMethodInvocation(
-      this,
-      _MethodInvocationVisitor(this, context, scope),
-    );
-    registry.addForStatement(this, _ForStatementVisitor(this, context, scope));
+    // List.generate is caught through the ArgumentList dispatch (walking
+    // up to the invocation): the plugin's MethodInvocation/SimpleIdentifier
+    // dispatch does not fire under analyzer 10.x.
+    registry.addArgumentList(this, _ArgumentListVisitor(this, context));
+    registry.addForStatement(this, _ForStatementVisitor(this, context));
   }
 }
 
-class _MethodInvocationVisitor extends SimpleAstVisitor<void> {
+class _ArgumentListVisitor extends SimpleAstVisitor<void> {
   final NoCollectionLoops rule;
 
   final RuleContext context;
 
-  final String scope;
-
-  _MethodInvocationVisitor(this.rule, this.context, this.scope);
+  _ArgumentListVisitor(this.rule, this.context);
 
   @override
-  void visitMethodInvocation(MethodInvocation node) {
-    if (node.methodName.name != 'generate') return;
-    final target = node.target;
-    if (target is Identifier && target.name == 'List') {
-      rule.reportAtNode(node, arguments: [scope, 'List.generate']);
+  void visitArgumentList(ArgumentList node) {
+    final scope = collectionLoopScope(context.definingUnit.file.path);
+    if (scope == null) return;
+    // The plugin runs on the *unresolved* parse tree, where
+    // `List.generate(...)` is an InstanceCreationExpression (constructor
+    // invocation with a named constructor `generate`); it only becomes a
+    // MethodInvocation after resolution. Both shapes are detected, and the
+    // reported node spans the whole call.
+    final parent = node.parent;
+    if (parent is MethodInvocation &&
+        parent.methodName.name == 'generate' &&
+        parent.target is Identifier &&
+        (parent.target as Identifier).name == 'List') {
+      rule.reportAtNode(parent, arguments: [scope, 'List.generate']);
+      return;
+    }
+    if (parent is InstanceCreationExpression) {
+      final constructorName = parent.constructorName;
+      if (constructorName.name?.token.lexeme == 'generate' &&
+          constructorName.type.name.lexeme == 'List') {
+        rule.reportAtNode(parent, arguments: [scope, 'List.generate']);
+      }
     }
   }
 }
@@ -68,12 +81,12 @@ class _ForStatementVisitor extends SimpleAstVisitor<void> {
 
   final RuleContext context;
 
-  final String scope;
-
-  _ForStatementVisitor(this.rule, this.context, this.scope);
+  _ForStatementVisitor(this.rule, this.context);
 
   @override
   void visitForStatement(ForStatement node) {
+    final scope = collectionLoopScope(context.definingUnit.file.path);
+    if (scope == null) return;
     // Only `for-in` over a collection is the target: a C-style indexed
     // `for (var i = 0; i < n; i++)` is not a collection loop and must not
     // be reported. Analyzer merged ForEachStatement into ForStatement;
