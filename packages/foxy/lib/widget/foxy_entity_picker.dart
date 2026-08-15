@@ -4,7 +4,6 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
-import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -16,14 +15,12 @@ class FoxyEntityPicker<T> extends StatefulWidget {
   final IntFieldController controller;
   final FoxyEntityPickerDelegate<T> delegate;
   final String? placeholder;
-  final bool readOnly;
 
   const FoxyEntityPicker({
     super.key,
     required this.controller,
     required this.delegate,
     this.placeholder,
-    this.readOnly = false,
   });
 
   @override
@@ -310,36 +307,20 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
 class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
   @override
   Widget build(BuildContext context) {
-    // Editable: the user may type an ID; read-only: pure display (no
-    // search button).
-    final readonly = FoxyReadonlyInput.resolve(
-      context,
-      readOnly: widget.readOnly,
-    );
-    return readonly.wrap(
-      ShadInput(
-        controller: widget.controller.controller,
-        placeholder: Text(widget.placeholder ?? ''),
-        readOnly: widget.readOnly,
-        style: readonly.style,
-        decoration: readonly.decoration,
-        mouseCursor: readonly.mouseCursor,
-        showCursor: readonly.showCursor,
-        trailing: widget.readOnly
-            ? null
-            : ShadButton.ghost(
-                height: 20,
-                width: 20,
-                padding: EdgeInsets.zero,
-                onPressed: _openDialog,
-                child: Icon(LucideIcons.search, size: 12),
-              ),
+    return ShadInput(
+      controller: widget.controller.controller,
+      placeholder: Text(widget.placeholder ?? ''),
+      trailing: ShadButton.ghost(
+        height: 20,
+        width: 20,
+        padding: EdgeInsets.zero,
+        onPressed: _openDialog,
+        child: Icon(LucideIcons.search, size: 12),
       ),
     );
   }
 
   Future<void> _openDialog() async {
-    if (widget.readOnly) return;
     // The input accepts free text; invalid text makes collect() throw
     // FormatException. Catch it and prompt the user instead of letting the
     // search button silently fail.

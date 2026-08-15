@@ -10,7 +10,6 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
-import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -43,18 +42,15 @@ class FoxySignedEntityPicker extends StatefulWidget {
 class _FoxySignedEntityPickerState extends State<FoxySignedEntityPicker> {
   @override
   Widget build(BuildContext context) {
-    final readonly = FoxyReadonlyInput.resolve(context, readOnly: false);
-    return readonly.wrap(
-      ShadInput(
-        controller: widget.controller.controller,
-        placeholder: Text(widget.placeholder ?? ''),
-        trailing: ShadButton.ghost(
-          height: 20,
-          width: 20,
-          padding: EdgeInsets.zero,
-          onPressed: _openDialog,
-          child: Icon(LucideIcons.search, size: 12),
-        ),
+    return ShadInput(
+      controller: widget.controller.controller,
+      placeholder: Text(widget.placeholder ?? ''),
+      trailing: ShadButton.ghost(
+        height: 20,
+        width: 20,
+        padding: EdgeInsets.zero,
+        onPressed: _openDialog,
+        child: Icon(LucideIcons.search, size: 12),
       ),
     );
   }
@@ -444,7 +440,8 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
       LoggerUtil.instance.e('${_source.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
       setState(
-        () => _errorMessage = '${_source.errorLabel}: ${FoxyExceptions.message(e)}',
+        () => _errorMessage =
+            '${_source.errorLabel}: ${FoxyExceptions.message(e)}',
       );
     }
   }

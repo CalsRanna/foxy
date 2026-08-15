@@ -27,20 +27,14 @@ class SpellDetailViewModel with FieldControllerMixin {
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-  // === Linkage signals: track the currently selected enum values to
-  // control sub-field readonly/enabled ===
+  // === Linkage signals: track the currently selected enum values for the
+  // misc-value editor mode and labels ===
   final effect0Signal = signal<int>(0);
   final effect1Signal = signal<int>(0);
   final effect2Signal = signal<int>(0);
   final effectAura0Signal = signal<int>(0);
   final effectAura1Signal = signal<int>(0);
   final effectAura2Signal = signal<int>(0);
-  // ChainTarget linkage: input > 0 unlocks the editable state of "effect
-  // damage multiplier".
-  final effectChainTargets0Signal = signal<int>(0);
-  final effectChainTargets1Signal = signal<int>(0);
-  final effectChainTargets2Signal = signal<int>(0);
-  final spellClassSetSignal = signal<int>(0);
 
   /// Primary key; prefilled with MAX+1 by [createSpell] on create, still
   /// editable afterwards.
@@ -1112,9 +1106,5 @@ class SpellDetailViewModel with FieldControllerMixin {
     sync(effectAura0Controller, effectAura0Signal);
     sync(effectAura1Controller, effectAura1Signal);
     sync(effectAura2Controller, effectAura2Signal);
-    sync(effectChainTargets0Controller, effectChainTargets0Signal);
-    sync(effectChainTargets1Controller, effectChainTargets1Signal);
-    sync(effectChainTargets2Controller, effectChainTargets2Signal);
-    sync(spellClassSetController, spellClassSetSignal);
   }
 }

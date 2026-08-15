@@ -32,7 +32,6 @@ class ConditionView extends StatelessWidget {
       final sourceGroup = viewModel.selectedSourceGroup.value;
       final conditionType = viewModel.selectedConditionType.value;
       final conditionValue1 = viewModel.selectedConditionValue1.value;
-      final errorType = viewModel.selectedErrorType.value;
       final referenceTemplate = viewModel.selectedSourceMode.value == 1;
       final referenceCondition = viewModel.selectedConditionMode.value == 1;
       final valueConfig = ConditionValueConfig.forType(
@@ -76,11 +75,7 @@ class ConditionView extends StatelessWidget {
                     sourceType,
                     referenceTemplate: referenceTemplate,
                   ),
-                  _sourceEntryItem(
-                    sourceType,
-                    sourceGroup,
-                    referenceTemplate: referenceTemplate,
-                  ),
+                  _sourceEntryItem(sourceType, sourceGroup),
                 ),
                 _row(
                   _sourceIdItem(
@@ -129,7 +124,6 @@ class ConditionView extends StatelessWidget {
                       controller: viewModel.conditionTargetController,
                       options: _targetOptions(sourceType),
                       placeholder: const Text('ConditionTarget'),
-                      enabled: !referenceCondition,
                     ),
                   ),
                   FoxyFormItem(
@@ -138,7 +132,6 @@ class ConditionView extends StatelessWidget {
                       controller: viewModel.negativeConditionController,
                       options: ConditionValueConfig.conditionBooleanOptions,
                       placeholder: const Text('NegativeCondition'),
-                      enabled: !referenceCondition,
                     ),
                   ),
                 ),
@@ -172,7 +165,6 @@ class ConditionView extends StatelessWidget {
                       controller: viewModel.errorTypeController,
                       options: ConditionErrorTypes.conditionErrorTypeOptions,
                       placeholder: const Text('ErrorType'),
-                      enabled: sourceType == 17,
                       maxHeight: 360,
                     ),
                   ),
@@ -182,7 +174,6 @@ class ConditionView extends StatelessWidget {
                       controller: viewModel.errorTextIdController,
                       options: ConditionErrorTypes.conditionCustomErrorOptions,
                       placeholder: const Text('ErrorTextId'),
-                      enabled: sourceType == 17 && errorType == 172,
                       maxHeight: 360,
                     ),
                   ),
@@ -228,14 +219,12 @@ class ConditionView extends StatelessWidget {
   Widget _referencePicker<T>(
     String column,
     IntFieldControllerGroup controllers,
-    FoxyEntityPickerDelegate<T> delegate, {
-    required bool readOnly,
-  }) {
+    FoxyEntityPickerDelegate<T> delegate,
+  ) {
     return FoxyEntityPicker<T>(
       controller: controllers.numberController,
       delegate: delegate,
       placeholder: column,
-      readOnly: readOnly,
     );
   }
 
@@ -246,16 +235,11 @@ class ConditionView extends StatelessWidget {
   FoxyFormItem _numberItem(
     String label,
     String column,
-    IntFieldController controller, {
-    bool readOnly = false,
-  }) {
+    IntFieldController controller,
+  ) {
     return FoxyFormItem(
       label: label,
-      child: FoxyNumberInput<int>(
-        placeholder: column,
-        controller: controller,
-        readOnly: readOnly,
-      ),
+      child: FoxyNumberInput<int>(placeholder: column, controller: controller),
     );
   }
 
@@ -284,17 +268,12 @@ class ConditionView extends StatelessWidget {
     );
   }
 
-  FoxyFormItem _sourceEntryItem(
-    int sourceType,
-    int sourceGroup, {
-    required bool referenceTemplate,
-  }) {
+  FoxyFormItem _sourceEntryItem(int sourceType, int sourceGroup) {
     Widget entryPicker<T>(FoxyEntityPickerDelegate<T> delegate) {
       return FoxyEntityPicker<T>(
         controller: viewModel.sourceEntryController,
         delegate: delegate,
         placeholder: 'SourceEntry',
-        readOnly: referenceTemplate,
       );
     }
 
@@ -329,7 +308,6 @@ class ConditionView extends StatelessWidget {
       _ => FoxyNumberInput<int>(
         controller: viewModel.sourceEntryController,
         placeholder: 'SourceEntry',
-        readOnly: referenceTemplate,
       ),
     };
     return FoxyFormItem(label: label, child: editor);
@@ -360,14 +338,10 @@ class ConditionView extends StatelessWidget {
       23 => '商人生物',
       _ => '来源组',
     };
-    final canEdit = ConditionSourceTypes.conditionSourceTypesWithGroup.contains(
-      sourceType,
-    );
     return _numberItem(
       label,
       'SourceGroup',
       viewModel.sourceGroupController.numberController,
-      readOnly: referenceTemplate || !canEdit,
     );
   }
 
@@ -389,11 +363,6 @@ class ConditionView extends StatelessWidget {
       sourceType == 30 ? '生成 GUID' : '来源 ID',
       'SourceId',
       viewModel.sourceIdController.numberController,
-      readOnly:
-          referenceTemplate ||
-          !ConditionSourceTypes.conditionSourceTypesWithSourceId.contains(
-            sourceType,
-          ),
     );
   }
 
@@ -413,13 +382,11 @@ class ConditionView extends StatelessWidget {
       IntegerNumberFieldSpec() => FoxyNumberInput<int>(
         controller: controllers.numberController,
         placeholder: column,
-        readOnly: !spec.editable,
       ),
       IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
         controller: controllers.selectController,
         options: options,
         placeholder: Text(column),
-        enabled: spec.editable,
       ),
       IntegerFlagsFieldSpec(:final flags) => FoxyFlagPicker(
         controller: controllers.flagController,
@@ -432,67 +399,56 @@ class ConditionView extends StatelessWidget {
           column,
           controllers,
           FoxyEntityPickerDelegates.achievement,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.area => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.areaTable,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.creature => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.creatureTemplate,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.faction => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.dbcFaction,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.gameObject => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.gameObjectTemplate,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.item => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.itemTemplate,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.map => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.map,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.quest => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.questTemplate,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.skill => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.skillLine,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.spell => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.spell,
-          readOnly: !spec.editable,
         ),
         ConditionValueReference.title => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.charTitle,
-          readOnly: !spec.editable,
         ),
       },
     };

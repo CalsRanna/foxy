@@ -4,7 +4,6 @@ import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 
 void main() {
-
   test('fromJson 接受 MySQL 整数坐标且 copyWith 不丢失联合字段', () {
     final source = const SmartScriptEntity(
       entryOrGuid: 1,
@@ -59,9 +58,15 @@ void main() {
       for (var value = 101; value <= 110; value++) value,
     });
     expect(SmartScriptConstants.eventTypesForSource(2).keys.toSet(), {46, 61});
-    expect(SmartScriptConstants.eventTypesForSource(1), containsPair(70, 'GO_STATE_CHANGED'));
+    expect(
+      SmartScriptConstants.eventTypesForSource(1),
+      containsPair(70, 'GO_STATE_CHANGED'),
+    );
     expect(SmartScriptConstants.eventTypesForSource(1), isNot(contains(4)));
-    expect(SmartScriptConstants.eventTypesForSource(9).keys.toSet(), SmartScriptConstants.eventTypes.keys.toSet());
+    expect(
+      SmartScriptConstants.eventTypesForSource(9).keys.toSet(),
+      SmartScriptConstants.eventTypes.keys.toSet(),
+    );
   });
 
   test('SmartActions 只包含当前 core 已声明且可加载的动作', () {
@@ -86,28 +91,14 @@ void main() {
   });
 
   test('事件与施法 Flags 不暴露运行时位或注释掉的旧位', () {
-    expect(SmartScriptConstants.eventFlagItems.map((item) => item.value).toSet(), {
-      0x001,
-      0x002,
-      0x004,
-      0x008,
-      0x010,
-      0x020,
-      0x040,
-      0x080,
-      0x100,
-      0x200,
-    });
-    expect(SmartScriptConstants.smartCastFlagItems.map((item) => item.value).toSet(), {
-      0x001,
-      0x002,
-      0x020,
-      0x040,
-      0x080,
-      0x100,
-      0x200,
-      0x400,
-    });
+    expect(
+      SmartScriptConstants.eventFlagItems.map((item) => item.value).toSet(),
+      {0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200},
+    );
+    expect(
+      SmartScriptConstants.smartCastFlagItems.map((item) => item.value).toSet(),
+      {0x001, 0x002, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400},
+    );
   });
 
   test('关键联合参数指向 SmartScriptMgr 使用的精确表或 DBC', () {
@@ -138,7 +129,7 @@ void main() {
       referenceOf(SmartScriptConstants.targetParameterConfig(201).param1),
       SmartParameterReference.spell,
     );
-    expect(SmartScriptConstants.eventParameterConfig(4).param1.editable, isFalse);
-    expect(SmartScriptConstants.targetParameterConfig(8).param1.editable, isFalse);
+    expect(SmartScriptConstants.eventParameterConfig(4).param1.label, '未使用');
+    expect(SmartScriptConstants.targetParameterConfig(8).param1.label, '未使用');
   });
 }

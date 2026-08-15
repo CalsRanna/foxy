@@ -4,7 +4,6 @@ import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 
 void main() {
-
   test('GameobjectTypes 完整覆盖 AzerothCore 0..35', () {
     expect(GameObjectConstants.gameObjectTypeOptions.keys.toSet(), {
       for (var type = 0; type <= 35; type++) type,
@@ -12,17 +11,20 @@ void main() {
   });
 
   test('GameObjectFlags 只包含服务端定义的 9 个数据库位', () {
-    expect(GameObjectConstants.gameObjectFlagItems.map((item) => item.value).toSet(), {
-      0x00000001,
-      0x00000002,
-      0x00000004,
-      0x00000008,
-      0x00000010,
-      0x00000020,
-      0x00000040,
-      0x00000200,
-      0x00000400,
-    });
+    expect(
+      GameObjectConstants.gameObjectFlagItems.map((item) => item.value).toSet(),
+      {
+        0x00000001,
+        0x00000002,
+        0x00000004,
+        0x00000008,
+        0x00000010,
+        0x00000020,
+        0x00000040,
+        0x00000200,
+        0x00000400,
+      },
+    );
   });
 
   test('Data0..Data23 可编辑槽位与 GameObjectData.h 联合体一致', () {
@@ -68,7 +70,12 @@ void main() {
     for (var type = 0; type <= 35; type++) {
       final actual = <int>{};
       for (var index = 0; index < 24; index++) {
-        if (GameObjectConstants.dataFieldSpec(type, index).editable) actual.add(index);
+        if (!identical(
+          GameObjectConstants.dataFieldSpec(type, index),
+          GameObjectConstants.unusedGameObjectDataField,
+        )) {
+          actual.add(index);
+        }
       }
       expect(actual, expected[type], reason: 'GameObject type $type');
     }
@@ -89,20 +96,40 @@ void main() {
     expect(referenceOf(3, 1), GameObjectDataReference.gameObjectLoot);
   });
 
-  test('trap type、boolean、椅子高度为 select 规格，未使用槽位回落只读 number', () {
-    expect(GameObjectConstants.dataFieldSpec(6, 4), isA<IntegerSelectFieldSpec>());
-    expect(GameObjectConstants.dataFieldSpec(0, 0), isA<IntegerSelectFieldSpec>());
-    expect(GameObjectConstants.dataFieldSpec(7, 1), isA<IntegerSelectFieldSpec>());
-    expect(GameObjectConstants.dataFieldSpec(4, 0), isA<IntegerNumberFieldSpec>());
-    expect(GameObjectConstants.dataFieldSpec(4, 0).editable, isFalse);
-    expect(GameObjectConstants.dataFieldSpec(6, 3), isA<IntegerReferenceFieldSpec>());
+  test('trap type、boolean、椅子高度为 select 规格，未使用槽位回落未使用 number', () {
+    expect(
+      GameObjectConstants.dataFieldSpec(6, 4),
+      isA<IntegerSelectFieldSpec>(),
+    );
+    expect(
+      GameObjectConstants.dataFieldSpec(0, 0),
+      isA<IntegerSelectFieldSpec>(),
+    );
+    expect(
+      GameObjectConstants.dataFieldSpec(7, 1),
+      isA<IntegerSelectFieldSpec>(),
+    );
+    expect(
+      GameObjectConstants.dataFieldSpec(4, 0),
+      isA<IntegerNumberFieldSpec>(),
+    );
+    expect(
+      identical(
+        GameObjectConstants.dataFieldSpec(4, 0),
+        GameObjectConstants.unusedGameObjectDataField,
+      ),
+      isTrue,
+    );
+    expect(
+      GameObjectConstants.dataFieldSpec(6, 3),
+      isA<IntegerReferenceFieldSpec>(),
+    );
   });
 
   test('游戏对象类型映射为标签，未知值回退', () {
     expect(const BriefGameObjectTemplateEntity(type: 2).typeLabel, '任务发放者');
     expect(const BriefGameObjectTemplateEntity(type: 99).typeLabel, '99');
   });
-
 }
 
 Set<int> _range(int start, int end) => {

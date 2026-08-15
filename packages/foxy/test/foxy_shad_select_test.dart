@@ -78,32 +78,6 @@ void main() {
     controller.dispose();
   });
 
-  testWidgets('enabled: false 时点击不打开选项列表', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(0);
-
-    await tester.pumpWidget(
-      ShadApp(
-        home: FoxyShadSelect<int>(
-          controller: controller,
-          options: const {0: '选项 0', 1: '选项 1'},
-          placeholder: const Text('请选择'),
-          enabled: false,
-        ),
-      ),
-    );
-
-    await tester.tap(find.text('选项 0'), warnIfMissed: false);
-    await tester.pumpAndSettle();
-
-    // While disabled the popover never opens; option text must not appear
-    // in the overlay.
-    expect(find.text('选项 1'), findsNothing);
-    expect(controller.collect(), 0);
-
-    await tester.pumpWidget(const SizedBox());
-    controller.dispose();
-  });
-
   testWidgets('搜索中文文案过滤选项', (tester) async {
     final controller = SelectFieldController<int>(fallback: 0)..init(1);
 

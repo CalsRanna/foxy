@@ -3,7 +3,7 @@ import 'package:foxy/constant/integer_field_spec.dart';
 
 abstract final class GameObjectConstants {
   static const unusedGameObjectDataField =
-      IntegerNumberFieldSpec<GameObjectDataReference>('未使用', editable: false);
+      IntegerNumberFieldSpec<GameObjectDataReference>('未使用');
 
   /// `SharedDefines.h::GameobjectTypes`, 0..35 in 3.3.5a.
   static const gameObjectTypeOptions = <int, String>{
@@ -697,8 +697,8 @@ abstract final class GameObjectConstants {
 
   /// Looks up the edit spec for a Data slot of a GameObject type.
   ///
-  /// Missing slots uniformly fall back to a read-only "unused" spec; sparse
-  /// types (e.g. 33) need no placeholders.
+  /// Missing slots uniformly fall back to an "unused" spec; sparse types
+  /// (e.g. 33) need no placeholders.
   static IntegerFieldSpec<GameObjectDataReference> dataFieldSpec(
     int type,
     int index,
@@ -732,8 +732,7 @@ enum GameObjectDataReference {
 ///
 /// Corresponds to one struct of the
 /// `GameObjectData.h::GameObjectTemplate` union; the Map only writes actual
-/// fields, missing slots fall back through [field] to a read-only "unused"
-/// spec.
+/// fields, missing slots fall back through [field] to an "unused" spec.
 class GameObjectDataSchema {
   final Map<int, IntegerFieldSpec<GameObjectDataReference>> fields;
 

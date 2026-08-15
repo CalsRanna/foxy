@@ -26,9 +26,6 @@ class FoxyShadSelect<T> extends StatefulWidget {
   /// The placeholder widget to show when no option is selected
   final Widget placeholder;
 
-  /// Whether the select is enabled (default: true)
-  final bool enabled;
-
   /// Optional minimum width for the select dropdown
   final double? minWidth;
 
@@ -43,7 +40,6 @@ class FoxyShadSelect<T> extends StatefulWidget {
     required this.controller,
     required this.options,
     required this.placeholder,
-    this.enabled = true,
     this.minWidth,
     this.maxHeight,
     this.searchPlaceholder,
@@ -70,7 +66,6 @@ class _FoxyShadSelectState<T> extends State<FoxyShadSelect<T>> {
         overflow: TextOverflow.ellipsis,
       ),
       placeholder: widget.placeholder,
-      enabled: widget.enabled,
       minWidth: widget.minWidth,
       maxHeight: widget.maxHeight,
       onSearchChanged: _onSearchChanged,

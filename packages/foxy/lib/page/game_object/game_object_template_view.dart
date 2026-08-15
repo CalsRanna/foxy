@@ -244,13 +244,11 @@ class GameObjectTemplateView extends StatelessWidget {
       IntegerNumberFieldSpec() => FoxyNumberInput<int>(
         controller: controllers.numberController,
         placeholder: column,
-        readOnly: !spec.editable,
       ),
       IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
         controller: controllers.selectController,
         options: options,
         placeholder: Text(column),
-        enabled: spec.editable,
       ),
       IntegerFlagsFieldSpec(:final flags) => FoxyFlagPicker(
         controller: controllers.flagController,
@@ -263,91 +261,76 @@ class GameObjectTemplateView extends StatelessWidget {
           column,
           controllers,
           FoxyEntityPickerDelegates.areaTable,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.cinematicSequence => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.cinematicSequence,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.creatureTemplate => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.creatureTemplate,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.destructibleModelData => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.destructibleModelData,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.gameObjectLoot => _referencePicker(
           column,
           controllers,
           gameObjectLootDelegate,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.gameObjectDisplayInfo => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.gameObjectDisplayInfo,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.gameObjectTemplate => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.gameObjectTemplate,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.gossipMenu => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.gossipMenu,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.lock => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.lock,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.map => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.map,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.pageText => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.pageText,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.questTemplate => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.questTemplate,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.spell => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.spell,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.spellFocusObject => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.spellFocusObject,
-          readOnly: !spec.editable,
         ),
         GameObjectDataReference.taxiPath => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.taxiPath,
-          readOnly: !spec.editable,
         ),
         // The sealed spec guarantees the reference branch always carries a
         // real reference; none can only come from a config error, so expose
@@ -388,14 +371,12 @@ class GameObjectTemplateView extends StatelessWidget {
   Widget _referencePicker<T>(
     String column,
     IntFieldControllerGroup controllers,
-    FoxyEntityPickerDelegate<T> delegate, {
-    required bool readOnly,
-  }) {
+    FoxyEntityPickerDelegate<T> delegate,
+  ) {
     return FoxyEntityPicker<T>(
       controller: controllers.numberController,
       delegate: delegate,
       placeholder: column,
-      readOnly: readOnly,
     );
   }
 

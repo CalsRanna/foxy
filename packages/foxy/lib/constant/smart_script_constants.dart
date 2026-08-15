@@ -6,10 +6,7 @@ import 'package:foxy/constant/integer_field_spec.dart';
 /// SmartAI parameter configuration: parameter specs per action/event
 /// target type, event-type filter per source type.
 abstract final class SmartScriptConstants {
-  static const _unused = IntegerNumberFieldSpec<SmartParameterReference>(
-    '未使用',
-    editable: false,
-  );
+  static const _unused = IntegerNumberFieldSpec<SmartParameterReference>('未使用');
   static const _none = SmartParameterGroupConfig(
     _unused,
     _unused,

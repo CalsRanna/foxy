@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Number input.
@@ -21,35 +20,25 @@ class FoxyNumberInput<T extends num> extends StatelessWidget {
 
   final NumberFieldController<T> controller;
   final String? placeholder;
-  final bool readOnly;
 
   const FoxyNumberInput({
     super.key,
     required this.controller,
     this.placeholder,
-    this.readOnly = false,
   });
 
   bool get _isFloat => T == double;
 
   @override
   Widget build(BuildContext context) {
-    final readonly = FoxyReadonlyInput.resolve(context, readOnly: readOnly);
-    return readonly.wrap(
-      ShadInput(
-        controller: controller.controller,
-        placeholder: Text(placeholder ?? ''),
-        readOnly: readOnly,
-        style: readonly.style,
-        decoration: readonly.decoration,
-        mouseCursor: readonly.mouseCursor,
-        showCursor: readonly.showCursor,
-        keyboardType: TextInputType.numberWithOptions(
-          decimal: _isFloat,
-          signed: true,
-        ),
-        inputFormatters: [_isFloat ? _floatFormatter : _intFormatter],
+    return ShadInput(
+      controller: controller.controller,
+      placeholder: Text(placeholder ?? ''),
+      keyboardType: TextInputType.numberWithOptions(
+        decimal: _isFloat,
+        signed: true,
       ),
+      inputFormatters: [_isFloat ? _floatFormatter : _intFormatter],
     );
   }
 }

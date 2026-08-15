@@ -269,14 +269,12 @@ class SmartScriptView extends StatelessWidget {
   Widget _referencePicker<T>(
     String column,
     IntFieldControllerGroup controllers,
-    FoxyEntityPickerDelegate<T> delegate, {
-    required bool readOnly,
-  }) {
+    FoxyEntityPickerDelegate<T> delegate,
+  ) {
     return FoxyEntityPicker<T>(
       controller: controllers.numberController,
       delegate: delegate,
       placeholder: column,
-      readOnly: readOnly,
     );
   }
 
@@ -318,13 +316,11 @@ class SmartScriptView extends StatelessWidget {
       IntegerNumberFieldSpec() => FoxyNumberInput<int>(
         controller: controllers.numberController,
         placeholder: column,
-        readOnly: !spec.editable,
       ),
       IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
         controller: controllers.selectController,
         options: options,
         placeholder: Text(column),
-        enabled: spec.editable,
       ),
       IntegerFlagsFieldSpec(:final flags) => FoxyFlagPicker(
         controller: controllers.flagController,
@@ -337,97 +333,81 @@ class SmartScriptView extends StatelessWidget {
           column,
           controllers,
           FoxyEntityPickerDelegates.areaTable,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.cinematicSequence => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.cinematicSequence,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.creature => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.creatureTemplate,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.creatureDisplay => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.creatureDisplayInfo,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.emote => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.dbcEmote,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.factionTemplate => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.dbcFactionTemplate,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.gameObject => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.gameObjectTemplate,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.gossipMenu => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.gossipMenu,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.item => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.itemTemplate,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.map => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.map,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.npcText => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.npcText,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.quest => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.questTemplate,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.spell => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.spell,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.taxiPath => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.taxiPath,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.textEmote => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.emote,
-          readOnly: !spec.editable,
         ),
         SmartParameterReference.waypointPath => _referencePicker(
           column,
           controllers,
           FoxyEntityPickerDelegates.waypointData,
-          readOnly: !spec.editable,
         ),
       },
     };

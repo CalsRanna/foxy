@@ -319,7 +319,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
     final mode = sourceModeController.collect();
     final type = sourceTypeController.collect();
     if (mode == 1) {
-      // In reference mode, the source group/source ID are always read-only
+      // In reference mode, the source group/source ID are always plain
       // number inputs.
       sourceGroupController.configure(IntegerFieldEditor.number);
       sourceIdController.configure(IntegerFieldEditor.number);

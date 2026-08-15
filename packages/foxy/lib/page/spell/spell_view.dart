@@ -1299,8 +1299,6 @@ class SpellView extends StatelessWidget {
   }
 
   /// Builds the reactive effect section
-  /// Decides sub-fields' readonly state from [effectSignal] and
-  /// [effectAuraSignal]
   Widget _buildEffectSection(String title, int i) {
     return Watch((_) {
       final effectValue = switch (i) {
@@ -1315,56 +1313,8 @@ class SpellView extends StatelessWidget {
         2 => viewModel.effectAura2Signal.value,
         _ => 0,
       };
-      final effectActive = effectValue != 0;
-      // Only SPELL_EFFECT_APPLY_AURA (6) or area-aura effects need the aura
-      // fields
-      final needsAura =
-          effectValue == 6 ||
-          effectValue == 27 ||
-          effectValue == 35 ||
-          effectValue == 65 ||
-          effectValue == 119 ||
-          effectValue == 128 ||
-          effectValue == 129 ||
-          effectValue == 143;
-      // Periodic auras
-      final isPeriodic = const {
-        3,
-        8,
-        23,
-        24,
-        53,
-        64,
-        89,
-        226,
-        227,
-        316,
-      }.contains(auraValue);
       final miscOptions = _miscValueOptions(effectValue, auraValue);
       final miscBOptions = _miscValueBOptions(effectValue, auraValue);
-      // Field linkage: some sub-fields only make sense under a specific
-      // Effect
-      final needsItemType = const {
-        24,
-        34,
-        53,
-        54,
-        99,
-        127,
-        157,
-        158,
-      }.contains(effectValue);
-      final needsTriggerSpell = const {
-        32,
-        36,
-        64,
-        140,
-        141,
-        142,
-        148,
-        151,
-      }.contains(effectValue);
-      final needsComboPoints = effectValue == 80;
 
       // Controllers by index
       final effCtrl = switch (i) {
@@ -1403,13 +1353,6 @@ class SpellView extends StatelessWidget {
         2 => viewModel.effectChainTargets2Controller,
         _ => viewModel.effectChainTargets0Controller,
       };
-      final chainTargetsVal = switch (i) {
-        0 => viewModel.effectChainTargets0Signal.value,
-        1 => viewModel.effectChainTargets1Signal.value,
-        2 => viewModel.effectChainTargets2Signal.value,
-        _ => 0,
-      };
-      final needsChainAmplitude = chainTargetsVal > 0;
       final auraCtrl = switch (i) {
         0 => viewModel.effectAura0Controller,
         1 => viewModel.effectAura1Controller,
@@ -1529,7 +1472,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<int>(
                     placeholder: 'BasePoints',
                     controller: basePointsCtrl,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1539,7 +1481,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<int>(
                     placeholder: 'DieSides',
                     controller: dieSidesCtrl,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1549,7 +1490,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<double>(
                     placeholder: 'RealPointsPerLevel',
                     controller: pointsPerLevelCtrl,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1565,7 +1505,6 @@ class SpellView extends StatelessWidget {
                     controller: mechanicCtrl,
                     options: SpellEnums.spellMechanicOptions,
                     placeholder: const Text('Mechanic'),
-                    enabled: effectActive,
                   ),
                 ),
               ),
@@ -1575,7 +1514,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<int>(
                     placeholder: 'ChainTarget',
                     controller: chainTargetsCtrl,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1586,7 +1524,6 @@ class SpellView extends StatelessWidget {
                     controller: auraCtrl,
                     options: SpellEnums.spellAuraTypeOptions,
                     placeholder: const Text('Aura'),
-                    enabled: needsAura,
                   ),
                 ),
               ),
@@ -1596,7 +1533,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<int>(
                     placeholder: 'AuraPeriod',
                     controller: auraPeriodCtrl,
-                    readOnly: !(needsAura && isPeriodic),
                   ),
                 ),
               ),
@@ -1611,7 +1547,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<double>(
                     placeholder: 'Amplitude',
                     controller: amplitudeCtrl,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1622,7 +1557,6 @@ class SpellView extends StatelessWidget {
                     controller: targetACtrl,
                     options: SpellEnums.spellImplicitTargetOptions,
                     placeholder: const Text('TargetA'),
-                    enabled: effectActive,
                   ),
                 ),
               ),
@@ -1633,7 +1567,6 @@ class SpellView extends StatelessWidget {
                     controller: targetBCtrl,
                     options: SpellEnums.spellImplicitTargetOptions,
                     placeholder: const Text('TargetB'),
-                    enabled: effectActive,
                   ),
                 ),
               ),
@@ -1643,7 +1576,6 @@ class SpellView extends StatelessWidget {
                   child: _MiscValueInput(
                     controller: miscValueCtrl,
                     options: miscOptions,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1658,7 +1590,6 @@ class SpellView extends StatelessWidget {
                   child: _MiscValueInput(
                     controller: miscValueBCtrl,
                     options: miscBOptions,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1668,7 +1599,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<int>(
                     placeholder: 'RadiusIndex',
                     controller: radiusCtrl,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1678,7 +1608,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<double>(
                     placeholder: 'ChainAmplitude',
                     controller: chainAmpCtrl,
-                    readOnly: !effectActive || !needsChainAmplitude,
                   ),
                 ),
               ),
@@ -1688,7 +1617,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<double>(
                     placeholder: 'BonusCoefficient',
                     controller: bonusCoefCtrl,
-                    readOnly: !effectActive,
                   ),
                 ),
               ),
@@ -1704,7 +1632,6 @@ class SpellView extends StatelessWidget {
                     delegate: FoxyEntityPickerDelegates.itemTemplate,
                     controller: itemTypeCtrl,
                     placeholder: 'ItemType',
-                    readOnly: !(effectActive && needsItemType),
                   ),
                 ),
               ),
@@ -1715,7 +1642,6 @@ class SpellView extends StatelessWidget {
                     delegate: FoxyEntityPickerDelegates.spell,
                     placeholder: 'TriggerSpell',
                     controller: triggerSpellCtrl,
-                    readOnly: !(effectActive && needsTriggerSpell),
                   ),
                 ),
               ),
@@ -1725,7 +1651,6 @@ class SpellView extends StatelessWidget {
                   child: FoxyNumberInput<double>(
                     placeholder: 'PointsPerCombo',
                     controller: comboCtrl,
-                    readOnly: !effectActive || !needsComboPoints,
                   ),
                 ),
               ),
@@ -1909,13 +1834,8 @@ class SpellView extends StatelessWidget {
 class _MiscValueInput extends StatefulWidget {
   final IntFieldController controller;
   final MiscValueOptions? options;
-  final bool readOnly;
 
-  const _MiscValueInput({
-    required this.controller,
-    this.options,
-    this.readOnly = false,
-  });
+  const _MiscValueInput({required this.controller, this.options});
 
   @override
   State<_MiscValueInput> createState() => _MiscValueInputState();
@@ -1944,13 +1864,11 @@ class _MiscValueInputState extends State<_MiscValueInput> {
         controller: _selectController!,
         options: (widget.options! as MiscValueDropdown).items,
         placeholder: const Text('选择...'),
-        enabled: !widget.readOnly,
       );
     }
     return FoxyNumberInput<int>(
       placeholder: 'MiscValue',
       controller: widget.controller,
-      readOnly: widget.readOnly,
     );
   }
 

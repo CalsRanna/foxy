@@ -71,7 +71,6 @@ class ReferenceLootTemplateView extends StatelessWidget {
         controller: viewModel.questRequiredController,
         options: CreatureEnums.booleanOptions,
         placeholder: Text('QuestRequired'),
-        enabled: !viewModel.hasReference.value,
       ),
     );
     final lootModeInput = FoxyFormItem(

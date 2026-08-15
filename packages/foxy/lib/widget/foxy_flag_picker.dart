@@ -8,10 +8,8 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// Flag picker: shows the formatted value; clicking the input or the
 /// trailing button opens the edit dialog.
 ///
-/// This is an interactive edit entry and does **not** use
-/// [FoxyReadonlyInput]'s muted/disabled look. `ShadInput.readOnly` only
-/// prevents hand-editing the `"123 (0x…)"` format string; all editing goes
-/// through the dialog.
+/// `ShadInput.readOnly` only prevents hand-editing the `"123 (0x…)"`
+/// format string; all editing goes through the dialog.
 ///
 /// [controller] is initialized by the ViewModel
 /// ([FlagFieldController.init]); after the dialog confirms, the formatted

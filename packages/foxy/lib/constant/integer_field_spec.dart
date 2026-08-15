@@ -16,19 +16,13 @@ enum IntegerFieldEditor { number, select, flags, reference }
 /// exhaustive switch renders it as the corresponding existing component.
 sealed class IntegerFieldSpec<R> {
   final String label;
-  final bool editable;
 
-  const IntegerFieldSpec(this.label, {this.editable = true});
+  const IntegerFieldSpec(this.label);
 
   IntegerFieldEditor get editor;
 }
 
 /// Bit-flag picker ([FoxyFlagPicker]).
-///
-/// Every Flags field is currently editable, so `editable: false` is not
-/// exposed; if read-only flags ever appear, add a uniform disable capability
-/// to [FoxyFlagPicker] first, then extend this spec — a config must never
-/// declare a state the widget cannot honor.
 final class IntegerFlagsFieldSpec<R> extends IntegerFieldSpec<R> {
   final List<FlagItem> flags;
 
@@ -40,7 +34,7 @@ final class IntegerFlagsFieldSpec<R> extends IntegerFieldSpec<R> {
 
 /// Plain integer input ([FoxyNumberInput]).
 final class IntegerNumberFieldSpec<R> extends IntegerFieldSpec<R> {
-  const IntegerNumberFieldSpec(super.label, {super.editable});
+  const IntegerNumberFieldSpec(super.label);
 
   @override
   IntegerFieldEditor get editor => IntegerFieldEditor.number;
@@ -50,11 +44,7 @@ final class IntegerNumberFieldSpec<R> extends IntegerFieldSpec<R> {
 final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
   final R reference;
 
-  const IntegerReferenceFieldSpec(
-    super.label, {
-    required this.reference,
-    super.editable,
-  });
+  const IntegerReferenceFieldSpec(super.label, {required this.reference});
 
   @override
   IntegerFieldEditor get editor => IntegerFieldEditor.reference;
@@ -64,11 +54,7 @@ final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
 final class IntegerSelectFieldSpec<R> extends IntegerFieldSpec<R> {
   final Map<int, String> options;
 
-  const IntegerSelectFieldSpec(
-    super.label, {
-    required this.options,
-    super.editable,
-  });
+  const IntegerSelectFieldSpec(super.label, {required this.options});
 
   @override
   IntegerFieldEditor get editor => IntegerFieldEditor.select;

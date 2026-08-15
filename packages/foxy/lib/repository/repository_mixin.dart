@@ -37,7 +37,7 @@ mixin RepositoryMixin {
   /// records.
   ///
   /// Conventions:
-  /// - [create*] calls this to prefill a read-only primary key, **without
+  /// - [create*] calls this to prefill the primary key, **without
   ///   persisting**;
   /// - [store*] keeps the entity's key when `> 0`, otherwise takes the next
   ///   number.

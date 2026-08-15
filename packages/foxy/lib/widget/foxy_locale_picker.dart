@@ -3,7 +3,6 @@ import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -121,9 +120,6 @@ class FoxyLocalePicker extends StatefulWidget {
   /// Placeholder of the main input.
   final String? placeholder;
 
-  /// Whether the main input is read-only.
-  final bool readOnly;
-
   /// Data/persistence config.
   final FoxyLocaleEditorDelegate delegate;
 
@@ -141,7 +137,6 @@ class FoxyLocalePicker extends StatefulWidget {
     required this.delegate,
     this.ownerKey,
     this.placeholder,
-    this.readOnly = false,
     this.onSaved,
   });
 
@@ -153,29 +148,16 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
   @override
   Widget build(BuildContext context) {
     final canOpen = widget.entry != null || widget.ownerKey != null;
-    // Editable main language uses the default look; read-only uses the
-    // display look (the globe button still opens the locale editor).
-    final readonly = FoxyReadonlyInput.resolve(
-      context,
-      readOnly: widget.readOnly,
-    );
-    return readonly.wrap(
-      ShadInput(
-        controller: widget.controller.controller,
-        placeholder: Text(widget.placeholder ?? ''),
-        readOnly: widget.readOnly,
-        style: readonly.style,
-        decoration: readonly.decoration,
-        mouseCursor: readonly.mouseCursor,
-        showCursor: readonly.showCursor,
-        trailing: ShadButton.ghost(
-          height: 20,
-          width: 20,
-          padding: EdgeInsets.zero,
-          enabled: canOpen,
-          onPressed: canOpen ? _openLocaleDialog : null,
-          child: Icon(LucideIcons.globe, size: 12),
-        ),
+    return ShadInput(
+      controller: widget.controller.controller,
+      placeholder: Text(widget.placeholder ?? ''),
+      trailing: ShadButton.ghost(
+        height: 20,
+        width: 20,
+        padding: EdgeInsets.zero,
+        enabled: canOpen,
+        onPressed: canOpen ? _openLocaleDialog : null,
+        child: Icon(LucideIcons.globe, size: 12),
       ),
     );
   }

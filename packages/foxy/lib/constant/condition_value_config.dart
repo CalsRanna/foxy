@@ -7,10 +7,7 @@ class ConditionValueConfig {
   static final conditionAuraTypeOptions = Map<int, String>.unmodifiable(
     Map<int, String>.from(SpellEnums.spellAuraTypeOptions)..remove(0),
   );
-  static const _unused = IntegerNumberFieldSpec<ConditionValueReference>(
-    '未使用',
-    editable: false,
-  );
+  static const _unused = IntegerNumberFieldSpec<ConditionValueReference>('未使用');
   static const conditionUnitStateFlags = <FlagItem>[
     FlagItem(0x00000001, '死亡'),
     FlagItem(0x00000002, '近战攻击'),
