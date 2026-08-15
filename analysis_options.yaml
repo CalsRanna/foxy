@@ -5,6 +5,15 @@
 # https://github.com/dart-lang/sdk/issues/61477: when member packages
 # `include` this file, relative plugin paths are resolved against the
 # including file's directory, not this one.
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: package:flutter_lints/flutter.yaml
 
 plugins:
