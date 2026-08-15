@@ -123,7 +123,7 @@ class DbcExportWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '读取 DBC 表统计失败：${FoxyError.message(error)}';
+      errorMessage.value = '读取 DBC 表统计失败：${FoxyExceptions.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -173,7 +173,7 @@ class DbcExportWorkflowViewModel {
       final error = ValidationException(
         'select at least one DBC table to export',
       );
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -181,7 +181,7 @@ class DbcExportWorkflowViewModel {
       final error = ValidationException(
         'select the DBC output directory first',
       );
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -223,7 +223,7 @@ class DbcExportWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '导出出错：${FoxyError.message(error)}';
+      errorMessage.value = '导出出错：${FoxyExceptions.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

@@ -48,7 +48,7 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     } catch (e, s) {
       LoggerUtil.instance.e('加载 DBC 本地化失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
-      _showErrorToast(context, '加载失败: ${FoxyError.message(e)}');
+      _showErrorToast(context, '加载失败: ${FoxyExceptions.message(e)}');
       return null;
     }
     if (!context.mounted) return null;
@@ -206,10 +206,10 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: ${FoxyError.message(e)}');
+      setState(() => _errorMessage = '保存失败: ${FoxyExceptions.message(e)}');
       DbcLocaleFieldEditor._showErrorToast(
         context,
-        '保存失败: ${FoxyError.message(e)}',
+        '保存失败: ${FoxyExceptions.message(e)}',
       );
     } finally {
       if (mounted) {

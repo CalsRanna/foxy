@@ -68,7 +68,7 @@ class _FoxySignedEntityPickerState extends State<FoxySignedEntityPicker> {
       currentValue = widget.controller.collect();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error(FoxyError.message(error));
+      DialogUtil.instance.error(FoxyExceptions.message(error));
       return;
     }
     if (!mounted) return;
@@ -444,7 +444,7 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
       LoggerUtil.instance.e('${_source.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
       setState(
-        () => _errorMessage = '${_source.errorLabel}: ${FoxyError.message(e)}',
+        () => _errorMessage = '${_source.errorLabel}: ${FoxyExceptions.message(e)}',
       );
     }
   }

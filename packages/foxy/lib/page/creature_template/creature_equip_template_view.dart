@@ -155,7 +155,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${FoxyError.message(error)}',
+                        '保存失败：${FoxyExceptions.message(error)}',
                       );
                       return;
                     }
@@ -293,7 +293,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyExceptions.message(error)}');
     }
   }
 
@@ -311,7 +311,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
     }
   }
 
@@ -321,7 +321,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       return true;
     } catch (error) {
       if (mounted) {
-        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
+        DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
       }
       return false;
     }
@@ -333,7 +333,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyExceptions.message(error)}');
       return;
     }
     if (!mounted) return;

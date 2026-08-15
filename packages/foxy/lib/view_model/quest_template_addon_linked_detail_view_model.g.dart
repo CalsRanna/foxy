@@ -143,7 +143,7 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
         return;
       }
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -194,7 +194,7 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
         return;
       }
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -245,7 +245,7 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       _applyCandidate(candidate);
     } catch (error, stackTrace) {
       if (token != _refreshToken || isDisposed) return;
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
     } finally {
       if (token == _refreshToken && !isDisposed) loading.value = false;

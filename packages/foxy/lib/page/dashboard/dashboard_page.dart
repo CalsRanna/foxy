@@ -101,7 +101,7 @@ class _DashboardPageRoute extends State<DashboardPage> {
       await viewModel.initSignals();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载仪表板数据失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('加载仪表板数据失败：${FoxyExceptions.message(error)}');
     }
     _checkForUpdate();
   }

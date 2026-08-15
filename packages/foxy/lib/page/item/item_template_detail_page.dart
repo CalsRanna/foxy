@@ -116,7 +116,7 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
       await viewModel.initSignals(key: widget.itemTemplateKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
     }
   }
 }

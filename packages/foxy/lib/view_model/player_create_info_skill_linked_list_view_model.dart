@@ -52,7 +52,7 @@ class PlayerCreateInfoSkillLinkedListViewModel
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     }
   }
@@ -74,7 +74,7 @@ class PlayerCreateInfoSkillLinkedListViewModel
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -106,7 +106,7 @@ class PlayerCreateInfoSkillLinkedListViewModel
         return;
       }
       editingKey.value = null;
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
@@ -151,7 +151,7 @@ class PlayerCreateInfoSkillLinkedListViewModel
       if (token != _interactionToken || linkKey.value != link) {
         return;
       }
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -198,7 +198,7 @@ class PlayerCreateInfoSkillLinkedListViewModel
       editingKey.value = null;
       selectedKey.value = null;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = FoxyError.message(error);
+      if (token == _refreshToken) errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

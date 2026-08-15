@@ -160,7 +160,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(FoxyError.message(error))));
+      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
     }
   }
 
@@ -175,7 +175,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(FoxyError.message(error))));
+      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
     }
   }
 }

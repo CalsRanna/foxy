@@ -59,7 +59,7 @@ class _QuestFactionRewardDetailPageState
       await viewModel.initSignals(key: widget.questFactionRewardKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
     }
   }
 }

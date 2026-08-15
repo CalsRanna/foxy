@@ -62,7 +62,7 @@ class DatabaseLocaleEditor extends StatefulWidget {
       try {
         ShadSonner.of(
           context,
-        ).show(ShadToast(description: Text('加载失败: ${FoxyError.message(e)}')));
+        ).show(ShadToast(description: Text('加载失败: ${FoxyExceptions.message(e)}')));
       } catch (_) {}
       return null;
     }
@@ -270,11 +270,11 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: ${FoxyError.message(e)}');
+      setState(() => _errorMessage = '保存失败: ${FoxyExceptions.message(e)}');
       try {
         ShadSonner.of(
           context,
-        ).show(ShadToast(description: Text('保存失败: ${FoxyError.message(e)}')));
+        ).show(ShadToast(description: Text('保存失败: ${FoxyExceptions.message(e)}')));
       } catch (_) {}
     } finally {
       if (mounted) {

@@ -617,7 +617,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       persistedKey.value = key;
       _wireEffectSignals();
     } catch (error, stackTrace) {
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -644,7 +644,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;

@@ -6,7 +6,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 // Exported for generated parts: the view-model .g.dart is `part of` the
 // parent library and cannot import on its own; the generated code's
-// FoxyException/FoxyError.message resolve through this file's import scope
+// FoxyException/FoxyExceptions.message resolve through this file's import scope
 // (AGENTS.md requires every generated-VM shell to mix in
 // FieldControllerMixin).
 export 'package:foxy/infrastructure/errors/foxy_exceptions.dart';

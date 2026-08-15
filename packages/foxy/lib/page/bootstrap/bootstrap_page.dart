@@ -138,7 +138,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
       }
       if (!mounted) return;
       DialogUtil.instance.error(
-        viewModel.errorMessage.value ?? FoxyError.message(error),
+        viewModel.errorMessage.value ?? FoxyExceptions.message(error),
       );
     }
   }

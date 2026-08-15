@@ -92,7 +92,7 @@ class MpqExportWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '读取 DBC 表统计失败：${FoxyError.message(error)}';
+      errorMessage.value = '读取 DBC 表统计失败：${FoxyExceptions.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -148,7 +148,7 @@ class MpqExportWorkflowViewModel {
       final error = ValidationException(
         'select at least one DBC table to export',
       );
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -156,7 +156,7 @@ class MpqExportWorkflowViewModel {
       final error = ValidationException(
         'select the MPQ output directory first',
       );
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -198,7 +198,7 @@ class MpqExportWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '导出出错：${FoxyError.message(error)}';
+      errorMessage.value = '导出出错：${FoxyExceptions.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

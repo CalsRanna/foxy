@@ -182,7 +182,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
         return;
       }
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -230,7 +230,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
         return;
       }
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -453,7 +453,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
       _applyCandidate(candidate);
     } catch (error, stackTrace) {
       if (token != _refreshToken) return;
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       LoggerUtil.instance.e(
         '加载 NPC 文本失败',
         error: error,

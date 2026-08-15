@@ -204,7 +204,7 @@ class _ProspectingLootTemplateViewState
                     } catch (error) {
                       if (!mounted) return;
                       DialogUtil.instance.error(
-                        '保存失败：${FoxyError.message(error)}',
+                        '保存失败：${FoxyExceptions.message(error)}',
                       );
                       return;
                     }
@@ -348,7 +348,7 @@ class _ProspectingLootTemplateViewState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
     }
   }
 
@@ -358,7 +358,7 @@ class _ProspectingLootTemplateViewState
       return true;
     } catch (error) {
       if (mounted) {
-        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
+        DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
       }
       return false;
     }
@@ -369,7 +369,7 @@ class _ProspectingLootTemplateViewState
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyExceptions.message(error)}');
       return;
     }
     if (!mounted) return;

@@ -3,7 +3,7 @@
 ///
 /// Shared by the update dialog ([UpdateDialog]) and the startup auto-check
 /// ([DashboardPage]).
-/// Failure messages are mapped to Chinese copy via [FoxyError.message] and
+/// Failure messages are mapped to Chinese copy via [FoxyExceptions.message] and
 /// written into [errorMessage].
 library;
 
@@ -51,7 +51,7 @@ class UpdateViewModel {
   final readyToRestart = signal<bool>(false);
 
   /// Failure message (Chinese copy already mapped via
-  /// [FoxyError.message]).
+  /// [FoxyExceptions.message]).
   final errorMessage = signal<String?>(null);
 
   /// Extracted new-version payload root (passed to the helper program on
@@ -104,7 +104,7 @@ class UpdateViewModel {
       }
     } catch (error) {
       availableUpdate.value = null;
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       if (!manual) {
         LoggerUtil.instance.w('自动检查更新失败: $error');
       }
@@ -135,7 +135,7 @@ class UpdateViewModel {
       return true;
     } catch (error) {
       downloadProgress.value = null;
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       return false;
     }
   }

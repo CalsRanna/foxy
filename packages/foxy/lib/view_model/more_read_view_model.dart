@@ -55,7 +55,7 @@ class MoreReadViewModel with FieldControllerMixin {
       if (token != _refreshToken) return;
       filteredModules.value = result;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = FoxyError.message(error);
+      if (token == _refreshToken) errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

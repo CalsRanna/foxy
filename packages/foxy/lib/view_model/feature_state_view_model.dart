@@ -43,7 +43,7 @@ class FeatureStateViewModel {
     try {
       allFeatures.value = await _repository.getFeatures();
     } catch (error) {
-      errorMessage.value = '加载功能模块失败: ${FoxyError.message(error)}';
+      errorMessage.value = '加载功能模块失败: ${FoxyExceptions.message(error)}';
       rethrow;
     } finally {
       loading.value = false;
@@ -79,7 +79,7 @@ class FeatureStateViewModel {
       );
       allFeatures.value = nextFeatures;
     } catch (error) {
-      errorMessage.value = '更新收藏状态失败: ${FoxyError.message(error)}';
+      errorMessage.value = '更新收藏状态失败: ${FoxyExceptions.message(error)}';
       rethrow;
     }
   }
@@ -106,7 +106,7 @@ class FeatureStateViewModel {
       );
       allFeatures.value = nextFeatures;
     } catch (error) {
-      errorMessage.value = '更新固定状态失败: ${FoxyError.message(error)}';
+      errorMessage.value = '更新固定状态失败: ${FoxyExceptions.message(error)}';
       rethrow;
     }
   }

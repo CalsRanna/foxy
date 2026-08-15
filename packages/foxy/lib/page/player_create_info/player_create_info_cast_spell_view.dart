@@ -169,7 +169,7 @@ class _PlayerCreateInfoCastSpellViewState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
     }
   }
 
@@ -179,7 +179,7 @@ class _PlayerCreateInfoCastSpellViewState
       return true;
     } catch (error) {
       if (mounted) {
-        DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
+        DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
       }
       return false;
     }
@@ -190,7 +190,7 @@ class _PlayerCreateInfoCastSpellViewState
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('创建失败：${FoxyExceptions.message(error)}');
       return;
     }
     if (mounted) _showDialog('新增登录施法');
@@ -280,7 +280,7 @@ class _PlayerCreateInfoCastSpellViewState
                         if (!mounted) return;
                         setState(
                           () => _errorMessage =
-                              '保存失败：${FoxyError.message(error)}',
+                              '保存失败：${FoxyExceptions.message(error)}',
                         );
                         return;
                       }

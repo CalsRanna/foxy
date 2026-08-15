@@ -190,7 +190,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('复制失败：${FoxyExceptions.message(error)}');
     }
   }
 
@@ -208,7 +208,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
     }
   }
 

@@ -273,33 +273,33 @@ void main() {
   });
 
   group('异常映射', () {
-    test('FoxyError.message 覆盖全部 UpdateErrorKind', () {
+    test('FoxyExceptions.message 覆盖全部 UpdateErrorKind', () {
       expect(
-        FoxyError.message(
+        FoxyExceptions.message(
           const UpdateException(UpdateErrorKind.network, 'x'),
         ),
         '无法连接更新服务器，请检查网络后重试',
       );
       expect(
-        FoxyError.message(
+        FoxyExceptions.message(
           const UpdateException(UpdateErrorKind.invalidManifest, 'x'),
         ),
         '更新信息无效，请稍后重试',
       );
       expect(
-        FoxyError.message(
+        FoxyExceptions.message(
           const UpdateException(UpdateErrorKind.verification, 'x'),
         ),
         '更新文件校验失败，请重试',
       );
       expect(
-        FoxyError.message(
+        FoxyExceptions.message(
           const UpdateException(UpdateErrorKind.fileSystem, 'x'),
         ),
         '更新文件写入失败，请检查磁盘空间后重试',
       );
       expect(
-        FoxyError.message(
+        FoxyExceptions.message(
           const UpdateException(UpdateErrorKind.canceled, 'x'),
         ),
         '更新已取消',

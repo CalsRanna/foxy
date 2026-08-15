@@ -95,7 +95,7 @@ class DbcImportWorkflowViewModel {
       }
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '检查 DBC 导入状态失败: ${FoxyError.message(error)}';
+      errorMessage.value = '检查 DBC 导入状态失败: ${FoxyExceptions.message(error)}';
       status.value = WorkflowStatus.failed;
     }
   }
@@ -119,7 +119,7 @@ class DbcImportWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '加载 DBC 配置失败: ${FoxyError.message(error)}';
+      errorMessage.value = '加载 DBC 配置失败: ${FoxyExceptions.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -151,7 +151,7 @@ class DbcImportWorkflowViewModel {
     final directory = path.value?.trim();
     if (directory == null || directory.isEmpty) {
       final error = ValidationException('select the DBC file directory first');
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -192,7 +192,7 @@ class DbcImportWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '导入出错：${FoxyError.message(error)}';
+      errorMessage.value = '导入出错：${FoxyExceptions.message(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

@@ -202,7 +202,7 @@ class _QuestFactionRewardListPageState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
     }
   }
 

@@ -63,7 +63,7 @@ class _ScalingStatDistributionDetailPageState
       await viewModel.initSignals(key: widget.scalingStatDistributionKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：${FoxyError.message(error)}');
+      DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
     }
   }
 }

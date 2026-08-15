@@ -297,11 +297,11 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
     } catch (e) {
       LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
-      // The UI only shows user copy mapped by FoxyError.message; raw
+      // The UI only shows user copy mapped by FoxyExceptions.message; raw
       // exception strings go to the log.
       setState(
         () => _errorMessage =
-            '${widget.delegate.errorLabel}: ${FoxyError.message(e)}',
+            '${widget.delegate.errorLabel}: ${FoxyExceptions.message(e)}',
       );
     }
   }
@@ -348,7 +348,7 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
       currentId = widget.controller.collect();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error(FoxyError.message(error));
+      DialogUtil.instance.error(FoxyExceptions.message(error));
       return;
     }
     if (!mounted) return;

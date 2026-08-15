@@ -43,7 +43,7 @@ final class ListEmitter {
       ..writeln('      normalizePageAfterDelete(total.value - 1);')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
-      ..writeln('      errorMessage.value = FoxyError.message(error);')
+      ..writeln('      errorMessage.value = FoxyExceptions.message(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -118,7 +118,7 @@ final class ListEmitter {
       ..writeln('      if (token != _refreshToken) return;')
       ..writeln("      LoggerUtil.instance.e('刷新列表失败: \$error');")
       ..writeln(
-        "      errorMessage.value = '刷新列表失败: \${FoxyError.message(error)}';",
+        "      errorMessage.value = '刷新列表失败: \${FoxyExceptions.message(error)}';",
       )
       ..writeln('    } finally {')
       ..writeln('      if (token == _refreshToken) loading.value = false;')
@@ -175,7 +175,7 @@ final class ListEmitter {
       )
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
-      ..writeln('      errorMessage.value = FoxyError.message(error);')
+      ..writeln('      errorMessage.value = FoxyExceptions.message(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')

@@ -36,7 +36,7 @@ mixin _GameObjectTemplateListViewModelMixin
       await _logActivity(ActivityActionType.copy, key);
       await _refresh();
     } catch (error) {
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -56,7 +56,7 @@ mixin _GameObjectTemplateListViewModelMixin
       normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
-      errorMessage.value = FoxyError.message(error);
+      errorMessage.value = FoxyExceptions.message(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -146,7 +146,7 @@ mixin _GameObjectTemplateListViewModelMixin
     } catch (error) {
       if (token != _refreshToken) return;
       LoggerUtil.instance.e('刷新列表失败: $error');
-      errorMessage.value = '刷新列表失败: ${FoxyError.message(error)}';
+      errorMessage.value = '刷新列表失败: ${FoxyExceptions.message(error)}';
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
