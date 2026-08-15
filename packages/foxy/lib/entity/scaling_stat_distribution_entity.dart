@@ -26,6 +26,9 @@ class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
   /// 常量表外的未知属性回退为数字，保证信息不丢失。
   static String formatStats(List<int> statIds, List<int> bonuses) {
     final result = StringBuffer();
+    // Runtime-value aggregation over the row's stat slots, not a field
+    // expansion.
+    // ignore: foxy_lint/no_collection_loops
     for (final (statId, bonus) in statEntries(statIds, bonuses)) {
       final name = ScalingStatDistributionConstants
           .scalingStatDistributionStatOptions[statId];

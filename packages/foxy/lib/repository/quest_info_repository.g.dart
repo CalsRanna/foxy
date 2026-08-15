@@ -25,6 +25,8 @@ final class QuestInfoFilter {
 }
 
 mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_quest_info';
+
   Future<int> copyQuestInfo(int key) async {
     final source = await getQuestInfo(key);
     if (source == null) {
@@ -170,5 +172,3 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_quest_info';

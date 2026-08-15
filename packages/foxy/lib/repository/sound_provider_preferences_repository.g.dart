@@ -28,6 +28,8 @@ final class SoundProviderPreferencesFilter {
 }
 
 mixin _SoundProviderPreferencesRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_sound_provider_preferences';
+
   Future<void> destroySoundProviderPreferences(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -122,5 +124,3 @@ mixin _SoundProviderPreferencesRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_sound_provider_preferences';

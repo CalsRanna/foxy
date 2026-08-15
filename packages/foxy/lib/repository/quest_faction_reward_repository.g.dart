@@ -21,6 +21,8 @@ final class QuestFactionRewardFilter {
 }
 
 mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_quest_faction_reward';
+
   Future<int> copyQuestFactionReward(int key) async {
     final source = await getQuestFactionReward(key);
     if (source == null) {
@@ -182,5 +184,3 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_quest_faction_reward';

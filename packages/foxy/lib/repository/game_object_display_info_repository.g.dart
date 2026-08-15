@@ -28,6 +28,8 @@ final class GameObjectDisplayInfoFilter {
 }
 
 mixin _GameObjectDisplayInfoRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_game_object_display_info';
+
   Future<void> destroyGameObjectDisplayInfo(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -120,5 +122,3 @@ mixin _GameObjectDisplayInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_game_object_display_info';

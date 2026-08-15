@@ -25,6 +25,8 @@ final class NpcTextFilter {
 }
 
 mixin _NpcTextRepositoryMixin on RepositoryMixin {
+  String get _table => 'npc_text';
+
   Future<void> destroyNpcText(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -99,5 +101,3 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'npc_text';

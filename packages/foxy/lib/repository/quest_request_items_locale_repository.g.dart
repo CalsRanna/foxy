@@ -3,6 +3,8 @@
 part of 'quest_request_items_locale_repository.dart';
 
 mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'quest_request_items_locale';
+
   Future<void> destroyQuestRequestItemsLocale(
     QuestRequestItemsLocaleKey key,
   ) async {
@@ -96,5 +98,3 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'quest_request_items_locale';

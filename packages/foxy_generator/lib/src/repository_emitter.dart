@@ -12,7 +12,12 @@ final class RepositoryEmitter {
   /// name (_applyFilter → _before* → _whereKey).
   String emit(RepositoryGenerationModel model) {
     final buffer = StringBuffer()
-      ..writeln('mixin ${model.mixinName} on ${_onClause(model)} {');
+      ..writeln('mixin ${model.mixinName} on ${_onClause(model)} {')
+      // The table name is a single source of truth on the Entity annotation;
+      // an instance getter makes it visible to both the mixin methods and the
+      // hand-written class body without a top-level declaration.
+      ..writeln('  String get _table => ${dartStringLiteral(model.table)};')
+      ..writeln();
     if (model.queryLayerEnabled) {
       _emitCopy(buffer, model);
       _emitCount(buffer, model);
@@ -40,14 +45,6 @@ final class RepositoryEmitter {
     _emitWriteHooks(buffer, model);
     _emitWhereKey(buffer, model);
     buffer.writeln('}');
-    // The table name is a single source of truth on the Entity annotation;
-    // this part materializes it as a library-level const so both the mixin
-    // and the hand-written class reference the same name. Emitted after the
-    // mixin to keep the top-level "Sort Members" order
-    // (Filter < _XxxMixin < _table).
-    buffer
-      ..writeln()
-      ..writeln('const _table = ${dartStringLiteral(model.table)};');
     return buffer.toString();
   }
 

@@ -28,6 +28,8 @@ final class PlayerCreateInfoFilter {
 }
 
 mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
+  String get _table => 'playercreateinfo';
+
   Future<PlayerCreateInfoKey> copyPlayerCreateInfo(
     PlayerCreateInfoKey key,
   ) async {
@@ -166,5 +168,3 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'playercreateinfo';

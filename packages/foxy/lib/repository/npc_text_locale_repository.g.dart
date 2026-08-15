@@ -3,6 +3,8 @@
 part of 'npc_text_locale_repository.dart';
 
 mixin _NpcTextLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'npc_text_locale';
+
   Future<void> destroyNpcTextLocale(NpcTextLocaleKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -80,5 +82,3 @@ mixin _NpcTextLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'npc_text_locale';

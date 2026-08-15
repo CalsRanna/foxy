@@ -28,6 +28,8 @@ final class ItemLootTemplateFilter {
 }
 
 mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'item_loot_template';
+
   Future<ItemLootTemplateKey> copyItemLootTemplate(
     ItemLootTemplateKey key,
   ) async {
@@ -161,5 +163,3 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'item_loot_template';

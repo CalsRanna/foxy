@@ -21,6 +21,8 @@ final class LockFilter {
 }
 
 mixin _LockRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_lock';
+
   Future<void> destroyLock(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -93,5 +95,3 @@ mixin _LockRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_lock';

@@ -157,6 +157,58 @@ abstract final class DbcExportWorker {
         : 0;
     return count > 0;
   }
+
+  static void _sendCount(
+    SendPort sendPort,
+    String fileName,
+    int completedFiles,
+    int totalFiles,
+    int processedRows,
+    int? totalRows,
+  ) {
+    sendPort.send((
+      'count',
+      fileName,
+      completedFiles,
+      totalFiles,
+      processedRows,
+      totalRows,
+    ));
+  }
+
+  static void _sendResult(
+    SendPort sendPort,
+    int completed,
+    int skipped,
+    List<Map<String, String?>> errors,
+    bool cancelled,
+  ) {
+    sendPort.send(('result', completed, skipped, errors, cancelled));
+  }
+
+  static void _sendStatus(
+    SendPort sendPort,
+    String stage,
+    String message, [
+    String? fileName,
+  ]) {
+    sendPort.send(('status', stage, message, fileName));
+  }
+
+  static Map<String, String?> _workerError({
+    String? tableName,
+    String? fileName,
+    required String stage,
+    required String message,
+  }) {
+    return {
+      'tableName': tableName,
+      'fileName': fileName,
+      'stage': stage,
+      'message': message,
+    };
+  }
+
 }
 
 /// Loads the rows of one DBC table (table name → rows). Kept injectable so
@@ -209,7 +261,7 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
 
   try {
     workerStage = 'scanning';
-    _sendStatus(sendPort, workerStage, '正在准备导出...');
+    DbcExportWorker._sendStatus(sendPort, workerStage, '正在准备导出...');
 
     final definitions = <DbcDefinition>[
       for (final table in tableNames)
@@ -217,7 +269,7 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
             (throw ValidationException('unknown DBC table: $table')),
     ];
     if (definitions.isEmpty) {
-      _sendResult(sendPort, 0, 0, const [], false);
+      DbcExportWorker._sendResult(sendPort, 0, 0, const [], false);
       return;
     }
 
@@ -241,7 +293,7 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
       outputDirectory: outputDirectory,
       isCancelled: () => cancelled,
       onProgress: (fileName, completedFiles, totalFiles, processed, total) {
-        _sendCount(
+        DbcExportWorker._sendCount(
           sendPort,
           fileName,
           completedFiles,
@@ -266,7 +318,7 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
       sendPort.send(('warning', missingRowOrder));
     }
 
-    _sendResult(
+    DbcExportWorker._sendResult(
       sendPort,
       summary.completed,
       summary.skipped,
@@ -274,65 +326,14 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
       cancelled,
     );
   } catch (error) {
-    _sendResult(sendPort, 0, 0, [
-      _workerError(stage: workerStage, message: 'Worker 错误: $error'),
+    DbcExportWorker._sendResult(sendPort, 0, 0, [
+      DbcExportWorker._workerError(stage: workerStage, message: 'Worker 错误: $error'),
     ], false);
   } finally {
     await laconic?.close();
     await cancelSubscription.cancel();
     cancelPort.close();
   }
-}
-
-void _sendCount(
-  SendPort sendPort,
-  String fileName,
-  int completedFiles,
-  int totalFiles,
-  int processedRows,
-  int? totalRows,
-) {
-  sendPort.send((
-    'count',
-    fileName,
-    completedFiles,
-    totalFiles,
-    processedRows,
-    totalRows,
-  ));
-}
-
-void _sendResult(
-  SendPort sendPort,
-  int completed,
-  int skipped,
-  List<Map<String, String?>> errors,
-  bool cancelled,
-) {
-  sendPort.send(('result', completed, skipped, errors, cancelled));
-}
-
-void _sendStatus(
-  SendPort sendPort,
-  String stage,
-  String message, [
-  String? fileName,
-]) {
-  sendPort.send(('status', stage, message, fileName));
-}
-
-Map<String, String?> _workerError({
-  String? tableName,
-  String? fileName,
-  required String stage,
-  required String message,
-}) {
-  return {
-    'tableName': tableName,
-    'fileName': fileName,
-    'stage': stage,
-    'message': message,
-  };
 }
 
 typedef DbcExportWorkerArgs = ({

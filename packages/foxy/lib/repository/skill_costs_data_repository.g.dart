@@ -3,6 +3,8 @@
 part of 'skill_costs_data_repository.dart';
 
 mixin _SkillCostsDataRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_skill_costs_data';
+
   Future<void> destroySkillCostsData(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -91,5 +93,3 @@ mixin _SkillCostsDataRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_skill_costs_data';

@@ -3,6 +3,8 @@
 part of 'player_create_info_item_repository.dart';
 
 mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
+  String get _table => 'playercreateinfo_item';
+
   Future<PlayerCreateInfoItemKey> copyPlayerCreateInfoItem(
     PlayerCreateInfoItemKey key,
   ) async {
@@ -156,5 +158,3 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'playercreateinfo_item';

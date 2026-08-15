@@ -3,6 +3,8 @@
 part of 'spell_rank_repository.dart';
 
 mixin _SpellRankRepositoryMixin on RepositoryMixin {
+  String get _table => 'spell_ranks';
+
   Future<SpellRankKey> copySpellRank(SpellRankKey key) async {
     final source = await getSpellRank(key);
     if (source == null) {
@@ -135,5 +137,3 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'spell_ranks';

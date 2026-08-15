@@ -3,6 +3,8 @@
 part of 'creature_equip_template_repository.dart';
 
 mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_equip_template';
+
   Future<CreatureEquipTemplateKey> copyCreatureEquipTemplate(
     CreatureEquipTemplateKey key,
   ) async {
@@ -146,5 +148,3 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'creature_equip_template';

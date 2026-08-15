@@ -21,6 +21,8 @@ final class SpellDurationFilter {
 }
 
 mixin _SpellDurationRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_spell_duration';
+
   Future<void> destroySpellDuration(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -103,5 +105,3 @@ mixin _SpellDurationRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_spell_duration';

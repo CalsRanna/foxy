@@ -3,6 +3,8 @@
 part of 'spell_bonus_data_repository.dart';
 
 mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
+  String get _table => 'spell_bonus_data';
+
   Future<void> destroySpellBonusData(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -83,5 +85,3 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
-
-const _table = 'spell_bonus_data';

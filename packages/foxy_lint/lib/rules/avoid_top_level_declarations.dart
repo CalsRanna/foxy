@@ -52,6 +52,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
+    if (!_isLibPath(context.definingUnit.file.path)) return;
     for (final declaration in node.declarations) {
       final name = switch (declaration) {
         TopLevelVariableDeclaration() =>
@@ -67,4 +68,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       rule.reportAtNode(declaration);
     }
   }
+
+  /// The rule targets the app's `lib/` namespace; test and tool scripts
+  /// may use top-level helpers.
+  bool _isLibPath(String path) =>
+      path.contains('/lib/') || path.contains(r'\lib\');
 }

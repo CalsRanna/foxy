@@ -264,6 +264,7 @@ import 'package:foxy/view_model/talent_detail_view_model.dart';
 import 'package:foxy/view_model/talent_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 
+// ignore: foxy_lint/class_file_name_match
 class DI {
   static final _instance = GetIt.instance;
 

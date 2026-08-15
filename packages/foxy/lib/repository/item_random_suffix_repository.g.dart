@@ -26,6 +26,8 @@ final class ItemRandomSuffixFilter {
 
 mixin _ItemRandomSuffixRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_item_random_suffix';
+
   Future<void> destroyItemRandomSuffix(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -127,5 +129,3 @@ mixin _ItemRandomSuffixRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item_random_suffix';

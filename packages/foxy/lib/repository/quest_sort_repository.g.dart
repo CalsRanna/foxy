@@ -25,6 +25,8 @@ final class QuestSortFilter {
 }
 
 mixin _QuestSortRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_quest_sort';
+
   Future<int> copyQuestSort(int key) async {
     final source = await getQuestSort(key);
     if (source == null) {
@@ -170,5 +172,3 @@ mixin _QuestSortRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_quest_sort';

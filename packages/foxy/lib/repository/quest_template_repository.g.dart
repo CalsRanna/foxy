@@ -25,6 +25,8 @@ final class QuestTemplateFilter {
 }
 
 mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'quest_template';
+
   Future<int> copyQuestTemplate(int key) async {
     final source = await getQuestTemplate(key);
     if (source == null) {
@@ -163,5 +165,3 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'quest_template';

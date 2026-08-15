@@ -25,6 +25,8 @@ final class PageTextFilter {
 }
 
 mixin _PageTextRepositoryMixin on RepositoryMixin {
+  String get _table => 'page_text';
+
   Future<int> copyPageText(int key) async {
     final source = await getPageText(key);
     if (source == null) {
@@ -152,5 +154,3 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'page_text';

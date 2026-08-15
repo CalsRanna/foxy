@@ -21,6 +21,8 @@ final class GlyphPropertyFilter {
 }
 
 mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_glyph_properties';
+
   Future<int> copyGlyphProperty(int key) async {
     final source = await getGlyphProperty(key);
     if (source == null) {
@@ -164,5 +166,3 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_glyph_properties';

@@ -25,6 +25,8 @@ final class AchievementFilter {
 }
 
 mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_achievement';
+
   Future<int> copyAchievement(int key) async {
     final source = await getAchievement(key);
     if (source == null) {
@@ -172,5 +174,3 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_achievement';

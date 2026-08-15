@@ -3,6 +3,8 @@
 part of 'gossip_menu_option_locale_repository.dart';
 
 mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'gossip_menu_option_locale';
+
   Future<void> destroyGossipMenuOptionLocale(
     GossipMenuOptionLocaleKey key,
   ) async {
@@ -82,5 +84,3 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'gossip_menu_option_locale';

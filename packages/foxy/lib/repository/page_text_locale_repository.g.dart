@@ -3,6 +3,8 @@
 part of 'page_text_locale_repository.dart';
 
 mixin _PageTextLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'page_text_locale';
+
   Future<void> destroyPageTextLocale(PageTextLocaleKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -80,5 +82,3 @@ mixin _PageTextLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'page_text_locale';

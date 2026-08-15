@@ -25,6 +25,8 @@ final class EmoteTextFilter {
 }
 
 mixin _EmoteTextRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_emotes_text';
+
   Future<int> copyEmoteText(int key) async {
     final source = await getEmoteText(key);
     if (source == null) {
@@ -156,5 +158,3 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_emotes_text';

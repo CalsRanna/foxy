@@ -3,6 +3,8 @@
 part of 'spell_custom_attr_repository.dart';
 
 mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
+  String get _table => 'spell_custom_attr';
+
   Future<void> destroySpellCustomAttr(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -85,5 +87,3 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
     return builder.where('`spell_id`', key);
   }
 }
-
-const _table = 'spell_custom_attr';

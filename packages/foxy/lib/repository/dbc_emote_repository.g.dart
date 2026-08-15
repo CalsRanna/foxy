@@ -25,6 +25,8 @@ final class DbcEmoteFilter {
 }
 
 mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_emotes';
+
   Future<void> destroyDbcEmote(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -99,5 +101,3 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_emotes';

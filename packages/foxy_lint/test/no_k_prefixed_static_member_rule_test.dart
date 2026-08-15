@@ -12,7 +12,7 @@ class NoKPrefixedStaticMemberRuleTest extends AnalysisRuleTest {
     super.setUp();
   }
 
-  void test_staticConstKPrefix_reports() async {
+  void testStaticConstKPrefixReports() async {
     await assertDiagnostics(
       r'''
 abstract final class QuestFlags {
@@ -25,7 +25,7 @@ abstract final class QuestFlags {
     );
   }
 
-  void test_staticFieldKPrefix_reports() async {
+  void testStaticFieldKPrefixReports() async {
     await assertDiagnostics(
       r'''
 class Foo {
@@ -38,7 +38,7 @@ class Foo {
     );
   }
 
-  void test_staticConstNoK_doesNotReport() async {
+  void testStaticConstNoKDoesNotReport() async {
     await assertNoDiagnostics(r'''
 abstract final class QuestFlags {
   static const flagOptions = 1;
@@ -46,7 +46,7 @@ abstract final class QuestFlags {
 ''');
   }
 
-  void test_instanceFieldKPrefix_doesNotReport() async {
+  void testInstanceFieldKPrefixDoesNotReport() async {
     await assertNoDiagnostics(r'''
 class Foo {
   final kBar = 1;

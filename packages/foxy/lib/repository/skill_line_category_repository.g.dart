@@ -26,6 +26,8 @@ final class SkillLineCategoryFilter {
 
 mixin _SkillLineCategoryRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_skill_line_category';
+
   Future<void> destroySkillLineCategory(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -127,5 +129,3 @@ mixin _SkillLineCategoryRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_skill_line_category';

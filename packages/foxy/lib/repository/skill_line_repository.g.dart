@@ -25,6 +25,8 @@ final class SkillLineFilter {
 }
 
 mixin _SkillLineRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_skill_line';
+
   Future<int> copySkillLine(int key) async {
     final source = await getSkillLine(key);
     if (source == null) {
@@ -167,5 +169,3 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_skill_line';

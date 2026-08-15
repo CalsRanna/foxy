@@ -25,6 +25,8 @@ final class ItemDisplayInfoFilter {
 }
 
 mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_item_display_info';
+
   Future<void> destroyItemDisplayInfo(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -115,5 +117,3 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item_display_info';

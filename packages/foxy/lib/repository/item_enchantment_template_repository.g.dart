@@ -23,6 +23,8 @@ final class ItemEnchantmentTemplateFilter {
 }
 
 mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'item_enchantment_template';
+
   Future<void> destroyItemEnchantmentTemplate(
     ItemEnchantmentTemplateKey key,
   ) async {
@@ -101,5 +103,3 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'item_enchantment_template';

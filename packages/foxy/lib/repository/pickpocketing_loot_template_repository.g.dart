@@ -28,6 +28,8 @@ final class PickpocketingLootTemplateFilter {
 }
 
 mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'pickpocketing_loot_template';
+
   Future<PickpocketingLootTemplateKey> copyPickpocketingLootTemplate(
     PickpocketingLootTemplateKey key,
   ) async {
@@ -178,5 +180,3 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'pickpocketing_loot_template';

@@ -21,6 +21,8 @@ final class CinematicSequenceFilter {
 }
 
 mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_cinematic_sequences';
+
   Future<void> destroyCinematicSequence(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -111,5 +113,3 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_cinematic_sequences';

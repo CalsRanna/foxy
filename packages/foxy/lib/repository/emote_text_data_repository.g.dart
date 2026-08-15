@@ -26,6 +26,8 @@ final class EmoteTextDataFilter {
 
 mixin _EmoteTextDataRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_emotes_text_data';
+
   Future<void> destroyEmoteTextData(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -125,5 +127,3 @@ mixin _EmoteTextDataRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_emotes_text_data';

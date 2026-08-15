@@ -3,6 +3,8 @@
 part of 'spell_loot_template_repository.dart';
 
 mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'spell_loot_template';
+
   Future<SpellLootTemplateKey> copySpellLootTemplate(
     SpellLootTemplateKey key,
   ) async {
@@ -138,5 +140,3 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'spell_loot_template';

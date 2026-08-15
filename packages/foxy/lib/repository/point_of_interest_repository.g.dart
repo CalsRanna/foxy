@@ -25,6 +25,8 @@ final class PointOfInterestFilter {
 }
 
 mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
+  String get _table => 'points_of_interest';
+
   Future<void> destroyPointOfInterest(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -107,5 +109,3 @@ mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'points_of_interest';

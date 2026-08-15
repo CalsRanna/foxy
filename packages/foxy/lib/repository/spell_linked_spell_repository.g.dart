@@ -3,6 +3,8 @@
 part of 'spell_linked_spell_repository.dart';
 
 mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
+  String get _table => 'spell_linked_spell';
+
   Future<SpellLinkedSpellKey> copySpellLinkedSpell(
     SpellLinkedSpellKey key,
   ) async {
@@ -134,5 +136,3 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'spell_linked_spell';

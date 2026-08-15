@@ -18,7 +18,7 @@ class FoxyApp extends StatelessWidget {
     );
     return ShadApp.router(
       debugShowCheckedModeBanner: false,
-      routerConfig: router.config(),
+      routerConfig: FoxyRouter.router.config(),
       theme: shadThemeData,
     );
   }

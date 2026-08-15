@@ -3,6 +3,8 @@
 part of 'game_object_template_locale_repository.dart';
 
 mixin _GameObjectTemplateLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'gameobject_template_locale';
+
   Future<void> destroyGameObjectTemplateLocale(
     GameObjectTemplateLocaleKey key,
   ) async {
@@ -99,5 +101,3 @@ mixin _GameObjectTemplateLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'gameobject_template_locale';

@@ -21,6 +21,8 @@ final class CreatureModelInfoFilter {
 }
 
 mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_model_info';
+
   Future<void> destroyCreatureModelInfo(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -103,5 +105,3 @@ mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`DisplayID`', key);
   }
 }
-
-const _table = 'creature_model_info';

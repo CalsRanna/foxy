@@ -21,6 +21,8 @@ final class VehicleFilter {
 }
 
 mixin _VehicleRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_vehicle';
+
   Future<void> destroyVehicle(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -95,5 +97,3 @@ mixin _VehicleRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_vehicle';

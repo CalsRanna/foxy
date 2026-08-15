@@ -25,6 +25,8 @@ final class TalentTabFilter {
 }
 
 mixin _TalentTabRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_talent_tab';
+
   Future<void> destroyTalentTab(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -116,5 +118,3 @@ mixin _TalentTabRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_talent_tab';

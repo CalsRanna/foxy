@@ -28,6 +28,8 @@ final class DbcItemFilter {
 }
 
 mixin _DbcItemRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_item';
+
   Future<void> destroyDbcItem(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -102,5 +104,3 @@ mixin _DbcItemRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item';

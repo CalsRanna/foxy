@@ -28,6 +28,8 @@ final class MillingLootTemplateFilter {
 }
 
 mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'milling_loot_template';
+
   Future<MillingLootTemplateKey> copyMillingLootTemplate(
     MillingLootTemplateKey key,
   ) async {
@@ -163,5 +165,3 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'milling_loot_template';

@@ -3,6 +3,8 @@
 part of 'creature_template_locale_repository.dart';
 
 mixin _CreatureTemplateLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_template_locale';
+
   Future<void> destroyCreatureTemplateLocale(
     CreatureTemplateLocaleKey key,
   ) async {
@@ -96,5 +98,3 @@ mixin _CreatureTemplateLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'creature_template_locale';

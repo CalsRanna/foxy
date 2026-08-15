@@ -21,6 +21,8 @@ final class TaxiPathFilter {
 }
 
 mixin _TaxiPathRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_taxi_path';
+
   Future<void> destroyTaxiPath(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -95,5 +97,3 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_taxi_path';

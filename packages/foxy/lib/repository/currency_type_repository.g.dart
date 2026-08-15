@@ -25,6 +25,8 @@ final class CurrencyTypeFilter {
 }
 
 mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_currency_types';
+
   Future<int> copyCurrencyType(int key) async {
     final source = await getCurrencyType(key);
     if (source == null) {
@@ -163,5 +165,3 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_currency_types';

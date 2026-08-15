@@ -39,6 +39,8 @@ final class CreatureTemplateFilter {
 }
 
 mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_template';
+
   Future<int> copyCreatureTemplate(int key) async {
     final source = await getCreatureTemplate(key);
     if (source == null) {
@@ -188,5 +190,3 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
-
-const _table = 'creature_template';

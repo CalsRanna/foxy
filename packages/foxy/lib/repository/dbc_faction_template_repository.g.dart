@@ -39,6 +39,8 @@ final class DbcFactionTemplateFilter {
 }
 
 mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_faction_template';
+
   Future<void> destroyDbcFactionTemplate(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -131,5 +133,3 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_faction_template';

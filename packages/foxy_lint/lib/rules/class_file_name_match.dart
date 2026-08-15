@@ -52,9 +52,19 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+    if (!_isLibPath(context.definingUnit.file.path)) return;
+    // A class with a supertype is not a namespace (subclasses inherit
+    // instance behavior); only standalone all-static classes apply.
+    if (node.extendsClause != null ||
+        node.withClause != null ||
+        node.implementsClause != null) {
+      return;
+    }
     // Only namespace classes (all-static, no instance fields/methods).
+    final body = node.body;
+    if (body is! BlockClassBody) return;
     var hasInstanceMember = false;
-    for (final member in node.members) {
+    for (final member in body.members) {
       if (member is FieldDeclaration && !member.isStatic) {
         hasInstanceMember = true;
         break;
@@ -70,13 +80,18 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     if (hasInstanceMember) return;
 
-    final className = node.name.lexeme;
+    final className = node.namePart.typeName.lexeme;
     final fileName = p.basenameWithoutExtension(context.definingUnit.file.path);
     final expected = _pascalCase(fileName);
     if (className != expected) {
       rule.reportAtNode(node);
     }
   }
+
+  /// The rule targets the app's `lib/` namespace; test fakes and tool
+  /// scripts may keep their own class names.
+  bool _isLibPath(String path) =>
+      path.contains('/lib/') || path.contains(r'\lib\');
 
   static String _pascalCase(String snakeCase) =>
       snakeCase.split('_').map((w) {

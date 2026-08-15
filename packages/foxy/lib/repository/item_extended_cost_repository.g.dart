@@ -21,6 +21,8 @@ final class ItemExtendedCostFilter {
 }
 
 mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_item_extended_cost';
+
   Future<int> copyItemExtendedCost(int key) async {
     final source = await getItemExtendedCost(key);
     if (source == null) {
@@ -181,5 +183,3 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item_extended_cost';

@@ -29,6 +29,8 @@ final class AchievementCategoryFilter {
 
 mixin _AchievementCategoryRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_achievement_category';
+
   Future<void> destroyAchievementCategory(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -132,5 +134,3 @@ mixin _AchievementCategoryRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_achievement_category';

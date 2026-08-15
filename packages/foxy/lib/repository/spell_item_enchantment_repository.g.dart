@@ -29,6 +29,8 @@ final class SpellItemEnchantmentFilter {
 
 mixin _SpellItemEnchantmentRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_spell_item_enchantment';
+
   Future<int> copySpellItemEnchantment(int key) async {
     final source = await getSpellItemEnchantment(key);
     if (source == null) {
@@ -197,5 +199,3 @@ mixin _SpellItemEnchantmentRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_spell_item_enchantment';

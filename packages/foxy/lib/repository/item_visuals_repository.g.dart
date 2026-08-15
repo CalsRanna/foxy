@@ -21,6 +21,8 @@ final class ItemVisualsFilter {
 }
 
 mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_item_visuals';
+
   Future<void> destroyItemVisuals(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -101,5 +103,3 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item_visuals';

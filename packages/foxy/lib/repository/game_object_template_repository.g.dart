@@ -28,6 +28,8 @@ final class GameObjectTemplateFilter {
 }
 
 mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'gameobject_template';
+
   Future<int> copyGameObjectTemplate(int key) async {
     final source = await getGameObjectTemplate(key);
     if (source == null) {
@@ -177,5 +179,3 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
-
-const _table = 'gameobject_template';

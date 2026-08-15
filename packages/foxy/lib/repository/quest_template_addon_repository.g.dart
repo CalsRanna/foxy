@@ -3,6 +3,8 @@
 part of 'quest_template_addon_repository.dart';
 
 mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
+  String get _table => 'quest_template_addon';
+
   Future<void> destroyQuestTemplateAddon(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -87,5 +89,3 @@ mixin _QuestTemplateAddonRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'quest_template_addon';

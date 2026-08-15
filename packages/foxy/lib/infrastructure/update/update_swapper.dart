@@ -21,6 +21,9 @@ library;
 
 import 'dart:io';
 
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:path/path.dart' as p;
+
 /// Records per-file operation failures; the overall swap is not aborted,
 /// keeping the app usable.
 class UpdateSwapFailure {
@@ -68,6 +71,29 @@ class UpdateSwapper {
       (preserved) =>
           normalized == preserved || normalized.startsWith('$preserved/'),
     );
+  }
+
+  /// Cleans up a leftover `.update_tmp/` directory from an interrupted
+  /// update (does not block startup).
+  ///
+  /// Update flow: download and extract into `.update_tmp/` → after restart
+  /// `foxy_updater.exe` swaps and deletes it; if the app is force-killed
+  /// before the swap, this cleanup covers the leftovers and the next update
+  /// check rediscovers the new version.
+  static void cleanupStaleTemp() {
+    final dir = Directory(
+      p.join(Directory.current.path, tempDirName),
+    );
+    if (!dir.existsSync()) return;
+    Future<void>.delayed(Duration.zero, () async {
+      try {
+        if (await dir.exists()) {
+          await dir.delete(recursive: true);
+        }
+      } catch (error) {
+        LoggerUtil.instance.w('清理更新临时目录失败: $error');
+      }
+    });
   }
 
   /// Mirrors the content of [payloadRoot] onto [appDir]:

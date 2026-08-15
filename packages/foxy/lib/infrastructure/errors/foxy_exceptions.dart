@@ -103,6 +103,7 @@ enum UpdateErrorKind {
   canceled,
 }
 
+// ignore: foxy_lint/class_file_name_match
 /// Exception → user-facing Chinese copy. The single entry point for UI
 /// error display.
 ///

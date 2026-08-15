@@ -25,6 +25,8 @@ final class TalentFilter {
 }
 
 mixin _TalentRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_talent';
+
   Future<int> copyTalent(int key) async {
     final source = await getTalent(key);
     if (source == null) {
@@ -152,5 +154,3 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_talent';

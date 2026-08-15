@@ -28,6 +28,8 @@ final class SmartScriptFilter {
 }
 
 mixin _SmartScriptRepositoryMixin on RepositoryMixin {
+  String get _table => 'smart_scripts';
+
   Future<SmartScriptKey> copySmartScript(SmartScriptKey key) async {
     final source = await getSmartScript(key);
     if (source == null) {
@@ -193,5 +195,3 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'smart_scripts';

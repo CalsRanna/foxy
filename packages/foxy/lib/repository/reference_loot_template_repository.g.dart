@@ -28,6 +28,8 @@ final class ReferenceLootTemplateFilter {
 }
 
 mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'reference_loot_template';
+
   Future<ReferenceLootTemplateKey> copyReferenceLootTemplate(
     ReferenceLootTemplateKey key,
   ) async {
@@ -192,5 +194,3 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'reference_loot_template';

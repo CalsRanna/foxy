@@ -25,6 +25,8 @@ final class ZoneMusicFilter {
 }
 
 mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_zone_music';
+
   Future<void> destroyZoneMusic(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -105,5 +107,3 @@ mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_zone_music';

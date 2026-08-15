@@ -28,6 +28,8 @@ final class CreatureModelDataFilter {
 }
 
 mixin _CreatureModelDataRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_creature_model_data';
+
   Future<void> destroyCreatureModelData(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -118,5 +120,3 @@ mixin _CreatureModelDataRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_creature_model_data';

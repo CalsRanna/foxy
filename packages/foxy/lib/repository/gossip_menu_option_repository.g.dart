@@ -3,6 +3,8 @@
 part of 'gossip_menu_option_repository.dart';
 
 mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
+  String get _table => 'gossip_menu_option';
+
   Future<GossipMenuOptionKey> copyGossipMenuOption(
     GossipMenuOptionKey key,
   ) async {
@@ -142,5 +144,3 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'gossip_menu_option';

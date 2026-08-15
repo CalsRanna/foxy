@@ -28,6 +28,8 @@ final class SkinningLootTemplateFilter {
 }
 
 mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'skinning_loot_template';
+
   Future<SkinningLootTemplateKey> copySkinningLootTemplate(
     SkinningLootTemplateKey key,
   ) async {
@@ -167,5 +169,3 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'skinning_loot_template';

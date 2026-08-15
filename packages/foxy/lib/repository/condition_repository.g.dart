@@ -39,6 +39,8 @@ final class ConditionFilter {
 }
 
 mixin _ConditionRepositoryMixin on RepositoryMixin {
+  String get _table => 'conditions';
+
   Future<ConditionKey> copyCondition(ConditionKey key) async {
     final source = await getCondition(key);
     if (source == null) {
@@ -232,5 +234,3 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'conditions';

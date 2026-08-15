@@ -34,7 +34,7 @@ class RouterFacade {
 
   /// Returns the router inside the Scaffold
   StackRouter? get _router {
-    return router.innerRouterOf<StackRouter>(ScaffoldRoute.name);
+    return FoxyRouter.router.innerRouterOf<StackRouter>(ScaffoldRoute.name);
   }
 
   /// Goes back one page

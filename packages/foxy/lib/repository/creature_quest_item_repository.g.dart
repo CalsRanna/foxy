@@ -3,6 +3,8 @@
 part of 'creature_quest_item_repository.dart';
 
 mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_questitem';
+
   Future<CreatureQuestItemKey> copyCreatureQuestItem(
     CreatureQuestItemKey key,
   ) async {
@@ -144,5 +146,3 @@ mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'creature_questitem';

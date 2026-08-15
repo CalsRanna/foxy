@@ -26,6 +26,8 @@ final class SpellFocusObjectFilter {
 
 mixin _SpellFocusObjectRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_spell_focus_object';
+
   Future<void> destroySpellFocusObject(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -127,5 +129,3 @@ mixin _SpellFocusObjectRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_spell_focus_object';

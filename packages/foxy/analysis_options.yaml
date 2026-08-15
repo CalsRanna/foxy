@@ -1,6 +1,15 @@
 # Analyzer plugins can only be declared in the workspace-root
 # analysis_options.yaml; include it to get both flutter_lints and the
 # foxy_lint rules here.
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: ../../analysis_options.yaml
 
 linter:

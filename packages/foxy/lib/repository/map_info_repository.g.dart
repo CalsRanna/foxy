@@ -25,6 +25,8 @@ final class MapInfoFilter {
 }
 
 mixin _MapInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_map';
+
   Future<void> destroyMapInfo(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -110,5 +112,3 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_map';

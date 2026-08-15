@@ -21,6 +21,8 @@ final class GemPropertyFilter {
 }
 
 mixin _GemPropertyRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_gem_properties';
+
   Future<int> copyGemProperty(int key) async {
     final source = await getGemProperty(key);
     if (source == null) {
@@ -157,5 +159,3 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_gem_properties';

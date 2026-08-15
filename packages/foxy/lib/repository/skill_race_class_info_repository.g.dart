@@ -3,6 +3,8 @@
 part of 'skill_race_class_info_repository.dart';
 
 mixin _SkillRaceClassInfoRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_skill_race_class_info';
+
   Future<void> destroySkillRaceClassInfo(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -95,5 +97,3 @@ mixin _SkillRaceClassInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_skill_race_class_info';

@@ -16,7 +16,7 @@ class ClassFileNameMatchRuleTest extends AnalysisRuleTest {
   @override
   String get testFileName => 'quest_flags.dart';
 
-  void test_namespaceClassMatchingName_doesNotReport() async {
+  void testNamespaceClassMatchingNameDoesNotReport() async {
     await assertNoDiagnostics(r'''
 abstract final class QuestFlags {
   static const flagOptions = 1;
@@ -24,7 +24,7 @@ abstract final class QuestFlags {
 ''');
   }
 
-  void test_namespaceClassWrongName_reports() async {
+  void testNamespaceClassWrongNameReports() async {
     await assertDiagnostics(
       r'''
 abstract final class Flags {
@@ -37,7 +37,7 @@ abstract final class Flags {
     );
   }
 
-  void test_regularClass_doesNotReport() async {
+  void testRegularClassDoesNotReport() async {
     await assertNoDiagnostics(r'''
 class FlagItem {
   final int value;
@@ -46,7 +46,7 @@ class FlagItem {
 ''');
   }
 
-  void test_singletonClass_doesNotReport() async {
+  void testSingletonClassDoesNotReport() async {
     await assertNoDiagnostics(r'''
 class QuestFlags {
   static final instance = QuestFlags._();

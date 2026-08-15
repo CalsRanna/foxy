@@ -3,6 +3,8 @@
 part of 'creature_on_kill_reputation_repository.dart';
 
 mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_onkill_reputation';
+
   Future<void> destroyCreatureOnKillReputation(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -97,5 +99,3 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     return builder.where('`creature_id`', key);
   }
 }
-
-const _table = 'creature_onkill_reputation';

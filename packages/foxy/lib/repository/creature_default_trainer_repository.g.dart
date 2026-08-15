@@ -3,6 +3,8 @@
 part of 'creature_default_trainer_repository.dart';
 
 mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_default_trainer';
+
   Future<void> destroyCreatureDefaultTrainer(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -97,5 +99,3 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     return builder.where('`CreatureId`', key);
   }
 }
-
-const _table = 'creature_default_trainer';

@@ -25,6 +25,8 @@ final class SpellFilter {
 }
 
 mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_spell';
+
   Future<int> copySpell(int key) async {
     final source = await getSpell(key);
     if (source == null) {
@@ -157,5 +159,3 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_spell';

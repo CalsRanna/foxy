@@ -75,7 +75,7 @@ class DialogUtil {
   /// Does not implicitly pop the stack top; callers should close temporary
   /// dialogs such as loading first.
   Future<void> alert({required String title, required String message}) async {
-    final context = router.navigatorKey.currentContext!;
+    final context = FoxyRouter.router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
     await show<void>(
@@ -103,7 +103,7 @@ class DialogUtil {
     String cancelText = '取消',
     bool destructive = false,
   }) async {
-    final context = router.navigatorKey.currentContext!;
+    final context = FoxyRouter.router.navigatorKey.currentContext!;
     final result = await show<bool>(
       context: context,
       builder: (context) {
@@ -134,11 +134,11 @@ class DialogUtil {
   }
 
   Future<void> dismiss() async {
-    await Navigator.maybePop(router.navigatorKey.currentContext!);
+    await Navigator.maybePop(FoxyRouter.router.navigatorKey.currentContext!);
   }
 
   void dismissAll() {
-    final context = router.navigatorKey.currentContext!;
+    final context = FoxyRouter.router.navigatorKey.currentContext!;
     if (!context.mounted) return;
     // Only close dialog routes (PopupRoute), never pop a business page.
     while (Navigator.of(context).canPop()) {
@@ -149,7 +149,7 @@ class DialogUtil {
   }
 
   void error(String error) {
-    final context = router.navigatorKey.currentContext!;
+    final context = FoxyRouter.router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
     // Do not implicitly pop the stack top: if callers stacked dialogs such
@@ -175,7 +175,7 @@ class DialogUtil {
   }
 
   void loading() {
-    final context = router.navigatorKey.currentContext!;
+    final context = FoxyRouter.router.navigatorKey.currentContext!;
     show(
       barrierDismissible: false,
       context: context,
@@ -195,7 +195,7 @@ class DialogUtil {
   }
 
   void success(String message) {
-    final context = router.navigatorKey.currentContext!;
+    final context = FoxyRouter.router.navigatorKey.currentContext!;
     ShadSonner.of(context).show(ShadToast(description: Text(message)));
   }
 }

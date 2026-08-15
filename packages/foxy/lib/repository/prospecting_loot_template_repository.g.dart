@@ -28,6 +28,8 @@ final class ProspectingLootTemplateFilter {
 }
 
 mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'prospecting_loot_template';
+
   Future<ProspectingLootTemplateKey> copyProspectingLootTemplate(
     ProspectingLootTemplateKey key,
   ) async {
@@ -175,5 +177,3 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'prospecting_loot_template';

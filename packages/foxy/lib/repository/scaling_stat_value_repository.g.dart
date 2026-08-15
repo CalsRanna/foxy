@@ -28,6 +28,8 @@ final class ScalingStatValueFilter {
 }
 
 mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_scaling_stat_values';
+
   Future<int> copyScalingStatValue(int key) async {
     final source = await getScalingStatValue(key);
     if (source == null) {
@@ -185,5 +187,3 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_scaling_stat_values';

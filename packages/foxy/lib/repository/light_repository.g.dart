@@ -28,6 +28,8 @@ final class LightFilter {
 }
 
 mixin _LightRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_light';
+
   Future<void> destroyLight(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -100,5 +102,3 @@ mixin _LightRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_light';

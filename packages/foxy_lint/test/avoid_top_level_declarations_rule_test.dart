@@ -12,7 +12,7 @@ class AvoidTopLevelDeclarationsRuleTest extends AnalysisRuleTest {
     super.setUp();
   }
 
-  void test_topLevelConst_reports() async {
+  void testTopLevelConstReports() async {
     await assertDiagnostics(
       r'''
 const kFoo = 1;
@@ -23,7 +23,7 @@ const kFoo = 1;
     );
   }
 
-  void test_topLevelFunction_reports() async {
+  void testTopLevelFunctionReports() async {
     await assertDiagnostics(
       r'''
 String formatFoo(int x) => '$x';
@@ -34,7 +34,7 @@ String formatFoo(int x) => '$x';
     );
   }
 
-  void test_main_doesNotReport() async {
+  void testMainDoesNotReport() async {
     await assertNoDiagnostics(r'''
 void main() {
   print('hello');
@@ -42,13 +42,13 @@ void main() {
 ''');
   }
 
-  void test_workerEntry_doesNotReport() async {
+  void testWorkerEntryDoesNotReport() async {
     await assertNoDiagnostics(r'''
 Future<void> runDbcImportWorker(dynamic args) async {}
 ''');
   }
 
-  void test_classMember_doesNotReport() async {
+  void testClassMemberDoesNotReport() async {
     await assertNoDiagnostics(r'''
 abstract final class QuestFlags {
   static const flagOptions = 1;

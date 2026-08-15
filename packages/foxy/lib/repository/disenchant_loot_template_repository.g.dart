@@ -28,6 +28,8 @@ final class DisenchantLootTemplateFilter {
 }
 
 mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'disenchant_loot_template';
+
   Future<DisenchantLootTemplateKey> copyDisenchantLootTemplate(
     DisenchantLootTemplateKey key,
   ) async {
@@ -175,5 +177,3 @@ mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'disenchant_loot_template';

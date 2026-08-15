@@ -21,6 +21,8 @@ final class SoundAmbienceFilter {
 }
 
 mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_sound_ambience';
+
   Future<void> destroySoundAmbience(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -103,5 +105,3 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_sound_ambience';

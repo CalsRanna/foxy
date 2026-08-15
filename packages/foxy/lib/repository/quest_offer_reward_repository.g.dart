@@ -3,6 +3,8 @@
 part of 'quest_offer_reward_repository.dart';
 
 mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
+  String get _table => 'quest_offer_reward';
+
   Future<void> destroyQuestOfferReward(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -85,5 +87,3 @@ mixin _QuestOfferRewardRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'quest_offer_reward';

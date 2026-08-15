@@ -21,6 +21,8 @@ final class DestructibleModelDataFilter {
 }
 
 mixin _DestructibleModelDataRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_destructible_model_data';
+
   Future<void> destroyDestructibleModelData(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -113,5 +115,3 @@ mixin _DestructibleModelDataRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_destructible_model_data';

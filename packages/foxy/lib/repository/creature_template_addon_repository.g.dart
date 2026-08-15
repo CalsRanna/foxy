@@ -3,6 +3,8 @@
 part of 'creature_template_addon_repository.dart';
 
 mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_template_addon';
+
   Future<void> destroyCreatureTemplateAddon(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -89,5 +91,3 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
-
-const _table = 'creature_template_addon';

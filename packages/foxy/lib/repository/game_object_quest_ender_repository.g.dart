@@ -3,6 +3,8 @@
 part of 'game_object_quest_ender_repository.dart';
 
 mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
+  String get _table => 'gameobject_questender';
+
   Future<GameObjectQuestEnderKey> copyGameObjectQuestEnder(
     GameObjectQuestEnderKey key,
   ) async {
@@ -131,5 +133,3 @@ mixin _GameObjectQuestEnderRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'gameobject_questender';

@@ -309,15 +309,15 @@ final class RepositoryReader {
     }
     // The table name is a single source of truth on the Entity annotation
     // (@FoxyFullEntity.table or the class-name derivation); the generated
-    // part declares `const _table`. A hand-written `_table` would silently
-    // duplicate — and could drift from — that source.
+    // mixin declares a `_table` getter. A hand-written `_table` would
+    // silently shadow — and could drift from — that source.
     if (sourceShape.declaresMember(cls, '_table')) {
       _fail(
         '$repositoryClassName hand-writes _table; the table name is '
             'generated from $entityClassName\'s @FoxyFullEntity.table.',
         element,
-        'Remove static const _table — the generated part declares '
-            'const _table.',
+        'Remove the _table member — the generated mixin declares '
+            'a _table getter.',
       );
     }
     // Locale-helper delegates need DbcLocaleRepositoryMixin's

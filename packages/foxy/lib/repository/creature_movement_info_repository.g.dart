@@ -21,6 +21,8 @@ final class CreatureMovementInfoFilter {
 }
 
 mixin _CreatureMovementInfoRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_creature_movement_info';
+
   Future<void> destroyCreatureMovementInfo(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -113,5 +115,3 @@ mixin _CreatureMovementInfoRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_creature_movement_info';

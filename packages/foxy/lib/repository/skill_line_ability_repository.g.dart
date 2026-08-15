@@ -3,6 +3,8 @@
 part of 'skill_line_ability_repository.dart';
 
 mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_skill_line_ability';
+
   Future<SkillLineAbilityKey> copySkillLineAbility(
     SkillLineAbilityKey key,
   ) async {
@@ -147,5 +149,3 @@ mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'foxy.dbc_skill_line_ability';

@@ -25,6 +25,8 @@ final class SpellItemEnchantmentConditionFilter {
 }
 
 mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_spell_item_enchantment_condition';
+
   Future<void> destroySpellItemEnchantmentCondition(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -119,5 +121,3 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_spell_item_enchantment_condition';

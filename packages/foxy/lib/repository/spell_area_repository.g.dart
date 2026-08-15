@@ -3,6 +3,8 @@
 part of 'spell_area_repository.dart';
 
 mixin _SpellAreaRepositoryMixin on RepositoryMixin {
+  String get _table => 'spell_area';
+
   Future<SpellAreaKey> copySpellArea(SpellAreaKey key) async {
     final source = await getSpellArea(key);
     if (source == null) {
@@ -151,5 +153,3 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'spell_area';

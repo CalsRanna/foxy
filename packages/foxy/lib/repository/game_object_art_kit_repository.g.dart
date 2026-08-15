@@ -25,6 +25,8 @@ final class GameObjectArtKitFilter {
 }
 
 mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_game_object_art_kit';
+
   Future<void> destroyGameObjectArtKit(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -115,5 +117,3 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_game_object_art_kit';

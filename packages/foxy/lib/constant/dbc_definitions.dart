@@ -207,6 +207,28 @@ abstract final class DbcDefinitions {
   static final Map<String, DbcDefinition> byFileName = Map.unmodifiable({
     for (final definition in all) definition.fileName.toLowerCase(): definition,
   });
+
+  /// Discovers all locale-field prefixes (e.g. `Name_lang`) from
+  /// [schema].
+  ///
+  /// Inferred by matching `*_lang_enUS` string columns; used by the
+  /// coverage-completeness tests.
+  static Set<String> discoverColumnPrefixes(DbcSchema schema) {
+    final prefixes = <String>{};
+    for (final field in schema.fields) {
+      if (!field.type.isString) continue;
+      const suffix = '_enUS';
+      if (!field.name.endsWith(suffix)) continue;
+      // Name_lang_enUS → Name_lang
+      final withoutLocale = field.name.substring(
+        0,
+        field.name.length - suffix.length,
+      );
+      if (!withoutLocale.endsWith('_lang')) continue;
+      prefixes.add(withoutLocale);
+    }
+    return prefixes;
+  }
 }
 
 /// A single DBC definition Foxy supports syncing.

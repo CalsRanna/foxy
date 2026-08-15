@@ -3,6 +3,8 @@
 part of 'quest_offer_reward_locale_repository.dart';
 
 mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'quest_offer_reward_locale';
+
   Future<void> destroyQuestOfferRewardLocale(
     QuestOfferRewardLocaleKey key,
   ) async {
@@ -96,5 +98,3 @@ mixin _QuestOfferRewardLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'quest_offer_reward_locale';

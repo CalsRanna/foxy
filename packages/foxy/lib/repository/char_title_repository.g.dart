@@ -25,6 +25,8 @@ final class CharTitleFilter {
 }
 
 mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_char_titles';
+
   Future<void> destroyCharTitle(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -116,5 +118,3 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_char_titles';

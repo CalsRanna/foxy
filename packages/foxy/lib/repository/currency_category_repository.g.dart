@@ -26,6 +26,8 @@ final class CurrencyCategoryFilter {
 
 mixin _CurrencyCategoryRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_currency_category';
+
   Future<void> destroyCurrencyCategory(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -127,5 +129,3 @@ mixin _CurrencyCategoryRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_currency_category';

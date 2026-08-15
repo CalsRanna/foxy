@@ -3,6 +3,8 @@
 part of 'npc_vendor_repository.dart';
 
 mixin _NpcVendorRepositoryMixin on RepositoryMixin {
+  String get _table => 'npc_vendor';
+
   Future<NpcVendorKey> copyNpcVendor(NpcVendorKey key) async {
     final source = await getNpcVendor(key);
     if (source == null) {
@@ -124,5 +126,3 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'npc_vendor';

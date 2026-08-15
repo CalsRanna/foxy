@@ -1,10 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:foxy/router/router.gr.dart';
 
-final router = FoxyRouter();
-
 @AutoRouterConfig()
 class FoxyRouter extends RootStackRouter {
+  static final router = FoxyRouter();
   @override
   RouteType get defaultRouteType {
     return RouteType.custom(

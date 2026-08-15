@@ -3,6 +3,8 @@
 part of 'spell_group_repository.dart';
 
 mixin _SpellGroupRepositoryMixin on RepositoryMixin {
+  String get _table => 'spell_group';
+
   Future<SpellGroupKey> copySpellGroup(SpellGroupKey key) async {
     final source = await getSpellGroup(key);
     if (source == null) {
@@ -121,5 +123,3 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'spell_group';

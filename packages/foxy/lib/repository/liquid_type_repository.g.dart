@@ -25,6 +25,8 @@ final class LiquidTypeFilter {
 }
 
 mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_liquid_type';
+
   Future<void> destroyLiquidType(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -105,5 +107,3 @@ mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_liquid_type';

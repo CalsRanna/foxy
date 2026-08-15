@@ -29,6 +29,8 @@ final class MailTemplateFilter {
 
 mixin _MailTemplateRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_mail_template';
+
   Future<void> destroyMailTemplate(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -122,5 +124,3 @@ mixin _MailTemplateRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_mail_template';

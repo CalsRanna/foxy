@@ -28,6 +28,8 @@ final class ItemTemplateFilter {
 }
 
 mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'item_template';
+
   Future<int> copyItemTemplate(int key) async {
     final source = await getItemTemplate(key);
     if (source == null) {
@@ -167,5 +169,3 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
-
-const _table = 'item_template';

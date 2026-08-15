@@ -3,6 +3,8 @@
 part of 'creature_template_resistance_repository.dart';
 
 mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_template_resistance';
+
   Future<CreatureTemplateResistanceKey> copyCreatureTemplateResistance(
     CreatureTemplateResistanceKey key,
   ) async {
@@ -156,5 +158,3 @@ mixin _CreatureTemplateResistanceRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'creature_template_resistance';

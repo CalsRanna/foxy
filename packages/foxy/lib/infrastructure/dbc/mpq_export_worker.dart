@@ -165,40 +165,92 @@ abstract final class MpqExportWorker {
       }
     }
   }
-}
 
-/// Atomic three-step replacement (target → .bak, tmp → target, drop .bak),
-/// the same pattern as DbcExportUtil's file commit.
-Future<void> _replaceFile({
-  required String targetPath,
-  required String temporaryPath,
-}) async {
-  final targetFile = File(targetPath);
-  final backupPath =
-      '$targetPath.foxy.${DateTime.now().microsecondsSinceEpoch}.bak';
-  final backupFile = File(backupPath);
-  final temporaryFile = File(temporaryPath);
+  /// Atomic three-step replacement (target → .bak, tmp → target, drop .bak),
+  /// the same pattern as DbcExportUtil's file commit.
+  static Future<void> _replaceFile({
+    required String targetPath,
+    required String temporaryPath,
+  }) async {
+    final targetFile = File(targetPath);
+    final backupPath =
+        '$targetPath.foxy.${DateTime.now().microsecondsSinceEpoch}.bak';
+    final backupFile = File(backupPath);
+    final temporaryFile = File(temporaryPath);
 
-  final hadTarget = await targetFile.exists();
-  if (hadTarget) await targetFile.rename(backupFile.path);
+    final hadTarget = await targetFile.exists();
+    if (hadTarget) await targetFile.rename(backupFile.path);
 
-  try {
-    await temporaryFile.rename(targetFile.path);
-  } catch (_) {
-    if (hadTarget && await backupFile.exists()) {
-      await backupFile.rename(targetFile.path);
-    }
-    rethrow;
-  }
-
-  if (await backupFile.exists()) {
     try {
-      await backupFile.delete();
+      await temporaryFile.rename(targetFile.path);
     } catch (_) {
-      // The target archive has been safely replaced; a leftover backup
-      // does not affect the result.
+      if (hadTarget && await backupFile.exists()) {
+        await backupFile.rename(targetFile.path);
+      }
+      rethrow;
+    }
+
+    if (await backupFile.exists()) {
+      try {
+        await backupFile.delete();
+      } catch (_) {
+        // The target archive has been safely replaced; a leftover backup
+        // does not affect the result.
+      }
     }
   }
+
+  static void _sendCount(
+    SendPort sendPort,
+    String fileName,
+    int completedFiles,
+    int totalFiles,
+    int processedRows,
+    int? totalRows,
+  ) {
+    sendPort.send((
+      'count',
+      fileName,
+      completedFiles,
+      totalFiles,
+      processedRows,
+      totalRows,
+    ));
+  }
+
+  static void _sendResult(
+    SendPort sendPort,
+    int completed,
+    int skipped,
+    List<Map<String, String?>> errors,
+    bool cancelled,
+  ) {
+    sendPort.send(('result', completed, skipped, errors, cancelled));
+  }
+
+  static void _sendStatus(
+    SendPort sendPort,
+    String stage,
+    String message, [
+    String? fileName,
+  ]) {
+    sendPort.send(('status', stage, message, fileName));
+  }
+
+  static Map<String, String?> _workerError({
+    String? tableName,
+    String? fileName,
+    required String stage,
+    required String message,
+  }) {
+    return {
+      'tableName': tableName,
+      'fileName': fileName,
+      'stage': stage,
+      'message': message,
+    };
+  }
+
 }
 
 /// Isolate entry point for MPQ-patch export: connects to MySQL, writes the
@@ -228,7 +280,7 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
 
   try {
     workerStage = 'scanning';
-    _sendStatus(sendPort, workerStage, '正在准备导出 MPQ...');
+    MpqExportWorker._sendStatus(sendPort, workerStage, '正在准备导出 MPQ...');
 
     final definitions = <DbcDefinition>[
       for (final table in tableNames)
@@ -236,7 +288,7 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
             (throw ValidationException('unknown DBC table: $table')),
     ];
     if (definitions.isEmpty) {
-      _sendResult(sendPort, 0, 0, const [], false);
+      MpqExportWorker._sendResult(sendPort, 0, 0, const [], false);
       return;
     }
 
@@ -259,9 +311,9 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
       loadRows: (table) => DbcExportWorker.loadRows(laconic!, table),
       mpqFilePath: mpqFilePath,
       isCancelled: () => cancelled,
-      onStatus: (stage, message) => _sendStatus(sendPort, stage, message),
+      onStatus: (stage, message) => MpqExportWorker._sendStatus(sendPort, stage, message),
       onProgress: (fileName, completedFiles, totalFiles, processed, total) {
-        _sendCount(
+        MpqExportWorker._sendCount(
           sendPort,
           fileName,
           completedFiles,
@@ -286,7 +338,7 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
       sendPort.send(('warning', missingRowOrder));
     }
 
-    _sendResult(
+    MpqExportWorker._sendResult(
       sendPort,
       summary.completed,
       summary.skipped,
@@ -294,65 +346,14 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
       cancelled,
     );
   } catch (error) {
-    _sendResult(sendPort, 0, 0, [
-      _workerError(stage: workerStage, message: 'Worker 错误: $error'),
+    MpqExportWorker._sendResult(sendPort, 0, 0, [
+      MpqExportWorker._workerError(stage: workerStage, message: 'Worker 错误: $error'),
     ], false);
   } finally {
     await laconic?.close();
     await cancelSubscription.cancel();
     cancelPort.close();
   }
-}
-
-void _sendCount(
-  SendPort sendPort,
-  String fileName,
-  int completedFiles,
-  int totalFiles,
-  int processedRows,
-  int? totalRows,
-) {
-  sendPort.send((
-    'count',
-    fileName,
-    completedFiles,
-    totalFiles,
-    processedRows,
-    totalRows,
-  ));
-}
-
-void _sendResult(
-  SendPort sendPort,
-  int completed,
-  int skipped,
-  List<Map<String, String?>> errors,
-  bool cancelled,
-) {
-  sendPort.send(('result', completed, skipped, errors, cancelled));
-}
-
-void _sendStatus(
-  SendPort sendPort,
-  String stage,
-  String message, [
-  String? fileName,
-]) {
-  sendPort.send(('status', stage, message, fileName));
-}
-
-Map<String, String?> _workerError({
-  String? tableName,
-  String? fileName,
-  required String stage,
-  required String message,
-}) {
-  return {
-    'tableName': tableName,
-    'fileName': fileName,
-    'stage': stage,
-    'message': message,
-  };
 }
 
 typedef MpqExportWorkerArgs = ({
@@ -391,9 +392,9 @@ Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
       directory: directory,
       mpqFilePath: mpqFilePath,
       isCancelled: () => cancelled,
-      onStatus: (stage, message) => _sendStatus(sendPort, stage, message),
+      onStatus: (stage, message) => MpqExportWorker._sendStatus(sendPort, stage, message),
       onProgress: (fileName, completedFiles, totalFiles, processed, total) {
-        _sendCount(
+        MpqExportWorker._sendCount(
           sendPort,
           fileName,
           completedFiles,
@@ -404,7 +405,7 @@ Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
       },
     );
 
-    _sendResult(
+    MpqExportWorker._sendResult(
       sendPort,
       summary.completed,
       summary.skipped,
@@ -412,8 +413,8 @@ Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
       cancelled,
     );
   } catch (error) {
-    _sendResult(sendPort, 0, 0, [
-      _workerError(stage: workerStage, message: 'Worker 错误: $error'),
+    MpqExportWorker._sendResult(sendPort, 0, 0, [
+      MpqExportWorker._workerError(stage: workerStage, message: 'Worker 错误: $error'),
     ], false);
   } finally {
     await cancelSubscription.cancel();

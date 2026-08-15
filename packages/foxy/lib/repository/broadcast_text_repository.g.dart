@@ -25,6 +25,8 @@ final class BroadcastTextFilter {
 }
 
 mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
+  String get _table => 'broadcast_text';
+
   Future<void> destroyBroadcastText(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -105,5 +107,3 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'broadcast_text';

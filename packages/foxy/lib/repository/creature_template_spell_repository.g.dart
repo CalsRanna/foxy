@@ -3,6 +3,8 @@
 part of 'creature_template_spell_repository.dart';
 
 mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_template_spell';
+
   Future<CreatureTemplateSpellKey> copyCreatureTemplateSpell(
     CreatureTemplateSpellKey key,
   ) async {
@@ -147,5 +149,3 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'creature_template_spell';

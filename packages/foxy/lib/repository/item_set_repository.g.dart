@@ -25,6 +25,8 @@ final class ItemSetFilter {
 }
 
 mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_item_set';
+
   Future<int> copyItemSet(int key) async {
     final source = await getItemSet(key);
     if (source == null) {
@@ -164,5 +166,3 @@ mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item_set';

@@ -29,6 +29,8 @@ final class ItemRandomPropertiesFilter {
 
 mixin _ItemRandomPropertiesRepositoryMixin
     on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_item_random_properties';
+
   Future<void> destroyItemRandomProperties(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -132,5 +134,3 @@ mixin _ItemRandomPropertiesRepositoryMixin
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item_random_properties';

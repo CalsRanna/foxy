@@ -3,28 +3,6 @@ import 'package:warcrafty/warcrafty.dart';
 
 /// DBC fixed language slots (matching warcrafty's `localeNames` order).
 class DbcLocale {
-  /// Discovers all locale-field prefixes (e.g. `Name_lang`) from
-  /// [DbcSchema].
-  ///
-  /// Inferred by matching `*_lang_enUS` string columns; used by the
-  /// coverage-completeness tests.
-  static Set<String> discoverColumnPrefixes(DbcSchema schema) {
-    final prefixes = <String>{};
-    for (final field in schema.fields) {
-      if (!field.type.isString) continue;
-      const suffix = '_enUS';
-      if (!field.name.endsWith(suffix)) continue;
-      // Name_lang_enUS → Name_lang
-      final withoutLocale = field.name.substring(
-        0,
-        field.name.length - suffix.length,
-      );
-      if (!withoutLocale.endsWith('_lang')) continue;
-      prefixes.add(withoutLocale);
-    }
-    return prefixes;
-  }
-
   static const enUS = DbcLocale(index: 0, code: 'enUS', label: '美式英语');
   static const koKR = DbcLocale(index: 1, code: 'koKR', label: '韩语');
   static const frFR = DbcLocale(index: 2, code: 'frFR', label: '法语');
@@ -104,20 +82,22 @@ class DbcLocaleFieldDefinition {
       throw ArgumentError('unknown DBC table: $tableName');
     }
     final schema = definition.schema;
-    for (final locale in DbcLocale.values) {
-      final column = '${columnPrefix}_${locale.code}';
-      final field = schema.getFieldByName(column);
-      if (field == null) {
-        throw ArgumentError(
-          'Schema ${schema.name} is missing locale column $column (prefix $columnPrefix)',
-        );
-      }
-      if (!field.type.isString) {
-        throw ArgumentError(
-          'Schema ${schema.name} column $column has type ${field.type}, expected string',
-        );
-      }
-    }
+    _requireStringColumn(schema, columnPrefix, DbcLocale.enUS);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.koKR);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.frFR);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.deDE);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.zhCN);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.zhTW);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.esES);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.esMX);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.ruRU);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.jaJP);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.ptPT);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.ptBR);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.itIT);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.unk1);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.unk2);
+    _requireStringColumn(schema, columnPrefix, DbcLocale.unk3);
     return DbcLocaleFieldDefinition._(
       tableName: tableName,
       columnPrefix: columnPrefix,
@@ -130,6 +110,26 @@ class DbcLocaleFieldDefinition {
     required this.columnPrefix,
     required this.label,
   });
+
+  /// Ensures one of the 16 language columns exists as a string column.
+  static void _requireStringColumn(
+    DbcSchema schema,
+    String columnPrefix,
+    DbcLocale locale,
+  ) {
+    final column = '${columnPrefix}_${locale.code}';
+    final field = schema.getFieldByName(column);
+    if (field == null) {
+      throw ArgumentError(
+        'Schema ${schema.name} is missing locale column $column (prefix $columnPrefix)',
+      );
+    }
+    if (!field.type.isString) {
+      throw ArgumentError(
+        'Schema ${schema.name} column $column has type ${field.type}, expected string',
+      );
+    }
+  }
 
   /// Physical column names of the 16 language columns (without Flags).
   List<String> get columnNames => [
@@ -180,6 +180,8 @@ extension DbcLocaleFieldValueListX on List<DbcLocaleFieldValue> {
   String get zhCN => valueOf('zhCN');
 
   String valueOf(String code) {
+    // Runtime-value lookup over the loaded rows, not a field expansion.
+    // ignore: foxy_lint/no_collection_loops
     for (final item in this) {
       if (item.locale.code == code) return item.value;
     }

@@ -28,6 +28,8 @@ final class GameObjectLootTemplateFilter {
 }
 
 mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'gameobject_loot_template';
+
   Future<GameObjectLootTemplateKey> copyGameObjectLootTemplate(
     GameObjectLootTemplateKey key,
   ) async {
@@ -175,5 +177,3 @@ mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'gameobject_loot_template';

@@ -28,6 +28,8 @@ final class GossipMenuFilter {
 }
 
 mixin _GossipMenuRepositoryMixin on RepositoryMixin {
+  String get _table => 'gossip_menu';
+
   Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
     final source = await getGossipMenu(key);
     if (source == null) {
@@ -146,5 +148,3 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'gossip_menu';

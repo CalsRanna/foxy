@@ -54,7 +54,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (!node.isStatic) return;
     for (final variable in node.fields.variables) {
       final name = variable.name.lexeme;
-      if (name.startsWith('k') && name.length > 1) {
+      // Only the `kFoo` convention is banned; plain words starting with
+      // `k` (e.g. `keepReleases`) are regular lowerCamelCase names.
+      if (RegExp(r'^k[A-Z]').hasMatch(name)) {
         rule.reportAtNode(variable);
       }
     }

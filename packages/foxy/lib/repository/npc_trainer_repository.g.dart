@@ -3,6 +3,8 @@
 part of 'npc_trainer_repository.dart';
 
 mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
+  String get _table => 'trainer_spell';
+
   Future<NpcTrainerKey> copyNpcTrainer(NpcTrainerKey key) async {
     final source = await getNpcTrainer(key);
     if (source == null) {
@@ -134,5 +136,3 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'trainer_spell';

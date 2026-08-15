@@ -25,6 +25,8 @@ final class AreaTableFilter {
 }
 
 mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
+  String get _table => 'foxy.dbc_area_table';
+
   Future<int> copyAreaTable(int key) async {
     final source = await getAreaTable(key);
     if (source == null) {
@@ -174,5 +176,3 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_area_table';

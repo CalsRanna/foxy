@@ -28,6 +28,8 @@ final class ItemVisualEffectFilter {
 }
 
 mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
+  String get _table => 'foxy.dbc_item_visual_effects';
+
   Future<void> destroyItemVisualEffect(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -118,5 +120,3 @@ mixin _ItemVisualEffectRepositoryMixin on RepositoryMixin {
     return builder.where('`ID`', key);
   }
 }
-
-const _table = 'foxy.dbc_item_visual_effects';

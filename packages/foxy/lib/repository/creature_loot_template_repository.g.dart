@@ -28,6 +28,8 @@ final class CreatureLootTemplateFilter {
 }
 
 mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
+  String get _table => 'creature_loot_template';
+
   Future<CreatureLootTemplateKey> copyCreatureLootTemplate(
     CreatureLootTemplateKey key,
   ) async {
@@ -188,5 +190,3 @@ mixin _CreatureLootTemplateRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'creature_loot_template';

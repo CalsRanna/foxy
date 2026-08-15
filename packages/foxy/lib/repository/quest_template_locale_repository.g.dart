@@ -3,6 +3,8 @@
 part of 'quest_template_locale_repository.dart';
 
 mixin _QuestTemplateLocaleRepositoryMixin on RepositoryMixin {
+  String get _table => 'quest_template_locale';
+
   Future<void> destroyQuestTemplateLocale(QuestTemplateLocaleKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -86,5 +88,3 @@ mixin _QuestTemplateLocaleRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'quest_template_locale';

@@ -3,6 +3,8 @@
 part of 'game_object_template_addon_repository.dart';
 
 mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
+  String get _table => 'gameobject_template_addon';
+
   Future<void> destroyGameObjectTemplateAddon(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
@@ -97,5 +99,3 @@ mixin _GameObjectTemplateAddonRepositoryMixin on RepositoryMixin {
     return builder.where('`entry`', key);
   }
 }
-
-const _table = 'gameobject_template_addon';

@@ -3,6 +3,8 @@
 part of 'player_create_info_spell_custom_repository.dart';
 
 mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
+  String get _table => 'playercreateinfo_spell_custom';
+
   Future<PlayerCreateInfoSpellCustomKey> copyPlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomKey key,
   ) async {
@@ -182,5 +184,3 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     return query;
   }
 }
-
-const _table = 'playercreateinfo_spell_custom';
