@@ -6,6 +6,7 @@ import 'package:foxy_lint/rules/avoid_top_level_declarations.dart';
 import 'package:foxy_lint/rules/class_file_name_match.dart';
 import 'package:foxy_lint/rules/entity_no_flutter_import.dart';
 import 'package:foxy_lint/rules/entity_scalar_only.dart';
+import 'package:foxy_lint/rules/min_table_column_width.dart';
 import 'package:foxy_lint/rules/no_chinese_throw.dart';
 import 'package:foxy_lint/rules/no_collection_loops.dart';
 import 'package:foxy_lint/rules/no_flex_readonly_in_view.dart';
@@ -36,6 +37,7 @@ class _FoxyLintPlugin extends Plugin {
       ..registerWarningRule(NoChineseThrow())
       ..registerWarningRule(AvoidTopLevelDeclarations())
       ..registerWarningRule(NoKPrefixedStaticMember())
-      ..registerWarningRule(ClassFileNameMatch());
+      ..registerWarningRule(ClassFileNameMatch())
+      ..registerWarningRule(MinTableColumnWidth());
   }
 }

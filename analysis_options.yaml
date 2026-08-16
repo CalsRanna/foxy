@@ -28,3 +28,4 @@ plugins:
       no_flex_in_view: true
       no_readonly_in_view: true
       no_chinese_throw: true
+      min_table_column_width: true

@@ -1,5 +1,6 @@
 name: foxy_lint
 description: "Foxy 的 analyzer 插件 — 项目专属 lint 规则(官方 analyzer 插件系统, Dart 3.10+)。"
+version: 0.1.0
 publish_to: none
 
 environment:
