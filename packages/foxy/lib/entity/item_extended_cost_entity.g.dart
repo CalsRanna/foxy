@@ -17,6 +17,14 @@ final class BriefItemExtendedCostEntity {
   final int itemCount2;
   final int itemCount3;
   final int itemCount4;
+  final String itemName0;
+  final String itemLocaleName0;
+  final String itemIcon0;
+  final int itemQuality0;
+  final String itemName1;
+  final String itemLocaleName1;
+  final String itemIcon1;
+  final int itemQuality1;
 
   const BriefItemExtendedCostEntity({
     this.id = 0,
@@ -33,6 +41,14 @@ final class BriefItemExtendedCostEntity {
     this.itemCount2 = 0,
     this.itemCount3 = 0,
     this.itemCount4 = 0,
+    this.itemName0 = '',
+    this.itemLocaleName0 = '',
+    this.itemIcon0 = '',
+    this.itemQuality0 = 0,
+    this.itemName1 = '',
+    this.itemLocaleName1 = '',
+    this.itemIcon1 = '',
+    this.itemQuality1 = 0,
   });
 
   factory BriefItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
@@ -107,6 +123,22 @@ final class BriefItemExtendedCostEntity {
           : json['ItemCount4'] == false
           ? 0
           : (json['ItemCount4'] as num?)?.toInt() ?? 0,
+      itemName0: json['itemName0']?.toString() ?? '',
+      itemLocaleName0: json['itemLocaleName0']?.toString() ?? '',
+      itemIcon0: json['itemIcon0']?.toString() ?? '',
+      itemQuality0: json['itemQuality0'] == true
+          ? 1
+          : json['itemQuality0'] == false
+          ? 0
+          : (json['itemQuality0'] as num?)?.toInt() ?? 0,
+      itemName1: json['itemName1']?.toString() ?? '',
+      itemLocaleName1: json['itemLocaleName1']?.toString() ?? '',
+      itemIcon1: json['itemIcon1']?.toString() ?? '',
+      itemQuality1: json['itemQuality1'] == true
+          ? 1
+          : json['itemQuality1'] == false
+          ? 0
+          : (json['itemQuality1'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -126,6 +158,14 @@ final class BriefItemExtendedCostEntity {
     itemCount2,
     itemCount3,
     itemCount4,
+    itemName0,
+    itemLocaleName0,
+    itemIcon0,
+    itemQuality0,
+    itemName1,
+    itemLocaleName1,
+    itemIcon1,
+    itemQuality1,
   ]);
 
   int get key => id;
@@ -147,7 +187,15 @@ final class BriefItemExtendedCostEntity {
             itemCount1 == other.itemCount1 &&
             itemCount2 == other.itemCount2 &&
             itemCount3 == other.itemCount3 &&
-            itemCount4 == other.itemCount4;
+            itemCount4 == other.itemCount4 &&
+            itemName0 == other.itemName0 &&
+            itemLocaleName0 == other.itemLocaleName0 &&
+            itemIcon0 == other.itemIcon0 &&
+            itemQuality0 == other.itemQuality0 &&
+            itemName1 == other.itemName1 &&
+            itemLocaleName1 == other.itemLocaleName1 &&
+            itemIcon1 == other.itemIcon1 &&
+            itemQuality1 == other.itemQuality1;
   }
 
   @override
@@ -166,7 +214,15 @@ final class BriefItemExtendedCostEntity {
         'itemCount1: $itemCount1, '
         'itemCount2: $itemCount2, '
         'itemCount3: $itemCount3, '
-        'itemCount4: $itemCount4'
+        'itemCount4: $itemCount4, '
+        'itemName0: $itemName0, '
+        'itemLocaleName0: $itemLocaleName0, '
+        'itemIcon0: $itemIcon0, '
+        'itemQuality0: $itemQuality0, '
+        'itemName1: $itemName1, '
+        'itemLocaleName1: $itemLocaleName1, '
+        'itemIcon1: $itemIcon1, '
+        'itemQuality1: $itemQuality1'
         ')';
   }
 }

@@ -10,7 +10,9 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/item_quality_color.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
@@ -121,13 +123,17 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
           width: 120,
           cell: (_, item) => Text(item.arenaPoints.toString()),
         ),
-        FoxyTableColumn.flex(
-          label: '物品列表',
-          cell: (_, item) => Text(
-            item.displayItems,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
+        _buildItemColumn('物品1', 0),
+        FoxyTableColumn.fixed(
+          label: '数量1',
+          width: 100,
+          cell: (_, item) => Text(item.displayItemCount(0)),
+        ),
+        _buildItemColumn('物品2', 1),
+        FoxyTableColumn.fixed(
+          label: '数量2',
+          width: 100,
+          cell: (_, item) => Text(item.displayItemCount(1)),
         ),
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
@@ -166,6 +172,31 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
+  }
+
+  /// Item-name column: icon + quality-colored name, or plain text when the
+  /// slot has no item (no empty icon placeholder).
+  FoxyTableColumn<BriefItemExtendedCostEntity> _buildItemColumn(
+    String label,
+    int index,
+  ) {
+    return FoxyTableColumn.flex(
+      label: label,
+      cell: (_, item) {
+        final itemId = index == 0 ? item.itemID0 : item.itemID1;
+        if (itemId == 0) {
+          return Text(item.displayItemName(index));
+        }
+        final qualityColor =
+            ItemQualityColor.colors[item.displayItemQuality(index)] ??
+                Colors.black;
+        return FoxyIconText(
+          iconPath: item.displayItemIcon(index),
+          name: item.displayItemName(index),
+          nameColor: qualityColor,
+        );
+      },
+    );
   }
 
   Future<void> _copy(int key) async {

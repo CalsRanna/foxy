@@ -5,13 +5,16 @@ part 'item_extended_cost_entity.g.dart';
 /// Extended cost
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('itemName0')
+@FoxyBriefField.text('itemLocaleName0')
+@FoxyBriefField.text('itemIcon0')
+@FoxyBriefField.integer('itemQuality0')
+@FoxyBriefField.text('itemName1')
+@FoxyBriefField.text('itemLocaleName1')
+@FoxyBriefField.text('itemIcon1')
+@FoxyBriefField.integer('itemQuality1')
 @FoxyFullEntity(table: 'foxy.dbc_item_extended_cost')
 class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
-  static String _appendDisplayItem(String current, int itemId, int count) {
-    if (itemId == 0) return current;
-    final value = '${itemId}x$count';
-    return current.isEmpty ? value : '$current, $value';
-  }
 
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)
@@ -99,33 +102,30 @@ class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
 }
 
 extension BriefItemExtendedCostEntityDisplay on BriefItemExtendedCostEntity {
-  String get displayItems {
-    var result = '';
-    result = ItemExtendedCostEntity._appendDisplayItem(
-      result,
-      itemID0,
-      itemCount0,
-    );
-    result = ItemExtendedCostEntity._appendDisplayItem(
-      result,
-      itemID1,
-      itemCount1,
-    );
-    result = ItemExtendedCostEntity._appendDisplayItem(
-      result,
-      itemID2,
-      itemCount2,
-    );
-    result = ItemExtendedCostEntity._appendDisplayItem(
-      result,
-      itemID3,
-      itemCount3,
-    );
-    result = ItemExtendedCostEntity._appendDisplayItem(
-      result,
-      itemID4,
-      itemCount4,
-    );
-    return result.isEmpty ? '-' : result;
+  /// Display name for the item at [index] (0 or 1): zhCN when available,
+  /// enUS otherwise; falls back to `#ID` when the item is not resolvable,
+  /// and `-` when there is no item.
+  String displayItemName(int index) {
+    final itemId = index == 0 ? itemID0 : itemID1;
+    if (itemId == 0) return '-';
+    final locale = index == 0 ? itemLocaleName0 : itemLocaleName1;
+    final name = index == 0 ? itemName0 : itemName1;
+    final resolved = locale.isNotEmpty ? locale : name;
+    return resolved.isNotEmpty ? resolved : '#$itemId';
   }
+
+  /// Count for the item at [index] (0 or 1); `-` when there is no item.
+  String displayItemCount(int index) {
+    final itemId = index == 0 ? itemID0 : itemID1;
+    if (itemId == 0) return '-';
+    return (index == 0 ? itemCount0 : itemCount1).toString();
+  }
+
+  /// Icon path for the item at [index] (0 or 1).
+  String displayItemIcon(int index) =>
+      index == 0 ? itemIcon0 : itemIcon1;
+
+  /// Quality for the item at [index] (0 or 1).
+  int displayItemQuality(int index) =>
+      index == 0 ? itemQuality0 : itemQuality1;
 }
