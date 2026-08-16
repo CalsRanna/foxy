@@ -261,27 +261,27 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       columns: [
         FoxyTableColumn.fixed(
           label: '区域',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.area.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '开始任务',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.questStart.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '结束任务',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.questEnd.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '光环',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.auraSpell.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '开始任务掩码',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.questStartStatusLabel),
         ),
         FoxyTableColumn.flex(

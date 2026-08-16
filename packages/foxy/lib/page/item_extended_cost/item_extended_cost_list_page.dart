@@ -126,13 +126,13 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
         _buildItemColumn('物品1', 0),
         FoxyTableColumn.fixed(
           label: '数量1',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.displayItemCount(0)),
         ),
         _buildItemColumn('物品2', 1),
         FoxyTableColumn.fixed(
           label: '数量2',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.displayItemCount(1)),
         ),
       ],

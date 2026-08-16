@@ -180,12 +180,12 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       columns: [
         FoxyTableColumn.fixed(
           label: '链接技能',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.spellEffect.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '类型',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.typeLabel),
         ),
         FoxyTableColumn.flex(

@@ -2780,12 +2780,12 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '层',
-        width: 80,
+        width: 120,
         text: (BriefTalentEntity row) => row.tierId.toString(),
       ),
       FoxyEntityPickerColumn(
         header: '列',
-        width: 80,
+        width: 120,
         text: (BriefTalentEntity row) => row.columnIndex.toString(),
       ),
       FoxyEntityPickerColumn(
@@ -2831,12 +2831,12 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '分类',
-        width: 100,
+        width: 120,
         text: (BriefTalentTabEntity row) => row.categoryEnumId.toString(),
       ),
       FoxyEntityPickerColumn(
         header: '页序',
-        width: 80,
+        width: 120,
         text: (BriefTalentTabEntity row) => row.orderIndex.toString(),
       ),
     ],

@@ -297,7 +297,7 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
         ),
         FoxyTableColumn.fixed(
           label: '获得方式',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(
             SkillLineConstants.skillAcquireMethodOptions[item.acquireMethod] ??
                 item.acquireMethod.toString(),

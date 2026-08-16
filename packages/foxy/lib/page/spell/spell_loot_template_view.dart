@@ -246,7 +246,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       columns: [
         FoxyTableColumn.fixed(
           label: '编号',
-          width: 80,
+          width: 120,
           cell: (_, item) => Text(item.item.toString()),
         ),
         // Previously `flexWidth * 0.4` (a leftover approximation that left
@@ -263,27 +263,27 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
         ),
         FoxyTableColumn.fixed(
           label: '关联',
-          width: 80,
+          width: 120,
           cell: (_, item) => Text(item.reference.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '几率',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text('${item.chance.toString()}%'),
         ),
         FoxyTableColumn.fixed(
           label: '需要任务',
-          width: 100,
+          width: 120,
           cell: (_, item) => Text(item.questRequired == 1 ? '需要' : '不需要'),
         ),
         FoxyTableColumn.fixed(
           label: '最小数量',
-          width: 80,
+          width: 120,
           cell: (_, item) => Text(item.minCount.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '最大数量',
-          width: 80,
+          width: 120,
           cell: (_, item) => Text(item.maxCount.toString()),
         ),
       ],
