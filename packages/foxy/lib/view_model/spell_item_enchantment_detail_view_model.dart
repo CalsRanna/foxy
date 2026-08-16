@@ -80,6 +80,7 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
 
   /// Other
   late final itemVisualController = registerController(IntFieldController());
+  late final nameLangFlagsController = registerController(IntFieldController());
   late final flagsController = registerController(FlagFieldController());
   late final srcItemIdController = registerController(IntFieldController());
   late final conditionIdController = registerController(IntFieldController());
@@ -162,7 +163,9 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
       if (originalKey == null) {
         // store returns the actual written key: a duplicate-key retry may
         // reallocate it, so persistedKey must reflect reality.
-        final storedKey = await _repository.storeSpellItemEnchantment(candidate);
+        final storedKey = await _repository.storeSpellItemEnchantment(
+          candidate,
+        );
         persistedKey.value = storedKey;
       } else {
         await _repository.updateSpellItemEnchantment(originalKey, candidate);
@@ -195,6 +198,7 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
     effectArg1Controller.init(entry.effectArg1);
     effectArg2Controller.init(entry.effectArg2);
     itemVisualController.init(entry.itemVisual);
+    nameLangFlagsController.init(entry.nameLangFlags);
     flagsController.init(entry.flags);
     srcItemIdController.init(entry.srcItemId);
     conditionIdController.init(entry.conditionId);
@@ -223,6 +227,7 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
       effectArg1: effectArg1Controller.collect(),
       effectArg2: effectArg2Controller.collect(),
       itemVisual: itemVisualController.collect(),
+      nameLangFlags: nameLangFlagsController.collect(),
       flags: flagsController.collect(),
       srcItemId: srcItemIdController.collect(),
       conditionId: conditionIdController.collect(),

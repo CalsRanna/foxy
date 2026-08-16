@@ -155,6 +155,13 @@ class SpellItemEnchantmentView extends StatelessWidget {
         controller: viewModel.minLevelController,
       ),
     );
+    final nameLangFlagsInput = FoxyFormItem(
+      label: '名称语言标志',
+      child: FoxyNumberInput<int>(
+        placeholder: 'Name_lang_Flags',
+        controller: viewModel.nameLangFlagsController,
+      ),
+    );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 16),
@@ -226,7 +233,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
                   Expanded(child: requiredSkillIdInput),
                   Expanded(child: requiredSkillRankInput),
                   Expanded(child: minLevelInput),
-                  const Expanded(child: SizedBox()),
+                  Expanded(child: nameLangFlagsInput),
                 ],
               ),
             ],

@@ -13,6 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'spell_loot_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(selects: {'questRequired'})
+@FoxyLinkedListViewModel(selects: {'questRequired'}, flags: {'lootMode'})
 class SpellLootTemplateLinkedListViewModel
     with FieldControllerMixin, _SpellLootTemplateLinkedListViewModelMixin {}

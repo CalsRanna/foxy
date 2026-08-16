@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/game_object_loot_template_linked_list_view_model.dart';
@@ -7,6 +8,7 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
@@ -218,8 +220,10 @@ class _GameObjectLootTemplateViewState
               Expanded(
                 child: FoxyFormItem(
                   label: '掉落模式',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyFlagPicker(
                     controller: viewModel.lootModeController,
+                    flags: CreatureFlags.lootModeFlagOptions,
+                    title: '掉落模式',
                     placeholder: 'LootMode',
                   ),
                 ),

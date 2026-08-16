@@ -30,7 +30,7 @@ mixin _SpellLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
   late final questRequiredController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final lootModeController = registerController(IntFieldController());
+  late final lootModeController = registerController(FlagFieldController());
   late final groupIdController = registerController(IntFieldController());
   late final minCountController = registerController(IntFieldController());
   late final maxCountController = registerController(IntFieldController());

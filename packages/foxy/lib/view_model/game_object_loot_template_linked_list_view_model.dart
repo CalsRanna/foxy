@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 
 part 'game_object_loot_template_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel()
+@FoxyLinkedListViewModel(flags: {'lootMode'})
 class GameObjectLootTemplateLinkedListViewModel
     with
         FieldControllerMixin,
