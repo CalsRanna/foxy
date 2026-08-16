@@ -255,6 +255,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.copy, size: 16),
               onPressed: () {
                 viewModel.selectedKey.value = equip.key;

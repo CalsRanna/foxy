@@ -100,6 +100,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
                     child: Text('编辑'),
                   ),
                   ShadContextMenuItem(
+                    enabled: !viewModel.submitting.value,
                     leading: Icon(LucideIcons.copy, size: 16),
                     onPressed: () => _copy(item.key),
                     child: Text('复制'),

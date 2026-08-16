@@ -68,7 +68,7 @@ class AchievementView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.factionController,
         options: AchievementConstants.achievementFactionOptions,
-        placeholder: const Text('Faction'),
+        placeholder: 'Faction',
       ),
     );
     final instanceIdInput = FoxyFormItem(

@@ -100,7 +100,7 @@ class GameObjectTemplateView extends StatelessWidget {
                         child: FoxyShadSelect<int>(
                           controller: viewModel.typeController,
                           options: GameObjectConstants.gameObjectTypeOptions,
-                          placeholder: const Text('type'),
+                          placeholder: 'type',
                         ),
                       ),
                     ),
@@ -249,7 +249,7 @@ class GameObjectTemplateView extends StatelessWidget {
       IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
         controller: controllers.selectController,
         options: options,
-        placeholder: Text(column),
+        placeholder: column,
       ),
       IntegerFlagsFieldSpec(:final flags) => FoxyFlagPicker(
         controller: controllers.flagController,

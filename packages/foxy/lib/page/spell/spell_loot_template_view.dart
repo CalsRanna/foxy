@@ -61,7 +61,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedKey.value != null;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
@@ -122,7 +122,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: const Text('QuestRequired'),
+                    placeholder: 'QuestRequired',
                   ),
                 ),
               ),

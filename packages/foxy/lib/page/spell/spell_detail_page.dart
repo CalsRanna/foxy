@@ -18,6 +18,11 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class SpellDetailPage extends StatefulWidget {
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
+
   final int? spellKey;
 
   const SpellDetailPage({super.key, this.spellKey});
@@ -41,17 +46,18 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
         Watch((_) {
           final key = viewModel.persistedKey.value;
           final spellId = key ?? 0;
+          const tabs = [
+            Text('基本信息'),
+            Text('奖励系数'),
+            Text('自定义属性'),
+            Text('区域技能'),
+            Text('技能组'),
+            Text('链接技能'),
+            Text('技能排行'),
+            Text('技能掉落'),
+          ];
           return FoxyTab(
-            tabs: const [
-              Text('基本信息'),
-              Text('奖励系数'),
-              Text('自定义属性'),
-              Text('区域技能'),
-              Text('技能组'),
-              Text('链接技能'),
-              Text('技能排行'),
-              Text('技能掉落'),
-            ],
+            tabs: tabs,
             contents: [
               SpellView(viewModel: viewModel),
               SpellBonusDataView(
@@ -74,9 +80,10 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
                 spellId: spellId,
               ),
             ],
-            disabledIndexes: key == null
-                ? const {1, 2, 3, 4, 5, 6, 7}
-                : const {},
+            disabledIndexes: SpellDetailPage.disabledTabIndexes(
+              key,
+              tabs.length,
+            ),
           );
         }),
       ],

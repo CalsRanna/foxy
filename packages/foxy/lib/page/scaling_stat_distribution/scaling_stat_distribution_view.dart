@@ -40,7 +40,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId0Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID0'),
+        placeholder: 'StatID0',
       ),
     );
     final bonus0Input = FoxyFormItem(
@@ -56,7 +56,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId1Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID1'),
+        placeholder: 'StatID1',
       ),
     );
     final bonus1Input = FoxyFormItem(
@@ -72,7 +72,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId2Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID2'),
+        placeholder: 'StatID2',
       ),
     );
     final bonus2Input = FoxyFormItem(
@@ -88,7 +88,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId3Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID3'),
+        placeholder: 'StatID3',
       ),
     );
     final bonus3Input = FoxyFormItem(
@@ -104,7 +104,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId4Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID4'),
+        placeholder: 'StatID4',
       ),
     );
     final bonus4Input = FoxyFormItem(
@@ -120,7 +120,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId5Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID5'),
+        placeholder: 'StatID5',
       ),
     );
     final bonus5Input = FoxyFormItem(
@@ -136,7 +136,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId6Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID6'),
+        placeholder: 'StatID6',
       ),
     );
     final bonus6Input = FoxyFormItem(
@@ -152,7 +152,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId7Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID7'),
+        placeholder: 'StatID7',
       ),
     );
     final bonus7Input = FoxyFormItem(
@@ -168,7 +168,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId8Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID8'),
+        placeholder: 'StatID8',
       ),
     );
     final bonus8Input = FoxyFormItem(
@@ -184,7 +184,7 @@ class ScalingStatDistributionView extends StatelessWidget {
         controller: viewModel.statId9Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
-        placeholder: const Text('StatID9'),
+        placeholder: 'StatID9',
       ),
     );
     final bonus9Input = FoxyFormItem(

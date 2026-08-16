@@ -250,7 +250,7 @@ class _NpcTextViewState extends State<NpcTextView> {
                 child: FoxyShadSelect<int>(
                   controller: languageController,
                   options: GossipMenuOptionConstants.npcTextLanguages,
-                  placeholder: Text('lang$index'),
+                  placeholder: 'lang$index',
                 ),
               ),
             ),

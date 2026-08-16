@@ -198,7 +198,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.mechanicController,
         options: SpellEnums.spellMechanicOptions,
-        placeholder: const Text('Mechanic'),
+        placeholder: 'Mechanic',
       ),
     );
     final defenseTypeInput = FoxyFormItem(
@@ -206,7 +206,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.defenseTypeController,
         options: SpellEnums.spellDmgClassOptions,
-        placeholder: const Text('DefenseType'),
+        placeholder: 'DefenseType',
       ),
     );
     final dispelTypeInput = FoxyFormItem(
@@ -214,7 +214,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.dispelTypeController,
         options: SpellEnums.spellDispelTypeOptions,
-        placeholder: const Text('DispelType'),
+        placeholder: 'DispelType',
       ),
     );
     final preventionTypeInput = FoxyFormItem(
@@ -222,7 +222,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.preventionTypeController,
         options: SpellEnums.spellPreventionTypeOptions,
-        placeholder: const Text('PreventionType'),
+        placeholder: 'PreventionType',
       ),
     );
 
@@ -324,7 +324,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.targetCreatureTypeController,
         options: CreatureEnums.creatureTypeOptions,
-        placeholder: const Text('TargetCreatureType'),
+        placeholder: 'TargetCreatureType',
       ),
     );
     final targetsInput = FoxyFormItem(
@@ -357,7 +357,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.casterAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: const Text('CasterAuraState'),
+        placeholder: 'CasterAuraState',
       ),
     );
     final targetAuraStateInput = FoxyFormItem(
@@ -365,7 +365,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.targetAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: const Text('TargetAuraState'),
+        placeholder: 'TargetAuraState',
       ),
     );
     final spellMissileIDInput = FoxyFormItem(
@@ -421,7 +421,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.powerTypeController,
         options: SpellEnums.spellPowerTypeOptions,
-        placeholder: const Text('PowerType'),
+        placeholder: 'PowerType',
       ),
     );
     final runeCostIDInput = FoxyFormItem(
@@ -599,7 +599,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.spellClassSetController,
         options: SpellEnums.spellFamilyNameOptions,
-        placeholder: const Text('SpellClassSet'),
+        placeholder: 'SpellClassSet',
       ),
     );
 
@@ -612,7 +612,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.equippedItemClassController,
         options: SpellEnums.spellItemClassOptions,
-        placeholder: const Text('EquippedItemClass'),
+        placeholder: 'EquippedItemClass',
       ),
     );
     final equippedItemSubclassInput = FoxyFormItem(
@@ -806,7 +806,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.minReputationController,
         options: SpellEnums.spellReputationRankOptions,
-        placeholder: const Text('MinReputation'),
+        placeholder: 'MinReputation',
       ),
     );
     final spellPriorityInput = FoxyFormItem(
@@ -886,7 +886,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.excludeCasterAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: const Text('ExcludeCasterAuraState'),
+        placeholder: 'ExcludeCasterAuraState',
       ),
     );
     final excludeTargetAuraStateInput = FoxyFormItem(
@@ -894,7 +894,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.excludeTargetAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: const Text('ExcludeTargetAuraState'),
+        placeholder: 'ExcludeTargetAuraState',
       ),
     );
     final excludeCasterAuraSpellInput = FoxyFormItem(
@@ -1465,7 +1465,7 @@ class SpellView extends StatelessWidget {
                   child: FoxyShadSelect<int>(
                     controller: effCtrl,
                     options: SpellEnums.spellEffectOptions,
-                    placeholder: const Text('Effect'),
+                    placeholder: 'Effect',
                   ),
                 ),
               ),
@@ -1507,7 +1507,7 @@ class SpellView extends StatelessWidget {
                   child: FoxyShadSelect<int>(
                     controller: mechanicCtrl,
                     options: SpellEnums.spellMechanicOptions,
-                    placeholder: const Text('Mechanic'),
+                    placeholder: 'Mechanic',
                   ),
                 ),
               ),
@@ -1526,7 +1526,7 @@ class SpellView extends StatelessWidget {
                   child: FoxyShadSelect<int>(
                     controller: auraCtrl,
                     options: SpellEnums.spellAuraTypeOptions,
-                    placeholder: const Text('Aura'),
+                    placeholder: 'Aura',
                   ),
                 ),
               ),
@@ -1559,7 +1559,7 @@ class SpellView extends StatelessWidget {
                   child: FoxyShadSelect<int>(
                     controller: targetACtrl,
                     options: SpellEnums.spellImplicitTargetOptions,
-                    placeholder: const Text('TargetA'),
+                    placeholder: 'TargetA',
                   ),
                 ),
               ),
@@ -1569,7 +1569,7 @@ class SpellView extends StatelessWidget {
                   child: FoxyShadSelect<int>(
                     controller: targetBCtrl,
                     options: SpellEnums.spellImplicitTargetOptions,
-                    placeholder: const Text('TargetB'),
+                    placeholder: 'TargetB',
                   ),
                 ),
               ),
@@ -1868,7 +1868,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
       return FoxyShadSelect<int>(
         controller: _selectController!,
         options: (widget.options! as _MiscValueDropdown).items,
-        placeholder: const Text('选择...'),
+        placeholder: '选择...',
       );
     }
     if (widget.options is _MiscValueEntityPicker) {

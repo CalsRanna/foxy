@@ -119,7 +119,7 @@ class _DisenchantLootTemplateViewState
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: const Text('QuestRequired'),
+                    placeholder: 'QuestRequired',
                   ),
                 ),
               ),

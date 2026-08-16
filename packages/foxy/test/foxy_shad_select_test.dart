@@ -15,7 +15,7 @@ void main() {
           child: FoxyShadSelect<int>(
             controller: controller,
             options: const {1: '这是一个很长的下拉选项'},
-            placeholder: const Text('请选择'),
+            placeholder: '请选择',
           ),
         ),
       ),
@@ -40,7 +40,7 @@ void main() {
         home: FoxyShadSelect<int>(
           controller: controller,
           options: const {1: '选项 A', 2: '选项 B'},
-          placeholder: const Text('请选择'),
+          placeholder: '请选择',
         ),
       ),
     );
@@ -62,7 +62,7 @@ void main() {
         home: FoxyShadSelect<int>(
           controller: controller,
           options: const {0: '选项 0', 1: '选项 1'},
-          placeholder: const Text('请选择'),
+          placeholder: '请选择',
         ),
       ),
     );
@@ -86,7 +86,7 @@ void main() {
         home: FoxyShadSelect<int>(
           controller: controller,
           options: const {1: '苹果', 2: '香蕉', 3: '菠萝'},
-          placeholder: const Text('请选择'),
+          placeholder: '请选择',
         ),
       ),
     );
@@ -114,7 +114,7 @@ void main() {
         home: FoxyShadSelect<int>(
           controller: controller,
           options: const {1: '苹果', 21: '香蕉'},
-          placeholder: const Text('请选择'),
+          placeholder: '请选择',
         ),
       ),
     );
@@ -145,7 +145,7 @@ void main() {
         home: FoxyShadSelect<int>(
           controller: controller,
           options: const {1: '苹果', 2: '香蕉', 3: '菠萝'},
-          placeholder: const Text('请选择'),
+          placeholder: '请选择',
         ),
       ),
     );
@@ -173,7 +173,7 @@ void main() {
         home: FoxyShadSelect<int>(
           controller: controller,
           options: const {1: '苹果', 2: '香蕉', 3: '菠萝'},
-          placeholder: const Text('请选择'),
+          placeholder: '请选择',
         ),
       ),
     );

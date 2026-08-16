@@ -23,8 +23,8 @@ class FoxyShadSelect<T> extends StatefulWidget {
   /// The options map where key is the value and value is the display text
   final Map<T, String> options;
 
-  /// The placeholder widget to show when no option is selected
-  final Widget placeholder;
+  /// The placeholder text to show when no option is selected
+  final String? placeholder;
 
   /// Optional minimum width for the select dropdown
   final double? minWidth;
@@ -39,7 +39,7 @@ class FoxyShadSelect<T> extends StatefulWidget {
     super.key,
     required this.controller,
     required this.options,
-    required this.placeholder,
+    this.placeholder,
     this.minWidth,
     this.maxHeight,
     this.searchPlaceholder,
@@ -65,7 +65,7 @@ class _FoxyShadSelectState<T> extends State<FoxyShadSelect<T>> {
         softWrap: false,
         overflow: TextOverflow.ellipsis,
       ),
-      placeholder: widget.placeholder,
+      placeholder: Text(widget.placeholder ?? ''),
       minWidth: widget.minWidth,
       maxHeight: widget.maxHeight,
       onSearchChanged: _onSearchChanged,

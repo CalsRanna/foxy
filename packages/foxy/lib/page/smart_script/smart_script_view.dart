@@ -55,7 +55,7 @@ class SmartScriptView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.sourceTypeController,
                       options: SmartScriptConstants.sourceTypes,
-                      placeholder: const Text('source_type'),
+                      placeholder: 'source_type',
                     ),
                   ),
                   _numberItem('ID', 'id', viewModel.idController),
@@ -86,7 +86,7 @@ class SmartScriptView extends StatelessWidget {
                       options: SmartScriptConstants.eventTypesForSource(
                         viewModel.selectedSourceType.value,
                       ),
-                      placeholder: const Text('event_type'),
+                      placeholder: 'event_type',
                     ),
                   ),
                   FoxyFormItem(
@@ -160,7 +160,7 @@ class SmartScriptView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.actionTypeController,
                       options: SmartScriptConstants.actionTypes,
-                      placeholder: const Text('action_type'),
+                      placeholder: 'action_type',
                     ),
                   ),
                   _parameterItem(
@@ -208,7 +208,7 @@ class SmartScriptView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.targetTypeController,
                       options: SmartScriptConstants.targetTypes,
-                      placeholder: const Text('target_type'),
+                      placeholder: 'target_type',
                     ),
                   ),
                   _parameterItem(
@@ -321,7 +321,7 @@ class SmartScriptView extends StatelessWidget {
       IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
         controller: controllers.selectController,
         options: options,
-        placeholder: Text(column),
+        placeholder: column,
       ),
       IntegerFlagsFieldSpec(:final flags) => FoxyFlagPicker(
         controller: controllers.flagController,

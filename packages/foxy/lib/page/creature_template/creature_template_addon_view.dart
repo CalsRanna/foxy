@@ -100,7 +100,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                           controller:
                               viewModel.visibilityDistanceTypeController,
                           options: CreatureEnums.visibilityDistanceTypeOptions,
-                          placeholder: const Text('visibilityDistanceType'),
+                          placeholder: 'visibilityDistanceType',
                         ),
                       ),
                     ),

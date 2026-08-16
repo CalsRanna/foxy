@@ -325,7 +325,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
               controller: argumentController.selectController,
               options: SpellItemEnchantmentConstants
                   .spellItemEnchantmentSchoolOptions,
-              placeholder: Text('EffectArg$slot'),
+              placeholder: 'EffectArg$slot',
             ),
           );
         }
@@ -336,7 +336,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
               controller: argumentController.selectController,
               options:
                   SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
-              placeholder: Text('EffectArg$slot'),
+              placeholder: 'EffectArg$slot',
             ),
           );
         }
@@ -361,7 +361,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
         controller: controller,
         options:
             SpellItemEnchantmentConstants.spellItemEnchantmentEffectTypeOptions,
-        placeholder: Text('Effect$slot'),
+        placeholder: 'Effect$slot',
       ),
     );
   }

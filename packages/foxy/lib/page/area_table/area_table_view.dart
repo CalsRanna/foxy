@@ -83,7 +83,7 @@ class AreaTableView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.factionGroupMaskController,
         options: AreaTableConstants.areaTeamOptions,
-        placeholder: const Text('FactionGroupMask'),
+        placeholder: 'FactionGroupMask',
       ),
     );
     final explorationLevelInput = FoxyFormItem(

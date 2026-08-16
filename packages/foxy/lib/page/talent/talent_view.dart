@@ -55,7 +55,7 @@ class TalentView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.flagsController,
         options: TalentConstants.talentAddToSpellBookOptions,
-        placeholder: const Text('Flags'),
+        placeholder: 'Flags',
       ),
     );
     final requiredSpellIdInput = FoxyFormItem(

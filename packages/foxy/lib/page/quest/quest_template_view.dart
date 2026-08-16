@@ -46,7 +46,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyShadSelect<int>(
                 controller: vm.questTypeController,
                 options: QuestEnums.questMethodOptions,
-                placeholder: const Text('QuestType'),
+                placeholder: 'QuestType',
               ),
             ),
           ),
@@ -428,7 +428,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyShadSelect<int>(
                 controller: vm.rewardXpDifficultyController,
                 options: QuestEnums.questRewardDifficultyOptions,
-                placeholder: const Text('RewardXPDifficulty'),
+                placeholder: 'RewardXPDifficulty',
               ),
             ),
           ),
@@ -447,7 +447,7 @@ class QuestTemplateView extends StatelessWidget {
               child: FoxyShadSelect<int>(
                 controller: vm.rewardMoneyDifficultyController,
                 options: QuestEnums.questRewardDifficultyOptions,
-                placeholder: const Text('RewardMoneyDifficulty'),
+                placeholder: 'RewardMoneyDifficulty',
               ),
             ),
           ),

@@ -87,7 +87,7 @@ class _CreatureTemplateResistanceViewState
                   child: FoxyShadSelect<int>(
                     controller: viewModel.schoolController,
                     options: CreatureEnums.resistanceSchoolOptions,
-                    placeholder: const Text('School'),
+                    placeholder: 'School',
                   ),
                 ),
               ),
@@ -222,6 +222,7 @@ class _CreatureTemplateResistanceViewState
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.copy, size: 16),
               onPressed: () {
                 viewModel.selectedKey.value = resistance.key;

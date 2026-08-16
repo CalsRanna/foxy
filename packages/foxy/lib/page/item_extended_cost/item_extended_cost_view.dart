@@ -48,7 +48,7 @@ class ItemExtendedCostView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.arenaBracketController,
         options: ItemExtendedCostConstants.arenaSlotOptions,
-        placeholder: const Text('ArenaBracket'),
+        placeholder: 'ArenaBracket',
       ),
     );
 

@@ -39,7 +39,7 @@ class PlayerCreateInfoView extends StatelessWidget {
                       child: FoxyShadSelect<int>(
                         controller: viewModel.raceController,
                         options: PlayerCreateInfoConstants.playerRaceOptions,
-                        placeholder: const Text('race'),
+                        placeholder: 'race',
                       ),
                     ),
                   ),
@@ -49,7 +49,7 @@ class PlayerCreateInfoView extends StatelessWidget {
                       child: FoxyShadSelect<int>(
                         controller: viewModel.classController,
                         options: PlayerCreateInfoConstants.playerClassOptions,
-                        placeholder: const Text('class'),
+                        placeholder: 'class',
                       ),
                     ),
                   ),

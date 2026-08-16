@@ -18,6 +18,11 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class QuestTemplateDetailPage extends StatefulWidget {
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
+
   final int? questTemplateKey;
 
   const QuestTemplateDetailPage({super.key, this.questTemplateKey});
@@ -42,17 +47,18 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
         Watch((_) {
           final key = viewModel.persistedKey.value;
           final questId = key ?? 0;
+          const tabs = [
+            Text('任务模板'),
+            Text('模板补充'),
+            Text('提交物品'),
+            Text('发放奖励'),
+            Text('开始生物'),
+            Text('结束生物'),
+            Text('开始物体'),
+            Text('结束物体'),
+          ];
           return FoxyTab(
-            tabs: const [
-              Text('任务模板'),
-              Text('模板补充'),
-              Text('提交物品'),
-              Text('发放奖励'),
-              Text('开始生物'),
-              Text('结束生物'),
-              Text('开始物体'),
-              Text('结束物体'),
-            ],
+            tabs: tabs,
             contents: [
               QuestTemplateView(
                 key: ValueKey('main-$key'),
@@ -87,9 +93,10 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
                 questId: questId,
               ),
             ],
-            disabledIndexes: key == null
-                ? const {1, 2, 3, 4, 5, 6, 7}
-                : const {},
+            disabledIndexes: QuestTemplateDetailPage.disabledTabIndexes(
+              key,
+              tabs.length,
+            ),
           );
         }),
       ],

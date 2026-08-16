@@ -80,7 +80,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.unitClassController,
         options: CreatureEnums.unitClassOptions,
-        placeholder: const Text('unit_class'),
+        placeholder: 'unit_class',
       ),
     );
     final rankInput = FoxyFormItem(
@@ -88,7 +88,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.rankController,
         options: CreatureEnums.rankOptions,
-        placeholder: const Text('rank'),
+        placeholder: 'rank',
       ),
     );
     final racialLeaderInput = FoxyFormItem(
@@ -96,7 +96,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.racialLeaderController,
         options: CreatureEnums.booleanOptions,
-        placeholder: const Text('RacialLeader'),
+        placeholder: 'RacialLeader',
       ),
     );
     final factionInput = FoxyFormItem(
@@ -112,7 +112,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.familyController,
         options: CreatureEnums.creatureFamilyOptions,
-        placeholder: const Text('family'),
+        placeholder: 'family',
       ),
     );
     final typeInput = FoxyFormItem(
@@ -120,7 +120,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.typeController,
         options: CreatureEnums.creatureTypeOptions,
-        placeholder: const Text('type'),
+        placeholder: 'type',
       ),
     );
     final regenerateHealthInput = FoxyFormItem(
@@ -128,7 +128,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.regenHealthController,
         options: CreatureEnums.booleanOptions,
-        placeholder: const Text('RegenHealth'),
+        placeholder: 'RegenHealth',
       ),
     );
     final petSpellDataIdInput = FoxyFormItem(
@@ -193,7 +193,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.expController,
         options: CreatureEnums.expansionOptions,
-        placeholder: const Text('exp'),
+        placeholder: 'exp',
       ),
     );
 
@@ -281,7 +281,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.damageSchoolController,
         options: CreatureEnums.damageSchoolOptions,
-        placeholder: const Text('dmgschool'),
+        placeholder: 'dmgschool',
       ),
     );
     final damageModifierInput = FoxyFormItem(
@@ -461,7 +461,7 @@ class CreatureTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.movementTypeController,
         options: CreatureEnums.movementTypeOptions,
-        placeholder: const Text('movementType'),
+        placeholder: 'movementType',
       ),
     );
     final hoverHeightInput = FoxyFormItem(

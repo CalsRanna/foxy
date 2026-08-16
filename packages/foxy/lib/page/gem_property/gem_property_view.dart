@@ -55,7 +55,7 @@ class GemPropertyView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.typeController,
         options: GemPropertyConstants.gemPropertyColorOptions,
-        placeholder: const Text('Type'),
+        placeholder: 'Type',
       ),
     );
 

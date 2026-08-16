@@ -58,7 +58,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedKey.value != null;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
@@ -95,7 +95,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.typeController,
                     options: SpellEnums.spellLinkedTypeOptions,
-                    placeholder: const Text('type'),
+                    placeholder: 'type',
                   ),
                 ),
               ),
@@ -216,6 +216,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.copy, size: 16),
               onPressed: () => _copy(viewModel.selectedKey.value!),
               child: Text('复制'),

@@ -111,7 +111,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.qualityController,
         options: ItemEnums.itemQualityOptions,
-        placeholder: const Text('Quality'),
+        placeholder: 'Quality',
       ),
     );
     final classInput = FoxyFormItem(
@@ -119,7 +119,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.classNameController,
         options: _itemClassOptions,
-        placeholder: const Text('class'),
+        placeholder: 'class',
       ),
     );
     final subclassInput = FoxyFormItem(
@@ -128,7 +128,7 @@ class ItemTemplateView extends StatelessWidget {
         (_) => FoxyShadSelect<int>(
           controller: viewModel.subclassController,
           options: _currentSubclassOptions,
-          placeholder: const Text('subclass'),
+          placeholder: 'subclass',
         ),
       ),
     );
@@ -144,7 +144,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.materialController,
         options: ItemEnums.itemMaterialOptions,
-        placeholder: const Text('Material'),
+        placeholder: 'Material',
       ),
     );
     final displayIdInput = FoxyFormItem(
@@ -160,7 +160,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.inventoryTypeController,
         options: _inventoryTypeOptions,
-        placeholder: const Text('InventoryType'),
+        placeholder: 'InventoryType',
       ),
     );
     final sheathInput = FoxyFormItem(
@@ -168,7 +168,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.sheathController,
         options: ItemEnums.itemSheathOptions,
-        placeholder: const Text('sheath'),
+        placeholder: 'sheath',
       ),
     );
     final bondingInput = FoxyFormItem(
@@ -176,7 +176,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.bondingController,
         options: ItemEnums.itemBondingOptions,
-        placeholder: const Text('bonding'),
+        placeholder: 'bonding',
       ),
     );
 
@@ -290,7 +290,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.foodTypeController,
         options: ItemEnums.itemFoodTypeOptions,
-        placeholder: const Text('FoodType'),
+        placeholder: 'FoodType',
       ),
     );
     final bagFamilyInput = FoxyFormItem(
@@ -498,7 +498,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.ammoTypeController,
         options: _ammoTypeOptions,
-        placeholder: const Text('ammo_type'),
+        placeholder: 'ammo_type',
       ),
     );
     final dmgType1Input = FoxyFormItem(
@@ -506,7 +506,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.dmgType1Controller,
         options: CreatureEnums.damageSchoolOptions,
-        placeholder: const Text('dmg_type1'),
+        placeholder: 'dmg_type1',
       ),
     );
     final dmgMin1Input = FoxyFormItem(
@@ -528,7 +528,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.dmgType2Controller,
         options: CreatureEnums.damageSchoolOptions,
-        placeholder: const Text('dmg_type2'),
+        placeholder: 'dmg_type2',
       ),
     );
     final dmgMin2Input = FoxyFormItem(
@@ -768,7 +768,7 @@ class ItemTemplateView extends StatelessWidget {
       label: '声望等级',
       child: FoxyShadSelect<int>(
         options: ItemEnums.itemReputationRankOptions,
-        placeholder: const Text('RequiredReputationRank'),
+        placeholder: 'RequiredReputationRank',
         controller: viewModel.requiredReputationRankController,
       ),
     );
@@ -952,7 +952,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.pageMaterialController,
         options: _pageMaterialOptions,
-        placeholder: const Text('PageMaterial'),
+        placeholder: 'PageMaterial',
       ),
     );
     final languageIdInput = FoxyFormItem(
@@ -960,7 +960,7 @@ class ItemTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.languageIdController,
         options: _languageOptions,
-        placeholder: const Text('LanguageID'),
+        placeholder: 'LanguageID',
       ),
     );
     final scriptNameInput = FoxyFormItem(
@@ -1175,7 +1175,7 @@ class ItemTemplateView extends StatelessWidget {
               child: FoxyShadSelect<int>(
                 controller: triggerController,
                 options: ItemEnums.itemSpellTriggerOptions,
-                placeholder: Text('spelltrigger_$number'),
+                placeholder: 'spelltrigger_$number',
               ),
             ),
           ),
@@ -1252,7 +1252,7 @@ class ItemTemplateView extends StatelessWidget {
             child: FoxyShadSelect<int>(
               controller: firstTypeController,
               options: ItemEnums.itemStatTypeOptions,
-              placeholder: Text('stat_type$firstNumber'),
+              placeholder: 'stat_type$firstNumber',
             ),
           ),
         ),
@@ -1271,7 +1271,7 @@ class ItemTemplateView extends StatelessWidget {
             child: FoxyShadSelect<int>(
               controller: secondTypeController,
               options: ItemEnums.itemStatTypeOptions,
-              placeholder: Text('stat_type$secondNumber'),
+              placeholder: 'stat_type$secondNumber',
             ),
           ),
         ),

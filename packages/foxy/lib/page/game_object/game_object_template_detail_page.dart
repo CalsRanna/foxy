@@ -14,6 +14,11 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class GameObjectTemplateDetailPage extends StatefulWidget {
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
+
   final int? gameObjectTemplateKey;
 
   const GameObjectTemplateDetailPage({super.key, this.gameObjectTemplateKey});
@@ -32,6 +37,7 @@ class _GameObjectTemplateDetailPageState
     return Watch((_) {
       final key = viewModel.persistedKey.value;
       final entry = key;
+      const tabs = [Text('游戏对象模板'), Text('模板补充'), Text('任务物品'), Text('物品掉落')];
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -40,12 +46,7 @@ class _GameObjectTemplateDetailPageState
             child: FoxyHeader('游戏对象详情'),
           ),
           FoxyTab(
-            tabs: const [
-              Text('游戏对象模板'),
-              Text('模板补充'),
-              Text('任务物品'),
-              Text('物品掉落'),
-            ],
+            tabs: tabs,
             contents: [
               GameObjectTemplateView(viewModel: viewModel),
               GameObjectTemplateAddonView(
@@ -61,7 +62,10 @@ class _GameObjectTemplateDetailPageState
                 linkKey: entry ?? 0,
               ),
             ],
-            disabledIndexes: key == null ? const {1, 2, 3} : const {},
+            disabledIndexes: GameObjectTemplateDetailPage.disabledTabIndexes(
+              key,
+              tabs.length,
+            ),
           ),
         ],
       );

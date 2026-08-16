@@ -116,7 +116,7 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: const Text('QuestRequired'),
+                    placeholder: 'QuestRequired',
                   ),
                 ),
               ),

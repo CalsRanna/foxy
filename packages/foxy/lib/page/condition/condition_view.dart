@@ -55,7 +55,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.sourceModeController,
                       options: ConditionDetailViewModel.modeOptions,
-                      placeholder: const Text('SourceTypeOrReferenceId'),
+                      placeholder: 'SourceTypeOrReferenceId',
                     ),
                   ),
                   FoxyFormItem(
@@ -69,7 +69,7 @@ class ConditionView extends StatelessWidget {
                             controller: viewModel.sourceTypeController,
                             options:
                                 ConditionSourceTypes.conditionSourceTypeLabels,
-                            placeholder: const Text('SourceTypeOrReferenceId'),
+                            placeholder: 'SourceTypeOrReferenceId',
                           ),
                   ),
                   _sourceGroupItem(
@@ -102,7 +102,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.conditionModeController,
                       options: ConditionDetailViewModel.modeOptions,
-                      placeholder: const Text('ConditionTypeOrReference'),
+                      placeholder: 'ConditionTypeOrReference',
                     ),
                   ),
                   FoxyFormItem(
@@ -116,7 +116,7 @@ class ConditionView extends StatelessWidget {
                         : FoxyShadSelect<int>(
                             controller: viewModel.conditionTypeController,
                             options: ConditionType.conditionTypeLabels,
-                            placeholder: const Text('ConditionTypeOrReference'),
+                            placeholder: 'ConditionTypeOrReference',
                           ),
                   ),
                   FoxyFormItem(
@@ -124,7 +124,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.conditionTargetController,
                       options: _targetOptions(sourceType),
-                      placeholder: const Text('ConditionTarget'),
+                      placeholder: 'ConditionTarget',
                     ),
                   ),
                   FoxyFormItem(
@@ -132,7 +132,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.negativeConditionController,
                       options: ConditionValueConfig.conditionBooleanOptions,
-                      placeholder: const Text('NegativeCondition'),
+                      placeholder: 'NegativeCondition',
                     ),
                   ),
                 ),
@@ -165,7 +165,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.errorTypeController,
                       options: ConditionErrorTypes.conditionErrorTypeOptions,
-                      placeholder: const Text('ErrorType'),
+                      placeholder: 'ErrorType',
                       maxHeight: 360,
                     ),
                   ),
@@ -174,7 +174,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.errorTextIdController,
                       options: ConditionErrorTypes.conditionCustomErrorOptions,
-                      placeholder: const Text('ErrorTextId'),
+                      placeholder: 'ErrorTextId',
                       maxHeight: 360,
                     ),
                   ),
@@ -322,7 +322,7 @@ class ConditionView extends StatelessWidget {
         child: FoxyShadSelect<int>(
           controller: viewModel.sourceGroupController.selectController,
           options: const {0: '生物', 1: '游戏对象'},
-          placeholder: const Text('SourceGroup'),
+          placeholder: 'SourceGroup',
         ),
       );
     }
@@ -354,7 +354,7 @@ class ConditionView extends StatelessWidget {
         child: FoxyShadSelect<int>(
           controller: viewModel.sourceIdController.selectController,
           options: SmartScriptConstants.sourceTypes,
-          placeholder: const Text('SourceId'),
+          placeholder: 'SourceId',
         ),
       );
     }
@@ -385,7 +385,7 @@ class ConditionView extends StatelessWidget {
       IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
         controller: controllers.selectController,
         options: options,
-        placeholder: Text(column),
+        placeholder: column,
       ),
       IntegerFlagsFieldSpec(:final flags) => FoxyFlagPicker(
         controller: controllers.flagController,

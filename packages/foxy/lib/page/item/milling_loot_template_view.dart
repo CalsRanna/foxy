@@ -118,7 +118,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: const Text('QuestRequired'),
+                    placeholder: 'QuestRequired',
                   ),
                 ),
               ),

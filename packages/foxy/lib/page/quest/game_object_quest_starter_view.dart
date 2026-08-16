@@ -56,7 +56,7 @@ class _GameObjectQuestStarterViewState
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedKey.value != null;
+    final isEditing = viewModel.editingKey.value != null;
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(

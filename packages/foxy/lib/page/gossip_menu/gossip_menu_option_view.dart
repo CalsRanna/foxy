@@ -97,7 +97,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.optionTypeController,
                     options: GossipMenuOptionConstants.gossipOptionTypes,
-                    placeholder: const Text('OptionType'),
+                    placeholder: 'OptionType',
                   ),
                 ),
               ),
@@ -113,7 +113,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.optionIconController,
                     options: GossipMenuOptionConstants.gossipOptionIcons,
-                    placeholder: const Text('OptionIcon'),
+                    placeholder: 'OptionIcon',
                   ),
                 ),
               ),
@@ -160,7 +160,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.boxCodedController,
                     options: GossipMenuOptionConstants.gossipBooleanOptions,
-                    placeholder: const Text('BoxCoded'),
+                    placeholder: 'BoxCoded',
                   ),
                 ),
               ),
@@ -354,6 +354,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.copy, size: 16),
               onPressed: () => _copy(o.key),
               child: Text('复制'),

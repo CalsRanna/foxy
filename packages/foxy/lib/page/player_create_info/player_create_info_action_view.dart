@@ -136,7 +136,7 @@ class _PlayerCreateInfoActionViewState
                     child: FoxyShadSelect<int>(
                       controller: viewModel.raceController,
                       options: PlayerCreateInfoConstants.playerRaceOptions,
-                      placeholder: const Text('race'),
+                      placeholder: 'race',
                     ),
                   ),
                 ),
@@ -146,7 +146,7 @@ class _PlayerCreateInfoActionViewState
                     child: FoxyShadSelect<int>(
                       controller: viewModel.classController,
                       options: PlayerCreateInfoConstants.playerClassOptions,
-                      placeholder: const Text('class'),
+                      placeholder: 'class',
                     ),
                   ),
                 ),
@@ -177,7 +177,7 @@ class _PlayerCreateInfoActionViewState
                       controller: viewModel.typeController,
                       options: PlayerCreateInfoConstants
                           .playerActionButtonTypeOptions,
-                      placeholder: const Text('type'),
+                      placeholder: 'type',
                     ),
                   ),
                 ),

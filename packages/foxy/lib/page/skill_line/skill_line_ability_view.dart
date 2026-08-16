@@ -61,7 +61,7 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedKey.value != null;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
@@ -97,7 +97,7 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.acquireMethodController,
                     options: SkillLineConstants.skillAcquireMethodOptions,
-                    placeholder: const Text('AcquireMethod'),
+                    placeholder: 'AcquireMethod',
                   ),
                 ),
               ),
@@ -345,6 +345,7 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.copy, size: 16),
               onPressed: () => _copy(viewModel.selectedKey.value!),
               child: Text('复制'),

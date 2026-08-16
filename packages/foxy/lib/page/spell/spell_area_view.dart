@@ -172,7 +172,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.genderController,
                     options: SpellEnums.spellAreaGenderOptions,
-                    placeholder: const Text('gender'),
+                    placeholder: 'gender',
                   ),
                 ),
               ),
@@ -188,7 +188,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.autocastController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: const Text('autocast'),
+                    placeholder: 'autocast',
                   ),
                 ),
               ),

@@ -210,7 +210,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                       child: FoxyShadSelect<int>(
                         controller: viewModel.raceController,
                         options: PlayerCreateInfoConstants.playerRaceOptions,
-                        placeholder: const Text('race'),
+                        placeholder: 'race',
                       ),
                     ),
                   ),
@@ -220,7 +220,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                       child: FoxyShadSelect<int>(
                         controller: viewModel.classController,
                         options: PlayerCreateInfoConstants.playerClassOptions,
-                        placeholder: const Text('class'),
+                        placeholder: 'class',
                       ),
                     ),
                   ),

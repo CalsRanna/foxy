@@ -54,7 +54,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedKey.value != null;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
@@ -174,6 +174,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.copy, size: 16),
               onPressed: () => _copy(viewModel.selectedKey.value!),
               child: Text('复制'),

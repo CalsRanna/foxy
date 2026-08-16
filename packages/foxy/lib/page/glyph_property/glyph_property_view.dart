@@ -44,7 +44,7 @@ class GlyphPropertyView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.glyphSlotFlagsController,
         options: GlyphPropertyConstants.glyphPropertySlotTypeOptions,
-        placeholder: const Text('GlyphSlotFlags'),
+        placeholder: 'GlyphSlotFlags',
       ),
     );
     final spellIconIdInput = FoxyFormItem(

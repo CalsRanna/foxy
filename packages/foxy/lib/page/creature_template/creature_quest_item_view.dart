@@ -221,6 +221,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.copy, size: 16),
               onPressed: () {
                 viewModel.selectedKey.value = questItem.key;

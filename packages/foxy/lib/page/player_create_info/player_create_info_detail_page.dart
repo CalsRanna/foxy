@@ -17,6 +17,11 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class PlayerCreateInfoDetailPage extends StatefulWidget {
+  static Set<int> disabledTabIndexes(PlayerCreateInfoKey? key, int tabCount) {
+    if (key != null) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
+
   final PlayerCreateInfoKey? playerCreateInfoKey;
 
   const PlayerCreateInfoDetailPage({super.key, this.playerCreateInfoKey});
@@ -33,6 +38,14 @@ class _PlayerCreateInfoDetailPageState
   @override
   Widget build(BuildContext context) => Watch((_) {
     final key = viewModel.persistedKey.value;
+    const tabs = [
+      Text('出生信息'),
+      Text('动作按钮'),
+      Text('起始物品'),
+      Text('初始技能'),
+      Text('自定义法术'),
+      Text('登录施法'),
+    ];
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -41,14 +54,7 @@ class _PlayerCreateInfoDetailPageState
           child: FoxyHeader('出生信息详情'),
         ),
         FoxyTab(
-          tabs: const [
-            Text('出生信息'),
-            Text('动作按钮'),
-            Text('起始物品'),
-            Text('初始技能'),
-            Text('自定义法术'),
-            Text('登录施法'),
-          ],
+          tabs: tabs,
           contents: [
             PlayerCreateInfoView(viewModel: viewModel),
             PlayerCreateInfoActionView(
@@ -69,7 +75,10 @@ class _PlayerCreateInfoDetailPageState
               playerClass: key?.class_,
             ),
           ],
-          disabledIndexes: key == null ? const {1, 2, 3, 4, 5} : const {},
+          disabledIndexes: PlayerCreateInfoDetailPage.disabledTabIndexes(
+            key,
+            tabs.length,
+          ),
         ),
       ],
     );
