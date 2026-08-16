@@ -64,7 +64,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editingKey.value != null;
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 720),
+      constraints: const BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

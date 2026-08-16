@@ -121,7 +121,7 @@ class _SettingPageState extends State<SettingPage> {
         Align(
           alignment: Alignment.topLeft,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
+            constraints: const BoxConstraints(maxWidth: DialogUtil.width),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

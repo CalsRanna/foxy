@@ -125,7 +125,7 @@ class _PlayerCreateInfoActionViewState
       descriptionPinned: true,
       constraints: DialogUtil.constraints(dialogContext),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 720),
+        constraints: BoxConstraints(maxWidth: DialogUtil.width),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,

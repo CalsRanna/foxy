@@ -199,7 +199,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
         descriptionPinned: true,
         constraints: DialogUtil.constraints(dialogContext),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 720),
+          constraints: const BoxConstraints(maxWidth: DialogUtil.width),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 16,

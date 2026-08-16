@@ -59,7 +59,7 @@ class _SpellRankViewState extends State<SpellRankView> {
     final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 720),
+      constraints: BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -149,7 +149,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     required bool isEditing,
   }) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 720),
+      constraints: BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
