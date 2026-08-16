@@ -274,7 +274,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
         FoxyTableColumn.fixed(
           label: '需要任务',
           width: 120,
-          cell: (_, item) => Text(item.questRequired == 1 ? '需要' : '不需要'),
+          cell: (_, item) => Text(item.questRequired == 1 ? '是' : '否'),
         ),
         FoxyTableColumn.fixed(
           label: '最小数量',

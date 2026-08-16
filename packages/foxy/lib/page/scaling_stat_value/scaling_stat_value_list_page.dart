@@ -129,7 +129,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
           cell: (_, item) => Text(item.tertiaryBudget.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '肩膀预算',
+          label: '肩部预算',
           cell: (_, item) => Text(item.shoulderBudget.toString()),
         ),
         FoxyTableColumn.flex(

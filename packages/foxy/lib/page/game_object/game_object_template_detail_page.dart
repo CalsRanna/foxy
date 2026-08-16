@@ -42,7 +42,7 @@ class _GameObjectTemplateDetailPageState
           FoxyTab(
             tabs: const [
               Text('游戏对象模板'),
-              Text('模版补充'),
+              Text('模板补充'),
               Text('任务物品'),
               Text('物品掉落'),
             ],

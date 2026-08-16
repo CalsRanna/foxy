@@ -121,8 +121,7 @@ class _ReferenceLootTemplateListPageState
         FoxyTableColumn.flex(
           label: '物品/行标识',
           cell: (context, template) {
-            final qualityColor =
-                ItemQualityColor.colors[template.itemQuality] ?? Colors.white;
+            final qualityColor = ItemQualityColor.of(template.itemQuality);
             return Text(
               template.reference == 0
                   ? (template.displayName.isEmpty

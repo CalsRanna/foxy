@@ -210,8 +210,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
         FoxyTableColumn.flex(
           label: '物品名称',
           cell: (_, vendor) {
-            final qualityColor =
-                ItemQualityColor.colors[vendor.itemQuality] ?? Colors.white;
+            final qualityColor = ItemQualityColor.of(vendor.itemQuality);
             return Text(
               vendor.displayName,
               style: TextStyle(color: qualityColor),

@@ -122,7 +122,7 @@ class _PlayerCreateInfoCastSpellViewState
         FoxyTableColumn.fixed(
           label: '备注',
           width: 360,
-          cell: (_, row) => Text(row.note ?? 'NULL'),
+          cell: (_, row) => Text(row.note ?? ''),
         ),
       ],
       onRowDoubleTap: (row) async {

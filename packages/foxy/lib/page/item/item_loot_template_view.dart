@@ -256,8 +256,7 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
         FoxyTableColumn.flex(
           label: '物品名称',
           cell: (context, loot) {
-            final qualityColor =
-                ItemQualityColor.colors[loot.itemQuality] ?? Colors.white;
+            final qualityColor = ItemQualityColor.of(loot.itemQuality);
             return loot.reference != 0
                 ? Text(
                     '关联掉落',

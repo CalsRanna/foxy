@@ -313,7 +313,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(const ShadToast(description: Text('模版补充数据已保存')));
+      ).show(const ShadToast(description: Text('模板补充数据已保存')));
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

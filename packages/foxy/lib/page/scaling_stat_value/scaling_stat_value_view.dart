@@ -55,7 +55,7 @@ class ScalingStatValueView extends StatelessWidget {
       ),
     );
     final rangedBudgetInput = FoxyFormItem(
-      label: '远程预算',
+      label: '远程武器预算',
       child: FoxyNumberInput<int>(
         placeholder: 'RangedBudget',
         controller: viewModel.rangedBudgetController,
