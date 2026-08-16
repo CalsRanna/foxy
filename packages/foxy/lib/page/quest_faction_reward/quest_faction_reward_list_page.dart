@@ -116,43 +116,43 @@ class _QuestFactionRewardListPageState
           cell: (_, item) => Text(item.id.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 0 声望值',
+          label: '难度 0 声望值',
           cell: (_, item) => Text(item.difficulty0.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 1 声望值',
+          label: '难度 1 声望值',
           cell: (_, item) => Text(item.difficulty1.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 2 声望值',
+          label: '难度 2 声望值',
           cell: (_, item) => Text(item.difficulty2.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 3 声望值',
+          label: '难度 3 声望值',
           cell: (_, item) => Text(item.difficulty3.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 4 声望值',
+          label: '难度 4 声望值',
           cell: (_, item) => Text(item.difficulty4.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 5 声望值',
+          label: '难度 5 声望值',
           cell: (_, item) => Text(item.difficulty5.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 6 声望值',
+          label: '难度 6 声望值',
           cell: (_, item) => Text(item.difficulty6.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 7 声望值',
+          label: '难度 7 声望值',
           cell: (_, item) => Text(item.difficulty7.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 8 声望值',
+          label: '难度 8 声望值',
           cell: (_, item) => Text(item.difficulty8.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '索引 9 声望值',
+          label: '难度 9 声望值',
           cell: (_, item) => Text(item.difficulty9.toString()),
         ),
       ],
@@ -166,6 +166,12 @@ class _QuestFactionRewardListPageState
               leading: Icon(LucideIcons.squarePen, size: 16),
               onPressed: () => _navigateToDetail(key: item.key),
               child: Text('编辑'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(item.key),
+              child: Text('复制'),
             ),
             ShadContextMenuItem(
               enabled: !viewModel.submitting.value,
@@ -203,6 +209,23 @@ class _QuestFactionRewardListPageState
     } catch (error) {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
+    }
+  }
+
+  Future<void> _copy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：${FoxyExceptions.message(error)}');
     }
   }
 

@@ -149,6 +149,12 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
             ),
             ShadContextMenuItem(
               enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(item.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
               leading: Icon(LucideIcons.trash, size: 16),
               onPressed: () => _destroy(item.key),
               child: Text('删除'),
@@ -183,6 +189,23 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     } catch (error) {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
+    }
+  }
+
+  Future<void> _copy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：${FoxyExceptions.message(error)}');
     }
   }
 
