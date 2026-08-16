@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/npc_text_linked_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -403,9 +404,7 @@ class _NpcTextViewState extends State<NpcTextView> {
       await viewModel.initSignals(linkKey: widget.textId);
     } catch (error) {
       if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
+      DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
     }
   }
 

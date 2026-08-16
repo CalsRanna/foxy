@@ -59,6 +59,8 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
               ),
             ],
           ),
+          if (viewModel.errorMessage.value != null)
+            FoxyInlineError(message: viewModel.errorMessage.value),
           _buildTable(),
         ],
       ),
@@ -104,31 +106,25 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
       shrinkWrap: true,
       rows: rows,
       columns: [
-        FoxyTableColumn.fixed(
+        FoxyTableColumn.flex(
           label: '种族掩码',
-          width: 150,
           cell: (_, row) => Text(row.raceMaskLabel),
         ),
-        FoxyTableColumn.fixed(
+        FoxyTableColumn.flex(
           label: '职业掩码',
-          width: 150,
           cell: (_, row) => Text(row.classMaskLabel),
         ),
         FoxyTableColumn.fixed(
           label: '技能',
-          width: 150,
+          width: 120,
           cell: (_, row) => Text(row.skill.toString()),
         ),
         FoxyTableColumn.fixed(
           label: '阶数',
-          width: 150,
+          width: 120,
           cell: (_, row) => Text(row.rank.toString()),
         ),
-        FoxyTableColumn.fixed(
-          label: '备注',
-          width: 280,
-          cell: (_, row) => Text(row.comment),
-        ),
+        FoxyTableColumn.flex(label: '备注', cell: (_, row) => Text(row.comment)),
       ],
       onRowDoubleTap: (row) => _showEditDialog(row),
       onRowSecondaryTapDownWithDetails: (row, details) {
@@ -155,7 +151,7 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
   Future<void> _destroy(PlayerCreateInfoSkillKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
       confirmText: '删除',
       destructive: true,
     );

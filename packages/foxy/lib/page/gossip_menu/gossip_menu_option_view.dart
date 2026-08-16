@@ -62,6 +62,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
+    final isEditing = viewModel.editingKey.value != null;
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 720),
       child: Column(
@@ -270,7 +271,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                     ).show(const ShadToast(description: Text('保存成功')));
                     Navigator.of(dialogContext).pop();
                   },
-                  child: Text('保存'),
+                  child: Text(isEditing ? '更新' : '保存'),
                 ),
               ),
             ],
@@ -282,7 +283,6 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
 
   Widget _buildList() {
     final createBtn = ShadButton(
-      leading: Icon(LucideIcons.plus, size: 16),
       onPressed: _showCreateDialog,
       child: Text('新增'),
     );
@@ -371,17 +371,14 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
 
     return Padding(
       padding: const EdgeInsets.only(top: 16),
-      child: ShadCard(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: Column(
-          spacing: 16,
-          children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
-            toolbar,
-            table,
-          ],
-        ),
+      child: Column(
+        spacing: 16,
+        children: [
+          if (viewModel.errorMessage.value != null)
+            FoxyInlineError(message: viewModel.errorMessage.value),
+          toolbar,
+          table,
+        ],
       ),
     );
   }
@@ -389,7 +386,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   Future<void> _copy(GossipMenuOptionKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
-      description: '确认复制该选项？',
+      description: '确定要复制这条记录吗？',
       confirmText: '复制',
     );
     if (!confirmed) return;
@@ -428,7 +425,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   Future<void> _destroy(GossipMenuOptionKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
-      description: '将永久删除该选项，确认继续？',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
       confirmText: '删除',
       destructive: true,
     );

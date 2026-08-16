@@ -287,6 +287,12 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   }
 
   Future<void> _copy(CreatureEquipTemplateKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
     try {
       await viewModel.copy(key);
       if (!mounted) return;
@@ -300,7 +306,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   Future<void> _destroy(CreatureEquipTemplateKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
       confirmText: '删除',
       destructive: true,
     );

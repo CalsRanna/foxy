@@ -63,6 +63,8 @@ class _PlayerCreateInfoSpellCustomViewState
               ),
             ],
           ),
+          if (viewModel.errorMessage.value != null)
+            FoxyInlineError(message: viewModel.errorMessage.value),
           _buildTable(),
         ],
       ),
@@ -150,7 +152,7 @@ class _PlayerCreateInfoSpellCustomViewState
   Future<void> _destroy(PlayerCreateInfoSpellCustomKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
       confirmText: '删除',
       destructive: true,
     );

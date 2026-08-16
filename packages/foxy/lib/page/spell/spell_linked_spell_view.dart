@@ -6,8 +6,9 @@ import 'package:foxy/view_model/spell_linked_spell_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
@@ -71,7 +72,8 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '触发法术',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
                     controller: viewModel.spellTriggerController,
                     placeholder: 'spell_trigger',
                   ),
@@ -80,7 +82,8 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '效果法术',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
                     controller: viewModel.spellEffectController,
                     placeholder: 'spell_effect',
                   ),
@@ -240,6 +243,12 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   }
 
   Future<void> _copy(SpellLinkedSpellKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
     try {
       await viewModel.copy(key);
       if (!mounted) return;
@@ -253,7 +262,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   Future<void> _destroy(SpellLinkedSpellKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
       confirmText: '删除',
       destructive: true,
     );

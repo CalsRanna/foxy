@@ -6,6 +6,8 @@ import 'package:foxy/view_model/spell_loot_template_linked_list_view_model.dart'
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
@@ -80,7 +82,8 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '物品',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemTemplate,
                     controller: viewModel.itemController,
                     placeholder: 'Item',
                   ),
@@ -89,7 +92,8 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '关联',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.referenceLoot,
                     controller: viewModel.referenceController,
                     placeholder: 'Reference',
                   ),
@@ -331,7 +335,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   Future<void> _destroy(SpellLootTemplateKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
       confirmText: '删除',
       destructive: true,
     );
