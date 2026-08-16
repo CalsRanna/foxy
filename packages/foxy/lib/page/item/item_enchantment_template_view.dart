@@ -215,7 +215,10 @@ class _ItemEnchantmentTemplateViewState
             ),
             ShadContextMenuItem(
               leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: () => _destroy(viewModel.selectedKey.value!),
+              onPressed: () {
+                viewModel.selectedKey.value = key;
+                _destroy(key);
+              },
               child: Text('删除'),
             ),
           ],

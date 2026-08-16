@@ -5,6 +5,7 @@ import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/smart_script/smart_script_view.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 
@@ -46,9 +47,10 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
   }
 
   Widget _buildHeader() {
-    var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-    var text = Text('脚本详情', style: textStyle);
-    return Padding(padding: EdgeInsets.only(bottom: 12), child: text);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: FoxyHeader('脚本详情'),
+    );
   }
 
   Future<void> _initialize() async {

@@ -5,6 +5,7 @@ import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_vi
 import 'package:foxy/view_model/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()
@@ -33,10 +34,7 @@ class _ScalingStatDistributionDetailPageState
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '属性缩放分布详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('属性缩放分布详情'),
         ),
         FoxyTab(
           tabs: const [Text('属性缩放分布')],

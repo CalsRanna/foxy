@@ -13,6 +13,7 @@ import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -116,7 +117,9 @@ class _GameObjectLootTemplateViewState
                   item.reference != 0
                       ? '[${item.displayName}]'
                       : item.displayName,
-                  style: TextStyle(color: _getQualityColor(item.itemQuality)),
+                  style: TextStyle(
+                    color: ItemQualityColor.of(item.itemQuality),
+                  ),
                 ),
               ),
               FoxyTableColumn.fixed(
@@ -327,17 +330,6 @@ class _GameObjectLootTemplateViewState
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
     }
-  }
-
-  Color _getQualityColor(int quality) {
-    return switch (quality) {
-      1 => const Color(0xFFFFFFFF),
-      2 => const Color(0xFF1EFF00),
-      3 => const Color(0xFF0070DD),
-      4 => const Color(0xFFA335EE),
-      5 => const Color(0xFFFF8000),
-      _ => const Color(0xFF9D9D9D),
-    };
   }
 
   Future<bool> _load(GameObjectLootTemplateKey key) async {

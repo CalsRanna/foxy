@@ -5,6 +5,7 @@ import 'package:foxy/page/emote_text/emote_text_view.dart';
 import 'package:foxy/view_model/emote_text_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()
@@ -27,10 +28,7 @@ class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '表情文本详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('表情文本详情'),
         ),
         FoxyTab(
           tabs: const [Text('表情文本')],

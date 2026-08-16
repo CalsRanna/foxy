@@ -16,18 +16,16 @@ import 'package:foxy/page/creature_template/skinning_loot_template_view.dart';
 import 'package:foxy/view_model/creature_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-
-
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {
-
   static Set<int> disabledTabIndexes(int? entry, int tabCount) {
-  if (entry != null && entry > 0) return const {};
-  return {for (var index = 1; index < tabCount; index++) index};
-}
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
 
   final int? creatureTemplateKey;
 
@@ -63,10 +61,7 @@ class _CreatureTemplateDetailPageState
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '生物详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('生物详情'),
         ),
         Watch((_) {
           final key = viewModel.persistedKey.value;

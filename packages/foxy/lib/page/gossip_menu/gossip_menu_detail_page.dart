@@ -8,6 +8,7 @@ import 'package:foxy/page/gossip_menu/npc_text_view.dart';
 import 'package:foxy/view_model/gossip_menu_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -33,10 +34,7 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              '对话详情',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+            child: FoxyHeader('对话详情'),
           ),
           FoxyTab(
             tabs: const [Text('对话'), Text('文本'), Text('选项')],

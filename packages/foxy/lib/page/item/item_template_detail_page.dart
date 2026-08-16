@@ -12,6 +12,7 @@ import 'package:foxy/page/item/prospecting_loot_template_view.dart';
 import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -35,10 +36,7 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '物品详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('物品详情'),
         ),
         Watch((_) {
           final key = viewModel.persistedKey.value;

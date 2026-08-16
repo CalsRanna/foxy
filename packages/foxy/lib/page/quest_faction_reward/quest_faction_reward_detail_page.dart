@@ -5,6 +5,7 @@ import 'package:foxy/page/quest_faction_reward/quest_faction_reward_view.dart';
 import 'package:foxy/view_model/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()
@@ -29,10 +30,7 @@ class _QuestFactionRewardDetailPageState
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '任务声望详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('任务声望详情'),
         ),
         FoxyTab(
           tabs: const [Text('任务声望')],

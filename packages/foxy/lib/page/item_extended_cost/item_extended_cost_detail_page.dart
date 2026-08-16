@@ -5,6 +5,7 @@ import 'package:foxy/page/item_extended_cost/item_extended_cost_view.dart';
 import 'package:foxy/view_model/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()
@@ -29,10 +30,7 @@ class _ItemExtendedCostDetailPageState
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '扩展价格详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('扩展价格详情'),
         ),
         FoxyTab(
           tabs: const [Text('扩展价格')],

@@ -314,7 +314,10 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
             ),
             ShadContextMenuItem(
               leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: () => _destroy(viewModel.selectedKey.value!),
+              onPressed: () {
+                viewModel.selectedKey.value = loot.key;
+                _destroy(loot.key);
+              },
               child: Text('删除'),
             ),
           ],

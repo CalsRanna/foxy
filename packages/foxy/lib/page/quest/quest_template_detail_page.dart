@@ -12,6 +12,7 @@ import 'package:foxy/page/quest/quest_template_view.dart';
 import 'package:foxy/view_model/quest_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -36,10 +37,7 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '任务详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('任务详情'),
         ),
         Watch((_) {
           final key = viewModel.persistedKey.value;

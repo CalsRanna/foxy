@@ -11,6 +11,7 @@ import 'package:foxy/page/player_create_info/player_create_info_view.dart';
 import 'package:foxy/view_model/player_create_info_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -37,10 +38,7 @@ class _PlayerCreateInfoDetailPageState
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '出生信息详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('出生信息详情'),
         ),
         FoxyTab(
           tabs: const [

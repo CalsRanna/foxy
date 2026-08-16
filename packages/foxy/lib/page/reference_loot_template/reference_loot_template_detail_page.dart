@@ -6,6 +6,7 @@ import 'package:foxy/page/reference_loot_template/reference_loot_template_view.d
 import 'package:foxy/view_model/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()
@@ -33,10 +34,7 @@ class _ReferenceLootTemplateDetailPageState
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '关联掉落详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('关联掉落详情'),
         ),
         FoxyTab(
           tabs: const [Text('关联掉落')],

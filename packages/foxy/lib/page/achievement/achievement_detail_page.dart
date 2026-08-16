@@ -5,6 +5,7 @@ import 'package:foxy/page/achievement/achievement_view.dart';
 import 'package:foxy/view_model/achievement_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -28,10 +29,7 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            '成就详情',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+          child: FoxyHeader('成就详情'),
         ),
         Watch((_) {
           final key = viewModel.persistedKey.value;

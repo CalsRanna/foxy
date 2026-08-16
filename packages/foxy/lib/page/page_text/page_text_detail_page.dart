@@ -5,6 +5,7 @@ import 'package:foxy/page/page_text/page_text_view.dart';
 import 'package:foxy/view_model/page_text_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -29,10 +30,7 @@ class _PageTextDetailPageState extends State<PageTextDetailPage> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              '页面文本详情',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+            child: FoxyHeader('页面文本详情'),
           ),
           FoxyTab(
             tabs: const [Text('页面文本')],
