@@ -113,17 +113,13 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
         ),
         FoxyTableColumn.flex(
           label: '法术物品附魔',
-          cell: (_, item) => Text(item.enchantId.toString()),
-        ),
-        FoxyTableColumn.fixed(
-          label: '客户端库存计数',
-          width: 120,
-          cell: (_, item) => Text(item.maxCountInv.toString()),
-        ),
-        FoxyTableColumn.fixed(
-          label: '客户端物品计数',
-          width: 120,
-          cell: (_, item) => Text(item.maxCountItem.toString()),
+          cell: (_, item) => Text(
+            item.displayEnchantName.isNotEmpty
+                ? item.displayEnchantName
+                : item.enchantId.toString(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         FoxyTableColumn.flex(
           label: '宝石颜色',

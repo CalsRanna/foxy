@@ -8,6 +8,8 @@ final class BriefGemPropertyEntity {
   final int maxCountInv;
   final int maxCountItem;
   final int type;
+  final String enchantName;
+  final String localeEnchantName;
 
   const BriefGemPropertyEntity({
     this.id = 0,
@@ -15,6 +17,8 @@ final class BriefGemPropertyEntity {
     this.maxCountInv = 0,
     this.maxCountItem = 0,
     this.type = 0,
+    this.enchantName = '',
+    this.localeEnchantName = '',
   });
 
   factory BriefGemPropertyEntity.fromJson(Map<String, dynamic> json) {
@@ -44,12 +48,21 @@ final class BriefGemPropertyEntity {
           : json['Type'] == false
           ? 0
           : (json['Type'] as num?)?.toInt() ?? 0,
+      enchantName: json['enchantName']?.toString() ?? '',
+      localeEnchantName: json['localeEnchantName']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([id, enchantId, maxCountInv, maxCountItem, type]);
+  int get hashCode => Object.hashAll([
+    id,
+    enchantId,
+    maxCountInv,
+    maxCountItem,
+    type,
+    enchantName,
+    localeEnchantName,
+  ]);
 
   int get key => id;
 
@@ -61,7 +74,9 @@ final class BriefGemPropertyEntity {
             enchantId == other.enchantId &&
             maxCountInv == other.maxCountInv &&
             maxCountItem == other.maxCountItem &&
-            type == other.type;
+            type == other.type &&
+            enchantName == other.enchantName &&
+            localeEnchantName == other.localeEnchantName;
   }
 
   @override
@@ -71,7 +86,9 @@ final class BriefGemPropertyEntity {
         'enchantId: $enchantId, '
         'maxCountInv: $maxCountInv, '
         'maxCountItem: $maxCountItem, '
-        'type: $type'
+        'type: $type, '
+        'enchantName: $enchantName, '
+        'localeEnchantName: $localeEnchantName'
         ')';
   }
 }

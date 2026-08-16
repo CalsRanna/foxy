@@ -1717,8 +1717,11 @@ class FoxyEntityPickerDelegates {
         text: (BriefGemPropertyEntity row) => row.id.toString(),
       ),
       FoxyEntityPickerColumn(
-        header: '附魔 ID',
-        text: (BriefGemPropertyEntity row) => row.enchantId.toString(),
+        header: '附魔',
+        text: (BriefGemPropertyEntity row) =>
+            row.displayEnchantName.isNotEmpty
+            ? row.displayEnchantName
+            : row.enchantId.toString(),
       ),
     ],
     idOf: (BriefGemPropertyEntity row) => row.id,

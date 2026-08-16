@@ -3,6 +3,8 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'gem_property_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('enchantName')
+@FoxyBriefField.text('localeEnchantName')
 @FoxyFullEntity(table: 'foxy.dbc_gem_properties')
 class GemPropertyEntity with _GemPropertyEntityMixin {
   @FoxyBriefField()
@@ -35,4 +37,10 @@ class GemPropertyEntity with _GemPropertyEntityMixin {
 
   factory GemPropertyEntity.fromJson(Map<String, dynamic> json) =>
       _GemPropertyEntityMixin.fromJson(json);
+}
+
+extension BriefGemPropertyEntityDisplay on BriefGemPropertyEntity {
+  /// Display enchant name: zhCN when available, enUS otherwise.
+  String get displayEnchantName =>
+      localeEnchantName.isNotEmpty ? localeEnchantName : enchantName;
 }

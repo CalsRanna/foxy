@@ -21,8 +21,50 @@ class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
   }
 
   @override
+  Future<int> countGemProperties({GemPropertyFilter? filter}) async {
+    return _applyFilter(laconic.table('$_table as gp'), filter).count();
+  }
+
+  @override
   Future<GemPropertyEntity> createGemProperty() async {
     return GemPropertyEntity(id: await _getNextId());
+  }
+
+  @override
+  Future<List<BriefGemPropertyEntity>> getBriefGemProperties({
+    int page = 1,
+    GemPropertyFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table as gp');
+    const fields = [
+      'gp.ID',
+      'gp.Enchant_ID',
+      'gp.Maxcount_inv',
+      'gp.Maxcount_item',
+      'gp.Type',
+      'sie.Name_lang_enUS as enchantName',
+      'sie.Name_lang_zhCN as localeEnchantName',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment as sie',
+      (join) => join.on('gp.Enchant_ID', 'sie.ID'),
+    );
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('gp.ID');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results.map((e) => BriefGemPropertyEntity.fromJson(e.toMap())).toList();
+  }
+
+  @override
+  QueryBuilder _applyFilter(QueryBuilder builder, GemPropertyFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('gp.ID', filter.id);
+    }
+    return builder;
   }
 
   Future<int> _getNextId() async {
