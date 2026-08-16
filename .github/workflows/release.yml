@@ -46,7 +46,7 @@ jobs:
   release-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # cache: true caches the Flutter SDK and the pub dependency cache
       # (keyed on the workspace pubspec.lock), so both runner setups in the
