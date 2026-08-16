@@ -174,7 +174,9 @@ class ReferenceLootTemplateView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      ShadSonner.of(context).show(const ShadToast(description: Text('关联掉落数据已保存')));
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('关联掉落数据已保存')));
     } catch (error) {
       if (!context.mounted) return;
       ShadSonner.of(

@@ -54,6 +54,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
   }
 
   Widget _buildCoverPanel() {
+    final surfaceColor = Theme.of(context).colorScheme.surface;
     var image = Image.asset(
       'asset/image/background.png',
       fit: BoxFit.cover,
@@ -63,7 +64,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
     var linearGradient = LinearGradient(
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
-      colors: [Colors.transparent, Colors.white],
+      colors: [Colors.transparent, surfaceColor],
     );
     var boxDecoration = BoxDecoration(gradient: linearGradient);
     return Stack(
@@ -80,7 +81,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
       children: [Watch((_) => Text(viewModel.version.value))],
     );
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       height: double.infinity,
       padding: const EdgeInsets.all(16),
       width: double.infinity,

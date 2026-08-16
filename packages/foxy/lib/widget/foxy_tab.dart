@@ -91,8 +91,8 @@ class _FoxyTabState extends State<FoxyTab> {
     var animatedPositioned = AnimatedPositioned(
       bottom: 0,
       duration: Duration(milliseconds: 300),
-      // 指示条定位在 Stack(视口)坐标系,偏移量需减去标签栏已滚动距离,
-      // 滚动时才与激活 tab 保持对齐。
+      // The indicator lives in the Stack (viewport) coordinate space, so its
+      // offset must subtract the tab bar's scroll offset to stay aligned.
       left: _getOffset() - _scrollOffset,
       child: _Indicator(width: width[index]),
     );
@@ -116,8 +116,8 @@ class _FoxyTabState extends State<FoxyTab> {
 
     _isAnimating = true;
 
-    // 0. 目标 tab 若在标签栏可视区外,先滚动到可见位置,再走切换动画
-    //    滚动时长与下方淡入淡出保持一致。
+    // 0. If the target tab is outside the tab bar's viewport, scroll it into
+    //    view first; the scroll duration matches the fade below.
     final targetContext = keys[targetIndex].currentContext;
     if (targetContext != null) {
       await Scrollable.ensureVisible(
@@ -155,7 +155,7 @@ class _FoxyTabState extends State<FoxyTab> {
     _resetTabState();
     _scrollController = ScrollController()
       ..addListener(() {
-        // 标签栏滚动时同步偏移,驱动指示条跟随
+        // Sync the scroll offset so the indicator follows the tab bar.
         final offset = _scrollController.offset;
         if (offset != _scrollOffset) {
           setState(() => _scrollOffset = offset);

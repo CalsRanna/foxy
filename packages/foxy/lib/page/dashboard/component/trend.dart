@@ -4,16 +4,18 @@ import 'package:foxy/widget/foxy_card.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class Trend extends StatelessWidget {
-  static final _copyColor = ShadOrangeColorScheme.light().primary;
-
-  /// Action icon colors come from each shadcn scheme's `primary` (light),
-  /// staying consistent with the shadcn palette and replacing the previously
-  /// hard-coded Material `Colors.green/blue/red/orange`.
-  static final _createColor = ShadGreenColorScheme.light().primary;
-
-  static final _deleteColor = ShadRedColorScheme.light().primary;
-
-  static final _updateColor = ShadBlueColorScheme.light().primary;
+  /// Action icon colors, the single source for the dashboard trend palette.
+  ///
+  /// shadcn_ui exposes the orange/green/red/blue palettes only through their
+  /// scheme constructors (`ShadXxxColorScheme.light()`), and the app ships a
+  /// single light theme — so these are intentionally static rather than
+  /// derived from the current theme. Revisit when a dark palette is added.
+  static final _actionColors = <ActivityActionType, Color>{
+    ActivityActionType.create: ShadGreenColorScheme.light().primary,
+    ActivityActionType.update: ShadBlueColorScheme.light().primary,
+    ActivityActionType.delete: ShadRedColorScheme.light().primary,
+    ActivityActionType.copy: ShadOrangeColorScheme.light().primary,
+  };
 
   final List<ActivityLogEntity> activities;
 
@@ -107,14 +109,7 @@ class _TrendItem extends StatelessWidget {
     );
   }
 
-  Color _actionColor(ActivityActionType type) {
-    return switch (type) {
-      ActivityActionType.create => Trend._createColor,
-      ActivityActionType.update => Trend._updateColor,
-      ActivityActionType.delete => Trend._deleteColor,
-      ActivityActionType.copy => Trend._copyColor,
-    };
-  }
+  Color _actionColor(ActivityActionType type) => Trend._actionColors[type]!;
 
   IconData _actionIcon(ActivityActionType type) {
     return switch (type) {

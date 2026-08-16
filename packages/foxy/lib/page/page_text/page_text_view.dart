@@ -108,7 +108,9 @@ class _PageTextViewState extends State<PageTextView> {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      ShadSonner.of(context).show(const ShadToast(description: Text('页面文本数据已保存')));
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('页面文本数据已保存')));
     } catch (error) {
       if (!context.mounted) return;
       ShadSonner.of(
