@@ -77,6 +77,7 @@ class PageTextView extends StatelessWidget {
             ],
           ),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -85,7 +86,6 @@ class PageTextView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

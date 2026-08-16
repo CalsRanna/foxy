@@ -302,6 +302,7 @@ class TalentView extends StatelessWidget {
           ),
           // Save + cancel buttons
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -310,7 +311,6 @@ class TalentView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

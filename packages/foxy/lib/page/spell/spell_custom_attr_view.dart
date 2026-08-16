@@ -3,7 +3,6 @@ import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_custom_attr_linked_detail_view_model.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
@@ -36,8 +35,6 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(
               title: '自定义属性',
               children: [

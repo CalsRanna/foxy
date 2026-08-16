@@ -119,6 +119,7 @@ class PlayerCreateInfoView extends StatelessWidget {
             ],
           ),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -127,7 +128,6 @@ class PlayerCreateInfoView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

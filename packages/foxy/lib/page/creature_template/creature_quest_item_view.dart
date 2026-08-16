@@ -120,13 +120,12 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           SizedBox(height: 24),
           // Button row
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
             children: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text('取消'),
               ),
-              SizedBox(width: 8),
               Watch(
                 (_) => ShadButton(
                   enabled: !viewModel.submitting.value,

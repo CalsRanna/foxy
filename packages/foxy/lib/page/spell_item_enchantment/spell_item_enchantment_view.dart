@@ -240,6 +240,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
             ],
           ),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -248,7 +249,6 @@ class SpellItemEnchantmentView extends StatelessWidget {
                   child: const Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
             ],
           ),

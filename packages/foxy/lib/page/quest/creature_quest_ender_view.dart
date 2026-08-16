@@ -88,13 +88,12 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
           ),
           SizedBox(height: 24),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
             children: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text('取消'),
               ),
-              SizedBox(width: 8),
               Watch(
                 (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
@@ -244,6 +243,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: '新增结束生物',
+        description: '新增一条结束生物记录',
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -254,6 +254,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: '编辑结束生物',
+        description: '编辑选中的结束生物记录',
         child: _buildDialogForm(dialogContext),
       ),
     );

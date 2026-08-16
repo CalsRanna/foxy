@@ -88,13 +88,12 @@ class _GameObjectQuestStarterViewState
           ),
           SizedBox(height: 24),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
             children: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text('取消'),
               ),
-              SizedBox(width: 8),
               Watch(
                 (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
@@ -244,6 +243,7 @@ class _GameObjectQuestStarterViewState
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: '新增开始物体',
+        description: '新增一条开始物体记录',
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -254,6 +254,7 @@ class _GameObjectQuestStarterViewState
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: '编辑开始物体',
+        description: '编辑选中的开始物体记录',
         child: _buildDialogForm(dialogContext),
       ),
     );

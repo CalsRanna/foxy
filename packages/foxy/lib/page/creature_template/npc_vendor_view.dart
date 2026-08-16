@@ -149,13 +149,12 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           ),
           SizedBox(height: 24),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
             children: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: const Text('取消'),
               ),
-              const SizedBox(width: 8),
               Watch(
                 (_) => ShadButton(
                   enabled: !viewModel.submitting.value,

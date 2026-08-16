@@ -87,13 +87,12 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
           ),
           SizedBox(height: 24),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
             children: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text('取消'),
               ),
-              SizedBox(width: 8),
               Watch(
                 (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
@@ -243,6 +242,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: '新增结束物体',
+        description: '新增一条结束物体记录',
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -253,6 +253,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: '编辑结束物体',
+        description: '编辑选中的结束物体记录',
         child: _buildDialogForm(dialogContext),
       ),
     );

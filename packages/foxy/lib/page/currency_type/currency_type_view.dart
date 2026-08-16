@@ -71,6 +71,7 @@ class CurrencyTypeView extends StatelessWidget {
             ],
           ),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -79,7 +80,6 @@ class CurrencyTypeView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

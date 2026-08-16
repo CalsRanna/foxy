@@ -68,6 +68,7 @@ class QuestInfoView extends StatelessWidget {
         children: [
           FoxyFormSection(title: '基本信息', children: rows),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -76,7 +77,6 @@ class QuestInfoView extends StatelessWidget {
                   child: const Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
             ],
           ),

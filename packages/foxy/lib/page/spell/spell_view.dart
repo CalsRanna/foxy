@@ -1284,6 +1284,7 @@ class SpellView extends StatelessWidget {
           FoxyFormSection(title: '施法材料', children: reagentRows),
           FoxyFormSection(title: '其他高级属性', children: otherRows),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -1292,7 +1293,6 @@ class SpellView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

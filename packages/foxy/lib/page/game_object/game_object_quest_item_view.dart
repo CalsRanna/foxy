@@ -202,13 +202,12 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
           ),
           SizedBox(height: 24),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
             children: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text('取消'),
               ),
-              SizedBox(width: 8),
               Watch(
                 (_) => ShadButton(
                   enabled: !viewModel.submitting.value,

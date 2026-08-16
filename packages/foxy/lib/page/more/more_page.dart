@@ -66,14 +66,7 @@ class _MorePageState extends State<MorePage> {
       final modules = viewModel.filteredModules.value;
       if (modules.isEmpty) {
         return Center(
-          child: Text(
-            '没有匹配的模块',
-            style: TextStyle(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
-          ),
+          child: Text('没有匹配的模块', style: ShadTheme.of(context).textTheme.muted),
         );
       }
       return GridView.builder(

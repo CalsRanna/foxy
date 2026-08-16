@@ -59,7 +59,7 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
           return FoxyTab(
             tabs: tabs,
             contents: [
-              SpellView(viewModel: viewModel),
+              SpellView(key: ValueKey('main-$key'), viewModel: viewModel),
               SpellBonusDataView(
                 key: ValueKey('bonus-$spellId'),
                 spellId: spellId,

@@ -441,6 +441,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   icon: LucideIcons.circleAlert,
                 ),
               Row(
+                spacing: 8,
                 children: [
                   ShadButton.ghost(
                     size: ShadButtonSize.sm,
@@ -449,7 +450,6 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                         : () => _vm.setAllSelectableSelected(!allSelected),
                     child: Text(allSelected ? '取消全选' : '全选'),
                   ),
-                  const SizedBox(width: 8),
                   Text(
                     '已选 $selectedCount / $selectableCount',
                     style: theme.textTheme.muted.copyWith(fontSize: 12),

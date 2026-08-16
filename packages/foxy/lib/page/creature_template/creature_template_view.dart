@@ -654,6 +654,7 @@ class CreatureTemplateView extends StatelessWidget {
           FoxyFormSection(title: '掉落', children: lootRows),
           FoxyFormSection(title: '难度与脚本', children: difficultyScriptRows),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -662,7 +663,6 @@ class CreatureTemplateView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

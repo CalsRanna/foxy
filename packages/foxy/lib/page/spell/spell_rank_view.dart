@@ -100,13 +100,12 @@ class _SpellRankViewState extends State<SpellRankView> {
           ),
           SizedBox(height: 24),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
             children: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text('取消'),
               ),
-              SizedBox(width: 8),
               Watch(
                 (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
@@ -205,6 +204,12 @@ class _SpellRankViewState extends State<SpellRankView> {
               child: Text('编辑'),
             ),
             ShadContextMenuItem(
+              enabled: !viewModel.submitting.value,
+              leading: Icon(LucideIcons.copy, size: 16),
+              onPressed: () => _copy(item.key),
+              child: Text('复制'),
+            ),
+            ShadContextMenuItem(
               leading: Icon(LucideIcons.trash, size: 16),
               onPressed: () => _destroy(viewModel.selectedKey.value!),
               child: Text('删除'),
@@ -222,6 +227,23 @@ class _SpellRankViewState extends State<SpellRankView> {
     ];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
+  }
+
+  Future<void> _copy(SpellRankKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：${FoxyExceptions.message(error)}');
+    }
   }
 
   Future<void> _destroy(SpellRankKey key) async {

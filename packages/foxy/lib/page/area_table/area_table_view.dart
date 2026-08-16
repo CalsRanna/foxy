@@ -275,6 +275,7 @@ class AreaTableView extends StatelessWidget {
           FoxyFormSection(title: '环境与音效', children: soundRows),
           FoxyFormSection(title: '液体类型', children: liquidRows),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -283,7 +284,6 @@ class AreaTableView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

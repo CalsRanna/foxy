@@ -149,6 +149,7 @@ class ReferenceLootTemplateView extends StatelessWidget {
         children: [
           FoxyFormSection(title: '基本信息', children: basicRows),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -157,7 +158,6 @@ class ReferenceLootTemplateView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

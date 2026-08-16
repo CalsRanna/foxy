@@ -227,6 +227,7 @@ class ItemExtendedCostView extends StatelessWidget {
           FoxyFormSection(title: '评分需求', children: ratingRows),
           FoxyFormSection(title: '购买组', children: purchaseGroupRows),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -235,7 +236,6 @@ class ItemExtendedCostView extends StatelessWidget {
                   child: Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),

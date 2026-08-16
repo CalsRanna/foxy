@@ -263,6 +263,7 @@ class ScalingStatDistributionView extends StatelessWidget {
           FoxyFormSection(title: '基本信息', children: basicRows),
           FoxyFormSection(title: '缩放属性', children: statRows),
           Row(
+            spacing: 8,
             children: [
               Watch(
                 (_) => ShadButton(
@@ -271,7 +272,6 @@ class ScalingStatDistributionView extends StatelessWidget {
                   child: const Text('保存'),
                 ),
               ),
-              const SizedBox(width: 8),
               ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
             ],
           ),

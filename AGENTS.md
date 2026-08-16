@@ -153,6 +153,15 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 - Detail pages: main form + `FoxyTab` sub-table tabs (12 tabs for `creature_template`).
 - `QueryVersionMixin` (in `lib/widget/query_version_mixin.dart`): pagination baseline — `FoxyDataTable` scrolls back to the top when `queryVersion` changes.
 
+### UI 一致性约定(audit 2026-08 后确立)
+
+- **错误提示一律阻塞模态**:操作失败用 `DialogUtil.instance.error('失败类型：${FoxyExceptions.message(error)}')`(标题"错误",需手动确认),禁止非阻塞错误 toast 或对话框内联错误。成功提示才用 `DialogUtil.instance.success('xx数据已保存')`(唯一 toast 入口,全库禁止裸 `ShadSonner.of`)。相关组件:`FoxyFormDialog`(子表增删改对话框统一外壳)、`FoxyLoadingIndicator`(加载态统一组件)、`DialogUtil.width`(对话框宽度唯一来源)。
+- **间距**:新代码统一用 Row/Column 的 `spacing:` 参数;`SizedBox` 只用于固定尺寸,不做元素间距。
+- **空态文案**:列表/表格空态统一"暂无数据"(FoxyDataTable 内置);其他场景按语境自定(如 dashboard"暂无动态"、more 页"没有匹配的模块"),不必强行统一。
+- **详情页响应式两模式并存,均正确**:大模块(creature/item/quest/spell 等)在详情页层 `Watch` 包 `FoxyTab` + 主视图 `ValueKey('main-$key')` + `disabledTabIndexes(entry, tabCount)` 静态方法;小模块在视图内 per-field `Watch`。新模块按模块规模选择,不必改造存量。
+- **子表 linkKey 变化**:新代码统一 `didUpdateWidget` 里调用 `viewModel.setLinkKey(...)`(比依赖父页 ValueKey 重建更精确)。
+- **控件映射**:数字→`FoxyNumberInput`;文本→`FoxyStringInput`;可空→`FoxyNullableStringInput`;枚举→`FoxyShadSelect`(placeholder 传字符串);位标志→`FoxyFlagPicker`;引用→`FoxyEntityPicker`;本地化→`FoxyLocalePicker`。placeholder 一律英文列名。
+
 ## Database Layer
 
 - `Database.instance` singleton (`lib/database/database.dart`): `connect(MysqlConfig)` → `Laconic(MysqlDriver)` (laconic + laconic_mysql). Config from `config.yaml` via `ConfigUtil` (atomic rewrite, corrupt-file self-heal to `.bak`).
