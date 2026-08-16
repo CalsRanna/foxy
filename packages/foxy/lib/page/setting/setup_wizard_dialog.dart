@@ -8,6 +8,7 @@ import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -69,12 +70,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
               ),
               child: const SizedBox(
                 height: 140,
-                child: Center(
-                  child: SizedBox.square(
-                    dimension: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
+                child: Center(child: FoxyLoadingIndicator()),
               ),
             );
           }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/util/table_layout_util.dart';
+import 'package:foxy/widget/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// One column of [FoxyDataTable]: a fixed-pixel column or a flex column
@@ -228,11 +229,7 @@ class _FoxyDataTableState<T> extends State<FoxyDataTable<T>> {
                 height: _rowHeight,
                 child: Center(
                   child: widget.loading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
+                      ? const FoxyLoadingIndicator(size: 20, strokeWidth: 2)
                       : const Text('暂无数据'),
                 ),
               ),

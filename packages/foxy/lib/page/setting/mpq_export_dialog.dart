@@ -6,6 +6,7 @@ import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/mpq_export_workflow_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_loading_indicator.dart';
 import 'package:path/path.dart' as p;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -62,10 +63,7 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 12,
                   children: [
-                    SizedBox.square(
-                      dimension: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                    FoxyLoadingIndicator(),
                     Text('正在读取表统计…', style: TextStyle(fontSize: 13)),
                   ],
                 ),
@@ -220,7 +218,9 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
               ),
               ShadInput(
                 controller: _fileNameController.controller,
-                placeholder: const Text(MpqExportWorkflowViewModel.defaultPatchFileName),
+                placeholder: const Text(
+                  MpqExportWorkflowViewModel.defaultPatchFileName,
+                ),
                 leading: const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Icon(LucideIcons.fileArchive, size: 16),

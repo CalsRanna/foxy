@@ -6,6 +6,7 @@ import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -144,12 +145,7 @@ class SettingDialogShell extends StatelessWidget {
             child: LinearProgressIndicator(value: ratio, minHeight: 8),
           ),
         ] else
-          const Center(
-            child: SizedBox.square(
-              dimension: 28,
-              child: CircularProgressIndicator(strokeWidth: 2.5),
-            ),
-          ),
+          const Center(child: FoxyLoadingIndicator(size: 28, strokeWidth: 2.5)),
         if (label.isNotEmpty)
           Text(
             label,
@@ -267,10 +263,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 12,
                   children: [
-                    SizedBox.square(
-                      dimension: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                    FoxyLoadingIndicator(),
                     Text('正在读取表统计…', style: TextStyle(fontSize: 13)),
                   ],
                 ),
@@ -558,12 +551,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
             title: SettingDialogShell.titleRow(LucideIcons.fileInput, '导入 DBC'),
             child: const SizedBox(
               height: 120,
-              child: Center(
-                child: SizedBox.square(
-                  dimension: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
+              child: Center(child: FoxyLoadingIndicator()),
             ),
           );
         }

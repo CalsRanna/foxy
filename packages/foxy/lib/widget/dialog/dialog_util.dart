@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
+import 'package:foxy/widget/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Foxy dialog entry point: uniform sizing, project-wide behaviors, and
@@ -184,10 +185,7 @@ class DialogUtil {
           closeIcon: SizedBox.shrink(),
           child: Padding(
             padding: EdgeInsets.all(12),
-            child: SizedBox.square(
-              dimension: 28,
-              child: CircularProgressIndicator(strokeWidth: 3),
-            ),
+            child: FoxyLoadingIndicator(size: 28, strokeWidth: 3),
           ),
         );
       },

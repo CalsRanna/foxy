@@ -3,6 +3,7 @@ import 'package:foxy/page/setting/setting_dialog_shell.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -32,12 +33,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
             title: SettingDialogShell.titleRow(LucideIcons.image, '提取游戏图标'),
             child: const SizedBox(
               height: 120,
-              child: Center(
-                child: SizedBox.square(
-                  dimension: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
+              child: Center(child: FoxyLoadingIndicator()),
             ),
           );
         }
