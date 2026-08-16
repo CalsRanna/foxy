@@ -81,9 +81,7 @@ class UpdateSwapper {
   /// before the swap, this cleanup covers the leftovers and the next update
   /// check rediscovers the new version.
   static void cleanupStaleTemp() {
-    final dir = Directory(
-      p.join(Directory.current.path, tempDirName),
-    );
+    final dir = Directory(p.join(Directory.current.path, tempDirName));
     if (!dir.existsSync()) return;
     Future<void>.delayed(Duration.zero, () async {
       try {

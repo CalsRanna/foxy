@@ -18,7 +18,6 @@ import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class PlayerCreateInfoSpellCustomView extends StatefulWidget {
   final int? race;

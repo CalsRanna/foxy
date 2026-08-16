@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:foxy/entity/item_set_entity.dart';
-import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -117,7 +117,7 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
         ),
         FoxyTableColumn.flex(
           label: '名称',
-          cell: (_, item) => Text(item.nameLangZhCN.toString()),
+          cell: (_, item) => Text(item.nameLangZhCN),
         ),
         FoxyTableColumn.fixed(
           label: '需求技能',

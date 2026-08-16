@@ -119,7 +119,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: Text('QuestRequired'),
+                    placeholder: const Text('QuestRequired'),
                   ),
                 ),
               ),

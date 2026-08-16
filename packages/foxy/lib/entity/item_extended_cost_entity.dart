@@ -15,7 +15,6 @@ part 'item_extended_cost_entity.g.dart';
 @FoxyBriefField.integer('itemQuality1')
 @FoxyFullEntity(table: 'foxy.dbc_item_extended_cost')
 class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
-
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
@@ -122,10 +121,8 @@ extension BriefItemExtendedCostEntityDisplay on BriefItemExtendedCostEntity {
   }
 
   /// Icon path for the item at [index] (0 or 1).
-  String displayItemIcon(int index) =>
-      index == 0 ? itemIcon0 : itemIcon1;
+  String displayItemIcon(int index) => index == 0 ? itemIcon0 : itemIcon1;
 
   /// Quality for the item at [index] (0 or 1).
-  int displayItemQuality(int index) =>
-      index == 0 ? itemQuality0 : itemQuality1;
+  int displayItemQuality(int index) => index == 0 ? itemQuality0 : itemQuality1;
 }

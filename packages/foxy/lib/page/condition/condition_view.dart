@@ -55,7 +55,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.sourceModeController,
                       options: ConditionDetailViewModel.modeOptions,
-                      placeholder: const Text('模式'),
+                      placeholder: const Text('SourceTypeOrReferenceId'),
                     ),
                   ),
                   FoxyFormItem(
@@ -102,7 +102,7 @@ class ConditionView extends StatelessWidget {
                     child: FoxyShadSelect<int>(
                       controller: viewModel.conditionModeController,
                       options: ConditionDetailViewModel.modeOptions,
-                      placeholder: const Text('模式'),
+                      placeholder: const Text('ConditionTypeOrReference'),
                     ),
                   ),
                   FoxyFormItem(

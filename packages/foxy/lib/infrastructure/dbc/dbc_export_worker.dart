@@ -142,7 +142,10 @@ abstract final class DbcExportWorker {
   /// (i.e. never re-imported after the row-order migration). Shared by the
   /// export workers so the UI can warn before order-sensitive DBCs export
   /// scrambled.
-  static Future<bool> hasMissingRowOrder(Laconic laconic, String tableName) async {
+  static Future<bool> hasMissingRowOrder(
+    Laconic laconic,
+    String tableName,
+  ) async {
     final hasColumn = await DbcExportWorker.tableHasRowOrderColumn(
       laconic,
       tableName,
@@ -208,7 +211,6 @@ abstract final class DbcExportWorker {
       'message': message,
     };
   }
-
 }
 
 /// Loads the rows of one DBC table (table name → rows). Kept injectable so
@@ -327,7 +329,10 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
     );
   } catch (error) {
     DbcExportWorker._sendResult(sendPort, 0, 0, [
-      DbcExportWorker._workerError(stage: workerStage, message: 'Worker 错误: $error'),
+      DbcExportWorker._workerError(
+        stage: workerStage,
+        message: 'Worker 错误: $error',
+      ),
     ], false);
   } finally {
     await laconic?.close();

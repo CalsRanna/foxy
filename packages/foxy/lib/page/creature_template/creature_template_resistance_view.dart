@@ -87,7 +87,7 @@ class _CreatureTemplateResistanceViewState
                   child: FoxyShadSelect<int>(
                     controller: viewModel.schoolController,
                     options: CreatureEnums.resistanceSchoolOptions,
-                    placeholder: Text('School'),
+                    placeholder: const Text('School'),
                   ),
                 ),
               ),

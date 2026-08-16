@@ -12,7 +12,7 @@ import 'package:warcrafty/warcrafty.dart';
 
 /// MpqExportWorker helper functions.
 abstract final class MpqExportWorker {
-/// In-archive directory for DBC files, matching the WoW 3.3.5 client layout.
+  /// In-archive directory for DBC files, matching the WoW 3.3.5 client layout.
   static const dbcArchivePath = r'DBFilesClient\';
 
   /// Builds a WoW patch MPQ from database DBC tables.
@@ -250,7 +250,6 @@ abstract final class MpqExportWorker {
       'message': message,
     };
   }
-
 }
 
 /// Isolate entry point for MPQ-patch export: connects to MySQL, writes the
@@ -311,7 +310,8 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
       loadRows: (table) => DbcExportWorker.loadRows(laconic!, table),
       mpqFilePath: mpqFilePath,
       isCancelled: () => cancelled,
-      onStatus: (stage, message) => MpqExportWorker._sendStatus(sendPort, stage, message),
+      onStatus: (stage, message) =>
+          MpqExportWorker._sendStatus(sendPort, stage, message),
       onProgress: (fileName, completedFiles, totalFiles, processed, total) {
         MpqExportWorker._sendCount(
           sendPort,
@@ -347,7 +347,10 @@ Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
     );
   } catch (error) {
     MpqExportWorker._sendResult(sendPort, 0, 0, [
-      MpqExportWorker._workerError(stage: workerStage, message: 'Worker 错误: $error'),
+      MpqExportWorker._workerError(
+        stage: workerStage,
+        message: 'Worker 错误: $error',
+      ),
     ], false);
   } finally {
     await laconic?.close();
@@ -392,7 +395,8 @@ Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
       directory: directory,
       mpqFilePath: mpqFilePath,
       isCancelled: () => cancelled,
-      onStatus: (stage, message) => MpqExportWorker._sendStatus(sendPort, stage, message),
+      onStatus: (stage, message) =>
+          MpqExportWorker._sendStatus(sendPort, stage, message),
       onProgress: (fileName, completedFiles, totalFiles, processed, total) {
         MpqExportWorker._sendCount(
           sendPort,
@@ -414,7 +418,10 @@ Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
     );
   } catch (error) {
     MpqExportWorker._sendResult(sendPort, 0, 0, [
-      MpqExportWorker._workerError(stage: workerStage, message: 'Worker 错误: $error'),
+      MpqExportWorker._workerError(
+        stage: workerStage,
+        message: 'Worker 错误: $error',
+      ),
     ], false);
   } finally {
     await cancelSubscription.cancel();

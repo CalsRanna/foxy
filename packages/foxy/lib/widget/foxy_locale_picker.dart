@@ -33,7 +33,7 @@ final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
     required this.onSave,
   }) : assert(
          fields.length == fieldLabels.length,
-         'fields 与 fieldLabels 长度必须一致',
+         'fields and fieldLabels must have the same length',
        );
 }
 
@@ -65,7 +65,7 @@ final class CompositeKeyLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
     required this.onSave,
   }) : assert(
          fields.length == fieldLabels.length,
-         'fields 与 fieldLabels 长度必须一致',
+         'fields and fieldLabels must have the same length',
        );
 }
 

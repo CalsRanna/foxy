@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 class FoxyPagination extends StatelessWidget {
   final int page;
@@ -25,12 +26,12 @@ class FoxyPagination extends StatelessWidget {
     final left = _Tile(
       disabled: !canGoLeft,
       onClick: canGoLeft ? () => change(-1, count) : null,
-      child: const Icon(Icons.chevron_left),
+      child: const Icon(LucideIcons.chevronLeft),
     );
     final right = _Tile(
       disabled: !canGoRight,
       onClick: canGoRight ? () => change(1, count) : null,
-      child: const Icon(Icons.chevron_right),
+      child: const Icon(LucideIcons.chevronRight),
     );
     final first = _Tile(
       active: page == 1,

@@ -241,7 +241,7 @@ class AchievementView extends StatelessWidget {
             Expanded(child: iconIdInput),
             Expanded(child: minimumCriteriaInput),
             Expanded(child: sharesCriteriaInput),
-            Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
           ],
         ),
       ],

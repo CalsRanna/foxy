@@ -14,17 +14,10 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class PageTextView extends StatefulWidget {
+class PageTextView extends StatelessWidget {
   final PageTextDetailViewModel viewModel;
 
   const PageTextView({super.key, required this.viewModel});
-
-  @override
-  State<PageTextView> createState() => _PageTextViewState();
-}
-
-class _PageTextViewState extends State<PageTextView> {
-  PageTextDetailViewModel get viewModel => widget.viewModel;
 
   @override
   Widget build(BuildContext context) {

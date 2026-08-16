@@ -163,7 +163,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final colorScheme = Theme.of(context).colorScheme;
     final active = routerFacade.activeMenu == menu;
     final backgroundColor = active ? colorScheme.primary : null;
-    final iconColor = active ? Colors.white : colorScheme.onSurface;
+    final iconColor = active ? colorScheme.onPrimary : colorScheme.onSurface;
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Icon(menu.icon, size: 16, color: iconColor),

@@ -41,7 +41,10 @@ class FoxyEntityPickerColumn<T> {
     this.text,
     this.cell,
     this.width,
-  }) : assert(text != null || cell != null, 'text 或 cell 至少提供一个');
+  }) : assert(
+         text != null || cell != null,
+         'either text or cell must be provided',
+       );
 }
 
 /// Query/render config provided per entity. Pure data + closures, holding
@@ -82,7 +85,7 @@ class _EntityPickerDialog<T> extends StatefulWidget {
   _EntityPickerDialog({required this.delegate, required this.initialValue})
     : assert(
         delegate.filters.length <= 3,
-        'FoxyEntityPickerDelegate.filters 最多支持 3 个筛选条件',
+        'FoxyEntityPickerDelegate.filters supports at most 3 filters',
       );
 
   @override

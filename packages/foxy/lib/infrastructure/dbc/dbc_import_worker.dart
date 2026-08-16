@@ -262,7 +262,12 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
   } on _ImportCancelled {
     DbcImportWorker._sendResult(sendPort, completed, skipped, errors, true);
   } catch (error) {
-    errors.add(DbcImportWorker._workerError(stage: workerStage, message: 'Worker 错误: $error'));
+    errors.add(
+      DbcImportWorker._workerError(
+        stage: workerStage,
+        message: 'Worker 错误: $error',
+      ),
+    );
     DbcImportWorker._sendResult(sendPort, completed, skipped, errors, false);
   } finally {
     await laconic?.close();
@@ -313,7 +318,10 @@ abstract final class DbcImportWorker {
   /// Adds the hidden row-order column to [tableShort] if it is missing (a
   /// staging table cloned from a legacy source table). Imported rows carry
   /// their DBC file position here; see [DbcRowOrder.column].
-  static Future<void> _ensureRowOrderColumn(Laconic laconic, String tableShort) async {
+  static Future<void> _ensureRowOrderColumn(
+    Laconic laconic,
+    String tableShort,
+  ) async {
     final rows = await laconic.select(
       "select column_name from information_schema.columns "
       "where table_schema = 'foxy' and table_name = '$tableShort' "
@@ -449,7 +457,11 @@ abstract final class DbcImportWorker {
   // warcrafty 1.0.2's public entry point does not actually export DbcRecord;
   // keep dynamic here to avoid depending on private paths under
   // package:warcrafty/src.
-  static String _recordSql(dynamic record, List<_FieldDef> fields, int rowOrder) {
+  static String _recordSql(
+    dynamic record,
+    List<_FieldDef> fields,
+    int rowOrder,
+  ) {
     final values = <String>[];
     for (final field in fields) {
       values.add(_readAndEscape(record, field.index, field.type));
@@ -594,7 +606,6 @@ abstract final class DbcImportWorker {
       'message': message,
     };
   }
-
 }
 
 typedef DbcImportWorkerArgs = ({

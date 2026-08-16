@@ -135,7 +135,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const edgeInsets = EdgeInsets.only(bottom: 12);
+    const edgeInsets = EdgeInsets.only(bottom: 16);
     return Padding(padding: edgeInsets, child: FoxyHeader('工作台'));
   }
 }

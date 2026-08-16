@@ -146,7 +146,9 @@ class CombinedExportWorkflowViewModel {
 
   void setFileName(String value) {
     final trimmed = value.trim();
-    fileName.value = trimmed.isEmpty ? MpqExportWorkflowViewModel.defaultPatchFileName : trimmed;
+    fileName.value = trimmed.isEmpty
+        ? MpqExportWorkflowViewModel.defaultPatchFileName
+        : trimmed;
   }
 
   Future<void> start() async {
@@ -207,7 +209,10 @@ class CombinedExportWorkflowViewModel {
       } else if (nextResult.success) {
         status.value = WorkflowStatus.succeeded;
       } else {
-        errorMessage.value = DbcSyncSummary.dbcSyncFailureSummary(nextResult, '导出');
+        errorMessage.value = DbcSyncSummary.dbcSyncFailureSummary(
+          nextResult,
+          '导出',
+        );
         status.value = WorkflowStatus.failed;
       }
     } catch (error) {

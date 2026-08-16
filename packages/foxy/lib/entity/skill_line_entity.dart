@@ -244,11 +244,9 @@ class SkillLineEntity with _SkillLineEntityMixin {
 }
 
 extension BriefSkillLineEntityDisplay on BriefSkillLineEntity {
-  String get displayName => displayNameZhCN.isNotEmpty
-      ? displayNameZhCN
-      : displayNameEnUS;
+  String get displayName =>
+      displayNameZhCN.isNotEmpty ? displayNameZhCN : displayNameEnUS;
 
-  String get displayCategoryName => categoryNameZhCN.isNotEmpty
-      ? categoryNameZhCN
-      : categoryNameEnUS;
+  String get displayCategoryName =>
+      categoryNameZhCN.isNotEmpty ? categoryNameZhCN : categoryNameEnUS;
 }

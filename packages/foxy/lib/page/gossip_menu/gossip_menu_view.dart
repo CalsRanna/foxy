@@ -49,8 +49,8 @@ class GossipMenuView extends StatelessWidget {
                 children: [
                   Expanded(child: menuIdInput),
                   Expanded(child: textIdInput),
-                  Expanded(child: SizedBox()),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
             ],

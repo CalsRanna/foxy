@@ -7,7 +7,6 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Legacy name kept for compatibility.
-typedef FoxyLocaleCrudDialog = DatabaseLocaleEditor;
 
 /// Dynamic-row editor for regular database `*_locale` sub-tables.
 ///
@@ -32,9 +31,12 @@ class DatabaseLocaleEditor extends StatefulWidget {
     required this.onSave,
   }) : assert(
          fields.length == fieldLabels.length,
-         'fields 与 fieldLabels 长度必须一致',
+         'fields and fieldLabels must have the same length',
        ),
-       assert(fields.length == 2, 'DatabaseLocaleEditor 仅支持两列：语言 + 单字段');
+       assert(
+         fields.length == 2,
+         'DatabaseLocaleEditor supports exactly two columns: language + single field',
+       );
 
   @override
   State<DatabaseLocaleEditor> createState() => _DatabaseLocaleEditorState();
@@ -60,9 +62,9 @@ class DatabaseLocaleEditor extends StatefulWidget {
       LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
       try {
-        ShadSonner.of(
-          context,
-        ).show(ShadToast(description: Text('加载失败: ${FoxyExceptions.message(e)}')));
+        ShadSonner.of(context).show(
+          ShadToast(description: Text('加载失败: ${FoxyExceptions.message(e)}')),
+        );
       } catch (_) {}
       return null;
     }
@@ -272,9 +274,9 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       if (!mounted) return;
       setState(() => _errorMessage = '保存失败: ${FoxyExceptions.message(e)}');
       try {
-        ShadSonner.of(
-          context,
-        ).show(ShadToast(description: Text('保存失败: ${FoxyExceptions.message(e)}')));
+        ShadSonner.of(context).show(
+          ShadToast(description: Text('保存失败: ${FoxyExceptions.message(e)}')),
+        );
       } catch (_) {}
     } finally {
       if (mounted) {

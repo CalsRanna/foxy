@@ -17,7 +17,6 @@ import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class SpellLinkedSpellView extends StatefulWidget {
   final int spellId;
@@ -96,7 +95,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.typeController,
                     options: SpellEnums.spellLinkedTypeOptions,
-                    placeholder: Text('type'),
+                    placeholder: const Text('type'),
                   ),
                 ),
               ),

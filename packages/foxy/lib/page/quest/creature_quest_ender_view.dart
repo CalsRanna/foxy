@@ -15,7 +15,6 @@ import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class CreatureQuestEnderView extends StatefulWidget {
   final int questId;
@@ -126,7 +125,6 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
   Widget _buildTable() {
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
-      leading: Icon(LucideIcons.plus, size: 16),
       child: Text('新增'),
     );
     final toolbar = Row(
@@ -166,7 +164,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
         viewModel.selectedKey.value = item.key;
         if (!await _load(viewModel.selectedKey.value!)) return;
         if (!mounted) return;
-        _showEditDialog(context);
+        _showEditDialog();
       },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
@@ -179,7 +177,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
               onPressed: () async {
                 if (!await _load(viewModel.selectedKey.value!)) return;
                 if (!mounted) return;
-                _showEditDialog(context);
+                _showEditDialog();
               },
               child: Text('编辑'),
             ),
@@ -251,7 +249,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
     );
   }
 
-  void _showEditDialog(BuildContext context) {
+  void _showEditDialog() {
     DialogUtil.show(
       context: context,
       builder: (dialogContext) => FoxyFormDialog(

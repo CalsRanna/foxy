@@ -20,7 +20,6 @@ import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class SpellLootTemplateView extends StatefulWidget {
   final int spellId;
@@ -123,7 +122,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: Text('QuestRequired'),
+                    placeholder: const Text('QuestRequired'),
                   ),
                 ),
               ),
@@ -186,8 +185,8 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),

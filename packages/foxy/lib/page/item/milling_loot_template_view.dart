@@ -21,7 +21,6 @@ import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 /// Milling loot tab
 class MillingLootTemplateView extends StatefulWidget {
@@ -119,7 +118,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: Text('QuestRequired'),
+                    placeholder: const Text('QuestRequired'),
                   ),
                 ),
               ),

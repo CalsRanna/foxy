@@ -22,9 +22,7 @@ class ItemExtendedCostRepository
   }
 
   @override
-  Future<int> countItemExtendedCosts({
-    ItemExtendedCostFilter? filter,
-  }) async {
+  Future<int> countItemExtendedCosts({ItemExtendedCostFilter? filter}) async {
     return _applyFilter(laconic.table('$_table as iec'), filter).count();
   }
 

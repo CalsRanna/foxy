@@ -1718,8 +1718,7 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '附魔',
-        text: (BriefGemPropertyEntity row) =>
-            row.displayEnchantName.isNotEmpty
+        text: (BriefGemPropertyEntity row) => row.displayEnchantName.isNotEmpty
             ? row.displayEnchantName
             : row.enchantId.toString(),
       ),
@@ -1737,48 +1736,49 @@ class FoxyEntityPickerDelegates {
   static FoxyEntityPickerDelegate<BriefGemPropertyEntity> get gemProperty =>
       instance._gemProperty;
 
-  late final _glyphProperty = FoxyEntityPickerDelegate<BriefGlyphPropertyEntity>(
-    title: '雕文属性',
-    errorLabel: '搜索雕文属性失败',
-    filters: const [FoxyEntityPickerFilter('雕文 ID')],
-    columns: [
-      FoxyEntityPickerColumn(
-        header: '编号',
-        width: 120,
-        text: (BriefGlyphPropertyEntity t) => t.id.toString(),
-      ),
-      FoxyEntityPickerColumn(
-        header: '法术',
-        cell: (BriefGlyphPropertyEntity t) => FoxyIconText(
-          iconPath: t.textureFilename,
-          name: t.displaySpellName,
-        ),
-      ),
-      FoxyEntityPickerColumn(
-        header: '类型',
-        width: 120,
-        text: (BriefGlyphPropertyEntity t) {
-          final label = GlyphPropertyConstants
-              .glyphPropertySlotTypeOptions[t.glyphSlotFlags];
-          return label ?? t.glyphSlotFlags.toString();
-        },
-      ),
-      FoxyEntityPickerColumn(
-        header: '图标 ID',
-        text: (BriefGlyphPropertyEntity t) => t.spellIconId.toString(),
-      ),
-    ],
-    idOf: (BriefGlyphPropertyEntity t) => t.id,
-    fetch: (page, v) => GetIt.instance
-        .get<GlyphPropertyRepository>()
-        .getBriefGlyphProperties(
-          page: page,
-          filter: GlyphPropertyFilter(id: v[0]),
-        ),
-    count: (v) => GetIt.instance
-        .get<GlyphPropertyRepository>()
-        .countGlyphProperties(filter: GlyphPropertyFilter(id: v[0])),
-  );
+  late final _glyphProperty =
+      FoxyEntityPickerDelegate<BriefGlyphPropertyEntity>(
+        title: '雕文属性',
+        errorLabel: '搜索雕文属性失败',
+        filters: const [FoxyEntityPickerFilter('雕文 ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefGlyphPropertyEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '法术',
+            cell: (BriefGlyphPropertyEntity t) => FoxyIconText(
+              iconPath: t.textureFilename,
+              name: t.displaySpellName,
+            ),
+          ),
+          FoxyEntityPickerColumn(
+            header: '类型',
+            width: 120,
+            text: (BriefGlyphPropertyEntity t) {
+              final label = GlyphPropertyConstants
+                  .glyphPropertySlotTypeOptions[t.glyphSlotFlags];
+              return label ?? t.glyphSlotFlags.toString();
+            },
+          ),
+          FoxyEntityPickerColumn(
+            header: '图标 ID',
+            text: (BriefGlyphPropertyEntity t) => t.spellIconId.toString(),
+          ),
+        ],
+        idOf: (BriefGlyphPropertyEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<GlyphPropertyRepository>()
+            .getBriefGlyphProperties(
+              page: page,
+              filter: GlyphPropertyFilter(id: v[0]),
+            ),
+        count: (v) => GetIt.instance
+            .get<GlyphPropertyRepository>()
+            .countGlyphProperties(filter: GlyphPropertyFilter(id: v[0])),
+      );
   static FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> get glyphProperty =>
       instance._glyphProperty;
 

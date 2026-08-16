@@ -211,7 +211,9 @@ class ItemEnchantmentTemplateLinkedListViewModel
       editingKey.value = null;
       selectedKey.value = null;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = FoxyExceptions.message(error);
+      if (token == _refreshToken) {
+        errorMessage.value = FoxyExceptions.message(error);
+      }
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

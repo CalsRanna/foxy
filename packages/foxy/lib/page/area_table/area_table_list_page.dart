@@ -119,8 +119,9 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
           label: '名称',
           cell: (_, item) => Text(item.areaNameLangZhCN),
         ),
-        FoxyTableColumn.flex(
+        FoxyTableColumn.fixed(
           label: '大陆',
+          width: 120,
           cell: (_, item) => Text(item.continentId.toString()),
         ),
         FoxyTableColumn.fixed(

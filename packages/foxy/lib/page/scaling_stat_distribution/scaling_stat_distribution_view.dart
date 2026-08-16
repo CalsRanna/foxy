@@ -201,8 +201,8 @@ class ScalingStatDistributionView extends StatelessWidget {
         children: [
           Expanded(child: idInput),
           Expanded(child: maxlevelInput),
-          const Expanded(child: SizedBox.shrink()),
-          const Expanded(child: SizedBox.shrink()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];

@@ -87,13 +87,16 @@ class _QuestFactionRewardListPageState
     final rewards = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
-    final canCreate =
-        !rewards.any((reward) => reward.id == 1) ||
-        !rewards.any((reward) => reward.id == 2);
-    var createButton = ShadButton(
-      leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: canCreate ? () => _navigateToDetail() : null,
-      child: Text('新增'),
+    // Fixed 2-row table (id 1/2): the total count is authoritative,
+    // unlike a per-page check that misses rows on other pages.
+    final canCreate = total < 2;
+    var createButton = Tooltip(
+      message: '仅允许 ID 1/2 两条记录',
+      child: ShadButton(
+        leading: Icon(LucideIcons.plus, size: 16),
+        onPressed: canCreate ? () => _navigateToDetail() : null,
+        child: Text('新增'),
+      ),
     );
     var pagination = FoxyPagination(
       page: page,

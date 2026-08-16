@@ -7,7 +7,6 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class PageTextDetailPage extends StatefulWidget {
@@ -24,21 +23,19 @@ class _PageTextDetailPageState extends State<PageTextDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: FoxyHeader('页面文本详情'),
-          ),
-          FoxyTab(
-            tabs: const [Text('页面文本')],
-            contents: [PageTextView(viewModel: viewModel)],
-          ),
-        ],
-      );
-    });
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: FoxyHeader('页面文本详情'),
+        ),
+        FoxyTab(
+          tabs: const [Text('页面文本')],
+          contents: [PageTextView(viewModel: viewModel)],
+        ),
+      ],
+    );
   }
 
   @override

@@ -15,7 +15,6 @@ import 'package:signals/signals.dart';
 /// "Normal type | reference template" mode options for the source/condition
 /// columns.
 
-
 class ConditionDetailViewModel with FieldControllerMixin {
   static const modeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
 

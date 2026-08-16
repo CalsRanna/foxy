@@ -60,7 +60,9 @@ class GlyphPropertyRepository
     builder = builder.orderBy('gp.ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefGlyphPropertyEntity.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefGlyphPropertyEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   @override

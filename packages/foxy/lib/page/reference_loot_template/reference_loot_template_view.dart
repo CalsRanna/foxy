@@ -16,7 +16,6 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class ReferenceLootTemplateView extends StatelessWidget {
   final ReferenceLootTemplateDetailViewModel viewModel;
@@ -71,7 +70,7 @@ class ReferenceLootTemplateView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: viewModel.questRequiredController,
         options: CreatureEnums.booleanOptions,
-        placeholder: Text('QuestRequired'),
+        placeholder: const Text('QuestRequired'),
       ),
     );
     final lootModeInput = FoxyFormItem(
@@ -128,7 +127,7 @@ class ReferenceLootTemplateView extends StatelessWidget {
           Expanded(child: questRequiredInput),
           Expanded(child: lootModeInput),
           Expanded(child: groupIdInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -137,7 +136,7 @@ class ReferenceLootTemplateView extends StatelessWidget {
           Expanded(child: minCountInput),
           Expanded(child: maxCountInput),
           Expanded(child: commentInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];

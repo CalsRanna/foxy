@@ -466,7 +466,7 @@ class ItemTemplateView extends StatelessWidget {
           Expanded(child: flagsInput),
           Expanded(child: flagsExtraInput),
           Expanded(child: flagsCustomInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -615,8 +615,8 @@ class ItemTemplateView extends StatelessWidget {
         children: [
           Expanded(child: scalingStatDistributionInput),
           Expanded(child: scalingStatValueInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];

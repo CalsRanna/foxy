@@ -79,7 +79,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
       Expanded(child: entryInput),
       Expanded(child: nameInput),
       Expanded(child: row),
-      Expanded(child: SizedBox()),
+      const Expanded(child: SizedBox()),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),

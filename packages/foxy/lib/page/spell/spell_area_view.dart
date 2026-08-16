@@ -21,7 +21,6 @@ import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class SpellAreaView extends StatefulWidget {
   final int spellId;
@@ -173,7 +172,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.genderController,
                     options: SpellEnums.spellAreaGenderOptions,
-                    placeholder: Text('gender'),
+                    placeholder: const Text('gender'),
                   ),
                 ),
               ),
@@ -189,12 +188,12 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   child: FoxyShadSelect<int>(
                     controller: viewModel.autocastController,
                     options: CreatureEnums.booleanOptions,
-                    placeholder: Text('autocast'),
+                    placeholder: const Text('autocast'),
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),

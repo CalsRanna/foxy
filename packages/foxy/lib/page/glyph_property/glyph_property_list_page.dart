@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
-import 'package:flutter/material.dart';
 import 'package:foxy/constant/glyph_property_constants.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';

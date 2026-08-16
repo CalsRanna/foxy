@@ -21,26 +21,24 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class MiscValueDropdown extends MiscValueOptions {
+class _MiscValueDropdown extends _MiscValueOptions {
   final Map<int, String> items;
-  const MiscValueDropdown(this.items);
+  const _MiscValueDropdown(this.items);
 }
 
-class MiscValueFlagPicker extends MiscValueOptions {
+class _MiscValueFlagPicker extends _MiscValueOptions {
   final List<FlagItem> flags;
-  const MiscValueFlagPicker(this.flags);
+  const _MiscValueFlagPicker(this.flags);
 }
 
-class MiscValueEntityPicker extends MiscValueOptions {
+class _MiscValueEntityPicker extends _MiscValueOptions {
   final FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> delegate;
-  const MiscValueEntityPicker(this.delegate);
+  const _MiscValueEntityPicker(this.delegate);
 }
-
-class MiscValueNumber extends MiscValueOptions {}
 
 /// Tri-state input modes for MiscValue.
-sealed class MiscValueOptions {
-  const MiscValueOptions();
+sealed class _MiscValueOptions {
+  const _MiscValueOptions();
 }
 
 class SpellView extends StatelessWidget {
@@ -359,7 +357,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.casterAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: Text('CasterAuraState'),
+        placeholder: const Text('CasterAuraState'),
       ),
     );
     final targetAuraStateInput = FoxyFormItem(
@@ -367,7 +365,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.targetAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: Text('TargetAuraState'),
+        placeholder: const Text('TargetAuraState'),
       ),
     );
     final spellMissileIDInput = FoxyFormItem(
@@ -888,7 +886,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.excludeCasterAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: Text('ExcludeCasterAuraState'),
+        placeholder: const Text('ExcludeCasterAuraState'),
       ),
     );
     final excludeTargetAuraStateInput = FoxyFormItem(
@@ -896,7 +894,7 @@ class SpellView extends StatelessWidget {
       child: FoxyShadSelect<int>(
         controller: vm.excludeTargetAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
-        placeholder: Text('ExcludeTargetAuraState'),
+        placeholder: const Text('ExcludeTargetAuraState'),
       ),
     );
     final excludeCasterAuraSpellInput = FoxyFormItem(
@@ -939,9 +937,9 @@ class SpellView extends StatelessWidget {
         spacing: 8,
         children: [
           Expanded(child: auraDescriptionLangFlagsInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -977,47 +975,45 @@ class SpellView extends StatelessWidget {
           const Expanded(child: SizedBox()),
         ],
       ),
-      Watch((_) {
-        return Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '分类掩码1',
-                child: FoxyFlagPicker(
-                  controller: vm.spellClassMask0Controller,
-                  flags: SpellFlags.spellClassMaskBits,
-                  title: '分类掩码1',
-                  placeholder: 'SpellClassMask0',
-                ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FoxyFormItem(
+              label: '分类掩码1',
+              child: FoxyFlagPicker(
+                controller: vm.spellClassMask0Controller,
+                flags: SpellFlags.spellClassMaskBits,
+                title: '分类掩码1',
+                placeholder: 'SpellClassMask0',
               ),
             ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '分类掩码2',
-                child: FoxyFlagPicker(
-                  controller: vm.spellClassMask1Controller,
-                  flags: SpellFlags.spellClassMaskBits,
-                  title: '分类掩码2',
-                  placeholder: 'SpellClassMask1',
-                ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '分类掩码2',
+              child: FoxyFlagPicker(
+                controller: vm.spellClassMask1Controller,
+                flags: SpellFlags.spellClassMaskBits,
+                title: '分类掩码2',
+                placeholder: 'SpellClassMask1',
               ),
             ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '分类掩码3',
-                child: FoxyFlagPicker(
-                  controller: vm.spellClassMask2Controller,
-                  flags: SpellFlags.spellClassMaskBits,
-                  title: '分类掩码3',
-                  placeholder: 'SpellClassMask2',
-                ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
+              label: '分类掩码3',
+              child: FoxyFlagPicker(
+                controller: vm.spellClassMask2Controller,
+                flags: SpellFlags.spellClassMaskBits,
+                title: '分类掩码3',
+                placeholder: 'SpellClassMask2',
               ),
             ),
-            const Expanded(child: SizedBox()),
-          ],
-        );
-      }),
+          ),
+          const Expanded(child: SizedBox()),
+        ],
+      ),
     ];
 
     final castingRows = [
@@ -1084,7 +1080,7 @@ class SpellView extends StatelessWidget {
           Expanded(child: requiredAreasIDInput),
           Expanded(child: requiresSpellFocusInput),
           Expanded(child: facingCasterFlagsInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -1135,7 +1131,7 @@ class SpellView extends StatelessWidget {
           Expanded(child: attributesExEInput),
           Expanded(child: attributesExFInput),
           Expanded(child: attributesExGInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -1147,7 +1143,7 @@ class SpellView extends StatelessWidget {
           Expanded(child: procTypeMaskInput),
           Expanded(child: procChanceInput),
           Expanded(child: procChargesInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -1159,7 +1155,7 @@ class SpellView extends StatelessWidget {
           Expanded(child: equippedItemClassInput),
           Expanded(child: equippedItemSubclassInput),
           Expanded(child: equippedItemInvTypesInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -1256,9 +1252,9 @@ class SpellView extends StatelessWidget {
         spacing: 8,
         children: [
           Expanded(child: shapeshiftExclude1Input),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -1661,7 +1657,7 @@ class SpellView extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
           Row(
@@ -1700,7 +1696,7 @@ class SpellView extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
         ],
@@ -1726,11 +1722,11 @@ class SpellView extends StatelessWidget {
   }
 
   /// Returns the enum options for MiscValueB
-  MiscValueOptions? _miscValueBOptions(int effect, int aura) {
+  _MiscValueOptions? _miscValueBOptions(int effect, int aura) {
     if (effect == 0) return null;
     return switch (effect) {
       6 => switch (aura) {
-        174 => MiscValueDropdown(
+        174 => _MiscValueDropdown(
           SpellEnums.statsEnumOptions,
         ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — uses the Stats enum!
         _ => null,
@@ -1791,30 +1787,30 @@ class SpellView extends StatelessWidget {
   }
 
   /// Returns the enum options for MiscValue.
-  MiscValueOptions? _miscValueOptions(int effect, int aura) {
+  _MiscValueOptions? _miscValueOptions(int effect, int aura) {
     if (effect == 0) return null;
     if (effect == 6) {
       return switch (aura) {
-        13 || 87 || 174 || 237 || 238 => MiscValueFlagPicker(
+        13 || 87 || 174 || 237 || 238 => _MiscValueFlagPicker(
           SpellFlags.spellSchoolMaskOptions,
         ), // school mask → FlagPicker!
-        22 || 83 => MiscValueDropdown(
+        22 || 83 => _MiscValueDropdown(
           CreatureEnums.damageSchoolOptions,
         ), // single resistance → dropdown
-        29 || 137 || 175 || 182 || 212 || 268 => MiscValueDropdown(
+        29 || 137 || 175 || 182 || 212 || 268 => _MiscValueDropdown(
           SpellEnums.statTypeOptions,
         ), // single stat → dropdown
         30 || 98 => null, // spell ID → number
-        31 => MiscValueDropdown(SpellEnums.speedTypeOptions),
-        36 => MiscValueDropdown(SpellEnums.shapeshiftFormOptions),
-        99 => MiscValueDropdown(SpellEnums.attackPowerTypeOptions),
-        107 || 108 => MiscValueDropdown(SpellEnums.spellModOpOptions),
+        31 => _MiscValueDropdown(SpellEnums.speedTypeOptions),
+        36 => _MiscValueDropdown(SpellEnums.shapeshiftFormOptions),
+        99 => _MiscValueDropdown(SpellEnums.attackPowerTypeOptions),
+        107 || 108 => _MiscValueDropdown(SpellEnums.spellModOpOptions),
         _ => null,
       };
     }
     return switch (effect) {
-      30 => MiscValueDropdown(SpellEnums.energizePowerTypeOptions), // ENERGIZE
-      74 => MiscValueEntityPicker(
+      30 => _MiscValueDropdown(SpellEnums.energizePowerTypeOptions), // ENERGIZE
+      74 => _MiscValueEntityPicker(
         // APPLY_GLYPH — GlyphProperties.dbc ID
         FoxyEntityPickerDelegates.glyphProperty,
       ),
@@ -1842,7 +1838,7 @@ class SpellView extends StatelessWidget {
 /// listener.
 class _MiscValueInput extends StatefulWidget {
   final IntFieldController controller;
-  final MiscValueOptions? options;
+  final _MiscValueOptions? options;
 
   const _MiscValueInput({required this.controller, this.options});
 
@@ -1854,16 +1850,16 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   SelectFieldController<int>? _selectController;
   FlagFieldController? _flagController;
 
-  bool get _isFlagMode => widget.options is MiscValueFlagPicker;
+  bool get _isFlagMode => widget.options is _MiscValueFlagPicker;
 
-  bool get _isSelectMode => widget.options is MiscValueDropdown;
+  bool get _isSelectMode => widget.options is _MiscValueDropdown;
 
   @override
   Widget build(BuildContext context) {
     if (_isFlagMode) {
       return FoxyFlagPicker(
         controller: _flagController!,
-        flags: (widget.options! as MiscValueFlagPicker).flags,
+        flags: (widget.options! as _MiscValueFlagPicker).flags,
         title: '杂项值',
         placeholder: 'MiscValue',
       );
@@ -1871,12 +1867,12 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     if (_isSelectMode) {
       return FoxyShadSelect<int>(
         controller: _selectController!,
-        options: (widget.options! as MiscValueDropdown).items,
+        options: (widget.options! as _MiscValueDropdown).items,
         placeholder: const Text('选择...'),
       );
     }
-    if (widget.options is MiscValueEntityPicker) {
-      final options = widget.options! as MiscValueEntityPicker;
+    if (widget.options is _MiscValueEntityPicker) {
+      final options = widget.options! as _MiscValueEntityPicker;
       return FoxyEntityPicker<BriefGlyphPropertyEntity>(
         controller: widget.controller,
         delegate: options.delegate,

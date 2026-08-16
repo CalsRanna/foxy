@@ -121,7 +121,7 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
     super.initState();
     assert(
       widget.initialValues.length == DbcLocale.values.length,
-      'DBC locale editor 必须固定 16 行',
+      'DBC locale editor must have exactly 16 rows',
     );
     _controllers = [
       for (final item in widget.initialValues)

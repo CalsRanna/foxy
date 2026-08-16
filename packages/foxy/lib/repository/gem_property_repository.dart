@@ -55,7 +55,9 @@ class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
     builder = builder.orderBy('gp.ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefGemPropertyEntity.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefGemPropertyEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   @override

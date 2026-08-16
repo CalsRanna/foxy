@@ -214,7 +214,7 @@ class CreatureTemplateView extends StatelessWidget {
           Expanded(child: expInput),
           Expanded(child: petSpellDataIdInput),
           Expanded(child: vehicleIdInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -402,7 +402,7 @@ class CreatureTemplateView extends StatelessWidget {
           Expanded(child: rangeAttackTimeInput),
           Expanded(child: rangeVarianceInput),
           Expanded(child: regenerateHealthInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -528,7 +528,7 @@ class CreatureTemplateView extends StatelessWidget {
           Expanded(child: dynamicFlagInput),
           Expanded(child: extraFlagInput),
           Expanded(child: creatureImmunitiesIdInput),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];

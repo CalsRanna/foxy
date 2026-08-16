@@ -115,7 +115,8 @@ class TalentEntity with _TalentEntityMixin {
 }
 
 extension BriefTalentEntityDisplay on BriefTalentEntity {
-  String get displayTabName => tabNameZhCN.isNotEmpty ? tabNameZhCN : tabNameEnUS;
+  String get displayTabName =>
+      tabNameZhCN.isNotEmpty ? tabNameZhCN : tabNameEnUS;
 
   String get displaySpellName =>
       spellNameZhCN.isNotEmpty ? spellNameZhCN : spellNameEnUS;

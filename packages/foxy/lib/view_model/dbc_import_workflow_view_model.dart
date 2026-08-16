@@ -7,28 +7,25 @@ import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-
-
 class DbcImportWorkflowViewModel {
-
   static String formatBlockingMessage(List<DbcTableCheckResult> blocking) {
-  final hasIncompatible = blocking.any(
-    (result) => result.state == DbcTableState.incompatible,
-  );
-  final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
-  final details = blocking
-      .take(5)
-      .map((result) {
-        final message = result.message;
-        if (message == null || message.isEmpty) {
-          return '${result.tableName} (${result.state.name})';
-        }
-        return '${result.tableName}: $message';
-      })
-      .join('\n');
-  final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
-  return '$title\n$details$suffix';
-}
+    final hasIncompatible = blocking.any(
+      (result) => result.state == DbcTableState.incompatible,
+    );
+    final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
+    final details = blocking
+        .take(5)
+        .map((result) {
+          final message = result.message;
+          if (message == null || message.isEmpty) {
+            return '${result.tableName} (${result.state.name})';
+          }
+          return '${result.tableName}: $message';
+        })
+        .join('\n');
+    final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
+    return '$title\n$details$suffix';
+  }
 
   final ImportDbcUseCase _useCase;
   final ConfigUtil _configUtil;

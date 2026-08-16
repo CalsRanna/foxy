@@ -63,7 +63,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyShadSelect<int>(
                           controller: viewModel.teamDependentController,
                           options: CreatureEnums.booleanOptions,
-                          placeholder: Text('TeamDependent'),
+                          placeholder: const Text('TeamDependent'),
                         ),
                       ),
                     ),
@@ -132,7 +132,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyShadSelect<int>(
                           controller: viewModel.maxStanding1Controller,
                           options: CreatureEnums.maxStandingOptions,
-                          placeholder: Text('MaxStanding1'),
+                          placeholder: const Text('MaxStanding1'),
                         ),
                       ),
                     ),
@@ -142,7 +142,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyShadSelect<int>(
                           controller: viewModel.maxStanding2Controller,
                           options: CreatureEnums.maxStandingOptions,
-                          placeholder: Text('MaxStanding2'),
+                          placeholder: const Text('MaxStanding2'),
                         ),
                       ),
                     ),
@@ -159,7 +159,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyShadSelect<int>(
                           controller: viewModel.isTeamAward1Controller,
                           options: CreatureEnums.booleanOptions,
-                          placeholder: Text('IsTeamAward1'),
+                          placeholder: const Text('IsTeamAward1'),
                         ),
                       ),
                     ),
@@ -169,7 +169,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyShadSelect<int>(
                           controller: viewModel.isTeamAward2Controller,
                           options: CreatureEnums.booleanOptions,
-                          placeholder: Text('IsTeamAward2'),
+                          placeholder: const Text('IsTeamAward2'),
                         ),
                       ),
                     ),

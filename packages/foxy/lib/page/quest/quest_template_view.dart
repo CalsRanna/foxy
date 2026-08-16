@@ -888,7 +888,7 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -922,7 +922,7 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -956,7 +956,7 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -990,7 +990,7 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -1024,7 +1024,7 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -1058,8 +1058,8 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -1089,8 +1089,8 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -1108,9 +1108,9 @@ class QuestTemplateView extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
       Row(
