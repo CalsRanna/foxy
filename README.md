@@ -106,7 +106,6 @@ icons_extracted: true
 - **database_editing 测试**(`test/database_editing/`):复合主键值语义、编辑流程、查询构建行为,纯内存运行。
 - **identity 测试**(`test/identity/`):身份/状态保持语义(活动日志 ID、locale 草稿、路由面包屑)。
 - **基础设施测试**:更新服务、DBC 编解码、BLP/MPQ、表单控制器、use case、widget 行为。
-- **DB 集成测试**(`test/dbc_mysql_integration_test.dart`):需 `FOXY_TEST_MYSQL=1` 且 `FOXY_TEST_MYSQL_FOXY_SCHEMA` 指向隔离 schema 才运行,否则自动跳过。
 - **生成器测试**(`packages/foxy_generator/test/`):`dart test` 纯 Dart 运行。
 - **lint 测试**(`packages/foxy_lint/test/`):analyzer 官方测试框架。
 

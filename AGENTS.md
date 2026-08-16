@@ -190,7 +190,6 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 - **Database editing tests** (`test/database_editing/*_database_editing_test.dart`, 17): key value semantics, editing behavior, query-builder behavior. Pure in-memory — no DB.
 - **Identity tests** (`test/identity/*_identity_test.dart`, 4): identity/state-preservation semantics (activity-log row IDs, locale draft vs original, route breadcrumbs).
 - **Infrastructure + widget + use-case tests**: update service (http mock), DBC codec/import/export, BLP decoder + MPQ extraction (fixtures in `test/fixture/icons/`), form controllers, widgets, gossip use cases, migration runner.
-- **DB integration test** (`test/dbc_mysql_integration_test.dart`): runs only with `FOXY_TEST_MYSQL=1` **and** `FOXY_TEST_MYSQL_FOXY_SCHEMA` set to an isolated schema (never `foxy`); host/port/username/password from `FOXY_TEST_MYSQL_*` env vars.
 - **Codegen tests**: `packages/foxy_generator/test/` — 8 generator suites (`dart test` from that package, no Flutter runtime), built with `build_test`'s `testBuilder` + `decodedMatches` over in-memory sources; `generator_test_support.dart` holds shared test sources.
 - **Lint tests**: `packages/foxy_lint/test/` — official `analyzer_testing` harness with `test_reflective_loader`.
 - New annotations/generators **require** codegen tests (see `doc/codegen/extending.md`).
