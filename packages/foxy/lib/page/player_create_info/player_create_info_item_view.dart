@@ -15,6 +15,7 @@ import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -193,11 +194,8 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
   void _showDialog({required bool isEditing}) {
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text(isEditing ? '编辑起始物品' : '新增起始物品'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: isEditing ? '编辑起始物品' : '新增起始物品',
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: DialogUtil.width),
           child: Column(

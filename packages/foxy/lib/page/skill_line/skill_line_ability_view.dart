@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -426,12 +427,9 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
     if (!mounted) return;
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('新增技能能力'),
-        description: Text('新增一条技能能力记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '新增技能能力',
+        description: '新增一条技能能力记录',
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -440,12 +438,9 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
   void _showEditDialog(BuildContext context) {
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('编辑技能能力'),
-        description: Text('编辑选中的技能能力记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '编辑技能能力',
+        description: '编辑选中的技能能力记录',
         child: _buildDialogForm(dialogContext),
       ),
     );

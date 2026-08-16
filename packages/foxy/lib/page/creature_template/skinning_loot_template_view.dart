@@ -17,6 +17,7 @@ import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/item_quality_color.dart';
+import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -379,12 +380,9 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
     if (!mounted) return;
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('新增掉落'),
-        description: Text('新增一条掉落记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '新增掉落',
+        description: '新增一条掉落记录',
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -394,12 +392,9 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
   void _showEditDialog() {
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('编辑掉落'),
-        description: Text('编辑选中的掉落记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '编辑掉落',
+        description: '编辑选中的掉落记录',
         child: _buildDialogForm(dialogContext),
       ),
     );

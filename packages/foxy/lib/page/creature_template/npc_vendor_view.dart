@@ -12,6 +12,7 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/item_quality_color.dart';
+import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -321,12 +322,9 @@ class _NpcVendorViewState extends State<NpcVendorView> {
     if (!mounted) return;
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: const Text('新增商品'),
-        description: const Text('新增一条商品记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '新增商品',
+        description: '新增一条商品记录',
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -335,12 +333,9 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   void _showEditDialog() {
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: const Text('编辑商品'),
-        description: const Text('编辑选中的商品记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '编辑商品',
+        description: '编辑选中的商品记录',
         child: _buildDialogForm(dialogContext),
       ),
     );

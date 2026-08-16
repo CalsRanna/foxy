@@ -4,6 +4,11 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Input that can explicitly switch between database `NULL` and plain
 /// text (including empty strings).
+///
+/// Scope: only for physical columns declared `String?` in the entity
+/// (currently just `player_create_info_cast_spell.note`) — a nullable
+/// column needs this widget because a bare [ShadInput] cannot distinguish
+/// `NULL` from `''`. Plain `String` columns use [FoxyStringInput].
 class FoxyNullableStringInput extends StatelessWidget {
   final NullableStringFieldController controller;
   final String? placeholder;

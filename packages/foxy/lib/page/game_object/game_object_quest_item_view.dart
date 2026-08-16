@@ -12,6 +12,7 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/item_quality_color.dart';
+import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -293,12 +294,9 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     if (!mounted) return;
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('新增任务物品'),
-        description: Text('新增一条任务物品记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '新增任务物品',
+        description: '新增一条任务物品记录',
         child: _buildDialogForm(dialogContext, isEditing: false),
       ),
     );
@@ -309,12 +307,9 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     if (!mounted) return;
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('编辑任务物品'),
-        description: Text('编辑选中的任务物品记录'),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: '编辑任务物品',
+        description: '编辑选中的任务物品记录',
         child: _buildDialogForm(dialogContext, isEditing: true),
       ),
     );

@@ -14,6 +14,7 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
+import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -119,11 +120,8 @@ class _PlayerCreateInfoActionViewState
   }
 
   Widget _buildDialog(BuildContext dialogContext, {required bool isEditing}) {
-    return ShadDialog(
-      title: Text(isEditing ? '编辑动作' : '新增动作'),
-      titlePinned: true,
-      descriptionPinned: true,
-      constraints: DialogUtil.constraints(dialogContext),
+    return FoxyFormDialog(
+      title: isEditing ? '编辑动作' : '新增动作',
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: DialogUtil.width),
         child: Column(

@@ -14,6 +14,7 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_nullable_string_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
+import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -80,8 +81,6 @@ class _PlayerCreateInfoCastSpellViewState
       );
     }
   }
-
-  String? _errorMessage;
 
   @override
   void dispose() {
@@ -198,16 +197,12 @@ class _PlayerCreateInfoCastSpellViewState
   void _showDialog(String title) {
     DialogUtil.show(
       context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text(title),
-        titlePinned: true,
-        descriptionPinned: true,
-        constraints: DialogUtil.constraints(dialogContext),
+      builder: (dialogContext) => FoxyFormDialog(
+        title: title,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
           children: [
-            if (_errorMessage != null) FoxyInlineError(message: _errorMessage),
             Row(
               spacing: 8,
               children: [
@@ -277,9 +272,8 @@ class _PlayerCreateInfoCastSpellViewState
                         await viewModel.persist();
                       } catch (error) {
                         if (!mounted) return;
-                        setState(
-                          () => _errorMessage =
-                              '保存失败：${FoxyExceptions.message(error)}',
+                        DialogUtil.instance.error(
+                          '保存失败：${FoxyExceptions.message(error)}',
                         );
                         return;
                       }
