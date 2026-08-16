@@ -4,9 +4,12 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// Dashboard card: title + content in a [ShadCard] container.
 ///
 /// Implemented on top of [ShadCard] so dashboard cards share the same
-/// radius, borders and color tokens as every other card in the app
-/// (previously a hand-rolled Material container with its own shadow and a
-/// different corner radius).
+/// radius, borders and color tokens as every other card in the app.
+///
+/// The title style is intentionally owned here rather than reusing
+/// [FoxyHeader]: card headings and page headings are different things and
+/// may diverge (size, color, leading icon) without touching page titles.
+/// Callers may pass a fully styled widget to override the default.
 ///
 /// The [child] is passed through unpadded; call sites add their own
 /// padding (dashboard components carry their own `Padding`).
@@ -18,6 +21,7 @@ class FoxyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
     return ShadCard(
       padding: EdgeInsets.zero,
       child: Column(
@@ -26,13 +30,7 @@ class FoxyCard extends StatelessWidget {
           if (title != null) ...[
             Padding(
               padding: const EdgeInsets.all(16),
-              child: DefaultTextStyle.merge(
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                child: title!,
-              ),
+              child: DefaultTextStyle.merge(style: textStyle, child: title!),
             ),
             const _Divider(),
           ],

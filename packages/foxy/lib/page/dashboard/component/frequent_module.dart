@@ -19,13 +19,11 @@ class FrequentModuleComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
-    const title = Text('常用功能', style: textStyle);
     const kTotalColumns = 3;
 
     if (features.isEmpty) {
       return FoxyCard(
-        title: title,
+        title: const Text('常用功能'),
         child: const Padding(
           padding: EdgeInsets.all(16),
           child: Text(
@@ -84,7 +82,7 @@ class FrequentModuleComponent extends StatelessWidget {
     }
 
     return FoxyCard(
-      title: title,
+      title: const Text('常用功能'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: rows,

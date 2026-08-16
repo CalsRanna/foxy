@@ -28,6 +28,6 @@ class Version extends StatelessWidget {
       children: children,
     );
     final padding = Padding(padding: EdgeInsets.all(16.0), child: column);
-    return FoxyCard(title: Text('版本信息'), child: padding);
+    return FoxyCard(title: const Text('版本信息'), child: padding);
   }
 }
