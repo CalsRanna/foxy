@@ -3,6 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
+import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -27,6 +28,11 @@ class MiscValueDropdown extends MiscValueOptions {
 class MiscValueFlagPicker extends MiscValueOptions {
   final List<FlagItem> flags;
   const MiscValueFlagPicker(this.flags);
+}
+
+class MiscValueEntityPicker extends MiscValueOptions {
+  final FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> delegate;
+  const MiscValueEntityPicker(this.delegate);
 }
 
 class MiscValueNumber extends MiscValueOptions {}
@@ -1768,6 +1774,8 @@ class SpellView extends StatelessWidget {
         return '宠物ID';
       case 64:
         return '触发法术ID';
+      case 74:
+        return '雕文ID';
       case 77:
         return '脚本参数';
       case 80:
@@ -1805,6 +1813,9 @@ class SpellView extends StatelessWidget {
     }
     return switch (effect) {
       30 => MiscValueDropdown(SpellEnums.energizePowerTypeOptions), // ENERGIZE
+      74 => MiscValueEntityPicker( // APPLY_GLYPH — GlyphProperties.dbc ID
+        FoxyEntityPickerDelegates.glyphProperty,
+      ),
       _ => null,
     };
   }
@@ -1864,6 +1875,14 @@ class _MiscValueInputState extends State<_MiscValueInput> {
         controller: _selectController!,
         options: (widget.options! as MiscValueDropdown).items,
         placeholder: const Text('选择...'),
+      );
+    }
+    if (widget.options is MiscValueEntityPicker) {
+      final options = widget.options! as MiscValueEntityPicker;
+      return FoxyEntityPicker<BriefGlyphPropertyEntity>(
+        controller: widget.controller,
+        delegate: options.delegate,
+        placeholder: 'MiscValue',
       );
     }
     return FoxyNumberInput<int>(

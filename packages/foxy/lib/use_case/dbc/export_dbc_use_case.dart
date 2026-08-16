@@ -7,7 +7,7 @@ import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
 
 final class DbcExportTable {
   final DbcDefinition definition;
@@ -67,7 +67,7 @@ final class ExportDbcUseCase {
     }
     await DbcExportUtil.ensureWritableDirectory(outputDirectory);
 
-    final mysqlConfig = await mysqlConfigFromSaved(_configUtil);
+    final mysqlConfig = await DbcExportShared.mysqlConfigFromSaved(_configUtil);
 
     // Files are written into a temp directory first, then copied over:
     // nothing lands in the target before it is fully written, and the same
@@ -116,48 +116,6 @@ final class ExportDbcUseCase {
     }
   }
 
-  Future<List<DbcExportTable>> loadTables() => loadDbcExportTables(_registry);
-}
-
-/// Loads the row-count view of every DBC table for the export-selection
-/// dialog. Shared by the standalone and combined export use cases.
-Future<List<DbcExportTable>> loadDbcExportTables(
-  DbcExportRegistry registry,
-) async {
-  final tables = <DbcExportTable>[];
-  for (final definition in DbcDefinitions.all) {
-    final result = await registry.countRows(definition.tableName);
-    tables.add(
-      DbcExportTable(
-        definition: definition,
-        recordCount: result.count,
-        countError: result.error,
-      ),
-    );
-  }
-  tables.sort(
-    (left, right) =>
-        left.definition.fileName.compareTo(right.definition.fileName),
-  );
-  return tables;
-}
-
-/// Builds the MySQL config from the saved config.yaml (same defaults as the
-/// bootstrap wizard). Shared by the standalone and combined export use cases.
-Future<MysqlConfig> mysqlConfigFromSaved(ConfigUtil configUtil) async {
-  final config = await configUtil.load();
-  return MysqlConfig(
-    host: config['host']?.toString() ?? '127.0.0.1',
-    port: parseMysqlPort(config['port']),
-    database: config['database']?.toString() ?? 'acore_world',
-    username: config['username']?.toString() ?? 'acore',
-    password: config['password']?.toString() ?? 'acore',
-    useSsl: config['use_ssl'] == true,
-    allowPublicKeyRetrieval: config['use_ssl'] != true,
-  );
-}
-
-int parseMysqlPort(Object? value) {
-  if (value is int) return value;
-  return int.tryParse(value?.toString() ?? '') ?? 3306;
+  Future<List<DbcExportTable>> loadTables() =>
+      DbcExportShared.loadDbcExportTables(_registry);
 }

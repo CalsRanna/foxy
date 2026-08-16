@@ -11,6 +11,7 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -113,7 +114,10 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
         ),
         FoxyTableColumn.flex(
           label: '法术',
-          cell: (_, item) => Text(item.spellId.toString()),
+          cell: (_, item) => FoxyIconText(
+            iconPath: item.textureFilename,
+            name: item.displaySpellName,
+          ),
         ),
         FoxyTableColumn.flex(
           label: '雕文类型',
@@ -122,10 +126,6 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
                     .glyphSlotFlags] ??
                 item.glyphSlotFlags.toString(),
           ),
-        ),
-        FoxyTableColumn.flex(
-          label: '法术图标',
-          cell: (_, item) => Text(item.spellIconId.toString()),
         ),
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),

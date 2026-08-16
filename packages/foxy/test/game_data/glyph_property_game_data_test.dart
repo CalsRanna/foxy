@@ -4,8 +4,11 @@ import 'package:foxy/constant/glyph_property_constants.dart';
 
 void main() {
 
-  test('雕文类型使用 GlyphProperties/GlyphSlot 专属 0 和 1', () {
-    expect(GlyphPropertyConstants.glyphPropertySlotTypeOptions, {0: '小型雕文', 1: '大型雕文'});
+  test('雕文类型使用 GlyphProperties/GlyphSlot 专属 0 和 1（0=大型, 1=小型）', () {
+    // 0 = major, 1 = minor: verified against client GlyphSlot.dbc slots 21-26
+    // and wowhead item data (Glyph of Frostbolt/Fireball major → flag 0,
+    // Glyph of Levitate/Arcane Intellect minor → flag 1).
+    expect(GlyphPropertyConstants.glyphPropertySlotTypeOptions, {0: '大型雕文', 1: '小型雕文'});
     expect(GlyphPropertyConstants.glyphPropertySlotTypeOptions, isNot(contains(2)));
     expect(GlyphPropertyConstants.applyGlyphSpellEffect, 74);
   });

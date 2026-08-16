@@ -3,6 +3,9 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'glyph_property_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('spellName')
+@FoxyBriefField.text('localeSpellName')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_glyph_properties')
 class GlyphPropertyEntity with _GlyphPropertyEntityMixin {
   @FoxyBriefField()
@@ -30,4 +33,10 @@ class GlyphPropertyEntity with _GlyphPropertyEntityMixin {
 
   factory GlyphPropertyEntity.fromJson(Map<String, dynamic> json) =>
       _GlyphPropertyEntityMixin.fromJson(json);
+}
+
+extension BriefGlyphPropertyEntityDisplay on BriefGlyphPropertyEntity {
+  /// Display spell name: zhCN when available, enUS otherwise.
+  String get displaySpellName =>
+      localeSpellName.isNotEmpty ? localeSpellName : spellName;
 }

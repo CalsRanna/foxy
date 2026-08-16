@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/glyph_property_constants.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
@@ -27,6 +28,7 @@ import 'package:foxy/entity/game_object_display_info_entity.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
+import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/holiday_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
@@ -97,6 +99,7 @@ import 'package:foxy/repository/game_object_display_info_repository.dart';
 import 'package:foxy/repository/game_object_loot_template_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
+import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
@@ -1730,6 +1733,51 @@ class FoxyEntityPickerDelegates {
   );
   static FoxyEntityPickerDelegate<BriefGemPropertyEntity> get gemProperty =>
       instance._gemProperty;
+
+  late final _glyphProperty = FoxyEntityPickerDelegate<BriefGlyphPropertyEntity>(
+    title: '雕文属性',
+    errorLabel: '搜索雕文属性失败',
+    filters: const [FoxyEntityPickerFilter('雕文 ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefGlyphPropertyEntity t) => t.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '法术',
+        cell: (BriefGlyphPropertyEntity t) => FoxyIconText(
+          iconPath: t.textureFilename,
+          name: t.displaySpellName,
+        ),
+      ),
+      FoxyEntityPickerColumn(
+        header: '类型',
+        width: 120,
+        text: (BriefGlyphPropertyEntity t) {
+          final label = GlyphPropertyConstants
+              .glyphPropertySlotTypeOptions[t.glyphSlotFlags];
+          return label ?? t.glyphSlotFlags.toString();
+        },
+      ),
+      FoxyEntityPickerColumn(
+        header: '图标 ID',
+        text: (BriefGlyphPropertyEntity t) => t.spellIconId.toString(),
+      ),
+    ],
+    idOf: (BriefGlyphPropertyEntity t) => t.id,
+    fetch: (page, v) => GetIt.instance
+        .get<GlyphPropertyRepository>()
+        .getBriefGlyphProperties(
+          page: page,
+          filter: GlyphPropertyFilter(id: v[0]),
+        ),
+    count: (v) => GetIt.instance
+        .get<GlyphPropertyRepository>()
+        .countGlyphProperties(filter: GlyphPropertyFilter(id: v[0])),
+  );
+  static FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> get glyphProperty =>
+      instance._glyphProperty;
 
   late final _itemVisuals = FoxyEntityPickerDelegate<BriefItemVisualsEntity>(
     title: '物品视觉',

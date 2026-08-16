@@ -7,12 +7,18 @@ final class BriefGlyphPropertyEntity {
   final int spellId;
   final int glyphSlotFlags;
   final int spellIconId;
+  final String spellName;
+  final String localeSpellName;
+  final String textureFilename;
 
   const BriefGlyphPropertyEntity({
     this.id = 0,
     this.spellId = 0,
     this.glyphSlotFlags = 0,
     this.spellIconId = 0,
+    this.spellName = '',
+    this.localeSpellName = '',
+    this.textureFilename = '',
   });
 
   factory BriefGlyphPropertyEntity.fromJson(Map<String, dynamic> json) {
@@ -37,12 +43,22 @@ final class BriefGlyphPropertyEntity {
           : json['SpellIconID'] == false
           ? 0
           : (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      spellName: json['spellName']?.toString() ?? '',
+      localeSpellName: json['localeSpellName']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([id, spellId, glyphSlotFlags, spellIconId]);
+  int get hashCode => Object.hashAll([
+    id,
+    spellId,
+    glyphSlotFlags,
+    spellIconId,
+    spellName,
+    localeSpellName,
+    textureFilename,
+  ]);
 
   int get key => id;
 
@@ -53,7 +69,10 @@ final class BriefGlyphPropertyEntity {
             id == other.id &&
             spellId == other.spellId &&
             glyphSlotFlags == other.glyphSlotFlags &&
-            spellIconId == other.spellIconId;
+            spellIconId == other.spellIconId &&
+            spellName == other.spellName &&
+            localeSpellName == other.localeSpellName &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -62,7 +81,10 @@ final class BriefGlyphPropertyEntity {
         'id: $id, '
         'spellId: $spellId, '
         'glyphSlotFlags: $glyphSlotFlags, '
-        'spellIconId: $spellIconId'
+        'spellIconId: $spellIconId, '
+        'spellName: $spellName, '
+        'localeSpellName: $localeSpellName, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

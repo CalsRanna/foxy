@@ -7,6 +7,7 @@ import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:path/path.dart' as p;
 
@@ -92,7 +93,7 @@ class CombinedExportUseCase {
     await DbcExportUtil.ensureWritableDirectory(dbcOutputDirectory);
     await DbcExportUtil.ensureWritableDirectory(mpqDirectory);
 
-    final mysqlConfig = await mysqlConfigFromSaved(_configUtil);
+    final mysqlConfig = await DbcExportShared.mysqlConfigFromSaved(_configUtil);
 
     final tempDir = await Directory.systemTemp.createTemp('foxy_dbc_export_');
     try {
@@ -157,5 +158,6 @@ class CombinedExportUseCase {
     }
   }
 
-  Future<List<DbcExportTable>> loadTables() => loadDbcExportTables(_registry);
+  Future<List<DbcExportTable>> loadTables() =>
+      DbcExportShared.loadDbcExportTables(_registry);
 }
