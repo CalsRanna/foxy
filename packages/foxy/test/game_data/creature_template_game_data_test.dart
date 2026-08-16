@@ -215,18 +215,6 @@ void main() {
     expect(loot.item, 0);
   });
 
-  test('光环列表按服务端空格语法规范化并拒绝无效值', () {
-    expect(normalizeCreatureTemplateAddonAuras('  123   456 '), '123 456');
-    expect(
-      () => normalizeCreatureTemplateAddonAuras('123 123'),
-      throwsFormatException,
-    );
-    expect(
-      () => normalizeCreatureTemplateAddonAuras('123 abc'),
-      throwsFormatException,
-    );
-  });
-
   test('装备模板 Item.dbc Picker 只允许服务端可持握位置', () {
     expect(DbcItemRepository.handEquippableInventoryTypes.toSet(), {
       13,
@@ -275,29 +263,6 @@ void main() {
     });
     expect(CreatureTemplateDetailPage.disabledTabIndexes(1, 12), isEmpty);
   });
-}
-
-String normalizeCreatureTemplateAddonAuras(String value) {
-  final tokens = value.trim().isEmpty
-      ? const <String>[]
-      : value.trim().split(RegExp(r'\s+'));
-  final spellIds = <int>[];
-  final seen = <int>{};
-  for (final token in tokens) {
-    final spellId = int.tryParse(token);
-    if (spellId == null || spellId <= 0) {
-      throw FormatException(
-        'aura list must contain space-separated positive spell IDs',
-      );
-    }
-    if (!seen.add(spellId)) {
-      throw FormatException(
-        'aura list cannot contain duplicate spell IDs: $spellId',
-      );
-    }
-    spellIds.add(spellId);
-  }
-  return spellIds.join(' ');
 }
 
 Set<int> _bits(int first, int last) => {

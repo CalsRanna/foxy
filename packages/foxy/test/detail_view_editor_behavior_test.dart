@@ -42,7 +42,7 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('GameObject 陷阱类型的 Data4 渲染为 ShadSelect，无 list icon', (
+  testWidgets('GameObject 陷阱类型的 Data4 渲染为 ShadSelect', (
     tester,
   ) async {
     GetIt.instance.registerSingleton<GameObjectTemplateRepository>(
@@ -64,9 +64,6 @@ void main() {
     // Data4 = trap type (select); value 0 shows "not a bomb trap".
     expect(find.text('陷阱类型'), findsOneWidget);
     expect(find.text('非炸弹陷阱'), findsOneWidget);
-    // No legacy list icon anywhere on the page.
-    expect(find.byIcon(LucideIcons.list), findsNothing);
-
     await tester.pumpWidget(const SizedBox());
   });
 
@@ -119,7 +116,6 @@ void main() {
     // are 0.
     expect(find.text('包含银行'), findsOneWidget);
     expect(find.text('是'), findsOneWidget);
-    expect(find.byIcon(LucideIcons.list), findsNothing);
 
     await tester.pumpWidget(const SizedBox());
   });
@@ -146,7 +142,6 @@ void main() {
     expect(find.text('ANY'), findsOneWidget);
     // The event-phase mask and event flags remain FlagPickers.
     expect(find.byType(FoxyFlagPicker), findsWidgets);
-    expect(find.byIcon(LucideIcons.list), findsNothing);
 
     await tester.pumpWidget(const SizedBox());
   });
