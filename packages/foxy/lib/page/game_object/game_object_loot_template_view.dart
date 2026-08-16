@@ -4,6 +4,7 @@ import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/game_object_loot_template_linked_list_view_model.dart';
+import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -55,7 +56,6 @@ class _GameObjectLootTemplateViewState
 
   Widget _buildContent(BuildContext context) {
     final items = viewModel.items.value;
-    final selectedKey = viewModel.selectedKey.value;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16),
@@ -65,20 +65,8 @@ class _GameObjectLootTemplateViewState
           if (viewModel.errorMessage.value != null)
             FoxyInlineError(message: viewModel.errorMessage.value),
           Row(
-            spacing: 8,
             children: [
-              ShadButton(
-                leading: Icon(LucideIcons.plus, size: 16),
-                onPressed: _showCreateDialog,
-                size: ShadButtonSize.sm,
-                child: Text('新增'),
-              ),
-              ShadButton.ghost(
-                leading: Icon(LucideIcons.squarePen, size: 16),
-                onPressed: selectedKey != null ? _showEditDialog : null,
-                size: ShadButtonSize.sm,
-                child: Text('编辑'),
-              ),
+              ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
               const Spacer(),
               FoxyPagination(
                 page: viewModel.page.value,
@@ -86,26 +74,36 @@ class _GameObjectLootTemplateViewState
                 total: viewModel.total.value,
                 onChange: viewModel.paginate,
               ),
-              ShadButton.destructive(
-                leading: Icon(LucideIcons.trash, size: 16),
-                onPressed: selectedKey != null
-                    ? () => _destroy(viewModel.selectedKey.value!)
-                    : null,
-                size: ShadButtonSize.sm,
-                child: Text('删除'),
-              ),
             ],
           ),
           FoxyDataTable<BriefGameObjectLootTemplateEntity>(
             shrinkWrap: true,
             pinnedRowCount: 1,
             rows: items,
-            keyOf: (item) => item.key,
-            selectedKey: selectedKey,
-            onRowTap: (item) => viewModel.selectedKey.value = item.key,
             onRowDoubleTap: (item) async {
               viewModel.selectedKey.value = item.key;
               await _showEditDialog();
+            },
+            onRowSecondaryTapDownWithDetails: (item, details) {
+              ContextMenu.show(
+                context: context,
+                position: details.globalPosition,
+                items: [
+                  ShadContextMenuItem(
+                    leading: Icon(LucideIcons.squarePen, size: 16),
+                    onPressed: () async {
+                      viewModel.selectedKey.value = item.key;
+                      await _showEditDialog();
+                    },
+                    child: Text('编辑'),
+                  ),
+                  ShadContextMenuItem(
+                    leading: Icon(LucideIcons.trash, size: 16),
+                    onPressed: () => _destroy(item.key),
+                    child: Text('删除'),
+                  ),
+                ],
+              );
             },
             columns: [
               FoxyTableColumn.fixed(
