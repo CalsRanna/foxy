@@ -219,9 +219,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                       return;
                     }
                     if (!dialogContext.mounted) return;
-                    ShadSonner.of(
-                      dialogContext,
-                    ).show(const ShadToast(description: Text('保存成功')));
+                    DialogUtil.instance.success('保存成功');
                     Navigator.of(dialogContext).pop();
                   },
                   child: Text(isEditing ? '更新' : '保存'),

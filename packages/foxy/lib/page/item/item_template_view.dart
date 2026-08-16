@@ -16,6 +16,7 @@ import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -54,27 +55,26 @@ class ItemTemplateView extends StatelessWidget {
     7: '未知',
   };
 
-  static final Map<int, String> _inventoryTypeOptions =
-      ItemConstants.itemInventoryTypes.asMap();
+  static final Map<int, String> _inventoryTypeOptions = ItemConstants
+      .itemInventoryTypes
+      .asMap();
 
-  static final Map<int, String> _itemClassOptions = ItemConstants.itemClasses.asMap();
+  static final Map<int, String> _itemClassOptions = ItemConstants.itemClasses
+      .asMap();
 
   final ItemTemplateDetailViewModel viewModel;
 
   const ItemTemplateView({super.key, required this.viewModel});
 
-
   // Get subclass options based on selected class
   Map<int, String> get _currentSubclassOptions {
     final classId = viewModel.classNameController.collect();
-    if (classId < 0 || classId >= ItemConstants.itemSubclasses.length) return {};
+    if (classId < 0 || classId >= ItemConstants.itemSubclasses.length) {
+      return {};
+    }
     final subclasses = ItemConstants.itemSubclasses[classId];
     return subclasses.asMap().map((k, v) => MapEntry(k, v));
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -1296,14 +1296,10 @@ class ItemTemplateView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(const ShadToast(description: Text('模板数据已保存')));
+      DialogUtil.instance.success('模板数据已保存');
     } catch (error) {
       if (!context.mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
+      DialogUtil.instance.error('保存失败：${FoxyExceptions.message(error)}');
     }
   }
 }

@@ -189,7 +189,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
         }
         final qualityColor =
             ItemQualityColor.colors[item.displayItemQuality(index)] ??
-                Colors.black;
+            Colors.black;
         return FoxyIconText(
           iconPath: item.displayItemIcon(index),
           name: item.displayItemName(index),

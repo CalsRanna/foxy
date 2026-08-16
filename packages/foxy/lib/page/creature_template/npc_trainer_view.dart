@@ -218,9 +218,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
                       return;
                     }
                     if (!dialogContext.mounted) return;
-                    ShadSonner.of(
-                      dialogContext,
-                    ).show(const ShadToast(description: Text('保存成功')));
+                    DialogUtil.instance.success('保存成功');
                     Navigator.of(dialogContext).pop();
                   },
                   child: Text(isEditing ? '更新' : '保存'),
@@ -365,9 +363,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       await viewModel.setLinkKey(trainerId);
     } catch (error) {
       if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
+      DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
     }
   }
 

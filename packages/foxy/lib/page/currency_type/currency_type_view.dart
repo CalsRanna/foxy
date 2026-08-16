@@ -7,6 +7,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -95,14 +96,10 @@ class CurrencyTypeView extends StatelessWidget {
     try {
       await viewModel.persist();
       if (!context.mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(const ShadToast(description: Text('货币数据已保存')));
+      DialogUtil.instance.success('货币数据已保存');
     } catch (error) {
       if (!context.mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
+      DialogUtil.instance.error('保存失败：${FoxyExceptions.message(error)}');
     }
   }
 }

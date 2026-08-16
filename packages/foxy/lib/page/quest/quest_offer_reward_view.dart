@@ -10,6 +10,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -225,9 +226,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
       await viewModel.initSignals(linkKey: widget.questId);
     } catch (error) {
       if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
+      DialogUtil.instance.error('加载失败：${FoxyExceptions.message(error)}');
     }
   }
 
@@ -235,14 +234,10 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
     try {
       await viewModel.persist();
       if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(const ShadToast(description: Text('发放奖励数据已保存')));
+      DialogUtil.instance.success('发放奖励数据已保存');
     } catch (error) {
       if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
+      DialogUtil.instance.error('保存失败：${FoxyExceptions.message(error)}');
     }
   }
 }

@@ -412,12 +412,10 @@ class _NpcTextViewState extends State<NpcTextView> {
     try {
       await viewModel.persist();
       if (!mounted) return;
-      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+      DialogUtil.instance.success('保存成功');
     } catch (error) {
       if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(FoxyExceptions.message(error))));
+      DialogUtil.instance.error('保存失败：${FoxyExceptions.message(error)}');
     }
   }
 }
