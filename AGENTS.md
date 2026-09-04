@@ -55,7 +55,7 @@ The architecture is **annotation-declared + code-generated**. Hand-written code 
 | `foxy:foxy_repository` | `lib/repository/**_repository.dart` | `XxxFilter` class + `mixin _XxxRepositoryMixin on RepositoryMixin` (CRUD + link-key query layer) |
 | `foxy:foxy_view_model` | `lib/view_model/**_view_model.dart` | `mixin _Xxx...ViewModelMixin on FieldControllerMixin[, QueryVersionMixin]` (signals + controllers) |
 
-On disk: 125 entity `.g.dart`, 124 repository `.g.dart`, 84 view_model `.g.dart`.
+On disk: 130 entity `.g.dart`, 129 repository `.g.dart`, 85 view_model `.g.dart`.
 
 **Golden rules:**
 
@@ -90,8 +90,9 @@ On disk: 125 entity `.g.dart`, 124 repository `.g.dart`, 84 view_model `.g.dart`
 
 ### Wiring a New Module
 
-- Register the ViewModel/Repository/etc. in **`lib/di.dart`** (get_it: 252 explicit registrations — 105 `registerFactory`, 137 `registerLazySingleton`, 10 `registerSingleton`; ALL registration is explicit here — no service-locator magic).
-- Add routes in **`lib/router/router.dart`** (`@AutoRoute`, generated into `router.gr.dart`; 57 routes total). `RouterFacade` handles breadcrumbs/menu highlighting — ViewModels must not touch routing.
+- Register the ViewModel/Repository/etc. in **`lib/di.dart`** (get_it: 264 explicit registrations — 111 `registerFactory`, 143 `registerLazySingleton`, 10 `registerSingleton`; ALL registration is explicit here — no service-locator magic).
+- Add routes in **`lib/router/router.dart`** (`@AutoRoute`, generated into `router.gr.dart`; 59 routes total). `RouterFacade` handles breadcrumbs/menu highlighting — ViewModels must not touch routing.
+- Full step-by-step checklist (module ≠ table, ordered, verifiable): **`doc/codegen/module-workflow.md`**.
 - Seed the `foxy.features` table (drives sidebar pinning / "更多" page / dashboard favorites) via a **migration**, matching existing insert patterns.
 
 ## Architecture Layers
@@ -115,7 +116,7 @@ laconic query builder ──► MySQL (AzerothCore `world` DB + `foxy` meta DB)
 - Class↔file snake_case: `XxxEntity` ↔ `xxx_entity.dart`, `XxxRepository` ↔ `xxx_repository.dart`; `BriefXxxEntity` for list rows.
 - Generated method names: `getBriefXxx` / `countXxx` / `getXxx` / `storeXxx` / `updateXxx` / `destroyXxx` / `createXxx` / `copyXxx`; Filter class `XxxFilter`.
 - Handwritten classes must mix in the generated mixin and declare `part 'xxx.g.dart';`.
-- `lib/entity/` holds ~130 `*_entity.dart` files (125 generated); hand-written-only ones: `activity_log_entity.dart`, `dbc_locale.dart`, `feature_entity.dart`, `version_entity.dart`, composite-key DTOs (`condition_entity` … are generated, keys are hand-written `*_key.dart`).
+- `lib/entity/` holds ~135 `*_entity.dart` files (130 generated); hand-written-only ones: `activity_log_entity.dart`, `dbc_locale.dart`, `feature_entity.dart`, `version_entity.dart`, composite-key DTOs (`condition_entity` … are generated, keys are hand-written `*_key.dart`).
 
 ### foxy_lint rules (analyzer plugin; 12 rules registered in `packages/foxy_lint/lib/main.dart`)
 
@@ -147,8 +148,8 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 ## State Management & UI
 
 - **signals** / **signals_flutter** (reactive signals) — ViewModels expose `signal(...)` fields; pages use `Watch((_) => ...)`. No Provider/Riverpod/Bloc. (`SignalsObserver.instance = null` in main.dart.)
-- **shadcn_ui** + **lucide_icons_flutter**; Chinese UI (Windows: Microsoft YaHei UI). App shell: `ShadApp.router`, 57 auto_route routes, 29 `RouterMenu` entries.
-- Reusable widgets in `lib/widget/` (28 files): `FoxyDataTable`/`FoxyTableColumn` (typed table, `queryVersion`-based), `FoxyHeader`, `FoxyStringInput`, `FoxyNumberInput`, `FoxyNullableStringInput`, `FoxyPagination`, `FoxyEntityPicker` (+ delegates), `FoxyFlagPicker`, `FoxySignedEntityPicker`, `FoxyShadSelect`, `FoxyFormItem`/`FoxyFormSection`, `ContextMenu`, `FoxyTab` (lazy tabs), `FoxyGameAssetIcon`, `FoxyInputReadonly`, dialogs in `widget/dialog/`, form controllers in `widget/form/field_controller.dart` (`FieldController<T>` sealed hierarchy + `FieldControllerMixin`).
+- **shadcn_ui** + **lucide_icons_flutter**; Chinese UI (Windows: Microsoft YaHei UI). App shell: `ShadApp.router`, 59 auto_route routes, 30 `RouterMenu` entries.
+- Reusable widgets in `lib/widget/` (30 files): `FoxyDataTable`/`FoxyTableColumn` (typed table, `queryVersion`-based), `FoxyHeader`, `FoxyStringInput`, `FoxyNumberInput`, `FoxyNullableStringInput`, `FoxyPagination`, `FoxyEntityPicker` (+ delegates), `FoxyFlagPicker`, `FoxySignedEntityPicker`, `FoxyShadSelect`, `FoxyFormItem`/`FoxyFormSection`, `ContextMenu`, `FoxyTab` (lazy tabs), `FoxyGameAssetIcon`, `FoxyInputReadonly`, dialogs in `widget/dialog/`, form controllers in `widget/form/field_controller.dart` (`FieldController<T>` sealed hierarchy + `FieldControllerMixin`).
 - List pages: filter row → `FoxyDataTable` → pagination; double-click opens detail; right-click context menu copies/deletes rows.
 - Detail pages: main form + `FoxyTab` sub-table tabs (12 tabs for `creature_template`).
 - `QueryVersionMixin` (in `lib/widget/query_version_mixin.dart`): pagination baseline — `FoxyDataTable` scrolls back to the top when `queryVersion` changes.
@@ -166,7 +167,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 - `Database.instance` singleton (`lib/database/database.dart`): `connect(MysqlConfig)` → `Laconic(MysqlDriver)` (laconic + laconic_mysql). Config from `config.yaml` via `ConfigUtil` (atomic rewrite, corrupt-file self-heal to `.bak`).
 - **Two DB namespaces**: AzerothCore `world` tables (unprefixed, e.g. `creature_template`) and the app's own **`foxy` meta DB**: `foxy.features` (sidebar registry, seeded via migrations), `foxy.migrations`, `foxy.activity_log` (id/module/action_type/entity_name/created_at), and ~50 `foxy.dbc_*` mirror tables.
-- **Migrations**: `lib/database/migration/migration_YYYYMMDDHHMM.dart` (7 total), appended in order to the list in `lib/database/migration_runner.dart`. Runner also force-creates the `foxy` DB as utf8mb4 and idempotently converts non-utf8mb4 tables (legacy MySQL 5.x bundles default to latin1).
+- **Migrations**: `lib/database/migration/migration_YYYYMMDDHHMM.dart` (10 total), appended in order to the list in `lib/database/migration_runner.dart`. Runner also force-creates the `foxy` DB as utf8mb4 and idempotently converts non-utf8mb4 tables (legacy MySQL 5.x bundles default to latin1).
 - **Activity logging**: every create/update/delete/copy fires `EntityWrittenEvent` on the `EventBus` (generated `_logActivity`); a **single** `ActivityLogListener` (eager singleton) persists to `foxy.activity_log` via `ActivityLogService.recordBestEffort` (never fails the main write). `DashboardReadViewModel` subscribes for the live feed.
 - **Transactions**: `DatabaseTransaction.execute()` for cross-table use cases; nested calls are **merged** via a zone marker (laconic_mysql opens a new connection per `transaction()` call, so nesting would commit independently). Repositories never coordinate transactions.
 - **Locale support**: `RepositoryMixin.localeEnabled` toggles zhCN JOINs; `@FoxyBriefField.text` marks locale display-name columns. DBC wide tables use `DbcLocaleRepositoryMixin` + `DbcLocaleFields` (16 languages).

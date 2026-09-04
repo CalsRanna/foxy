@@ -35,7 +35,7 @@ foxy/
 ├── packages/
 │   ├── foxy/                 # Flutter 应用(唯一可运行包)
 │   │   ├── lib/              # 应用源码(见下方架构)
-│   │   ├── test/             # 91 个测试文件
+│   │   ├── test/             # 102 个测试文件
 │   │   ├── tool/             # 发布工具与更新器
 │   │   └── windows|linux|macos/  # 平台工程
 │   ├── foxy_annotation/      # 代码生成注解定义(Entity/Repository/ViewModel)
@@ -100,7 +100,7 @@ icons_extracted: true
 
 ## 测试
 
-共 110 个 Dart 测试文件:
+共 123 个 Dart 测试文件(应用 102 + 生成器 9 + lint 12):
 
 - **game_data 测试**(`test/game_data/`):枚举/标志常量与 AzerothCore 服务端取值一致性,纯内存运行。
 - **database_editing 测试**(`test/database_editing/`):复合主键值语义、编辑流程、查询构建行为,纯内存运行。
@@ -125,6 +125,7 @@ icons_extracted: true
 - [doc/codegen/usage.md](doc/codegen/usage.md) — 模块开发指南
 - [doc/codegen/generators.md](doc/codegen/generators.md) — 生成器实现详解
 - [doc/codegen/extending.md](doc/codegen/extending.md) — 扩展生成器
+- [doc/module-workflow.md](doc/module-workflow.md) — 新增完整模块机械执行清单(逐步、可验证)
 
 ## 许可
 
