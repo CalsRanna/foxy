@@ -68,11 +68,4 @@ class WindowInitializer with WindowListener {
     if (Platform.isAndroid || Platform.isFuchsia || Platform.isIOS) return;
     await windowManager.setOpacity(1);
   }
-
-  static Future<void> resize(Size size) async {
-    if (kIsWeb) return;
-    if (Platform.isAndroid || Platform.isFuchsia || Platform.isIOS) return;
-    await windowManager.setOpacity(0);
-    await Future.wait([windowManager.setSize(size), windowManager.center()]);
-  }
 }

@@ -7,7 +7,6 @@ import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_import_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/mpq_export_worker.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:signals/signals.dart';
@@ -126,28 +125,6 @@ class DbcSyncUtil {
         );
       }
     }
-  }
-
-  Future<List<String>> checkRequiredTablesExist() async {
-    final results = await checkTables();
-    final errors = results.where(
-      (result) =>
-          result.state == DbcTableState.error ||
-          result.state == DbcTableState.incompatible,
-    );
-    if (errors.isNotEmpty) {
-      throw ValidationException(
-        'DBC table check failed: ${errors.first.message}',
-      );
-    }
-    return results
-        .where(
-          (result) =>
-              result.state == DbcTableState.missing ||
-              result.state == DbcTableState.empty,
-        )
-        .map((result) => result.tableName)
-        .toList();
   }
 
   Future<List<DbcTableCheckResult>> checkTables() async {

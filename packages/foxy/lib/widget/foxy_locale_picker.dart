@@ -6,9 +6,6 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// Legacy name kept for compatibility.
-typedef FoxyLocalePickerDelegate = DatabaseLocaleEditorDelegate;
-
 /// Edit contract for regular database `*_locale` sub-tables: dynamic
 /// language rows, addable/deletable.
 final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {

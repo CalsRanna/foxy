@@ -22,11 +22,6 @@ String tableNameOf(String entityClassName) {
 String entityClassNameOfRepository(String repositoryClassName) =>
     '${stripSuffix(repositoryClassName, 'Repository')}Entity';
 
-/// Derived Repository class name for a Full Entity class name:
-/// `CreatureLootTemplateEntity` → `CreatureLootTemplateRepository`.
-String repositoryClassNameOfEntity(String entityClassName) =>
-    '${stripEntitySuffix(entityClassName)}Repository';
-
 /// ViewModel suffixes, longest first. `XxxLinkedDetailViewModel` must be
 /// stripped before `XxxDetailViewModel` (its name *ends with* the shorter
 /// suffix too).

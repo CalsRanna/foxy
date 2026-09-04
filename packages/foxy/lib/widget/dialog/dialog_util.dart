@@ -138,17 +138,6 @@ class DialogUtil {
     await Navigator.maybePop(FoxyRouter.router.navigatorKey.currentContext!);
   }
 
-  void dismissAll() {
-    final context = FoxyRouter.router.navigatorKey.currentContext!;
-    if (!context.mounted) return;
-    // Only close dialog routes (PopupRoute), never pop a business page.
-    while (Navigator.of(context).canPop()) {
-      final route = ModalRoute.of(context);
-      if (route is! PopupRoute) break;
-      Navigator.of(context).pop();
-    }
-  }
-
   void error(String error) {
     final context = FoxyRouter.router.navigatorKey.currentContext!;
     if (!context.mounted) return;
