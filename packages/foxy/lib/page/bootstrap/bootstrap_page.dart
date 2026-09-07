@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/cover/cover_selector.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/bootstrap/bootstrap_simulator_form.dart';
 import 'package:foxy/page/bootstrap/bootstrap_window_header.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -21,6 +25,10 @@ class BootstrapPage extends StatefulWidget {
 
 class _BootstrapPageState extends State<BootstrapPage> {
   final viewModel = GetIt.instance.get<BootstrapWorkflowViewModel>();
+
+  /// User-chosen cover image, picked once when the page opens; null falls
+  /// back to the built-in asset.
+  File? _coverFile;
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +58,35 @@ class _BootstrapPageState extends State<BootstrapPage> {
   @override
   void initState() {
     super.initState();
+    try {
+      final coverDir = Directory(CoverSelector.defaultDirPath);
+      if (!coverDir.existsSync()) coverDir.createSync(recursive: true);
+    } on FileSystemException {
+      // Best effort: pick() treats a missing directory as "no candidate".
+    }
+    _coverFile = CoverSelector.pick(CoverSelector.defaultDirPath);
+    LoggerUtil.instance.d(
+      _coverFile == null
+          ? '封面目录无可用图片,使用内置背景: ${CoverSelector.defaultDirPath}'
+          : '封面图片: ${_coverFile!.path}',
+    );
     _prepare();
   }
 
   Widget _buildCoverPanel() {
     final surfaceColor = Theme.of(context).colorScheme.surface;
-    var image = Image.asset(
-      'asset/image/background.png',
-      fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
-    );
+    var image = _coverFile == null
+        ? _buildAssetCover()
+        : Image.file(
+            _coverFile!,
+            fit: BoxFit.cover,
+            height: double.infinity,
+            width: double.infinity,
+            // Decode at screen width so arbitrary user images (possibly 4K)
+            // do not consume full-resolution memory.
+            cacheWidth: MediaQuery.sizeOf(context).width.round(),
+            errorBuilder: (context, error, stackTrace) => _buildAssetCover(),
+          );
     var linearGradient = LinearGradient(
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
@@ -72,6 +98,16 @@ class _BootstrapPageState extends State<BootstrapPage> {
         image,
         Container(decoration: boxDecoration),
       ],
+    );
+  }
+
+  /// Built-in fallback when no user cover is available or decoding fails.
+  Widget _buildAssetCover() {
+    return Image.asset(
+      'asset/image/cover.webp',
+      fit: BoxFit.cover,
+      height: double.infinity,
+      width: double.infinity,
     );
   }
 
