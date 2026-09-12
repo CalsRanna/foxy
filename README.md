@@ -111,11 +111,13 @@ icons_extracted: true
 
 ## 构建与发布
 
-发布流水线(`.github/workflows/release.yml`)默认由推送 `v*` tag 触发,也可在 Actions 页面手动触发(填 release tag 重跑):
+发布流水线(`.github/workflows/release.yml`)由推送 `v*` tag 触发:
 
 1. 手动 bump `packages/foxy/pubspec.yaml` 的 `version`,并在 `CHANGELOG.md` 补 `## vX.Y.Z` 段(流水线读取该段作为更新说明);
 2. 打 tag 并推送:`git tag vX.Y.Z && git push origin vX.Y.Z`;
-3. 单 job CI 依次执行:analyze + 三包测试 gate → `flutter build windows --release` → 编译更新器 → 打包 zip → 生成 `latest.yaml`(含 SHA-256,保留最近 3 条) → 发布 GitHub Release。同一 tag 重复推送会自动取消旧 run。
+3. 单 job 依次执行:`flutter build windows --release` → 编译更新器 → 打包 zip → 生成 `latest.yaml`(含 SHA-256,保留最近 3 条) → 发布 GitHub Release。
+
+analyze + 三包测试不在这条流水线里,由 `.github/workflows/ci.yml` 在 push 与 PR 时运行,环境为 Windows,与发布构建保持一致。发布出问题时,删除该 tag 再重新推送即可重跑;同一 tag 重复推送会自动取消旧 run。
 
 更新入口固定为 `releases/latest/download/latest.yaml`,应用启动时自动检查(24 小时内不重复),也可在设置页手动检查。
 

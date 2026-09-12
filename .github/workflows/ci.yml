@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  analyze-and-test:
+    # Windows, to match the release workflow's build environment. The
+    # generator/lint suites also hit a Windows-only file-lock race unless
+    # serialized (see the `-j 1` note below).
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # Monorepo: the Flutter app lives under packages/foxy (Dart pub
+      # workspace root at the repo root).
+      - name: Resolve dependencies
+        working-directory: packages/foxy
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: packages/foxy
+        run: flutter analyze
+
+      - name: Test
+        working-directory: packages/foxy
+        run: flutter test
+
+      # Workspace members: generator and lint plugin tests run as plain
+      # Dart (no Flutter runtime), so they have their own steps.
+      # `-j 1` serializes the test files: build_test suites initialize the
+      # build_resolvers SDK cache (`.dart_tool/build_resolvers/sdk.sum`)
+      # per test file, and parallel files hit a file-lock race on Windows
+      # (PathAccessException: Access is denied). `-j 1` removes the
+      # concurrency.
+      - name: Test generator package
+        working-directory: packages/foxy_generator
+        run: dart test -j 1
+
+      - name: Test lint package
+        working-directory: packages/foxy_lint
+        run: dart test -j 1

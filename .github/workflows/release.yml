@@ -1,21 +1,23 @@
 name: Release Windows
 
-# Release flow (primary trigger: pushing a tag, e.g.
+# Release flow (triggered by pushing a tag, e.g.
 # `git tag v1.1.0 && git push origin v1.1.0`):
 # 1. Before releasing, manually bump the `version` in pubspec.yaml and the
 #    `## vX.Y.Z` section in CHANGELOG.md and commit;
-# 2. After the tag push, this workflow automatically runs: analyze + test
-#    gate → build the Release directory → compile the update helper → zip
-#    it → generate latest.yaml (with SHA-256 and update notes; the releases
-#    array keeps the most recent 3) → publish the GitHub Release.
+# 2. After the tag push, this workflow automatically runs: build the Release
+#    directory → compile the update helper → zip it → generate latest.yaml
+#    (with SHA-256 and update notes; the releases array keeps the most
+#    recent 3) → publish the GitHub Release.
 #
-# Manual re-run: trigger via the workflow UI and pass the release tag
-# (e.g. `v1.1.3`); re-pushing the same tag also restarts the workflow
-# (the concurrency group cancels the stale run).
+# Tests are not part of this workflow; analyze + test run in ci.yml on push
+# and pull requests.
 #
-# Single-job design: the test gate and the Windows build share one runner,
-# so checkout / Flutter SDK / pub get are prepared once instead of twice.
-# A failing test step aborts the job before the build steps run.
+# Recovery from a bad release: delete the tag and re-push it, which starts a
+# fresh run (the concurrency group cancels the stale one).
+#
+# Single-job design: nothing is published until the build, packaging, and
+# manifest generation have all succeeded, so `releases/latest` never points
+# at a partial release.
 #
 # The app's update entry point is fixed at
 # `releases/latest/download/latest.yaml`; the asset must keep that name.
@@ -28,12 +30,6 @@ name: Release Windows
 on:
   push:
     tags: ['v*']
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Release tag to publish (e.g. v1.1.3)'
-        required: true
-        type: string
 
 concurrency:
   group: release-${{ github.ref }}
@@ -62,40 +58,11 @@ jobs:
         working-directory: packages/foxy
         run: flutter pub get
 
-      # Test gate: analyze + tests must pass before the build steps. Steps
-      # within one job are sequential, so a failure here skips the build.
-      - name: Analyze
-        working-directory: packages/foxy
-        run: flutter analyze
-
-      - name: Test
-        working-directory: packages/foxy
-        run: flutter test
-
-      # Workspace members: generator and lint plugin tests run as plain
-      # Dart (no Flutter runtime), so they have their own gate steps.
-      # `-j 1` serializes the test files: build_test suites initialize the
-      # build_resolvers SDK cache (`.dart_tool/build_resolvers/sdk.sum`)
-      # per test file, and parallel files hit a file-lock race on Windows
-      # (PathAccessException: Access is denied). `-j 1` removes the
-      # concurrency.
-      - name: Test generator package
-        working-directory: packages/foxy_generator
-        run: dart test -j 1
-
-      - name: Test lint package
-        working-directory: packages/foxy_lint
-        run: dart test -j 1
-
       - name: Determine version
         id: version
         shell: pwsh
         run: |
-          $tag = '${{ github.event.inputs.tag }}'
-          if ([string]::IsNullOrEmpty($tag)) {
-            # Pushed-tag trigger: the tag name is the ref name.
-            $tag = '${{ github.ref_name }}'
-          }
+          $tag = '${{ github.ref_name }}'
           $version = $tag.TrimStart('v')
           # Prerelease-suffix handling (consistent with
           # _stripPrereleaseSuffix in make_update_manifest.dart): the zip
