@@ -274,7 +274,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
         FoxyTableColumn.fixed(
           label: '几率',
           width: 120,
-          cell: (_, item) => Text('${item.chance.toString()}%'),
+          cell: (_, item) => Text('${item.chance.toStringAsFixed(2)}%'),
         ),
         FoxyTableColumn.fixed(
           label: '需要任务',

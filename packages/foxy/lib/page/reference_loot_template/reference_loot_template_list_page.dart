@@ -140,7 +140,7 @@ class _ReferenceLootTemplateListPageState
         FoxyTableColumn.fixed(
           label: '几率',
           width: 120,
-          cell: (_, template) => Text('${template.chance}%'),
+          cell: (_, template) => Text('${template.chance.toStringAsFixed(2)}%'),
         ),
         FoxyTableColumn.fixed(
           label: '需要任务',

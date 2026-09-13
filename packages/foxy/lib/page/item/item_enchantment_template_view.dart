@@ -185,7 +185,7 @@ class _ItemEnchantmentTemplateViewState
         FoxyTableColumn.fixed(
           label: '几率',
           width: 120,
-          cell: (_, ench) => Text('${ench.chance}%'),
+          cell: (_, ench) => Text('${ench.chance.toStringAsFixed(2)}%'),
         ),
       ],
       onRowDoubleTap: (ench) async {

@@ -271,7 +271,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
         FoxyTableColumn.fixed(
           label: '几率',
           width: 120,
-          cell: (_, loot) => Text('${loot.chance}%'),
+          cell: (_, loot) => Text('${loot.chance.toStringAsFixed(2)}%'),
         ),
         FoxyTableColumn.fixed(
           label: '数量',
