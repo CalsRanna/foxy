@@ -78,6 +78,19 @@ void main() {
     return rows.map((row) => row.toMap()['TABLE_NAME'] as String).toList();
   }
 
+  /// A rejected import must leave the live table untouched and must not leave
+  /// its staging table behind.
+  Future<void> expectRejectedImport({required int leftRows}) async {
+    expect(await readTable(), hasLength(leftRows), reason: '失败不得替换原表');
+    expect(
+      (await foxyTables()).where(
+        (name) => name.startsWith('dbc_spell_icon__staging'),
+      ),
+      isEmpty,
+      reason: '失败后应清理 staging 表',
+    );
+  }
+
   setUpAll(() async {
     // Create the fixture directory before connecting: when the connection
     // fails, tearDownAll still has something to delete.
@@ -150,8 +163,43 @@ void main() {
     );
   });
 
-  test('重复 ID:在校验阶段失败,原表内容不变且不留 staging 表', () async {
+  test('重复 ID:按 schema 建的表(带主键)在写入阶段被拒', () async {
     if (!guardDbcWrite()) return;
+
+    // `_sqlType` maps the ID field to `int not null primary key`, so a table
+    // built from the schema rejects a duplicate file on the INSERT itself.
+    writeDbc([
+      [1, 'good'],
+    ]);
+    expect((await runImport()).success, isTrue);
+
+    writeDbc([
+      [5, 'first'],
+      [5, 'second'],
+    ]);
+    final result = await runImport();
+
+    expect(result.success, isFalse);
+    final error = result.errors.single;
+    expect(error.stage, DbcSyncStage.writing, reason: error.message);
+    await expectRejectedImport(leftRows: 1);
+  });
+
+  test('重复 ID:无主键的遗留表在校验阶段被拒', () async {
+    if (!guardDbcWrite()) return;
+
+    // A legacy mirror table without the primary key (and without the row-order
+    // column) is the only shape where the row-count/distinct-ID validation is
+    // what catches duplicates — it also exercises the ALTER that adds
+    // `__dbc_order` to a cloned legacy table.
+    await Database.instance.laconic.statement(
+      'drop table if exists ${definition.qualifiedTableName}',
+    );
+    await Database.instance.laconic.statement(
+      'create table ${definition.qualifiedTableName} ('
+      '`ID` int unsigned not null, `TextureFilename` text'
+      ') engine=innodb default charset=utf8mb4',
+    );
 
     writeDbc([
       [1, 'good'],
@@ -166,20 +214,9 @@ void main() {
 
     expect(result.success, isFalse);
     final error = result.errors.single;
-    expect(error.stage, DbcSyncStage.validating);
+    expect(error.stage, DbcSyncStage.validating, reason: error.message);
     expect(error.message, contains('duplicate IDs'));
-
-    final rows = await readTable();
-    expect(rows, hasLength(1), reason: '校验失败不得替换原表');
-    expect(rows.single['ID'], 1);
-
-    expect(
-      (await foxyTables()).where(
-        (name) => name.startsWith('dbc_spell_icon__staging'),
-      ),
-      isEmpty,
-      reason: '失败后应清理 staging 表',
-    );
+    await expectRejectedImport(leftRows: 1);
   });
 
   test('checkTables 报告该表 ready', () async {

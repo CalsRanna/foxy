@@ -25,6 +25,25 @@ mixin RepositoryMixin {
     }
   }
 
+  /// The `MAX(column)` select expression used by [nextMaxPlusOne].
+  ///
+  /// Callers pass both plain (`ID`) and already backtick-quoted (`` `ID` ``)
+  /// column names — the generated `store*`/`create*` code quotes them — so the
+  /// name is normalized before the quoting this function adds. Without that,
+  /// an already-quoted name produced `max(``ID``)`, which MySQL rejects with a
+  /// syntax error (the duplicate-key renumber path never worked).
+  ///
+  /// The quoting stays: it is what keeps reserved-word columns such as
+  /// `spell_ranks.rank` usable.
+  String maxIdExpression(String column) {
+    _assertIdentifier(column);
+    final bare = column
+        .split('.')
+        .map((segment) => segment.replaceAll('`', ''))
+        .join('.');
+    return 'max(`$bare`) as max_id';
+  }
+
   /// Next primary-key sequence number: `MAX(column) + 1`, starting at `1`
   /// for empty tables.
   ///
@@ -48,11 +67,10 @@ mixin RepositoryMixin {
     int firstValue = 1,
   }) async {
     _assertIdentifier(table);
-    _assertIdentifier(column);
     for (final entry in where.entries) {
       _assertIdentifier(entry.key);
     }
-    var builder = laconic.table(table).select(['max(`$column`) as max_id']);
+    var builder = laconic.table(table).select([maxIdExpression(column)]);
     for (final entry in where.entries) {
       builder = builder.where(entry.key, entry.value);
     }

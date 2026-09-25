@@ -69,7 +69,7 @@ void main() {
   Future<void> seedRows() async {
     await Database.instance.laconic.statement('drop table if exists $table');
     await Database.instance.laconic.statement(
-      'create table `${definition.tableName}` ('
+      'create table $table ('
       '`ID` int unsigned not null, '
       '`TextureFilename` text character set utf8mb4 '
       'collate utf8mb4_unicode_ci, '
@@ -176,7 +176,7 @@ void main() {
     if (File(exportedPath).existsSync()) File(exportedPath).deleteSync();
     await Database.instance.laconic.statement('drop table if exists $table');
     await Database.instance.laconic.statement(
-      'create table `${definition.tableName}` ('
+      'create table $table ('
       '`ID` int unsigned not null, `TextureFilename` text, '
       '`__dbc_order` bigint null) engine=innodb default charset=utf8mb4',
     );

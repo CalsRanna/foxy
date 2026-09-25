@@ -12,10 +12,7 @@ void main() {
     });
 
     test('含空白拒绝', () {
-      expect(
-        () => probe.prepareWriteJson({'foo bar': 1}),
-        throwsArgumentError,
-      );
+      expect(() => probe.prepareWriteJson({'foo bar': 1}), throwsArgumentError);
     });
 
     test('段中混入反引号拒绝', () {
@@ -41,20 +38,13 @@ void main() {
 
     test('反引号整段包裹的 where 键通过校验', () {
       expect(
-        () => probe.nextMaxPlusOne(
-          't',
-          'ID',
-          where: {'`CreatureID`': 1},
-        ),
+        () => probe.nextMaxPlusOne('t', 'ID', where: {'`CreatureID`': 1}),
         throwsA(isA<DatabaseNotConnectedException>()),
       );
     });
 
     test('非法表名被拒绝', () {
-      expect(
-        () => probe.nextMaxPlusOne('a;b', 'ID'),
-        throwsArgumentError,
-      );
+      expect(() => probe.nextMaxPlusOne('a;b', 'ID'), throwsArgumentError);
     });
 
     test('非法 where 键被拒绝', () {
@@ -62,6 +52,24 @@ void main() {
         () => probe.nextMaxPlusOne('t', 'ID', where: {'a``b': 1}),
         throwsArgumentError,
       );
+    });
+  });
+
+  group('maxIdExpression', () {
+    test('普通列名被加反引号', () {
+      expect(probe.maxIdExpression('spell_id'), 'max(`spell_id`) as max_id');
+    });
+
+    test('已加反引号的列名不会双重加引号', () {
+      expect(probe.maxIdExpression('`spell_id`'), 'max(`spell_id`) as max_id');
+    });
+
+    test('保留字列名仍被引号保护', () {
+      expect(probe.maxIdExpression('rank'), 'max(`rank`) as max_id');
+    });
+
+    test('非法列名仍被拒绝', () {
+      expect(() => probe.maxIdExpression('a;b'), throwsArgumentError);
     });
   });
 }

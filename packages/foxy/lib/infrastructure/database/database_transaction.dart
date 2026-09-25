@@ -24,7 +24,33 @@ class DatabaseTransaction {
       // 已在外层事务中:合并执行,不新开事务。
       return action();
     }
-    return runZoned(() => runTransaction(action), zoneValues: {_txKey: true});
+
+    Object? failure;
+    StackTrace? failureStack;
+    try {
+      return await runZoned(
+        () => runTransaction(() async {
+          try {
+            return await action();
+          } catch (error, stackTrace) {
+            // laconic_mysql's transaction() turns any non-LaconicException into
+            // a LaconicException, which would erase the FoxyException type (and
+            // with it the central Chinese message mapping). Remember the
+            // original error so it can be rethrown once the driver finished
+            // rolling back.
+            failure = error;
+            failureStack = stackTrace;
+            rethrow;
+          }
+        }),
+        zoneValues: {_txKey: true},
+      );
+    } catch (_) {
+      if (failure != null) {
+        Error.throwWithStackTrace(failure!, failureStack ?? StackTrace.current);
+      }
+      rethrow;
+    }
   }
 
   /// Opens the underlying database transaction. Override point for tests

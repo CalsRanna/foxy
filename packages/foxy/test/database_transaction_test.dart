@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:laconic/laconic.dart';
 
 /// Verifies the nested-transaction merge semantics: laconic_mysql opens a
 /// fresh pooled connection per `transaction` call, so a naive nested
@@ -52,6 +54,35 @@ void main() {
     final value = await tx.execute(() async => 42);
     expect(value, 42);
   });
+
+  test('底层事务包装异常时,原始异常类型仍向外抛出', () async {
+    final tx = _WrappingTransaction();
+
+    await expectLater(
+      tx.execute(() async => throw const RecordNotFoundException('missing')),
+      throwsA(isA<RecordNotFoundException>()),
+    );
+  });
+
+  test('嵌套执行时原始异常同样不被包装吞掉', () async {
+    final tx = _WrappingTransaction();
+
+    await expectLater(
+      tx.execute(() async {
+        await tx.execute(() async => throw const BusyException('busy'));
+      }),
+      throwsA(isA<BusyException>()),
+    );
+  });
+
+  test('非业务异常也按原类型抛出', () async {
+    final tx = _WrappingTransaction();
+
+    await expectLater(
+      tx.execute(() async => throw StateError('boom')),
+      throwsStateError,
+    );
+  });
 }
 
 final class _CountingTransaction extends DatabaseTransaction {
@@ -64,6 +95,24 @@ final class _CountingTransaction extends DatabaseTransaction {
       return await action();
     } catch (_) {
       rethrow; // 真实实现会 ROLLBACK;此处原样冒泡。
+    }
+  }
+}
+
+/// Mirrors laconic_mysql's `transaction()`: it rewraps every non-Laconic error
+/// as a `LaconicException`, which is what used to erase `FoxyException` types
+/// on the way out of a transaction.
+final class _WrappingTransaction extends DatabaseTransaction {
+  @override
+  Future<T> runTransaction<T>(Future<T> Function() action) async {
+    try {
+      return await action();
+    } catch (error) {
+      throw LaconicException(
+        error.toString(),
+        driver: 'mysql',
+        code: error is LaconicException ? error.code : null,
+      );
     }
   }
 }
