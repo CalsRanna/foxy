@@ -48,3 +48,52 @@ jobs:
       - name: Test lint package
         working-directory: packages/foxy_lint
         run: dart test -j 1
+
+  # Suites that talk to a real MySQL. They live in a separate Linux job
+  # because GitHub-hosted Windows runners support neither service containers
+  # ("Container operations are only supported on Linux runners") nor a
+  # preinstalled MySQL server — the windows-latest image only ships MySQL
+  # client tools. The database layer is pure Dart (laconic_mysql →
+  # buffer/crypto/laconic), so running it on Linux does not change what is
+  # being tested.
+  database-integration:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: foxy
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pfoxy"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        working-directory: packages/foxy
+        run: flutter pub get
+
+      # `--run-skipped` turns the tag back on: `integration` is skipped by
+      # default (dart_test.yaml), so a plain `flutter test` needs no database.
+      # FOXY_TEST_MYSQL_ALLOW_DROP enables the destructive fresh-database test
+      # against this disposable container. `-j 1` keeps the suites serialized —
+      # they share the single `foxy` schema name that MigrationRunner
+      # hardcodes.
+      - name: Test (real MySQL)
+        working-directory: packages/foxy
+        env:
+          FOXY_TEST_MYSQL_HOST: 127.0.0.1
+          FOXY_TEST_MYSQL_PORT: "3306"
+          FOXY_TEST_MYSQL_USER: root
+          FOXY_TEST_MYSQL_PASSWORD: foxy
+          FOXY_TEST_MYSQL_ALLOW_DROP: "1"
+        run: flutter test --tags integration --run-skipped -j 1

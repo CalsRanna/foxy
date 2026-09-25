@@ -1,0 +1,14 @@
+# `flutter test` configuration (package:test config format).
+#
+# The `integration` tag marks suites that talk to a real MySQL instance
+# (`test/integration/`). They are skipped by default so a plain
+# `flutter test` keeps working without any database, and CI runs them
+# explicitly:
+#
+#   flutter test --tags integration --run-skipped
+#
+# See test/integration/integration_mysql.dart for the connection settings
+# (FOXY_TEST_MYSQL_* environment variables).
+tags:
+  integration:
+    skip: "needs a real MySQL; run: flutter test --tags integration --run-skipped"

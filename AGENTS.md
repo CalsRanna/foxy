@@ -39,7 +39,7 @@ cd packages/foxy
 flutter pub get                          # install deps (workspace resolution)
 dart run build_runner build --delete-conflicting-outputs   # regenerate .g.dart (SLOW, can take many minutes)
 flutter analyze                          # includes the 9 foxy_lint plugin rules
-flutter test                             # ~91 test files; can take a while
+flutter test                             # ~107 test files; can take a while
 flutter run -d windows                   # run (reads config.yaml for DB connection)
 ```
 
@@ -191,6 +191,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 - **Database editing tests** (`test/database_editing/*_database_editing_test.dart`, 17): key value semantics, editing behavior, query-builder behavior. Pure in-memory — no DB.
 - **Identity tests** (`test/identity/*_identity_test.dart`, 4): identity/state-preservation semantics (activity-log row IDs, locale draft vs original, route breadcrumbs).
 - **Infrastructure + widget + use-case tests**: update service (http mock), DBC codec/import/export, BLP decoder + MPQ extraction (fixtures in `test/fixture/icons/`), form controllers, widgets, gossip use cases, migration runner.
+- **Integration tests** (`test/integration/*_integration_test.dart`, tag `integration`): run the app's real startup path (`Database.instance.connect` → `MigrationRunner.run`) against a throwaway MySQL — database bootstrap, every migration, the utf8mb4 self-heal scan and a Chinese round-trip of the seeded `foxy.features` rows. Skipped by default (declared in `dart_test.yaml`), so a plain `flutter test` needs no database; CI runs them in a separate **Linux** job because GitHub-hosted Windows runners support neither service containers nor a preinstalled MySQL server. `MigrationRunner` hardcodes the `foxy` schema name (`create database if not exists foxy`), so these suites must stay serialized (`-j 1`) and must never be pointed at a database whose `foxy` schema matters.
 - **Codegen tests**: `packages/foxy_generator/test/` — 8 generator suites (`dart test` from that package, no Flutter runtime), built with `build_test`'s `testBuilder` + `decodedMatches` over in-memory sources; `generator_test_support.dart` holds shared test sources.
 - **Lint tests**: `packages/foxy_lint/test/` — official `analyzer_testing` harness with `test_reflective_loader`.
 - New annotations/generators **require** codegen tests (see `doc/codegen/extending.md`).
