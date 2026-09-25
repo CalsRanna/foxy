@@ -177,7 +177,7 @@ All business errors are **`sealed class FoxyException`** subtypes (`lib/infrastr
 
 - **DBC import/export** (`lib/infrastructure/dbc/`): `warcrafty` parses DBC binary; `dbc_definitions.dart` maps ~50 table names ↔ warcrafty schemas. Import runs in an **isolate worker** (`dbc_import_worker.dart`, self-contained connection) with stage progress + cancellation, staging-table + atomic rename commit, count/duplicate-ID validation, and a 512 MiB payload guard. Export via `DbcExportRegistry` + `DbcWriter` with re-read validation and atomic replace.
 - **Icon extraction** (`lib/infrastructure/game_asset/`): reads MPQ (`GameMpqSource`), decodes BLP (`blp_decoder.dart`, DXT1/3/5), caches to `data/icon/` (6.3k+ `.blp`) with an in-memory LRU (`GameIconCache`).
-- Both are one-time setup steps enforced by a non-skippable 3-step wizard on first run (bootstrap → DBC sync → icon extraction).
+- Both are one-time setup steps in the first-run 3-step wizard (bootstrap → DBC sync → icon extraction). DBC sync is mandatory; icon extraction can be skipped (icons fall back to placeholders and can be extracted later from the settings page), and the client directory is rejected on save when no MPQ archive can be located (mirroring the server-dir DBC check, `icons_skipped` in `config.yaml` records a skip).
 
 ## Update & Release
 

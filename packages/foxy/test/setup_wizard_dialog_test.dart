@@ -249,7 +249,7 @@ void main() {
     expect(find.text('进入应用'), findsOneWidget);
   });
 
-  testWidgets('图标提取失败时显示错误、重试与退出应用', (tester) async {
+  testWidgets('图标提取失败时可返回上一步改目录，重试成功后进入应用', (tester) async {
     final noDataClient = Directory(p.join(tempDir.path, 'noData'))..createSync();
     configData['client_dir'] = noDataClient.path;
     configData['server_dir'] = serverRoot.path;
@@ -265,6 +265,124 @@ void main() {
 
     expect(find.text('重试'), findsOneWidget);
     expect(find.text('退出应用'), findsOneWidget);
+
+    // 上一步 must stay reachable from a failure: the wizard is the only UI
+    // and cannot be dismissed, so without it a wrong directory would lock
+    // the user out of the app permanently.
+    expect(find.text('上一步'), findsOneWidget);
+    await tester.tap(find.text('上一步'));
+    await tester.pump();
+    expect(find.text('第 2 步：设置服务端目录'), findsOneWidget);
+
+    await tester.tap(find.text('上一步'));
+    await tester.pump();
+    expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
+
+    // Re-enter the corrected client directory through the form, then advance
+    // and retry: the retry must use the newly configured path — the workflow
+    // captured the old one when extraction first started, so a stale-path
+    // retry would fail again. The step-2 save is asynchronous (real directory
+    // scan + config write) while both path signals are already set, so wait
+    // for the rendered step instead of a signal.
+    await tester.runAsync(() async {
+      await tester.enterText(find.byType(ShadInput), clientRoot.path);
+      await tester.tap(find.text('下一步'));
+      await _waitFor(() => setupVm.clientDir.value == clientRoot.path);
+      await tester.pump();
+      await tester.tap(find.text('下一步'));
+      final deadline = DateTime.now().add(const Duration(seconds: 10));
+      while (find.text('第 3 步：导入 DBC 数据并提取游戏图标').evaluate().isEmpty &&
+          DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        await tester.pump();
+      }
+    });
+    expect(find.text('第 3 步：导入 DBC 数据并提取游戏图标'), findsOneWidget);
+
+    await tester.runAsync(() async {
+      await tester.tap(find.text('重试'));
+      await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
+    });
+    await tester.pump();
+
+    expect(iconVm.result.value?.extracted, 2);
+    expect(find.text('进入应用'), findsOneWidget);
+  });
+
+  testWidgets('图标提取失败时可跳过图标提取并进入应用', (tester) async {
+    final noDataClient = Directory(p.join(tempDir.path, 'noData'))..createSync();
+    configData['client_dir'] = noDataClient.path;
+    configData['server_dir'] = serverRoot.path;
+    configData['dbc_dir'] = p.join(serverRoot.path, 'data', 'dbc');
+
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+        ShadApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => Center(
+                child: ShadButton(
+                  onPressed: () => DialogUtil.show(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => SetupWizardDialog(
+                      setupVm: setupVm,
+                      importVm: importVm,
+                      iconVm: iconVm,
+                    ),
+                  ),
+                  child: const Text('打开向导'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('打开向导'));
+      await tester.pump();
+      await _waitFor(() => iconVm.status.value == WorkflowStatus.failed);
+    });
+    await tester.pump();
+
+    // Skipping is the last resort for a client whose archives cannot be
+    // read: without it the wizard would reopen on every launch.
+    expect(find.text('跳过图标提取'), findsOneWidget);
+    await tester.runAsync(() async {
+      await tester.tap(find.text('跳过图标提取'));
+      await _waitFor(() => setupVm.iconsSkipped.value);
+    });
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SetupWizardDialog), findsNothing);
+    expect(configData['icons_skipped'], isTrue);
+  });
+
+  testWidgets('没有可用客户端目录时可跳过图标提取继续设置', (tester) async {
+    await pumpWizard(tester);
+
+    // Step 1: skipping the client directory (the save-time MPQ check would
+    // reject a directory without archives) moves on to the server directory.
+    await tester.runAsync(() async {
+      await tester.tap(find.text('跳过图标提取'));
+      await _waitFor(() => setupVm.iconsSkipped.value);
+      await tester.pump();
+    });
+    expect(find.text('第 2 步：设置服务端目录'), findsOneWidget);
+
+    await tester.runAsync(() async {
+      await tester.enterText(find.byType(ShadInput), serverRoot.path);
+      await tester.tap(find.text('下一步'));
+      await _waitFor(() => setupVm.serverDir.value == serverRoot.path);
+      await tester.pump();
+    });
+    expect(find.text('第 3 步：导入 DBC 数据并提取游戏图标'), findsOneWidget);
+
+    // Tables are already imported (fake sync tool) and icons were skipped,
+    // so the wizard can be finished without a client directory — and no
+    // extraction was started in the meantime.
+    expect(iconVm.status.value, WorkflowStatus.idle);
+    expect(find.text('进入应用'), findsOneWidget);
+    expect(configData['icons_skipped'], isTrue);
   });
 }
 

@@ -102,14 +102,19 @@ void main() {
     expect(config['mpq_dir'], mpq);
   });
 
-  test('saveClientDir 探测不到 MPQ 时写入空串避免旧值残留', () async {
+  test('saveClientDir 探测不到 MPQ 时失败并写入错误信号', () async {
     final client = Directory(p.join(tempDir.path, 'client'))..createSync();
     await configUtil.update({'mpq_dir': p.join('旧', 'mpq')});
     final vm = buildVm();
 
-    expect(await vm.saveClientDir(client.path), isTrue);
-    expect(vm.mpqDir.value, isNull);
-    expect((await configUtil.load())['mpq_dir'], '');
+    expect(await vm.saveClientDir(client.path), isFalse);
+    expect(vm.clientDirError.value, contains('未找到 MPQ'));
+    expect(vm.isClientDirConfigured, isFalse);
+    // Nothing is persisted, so the stale mpq_dir is left untouched instead
+    // of being emptied into a half-configured state.
+    final config = await configUtil.load();
+    expect(config['client_dir'], isNull);
+    expect(config['mpq_dir'], p.join('旧', 'mpq'));
   });
 
   test('saveServerDir 校验并持久化 server_dir 与探测出的 dbc_dir', () async {
@@ -161,7 +166,7 @@ void main() {
   test('isSetupComplete 需要全部步骤完成', () async {
     final client = Directory(p.join(tempDir.path, 'client'))..createSync();
     final server = buildServerRoot();
-    final vm = buildVm();
+    final vm = buildVm(findMpqDir: (_) => p.join(client.path, 'Data', 'zhCN'));
 
     await vm.saveClientDir(client.path);
     expect(vm.isSetupComplete, isFalse); // server directory missing
@@ -171,6 +176,40 @@ void main() {
 
     await configUtil.update({'icons_extracted': true});
     await vm.prepare();
+    expect(vm.isSetupComplete, isTrue);
+  });
+
+  test('skipIconExtraction 跳过图标步骤并让设置视为完成', () async {
+    final client = Directory(p.join(tempDir.path, 'client'))..createSync();
+    final server = buildServerRoot();
+    String? findMpq(String root) => p.join(root, 'Data', 'zhCN');
+    final vm = buildVm(findMpqDir: findMpq);
+
+    await vm.saveClientDir(client.path);
+    await vm.saveServerDir(server.path);
+    expect(vm.isSetupComplete, isFalse); // icon-extraction marker missing
+
+    await vm.skipIconExtraction();
+    expect(vm.iconsSkipped.value, isTrue);
+    expect(vm.isSetupComplete, isTrue);
+
+    // The marker is persisted, so the next launch does not reopen the
+    // wizard for an icon step the user already declined.
+    final reloaded = buildVm(findMpqDir: findMpq);
+    await reloaded.prepare();
+    expect(reloaded.iconsSkipped.value, isTrue);
+    expect(reloaded.isSetupComplete, isTrue);
+  });
+
+  test('跳过后没有客户端目录也算设置完成', () async {
+    final server = buildServerRoot();
+    final vm = buildVm();
+
+    await vm.saveServerDir(server.path);
+    expect(vm.isSetupComplete, isFalse);
+
+    await vm.skipIconExtraction();
+    expect(vm.isClientDirConfigured, isFalse);
     expect(vm.isSetupComplete, isTrue);
   });
 }

@@ -103,7 +103,10 @@ class GameIconExtractor {
         extracted: 0,
         skipped: 0,
         failed: 1,
-        errors: ['未在客户端目录中找到 Data/<locale> 归档目录：$clientDir'],
+        errors: [
+          '未在客户端目录中找到 Data/<locale> 归档目录：$clientDir'
+          '（${_describeMissingLocaleDataDir(clientDir)}）',
+        ],
         cancelled: false,
       );
     }
@@ -302,6 +305,32 @@ class GameIconExtractor {
       if (_hasMpq(entry.path)) return entry.path;
     }
     return null;
+  }
+
+  /// Explains why [findLocaleDataDir] found nothing; appended to the
+  /// extraction error so the cause is obvious from the message alone.
+  ///
+  /// Distinguishes a wrong client root (`Data` missing entirely) from a
+  /// client whose `Data` has no archive-bearing locale directory (an
+  /// unusual repack layout) — the two need different fixes.
+  static String _describeMissingLocaleDataDir(String clientDir) {
+    final dataDir = p.join(clientDir, 'Data');
+    try {
+      if (!Directory(dataDir).existsSync()) {
+        return '没有 Data 目录，请确认选择的是客户端根目录（含 Data 目录）';
+      }
+      final subDirs = Directory(dataDir)
+          .listSync()
+          .whereType<Directory>()
+          .map((entry) => p.basename(entry.path))
+          .toList()
+        ..sort();
+      return subDirs.isEmpty
+          ? 'Data 目录下没有子目录'
+          : 'Data 下没有含 MPQ 归档的子目录，现有子目录：${subDirs.join('、')}';
+    } on FileSystemException catch (error) {
+      return '读取 Data 目录失败：$error';
+    }
   }
 
   /// Archive sort key (higher category = higher priority; order is the

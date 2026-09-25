@@ -17,7 +17,7 @@ enum DirectoryConfigTarget {
     title: '客户端目录',
     icon: LucideIcons.folderCog,
     description:
-        '魔兽客户端根目录（含 Data 目录），用于从 MPQ 归档提取游戏图标。'
+        '魔兽客户端根目录（含 Data 目录及其语言归档），用于从 MPQ 归档提取游戏图标。'
         '保存时自动检测 MPQ 归档所在位置。',
   ),
   serverDir(

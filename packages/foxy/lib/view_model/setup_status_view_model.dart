@@ -19,6 +19,9 @@ import 'package:signals/signals.dart';
 ///   (DBC import/export source; `dbc_dir` in `config.yaml`)
 /// - [iconsExtracted]: whether icons were fully extracted (the
 ///   `icons_extracted` marker written on successful extraction)
+/// - [iconsSkipped]: the user chose to continue without icons
+///   (`icons_skipped`); this also counts as complete, so a client whose
+///   archives cannot be read never keeps reopening the wizard
 ///
 /// When a path is configured but its directory no longer exists (the user
 /// moved/deleted it): signals keep the original path for UI prefill, the
@@ -41,6 +44,7 @@ class SetupStatusViewModel {
   final dbcPathExists = signal<bool>(false);
   final serverDirExists = signal<bool>(false);
   final iconsExtracted = signal<bool>(false);
+  final iconsSkipped = signal<bool>(false);
 
   final clientDirError = signal<String?>(null);
   final serverDirError = signal<String?>(null);
@@ -61,10 +65,15 @@ class SetupStatusViewModel {
   bool get isServerDirConfigured =>
       serverDir.value != null && serverDirExists.value;
 
-  /// Whether all three setup steps are complete (both directories
-  /// configured and existing + icons extracted).
+  /// Whether first setup is complete: the server directory is configured
+  /// and existing, and icons were extracted or deliberately skipped.
+  ///
+  /// Skipping also covers having no client directory at all (the client is
+  /// only needed for icons and MPQ patches), so a user whose client cannot
+  /// be validated is not kept out of the app.
   bool get isSetupComplete =>
-      isClientDirConfigured && isServerDirConfigured && iconsExtracted.value;
+      isServerDirConfigured &&
+      (iconsSkipped.value || (isClientDirConfigured && iconsExtracted.value));
 
   /// Loads directory config and the icon-extraction marker from config.
   ///
@@ -93,24 +102,36 @@ class SetupStatusViewModel {
     mpqDir.value = (mpq == null || mpq.isEmpty) ? null : mpq;
 
     iconsExtracted.value = config['icons_extracted'] == true;
+    iconsSkipped.value = config['icons_skipped'] == true;
   }
 
   /// Validates and persists the client directory, auto-detecting the MPQ
-  /// archive directory under it (`mpq_dir`); returns false on failure and
-  /// writes [clientDirError].
+  /// archive directory under it (`mpq_dir`); returns false and writes
+  /// [clientDirError] when the directory is invalid or holds no MPQ archive
+  /// directory at all (mirrors [saveServerDir]'s DBC check: a client
+  /// directory without archives can only make icon extraction fail).
   Future<bool> saveClientDir(String path) async {
     if (!await _validatePath(clientDirError, '客户端目录', path)) return false;
     final mpq = _findMpqDir(path.trim());
-    await _configUtil.update({
-      'client_dir': path.trim(),
-      // Missing MPQ archives are not fatal (extraction reports its own
-      // error); an empty value keeps the previous mpq_dir from lingering.
-      'mpq_dir': mpq ?? '',
-    });
+    if (mpq == null) {
+      clientDirError.value =
+          '在客户端目录中未找到 MPQ 归档(如 Data/zhCN),请确认选择的是客户端根目录';
+      return false;
+    }
+    await _configUtil.update({'client_dir': path.trim(), 'mpq_dir': mpq});
     clientDir.value = path.trim();
     clientDirExists.value = true;
     mpqDir.value = mpq;
     return true;
+  }
+
+  /// Marks the icon-extraction step as skipped so first setup counts as
+  /// complete: icons are optional (list pages fall back to placeholders and
+  /// the settings page can extract them later), and a client whose archives
+  /// cannot be read must not keep the wizard reopening forever.
+  Future<void> skipIconExtraction() async {
+    await _configUtil.update({'icons_skipped': true});
+    iconsSkipped.value = true;
   }
 
   /// Validates and persists the server root directory, auto-detecting the

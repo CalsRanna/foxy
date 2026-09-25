@@ -302,6 +302,18 @@ void main() {
       expect(result.success, isFalse);
       expect(result.failed, 1);
       expect(result.errors.single, contains('Data'));
+      expect(result.errors.single, contains('没有 Data 目录'));
+    });
+
+    test('Data 目录存在但无 MPQ 归档时报出已检查的子目录', () {
+      Directory(p.join(clientRoot.path, 'Data', 'zhCN')).createSync(
+        recursive: true,
+      );
+      final result = _extractor(clientRoot, outputDir, const {}).extract();
+      expect(result.success, isFalse);
+      expect(result.failed, 1);
+      expect(result.errors.single, contains('没有含 MPQ 归档的子目录'));
+      expect(result.errors.single, contains('zhCN'));
     });
   });
 }

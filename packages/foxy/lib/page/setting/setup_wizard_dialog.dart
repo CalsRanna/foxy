@@ -18,7 +18,8 @@ import 'package:signals/signals_flutter.dart';
 /// directory); step 3 runs DBC import and icon extraction in order. On
 /// open, completed steps are skipped by completion state; until everything
 /// is done the dialog cannot be dismissed (barrier, close button and Esc
-/// all no-op), and the only exit is "Enter app".
+/// all no-op); the ways out are finishing the step, skipping icon
+/// extraction, or quitting the app.
 class SetupWizardDialog extends StatefulWidget {
   final SetupStatusViewModel setupVm;
   final DbcImportWorkflowViewModel importVm;
@@ -52,6 +53,12 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   /// or a successful import this session.
   bool get _importCompleted =>
       _importDoneAtCheck || _importVm.status.value == WorkflowStatus.succeeded;
+
+  /// Whether the icon step counts as done: extracted, or deliberately
+  /// skipped (icons are optional and can be extracted later from settings).
+  bool get _iconStepDone =>
+      _iconVm.status.value == WorkflowStatus.succeeded ||
+      _setupVm.iconsSkipped.value;
   DbcImportWorkflowViewModel get _importVm => widget.importVm;
   SetupStatusViewModel get _setupVm => widget.setupVm;
 
@@ -114,6 +121,14 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
 
     if (step == 0) {
       return [
+        // The client directory is only needed for icons (and MPQ patches),
+        // and the save-time MPQ check blocks a directory without archives:
+        // without this skip a user whose client cannot be validated would
+        // be stuck on step 1 with no way forward.
+        ShadButton.outline(
+          onPressed: _skipClientSetup,
+          child: const Text('跳过图标提取'),
+        ),
         ShadButton(
           onPressed: () => _saveAndAdvance(0),
           child: const Text('下一步'),
@@ -135,9 +150,9 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     // Step 3: while a task is running, only the cancel button shows; no
     // going back or exiting.
     if (importRunning || iconRunning) return const [];
-    if (_importCompleted && iconStatus == WorkflowStatus.succeeded) {
+    if (_importCompleted && _iconStepDone) {
       return [
-        // This button is the wizard's only legal exit: it must not use
+        // Enter and skip are the wizard's legal exits: they must not use
         // maybePop, which the outer PopScope(canPop: false) would intercept
         // and swallow.
         ShadButton(
@@ -148,6 +163,10 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     }
     if (importStatus == WorkflowStatus.failed) {
       return [
+        ShadButton.outline(
+          onPressed: _backToDirectories,
+          child: const Text('上一步'),
+        ),
         ShadButton.outline(onPressed: _retryImport, child: const Text('重试')),
         ShadButton.destructive(onPressed: _exitApp, child: const Text('退出应用')),
       ];
@@ -155,8 +174,16 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     if (iconStatus == WorkflowStatus.failed) {
       return [
         ShadButton.outline(
+          onPressed: _backToDirectories,
+          child: const Text('上一步'),
+        ),
+        ShadButton.outline(
           onPressed: _retryIconExtract,
           child: const Text('重试'),
+        ),
+        ShadButton.outline(
+          onPressed: _skipIconExtract,
+          child: const Text('跳过图标提取'),
         ),
         ShadButton.destructive(onPressed: _exitApp, child: const Text('退出应用')),
       ];
@@ -230,7 +257,11 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
         ),
         (_, _, true) => SettingDialogShell.banner(
           context,
-          text: error ?? '提取失败',
+          text:
+              '${error ?? '提取失败'}\n'
+              '客户端目录设置（第 1 步）有误会导致提取失败，'
+              '可用「上一步」返回修正后重试；也可以跳过图标提取先进入应用'
+              '（列表页图标显示占位符，可在设置页补提取）。',
           color: theme.colorScheme.destructive,
           icon: LucideIcons.triangleAlert,
         ),
@@ -241,7 +272,9 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           children: [
             SettingDialogShell.mutedHint(
               context,
-              _importCompleted
+              _setupVm.iconsSkipped.value
+                  ? '已跳过图标提取，可在设置页「游戏图标」中随时补提取。'
+                  : _importCompleted
                   ? '自动开始提取图标（约 6300 个，BLP 原始格式），完成后显示在列表页。'
                   : '导入完成后自动开始提取图标。',
             ),
@@ -416,20 +449,59 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     _checked.value = true;
     // Directories ready and DBC imported, only icons missing → jump
     // straight to extraction.
-    if (_step.value == 2 && _importDoneAtCheck) {
+    if (_step.value == 2 && _importDoneAtCheck && !_setupVm.iconsSkipped.value) {
       await _startIconExtract();
     }
+  }
+
+  /// Returns to the directory steps from a step-3 failure, so a directory
+  /// that made a task fail can be corrected: the wizard is the only UI at
+  /// this point and cannot be dismissed, so without this the wrong
+  /// directory would lock the app out permanently.
+  void _backToDirectories() => _step.value = 1;
+
+  /// Records that icons are skipped, best effort: continuing must not hinge
+  /// on the config write.
+  Future<void> _markIconsSkipped() async {
+    try {
+      await _setupVm.skipIconExtraction();
+    } catch (_) {
+      // Best effort: continuing matters more than the marker.
+    }
+  }
+
+  /// Skips the client directory (and with it icon extraction) from step 1,
+  /// continuing to the server directory.
+  Future<void> _skipClientSetup() async {
+    await _markIconsSkipped();
+    if (!mounted) return;
+    _step.value = 1;
+  }
+
+  /// Enters the app without icons. Extraction is optional (list pages show
+  /// placeholders and the settings page can extract later), so a client
+  /// whose archives cannot be read must not lock the user out; the marker
+  /// keeps the wizard from reopening on the next startup.
+  Future<void> _skipIconExtract() async {
+    await _markIconsSkipped();
+    if (!mounted) return;
+    Navigator.of(context).pop();
   }
 
   void _exitApp() => exit(0);
 
   bool _isStepDone(int index) => switch (index) {
-    0 => _setupVm.isClientDirConfigured,
+    0 => _setupVm.isClientDirConfigured || _setupVm.iconsSkipped.value,
     1 => _setupVm.isServerDirConfigured,
-    _ => _importCompleted && _iconVm.status.value == WorkflowStatus.succeeded,
+    _ => _importCompleted && _iconStepDone,
   };
 
+  /// Re-runs icon extraction, re-reading the configured client directory
+  /// first: the path was captured when extraction originally started, so a
+  /// directory corrected through 上一步 would otherwise be ignored and the
+  /// retry would fail again against the stale path.
   Future<void> _retryIconExtract() async {
+    _iconVm.setPath(_setupVm.clientDir.value ?? '');
     try {
       await _iconVm.retry();
     } catch (_) {
@@ -437,7 +509,11 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     }
   }
 
+  /// Re-runs DBC import, re-reading the auto-detected DBC directory first
+  /// (same stale-path reason as [_retryIconExtract]); a successful import
+  /// continues into icon extraction.
   Future<void> _retryImport() async {
+    _importVm.setPath(_setupVm.dbcPath.value ?? '');
     try {
       await _importVm.retry();
     } catch (_) {
