@@ -42,7 +42,8 @@ final class LinkedDetailReader {
       }
       repositoryClassName = repositoryType.element.name!;
     } else {
-      repositoryClassName = repositoryClassNameOfViewModel(form.className) ??
+      repositoryClassName =
+          repositoryClassNameOfViewModel(form.className) ??
           _fail(
             '${form.className} cannot derive a repository class name.',
             element,

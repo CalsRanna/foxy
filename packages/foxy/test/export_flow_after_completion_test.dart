@@ -54,11 +54,7 @@ void main() {
       isFalse,
       reason: 'MPQ 导出完成后 VM 不得残留运行状态（busy 置灰按钮的根因）',
     );
-    expect(
-      util.isRunning,
-      isFalse,
-      reason: 'MPQ 导出完成后共享 DbcSyncUtil 不得残留运行状态',
-    );
+    expect(util.isRunning, isFalse, reason: 'MPQ 导出完成后共享 DbcSyncUtil 不得残留运行状态');
     expect(util.operation, isNull);
 
     // 紧接着的 DBC 导出不得被拒为 busy。

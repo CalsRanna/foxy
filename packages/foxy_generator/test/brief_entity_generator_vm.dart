@@ -70,10 +70,7 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(
-      logContains(logs, 'is missing the full physical identity'),
-      isTrue,
-    );
+    expect(logContains(logs, 'is missing the full physical identity'), isTrue);
   });
 
   test('class 上的具名 FoxyBriefField 只生成 Brief 投影字段', () async {

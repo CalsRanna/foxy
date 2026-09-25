@@ -23,18 +23,8 @@ void main() {
   final icon = DbcDefinitions.byTable['dbc_spell_icon']!;
 
   List<Map<String, dynamic>> durationRows() => [
-    {
-      'ID': 1,
-      'Duration': 1,
-      'DurationPerLevel': 0,
-      'MaxDuration': 1,
-    },
-    {
-      'ID': 2,
-      'Duration': 2,
-      'DurationPerLevel': 1,
-      'MaxDuration': 2,
-    },
+    {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
+    {'ID': 2, 'Duration': 2, 'DurationPerLevel': 1, 'MaxDuration': 2},
   ];
 
   test('导出 SQL: 有行序列时按原文件顺序排序,新行(NULL)排在末尾', () {
@@ -79,7 +69,10 @@ void main() {
 
     expect(summary.completed, 0);
     expect(summary.skipped, 1);
-    expect(await File(p.join(outDir.path, duration.fileName)).exists(), isFalse);
+    expect(
+      await File(p.join(outDir.path, duration.fileName)).exists(),
+      isFalse,
+    );
   });
 
   test('DbcExportWorker.writeFiles 单表失败记录错误且不影响其余表', () async {
@@ -99,10 +92,7 @@ void main() {
     expect(summary.completed, 1);
     expect(summary.errors, hasLength(1));
     expect(summary.errors.single['fileName'], icon.fileName);
-    expect(
-      await File(p.join(outDir.path, duration.fileName)).exists(),
-      isTrue,
-    );
+    expect(await File(p.join(outDir.path, duration.fileName)).exists(), isTrue);
     expect(await File(p.join(outDir.path, icon.fileName)).exists(), isFalse);
   });
 

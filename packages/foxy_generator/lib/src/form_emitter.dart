@@ -138,8 +138,8 @@ final class FormEmitter {
     // key must reflect reality, not the pre-filled candidate. The storedKey
     // assignment lives *inside* the create branch — referencing it after
     // the if/else would be undefined on the update path.
-    final singleIntKey = model.singleKeyFieldName != null &&
-        model.keyType == 'int';
+    final singleIntKey =
+        model.singleKeyFieldName != null && model.keyType == 'int';
     final updateKeyWrite = model.singleKeyFieldName != null
         ? 'candidate.${model.singleKeyFieldName}'
         : '${model.baseName}Key.fromEntity(candidate)';
@@ -193,8 +193,8 @@ final class FormEmitter {
               ? '\'${model.baseName} \${${model.entityCamelName}.${model.singleKeyFieldName}}\''
               : '\'${model.baseName}\''
         : nameField.dartType == 'String?'
-              ? '${model.entityCamelName}.name ?? \'\''
-              : '${model.entityCamelName}.name';
+        ? '${model.entityCamelName}.name ?? \'\''
+        : '${model.entityCamelName}.name';
     buffer
       ..writeln(
         '  /// Fires the activity-log event after a write; persistence is handled by\n'
@@ -204,7 +204,9 @@ final class FormEmitter {
         '  void _logActivity(ActivityActionType action, '
         '${model.entityClassName} ${model.entityCamelName}) {',
       )
-      ..writeln('    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(')
+      ..writeln(
+        '    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(',
+      )
       ..writeln('      module: \'${model.moduleName}\',')
       ..writeln('      actionType: action,')
       ..writeln('      entityName: $entityNameExpr,')

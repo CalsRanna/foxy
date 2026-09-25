@@ -68,8 +68,12 @@ final class ListReader {
       );
     }
 
-    final (ClassElement entityElement, String table) =
-        await _readEntity(annotation, className, element, buildStep);
+    final (ClassElement entityElement, String table) = await _readEntity(
+      annotation,
+      className,
+      element,
+      buildStep,
+    );
     final repositoryElement = await _readRepository(
       annotation,
       className,
@@ -184,7 +188,8 @@ final class ListReader {
         );
       }
     } else {
-      entityClassName = entityClassNameOfViewModel(className) ??
+      entityClassName =
+          entityClassNameOfViewModel(className) ??
           _fail(
             '$className cannot derive an entity class name.',
             element,
@@ -240,7 +245,8 @@ final class ListReader {
         );
       }
     } else {
-      repositoryClassName = repositoryClassNameOfViewModel(className) ??
+      repositoryClassName =
+          repositoryClassNameOfViewModel(className) ??
           _fail(
             '$className cannot derive a repository class name.',
             element,

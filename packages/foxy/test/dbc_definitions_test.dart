@@ -52,7 +52,10 @@ void main() {
       DbcDefinitions.byTable['dbc_zone_intro_music_table']?.fileName,
       'ZoneIntroMusicTable.dbc',
     );
-    expect(DbcDefinitions.byTable['dbc_liquid_type']?.fileName, 'LiquidType.dbc');
+    expect(
+      DbcDefinitions.byTable['dbc_liquid_type']?.fileName,
+      'LiquidType.dbc',
+    );
     expect(DbcDefinitions.byTable['dbc_light']?.fileName, 'Light.dbc');
   });
 

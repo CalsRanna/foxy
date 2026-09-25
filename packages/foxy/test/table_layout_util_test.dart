@@ -9,7 +9,10 @@ void main() {
 
   test('放不下时让出位置给 +N', () {
     expect(TableLayoutUtil.fittingBadgeCount([50, 50], (h) => 30, 4, 100), 1);
-    expect(TableLayoutUtil.fittingBadgeCount([50, 50, 50], (h) => 30, 4, 150), 2);
+    expect(
+      TableLayoutUtil.fittingBadgeCount([50, 50, 50], (h) => 30, 4, 150),
+      2,
+    );
   });
 
   test('一个 badge 都放不下时返回 0', () {
@@ -18,7 +21,23 @@ void main() {
   });
 
   test('+N 宽度随隐藏数量变化', () {
-    expect(TableLayoutUtil.fittingBadgeCount([50, 50, 50], (h) => 20 + h * 10, 4, 150), 2);
-    expect(TableLayoutUtil.fittingBadgeCount([50, 50, 50], (h) => 40 + h * 10, 4, 150), 1);
+    expect(
+      TableLayoutUtil.fittingBadgeCount(
+        [50, 50, 50],
+        (h) => 20 + h * 10,
+        4,
+        150,
+      ),
+      2,
+    );
+    expect(
+      TableLayoutUtil.fittingBadgeCount(
+        [50, 50, 50],
+        (h) => 40 + h * 10,
+        4,
+        150,
+      ),
+      1,
+    );
   });
 }

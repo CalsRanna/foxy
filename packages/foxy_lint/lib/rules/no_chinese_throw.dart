@@ -21,16 +21,16 @@ class NoChineseThrow extends AnalysisRule {
     'Throw expressions must not contain Chinese string literals.',
     correctionMessage:
         'Use an English diagnostic message; user-facing Chinese copy is '
-            'mapped by type through foxyErrorMessage.',
+        'mapped by type through foxyErrorMessage.',
     severity: DiagnosticSeverity.WARNING,
   );
 
   NoChineseThrow()
-      : super(
-          name: 'no_chinese_throw',
-          description:
-              'Throw expressions must not contain Chinese string literals.',
-        );
+    : super(
+        name: 'no_chinese_throw',
+        description:
+            'Throw expressions must not contain Chinese string literals.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

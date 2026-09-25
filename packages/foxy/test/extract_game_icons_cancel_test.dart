@@ -106,7 +106,6 @@ void main() {
     expect(third.success, isTrue);
     expect(useCase.isRunning, isFalse);
   });
-
 }
 
 /// Scripted worker: honours the control protocol, terminates immediately on

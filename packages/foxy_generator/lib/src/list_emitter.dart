@@ -32,8 +32,8 @@ final class ListEmitter {
             // The row is gone after the destroy; capture its name first so
             // the activity log can record it.
             : '      final record = '
-                'await _repository.get${_baseName(model)}(key);\n'
-                '      await _repository.destroy${_baseName(model)}(key);',
+                  'await _repository.get${_baseName(model)}(key);\n'
+                  '      await _repository.destroy${_baseName(model)}(key);',
       )
       ..writeln(
         model.logNameFields.isEmpty

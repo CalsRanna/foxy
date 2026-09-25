@@ -37,9 +37,7 @@ void main() {
   Future<void> pumpDialog(WidgetTester tester) async {
     await tester.pumpWidget(
       ShadApp(
-        home: Scaffold(
-          body: IconExtractDialog(vm: vm),
-        ),
+        home: Scaffold(body: IconExtractDialog(vm: vm)),
       ),
     );
     await tester.pump(); // finish _prepare (synchronous config microtask)

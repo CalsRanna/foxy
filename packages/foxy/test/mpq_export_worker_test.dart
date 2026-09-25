@@ -116,7 +116,10 @@ void main() {
     final archive = MpqArchive.open(mpqPath);
     try {
       expect(archive.files, isNot(contains('stale.txt')));
-      expect(archive.files, contains('${MpqExportWorker.dbcArchivePath}${duration.fileName}'));
+      expect(
+        archive.files,
+        contains('${MpqExportWorker.dbcArchivePath}${duration.fileName}'),
+      );
     } finally {
       archive.close();
     }

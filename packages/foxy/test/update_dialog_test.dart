@@ -14,7 +14,9 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
   Widget wrap(Widget child) {
-    return ShadApp(home: Scaffold(body: Center(child: child)));
+    return ShadApp(
+      home: Scaffold(body: Center(child: child)),
+    );
   }
 
   testWidgets('更新就绪 → 显示就绪视图与立即重启按钮', (tester) async {

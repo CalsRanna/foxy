@@ -21,9 +21,7 @@ abstract final class QuestFlags {
   static const kFlagOptions = 1;
 }
 ''',
-      [
-        lint(49, 16),
-      ],
+      [lint(49, 16)],
     );
   }
 
@@ -34,9 +32,7 @@ class Foo {
   static final kBar = 1;
 }
 ''',
-      [
-        lint(27, 8),
-      ],
+      [lint(27, 8)],
     );
   }
 

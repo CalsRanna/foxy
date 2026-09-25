@@ -21,17 +21,17 @@ class AnnotationFileMismatch extends AnalysisRule {
         'glob), or the builder silently skips them.',
     correctionMessage:
         'Move the class to a file matching the glob, e.g. '
-            '<snake_case>_entity.dart.',
+        '<snake_case>_entity.dart.',
     severity: DiagnosticSeverity.WARNING,
   );
 
   AnnotationFileMismatch()
-      : super(
-          name: 'annotation_file_mismatch',
-          description:
-              'Annotated classes must live in the file pattern the code '
-                  'generator scans.',
-        );
+    : super(
+        name: 'annotation_file_mismatch',
+        description:
+            'Annotated classes must live in the file pattern the code '
+            'generator scans.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

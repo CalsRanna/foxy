@@ -192,38 +192,34 @@ void main() {
         : false,
   );
 
-  test(
-    'DBC 导入：同一定义匹配多个文件时报错',
-    () async {
-      final util = DbcSyncUtil();
-      final dir = await Directory.systemTemp.createTemp('foxy_import_dup_');
-      addTearDown(() async {
-        if (await dir.exists()) await dir.delete(recursive: true);
-      });
+  test('DBC 导入：同一定义匹配多个文件时报错', () async {
+    final util = DbcSyncUtil();
+    final dir = await Directory.systemTemp.createTemp('foxy_import_dup_');
+    addTearDown(() async {
+      if (await dir.exists()) await dir.delete(recursive: true);
+    });
 
-      final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
-      await DbcExportUtil().write(
-        definition: definition,
-        rows: [
-          {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
-        ],
-        outputDirectory: dir.path,
-      );
-      await File(
-        p.join(dir.path, definition.fileName),
-      ).copy(p.join(dir.path, 'SpellDuration.DBC'));
+    final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
+    await DbcExportUtil().write(
+      definition: definition,
+      rows: [
+        {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
+      ],
+      outputDirectory: dir.path,
+    );
+    await File(
+      p.join(dir.path, definition.fileName),
+    ).copy(p.join(dir.path, 'SpellDuration.DBC'));
 
-      final events = await util
-          .import(directory: dir.path, mysqlConfig: mysql)
-          .toList()
-          .timeout(const Duration(seconds: 15));
+    final events = await util
+        .import(directory: dir.path, mysqlConfig: mysql)
+        .toList()
+        .timeout(const Duration(seconds: 15));
 
-      final result = events.whereType<DbcSyncResult>().single;
-      expect(result.success, isFalse);
-      expect(result.errors.map((e) => e.message).join('\n'), contains('多个'));
-    },
-    skip: Platform.isWindows ? 'Windows 文件系统大小写不敏感，无法并存 .dbc 与 .DBC' : false,
-  );
+    final result = events.whereType<DbcSyncResult>().single;
+    expect(result.success, isFalse);
+    expect(result.errors.map((e) => e.message).join('\n'), contains('多个'));
+  }, skip: Platform.isWindows ? 'Windows 文件系统大小写不敏感，无法并存 .dbc 与 .DBC' : false);
 }
 
 /// Fake DBC-export worker: registers its control port, then stays alive

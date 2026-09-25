@@ -114,8 +114,7 @@ class SetupStatusViewModel {
     if (!await _validatePath(clientDirError, '客户端目录', path)) return false;
     final mpq = _findMpqDir(path.trim());
     if (mpq == null) {
-      clientDirError.value =
-          '在客户端目录中未找到 MPQ 归档(如 Data/zhCN),请确认选择的是客户端根目录';
+      clientDirError.value = '在客户端目录中未找到 MPQ 归档(如 Data/zhCN),请确认选择的是客户端根目录';
       return false;
     }
     await _configUtil.update({'client_dir': path.trim(), 'mpq_dir': mpq});

@@ -16,7 +16,10 @@ void main() {
     test('rejects illegal input instead of silent zero', () {
       expect(() => ParseUtil.parseIntField('12a'), throwsFormatException);
       expect(() => ParseUtil.parseIntField('1.5'), throwsFormatException);
-      expect(() => ParseUtil.parseIntField('abc', field: 'entry'), throwsFormatException);
+      expect(
+        () => ParseUtil.parseIntField('abc', field: 'entry'),
+        throwsFormatException,
+      );
     });
   });
 
@@ -32,7 +35,10 @@ void main() {
 
     test('rejects illegal input instead of silent zero', () {
       expect(() => ParseUtil.parseDoubleField('12a'), throwsFormatException);
-      expect(() => ParseUtil.parseDoubleField('x', field: 'x'), throwsFormatException);
+      expect(
+        () => ParseUtil.parseDoubleField('x', field: 'x'),
+        throwsFormatException,
+      );
     });
   });
 

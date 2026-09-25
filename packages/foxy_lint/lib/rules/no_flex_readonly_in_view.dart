@@ -19,11 +19,10 @@ class NoFlexInView extends AnalysisRule {
   );
 
   NoFlexInView()
-      : super(
-          name: 'no_flex_in_view',
-          description:
-              'View files must not use the flex: parameter.',
-        );
+    : super(
+        name: 'no_flex_in_view',
+        description: 'View files must not use the flex: parameter.',
+      );
 
   @override
   LintCode get diagnosticCode => code;
@@ -63,11 +62,10 @@ class NoReadOnlyInView extends AnalysisRule {
   );
 
   NoReadOnlyInView()
-      : super(
-          name: 'no_readonly_in_view',
-          description:
-              'View files must not use readOnly: true.',
-        );
+    : super(
+        name: 'no_readonly_in_view',
+        description: 'View files must not use readOnly: true.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

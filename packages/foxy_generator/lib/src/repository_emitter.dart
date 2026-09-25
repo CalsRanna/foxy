@@ -361,9 +361,7 @@ final class RepositoryEmitter {
               .map((field) => field.dartName)
               .toList();
     final returnsKey = model.keyType == 'int';
-    final returnType = returnsKey
-        ? 'Future<${model.keyType}>'
-        : 'Future<void>';
+    final returnType = returnsKey ? 'Future<${model.keyType}>' : 'Future<void>';
     buffer.writeln(
       '  $returnType store${model.baseName}'
       '(${model.entityClassName} $parameter) async {',
@@ -413,9 +411,7 @@ final class RepositoryEmitter {
         // the actual written key through the return value.
         ..writeln('      final retried = $parameter.copyWith(')
         ..writeln('        $retriedKey: await nextMaxPlusOne(')
-        ..writeln(
-          '          _table, ${_column(retriedField.columnName)},',
-        );
+        ..writeln('          _table, ${_column(retriedField.columnName)},');
       if (retryScope.isNotEmpty) {
         buffer.writeln(
           '          where: {${_retryWhereMap(model, parameter, retryScope)}},',
@@ -425,10 +421,14 @@ final class RepositoryEmitter {
         ..writeln('        ),')
         ..writeln('      );')
         ..writeln('      try {')
-        ..writeln('        await laconic.table(_table)'
-          '.insert([prepareWriteJson(retried.toJson())]);')
         ..writeln(
-          returnsKey ? '        return retried.$retriedKey;' : '        return;',
+          '        await laconic.table(_table)'
+          '.insert([prepareWriteJson(retried.toJson())]);',
+        )
+        ..writeln(
+          returnsKey
+              ? '        return retried.$retriedKey;'
+              : '        return;',
         )
         ..writeln('      } catch (retryError) {')
         ..writeln('        if (MysqlErrorUtil.isDuplicateEntry(retryError)) {')
@@ -540,9 +540,8 @@ final class RepositoryEmitter {
   /// Backticks are unconditional (like [_column]): laconic splices these
   /// keys into SQL verbatim, so a reserved-word link column (e.g. `index`)
   /// must be quoted.
-  String _linkWhereMap(List<RepositoryKeyFieldModel> links) => links
-      .map((p) => "${_column(p.columnName)}: ${p.dartName}")
-      .join(', ');
+  String _linkWhereMap(List<RepositoryKeyFieldModel> links) =>
+      links.map((p) => "${_column(p.columnName)}: ${p.dartName}").join(', ');
 
   /// Sequence-column where map for the retry path, referenced via the entity
   /// parameter, e.g. `'CreatureID': loot.CreatureID` (_column already returns
@@ -553,14 +552,12 @@ final class RepositoryEmitter {
     RepositoryGenerationModel model,
     String parameter,
     List<String> scopeNames,
-  ) =>
-      scopeNames
-          .map(
-            (name) => '${_column(
-              model.keyFields.firstWhere((f) => f.dartName == name).columnName,
-            )}: $parameter.$name',
-          )
-          .join(', ');
+  ) => scopeNames
+      .map(
+        (name) =>
+            '${_column(model.keyFields.firstWhere((f) => f.dartName == name).columnName)}: $parameter.$name',
+      )
+      .join(', ');
 
   /// `.orderBy('`ID`')`, or a chained `.orderBy(...).orderBy(...)` for
   /// composite keys.

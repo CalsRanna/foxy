@@ -43,9 +43,7 @@ class FoxyRepository {
 @FoxyRepository()
 class SpellRepository {}
 ''',
-      [
-        lint(52, 42),
-      ],
+      [lint(52, 42)],
     );
   }
 
@@ -59,9 +57,7 @@ class FoxyListViewModel {
 @FoxyListViewModel()
 class SpellListViewModel {}
 ''',
-      [
-        lint(58, 48),
-      ],
+      [lint(58, 48)],
     );
   }
 
@@ -93,9 +89,7 @@ class FoxyFullEntity {
 @FoxyFullEntity(table: 'spell')
 class SpellEntity {}
 ''',
-      [
-        lint(87, 52),
-      ],
+      [lint(87, 52)],
     );
   }
 }

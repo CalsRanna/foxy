@@ -19,17 +19,16 @@ class ClassFileNameMatch extends AnalysisRule {
     'The class name must match its file name (PascalCase of the file).',
     correctionMessage:
         'Rename the class to the PascalCase of the file name (e.g. '
-            '`quest_flags.dart` → `QuestFlags`), or move the class to a '
-            'matching file.',
+        '`quest_flags.dart` → `QuestFlags`), or move the class to a '
+        'matching file.',
     severity: DiagnosticSeverity.WARNING,
   );
 
   ClassFileNameMatch()
-      : super(
-          name: 'class_file_name_match',
-          description:
-              'Namespace classes must be named after their file name.',
-        );
+    : super(
+        name: 'class_file_name_match',
+        description: 'Namespace classes must be named after their file name.',
+      );
 
   @override
   LintCode get diagnosticCode => code;
@@ -93,9 +92,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool _isLibPath(String path) =>
       path.contains('/lib/') || path.contains(r'\lib\');
 
-  static String _pascalCase(String snakeCase) =>
-      snakeCase.split('_').map((w) {
-        if (w.isEmpty) return w;
-        return w[0].toUpperCase() + w.substring(1);
-      }).join();
+  static String _pascalCase(String snakeCase) => snakeCase.split('_').map((w) {
+    if (w.isEmpty) return w;
+    return w[0].toUpperCase() + w.substring(1);
+  }).join();
 }

@@ -33,9 +33,7 @@ abstract final class Flags {
   static const flagOptions = 1;
 }
 ''',
-      [
-        lint(0, 62),
-      ],
+      [lint(0, 62)],
     );
   }
 

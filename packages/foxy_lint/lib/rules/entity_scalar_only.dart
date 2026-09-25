@@ -18,12 +18,12 @@ class EntityScalarOnly extends AnalysisRule {
   );
 
   EntityScalarOnly()
-      : super(
-          name: 'entity_scalar_only',
-          description:
-              'Entity fields must be scalar types; collection types are '
-                  'not allowed.',
-        );
+    : super(
+        name: 'entity_scalar_only',
+        description:
+            'Entity fields must be scalar types; collection types are '
+            'not allowed.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

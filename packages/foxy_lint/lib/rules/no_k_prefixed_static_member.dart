@@ -23,12 +23,12 @@ class NoKPrefixedStaticMember extends AnalysisRule {
   );
 
   NoKPrefixedStaticMember()
-      : super(
-          name: 'no_k_prefixed_static_member',
-          description:
-              'Class members must not use the `k` prefix; the class name '
-                  'already provides the namespace.',
-        );
+    : super(
+        name: 'no_k_prefixed_static_member',
+        description:
+            'Class members must not use the `k` prefix; the class name '
+            'already provides the namespace.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

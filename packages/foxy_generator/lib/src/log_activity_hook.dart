@@ -65,7 +65,8 @@ class LogActivityHookEmitter {
   /// candidate name field (empty strings fall through to the key); the
   /// fallback variant logs the key.
   String get body {
-    final fire = '    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(\n'
+    final fire =
+        '    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(\n'
         '      module: \'$moduleName\',\n'
         '      actionType: action,\n'
         '      entityName: ${logNameFields.isEmpty ? 'key.toString()' : 'entityName'},\n'
@@ -80,9 +81,7 @@ class LogActivityHookEmitter {
       chain.writeln(
         '${' '.padLeft(8 + 6 * i, ' ')}: resolved.$field.isNotEmpty',
       );
-      chain.writeln(
-        '${' '.padLeft(8 + 6 * (i + 1), ' ')}? resolved.$field',
-      );
+      chain.writeln('${' '.padLeft(8 + 6 * (i + 1), ' ')}? resolved.$field');
     }
     chain.write(
       '${' '.padLeft(8 + 6 * logNameFields.length, ' ')}: key.toString();',

@@ -16,10 +16,10 @@ class MinTableColumnWidth extends AnalysisRule {
   );
 
   MinTableColumnWidth()
-      : super(
-          name: 'min_table_column_width',
-          description: 'Table columns must have a width of at least 120.',
-        );
+    : super(
+        name: 'min_table_column_width',
+        description: 'Table columns must have a width of at least 120.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

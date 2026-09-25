@@ -85,7 +85,8 @@ final class FormReader {
         );
       }
     } else {
-      entityClassName = entityClassNameOfViewModel(className) ??
+      entityClassName =
+          entityClassNameOfViewModel(className) ??
           _fail(
             '$className cannot derive an entity class name.',
             element,

@@ -119,7 +119,9 @@ final class _DuplicateRetryDriver implements DatabaseDriver {
     List<Object?> params = const [],
   ]) async {
     // nextMaxPlusOne: SELECT MAX(`id`) AS max_id ... → returns 999.
-    return [LaconicResult.fromMap({'max_id': 999})];
+    return [
+      LaconicResult.fromMap({'max_id': 999}),
+    ];
   }
 
   @override

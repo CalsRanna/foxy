@@ -36,8 +36,10 @@ void main() {
                 contains('final submitting = signal(false);'),
                 contains('final errorMessage = signal<String?>(null);'),
                 // Controller boilerplate (reuses FormEmitter)
-                contains('late final childIdController = '
-                    'registerController(IntFieldController());'),
+                contains(
+                  'late final childIdController = '
+                  'registerController(IntFieldController());',
+                ),
                 // Race token
                 contains('int _refreshToken = 0;'),
                 contains('int _interactionToken = 0;'),
@@ -93,10 +95,8 @@ void main() {
   });
 }
 
-const formAnnotationAsset =
-    'foxy_annotation|lib/form_annotations.dart';
-const entityAnnotationAsset =
-    'foxy_annotation|lib/entity_annotations.dart';
+const formAnnotationAsset = 'foxy_annotation|lib/form_annotations.dart';
+const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
 const entityAsset = 'foxy|lib/entity/child_item_entity.dart';
 const repositoryAnnotationAsset =
     'foxy_annotation|lib/repository_annotations.dart';
@@ -153,4 +153,6 @@ final formAnnotationSource = foxyAnnotationSource('form_annotations.dart');
 
 final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
-final repositoryAnnotationSource = foxyAnnotationSource('repository_annotations.dart');
+final repositoryAnnotationSource = foxyAnnotationSource(
+  'repository_annotations.dart',
+);

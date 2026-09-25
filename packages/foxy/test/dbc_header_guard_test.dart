@@ -46,7 +46,12 @@ void main() {
   });
 
   test('巨大 stringBlockSize 声明被拒绝', () {
-    writeHeader('evil2.dbc', recordCount: 1, recordSize: 4, stringBlockSize: 1 << 30);
+    writeHeader(
+      'evil2.dbc',
+      recordCount: 1,
+      recordSize: 4,
+      stringBlockSize: 1 << 30,
+    );
     expect(
       () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'evil2.dbc')),
       throwsA(isA<ValidationException>()),
@@ -75,7 +80,9 @@ void main() {
       stringBlockSize: 0,
     );
     expect(
-      () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'boundary_ok.dbc')),
+      () => DbcHeaderGuard.assertPayloadSafe(
+        p.join(tempDir.path, 'boundary_ok.dbc'),
+      ),
       returnsNormally,
     );
     writeHeader(
@@ -85,7 +92,9 @@ void main() {
       stringBlockSize: 0,
     );
     expect(
-      () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'boundary_bad.dbc')),
+      () => DbcHeaderGuard.assertPayloadSafe(
+        p.join(tempDir.path, 'boundary_bad.dbc'),
+      ),
       throwsA(isA<ValidationException>()),
     );
   });
@@ -93,9 +102,6 @@ void main() {
   test('短文件(无头)放行,由 DbcLoader 处理', () {
     final file = File(p.join(tempDir.path, 'tiny.dbc'));
     file.writeAsBytesSync([1, 2, 3]);
-    expect(
-      () => DbcHeaderGuard.assertPayloadSafe(file.path),
-      returnsNormally,
-    );
+    expect(() => DbcHeaderGuard.assertPayloadSafe(file.path), returnsNormally);
   });
 }

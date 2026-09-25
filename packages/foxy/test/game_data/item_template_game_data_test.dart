@@ -14,7 +14,6 @@ import 'package:foxy/repository/milling_loot_template_repository.dart';
 import 'package:foxy/repository/prospecting_loot_template_repository.dart';
 
 void main() {
-
   test('ItemTemplateEntity 成组列使用独立字段而不是数组', () {
     const entity = ItemTemplateEntity(
       statType10: 7,

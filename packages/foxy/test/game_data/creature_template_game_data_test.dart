@@ -36,7 +36,14 @@ void main() {
       for (var value = 0; value <= 6; value++) value,
     });
     expect(CreatureEnums.movementTypeOptions.keys.toSet(), {0, 1, 2});
-    expect(CreatureEnums.visibilityDistanceTypeOptions.keys.toSet(), {0, 1, 2, 3, 4, 5});
+    expect(CreatureEnums.visibilityDistanceTypeOptions.keys.toSet(), {
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+    });
     expect(CreatureEnums.creatureFamilyOptions.keys.toSet(), {
       0,
       1,
@@ -93,11 +100,22 @@ void main() {
     });
     expect(_valuesOf(CreatureFlags.creatureTypeFlagOptions), _bits(0, 31));
     expect(_valuesOf(CreatureFlags.dynamicFlagOptions), _bits(0, 7));
-    expect(_valuesOf(CreatureFlags.lootModeFlagOptions), {1, 2, 4, 8, 16, 32, 0x8000});
+    expect(_valuesOf(CreatureFlags.lootModeFlagOptions), {
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      0x8000,
+    });
 
     final dbAllowedExtraFlags = _bits(0, 31)..remove(1 << 28);
     expect(_valuesOf(CreatureFlags.flagsExtraOptions), dbAllowedExtraFlags);
-    expect(_valuesOf(CreatureFlags.flagsExtraOptions), isNot(contains(1 << 28)));
+    expect(
+      _valuesOf(CreatureFlags.flagsExtraOptions),
+      isNot(contains(1 << 28)),
+    );
   });
 
   test('11 个关联 Tab 的 Entity 写出字段与目标 SQL 列一致', () {

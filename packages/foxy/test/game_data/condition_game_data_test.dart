@@ -7,7 +7,6 @@ import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/condition_entity.dart';
 
 void main() {
-
   test('来源类型精确排除 NONE、3.3.5a 不支持值和枚举哨兵', () {
     expect(ConditionSourceTypes.conditionSourceTypeLabels.keys.toSet(), {
       for (var value = 1; value <= 24; value++) value,
@@ -70,17 +69,20 @@ void main() {
       3,
     });
     expect(
-      (ConditionValueConfig.forType(31, value1: 3).value2 as IntegerReferenceFieldSpec)
+      (ConditionValueConfig.forType(31, value1: 3).value2
+              as IntegerReferenceFieldSpec)
           .reference,
       ConditionValueReference.creature,
     );
     expect(
-      (ConditionValueConfig.forType(31, value1: 5).value2 as IntegerReferenceFieldSpec)
+      (ConditionValueConfig.forType(31, value1: 5).value2
+              as IntegerReferenceFieldSpec)
           .reference,
       ConditionValueReference.gameObject,
     );
     expect(
-      (ConditionValueConfig.forType(31, value1: 4).value2 as IntegerNumberFieldSpec)
+      (ConditionValueConfig.forType(31, value1: 4).value2
+              as IntegerNumberFieldSpec)
           .label,
       '对象条目',
     );
@@ -117,5 +119,4 @@ void main() {
     );
     expect(reference.conditionValue1Label, '7');
   });
-
 }

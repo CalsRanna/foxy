@@ -54,9 +54,6 @@ void main() {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(
-      logContains(logs, 'has no physical primary key field'),
-      isTrue,
-    );
+    expect(logContains(logs, 'has no physical primary key field'), isTrue);
   });
 }

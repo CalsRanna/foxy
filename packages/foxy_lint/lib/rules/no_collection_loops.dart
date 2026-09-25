@@ -20,11 +20,11 @@ class NoCollectionLoops extends AnalysisRule {
   );
 
   NoCollectionLoops()
-      : super(
-          name: 'no_collection_loops',
-          description:
-              'Entity/ViewModel/View files must not use collection loops.',
-        );
+    : super(
+        name: 'no_collection_loops',
+        description:
+            'Entity/ViewModel/View files must not use collection loops.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

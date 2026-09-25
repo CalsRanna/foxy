@@ -27,7 +27,9 @@ void main() {
   });
 
   test('SpellCustomAttributes 覆盖全部独立位且不加入组合别名', () {
-    final values = SpellFlags.spellCustomAttributeOptions.map((item) => item.value);
+    final values = SpellFlags.spellCustomAttributeOptions.map(
+      (item) => item.value,
+    );
     expect(values.toSet(), hasLength(32));
     expect(
       values.every((value) => value > 0 && value & (value - 1) == 0),
@@ -44,7 +46,10 @@ void main() {
       SpellFlags.spellAreaQuestStatusOptions.map((item) => item.value),
       orderedEquals([0x01, 0x02, 0x08, 0x20, 0x40]),
     );
-    expect(SpellEnums.spellPowerTypeOptions.keys, containsAll([127, 0xFFFFFFFE]));
+    expect(
+      SpellEnums.spellPowerTypeOptions.keys,
+      containsAll([127, 0xFFFFFFFE]),
+    );
   });
 
   test('父键型关联记录禁止通过 MAX+1 复制出无效引用', () async {

@@ -63,7 +63,10 @@ class _FailingDriver implements DatabaseDriver {
   final SqlGrammar grammar = MysqlGrammar();
 
   @override
-  Future<int> affectingStatement(String sql, [List<Object?> params = const []]) {
+  Future<int> affectingStatement(
+    String sql, [
+    List<Object?> params = const [],
+  ]) {
     throw StateError('write failed');
   }
 
@@ -76,7 +79,10 @@ class _FailingDriver implements DatabaseDriver {
   }
 
   @override
-  Future<List<LaconicResult>> select(String sql, [List<Object?> params = const []]) async {
+  Future<List<LaconicResult>> select(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
     return const [];
   }
 

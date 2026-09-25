@@ -17,9 +17,12 @@ void main() {
 
     // Old-version files (to be replaced/deleted).
     File(p.join(appDir.path, 'foxy.exe')).writeAsStringSync('old-exe');
-    File(p.join(appDir.path, 'data', 'flutter_assets', 'old.png'))
-        .createSync(recursive: true);
-    File(p.join(appDir.path, 'data', 'icudtl.dat')).writeAsStringSync('old-icu');
+    File(
+      p.join(appDir.path, 'data', 'flutter_assets', 'old.png'),
+    ).createSync(recursive: true);
+    File(
+      p.join(appDir.path, 'data', 'icudtl.dat'),
+    ).writeAsStringSync('old-icu');
     File(p.join(appDir.path, 'stale.dll')).writeAsStringSync('stale');
     Directory(p.join(appDir.path, 'empty_dir')).createSync();
 
@@ -38,8 +41,9 @@ void main() {
     );
     asset.parent.createSync(recursive: true);
     asset.writeAsStringSync('png');
-    File(p.join(payloadDir.path, 'data', 'icudtl.dat'))
-        .writeAsStringSync('new-icu');
+    File(
+      p.join(payloadDir.path, 'data', 'icudtl.dat'),
+    ).writeAsStringSync('new-icu');
     File(p.join(payloadDir.path, 'new_file.dll')).writeAsStringSync('new-dll');
   });
 
@@ -57,8 +61,9 @@ void main() {
     // New-version files are in place.
     expect(File(p.join(appDir.path, 'foxy.exe')).readAsStringSync(), 'new-exe');
     expect(
-      File(p.join(appDir.path, 'data', 'flutter_assets', 'new.png'))
-          .readAsStringSync(),
+      File(
+        p.join(appDir.path, 'data', 'flutter_assets', 'new.png'),
+      ).readAsStringSync(),
       'png',
     );
     expect(
@@ -72,22 +77,24 @@ void main() {
     // Old-version leftovers are deleted.
     expect(File(p.join(appDir.path, 'stale.dll')).existsSync(), isFalse);
     expect(
-      File(p.join(appDir.path, 'data', 'flutter_assets', 'old.png'))
-          .existsSync(),
+      File(
+        p.join(appDir.path, 'data', 'flutter_assets', 'old.png'),
+      ).existsSync(),
       isFalse,
     );
     // Empty directories are cleaned up.
     expect(Directory(p.join(appDir.path, 'empty_dir')).existsSync(), isFalse);
     // User data is preserved as-is.
-    expect(File(p.join(appDir.path, 'config.yaml')).readAsStringSync(), 'host: x');
     expect(
-      File(p.join(appDir.path, 'data', 'icon', 'icon1.blp'))
-          .readAsStringSync(),
+      File(p.join(appDir.path, 'config.yaml')).readAsStringSync(),
+      'host: x',
+    );
+    expect(
+      File(p.join(appDir.path, 'data', 'icon', 'icon1.blp')).readAsStringSync(),
       'blp1',
     );
     expect(
-      File(p.join(appDir.path, 'data', 'icon', 'icon2.blp'))
-          .readAsStringSync(),
+      File(p.join(appDir.path, 'data', 'icon', 'icon2.blp')).readAsStringSync(),
       'blp2',
     );
   });
@@ -131,8 +138,8 @@ void main() {
   test('payload 根为 .update_tmp 子目录时,交换后可被完整删除', () async {
     // Simulate: payload under .update_tmp/Foxy, with other leftovers in
     // .update_tmp.
-    final updateTemp =
-        Directory(p.join(appDir.path, UpdateSwapper.tempDirName))..createSync();
+    final updateTemp = Directory(p.join(appDir.path, UpdateSwapper.tempDirName))
+      ..createSync();
     final nested = Directory(p.join(updateTemp.path, 'Foxy'))..createSync();
     File(p.join(nested.path, 'foxy.exe')).writeAsStringSync('nested-exe');
     File(p.join(updateTemp.path, 'junk.bin')).writeAsStringSync('junk');
@@ -149,10 +156,7 @@ void main() {
     );
     // User data is still there.
     expect(File(p.join(appDir.path, 'config.yaml')).existsSync(), isTrue);
-    expect(
-      Directory(p.join(appDir.path, 'data', 'icon')).existsSync(),
-      isTrue,
-    );
+    expect(Directory(p.join(appDir.path, 'data', 'icon')).existsSync(), isTrue);
     // The swapper never touches .update_tmp (the helper deletes the whole
     // directory after swapping); simulate the helper deleting the temp
     // directory and verify the swapped app files are unaffected.

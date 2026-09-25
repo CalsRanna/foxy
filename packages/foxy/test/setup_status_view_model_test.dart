@@ -21,8 +21,7 @@ void main() {
   /// Server root with a standard `data/dbc` layout holding one .dbc file.
   Directory buildServerRoot() {
     final root = Directory(p.join(tempDir.path, 'server'))..createSync();
-    Directory(p.join(root.path, 'data', 'dbc'))
-        .createSync(recursive: true);
+    Directory(p.join(root.path, 'data', 'dbc')).createSync(recursive: true);
     File(p.join(root.path, 'data', 'dbc', 'Spell.dbc')).createSync();
     return root;
   }

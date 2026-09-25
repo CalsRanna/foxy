@@ -449,7 +449,9 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     _checked.value = true;
     // Directories ready and DBC imported, only icons missing → jump
     // straight to extraction.
-    if (_step.value == 2 && _importDoneAtCheck && !_setupVm.iconsSkipped.value) {
+    if (_step.value == 2 &&
+        _importDoneAtCheck &&
+        !_setupVm.iconsSkipped.value) {
       await _startIconExtract();
     }
   }

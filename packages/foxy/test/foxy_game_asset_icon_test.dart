@@ -18,9 +18,9 @@ void main() {
     iconDir = Directory(p.join(Directory.current.path, 'data', 'icon'))
       ..createSync(recursive: true);
     for (final name in ['fixture_dxt1', 'fixture_dxt3', 'fixture_dxt5']) {
-      File('test/fixture/icons/$name.blp').copySync(
-        p.join(iconDir.path, '$name.blp'),
-      );
+      File(
+        'test/fixture/icons/$name.blp',
+      ).copySync(p.join(iconDir.path, '$name.blp'));
     }
   });
 
@@ -48,9 +48,9 @@ void main() {
   /// moves a completed image into its keep-alive store via the internal
   /// pending-image listener, which a direct loadImage call bypasses.
   Future<void> preload(String name) async {
-    final stream = BlpIconProvider(rawPath: name).resolve(
-      const ImageConfiguration(),
-    );
+    final stream = BlpIconProvider(
+      rawPath: name,
+    ).resolve(const ImageConfiguration());
     final completer = Completer<ImageInfo?>();
     late ImageStreamListener listener;
     listener = ImageStreamListener(

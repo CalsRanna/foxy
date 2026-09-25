@@ -51,8 +51,7 @@ void f(int id) {
   }
 
   void test_englishOnly_doesNotReport() async {
-    await assertNoDiagnostics(
-      r'''
+    await assertNoDiagnostics(r'''
 class Boom implements Exception {
   const Boom(this.message);
   final String message;
@@ -61,17 +60,14 @@ class Boom implements Exception {
 void f() {
   throw const Boom('record not found');
 }
-''',
-    );
+''');
   }
 
   void test_cjkOutsideThrow_doesNotReport() async {
-    await assertNoDiagnostics(
-      r'''
+    await assertNoDiagnostics(r'''
 const label = '中文文案';
 void f() {}
-''',
-    );
+''');
   }
 }
 

@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 
 void main() {
-
   test('Achievement 三张 DBC definitions 使用 3.3.5.12340 精确格式', () {
     final achievement = DbcDefinitions.byTable['dbc_achievement']!;
     final category = DbcDefinitions.byTable['dbc_achievement_category']!;

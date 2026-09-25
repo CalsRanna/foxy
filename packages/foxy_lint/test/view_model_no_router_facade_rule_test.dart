@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:analyzer/error/error.dart' show DiagnosticCode, diagnosticCodeValues;
+import 'package:analyzer/error/error.dart'
+    show DiagnosticCode, diagnosticCodeValues;
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:foxy_lint/rules/view_model_no_router_facade.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -8,8 +9,8 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 /// The blocked URI does not resolve in the harness's test package, so the
 /// positive case also expects the `uri_does_not_exist` compile error.
 DiagnosticCode _uriDoesNotExist() => diagnosticCodeValues.firstWhere(
-      (code) => code.lowerCaseUniqueName == 'uri_does_not_exist',
-    );
+  (code) => code.lowerCaseUniqueName == 'uri_does_not_exist',
+);
 
 /// Tests the real ViewModelNoRouterFacade rule through the official
 /// analyzer_testing harness. Scope comes from the probed file name
@@ -32,10 +33,7 @@ class ViewModelNoRouterFacadeRuleTest extends AnalysisRuleTest {
       r'''
 import 'package:foxy/router/router_facade.dart';
 ''',
-      [
-        lint(0, 48),
-        error(_uriDoesNotExist(), 7, 40),
-      ],
+      [lint(0, 48), error(_uriDoesNotExist(), 7, 40)],
     );
   }
 

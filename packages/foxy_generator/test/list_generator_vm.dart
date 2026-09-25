@@ -97,7 +97,9 @@ void main() {
               allOf(<Matcher>[
                 // destroy 在删库前预取记录,日志收到名称而不是空查询。
                 contains('final record = await _repository.getSample(key);'),
-                contains('await _logActivity(ActivityActionType.delete, key, record);'),
+                contains(
+                  'await _logActivity(ActivityActionType.delete, key, record);',
+                ),
                 contains('await _logActivity(ActivityActionType.copy, key);'),
                 // 签名经 dart_style 换行,按片段断言。
                 contains('Future<void> _logActivity('),
@@ -113,8 +115,10 @@ void main() {
                 contains("entityName: entityName,"),
                 // 无 name 字段的表保持同步 key 版本(见第一个用例)。
                 isNot(
-                  contains('void _logActivity(ActivityActionType action, '
-                      'int key) {'),
+                  contains(
+                    'void _logActivity(ActivityActionType action, '
+                    'int key) {',
+                  ),
                 ),
               ]),
             ),
@@ -344,10 +348,7 @@ class BriefSampleEntity {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(
-      logs.any((log) => log.contains('ending in ListViewModel')),
-      isTrue,
-    );
+    expect(logs.any((log) => log.contains('ending in ListViewModel')), isTrue);
   });
 
   test('缺少 part 声明时拒绝生成', () async {
@@ -406,7 +407,10 @@ class BriefSampleEntity {
       'class OtherRepository',
     );
     final source = sampleViewModelSource
-        .replaceFirst('repository: SampleRepository', 'repository: OtherRepository')
+        .replaceFirst(
+          'repository: SampleRepository',
+          'repository: OtherRepository',
+        )
         .replaceFirst(
           "import 'package:foxy/repository/sample_repository.dart';",
           "import 'package:foxy/repository/sample_repository.dart' "
@@ -435,11 +439,9 @@ class BriefSampleEntity {
   });
 }
 
-const entityAnnotationAsset =
-    'foxy_annotation|lib/entity_annotations.dart';
+const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
 const entityAsset = 'foxy|lib/entity/sample_entity.dart';
-const listAnnotationAsset =
-    'foxy_annotation|lib/list_annotations.dart';
+const listAnnotationAsset = 'foxy_annotation|lib/list_annotations.dart';
 const repositoryAnnotationAsset =
     'foxy_annotation|lib/repository_annotations.dart';
 const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
@@ -515,4 +517,6 @@ final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 final listAnnotationSource = foxyAnnotationSource('list_annotations.dart');
 
-final repositoryAnnotationSource = foxyAnnotationSource('repository_annotations.dart');
+final repositoryAnnotationSource = foxyAnnotationSource(
+  'repository_annotations.dart',
+);

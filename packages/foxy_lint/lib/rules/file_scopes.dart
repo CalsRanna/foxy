@@ -1,9 +1,7 @@
 import 'package:path/path.dart' as p;
 
 /// Utility file paths excluded from entity checks.
-const _entityUtilities = {
-  'dbc_locale_field_definition.dart',
-};
+const _entityUtilities = {'dbc_locale_field_definition.dart'};
 
 String? collectionLoopScope(String path) {
   if (isEntityFile(path)) return 'Entity';

@@ -19,9 +19,7 @@ class AvoidTopLevelDeclarationsRuleTest extends AnalysisRuleTest {
       r'''
 const kFoo = 1;
 ''',
-      [
-        lint(0, 15),
-      ],
+      [lint(0, 15)],
     );
   }
 
@@ -30,9 +28,7 @@ const kFoo = 1;
       r'''
 String formatFoo(int x) => '$x';
 ''',
-      [
-        lint(0, 32),
-      ],
+      [lint(0, 32)],
     );
   }
 

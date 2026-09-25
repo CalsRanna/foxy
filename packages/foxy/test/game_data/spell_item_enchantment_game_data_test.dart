@@ -4,14 +4,31 @@ import 'package:foxy/constant/spell_item_enchantment_constants.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 
 void main() {
-
   test('效果类型、抗性和属性使用本表实际消费的独立值域', () {
-    expect(SpellItemEnchantmentConstants.spellItemEnchantmentEffectTypeOptions.keys, orderedEquals([0, 1, 2, 3, 4, 5, 6, 7, 8]));
-    expect(SpellItemEnchantmentConstants.spellItemEnchantmentSchoolOptions.keys, orderedEquals([0, 1, 2, 3, 4, 5, 6]));
-    expect(SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions, containsPair(29, '近战急速等级'));
-    expect(SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions, containsPair(48, '格挡值'));
-    expect(SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions, isNot(contains(2)));
-    expect(SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions, isNot(contains(40)));
+    expect(
+      SpellItemEnchantmentConstants.spellItemEnchantmentEffectTypeOptions.keys,
+      orderedEquals([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+    );
+    expect(
+      SpellItemEnchantmentConstants.spellItemEnchantmentSchoolOptions.keys,
+      orderedEquals([0, 1, 2, 3, 4, 5, 6]),
+    );
+    expect(
+      SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
+      containsPair(29, '近战急速等级'),
+    );
+    expect(
+      SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
+      containsPair(48, '格挡值'),
+    );
+    expect(
+      SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
+      isNot(contains(2)),
+    );
+    expect(
+      SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
+      isNot(contains(40)),
+    );
   });
 
   test('三张关联 DBC definition 与 3.3.5a 物理格式一致', () {
@@ -25,7 +42,8 @@ void main() {
     expect(effects.schema.format, 'ns');
     expect(effects.schema.fields, hasLength(2));
 
-    final conditions = DbcDefinitions.byTable['dbc_spell_item_enchantment_condition']!;
+    final conditions =
+        DbcDefinitions.byTable['dbc_spell_item_enchantment_condition']!;
     expect(conditions.fileName, 'SpellItemEnchantmentCondition.dbc');
     expect(conditions.schema.format, 'nbbbbbiiiiibbbbbbbbbbiiiiibbbbb');
     expect(conditions.schema.fields, hasLength(31));

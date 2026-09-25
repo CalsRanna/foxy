@@ -152,9 +152,10 @@ void main() {
 /// moves a completed image into its keep-alive store via the internal
 /// pending-image listener, which a direct loadImage call bypasses.
 Future<void> preloadIconIntoCache(String name, String iconDir) async {
-  final stream = BlpIconProvider(rawPath: name, iconDir: iconDir).resolve(
-    const ImageConfiguration(),
-  );
+  final stream = BlpIconProvider(
+    rawPath: name,
+    iconDir: iconDir,
+  ).resolve(const ImageConfiguration());
   final completer = Completer<ImageInfo?>();
   late ImageStreamListener listener;
   listener = ImageStreamListener(

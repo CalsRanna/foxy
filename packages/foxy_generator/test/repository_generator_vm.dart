@@ -352,9 +352,8 @@ class SampleEntity {
     );
     expect(
       logs.any(
-        (log) => log.contains(
-          'cannot serve as the physical Key for generated CRUD',
-        ),
+        (log) =>
+            log.contains('cannot serve as the physical Key for generated CRUD'),
       ),
       isTrue,
       reason: '`列 = NULL` 恒不成立，生成的 _whereKey 会静默匹配 0 行',
@@ -429,7 +428,7 @@ class SampleEntity {
         entityAsset: briefEntitySource,
         repositoryAsset: dottedFilterRepositorySource.replaceFirst(
           '  @override\n'
-          '  Future<int> countSamples({SampleFilter? filter}) async => 0;\n\n',
+              '  Future<int> countSamples({SampleFilter? filter}) async => 0;\n\n',
           '',
         ),
         listViewModelAsset: listViewModelSource,
@@ -439,9 +438,7 @@ class SampleEntity {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any(
-        (log) => log.contains('countSamples must be hand-written'),
-      ),
+      logs.any((log) => log.contains('countSamples must be hand-written')),
       isTrue,
       reason: '主表 count 走 _applyFilter，别名列查询无法由生成器表达',
     );
@@ -457,10 +454,10 @@ class SampleEntity {
         entityAsset: briefEntitySource,
         repositoryAsset: dottedFilterRepositorySource.replaceFirst(
           '  @override\n'
-          '  Future<List<BriefSampleEntity>> getBriefSamples({\n'
-          '    int page = 1,\n'
-          '    SampleFilter? filter,\n'
-          '  }) async => [];',
+              '  Future<List<BriefSampleEntity>> getBriefSamples({\n'
+              '    int page = 1,\n'
+              '    SampleFilter? filter,\n'
+              '  }) async => [];',
           '',
         ),
         listViewModelAsset: listViewModelSource,
@@ -470,9 +467,7 @@ class SampleEntity {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any(
-        (log) => log.contains('getBriefSamples must be hand-written'),
-      ),
+      logs.any((log) => log.contains('getBriefSamples must be hand-written')),
       isTrue,
     );
   });
@@ -523,15 +518,11 @@ class SampleRepository with _SampleRepositoryMixin {
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(
-      logs.any((log) => log.contains('Remove the _table member')),
-      isTrue,
-    );
+    expect(logs.any((log) => log.contains('Remove the _table member')), isTrue);
   });
 }
 
-const entityAnnotationAsset =
-    'foxy_annotation|lib/entity_annotations.dart';
+const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
 const entityAsset = 'foxy|lib/entity/sample_entity.dart';
 const listViewModelAsset = 'foxy|lib/view_model/sample_list_view_model.dart';
 const listAnnotationAsset = 'foxy_annotation|lib/list_annotations.dart';
@@ -784,7 +775,9 @@ class SampleEntity {
 
 final repositoryMixinSource = foxyAppSource('repository/repository_mixin.dart');
 
-final dbcLocaleMixinSource = foxyAppSource('repository/dbc_locale_repository_mixin.dart');
+final dbcLocaleMixinSource = foxyAppSource(
+  'repository/dbc_locale_repository_mixin.dart',
+);
 
 final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
@@ -794,4 +787,6 @@ final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 /// Copies silently drift when annotations gain parameters or change
 /// defaults, letting tests pass against stale definitions. Tests run from
 /// the repository root (see AGENTS.md).
-final repositoryAnnotationSource = foxyAnnotationSource('repository_annotations.dart');
+final repositoryAnnotationSource = foxyAnnotationSource(
+  'repository_annotations.dart',
+);

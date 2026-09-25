@@ -28,8 +28,10 @@ import 'package:path/path.dart' as p;
 
 abstract final class UpdaterMain {
   /// Log path: `%TEMP%\foxy_updater.log`.
-  static final String updaterLogPath =
-      p.join(Directory.systemTemp.path, 'foxy_updater.log');
+  static final String updaterLogPath = p.join(
+    Directory.systemTemp.path,
+    'foxy_updater.log',
+  );
 
   /// Cap on waiting for the main process to exit.
   static const waitTimeout = Duration(minutes: 10);
@@ -80,14 +82,19 @@ abstract final class UpdaterMain {
       payloadRoot: Directory(updateDir),
     );
     if (result.hasFailures) {
-      final detail = result.failures.map((failure) => failure.toString()).join('; ');
+      final detail = result.failures
+          .map((failure) => failure.toString())
+          .join('; ');
       log.e('Swap completed with failures: $detail');
     } else {
       log.i('Swap completed');
     }
 
     // 5. Delete the update temp directory.
-    await _deleteWithRetry(Directory(p.join(appDir, UpdateSwapper.tempDirName)), log);
+    await _deleteWithRetry(
+      Directory(p.join(appDir, UpdateSwapper.tempDirName)),
+      log,
+    );
 
     // 6. Restart the main program.
     await _relaunchApp(log, appDir, appExe);
@@ -114,17 +121,22 @@ abstract final class UpdaterMain {
 
   /// Polls tasklist waiting for the process to exit; returns whether it
   /// exited before the timeout.
-  static Future<bool> _waitForProcessExit(int targetPid, Duration timeout) async {
+  static Future<bool> _waitForProcessExit(
+    int targetPid,
+    Duration timeout,
+  ) async {
     final deadline = DateTime.now().add(timeout);
     final pidPattern = RegExp('(^|\\s)$targetPid(\\s|\$)');
     while (DateTime.now().isBefore(deadline)) {
       try {
-        final result = await Process.run(
-          'tasklist',
-          ['/FI', 'PID eq $targetPid', '/NH'],
-        );
+        final result = await Process.run('tasklist', [
+          '/FI',
+          'PID eq $targetPid',
+          '/NH',
+        ]);
         final alive =
-            result.exitCode == 0 && pidPattern.hasMatch(result.stdout.toString());
+            result.exitCode == 0 &&
+            pidPattern.hasMatch(result.stdout.toString());
         if (!alive) return true;
       } catch (error) {
         // On tasklist failure, wait conservatively rather than swapping
@@ -137,7 +149,11 @@ abstract final class UpdaterMain {
 
   /// Restarts the main program with the app directory as its working
   /// directory.
-  static Future<void> _relaunchApp(_Logger log, String appDir, String appExe) async {
+  static Future<void> _relaunchApp(
+    _Logger log,
+    String appDir,
+    String appExe,
+  ) async {
     final exePath = p.join(appDir, appExe);
     log.i('Relaunching $exePath');
     try {

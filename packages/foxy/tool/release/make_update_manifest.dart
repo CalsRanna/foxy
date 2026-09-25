@@ -116,7 +116,11 @@ abstract final class MakeUpdateManifest {
     };
     final releases = <Map<String, Object?>>[current];
     if (existingPath != null && File(existingPath).existsSync()) {
-      final existing = _readExistingReleases(existingPath, version, buildNumber);
+      final existing = _readExistingReleases(
+        existingPath,
+        version,
+        buildNumber,
+      );
       releases.addAll(existing);
     }
     final kept = releases.take(keepReleases).toList();
@@ -129,9 +133,11 @@ abstract final class MakeUpdateManifest {
       await File(notesOutPath).writeAsString('## Foxy $version\n\n$notes');
     }
 
-    stdout.writeln('latest.yaml 已生成: version=$version build=$buildNumber '
-        'isPrerelease=$isPrerelease releases=${kept.length} '
-        'size=$sizeBytes sha256=${sha256Hex.substring(0, 12)}…');
+    stdout.writeln(
+      'latest.yaml 已生成: version=$version build=$buildNumber '
+      'isPrerelease=$isPrerelease releases=${kept.length} '
+      'size=$sizeBytes sha256=${sha256Hex.substring(0, 12)}…',
+    );
   }
 
   /// Reads the existing manifest's releases, dropping entries matching the
@@ -261,7 +267,8 @@ abstract final class MakeUpdateManifest {
       exit(1);
     }
     final lines = file.readAsLinesSync();
-    final sectionStart = _findSectionStart(lines, '## $tag') ??
+    final sectionStart =
+        _findSectionStart(lines, '## $tag') ??
         _findSectionStart(lines, '## ${_stripPrereleaseSuffix(tag)}');
     if (sectionStart == null) {
       stderr.writeln(
@@ -277,9 +284,7 @@ abstract final class MakeUpdateManifest {
     }
     final notes = section.join('\n').trim();
     if (notes.isEmpty) {
-      stderr.writeln(
-        'CHANGELOG.md 的 "## $tag" 段为空,请补充更新说明',
-      );
+      stderr.writeln('CHANGELOG.md 的 "## $tag" 段为空,请补充更新说明');
       exit(1);
     }
     return notes;
@@ -308,4 +313,3 @@ abstract final class MakeUpdateManifest {
 }
 
 Future<void> main(List<String> args) => MakeUpdateManifest.run(args);
-

@@ -42,16 +42,10 @@ class _StubUpdateService extends UpdateService {
     // Simulate download latency: cancellable in between.
     await Future<void>.delayed(const Duration(milliseconds: 20));
     if (cancelToken?.isCanceled ?? false) {
-      throw const UpdateException(
-        UpdateErrorKind.canceled,
-        'canceled by user',
-      );
+      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by user');
     }
     if (prepareShouldFail) {
-      throw const UpdateException(
-        UpdateErrorKind.canceled,
-        'canceled by test',
-      );
+      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by test');
     }
     final dir = Directory(p.join(appDir.path, UpdateSwapper.tempDirName))
       ..createSync(recursive: true);
@@ -60,13 +54,13 @@ class _StubUpdateService extends UpdateService {
 }
 
 UpdateManifestInfo _update() => UpdateManifestInfo(
-      version: '1.1.0',
-      buildNumber: '630',
-      zipUrl: Uri.parse('https://example.com/foxy-1.1.0.zip'),
-      sizeBytes: 42,
-      sha256: 'a',
-      notes: '说明',
-    );
+  version: '1.1.0',
+  buildNumber: '630',
+  zipUrl: Uri.parse('https://example.com/foxy-1.1.0.zip'),
+  sizeBytes: 42,
+  sha256: 'a',
+  notes: '说明',
+);
 
 void main() {
   setUp(() {
@@ -160,8 +154,9 @@ void main() {
       expect(found, isTrue);
       expect(service.checkCalls, 1);
       // Write the throttle timestamp after the check.
-      final last = await SharedPreferences.getInstance()
-          .then((prefs) => prefs.getString('last_update_check_at'));
+      final last = await SharedPreferences.getInstance().then(
+        (prefs) => prefs.getString('last_update_check_at'),
+      );
       expect(last, isNotNull);
     });
 

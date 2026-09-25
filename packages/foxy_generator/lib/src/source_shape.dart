@@ -52,17 +52,14 @@ final class SourceShape {
   List<String> withClauseTypeNames(ClassDeclaration cls) {
     final withClause = cls.withClause;
     if (withClause == null) return const [];
-    return [
-      for (final type in withClause.mixinTypes) type.name.lexeme,
-    ];
+    return [for (final type in withClause.mixinTypes) type.name.lexeme];
   }
 
   /// Whether the library declares `part '<partName>';` (single or double
   /// quotes, any indentation).
   bool hasPartDirective(CompilationUnit unit, String partName) {
     for (final directive in unit.directives) {
-      if (directive is PartDirective &&
-          directive.uri.stringValue == partName) {
+      if (directive is PartDirective && directive.uri.stringValue == partName) {
         return true;
       }
     }
@@ -130,13 +127,9 @@ final class SourceShape {
   }
 
   /// The constructor named [ctorName] declared on [cls], or null.
-  ConstructorDeclaration? constructor(
-    ClassDeclaration cls,
-    String ctorName,
-  ) {
+  ConstructorDeclaration? constructor(ClassDeclaration cls, String ctorName) {
     for (final member in cls.members) {
-      if (member is ConstructorDeclaration &&
-          member.name?.lexeme == ctorName) {
+      if (member is ConstructorDeclaration && member.name?.lexeme == ctorName) {
         return member;
       }
     }

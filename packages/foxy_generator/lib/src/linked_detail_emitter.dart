@@ -78,8 +78,8 @@ final class LinkedDetailEmitter {
             // The row is gone after the destroy; capture its name first so
             // the activity log can record it.
             : '      final record = '
-                'await _repository.get${model.baseName}(key);\n'
-                '      await _repository.destroy${model.baseName}(key);',
+                  'await _repository.get${model.baseName}(key);\n'
+                  '      await _repository.destroy${model.baseName}(key);',
       )
       ..writeln(
         '      if (linkToken != _linkToken || linkKey.value != linkSnapshot) {',
@@ -182,10 +182,10 @@ final class LinkedDetailEmitter {
       ..writeln('    }')
       ..writeln('  }')
       ..writeln()
+      ..writeln('  Future<void> setLinkKey(${model.keyType} linkKey) async {')
       ..writeln(
-        '  Future<void> setLinkKey(${model.keyType} linkKey) async {',
+        '    if (this.linkKey.value == linkKey && entity.value != null) return;',
       )
-      ..writeln('    if (this.linkKey.value == linkKey && entity.value != null) return;')
       ..writeln('    _linkToken++;')
       ..writeln('    this.linkKey.value = linkKey;')
       ..writeln('    editingKey.value = null;')
@@ -208,8 +208,10 @@ final class LinkedDetailEmitter {
       ..writeln('    loading.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
-      ..writeln('      final existing = await _repository.get${model.baseName}('
-          'linkSnapshot);')
+      ..writeln(
+        '      final existing = await _repository.get${model.baseName}('
+        'linkSnapshot);',
+      )
       // When a slow query returns, the page may already be disposed
       // (disposeControllers); writing to a TextEditingController then throws
       // a FlutterError in debug mode.
@@ -221,7 +223,9 @@ final class LinkedDetailEmitter {
       )
       ..writeln('      if (token != _refreshToken || isDisposed) return;')
       ..writeln('      entity.value = candidate;')
-      ..writeln('      editingKey.value = existing == null ? null : linkSnapshot;')
+      ..writeln(
+        '      editingKey.value = existing == null ? null : linkSnapshot;',
+      )
       ..writeln('      _applyCandidate(candidate);')
       ..writeln('    } catch (error, stackTrace) {')
       ..writeln('      if (token != _refreshToken || isDisposed) return;')

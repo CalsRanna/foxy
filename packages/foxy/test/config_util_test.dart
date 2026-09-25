@@ -51,7 +51,10 @@ void main() {
     expect(await File('${configUtil.configPath}.bak').exists(), isTrue);
     // The backup preserves the original content; saving still works and
     // never overwrites the backed-up data.
-    expect(await File('${configUtil.configPath}.bak').readAsString(), 'just a string');
+    expect(
+      await File('${configUtil.configPath}.bak').readAsString(),
+      'just a string',
+    );
     await configUtil.update({'host': '127.0.0.1'});
     expect((await configUtil.load())['host'], '127.0.0.1');
   });

@@ -34,14 +34,16 @@ void main() {
   setUp(() {
     tempDir = Directory.systemTemp.createTempSync('foxy_wizard_test_');
     clientRoot = Directory(p.join(tempDir.path, 'client'))..createSync();
-    Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
-        .createSync(recursive: true);
+    Directory(
+      p.join(clientRoot.path, 'Data', 'zhCN'),
+    ).createSync(recursive: true);
     _createFakeClientMpq(p.join(clientRoot.path, 'Data', 'zhCN'));
     // Server root with a standard data/dbc layout, so the real
     // ServerDirResolver finds it when the wizard step 2 saves.
     serverRoot = Directory(p.join(tempDir.path, 'server'))..createSync();
-    Directory(p.join(serverRoot.path, 'data', 'dbc'))
-        .createSync(recursive: true);
+    Directory(
+      p.join(serverRoot.path, 'data', 'dbc'),
+    ).createSync(recursive: true);
     File(p.join(serverRoot.path, 'data', 'dbc', 'Spell.dbc')).createSync();
     outputDir = Directory(p.join(tempDir.path, 'out'))..createSync();
 
@@ -127,7 +129,9 @@ void main() {
         p.join(tempDir.path, '不存在'),
       );
       await tester.tap(find.text('下一步'));
-      await _waitFor(() => setupVm.clientDirError.value?.contains('不存在') ?? false);
+      await _waitFor(
+        () => setupVm.clientDirError.value?.contains('不存在') ?? false,
+      );
       await tester.pump();
     });
     expect(find.textContaining('目录不存在'), findsOneWidget);
@@ -172,9 +176,7 @@ void main() {
     // continues into the real icon extraction (2 icons).
     await tester.runAsync(() async {
       await tester.tap(find.text('开始导入'));
-      await _waitFor(
-        () => iconVm.status.value == WorkflowStatus.succeeded,
-      );
+      await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
     });
     await tester.pump();
 
@@ -237,9 +239,7 @@ void main() {
 
     await tester.runAsync(() async {
       await tester.pumpWidget(buildWizard());
-      await _waitFor(
-        () => iconVm.status.value == WorkflowStatus.succeeded,
-      );
+      await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
     });
     await tester.pump();
 
@@ -250,16 +250,15 @@ void main() {
   });
 
   testWidgets('图标提取失败时可返回上一步改目录，重试成功后进入应用', (tester) async {
-    final noDataClient = Directory(p.join(tempDir.path, 'noData'))..createSync();
+    final noDataClient = Directory(p.join(tempDir.path, 'noData'))
+      ..createSync();
     configData['client_dir'] = noDataClient.path;
     configData['server_dir'] = serverRoot.path;
     configData['dbc_dir'] = p.join(serverRoot.path, 'data', 'dbc');
 
     await tester.runAsync(() async {
       await tester.pumpWidget(buildWizard());
-      await _waitFor(
-        () => iconVm.status.value == WorkflowStatus.failed,
-      );
+      await _waitFor(() => iconVm.status.value == WorkflowStatus.failed);
     });
     await tester.pump();
 
@@ -310,7 +309,8 @@ void main() {
   });
 
   testWidgets('图标提取失败时可跳过图标提取并进入应用', (tester) async {
-    final noDataClient = Directory(p.join(tempDir.path, 'noData'))..createSync();
+    final noDataClient = Directory(p.join(tempDir.path, 'noData'))
+      ..createSync();
     configData['client_dir'] = noDataClient.path;
     configData['server_dir'] = serverRoot.path;
     configData['dbc_dir'] = p.join(serverRoot.path, 'data', 'dbc');
@@ -418,12 +418,12 @@ Future<void> _waitFor(bool Function() condition) async {
 final class _FakeDbcSyncUtil extends DbcSyncUtil {
   @override
   Future<List<DbcTableCheckResult>> checkTables() async => [
-        for (final definition in DbcDefinitions.all)
-          DbcTableCheckResult(
-            tableName: definition.tableName,
-            state: DbcTableState.ready,
-          ),
-      ];
+    for (final definition in DbcDefinitions.all)
+      DbcTableCheckResult(
+        tableName: definition.tableName,
+        state: DbcTableState.ready,
+      ),
+  ];
 
   @override
   Stream<DbcSyncProgress> import({

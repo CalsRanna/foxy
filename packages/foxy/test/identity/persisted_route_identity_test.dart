@@ -22,14 +22,24 @@ void main() {
 
   test('详情面包屑文案统一为“XXX详情”且保留详情路由与参数', () {
     const key = ConditionKey(
-      sourceTypeOrReferenceId: 17, sourceGroup: 1, sourceEntry: 2, sourceId: 3,
-      elseGroup: 4, conditionTypeOrReference: 5, conditionTarget: 6,
-      conditionValue1: 7, conditionValue2: 8, conditionValue3: 9,
+      sourceTypeOrReferenceId: 17,
+      sourceGroup: 1,
+      sourceEntry: 2,
+      sourceId: 3,
+      elseGroup: 4,
+      conditionTypeOrReference: 5,
+      conditionTarget: 6,
+      conditionValue1: 7,
+      conditionValue2: 8,
+      conditionValue3: 9,
     );
     final detailRoute = ConditionDetailRoute(conditionKey: key);
     final facade = RouterFacade();
 
-    facade.navigateToDetail(route: detailRoute, parentMenu: RouterMenu.condition);
+    facade.navigateToDetail(
+      route: detailRoute,
+      parentMenu: RouterMenu.condition,
+    );
     final lastNode = facade.path.value.last;
 
     expect(lastNode.label, '条件详情');

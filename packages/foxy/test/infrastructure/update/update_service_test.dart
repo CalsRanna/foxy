@@ -46,7 +46,8 @@ String _manifestYaml({
   List<Map<String, Object?>>? extraReleases,
   List<Map<String, Object?>>? releases,
 }) {
-  final all = releases ??
+  final all =
+      releases ??
       [
         _releaseMap(
           version: version,
@@ -126,9 +127,7 @@ void main() {
 
   group('checkForUpdates', () {
     test('清单版本更高 → UpdateAvailable', () async {
-      final service = UpdateService(
-        client: _clientReturning(_manifestYaml()),
-      );
+      final service = UpdateService(client: _clientReturning(_manifestYaml()));
       final result = await service.checkForUpdates(
         installedVersion: '1.0.0',
         installedBuildNumber: '628',
@@ -240,9 +239,7 @@ void main() {
     });
 
     test('旧清单缺 isPrerelease 字段 → 视为正式版', () async {
-      final service = UpdateService(
-        client: _clientReturning(_manifestYaml()),
-      );
+      final service = UpdateService(client: _clientReturning(_manifestYaml()));
       final result = await service.checkForUpdates(
         installedVersion: '1.0.0',
         installedBuildNumber: '628',
@@ -336,9 +333,7 @@ void main() {
 
     test('appId 不符 → invalidManifest', () async {
       final service = UpdateService(
-        client: _clientReturning(
-          _manifestYaml(appId: 'com.other.app'),
-        ),
+        client: _clientReturning(_manifestYaml(appId: 'com.other.app')),
       );
       await expectLater(
         service.checkForUpdates(
@@ -439,9 +434,7 @@ void main() {
 
     test('下载成功并校验大小与 SHA-256', () async {
       final zipService = UpdateService(
-        client: MockClient(
-          (request) async => http.Response.bytes(bytes, 200),
-        ),
+        client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
       final file = await zipService.downloadZip(
         UpdateManifestInfo(
@@ -460,9 +453,7 @@ void main() {
 
     test('大小不符 → UpdateException.verification 且删除半成品', () async {
       final service = UpdateService(
-        client: MockClient(
-          (request) async => http.Response.bytes(bytes, 200),
-        ),
+        client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
       await expectLater(
         service.downloadZip(
@@ -484,17 +475,16 @@ void main() {
         ),
       );
       expect(
-        File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.9.zip'))
-            .existsSync(),
+        File(
+          p.join(Directory.systemTemp.path, 'foxy_update_9.9.9.zip'),
+        ).existsSync(),
         isFalse,
       );
     });
 
     test('SHA-256 不符 → UpdateException.verification', () async {
       final service = UpdateService(
-        client: MockClient(
-          (request) async => http.Response.bytes(bytes, 200),
-        ),
+        client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
       await expectLater(
         service.downloadZip(
@@ -519,9 +509,7 @@ void main() {
 
     test('已取消 → UpdateException.canceled 且删除半成品', () async {
       final service = UpdateService(
-        client: MockClient(
-          (request) async => http.Response.bytes(bytes, 200),
-        ),
+        client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
       final token = UpdateCancelToken()..cancel();
       await expectLater(
@@ -545,17 +533,16 @@ void main() {
         ),
       );
       expect(
-        File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.7.zip'))
-            .existsSync(),
+        File(
+          p.join(Directory.systemTemp.path, 'foxy_update_9.9.7.zip'),
+        ).existsSync(),
         isFalse,
       );
     });
 
     test('非 200 → UpdateException.network', () async {
       final service = UpdateService(
-        client: MockClient(
-          (request) async => http.Response('oops', 403),
-        ),
+        client: MockClient((request) async => http.Response('oops', 403)),
       );
       await expectLater(
         service.downloadZip(manifest),
@@ -581,7 +568,10 @@ void main() {
       if (appDir.existsSync()) appDir.deleteSync(recursive: true);
     });
 
-    UpdateManifestInfo zipManifest(List<int> zipBytes, {String version = '9.9.6'}) {
+    UpdateManifestInfo zipManifest(
+      List<int> zipBytes, {
+      String version = '9.9.6',
+    }) {
       return UpdateManifestInfo(
         version: version,
         buildNumber: '1',
@@ -603,22 +593,26 @@ void main() {
           (request) async => http.Response.bytes(zipBytes, 200),
         ),
       );
-      final payloadRoot =
-          await service.prepareUpdate(zipManifest(zipBytes), appDir: appDir);
+      final payloadRoot = await service.prepareUpdate(
+        zipManifest(zipBytes),
+        appDir: appDir,
+      );
       expect(payloadRoot.path, p.join(appDir.path, '.update_tmp'));
       expect(
         File(p.join(payloadRoot.path, 'foxy.exe')).readAsStringSync(),
         'new-binary',
       );
       expect(
-        File(p.join(payloadRoot.path, 'data', 'flutter_assets', 'asset.png'))
-            .existsSync(),
+        File(
+          p.join(payloadRoot.path, 'data', 'flutter_assets', 'asset.png'),
+        ).existsSync(),
         isTrue,
       );
       // The zip is cleaned up after extraction.
       expect(
-        File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.6.zip'))
-            .existsSync(),
+        File(
+          p.join(Directory.systemTemp.path, 'foxy_update_9.9.6.zip'),
+        ).existsSync(),
         isFalse,
       );
     });
@@ -633,8 +627,10 @@ void main() {
           (request) async => http.Response.bytes(zipBytes, 200),
         ),
       );
-      final payloadRoot =
-          await service.prepareUpdate(zipManifest(zipBytes), appDir: appDir);
+      final payloadRoot = await service.prepareUpdate(
+        zipManifest(zipBytes),
+        appDir: appDir,
+      );
       expect(payloadRoot.path, p.join(appDir.path, '.update_tmp', 'Foxy'));
     });
 

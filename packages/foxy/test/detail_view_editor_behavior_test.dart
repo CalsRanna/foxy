@@ -42,9 +42,7 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('GameObject 陷阱类型的 Data4 渲染为 ShadSelect', (
-    tester,
-  ) async {
+  testWidgets('GameObject 陷阱类型的 Data4 渲染为 ShadSelect', (tester) async {
     GetIt.instance.registerSingleton<GameObjectTemplateRepository>(
       _FakeGameObjectTemplateRepository(),
     );

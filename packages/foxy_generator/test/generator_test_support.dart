@@ -1,7 +1,6 @@
 import 'dart:io';
 
-const annotationAsset =
-    'foxy_annotation|lib/entity_annotations.dart';
+const annotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
 
 const compositeEntityAsset = 'foxy|lib/entity/codegen_relation_entity.dart';
 

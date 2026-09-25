@@ -105,7 +105,7 @@ class GameIconExtractor {
         failed: 1,
         errors: [
           '未在客户端目录中找到 Data/<locale> 归档目录：$clientDir'
-          '（${_describeMissingLocaleDataDir(clientDir)}）',
+              '（${_describeMissingLocaleDataDir(clientDir)}）',
         ],
         cancelled: false,
       );
@@ -319,12 +319,13 @@ class GameIconExtractor {
       if (!Directory(dataDir).existsSync()) {
         return '没有 Data 目录，请确认选择的是客户端根目录（含 Data 目录）';
       }
-      final subDirs = Directory(dataDir)
-          .listSync()
-          .whereType<Directory>()
-          .map((entry) => p.basename(entry.path))
-          .toList()
-        ..sort();
+      final subDirs =
+          Directory(dataDir)
+              .listSync()
+              .whereType<Directory>()
+              .map((entry) => p.basename(entry.path))
+              .toList()
+            ..sort();
       return subDirs.isEmpty
           ? 'Data 目录下没有子目录'
           : 'Data 下没有含 MPQ 归档的子目录，现有子目录：${subDirs.join('、')}';

@@ -68,13 +68,15 @@ void main() {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logs.any((log) => log.contains('is not a valid lowerCamelCase identifier')),
+      logs.any(
+        (log) => log.contains('is not a valid lowerCamelCase identifier'),
+      ),
       isTrue,
     );
   });
 }
-const annotationAsset =
-    'foxy_annotation|lib/repository_annotations.dart';
+
+const annotationAsset = 'foxy_annotation|lib/repository_annotations.dart';
 
 const annotationSource = r'''
 enum FoxyFilterType { boolean, decimal, integer, text }

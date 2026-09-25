@@ -3,7 +3,6 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 
 void main() {
-
   test('QuestSort DBC 与本地化定义对应 3.3.5.12340', () {
     final definition = DbcDefinitions.byTable['dbc_quest_sort']!;
     expect(definition.fileName, 'QuestSort.dbc');
@@ -16,5 +15,4 @@ void main() {
       'SortName_lang_Flags',
     );
   });
-
 }

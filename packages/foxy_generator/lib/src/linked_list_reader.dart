@@ -60,7 +60,8 @@ final class LinkedListReader {
         );
       }
     } else {
-      repositoryClassName = repositoryClassNameOfViewModel(form.className) ??
+      repositoryClassName =
+          repositoryClassNameOfViewModel(form.className) ??
           _fail(
             '${form.className} cannot derive a repository class name.',
             element,
@@ -148,8 +149,9 @@ final class LinkedListReader {
       keyType: keyFieldTypes.length == 1
           ? keyFieldTypes.single
           : '${form.baseName}Key',
-      singleKeyFieldName:
-          keyFieldTypes.length == 1 ? keyFieldNames.single : null,
+      singleKeyFieldName: keyFieldTypes.length == 1
+          ? keyFieldNames.single
+          : null,
       linkFieldName: linkFieldName,
       linkKeyType: linkFieldType,
       table: form.table,

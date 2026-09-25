@@ -22,15 +22,11 @@ class _FakeConfigUtil implements ConfigUtil {
   }
 }
 
-DbcTableCheckResult _missing(String tableName) => DbcTableCheckResult(
-  tableName: tableName,
-  state: DbcTableState.missing,
-);
+DbcTableCheckResult _missing(String tableName) =>
+    DbcTableCheckResult(tableName: tableName, state: DbcTableState.missing);
 
-DbcTableCheckResult _ready(String tableName) => DbcTableCheckResult(
-  tableName: tableName,
-  state: DbcTableState.ready,
-);
+DbcTableCheckResult _ready(String tableName) =>
+    DbcTableCheckResult(tableName: tableName, state: DbcTableState.ready);
 
 void main() {
   test('无缺失表时不提醒也不写配置', () async {
@@ -64,10 +60,10 @@ void main() {
     expect(result.shouldRemind, isTrue);
     expect(result.missingTables, ['dbc_skill_line_ability', 'dbc_skill_tiers']);
     expect(result.newlyMissing, ['dbc_skill_line_ability', 'dbc_skill_tiers']);
-    expect(
-      config.data[CheckDbcReminderUseCase.notifiedKey],
-      ['dbc_skill_line_ability', 'dbc_skill_tiers'],
-    );
+    expect(config.data[CheckDbcReminderUseCase.notifiedKey], [
+      'dbc_skill_line_ability',
+      'dbc_skill_tiers',
+    ]);
   });
 
   test('缺失集合与上次提醒相同时不再提醒', () async {
@@ -105,9 +101,9 @@ void main() {
     expect(result.shouldRemind, isTrue);
     expect(result.missingTables, ['dbc_skill_line_ability', 'dbc_skill_tiers']);
     expect(result.newlyMissing, ['dbc_skill_line_ability']);
-    expect(
-      config.data[CheckDbcReminderUseCase.notifiedKey],
-      ['dbc_skill_line_ability', 'dbc_skill_tiers'],
-    );
+    expect(config.data[CheckDbcReminderUseCase.notifiedKey], [
+      'dbc_skill_line_ability',
+      'dbc_skill_tiers',
+    ]);
   });
 }

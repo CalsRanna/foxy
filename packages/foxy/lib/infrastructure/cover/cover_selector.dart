@@ -32,8 +32,9 @@ class CoverSelector {
         ..sort((a, b) => a.path.compareTo(b.path));
       return files
           .where(
-            (file) => supportedExtensions
-                .contains(p.extension(file.path).toLowerCase()),
+            (file) => supportedExtensions.contains(
+              p.extension(file.path).toLowerCase(),
+            ),
           )
           .where(_hasValidHeader)
           .toList();

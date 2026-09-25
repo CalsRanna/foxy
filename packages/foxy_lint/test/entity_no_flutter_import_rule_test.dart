@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:analyzer/error/error.dart' show DiagnosticCode, diagnosticCodeValues;
+import 'package:analyzer/error/error.dart'
+    show DiagnosticCode, diagnosticCodeValues;
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:foxy_lint/rules/entity_no_flutter_import.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -9,8 +10,8 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 /// so positive cases also expect the `uri_does_not_exist` compile error
 /// (resolved from the public [diagnosticCodeValues] list).
 DiagnosticCode _uriDoesNotExist() => diagnosticCodeValues.firstWhere(
-      (code) => code.lowerCaseUniqueName == 'uri_does_not_exist',
-    );
+  (code) => code.lowerCaseUniqueName == 'uri_does_not_exist',
+);
 
 /// Tests the real EntityNoFlutterImport rule through the official
 /// analyzer_testing harness. Scope comes from the probed file name
@@ -33,10 +34,7 @@ class EntityNoFlutterImportRuleTest extends AnalysisRuleTest {
       r'''
 import 'package:flutter/material.dart';
 ''',
-      [
-        lint(0, 39),
-        error(_uriDoesNotExist(), 7, 31),
-      ],
+      [lint(0, 39), error(_uriDoesNotExist(), 7, 31)],
     );
   }
 
@@ -45,10 +43,7 @@ import 'package:flutter/material.dart';
       r'''
 import 'dart:ui';
 ''',
-      [
-        lint(0, 17),
-        error(_uriDoesNotExist(), 7, 9),
-      ],
+      [lint(0, 17), error(_uriDoesNotExist(), 7, 9)],
     );
   }
 
@@ -57,10 +52,7 @@ import 'dart:ui';
       r'''
 import 'package:signals_flutter/signals_flutter.dart';
 ''',
-      [
-        lint(0, 54),
-        error(_uriDoesNotExist(), 7, 46),
-      ],
+      [lint(0, 54), error(_uriDoesNotExist(), 7, 46)],
     );
   }
 
@@ -69,10 +61,7 @@ import 'package:signals_flutter/signals_flutter.dart';
       r'''
 import 'package:foxy/widget/foxy_tab.dart';
 ''',
-      [
-        lint(0, 43),
-        error(_uriDoesNotExist(), 7, 35),
-      ],
+      [lint(0, 43), error(_uriDoesNotExist(), 7, 35)],
     );
   }
 

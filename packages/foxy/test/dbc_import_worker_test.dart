@@ -16,7 +16,10 @@ void main() {
   });
 
   test('导入值元组在末尾携带记录的原文件位置', () {
-    expect(DbcImportWorker.valueTuple(['1', "'abc'", 'NULL'], 7), "(1,'abc',NULL,7)");
+    expect(
+      DbcImportWorker.valueTuple(['1', "'abc'", 'NULL'], 7),
+      "(1,'abc',NULL,7)",
+    );
     expect(DbcImportWorker.valueTuple(const ['1'], 0), '(1,0)');
   });
 }

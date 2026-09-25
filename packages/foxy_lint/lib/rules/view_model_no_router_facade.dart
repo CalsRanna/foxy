@@ -18,10 +18,10 @@ class ViewModelNoRouterFacade extends AnalysisRule {
   );
 
   ViewModelNoRouterFacade()
-      : super(
-          name: 'view_model_no_router_facade',
-          description: 'ViewModels must not import RouterFacade.',
-        );
+    : super(
+        name: 'view_model_no_router_facade',
+        description: 'ViewModels must not import RouterFacade.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

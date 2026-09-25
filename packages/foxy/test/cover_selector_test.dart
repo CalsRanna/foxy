@@ -42,8 +42,10 @@ void main() {
       File(p.join(tempDir.path, name))..writeAsBytesSync(bytes);
 
   test('目录不存在或为空时返回空候选,pick 返回 null', () {
-    expect(CoverSelector.listCandidates(p.join(tempDir.path, 'missing')),
-        isEmpty);
+    expect(
+      CoverSelector.listCandidates(p.join(tempDir.path, 'missing')),
+      isEmpty,
+    );
     expect(CoverSelector.pick(p.join(tempDir.path, 'missing')), isNull);
     expect(CoverSelector.pick(tempDir.path), isNull);
   });
@@ -59,9 +61,9 @@ void main() {
     writeBytes('h.DS_Store', kPngBytes);
     writeBytes('Thumbs.db', kPngBytes);
 
-    final names = CoverSelector.listCandidates(tempDir.path)
-        .map((file) => p.basename(file.path))
-        .toList();
+    final names = CoverSelector.listCandidates(
+      tempDir.path,
+    ).map((file) => p.basename(file.path)).toList();
     expect(names, ['a.png', 'b.PNG', 'c.Jpg', 'd.webp']);
   });
 
@@ -74,17 +76,28 @@ void main() {
 
   test('魔数识别:png/jpg/webp 通过,gif/文本/短 header 拒绝', () {
     expect(CoverSelector.isSupportedImageHeader(kPngBytes), isTrue);
-    expect(CoverSelector.isSupportedImageHeader([0xFF, 0xD8, 0xFF, 0xE0]),
-        isTrue);
+    expect(
+      CoverSelector.isSupportedImageHeader([0xFF, 0xD8, 0xFF, 0xE0]),
+      isTrue,
+    );
     expect(CoverSelector.isSupportedImageHeader(kWebpBytes), isTrue);
     expect(CoverSelector.isSupportedImageHeader(kGifBytes), isFalse);
     expect(CoverSelector.isSupportedImageHeader('text'.codeUnits), isFalse);
     expect(CoverSelector.isSupportedImageHeader(const []), isFalse);
     expect(CoverSelector.isSupportedImageHeader('RIFF'.codeUnits), isFalse);
     expect(
-        CoverSelector.isSupportedImageHeader(
-            [...'RIFF'.codeUnits, 0x00, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42]),
-        isFalse);
+      CoverSelector.isSupportedImageHeader([
+        ...'RIFF'.codeUnits,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x57,
+        0x45,
+        0x42,
+      ]),
+      isFalse,
+    );
   });
 
   test('子目录不递归收集', () {
@@ -92,9 +105,9 @@ void main() {
     final sub = Directory(p.join(tempDir.path, 'sub'))..createSync();
     File(p.join(sub.path, 'nested.png')).writeAsBytesSync(kPngBytes);
 
-    final names = CoverSelector.listCandidates(tempDir.path)
-        .map((file) => p.relative(file.path, from: tempDir.path))
-        .toList();
+    final names = CoverSelector.listCandidates(
+      tempDir.path,
+    ).map((file) => p.relative(file.path, from: tempDir.path)).toList();
     expect(names, ['root.png']);
   });
 
@@ -109,8 +122,9 @@ void main() {
     expect(first, isNotNull);
     expect(first!.path, second!.path);
     expect(
-      CoverSelector.listCandidates(tempDir.path)
-          .any((file) => file.path == first.path),
+      CoverSelector.listCandidates(
+        tempDir.path,
+      ).any((file) => file.path == first.path),
       isTrue,
     );
   });

@@ -11,7 +11,12 @@ void main() {
   group('合成 BLP2（确定性像素断言）', () {
     // 64×64 = 16×16 blocks
     test('DXT1 4 色模式：全部像素为 c0 色', () {
-      final block = dxtColorBlock(255, 0, 0, 0); // c0=red, all pixels use index 0
+      final block = dxtColorBlock(
+        255,
+        0,
+        0,
+        0,
+      ); // c0=red, all pixels use index 0
       final blp = buildBlp2(tile(block, 256));
       final image = BlpDecoder.decode(blp);
       expect(image.width, 64);
@@ -57,7 +62,11 @@ void main() {
 
     test('DXT5：a0=0/a1=255 的 6/7 特例（透明/不透明）', () {
       final color = dxtColorBlock(255, 255, 255, 0);
-      final alpha0 = dxt5AlphaBlock(0, 255, 6); // special case → 0 (transparent)
+      final alpha0 = dxt5AlphaBlock(
+        0,
+        255,
+        6,
+      ); // special case → 0 (transparent)
       final alpha7 = dxt5AlphaBlock(0, 255, 7); // special case → 255
       // Assembling an 8×1 scene from two 2×1 blocks is overkill; just
       // verify 6/7 once each:
@@ -81,7 +90,9 @@ void main() {
         throwsA(isA<BlpFormatException>()),
       );
       expect(
-        () => BlpDecoder.decode(Uint8List.fromList('nonsense'.codeUnits)), // header too short
+        () => BlpDecoder.decode(
+          Uint8List.fromList('nonsense'.codeUnits),
+        ), // header too short
         throwsA(isA<BlpFormatException>()),
       );
     });
@@ -90,27 +101,26 @@ void main() {
   group('真实客户端 fixture（与原始 PNG 对照）', () {
     for (final variant in ['dxt1', 'dxt3', 'dxt5']) {
       test('$variant RGB 与对应 PNG 逐像素一致', () async {
-        final blpBytes = File('test/fixture/icons/fixture_$variant.blp')
-            .readAsBytesSync();
+        final blpBytes = File(
+          'test/fixture/icons/fixture_$variant.blp',
+        ).readAsBytesSync();
         final image = BlpDecoder.decode(blpBytes);
         expect(image.width, 64);
         expect(image.height, 64);
 
-        final pngBytes = File('test/fixture/icons/fixture_$variant.png')
-            .readAsBytesSync();
+        final pngBytes = File(
+          'test/fixture/icons/fixture_$variant.png',
+        ).readAsBytesSync();
         final codec = await ui.instantiateImageCodec(pngBytes);
         final frame = await codec.getNextFrame();
-        final pngData =
-            await frame.image.toByteData(format: ui.ImageByteFormat.rawRgba);
+        final pngData = await frame.image.toByteData(
+          format: ui.ImageByteFormat.rawRgba,
+        );
         final expected = pngData!.buffer.asUint8List();
 
         expect(expected.length, image.rgba.length);
         for (var i = 0; i < expected.length; i += 4) {
-          expect(
-            image.rgba[i],
-            expected[i],
-            reason: 'R 像素 $i 不一致（$variant）',
-          );
+          expect(image.rgba[i], expected[i], reason: 'R 像素 $i 不一致（$variant）');
           expect(
             image.rgba[i + 1],
             expected[i + 1],
@@ -133,7 +143,11 @@ void main() {
 }
 
 /// Assembles a full BLP2 file (64×64, single-block tiling, no mipmaps).
-Uint8List buildBlp2(Uint8List mip0, {int alphaDepth = 0, int alphaEncoding = 0}) {
+Uint8List buildBlp2(
+  Uint8List mip0, {
+  int alphaDepth = 0,
+  int alphaEncoding = 0,
+}) {
   const width = 64, height = 64;
   final header = BytesBuilder();
   header.add('BLP2'.codeUnits);

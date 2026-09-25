@@ -14,17 +14,15 @@ class RepositoryNoSave extends AnalysisRule {
     'repository_no_save',
     'Repositories must not hand-write save*/insertAndGetId; use '
         'store*/update*/destroy*.',
-    correctionMessage:
-        'Use the generated store*/update*/destroy* methods.',
+    correctionMessage: 'Use the generated store*/update*/destroy* methods.',
     severity: DiagnosticSeverity.WARNING,
   );
 
   RepositoryNoSave()
-      : super(
-          name: 'repository_no_save',
-          description:
-              'Repositories must not hand-write save*/insertAndGetId.',
-        );
+    : super(
+        name: 'repository_no_save',
+        description: 'Repositories must not hand-write save*/insertAndGetId.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

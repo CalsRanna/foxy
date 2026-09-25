@@ -159,8 +159,8 @@ final class LinkedListEmitter {
             // The row is gone after the destroy; capture its name first so
             // the activity log can record it.
             : '      final record = '
-                'await _repository.get${model.baseName}(key);\n'
-                '      await _repository.destroy${model.baseName}(key);',
+                  'await _repository.get${model.baseName}(key);\n'
+                  '      await _repository.destroy${model.baseName}(key);',
       )
       ..writeln(
         '      if (token != _interactionToken || linkKey.value != link) return;',
@@ -347,9 +347,7 @@ final class LinkedListEmitter {
       ..writeln('      selectedKey.value = null;')
       ..writeln('    } catch (error) {')
       ..writeln('      if (token == _refreshToken) {')
-      ..writeln(
-        '        errorMessage.value = FoxyExceptions.message(error);',
-      )
+      ..writeln('        errorMessage.value = FoxyExceptions.message(error);')
       ..writeln("        LoggerUtil.instance.e('刷新子表列表失败: \$error');")
       ..writeln('      }')
       ..writeln('    } finally {')

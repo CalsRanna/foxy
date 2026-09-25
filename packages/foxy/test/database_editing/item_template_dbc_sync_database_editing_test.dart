@@ -25,9 +25,11 @@ void main() {
   });
 
   test('已存在的 DBC 行走 update 而非重复插入', () async {
-    final env = _build(selectResult: [
-      {'ID': 56807},
-    ]);
+    final env = _build(
+      selectResult: [
+        {'ID': 56807},
+      ],
+    );
 
     await env.repository.storeItemTemplate(_candidate());
 
@@ -38,9 +40,11 @@ void main() {
   });
 
   test('修改 displayid 保存后 DBC 行同步更新', () async {
-    final env = _build(selectResult: [
-      {'ID': 56807},
-    ]);
+    final env = _build(
+      selectResult: [
+        {'ID': 56807},
+      ],
+    );
 
     await env.repository.updateItemTemplate(
       56807,
@@ -54,9 +58,11 @@ void main() {
   });
 
   test('修改 entry 后旧行删除、新 ID 行写入', () async {
-    final env = _build(selectResult: [
-      {'ID': 56807},
-    ]);
+    final env = _build(
+      selectResult: [
+        {'ID': 56807},
+      ],
+    );
 
     await env.repository.updateItemTemplate(
       50000,
@@ -92,9 +98,7 @@ void main() {
   });
 
   test('DBC 同步失败不影响物品保存(best-effort)', () async {
-    final env = _build(
-      selectThrowsFor: (sql) => sql.contains('dbc_item'),
-    );
+    final env = _build(selectThrowsFor: (sql) => sql.contains('dbc_item'));
 
     final storedKey = await env.repository.storeItemTemplate(_candidate());
     expect(storedKey, 56807);
@@ -140,10 +144,7 @@ List<LaconicQuery> _dbcQueries(List<LaconicQuery> queries) {
   GetIt.instance.registerSingleton<DbcItemRepository>(
     _TestDbcItemRepository(laconic),
   );
-  return (
-    queries: queries,
-    repository: _TestItemTemplateRepository(laconic),
-  );
+  return (queries: queries, repository: _TestItemTemplateRepository(laconic));
 }
 
 class _RecordingDriver implements DatabaseDriver {
@@ -185,16 +186,11 @@ class _RecordingDriver implements DatabaseDriver {
   ]) async {
     final fn = selectThrowsFor;
     if (fn != null && fn(sql)) throw StateError('simulated sync failure');
-    return [
-      for (final row in selectResult) LaconicResult.fromMap(row),
-    ];
+    return [for (final row in selectResult) LaconicResult.fromMap(row)];
   }
 
   @override
-  Future<void> statement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {}
+  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
 
   @override
   Future<T> transaction<T>(Future<T> Function() action) => action();

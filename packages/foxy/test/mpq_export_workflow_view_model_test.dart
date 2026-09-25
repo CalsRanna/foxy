@@ -83,9 +83,7 @@ void main() {
 
     await vm.start();
 
-    expect(useCase.executedPaths, [
-      p.join(mpqDir, 'custom.mpq'),
-    ]);
+    expect(useCase.executedPaths, [p.join(mpqDir, 'custom.mpq')]);
     expect(vm.status.value, WorkflowStatus.succeeded);
     expect(vm.result.value?.success, isTrue);
   });

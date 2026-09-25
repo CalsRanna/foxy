@@ -53,7 +53,10 @@ void main() {
       onLog: (record) => logs.add(record.toString()),
     );
     expect(
-      logContains(logs, 'Required constructor parameters are not yet supported'),
+      logContains(
+        logs,
+        'Required constructor parameters are not yet supported',
+      ),
       isTrue,
     );
   });
@@ -109,7 +112,7 @@ void main() {
       logContains(
         unsupportedLogs,
         'The type List<int>? of CodegenSampleEntity.description '
-            'is not yet supported',
+        'is not yet supported',
       ),
       isTrue,
     );
@@ -192,9 +195,7 @@ void main() {
       foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, blockBody),
       outputs: {
-        output: decodedMatches(
-          contains('static CodegenSampleEntity fromJson'),
-        ),
+        output: decodedMatches(contains('static CodegenSampleEntity fromJson')),
       },
     );
   });

@@ -308,7 +308,7 @@ final class EntityReader {
         fullAnnotations.isEmpty
             ? '${classElement.name}.$fieldName is missing @FoxyFullField.'
             : '${classElement.name}.$fieldName uses @FoxyFullField more '
-                'than once.',
+                  'than once.',
         field,
         fullAnnotations.isEmpty
             ? 'Add a single field annotation.'

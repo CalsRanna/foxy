@@ -267,8 +267,9 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_skill_line_category' => SkillLineCategoryEntity.fromJson(row).toJson(),
     'dbc_skill_costs_data' => SkillCostsDataEntity.fromJson(row).toJson(),
     'dbc_skill_tiers' => SkillTiersEntity.fromJson(row).toJson(),
-    'dbc_skill_race_class_info' =>
-      SkillRaceClassInfoEntity.fromJson(row).toJson(),
+    'dbc_skill_race_class_info' => SkillRaceClassInfoEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_sound_ambience' => SoundAmbienceEntity.fromJson(row).toJson(),
     'dbc_sound_provider_preferences' => SoundProviderPreferencesEntity.fromJson(
       row,

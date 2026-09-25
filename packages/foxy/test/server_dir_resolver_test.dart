@@ -17,11 +17,11 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  Directory dir(String relative) => Directory(p.join(root, relative))
-    ..createSync(recursive: true);
+  Directory dir(String relative) =>
+      Directory(p.join(root, relative))..createSync(recursive: true);
 
-  File dbc(String relative) => File(p.join(root, relative))
-    ..createSync(recursive: true);
+  File dbc(String relative) =>
+      File(p.join(root, relative))..createSync(recursive: true);
 
   /// 期望路径:findDbcDir 返回的路径来自 Directory 遍历(Windows 上为
   /// 正斜杠),这里同样用 root 拼接 + normalize,避免与 p.join 的
@@ -30,10 +30,7 @@ void main() {
 
   test('标准位置 data/dbc 命中', () async {
     dbc('data/dbc/Spell.dbc');
-    expect(
-      await ServerDirResolver.findDbcDir(root),
-      expected('data/dbc'),
-    );
+    expect(await ServerDirResolver.findDbcDir(root), expected('data/dbc'));
   });
 
   test('备选位置 dbc 命中', () async {
@@ -43,10 +40,7 @@ void main() {
 
   test('深层目录递归命中', () async {
     dbc('x/y/data/dbc/Spell.dbc');
-    expect(
-      await ServerDirResolver.findDbcDir(root),
-      expected('x/y/data/dbc'),
-    );
+    expect(await ServerDirResolver.findDbcDir(root), expected('x/y/data/dbc'));
   });
 
   test('跳过 src/deps 等无关目录', () async {
@@ -58,10 +52,7 @@ void main() {
   test('data/dbc 存在但为空 → 继续递归搜索其他位置', () async {
     dir('data/dbc');
     dbc('custom/dbc/Spell.dbc');
-    expect(
-      await ServerDirResolver.findDbcDir(root),
-      expected('custom/dbc'),
-    );
+    expect(await ServerDirResolver.findDbcDir(root), expected('custom/dbc'));
   });
 
   test('超过最大深度返回 null', () async {

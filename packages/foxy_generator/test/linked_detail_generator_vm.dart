@@ -34,8 +34,10 @@ void main() {
                 contains('final submitting = signal(false);'),
                 contains('final errorMessage = signal<String?>(null);'),
                 // Controller boilerplate (reuses FormEmitter)
-                contains('late final entryController = '
-                    'registerController(IntFieldController());'),
+                contains(
+                  'late final entryController = '
+                  'registerController(IntFieldController());',
+                ),
                 // Race token
                 contains('int _refreshToken = 0;'),
                 contains('int _linkToken = 0;'),
@@ -44,9 +46,7 @@ void main() {
                 contains('Future<void> destroy() async {'),
                 contains('await _repository.destroyAddon(key);'),
                 contains('void dispose() {'),
-                contains(
-                  'Future<void> initSignals({required int linkKey}) {',
-                ),
+                contains('Future<void> initSignals({required int linkKey}) {'),
                 contains('return setLinkKey(linkKey);'),
                 contains(
                   "throw LinkNotLoadedException('link record not loaded');",
@@ -59,7 +59,9 @@ void main() {
                 // primary key)
                 contains('final existing = await _repository.getAddon('),
                 contains('existing ?? await _repository.createAddon('),
-                contains('editingKey.value = existing == null ? null : linkSnapshot;'),
+                contains(
+                  'editingKey.value = existing == null ? null : linkSnapshot;',
+                ),
                 contains("LoggerUtil.instance.e('加载单行编辑器失败'"),
               ]),
             ),
@@ -86,7 +88,7 @@ void main() {
       logs.any(
         (log) => log.contains(
           'is a composite-key entity; a Linked Detail skeleton '
-              'cannot be generated',
+          'cannot be generated',
         ),
       ),
       isTrue,
@@ -109,7 +111,8 @@ void main() {
       },
       outputs: {
         'foxy|lib/view_model/addon_linked_detail_view_model'
-            '.foxy_view_model.g.part': anything,
+                '.foxy_view_model.g.part':
+            anything,
       },
     );
   });
@@ -165,10 +168,8 @@ void main() {
   });
 }
 
-const formAnnotationAsset =
-    'foxy_annotation|lib/form_annotations.dart';
-const entityAnnotationAsset =
-    'foxy_annotation|lib/entity_annotations.dart';
+const formAnnotationAsset = 'foxy_annotation|lib/form_annotations.dart';
+const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
 const entityAsset = 'foxy|lib/entity/addon_entity.dart';
 const repositoryAnnotationAsset =
     'foxy_annotation|lib/repository_annotations.dart';
@@ -270,4 +271,6 @@ final formAnnotationSource = foxyAnnotationSource('form_annotations.dart');
 
 final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
-final repositoryAnnotationSource = foxyAnnotationSource('repository_annotations.dart');
+final repositoryAnnotationSource = foxyAnnotationSource(
+  'repository_annotations.dart',
+);

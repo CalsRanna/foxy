@@ -17,10 +17,10 @@ class EntityNoFlutterImport extends AnalysisRule {
   );
 
   EntityNoFlutterImport()
-      : super(
-          name: 'entity_no_flutter_import',
-          description: 'Entity files must not import UI-layer packages.',
-        );
+    : super(
+        name: 'entity_no_flutter_import',
+        description: 'Entity files must not import UI-layer packages.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

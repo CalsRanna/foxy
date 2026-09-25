@@ -19,12 +19,15 @@ void main() {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
-        'foxy_annotation|lib/entity_annotations.dart':
-            foxyAnnotationSource('entity_annotations.dart'),
-        'foxy_annotation|lib/repository_annotations.dart':
-            foxyAnnotationSource('repository_annotations.dart'),
-        'foxy_annotation|lib/list_annotations.dart':
-            foxyAnnotationSource('list_annotations.dart'),
+        'foxy_annotation|lib/entity_annotations.dart': foxyAnnotationSource(
+          'entity_annotations.dart',
+        ),
+        'foxy_annotation|lib/repository_annotations.dart': foxyAnnotationSource(
+          'repository_annotations.dart',
+        ),
+        'foxy_annotation|lib/list_annotations.dart': foxyAnnotationSource(
+          'list_annotations.dart',
+        ),
         'foxy|lib/entity/codegen_sample_entity.dart': _sampleEntitySource,
         'foxy|lib/entity/codegen_relation_entity.dart': _relationEntitySource,
         'foxy|lib/repository/codegen_sample_repository.dart':
@@ -36,9 +39,11 @@ void main() {
       },
       outputs: {
         'foxy|lib/repository/codegen_sample_repository'
-            '.foxy_repository.g.part': _parseable,
+                '.foxy_repository.g.part':
+            _parseable,
         'foxy|lib/repository/codegen_relation_repository'
-            '.foxy_repository.g.part': _parseable,
+                '.foxy_repository.g.part':
+            _parseable,
       },
     );
   });
@@ -47,14 +52,18 @@ void main() {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
-        'foxy_annotation|lib/entity_annotations.dart':
-            foxyAnnotationSource('entity_annotations.dart'),
-        'foxy_annotation|lib/form_annotations.dart':
-            foxyAnnotationSource('form_annotations.dart'),
-        'foxy_annotation|lib/list_annotations.dart':
-            foxyAnnotationSource('list_annotations.dart'),
-        'foxy_annotation|lib/repository_annotations.dart':
-            foxyAnnotationSource('repository_annotations.dart'),
+        'foxy_annotation|lib/entity_annotations.dart': foxyAnnotationSource(
+          'entity_annotations.dart',
+        ),
+        'foxy_annotation|lib/form_annotations.dart': foxyAnnotationSource(
+          'form_annotations.dart',
+        ),
+        'foxy_annotation|lib/list_annotations.dart': foxyAnnotationSource(
+          'list_annotations.dart',
+        ),
+        'foxy_annotation|lib/repository_annotations.dart': foxyAnnotationSource(
+          'repository_annotations.dart',
+        ),
         'foxy|lib/entity/codegen_sample_entity.dart': _sampleEntitySource,
         'foxy|lib/repository/codegen_sample_repository.dart':
             _sampleRepositorySource,
@@ -65,9 +74,11 @@ void main() {
       },
       outputs: {
         'foxy|lib/view_model/codegen_sample_list_view_model'
-            '.foxy_view_model.g.part': _parseable,
+                '.foxy_view_model.g.part':
+            _parseable,
         'foxy|lib/view_model/codegen_sample_detail_view_model'
-            '.foxy_view_model.g.part': _parseable,
+                '.foxy_view_model.g.part':
+            _parseable,
       },
     );
   });

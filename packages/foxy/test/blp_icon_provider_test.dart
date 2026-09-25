@@ -58,7 +58,9 @@ void main() {
 
   group('BlpIconProvider', () {
     test('obtainKey 归一化 rawPath', () async {
-      final provider = BlpIconProvider(rawPath: 'Interface\\Icons\\INV_Misc_Foo');
+      final provider = BlpIconProvider(
+        rawPath: 'Interface\\Icons\\INV_Misc_Foo',
+      );
       final key = await provider.obtainKey(const ImageConfiguration());
       expect(key.name, 'inv_misc_foo');
     });
@@ -100,8 +102,9 @@ void main() {
     });
 
     test('损坏 BLP 抛错并记录负缓存', () async {
-      File(p.join(tempDir.path, 'broken.blp'))
-          .writeAsBytesSync(List.filled(128, 0));
+      File(
+        p.join(tempDir.path, 'broken.blp'),
+      ).writeAsBytesSync(List.filled(128, 0));
       final cache = BlpIconCache();
       final provider = BlpIconProvider(
         rawPath: 'broken',
@@ -120,8 +123,7 @@ void main() {
         negativeCache: cache,
         iconDir: p.dirname(fixtureBlp),
       );
-      expect(await loadViaStream(provider), isNull,
-          reason: '负缓存命中直接抛错,不读文件');
+      expect(await loadViaStream(provider), isNull, reason: '负缓存命中直接抛错,不读文件');
     });
   });
 }

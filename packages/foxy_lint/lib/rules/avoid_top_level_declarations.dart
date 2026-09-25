@@ -19,17 +19,17 @@ class AvoidTopLevelDeclarations extends AnalysisRule {
     'Top-level declarations are banned; put the symbol inside a class.',
     correctionMessage:
         'Move the declaration into its domain class (e.g. an '
-            '`abstract final class` namespace).',
+        '`abstract final class` namespace).',
     severity: DiagnosticSeverity.WARNING,
   );
 
   AvoidTopLevelDeclarations()
-      : super(
-          name: 'avoid_top_level_declarations',
-          description:
-              'Top-level variables/functions are banned; every symbol '
-                  'must live in a class.',
-        );
+    : super(
+        name: 'avoid_top_level_declarations',
+        description:
+            'Top-level variables/functions are banned; every symbol '
+            'must live in a class.',
+      );
 
   @override
   LintCode get diagnosticCode => code;

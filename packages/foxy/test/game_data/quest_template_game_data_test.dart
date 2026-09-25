@@ -8,7 +8,6 @@ import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
 
 void main() {
-
   test('四张起止关系表都使用显式复合键字段', () {
     expect(const CreatureQuestStarterEntity().toJson().keys.toSet(), {
       'id',
@@ -55,5 +54,4 @@ void main() {
     expect(const BriefQuestTemplateEntity(questType: 2).typeLabel, '2（默认）');
     expect(const BriefQuestTemplateEntity(questType: 99).typeLabel, '99');
   });
-
 }
