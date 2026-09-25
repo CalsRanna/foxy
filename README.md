@@ -100,13 +100,13 @@ icons_extracted: true
 
 ## 测试
 
-共 128 个 Dart 测试文件(应用 107 + 生成器 9 + lint 12):
+共 129 个 Dart 测试文件(应用 108 + 生成器 9 + lint 12):
 
 - **game_data 测试**(`test/game_data/`):枚举/标志常量与 AzerothCore 服务端取值一致性,纯内存运行。
 - **database_editing 测试**(`test/database_editing/`):复合主键值语义、编辑流程、查询构建行为,纯内存运行。
 - **identity 测试**(`test/identity/`):身份/状态保持语义(活动日志 ID、locale 草稿、路由面包屑)。
 - **基础设施测试**:更新服务、DBC 编解码、BLP/MPQ、表单控制器、use case、widget 行为。
-- **集成测试**(`test/integration/`,标签 `integration`):对真实 MySQL 运行应用自身的启动链路(建库、全部迁移、utf8mb4 自愈、features 种子中文回读)。默认跳过(见 `dart_test.yaml`);本地先起一次性实例(`docker run -d --rm -p 3307:3306 -e MYSQL_ROOT_PASSWORD=foxy mysql:8.0`),再 `flutter test --tags integration --run-skipped`;CI 由 `ci.yml` 的 `database-integration` job 在 MySQL 8 容器上运行。
+- **集成测试**(`test/integration/`,标签 `integration`):对真实 MySQL 运行应用自身的启动链路(建库、全部迁移、utf8mb4 自愈、features 种子中文回读)与仓储读写(生成器的 store/update/destroy、异常映射及手写列表方法,夹具表建在专用 `foxy_it_world` 库)。默认跳过(见 `dart_test.yaml`);本地先起一次性实例(`docker run -d --rm -p 3307:3306 -e MYSQL_ROOT_PASSWORD=foxy mysql:8.0`),再 `flutter test --tags integration --run-skipped`;CI 由 `ci.yml` 的 `database-integration` job 在 MySQL 8 容器上运行。
 - **生成器测试**(`packages/foxy_generator/test/`):`dart test` 纯 Dart 运行。
 - **lint 测试**(`packages/foxy_lint/test/`):analyzer 官方测试框架。
 
