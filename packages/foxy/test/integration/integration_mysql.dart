@@ -62,6 +62,15 @@ MysqlConfig _integrationConfig(String database) {
 bool get allowDropFoxyDatabase =>
     Platform.environment['FOXY_TEST_MYSQL_ALLOW_DROP'] == '1';
 
+/// Whether the DBC import suite may write into the real `foxy.dbc_*` tables.
+///
+/// The importer only targets the fixed `foxy.<table>` names (never a test
+/// schema), and a DBC import replaces the whole table — so on a machine whose
+/// `foxy` schema already holds DBC mirror data this would overwrite it. Opt-in
+/// only; CI sets it because the container is disposable.
+bool get allowDbcImportWrite =>
+    Platform.environment['FOXY_TEST_MYSQL_ALLOW_DBC_WRITE'] == '1';
+
 /// Connects the app's real singleton with the `foxy`-bootstrap settings and
 /// probes the server.
 ///

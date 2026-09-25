@@ -84,10 +84,10 @@ jobs:
 
       # `--run-skipped` turns the tag back on: `integration` is skipped by
       # default (dart_test.yaml), so a plain `flutter test` needs no database.
-      # FOXY_TEST_MYSQL_ALLOW_DROP enables the destructive fresh-database test
-      # against this disposable container. `-j 1` keeps the suites serialized —
-      # they share the single `foxy` schema name that MigrationRunner
-      # hardcodes.
+      # FOXY_TEST_MYSQL_ALLOW_DROP / ALLOW_DBC_WRITE enable the destructive
+      # tests (fresh-database rebuild, DBC import into foxy.dbc_*) — safe here
+      # because the container is disposable. `-j 1` keeps suites serialized:
+      # they share the single `foxy` schema name that MigrationRunner hardcodes.
       - name: Test (real MySQL)
         working-directory: packages/foxy
         env:
@@ -96,4 +96,5 @@ jobs:
           FOXY_TEST_MYSQL_USER: root
           FOXY_TEST_MYSQL_PASSWORD: foxy
           FOXY_TEST_MYSQL_ALLOW_DROP: "1"
+          FOXY_TEST_MYSQL_ALLOW_DBC_WRITE: "1"
         run: flutter test --tags integration --run-skipped -j 1
