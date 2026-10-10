@@ -124,6 +124,7 @@ analyze + 三包测试不在这条流水线里,由 `.github/workflows/ci.yml` �
 
 ## 文档
 
+- [CONVENTIONS.md](CONVENTIONS.md) — 项目硬性约定(命名、代码生成铁律、lint、错误处理、UI、数据库、测试)
 - [doc/codegen/README.md](doc/codegen/README.md) — 代码生成系统架构
 - [doc/codegen/usage.md](doc/codegen/usage.md) — 模块开发指南
 - [doc/codegen/generators.md](doc/codegen/generators.md) — 生成器实现详解

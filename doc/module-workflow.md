@@ -5,7 +5,7 @@
 面向执行者(人类或 AI 编码助手)。规则:
 
 - **按顺序执行,每步完成并验证后再进入下一步**;某步失败,先修好这一步,不要往下跳。
-- **不要自行发挥**。每一步都先打开"样板文件"照抄模式:简单模块看 `quest_sort`,复杂主模块看 `creature_template`,DBC+子表模块看 `skill_line`。多个先例冲突时,以**最近、规模最大、覆盖最全**的为准(见根目录 `AGENTS.md` 的工作原则)。
+- **不要自行发挥**。每一步都先打开"样板文件"照抄模式:简单模块看 `quest_sort`,复杂主模块看 `creature_template`,DBC+子表模块看 `skill_line`。多个先例冲突时,以**最近、规模最大、覆盖最全**的为准。
 - 每步标注了 `✅ 验证`:没有通过验证,任务就没有完成。
 - 假设:你已能运行 `cd packages/foxy && flutter pub get`,且 `packages/foxy` 下已安装依赖。**所有命令都在 `packages/foxy` 下执行**(monorepo 根是 workspace)。
 
@@ -140,7 +140,7 @@ class XxxRepository
 
 ### 3.1 List ViewModel(形态 A/B 都需要)
 
-样板:`lib/view_model/quest_sort_list_view_model.dart`(18 行):
+样板:`lib/view_model/quest_sort_list_view_model.dart`(20 行):
 
 ```dart
 @FoxyListViewModel()
@@ -245,10 +245,9 @@ class XxxDetailPage extends StatefulWidget {
 | 位标志 int | `FoxyFlagPicker` |
 | 外键引用 | `FoxyEntityPicker(delegate:)` |
 | 16 语言 locale | `FoxyLocalePicker`(见 4.4) |
-| 只读 | `FoxyInputReadonly` |
 
-- placeholder **一律英文列名**;`Row/Column` 间距用 `spacing:` 参数,`SizedBox` 只做固定尺寸(AGENTS.md UI 约定)。
-- 保存/取消:`Watch` 包 `ShadButton(enabled: !viewModel.submitting.value, onPressed: _persist)`;`_persist` 成功 `DialogUtil.success('X数据已保存')`、失败 `DialogUtil.error('保存失败：…')`;取消 → `RouterFacade.goBack()`。
+- placeholder **一律英文列名**;`Row/Column` 间距用 `spacing:` 参数,`SizedBox` 只做固定尺寸(CONVENTIONS.md UI 约定)。
+- 保存/取消:`Watch` 包 `ShadButton(enabled: !viewModel.submitting.value, onPressed: _persist)`;`_persist` 成功 `DialogUtil.instance.success('X数据已保存')`、失败 `DialogUtil.instance.error('保存失败：…')`;取消 → `RouterFacade.goBack()`。
 
 ### 4.4 FoxyLocalePicker(DBC 宽表)
 
@@ -257,7 +256,7 @@ class XxxDetailPage extends StatefulWidget {
 ### 4.5 子表视图(linked list tab)
 
 样板 `skill_line_ability_view.dart`:
-`initSignals(linkKey: parentId)`;`didUpdateWidget` 里 `setLinkKey`;列表 `FoxyDataTable<BriefXxxEntity>` + 新增按钮;编辑用 `FoxyFormDialog`(不要裸 ShadDialog);行编辑表单照抄样板(字段与 4.3 控件映射一致);成功 `DialogUtil.success` / 失败 `DialogUtil.error`。
+`initSignals(linkKey: parentId)`;`didUpdateWidget` 里 `setLinkKey`;列表 `FoxyDataTable<BriefXxxEntity>` + 新增按钮;编辑用 `FoxyFormDialog`(不要裸 ShadDialog);行编辑表单照抄样板(字段与 4.3 控件映射一致);成功 `DialogUtil.instance.success` / 失败 `DialogUtil.instance.error`。
 
 ✅ **验证**:`flutter analyze` 通过;运行 `flutter run -d <device>` 手动冒烟(见步骤 15)。
 
@@ -282,10 +281,10 @@ dart run build_runner build --delete-conflicting-outputs
 
 文件:`packages/foxy/lib/di.dart`。
 
-三处修改(全部显式注册,无自动扫描;照 skill-line 提交的 di.dart 段落):
+修改点(全部显式注册,无自动扫描;照 skill-line 提交的 di.dart 段落):
 
 1. **import 区**(按字母序):新增 `repository/xxx_repository.dart`、`view_model/xxx_*_view_model.dart` 的 import。
-2. **`_registerViewModels`(registerFactory)**:每个 VM 一行:
+2. **`_registerInteractionViewModels`(registerFactory)**:每个模块 VM 一行(全局状态 VM 的 `registerSingleton` 在 `_registerGlobalStateViewModels`,新模块用不到):
    `_instance.registerFactory(() => XxxListViewModel());`
    `_instance.registerFactory(() => XxxDetailViewModel());`
    `_instance.registerFactory(() => XxxLinkedListViewModel());`(子表有才加)
@@ -427,7 +426,7 @@ class Migration202609030000 implements Migration {
 
 单表 CRUD 不需要。跨表事务(如"创建 gossip 同时建 option"、"保存物品同步 Item.dbc")才建 UseCase:
 
-1. `lib/use_case/xxx_use_case.dart`(注入 `DatabaseTransaction`,`AGENTS.md` 说 UseCase 手写、事务合并 zone marker)。
+1. `lib/use_case/xxx_use_case.dart`(注入 `DatabaseTransaction`,`CONVENTIONS.md` 说 UseCase 手写、事务合并 zone marker)。
 2. `di.dart` `_registerUseCases()` 注册 `registerFactory`。
 3. 页面/VM 里经 GetIt 取用。
 
@@ -473,14 +472,14 @@ cd packages/foxy_generator && dart test    # 只动了注解/生成器时才需�
 | --- | --- |
 | 第 5 行 | 功能描述 "…等 **130 余张**数据表的图形化编辑能力" → 更新为实际数 |
 | 第 9 行 | "*120+* 张 world 表" → 更新 |
-| 第 38 行 | "**91 个测试文件**" → 更新 |
-| 第 103 行 | "共 **110 个** Dart 测试文件" → 更新 |
+| 第 38 行 | "**102 个测试文件**"(仓库结构树)→ 更新 |
+| 第 103 行 | "共 **123 个** Dart 测试文件(应用 + 生成器 + lint 三个分项一并改)" → 更新 |
 | 第 11 行 | DBC 表数 "约 50 张表"(仅 DBC 表新增时) |
 | 文档索引 | `doc/` 列表加本清单链接(如有) |
 
-### AGENTS.md
+### 统计命令
 
-统计命令(在 `packages/foxy` 下执行,实测值备查):
+在 `packages/foxy` 下执行,实测值备查:
 
 ```bash
 ls lib/entity/*_entity.g.dart | wc -l          # 130
@@ -493,27 +492,17 @@ grep -c "registerLazySingleton(" lib/di.dart   # 143
 grep -c "registerSingleton(" lib/di.dart       # 10
 ls lib/entity/*_entity.dart | wc -l            # 135 (含手写)
 ls lib/database/migration/*.dart | wc -l       # 10
-ls lib/constant/*.dart | wc -l                 # 34
+ls lib/constant/*.dart | wc -l                 # 33
 ls lib/widget/*.dart | wc -l                   # 30
 ```
 
-| 位置 | 内容 |
-| --- | --- |
-| `Repository Layout` 表 | 包版本号/描述(rare) |
-| 「On disk:」行 | entity/repository/view_model 三个 `.g.dart` 计数(当前按上表) |
-| 「Wiring a New Module」 | di.dart 注册计数(总数 + 三个分计数,当前 111/143/10) |
-| 同行 | router 数(当前 59)、`RouterMenu` 数(当前 30) |
-| 实体文件行 | "~135 `*_entity.dart` files (130 generated)" |
-| Migrations 行 | "(total)"(当前 10) |
-| constant 行 | "34 files" |
-| widget 行 | "30 files" |
-| foxy_lint 规则数 | 只在 rules 增减时改(加模块不改) |
+以上计数是 README 各处数字的来源;CONVENTIONS.md **不含数字** —— 只有 foxy_lint 规则增删、或约定本身变化时才需要同步更新它。
 
 ### CHANGELOG.md + 版本
 
-- 模块合入时在 CHANGELOG 相应未发布段补一条(发布流水线读最新段做 release notes);版本 bump 在发布流程做,平时不动 `pubspec.yaml` 的 version。
+- CHANGELOG 没有独立的"未发布"段:发布准备时为本版本补 `## vX.Y.Z` 段,把本模块的变更写进去(发布流水线读最新一条版本段做 release notes);版本 bump 同在发布流程做,平时不动 `pubspec.yaml` 的 version。
 
-✅ **验证**:`grep -n` 数字已更新;README/AGENTS 无过期计数。
+✅ **验证**:`grep -n` 数字已更新;README 无过期计数(CONVENTIONS.md 不含数字)。
 
 ---
 
@@ -550,7 +539,7 @@ git commit -m "feat(game-event): add game event management module"
 
 ## 附录 A:本清单与现有文档的分工
 
-- `AGENTS.md`:全局约定(代码生成系统、lint 规则、UI 一致性)与"Wiring a New Module"速览 —— **本文是它的展开执行版**。
+- `CONVENTIONS.md`:项目硬性约定(命名与结构、代码生成铁律、lint 规则、错误处理、UI 一致性、数据库层、测试、提交规范) —— **本文是它的展开执行版**。
 - `doc/codegen/usage.md`:5 种模块形态的注解用法、推导规则、覆写点、常见构建期错误表 —— 写代码时逐条对照。
 - `doc/codegen/README.md` / `generators.md` / `extending.md`:生成器内部实现与扩展 —— 改生成器时读;加普通模块不读。
 
@@ -559,7 +548,7 @@ git commit -m "feat(game-event): add game event management module"
 1. `migration_runner_test.dart` 的数量断言(步骤 8.2)—— 改迁移必改测试,否则 CI 红。
 2. `router.gr.dart` 没重生成 —— 路由加了但导航崩(运行时)或编译错。
 3. `foxy_feature_card.dart` 图标 map 漏加 —— dashboard 卡片显示 `circleAlert` 占位图标。
-4. README / AGENTS.md 的计数没更新 —— 两者都有"生成文件数量/路由数量/注册数量/迁移数量",diff 时先 `grep -n` 数字。
+4. README 的计数没更新 —— 生成文件数量/路由数量/注册数量/迁移数量都在 README,diff 时先 `grep -n` 数字。
 5. 实体 fromJson 委托 / with mixin / part 三件套 —— 缺一个,构建期报错提示到元素(修复表见 usage.md)。
 6. 新实体忘记 `@FoxyBriefEntity()` —— 生成器报 `must declare @FoxyBriefEntity`。
 7. `_logActivity` 名称链无命中 —— 复制/删除日志只有裸 key;给实体加名称字段或覆写 `_logActivity`。
