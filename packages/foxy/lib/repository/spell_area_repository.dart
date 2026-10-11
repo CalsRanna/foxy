@@ -42,7 +42,17 @@ class SpellAreaRepository with RepositoryMixin, _SpellAreaRepositoryMixin {
           'gender',
           'quest_start_status',
           'quest_end_status',
+          'ds.Name_lang_zhCN as auraSpellName',
+          'dsi.TextureFilename as auraSpellTextureFilename',
         ])
+        .leftJoin(
+          'foxy.dbc_spell as ds',
+          (join) => join.on('aura_spell', 'ds.ID'),
+        )
+        .leftJoin(
+          'foxy.dbc_spell_icon as dsi',
+          (join) => join.on('ds.SpellIconID', 'dsi.ID'),
+        )
         .where('spell', spell)
         .orderBy('area')
         .orderBy('quest_start')

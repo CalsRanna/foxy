@@ -32,12 +32,17 @@ class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
       'ts.MoneyCost',
       'ts.ReqSkillLine',
       'ts.ReqLevel',
-      'ds.Name_lang_zhCN as kSpellName',
+      'ds.Name_lang_zhCN as spellName',
       'ds.NameSubtext_lang_zhCN as spellSubtext',
+      'dsi.TextureFilename as textureFilename',
     ]);
     builder = builder.leftJoin(
       'foxy.dbc_spell as ds',
       (join) => join.on('ts.SpellId', 'ds.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_icon as dsi',
+      (join) => join.on('ds.SpellIconID', 'dsi.ID'),
     );
     builder = builder.where('ts.TrainerId', trainerId);
     builder = builder.orderBy('ts.SpellId');

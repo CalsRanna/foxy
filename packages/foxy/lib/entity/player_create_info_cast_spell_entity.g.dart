@@ -7,12 +7,16 @@ final class BriefPlayerCreateInfoCastSpellEntity {
   final int classMask;
   final int spell;
   final String? note;
+  final String spellName;
+  final String textureFilename;
 
   const BriefPlayerCreateInfoCastSpellEntity({
     this.raceMask = 0,
     this.classMask = 0,
     this.spell = 0,
     this.note,
+    this.spellName = '',
+    this.textureFilename = '',
   });
 
   factory BriefPlayerCreateInfoCastSpellEntity.fromJson(
@@ -35,11 +39,20 @@ final class BriefPlayerCreateInfoCastSpellEntity {
           ? 0
           : (json['spell'] as num?)?.toInt() ?? 0,
       note: json['note']?.toString(),
+      spellName: json['spellName']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode => Object.hashAll([raceMask, classMask, spell, note]);
+  int get hashCode => Object.hashAll([
+    raceMask,
+    classMask,
+    spell,
+    note,
+    spellName,
+    textureFilename,
+  ]);
 
   PlayerCreateInfoCastSpellKey get key {
     return PlayerCreateInfoCastSpellKey(
@@ -57,7 +70,9 @@ final class BriefPlayerCreateInfoCastSpellEntity {
             raceMask == other.raceMask &&
             classMask == other.classMask &&
             spell == other.spell &&
-            note == other.note;
+            note == other.note &&
+            spellName == other.spellName &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -66,7 +81,9 @@ final class BriefPlayerCreateInfoCastSpellEntity {
         'raceMask: $raceMask, '
         'classMask: $classMask, '
         'spell: $spell, '
-        'note: $note'
+        'note: $note, '
+        'spellName: $spellName, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

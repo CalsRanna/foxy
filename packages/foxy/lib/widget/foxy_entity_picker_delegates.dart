@@ -935,19 +935,23 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '技能1',
-            text: (BriefCreatureSpellDataEntity t) => t.spellName1,
+            cell: (BriefCreatureSpellDataEntity t) =>
+                FoxyIconText(iconPath: t.textureFilename1, name: t.spellName1),
           ),
           FoxyEntityPickerColumn(
             header: '技能2',
-            text: (BriefCreatureSpellDataEntity t) => t.spellName2,
+            cell: (BriefCreatureSpellDataEntity t) =>
+                FoxyIconText(iconPath: t.textureFilename2, name: t.spellName2),
           ),
           FoxyEntityPickerColumn(
             header: '技能3',
-            text: (BriefCreatureSpellDataEntity t) => t.spellName3,
+            cell: (BriefCreatureSpellDataEntity t) =>
+                FoxyIconText(iconPath: t.textureFilename3, name: t.spellName3),
           ),
           FoxyEntityPickerColumn(
             header: '技能4',
-            text: (BriefCreatureSpellDataEntity t) => t.spellName4,
+            cell: (BriefCreatureSpellDataEntity t) =>
+                FoxyIconText(iconPath: t.textureFilename4, name: t.spellName4),
           ),
         ],
         idOf: (BriefCreatureSpellDataEntity t) => t.id,

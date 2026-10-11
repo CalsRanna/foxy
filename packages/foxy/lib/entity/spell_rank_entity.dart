@@ -7,8 +7,10 @@ part 'spell_rank_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('firstSpellName')
 @FoxyBriefField.text('firstSpellSubtext')
+@FoxyBriefField.text('firstSpellTextureFilename')
 @FoxyBriefField.text('spellName')
 @FoxyBriefField.text('spellSubtext')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'spell_ranks')
 class SpellRankEntity with _SpellRankEntityMixin {
   @FoxyBriefField()

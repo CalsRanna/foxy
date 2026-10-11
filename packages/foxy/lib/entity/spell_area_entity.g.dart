@@ -12,6 +12,8 @@ final class BriefSpellAreaEntity {
   final int gender;
   final int questStartStatus;
   final int questEndStatus;
+  final String auraSpellName;
+  final String auraSpellTextureFilename;
 
   const BriefSpellAreaEntity({
     this.spell = 0,
@@ -23,6 +25,8 @@ final class BriefSpellAreaEntity {
     this.gender = 2,
     this.questStartStatus = 64,
     this.questEndStatus = 11,
+    this.auraSpellName = '',
+    this.auraSpellTextureFilename = '',
   });
 
   factory BriefSpellAreaEntity.fromJson(Map<String, dynamic> json) {
@@ -72,6 +76,9 @@ final class BriefSpellAreaEntity {
           : json['quest_end_status'] == false
           ? 0
           : (json['quest_end_status'] as num?)?.toInt() ?? 11,
+      auraSpellName: json['auraSpellName']?.toString() ?? '',
+      auraSpellTextureFilename:
+          json['auraSpellTextureFilename']?.toString() ?? '',
     );
   }
 
@@ -86,6 +93,8 @@ final class BriefSpellAreaEntity {
     gender,
     questStartStatus,
     questEndStatus,
+    auraSpellName,
+    auraSpellTextureFilename,
   ]);
 
   SpellAreaKey get key {
@@ -111,7 +120,9 @@ final class BriefSpellAreaEntity {
             racemask == other.racemask &&
             gender == other.gender &&
             questStartStatus == other.questStartStatus &&
-            questEndStatus == other.questEndStatus;
+            questEndStatus == other.questEndStatus &&
+            auraSpellName == other.auraSpellName &&
+            auraSpellTextureFilename == other.auraSpellTextureFilename;
   }
 
   @override
@@ -125,7 +136,9 @@ final class BriefSpellAreaEntity {
         'racemask: $racemask, '
         'gender: $gender, '
         'questStartStatus: $questStartStatus, '
-        'questEndStatus: $questEndStatus'
+        'questEndStatus: $questEndStatus, '
+        'auraSpellName: $auraSpellName, '
+        'auraSpellTextureFilename: $auraSpellTextureFilename'
         ')';
   }
 }

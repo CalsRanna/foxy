@@ -7,12 +7,16 @@ final class BriefPlayerCreateInfoSpellCustomEntity {
   final int classMask;
   final int spell;
   final String note;
+  final String spellName;
+  final String textureFilename;
 
   const BriefPlayerCreateInfoSpellCustomEntity({
     this.raceMask = 0,
     this.classMask = 0,
     this.spell = 0,
     this.note = '',
+    this.spellName = '',
+    this.textureFilename = '',
   });
 
   factory BriefPlayerCreateInfoSpellCustomEntity.fromJson(
@@ -35,11 +39,20 @@ final class BriefPlayerCreateInfoSpellCustomEntity {
           ? 0
           : (json['Spell'] as num?)?.toInt() ?? 0,
       note: json['Note']?.toString() ?? '',
+      spellName: json['spellName']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode => Object.hashAll([raceMask, classMask, spell, note]);
+  int get hashCode => Object.hashAll([
+    raceMask,
+    classMask,
+    spell,
+    note,
+    spellName,
+    textureFilename,
+  ]);
 
   PlayerCreateInfoSpellCustomKey get key {
     return PlayerCreateInfoSpellCustomKey(
@@ -56,7 +69,9 @@ final class BriefPlayerCreateInfoSpellCustomEntity {
             raceMask == other.raceMask &&
             classMask == other.classMask &&
             spell == other.spell &&
-            note == other.note;
+            note == other.note &&
+            spellName == other.spellName &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -65,7 +80,9 @@ final class BriefPlayerCreateInfoSpellCustomEntity {
         'raceMask: $raceMask, '
         'classMask: $classMask, '
         'spell: $spell, '
-        'note: $note'
+        'note: $note, '
+        'spellName: $spellName, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

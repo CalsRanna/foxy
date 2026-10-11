@@ -59,7 +59,19 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
     final classBit = PlayerCreateInfoConstants.classBit(playerClass);
     final rows = await laconic
         .table(_table)
-        .select(['raceMask', 'classMask', 'spell', 'note'])
+        .select([
+          'raceMask',
+          'classMask',
+          'spell',
+          'note',
+          'ds.Name_lang_zhCN as spellName',
+          'dsi.TextureFilename as textureFilename',
+        ])
+        .leftJoin('foxy.dbc_spell as ds', (join) => join.on('spell', 'ds.ID'))
+        .leftJoin(
+          'foxy.dbc_spell_icon as dsi',
+          (join) => join.on('ds.SpellIconID', 'dsi.ID'),
+        )
         .whereRaw('(`raceMask` = 0 OR (`raceMask` & ?) <> 0)', [raceBit])
         .whereRaw('(`classMask` = 0 OR (`classMask` & ?) <> 0)', [classBit])
         .orderBy('raceMask')

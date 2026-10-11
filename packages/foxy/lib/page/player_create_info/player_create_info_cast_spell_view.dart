@@ -11,6 +11,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_nullable_string_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
@@ -116,6 +117,11 @@ class _PlayerCreateInfoCastSpellViewState
           label: '法术',
           width: 120,
           cell: (_, row) => Text(row.spell.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '法术名称',
+          cell: (_, row) =>
+              FoxyIconText(iconPath: row.textureFilename, name: row.spellName),
         ),
         FoxyTableColumn.flex(
           label: '备注',

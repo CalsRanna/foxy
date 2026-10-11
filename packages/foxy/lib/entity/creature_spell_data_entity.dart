@@ -9,6 +9,10 @@ part 'creature_spell_data_entity.g.dart';
 @FoxyBriefField.text('spellName2')
 @FoxyBriefField.text('spellName3')
 @FoxyBriefField.text('spellName4')
+@FoxyBriefField.text('textureFilename1')
+@FoxyBriefField.text('textureFilename2')
+@FoxyBriefField.text('textureFilename3')
+@FoxyBriefField.text('textureFilename4')
 @FoxyFullEntity(table: 'foxy.dbc_creature_spell_data')
 class CreatureSpellDataEntity with _CreatureSpellDataEntityMixin {
   @FoxyBriefField()

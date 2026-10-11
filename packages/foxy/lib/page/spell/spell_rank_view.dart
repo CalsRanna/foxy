@@ -8,6 +8,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
@@ -164,7 +165,10 @@ class _SpellRankViewState extends State<SpellRankView> {
             final firstDisplay = item.firstSpellSubtext.isNotEmpty
                 ? '${item.firstSpellName} - ${item.firstSpellSubtext}'
                 : item.firstSpellName;
-            return Text(firstDisplay);
+            return FoxyIconText(
+              iconPath: item.firstSpellTextureFilename,
+              name: firstDisplay,
+            );
           },
         ),
         FoxyTableColumn.flex(
@@ -173,7 +177,10 @@ class _SpellRankViewState extends State<SpellRankView> {
             final spellDisplay = item.spellSubtext.isNotEmpty
                 ? '${item.spellName} - ${item.spellSubtext}'
                 : item.spellName;
-            return Text(spellDisplay);
+            return FoxyIconText(
+              iconPath: item.textureFilename,
+              name: spellDisplay,
+            );
           },
         ),
         FoxyTableColumn.fixed(

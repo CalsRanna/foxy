@@ -7,12 +7,16 @@ final class BriefSpellLinkedSpellEntity {
   final int spellEffect;
   final int type;
   final String comment;
+  final String effectSpellName;
+  final String effectSpellTextureFilename;
 
   const BriefSpellLinkedSpellEntity({
     this.spellTrigger = 0,
     this.spellEffect = 0,
     this.type = 0,
     this.comment = '',
+    this.effectSpellName = '',
+    this.effectSpellTextureFilename = '',
   });
 
   factory BriefSpellLinkedSpellEntity.fromJson(Map<String, dynamic> json) {
@@ -33,12 +37,21 @@ final class BriefSpellLinkedSpellEntity {
           ? 0
           : (json['type'] as num?)?.toInt() ?? 0,
       comment: json['comment']?.toString() ?? '',
+      effectSpellName: json['effectSpellName']?.toString() ?? '',
+      effectSpellTextureFilename:
+          json['effectSpellTextureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([spellTrigger, spellEffect, type, comment]);
+  int get hashCode => Object.hashAll([
+    spellTrigger,
+    spellEffect,
+    type,
+    comment,
+    effectSpellName,
+    effectSpellTextureFilename,
+  ]);
 
   SpellLinkedSpellKey get key {
     return SpellLinkedSpellKey(
@@ -55,7 +68,9 @@ final class BriefSpellLinkedSpellEntity {
             spellTrigger == other.spellTrigger &&
             spellEffect == other.spellEffect &&
             type == other.type &&
-            comment == other.comment;
+            comment == other.comment &&
+            effectSpellName == other.effectSpellName &&
+            effectSpellTextureFilename == other.effectSpellTextureFilename;
   }
 
   @override
@@ -64,7 +79,9 @@ final class BriefSpellLinkedSpellEntity {
         'spellTrigger: $spellTrigger, '
         'spellEffect: $spellEffect, '
         'type: $type, '
-        'comment: $comment'
+        'comment: $comment, '
+        'effectSpellName: $effectSpellName, '
+        'effectSpellTextureFilename: $effectSpellTextureFilename'
         ')';
   }
 }

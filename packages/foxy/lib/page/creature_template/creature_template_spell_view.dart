@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_form_dialog.dart';
@@ -188,7 +189,10 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
         ),
         FoxyTableColumn.flex(
           label: '技能名称',
-          cell: (_, spell) => Text(spell.displayName),
+          cell: (_, spell) => FoxyIconText(
+            iconPath: spell.textureFilename,
+            name: spell.displayName,
+          ),
         ),
         FoxyTableColumn.fixed(
           label: '验证版本',

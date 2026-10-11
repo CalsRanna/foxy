@@ -13,6 +13,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
@@ -275,6 +276,16 @@ class _SpellAreaViewState extends State<SpellAreaView> {
           label: '光环',
           width: 120,
           cell: (_, item) => Text(item.auraSpell.toString()),
+        ),
+        FoxyTableColumn.fixed(
+          label: '光环名称',
+          width: 120,
+          cell: (_, item) => item.auraSpell <= 0
+              ? Text('-')
+              : FoxyIconText(
+                  iconPath: item.auraSpellTextureFilename,
+                  name: item.auraSpellName,
+                ),
         ),
         FoxyTableColumn.fixed(
           label: '开始任务掩码',

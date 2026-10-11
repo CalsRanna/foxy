@@ -8,6 +8,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
@@ -258,7 +259,10 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
             final displayName = trainer.spellSubtext.isNotEmpty
                 ? '${trainer.spellName} - ${trainer.spellSubtext}'
                 : trainer.spellName;
-            return Text(displayName);
+            return FoxyIconText(
+              iconPath: trainer.textureFilename,
+              name: displayName,
+            );
           },
         ),
         FoxyTableColumn.fixed(

@@ -8,6 +8,7 @@ part 'npc_trainer_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('spellName')
 @FoxyBriefField.text('spellSubtext')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'trainer_spell')
 class NpcTrainerEntity with _NpcTrainerEntityMixin {
   @FoxyBriefField()

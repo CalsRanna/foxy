@@ -6,6 +6,8 @@ part 'spell_linked_spell_entity.g.dart';
 /// Spell linked spells
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('effectSpellName')
+@FoxyBriefField.text('effectSpellTextureFilename')
 @FoxyFullEntity()
 class SpellLinkedSpellEntity with _SpellLinkedSpellEntityMixin {
   @FoxyBriefField()

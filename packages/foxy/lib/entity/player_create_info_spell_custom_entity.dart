@@ -5,6 +5,8 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'player_create_info_spell_custom_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('spellName')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'playercreateinfo_spell_custom')
 class PlayerCreateInfoSpellCustomEntity
     with _PlayerCreateInfoSpellCustomEntityMixin {

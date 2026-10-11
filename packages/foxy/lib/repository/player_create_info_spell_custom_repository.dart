@@ -50,7 +50,19 @@ class PlayerCreateInfoSpellCustomRepository
     final classBit = PlayerCreateInfoConstants.classBit(classMask);
     final results = await laconic
         .table(_table)
-        .select(['racemask', 'classmask', 'Spell', 'Note'])
+        .select([
+          'racemask',
+          'classmask',
+          'Spell',
+          'Note',
+          'ds.Name_lang_zhCN as spellName',
+          'dsi.TextureFilename as textureFilename',
+        ])
+        .leftJoin('foxy.dbc_spell as ds', (join) => join.on('Spell', 'ds.ID'))
+        .leftJoin(
+          'foxy.dbc_spell_icon as dsi',
+          (join) => join.on('ds.SpellIconID', 'dsi.ID'),
+        )
         .whereRaw('(racemask = 0 OR (racemask & ?) <> 0)', [raceBit])
         .whereRaw('(classmask = 0 OR (classmask & ?) <> 0)', [classBit])
         .orderBy('racemask')

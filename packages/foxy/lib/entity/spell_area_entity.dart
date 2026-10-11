@@ -7,6 +7,8 @@ part 'spell_area_entity.g.dart';
 /// Spell-area spells
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('auraSpellName')
+@FoxyBriefField.text('auraSpellTextureFilename')
 @FoxyFullEntity()
 class SpellAreaEntity with _SpellAreaEntityMixin {
   @FoxyBriefField()

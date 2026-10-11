@@ -54,12 +54,17 @@ class CreatureTemplateSpellRepository
           'cts.`Index`',
           'cts.Spell',
           'cts.VerifiedBuild',
-          'ds.Name_lang_zhCN as kSpellName',
+          'ds.Name_lang_zhCN as spellName',
           'ds.NameSubtext_lang_zhCN as spellSubtext',
+          'dsi.TextureFilename as textureFilename',
         ])
         .leftJoin(
           'foxy.dbc_spell as ds',
           (join) => join.on('cts.Spell', 'ds.ID'),
+        )
+        .leftJoin(
+          'foxy.dbc_spell_icon as dsi',
+          (join) => join.on('ds.SpellIconID', 'dsi.ID'),
         )
         .where('cts.CreatureID', creatureID)
         .orderBy('cts.CreatureID')

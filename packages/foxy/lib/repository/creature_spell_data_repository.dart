@@ -13,6 +13,7 @@ part 'creature_spell_data_repository.g.dart';
 class CreatureSpellDataRepository
     with RepositoryMixin, _CreatureSpellDataRepositoryMixin {
   static const _spellTable = 'foxy.dbc_spell';
+  static const _spellIconTable = 'foxy.dbc_spell_icon';
 
   Future<int> copyCreatureSpellData(int key) async {
     final source = await getCreatureSpellData(key);
@@ -62,6 +63,10 @@ class CreatureSpellDataRepository
       'ds_2.Name_lang_zhCN as spellName2',
       'ds_3.Name_lang_zhCN as spellName3',
       'ds_4.Name_lang_zhCN as spellName4',
+      'dsi_1.TextureFilename as textureFilename1',
+      'dsi_2.TextureFilename as textureFilename2',
+      'dsi_3.TextureFilename as textureFilename3',
+      'dsi_4.TextureFilename as textureFilename4',
     ];
     var builder = laconic.table('$_table as dcsd');
     builder = builder.select(fields);
@@ -121,6 +126,22 @@ class CreatureSpellDataRepository
     builder = builder.leftJoin(
       '$_spellTable as ds_4',
       (join) => join.on('dcsd.Spells3', 'ds_4.ID'),
+    );
+    builder = builder.leftJoin(
+      '$_spellIconTable as dsi_1',
+      (join) => join.on('ds_1.SpellIconID', 'dsi_1.ID'),
+    );
+    builder = builder.leftJoin(
+      '$_spellIconTable as dsi_2',
+      (join) => join.on('ds_2.SpellIconID', 'dsi_2.ID'),
+    );
+    builder = builder.leftJoin(
+      '$_spellIconTable as dsi_3',
+      (join) => join.on('ds_3.SpellIconID', 'dsi_3.ID'),
+    );
+    builder = builder.leftJoin(
+      '$_spellIconTable as dsi_4',
+      (join) => join.on('ds_4.SpellIconID', 'dsi_4.ID'),
     );
     return builder;
   }

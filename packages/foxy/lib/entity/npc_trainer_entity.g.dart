@@ -10,6 +10,7 @@ final class BriefNpcTrainerEntity {
   final int reqLevel;
   final String spellName;
   final String spellSubtext;
+  final String textureFilename;
 
   const BriefNpcTrainerEntity({
     this.trainerId = 0,
@@ -19,6 +20,7 @@ final class BriefNpcTrainerEntity {
     this.reqLevel = 0,
     this.spellName = '',
     this.spellSubtext = '',
+    this.textureFilename = '',
   });
 
   factory BriefNpcTrainerEntity.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ final class BriefNpcTrainerEntity {
           : (json['ReqLevel'] as num?)?.toInt() ?? 0,
       spellName: json['spellName']?.toString() ?? '',
       spellSubtext: json['spellSubtext']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
@@ -62,6 +65,7 @@ final class BriefNpcTrainerEntity {
     reqLevel,
     spellName,
     spellSubtext,
+    textureFilename,
   ]);
 
   NpcTrainerKey get key {
@@ -78,7 +82,8 @@ final class BriefNpcTrainerEntity {
             reqSkillLine == other.reqSkillLine &&
             reqLevel == other.reqLevel &&
             spellName == other.spellName &&
-            spellSubtext == other.spellSubtext;
+            spellSubtext == other.spellSubtext &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -90,7 +95,8 @@ final class BriefNpcTrainerEntity {
         'reqSkillLine: $reqSkillLine, '
         'reqLevel: $reqLevel, '
         'spellName: $spellName, '
-        'spellSubtext: $spellSubtext'
+        'spellSubtext: $spellSubtext, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

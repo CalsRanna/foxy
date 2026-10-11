@@ -50,16 +50,26 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
           'sr.`rank` as rank',
           'fds.Name_lang_zhCN as firstSpellName',
           'fds.NameSubtext_lang_zhCN as firstSpellSubtext',
-          'ds.Name_lang_zhCN as kSpellName',
+          'fdsi.TextureFilename as firstSpellTextureFilename',
+          'ds.Name_lang_zhCN as spellName',
           'ds.NameSubtext_lang_zhCN as spellSubtext',
+          'dsi.TextureFilename as textureFilename',
         ])
         .leftJoin(
           'foxy.dbc_spell as fds',
           (join) => join.on('sr.first_spell_id', 'fds.ID'),
         )
         .leftJoin(
+          'foxy.dbc_spell_icon as fdsi',
+          (join) => join.on('fds.SpellIconID', 'fdsi.ID'),
+        )
+        .leftJoin(
           'foxy.dbc_spell as ds',
           (join) => join.on('sr.spell_id', 'ds.ID'),
+        )
+        .leftJoin(
+          'foxy.dbc_spell_icon as dsi',
+          (join) => join.on('ds.SpellIconID', 'dsi.ID'),
         )
         .where('sr.first_spell_id', firstSpellId)
         .orderBy('sr.`rank`')

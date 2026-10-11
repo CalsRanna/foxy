@@ -8,8 +8,10 @@ final class BriefSpellRankEntity {
   final int rank;
   final String firstSpellName;
   final String firstSpellSubtext;
+  final String firstSpellTextureFilename;
   final String spellName;
   final String spellSubtext;
+  final String textureFilename;
 
   const BriefSpellRankEntity({
     this.firstSpellId = 0,
@@ -17,8 +19,10 @@ final class BriefSpellRankEntity {
     this.rank = 0,
     this.firstSpellName = '',
     this.firstSpellSubtext = '',
+    this.firstSpellTextureFilename = '',
     this.spellName = '',
     this.spellSubtext = '',
+    this.textureFilename = '',
   });
 
   factory BriefSpellRankEntity.fromJson(Map<String, dynamic> json) {
@@ -40,8 +44,11 @@ final class BriefSpellRankEntity {
           : (json['rank'] as num?)?.toInt() ?? 0,
       firstSpellName: json['firstSpellName']?.toString() ?? '',
       firstSpellSubtext: json['firstSpellSubtext']?.toString() ?? '',
+      firstSpellTextureFilename:
+          json['firstSpellTextureFilename']?.toString() ?? '',
       spellName: json['spellName']?.toString() ?? '',
       spellSubtext: json['spellSubtext']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
@@ -52,8 +59,10 @@ final class BriefSpellRankEntity {
     rank,
     firstSpellName,
     firstSpellSubtext,
+    firstSpellTextureFilename,
     spellName,
     spellSubtext,
+    textureFilename,
   ]);
 
   SpellRankKey get key {
@@ -69,8 +78,10 @@ final class BriefSpellRankEntity {
             rank == other.rank &&
             firstSpellName == other.firstSpellName &&
             firstSpellSubtext == other.firstSpellSubtext &&
+            firstSpellTextureFilename == other.firstSpellTextureFilename &&
             spellName == other.spellName &&
-            spellSubtext == other.spellSubtext;
+            spellSubtext == other.spellSubtext &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -81,8 +92,10 @@ final class BriefSpellRankEntity {
         'rank: $rank, '
         'firstSpellName: $firstSpellName, '
         'firstSpellSubtext: $firstSpellSubtext, '
+        'firstSpellTextureFilename: $firstSpellTextureFilename, '
         'spellName: $spellName, '
-        'spellSubtext: $spellSubtext'
+        'spellSubtext: $spellSubtext, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

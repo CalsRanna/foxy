@@ -56,7 +56,22 @@ class SpellLinkedSpellRepository
     int page = 1,
   }) async {
     final results = await _whereParent(laconic.table(_table), spellTrigger)
-        .select(['spell_trigger', 'spell_effect', 'type', 'comment'])
+        .select([
+          'spell_trigger',
+          'spell_effect',
+          'type',
+          'comment',
+          'ds.Name_lang_zhCN as effectSpellName',
+          'dsi.TextureFilename as effectSpellTextureFilename',
+        ])
+        .leftJoin(
+          'foxy.dbc_spell as ds',
+          (join) => join.on('spell_effect', 'ds.ID'),
+        )
+        .leftJoin(
+          'foxy.dbc_spell_icon as dsi',
+          (join) => join.on('ds.SpellIconID', 'dsi.ID'),
+        )
         .orderBy('spell_trigger')
         .orderBy('spell_effect')
         .orderBy('type')

@@ -12,6 +12,10 @@ final class BriefCreatureSpellDataEntity {
   final String spellName2;
   final String spellName3;
   final String spellName4;
+  final String textureFilename1;
+  final String textureFilename2;
+  final String textureFilename3;
+  final String textureFilename4;
 
   const BriefCreatureSpellDataEntity({
     this.id = 0,
@@ -23,6 +27,10 @@ final class BriefCreatureSpellDataEntity {
     this.spellName2 = '',
     this.spellName3 = '',
     this.spellName4 = '',
+    this.textureFilename1 = '',
+    this.textureFilename2 = '',
+    this.textureFilename3 = '',
+    this.textureFilename4 = '',
   });
 
   factory BriefCreatureSpellDataEntity.fromJson(Map<String, dynamic> json) {
@@ -56,6 +64,10 @@ final class BriefCreatureSpellDataEntity {
       spellName2: json['spellName2']?.toString() ?? '',
       spellName3: json['spellName3']?.toString() ?? '',
       spellName4: json['spellName4']?.toString() ?? '',
+      textureFilename1: json['textureFilename1']?.toString() ?? '',
+      textureFilename2: json['textureFilename2']?.toString() ?? '',
+      textureFilename3: json['textureFilename3']?.toString() ?? '',
+      textureFilename4: json['textureFilename4']?.toString() ?? '',
     );
   }
 
@@ -70,6 +82,10 @@ final class BriefCreatureSpellDataEntity {
     spellName2,
     spellName3,
     spellName4,
+    textureFilename1,
+    textureFilename2,
+    textureFilename3,
+    textureFilename4,
   ]);
 
   int get key => id;
@@ -86,7 +102,11 @@ final class BriefCreatureSpellDataEntity {
             spellName1 == other.spellName1 &&
             spellName2 == other.spellName2 &&
             spellName3 == other.spellName3 &&
-            spellName4 == other.spellName4;
+            spellName4 == other.spellName4 &&
+            textureFilename1 == other.textureFilename1 &&
+            textureFilename2 == other.textureFilename2 &&
+            textureFilename3 == other.textureFilename3 &&
+            textureFilename4 == other.textureFilename4;
   }
 
   @override
@@ -100,7 +120,11 @@ final class BriefCreatureSpellDataEntity {
         'spellName1: $spellName1, '
         'spellName2: $spellName2, '
         'spellName3: $spellName3, '
-        'spellName4: $spellName4'
+        'spellName4: $spellName4, '
+        'textureFilename1: $textureFilename1, '
+        'textureFilename2: $textureFilename2, '
+        'textureFilename3: $textureFilename3, '
+        'textureFilename4: $textureFilename4'
         ')';
   }
 }

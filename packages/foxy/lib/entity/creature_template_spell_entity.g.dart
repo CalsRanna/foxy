@@ -9,6 +9,7 @@ final class BriefCreatureTemplateSpellEntity {
   final int verifiedBuild;
   final String spellName;
   final String spellSubtext;
+  final String textureFilename;
 
   const BriefCreatureTemplateSpellEntity({
     this.creatureID = 0,
@@ -17,6 +18,7 @@ final class BriefCreatureTemplateSpellEntity {
     this.verifiedBuild = 0,
     this.spellName = '',
     this.spellSubtext = '',
+    this.textureFilename = '',
   });
 
   factory BriefCreatureTemplateSpellEntity.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,7 @@ final class BriefCreatureTemplateSpellEntity {
           : (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
       spellName: json['spellName']?.toString() ?? '',
       spellSubtext: json['spellSubtext']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
@@ -54,6 +57,7 @@ final class BriefCreatureTemplateSpellEntity {
     verifiedBuild,
     spellName,
     spellSubtext,
+    textureFilename,
   ]);
 
   CreatureTemplateSpellKey get key {
@@ -69,7 +73,8 @@ final class BriefCreatureTemplateSpellEntity {
             spell == other.spell &&
             verifiedBuild == other.verifiedBuild &&
             spellName == other.spellName &&
-            spellSubtext == other.spellSubtext;
+            spellSubtext == other.spellSubtext &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -80,7 +85,8 @@ final class BriefCreatureTemplateSpellEntity {
         'spell: $spell, '
         'verifiedBuild: $verifiedBuild, '
         'spellName: $spellName, '
-        'spellSubtext: $spellSubtext'
+        'spellSubtext: $spellSubtext, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }
