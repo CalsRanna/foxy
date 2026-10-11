@@ -11,6 +11,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
@@ -116,6 +117,15 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
           label: '技能',
           width: 120,
           cell: (_, row) => Text(row.skill.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '技能名称',
+          cell: (_, row) => row.skill <= 0
+              ? const Text('-')
+              : FoxyIconText(
+                  iconPath: row.textureFilename,
+                  name: row.skillName,
+                ),
         ),
         FoxyTableColumn.fixed(
           label: '阶数',

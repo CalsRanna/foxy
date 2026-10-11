@@ -35,6 +35,8 @@ class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
       'ds.Name_lang_zhCN as spellName',
       'ds.NameSubtext_lang_zhCN as spellSubtext',
       'dsi.TextureFilename as textureFilename',
+      'dsl.DisplayName_lang_zhCN as skillLineName',
+      'dsli.TextureFilename as skillLineTextureFilename',
     ]);
     builder = builder.leftJoin(
       'foxy.dbc_spell as ds',
@@ -43,6 +45,14 @@ class NpcTrainerRepository with RepositoryMixin, _NpcTrainerRepositoryMixin {
     builder = builder.leftJoin(
       'foxy.dbc_spell_icon as dsi',
       (join) => join.on('ds.SpellIconID', 'dsi.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_skill_line as dsl',
+      (join) => join.on('ts.ReqSkillLine', 'dsl.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_icon as dsli',
+      (join) => join.on('dsl.SpellIconID', 'dsli.ID'),
     );
     builder = builder.where('ts.TrainerId', trainerId);
     builder = builder.orderBy('ts.SpellId');

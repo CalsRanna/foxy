@@ -5,6 +5,8 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'player_create_info_skill_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('skillName')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'playercreateinfo_skills')
 class PlayerCreateInfoSkillEntity with _PlayerCreateInfoSkillEntityMixin {
   @FoxyBriefField()

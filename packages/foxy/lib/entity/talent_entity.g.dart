@@ -13,6 +13,7 @@ final class BriefTalentEntity {
   final String spellNameEnUS;
   final String spellNameZhCN;
   final String textureFilename;
+  final String tabTextureFilename;
 
   const BriefTalentEntity({
     this.id = 0,
@@ -25,6 +26,7 @@ final class BriefTalentEntity {
     this.spellNameEnUS = '',
     this.spellNameZhCN = '',
     this.textureFilename = '',
+    this.tabTextureFilename = '',
   });
 
   factory BriefTalentEntity.fromJson(Map<String, dynamic> json) {
@@ -59,6 +61,7 @@ final class BriefTalentEntity {
       spellNameEnUS: json['spellNameEnUS']?.toString() ?? '',
       spellNameZhCN: json['spellNameZhCN']?.toString() ?? '',
       textureFilename: json['textureFilename']?.toString() ?? '',
+      tabTextureFilename: json['tabTextureFilename']?.toString() ?? '',
     );
   }
 
@@ -74,6 +77,7 @@ final class BriefTalentEntity {
     spellNameEnUS,
     spellNameZhCN,
     textureFilename,
+    tabTextureFilename,
   ]);
 
   int get key => id;
@@ -91,7 +95,8 @@ final class BriefTalentEntity {
             tabNameZhCN == other.tabNameZhCN &&
             spellNameEnUS == other.spellNameEnUS &&
             spellNameZhCN == other.spellNameZhCN &&
-            textureFilename == other.textureFilename;
+            textureFilename == other.textureFilename &&
+            tabTextureFilename == other.tabTextureFilename;
   }
 
   @override
@@ -106,7 +111,8 @@ final class BriefTalentEntity {
         'tabNameZhCN: $tabNameZhCN, '
         'spellNameEnUS: $spellNameEnUS, '
         'spellNameZhCN: $spellNameZhCN, '
-        'textureFilename: $textureFilename'
+        'textureFilename: $textureFilename, '
+        'tabTextureFilename: $tabTextureFilename'
         ')';
   }
 }

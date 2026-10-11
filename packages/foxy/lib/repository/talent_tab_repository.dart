@@ -39,22 +39,48 @@ class TalentTabRepository
     int page = 1,
     TalentTabFilter? filter,
   }) async {
-    var builder = laconic.table(_table).select([
-      'ID',
-      'Name_lang_zhCN',
-      'ClassMask',
-      'CategoryEnumID',
-      'OrderIndex',
+    var builder = laconic.table('$_table as tt').select([
+      'tt.ID',
+      'tt.Name_lang_zhCN',
+      'tt.ClassMask',
+      'tt.CategoryEnumID',
+      'tt.OrderIndex',
+      'dsi.TextureFilename as textureFilename',
     ]);
-    builder = _applyFilter(builder, filter);
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_icon as dsi',
+      (join) => join.on('tt.SpellIconID', 'dsi.ID'),
+    );
+    builder = _applyFilterTalentTab(builder, filter);
     final rows = await builder
-        .orderBy('ID')
+        .orderBy('tt.ID')
         .limit(kPageSize)
         .offset((page - 1) * kPageSize)
         .get();
     return rows
         .map((row) => BriefTalentTabEntity.fromJson(row.toMap()))
         .toList();
+  }
+
+  /// Re-applies the generated filter against the aliased icon join; the
+  /// generated `_applyFilter` targets the bare table name, and the joined
+  /// icon table would make its `ID` column ambiguous.
+  QueryBuilder _applyFilterTalentTab(
+    QueryBuilder builder,
+    TalentTabFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('tt.ID', int.tryParse(filter.id) ?? 0);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where(
+        'tt.Name_lang_zhCN',
+        '%${ParseUtil.escapeLike(filter.name)}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
   }
 
   Future<List<TalentTabEntity>> getTalentTabs() async {

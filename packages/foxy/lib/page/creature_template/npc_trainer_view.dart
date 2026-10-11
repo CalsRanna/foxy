@@ -276,6 +276,16 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           cell: (_, trainer) => Text(trainer.reqSkillLine.toString()),
         ),
         FoxyTableColumn.fixed(
+          label: '技能名称',
+          width: 160,
+          cell: (_, trainer) => trainer.reqSkillLine <= 0
+              ? const Text('-')
+              : FoxyIconText(
+                  iconPath: trainer.skillLineTextureFilename,
+                  name: trainer.skillLineName,
+                ),
+        ),
+        FoxyTableColumn.fixed(
           label: '等级要求',
           width: 120,
           cell: (_, trainer) => Text(trainer.reqLevel.toString()),

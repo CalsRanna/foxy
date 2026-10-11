@@ -8,6 +8,7 @@ part 'talent_entity.g.dart';
 @FoxyBriefField.text('spellNameEnUS')
 @FoxyBriefField.text('spellNameZhCN')
 @FoxyBriefField.text('textureFilename')
+@FoxyBriefField.text('tabTextureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_talent')
 class TalentEntity with _TalentEntityMixin {
   @FoxyBriefField()

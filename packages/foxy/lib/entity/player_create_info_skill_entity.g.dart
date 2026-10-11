@@ -8,6 +8,8 @@ final class BriefPlayerCreateInfoSkillEntity {
   final int skill;
   final int rank;
   final String comment;
+  final String skillName;
+  final String textureFilename;
 
   const BriefPlayerCreateInfoSkillEntity({
     this.raceMask = 0,
@@ -15,6 +17,8 @@ final class BriefPlayerCreateInfoSkillEntity {
     this.skill = 0,
     this.rank = 0,
     this.comment = '',
+    this.skillName = '',
+    this.textureFilename = '',
   });
 
   factory BriefPlayerCreateInfoSkillEntity.fromJson(Map<String, dynamic> json) {
@@ -40,12 +44,21 @@ final class BriefPlayerCreateInfoSkillEntity {
           ? 0
           : (json['rank'] as num?)?.toInt() ?? 0,
       comment: json['comment']?.toString() ?? '',
+      skillName: json['skillName']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([raceMask, classMask, skill, rank, comment]);
+  int get hashCode => Object.hashAll([
+    raceMask,
+    classMask,
+    skill,
+    rank,
+    comment,
+    skillName,
+    textureFilename,
+  ]);
 
   PlayerCreateInfoSkillKey get key {
     return PlayerCreateInfoSkillKey(
@@ -63,7 +76,9 @@ final class BriefPlayerCreateInfoSkillEntity {
             classMask == other.classMask &&
             skill == other.skill &&
             rank == other.rank &&
-            comment == other.comment;
+            comment == other.comment &&
+            skillName == other.skillName &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -73,7 +88,9 @@ final class BriefPlayerCreateInfoSkillEntity {
         'classMask: $classMask, '
         'skill: $skill, '
         'rank: $rank, '
-        'comment: $comment'
+        'comment: $comment, '
+        'skillName: $skillName, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

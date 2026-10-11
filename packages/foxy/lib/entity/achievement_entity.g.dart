@@ -7,12 +7,14 @@ final class BriefAchievementEntity {
   final String titleLangZhCN;
   final String descriptionLangZhCN;
   final String rewardLangZhCN;
+  final String textureFilename;
 
   const BriefAchievementEntity({
     this.id = 0,
     this.titleLangZhCN = '',
     this.descriptionLangZhCN = '',
     this.rewardLangZhCN = '',
+    this.textureFilename = '',
   });
 
   factory BriefAchievementEntity.fromJson(Map<String, dynamic> json) {
@@ -25,12 +27,18 @@ final class BriefAchievementEntity {
       titleLangZhCN: json['Title_lang_zhCN']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
       rewardLangZhCN: json['Reward_lang_zhCN']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([id, titleLangZhCN, descriptionLangZhCN, rewardLangZhCN]);
+  int get hashCode => Object.hashAll([
+    id,
+    titleLangZhCN,
+    descriptionLangZhCN,
+    rewardLangZhCN,
+    textureFilename,
+  ]);
 
   int get key => id;
 
@@ -41,7 +49,8 @@ final class BriefAchievementEntity {
             id == other.id &&
             titleLangZhCN == other.titleLangZhCN &&
             descriptionLangZhCN == other.descriptionLangZhCN &&
-            rewardLangZhCN == other.rewardLangZhCN;
+            rewardLangZhCN == other.rewardLangZhCN &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -50,7 +59,8 @@ final class BriefAchievementEntity {
         'id: $id, '
         'titleLangZhCN: $titleLangZhCN, '
         'descriptionLangZhCN: $descriptionLangZhCN, '
-        'rewardLangZhCN: $rewardLangZhCN'
+        'rewardLangZhCN: $rewardLangZhCN, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

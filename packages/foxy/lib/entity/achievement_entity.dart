@@ -3,6 +3,7 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'achievement_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_achievement')
 class AchievementEntity with _AchievementEntityMixin {
   @FoxyBriefField()

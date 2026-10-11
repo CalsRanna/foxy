@@ -52,6 +52,57 @@ class AchievementRepository
     return builder;
   }
 
+  /// Brief rows carry the achievement icon resolved through SpellIcon.dbc
+  /// (Achievement.dbc `IconID` is a SpellIcon reference, matching the
+  /// spell-icon picker used for the same field on the detail page).
+  ///
+  /// The table is aliased because the joined icon table also exposes `ID`,
+  /// which would make the generated filter's bare column ambiguous; the
+  /// aliased filter below mirrors it for this query only.
+  @override
+  Future<List<BriefAchievementEntity>> getBriefAchievements({
+    int page = 1,
+    AchievementFilter? filter,
+  }) async {
+    final offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table as da').select([
+      'da.`ID`',
+      'da.`Title_lang_zhCN`',
+      'da.`Description_lang_zhCN`',
+      'da.`Reward_lang_zhCN`',
+      'dsi.TextureFilename as textureFilename',
+    ]);
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_icon as dsi',
+      (join) => join.on('da.IconID', 'dsi.ID'),
+    );
+    builder = _applyBriefFilter(builder, filter);
+    builder = builder.orderBy('da.`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefAchievementEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  QueryBuilder _applyBriefFilter(
+    QueryBuilder builder,
+    AchievementFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('da.ID', int.tryParse(filter.id) ?? 0);
+    }
+    if (filter.title.isNotEmpty) {
+      builder = builder.where(
+        'da.Title_lang_zhCN',
+        '%${ParseUtil.escapeLike(filter.title)}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
+  }
+
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0xffff) {

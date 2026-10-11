@@ -48,13 +48,33 @@ class PlayerCreateInfoSkillRepository
     final raceBit = PlayerCreateInfoConstants.raceBit(raceMask);
     final classBit = PlayerCreateInfoConstants.classBit(classMask);
     final rows = await laconic
-        .table(_table)
-        .select(['raceMask', 'classMask', 'skill', '`rank`', 'comment'])
-        .whereRaw('(`raceMask` = 0 OR (`raceMask` & ?) <> 0)', [raceBit])
-        .whereRaw('(`classMask` = 0 OR (`classMask` & ?) <> 0)', [classBit])
-        .orderBy('raceMask')
-        .orderBy('classMask')
-        .orderBy('skill')
+        .table('$_table as pcis')
+        .select([
+          'pcis.raceMask',
+          'pcis.classMask',
+          'pcis.skill',
+          'pcis.`rank`',
+          'pcis.comment',
+          'dsl.DisplayName_lang_zhCN as skillName',
+          'dsli.TextureFilename as textureFilename',
+        ])
+        .leftJoin(
+          'foxy.dbc_skill_line as dsl',
+          (join) => join.on('pcis.skill', 'dsl.ID'),
+        )
+        .leftJoin(
+          'foxy.dbc_spell_icon as dsli',
+          (join) => join.on('dsl.SpellIconID', 'dsli.ID'),
+        )
+        .whereRaw('(`pcis`.`raceMask` = 0 OR (`pcis`.`raceMask` & ?) <> 0)', [
+          raceBit,
+        ])
+        .whereRaw('(`pcis`.`classMask` = 0 OR (`pcis`.`classMask` & ?) <> 0)', [
+          classBit,
+        ])
+        .orderBy('pcis.raceMask')
+        .orderBy('pcis.classMask')
+        .orderBy('pcis.skill')
         .limit(kPageSize)
         .offset((page - 1) * kPageSize)
         .get();

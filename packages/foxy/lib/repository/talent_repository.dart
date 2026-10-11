@@ -51,6 +51,7 @@ class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
       'ds.Name_lang_enUS as spellNameEnUS',
       'ds.Name_lang_zhCN as spellNameZhCN',
       'dsi.TextureFilename as textureFilename',
+      'dtti.TextureFilename as tabTextureFilename',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
@@ -64,6 +65,10 @@ class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
     builder = builder.leftJoin(
       'foxy.dbc_spell_icon as dsi',
       (join) => join.on('ds.SpellIconID', 'dsi.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_icon as dtti',
+      (join) => join.on('dtt.SpellIconID', 'dtti.ID'),
     );
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('dt.ID');

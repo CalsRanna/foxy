@@ -3,6 +3,7 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'talent_tab_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_talent_tab')
 class TalentTabEntity with _TalentTabEntityMixin {
   @FoxyBriefField()

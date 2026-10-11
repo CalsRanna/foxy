@@ -8,6 +8,7 @@ final class BriefTalentTabEntity {
   final int classMask;
   final int categoryEnumId;
   final int orderIndex;
+  final String textureFilename;
 
   const BriefTalentTabEntity({
     this.id = 0,
@@ -15,6 +16,7 @@ final class BriefTalentTabEntity {
     this.classMask = 0,
     this.categoryEnumId = 0,
     this.orderIndex = 0,
+    this.textureFilename = '',
   });
 
   factory BriefTalentTabEntity.fromJson(Map<String, dynamic> json) {
@@ -40,12 +42,19 @@ final class BriefTalentTabEntity {
           : json['OrderIndex'] == false
           ? 0
           : (json['OrderIndex'] as num?)?.toInt() ?? 0,
+      textureFilename: json['textureFilename']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode =>
-      Object.hashAll([id, nameLangZhCN, classMask, categoryEnumId, orderIndex]);
+  int get hashCode => Object.hashAll([
+    id,
+    nameLangZhCN,
+    classMask,
+    categoryEnumId,
+    orderIndex,
+    textureFilename,
+  ]);
 
   int get key => id;
 
@@ -57,7 +66,8 @@ final class BriefTalentTabEntity {
             nameLangZhCN == other.nameLangZhCN &&
             classMask == other.classMask &&
             categoryEnumId == other.categoryEnumId &&
-            orderIndex == other.orderIndex;
+            orderIndex == other.orderIndex &&
+            textureFilename == other.textureFilename;
   }
 
   @override
@@ -67,7 +77,8 @@ final class BriefTalentTabEntity {
         'nameLangZhCN: $nameLangZhCN, '
         'classMask: $classMask, '
         'categoryEnumId: $categoryEnumId, '
-        'orderIndex: $orderIndex'
+        'orderIndex: $orderIndex, '
+        'textureFilename: $textureFilename'
         ')';
   }
 }

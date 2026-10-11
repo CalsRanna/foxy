@@ -210,7 +210,10 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefAchievementEntity value) => value.titleLangZhCN,
+        cell: (BriefAchievementEntity value) => FoxyIconText(
+          iconPath: value.textureFilename,
+          name: value.titleLangZhCN,
+        ),
       ),
       FoxyEntityPickerColumn(
         header: '说明',
@@ -437,7 +440,8 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefSkillLineEntity t) => t.displayNameZhCN,
+        cell: (BriefSkillLineEntity t) =>
+            FoxyIconText(iconPath: t.textureFilename, name: t.displayNameZhCN),
       ),
       FoxyEntityPickerColumn(
         header: '分类 ID',
@@ -2814,6 +2818,13 @@ class FoxyEntityPickerDelegates {
         text: (BriefTalentEntity row) => row.id.toString(),
       ),
       FoxyEntityPickerColumn(
+        header: '法术名称',
+        cell: (BriefTalentEntity row) => FoxyIconText(
+          iconPath: row.textureFilename,
+          name: row.displaySpellName,
+        ),
+      ),
+      FoxyEntityPickerColumn(
         header: '天赋页',
         width: 120,
         text: (BriefTalentEntity row) => row.tabId.toString(),
@@ -2862,7 +2873,8 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefTalentTabEntity row) => row.nameLangZhCN,
+        cell: (BriefTalentTabEntity row) =>
+            FoxyIconText(iconPath: row.textureFilename, name: row.nameLangZhCN),
       ),
       FoxyEntityPickerColumn(
         header: '职业掩码',

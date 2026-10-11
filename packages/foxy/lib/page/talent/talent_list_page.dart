@@ -121,7 +121,10 @@ class _TalentListPageState extends State<TalentListPage> {
         FoxyTableColumn.fixed(
           label: '天赋页',
           width: 160,
-          cell: (_, item) => Text(item.displayTabName),
+          cell: (_, item) => FoxyIconText(
+            iconPath: item.tabTextureFilename,
+            name: item.displayTabName,
+          ),
         ),
         FoxyTableColumn.fixed(
           label: '层',
