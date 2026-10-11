@@ -10,6 +10,7 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -122,13 +123,16 @@ class _ReferenceLootTemplateListPageState
           label: '物品/行标识',
           cell: (context, template) {
             final qualityColor = ItemQualityColor.of(template.itemQuality);
-            return Text(
-              template.reference == 0
-                  ? (template.displayName.isEmpty
-                        ? template.item.toString()
-                        : template.displayName)
-                  : template.item.toString(),
-              style: TextStyle(color: qualityColor),
+            if (template.reference != 0 || template.displayName.isEmpty) {
+              return Text(
+                template.item.toString(),
+                style: TextStyle(color: qualityColor),
+              );
+            }
+            return FoxyIconText(
+              iconPath: template.itemIcon,
+              name: template.displayName,
+              nameColor: qualityColor,
             );
           },
         ),

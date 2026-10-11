@@ -48,6 +48,8 @@ class CurrencyTypeRepository
       'ct.BitIndex',
       'it.name as itemName',
       if (joinLocale) 'itl.Name as localeItemName',
+      'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
     ]);
     builder = builder.leftJoin(
       'item_template as it',
@@ -60,6 +62,10 @@ class CurrencyTypeRepository
       );
     }
     builder = _applyLocaleFilter(builder, filter, joinLocale: joinLocale);
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info as didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
     final rows = await builder
         .orderBy('ct.ID')
         .limit(kPageSize)

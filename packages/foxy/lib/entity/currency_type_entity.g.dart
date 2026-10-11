@@ -9,6 +9,8 @@ final class BriefCurrencyTypeEntity {
   final int bitIndex;
   final String itemName;
   final String localeItemName;
+  final int itemQuality;
+  final String itemIcon;
 
   const BriefCurrencyTypeEntity({
     this.id = 0,
@@ -17,6 +19,8 @@ final class BriefCurrencyTypeEntity {
     this.bitIndex = 0,
     this.itemName = '',
     this.localeItemName = '',
+    this.itemQuality = 0,
+    this.itemIcon = '',
   });
 
   factory BriefCurrencyTypeEntity.fromJson(Map<String, dynamic> json) {
@@ -43,6 +47,12 @@ final class BriefCurrencyTypeEntity {
           : (json['BitIndex'] as num?)?.toInt() ?? 0,
       itemName: json['itemName']?.toString() ?? '',
       localeItemName: json['localeItemName']?.toString() ?? '',
+      itemQuality: json['itemQuality'] == true
+          ? 1
+          : json['itemQuality'] == false
+          ? 0
+          : (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemIcon: json['itemIcon']?.toString() ?? '',
     );
   }
 
@@ -54,6 +64,8 @@ final class BriefCurrencyTypeEntity {
     bitIndex,
     itemName,
     localeItemName,
+    itemQuality,
+    itemIcon,
   ]);
 
   int get key => id;
@@ -67,7 +79,9 @@ final class BriefCurrencyTypeEntity {
             categoryId == other.categoryId &&
             bitIndex == other.bitIndex &&
             itemName == other.itemName &&
-            localeItemName == other.localeItemName;
+            localeItemName == other.localeItemName &&
+            itemQuality == other.itemQuality &&
+            itemIcon == other.itemIcon;
   }
 
   @override
@@ -78,7 +92,9 @@ final class BriefCurrencyTypeEntity {
         'categoryId: $categoryId, '
         'bitIndex: $bitIndex, '
         'itemName: $itemName, '
-        'localeItemName: $localeItemName'
+        'localeItemName: $localeItemName, '
+        'itemQuality: $itemQuality, '
+        'itemIcon: $itemIcon'
         ')';
   }
 }

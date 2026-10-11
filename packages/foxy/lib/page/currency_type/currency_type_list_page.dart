@@ -10,9 +10,11 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -123,7 +125,11 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
         ),
         FoxyTableColumn.flex(
           label: '名称',
-          cell: (_, item) => Text(item.displayItemName),
+          cell: (_, item) => FoxyIconText(
+            iconPath: item.itemIcon,
+            name: item.displayItemName,
+            nameColor: ItemQualityColor.of(item.itemQuality),
+          ),
         ),
         FoxyTableColumn.fixed(
           label: '分类',

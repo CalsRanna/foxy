@@ -11,6 +11,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
@@ -263,7 +264,11 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
                       ).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   )
-                : Text(loot.displayName, style: TextStyle(color: qualityColor));
+                : FoxyIconText(
+                    iconPath: loot.itemIcon,
+                    name: loot.displayName,
+                    nameColor: qualityColor,
+                  );
           },
         ),
         FoxyTableColumn.fixed(

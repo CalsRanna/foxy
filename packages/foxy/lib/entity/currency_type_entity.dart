@@ -5,6 +5,8 @@ part 'currency_type_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('itemName')
 @FoxyBriefField.text('localeItemName')
+@FoxyBriefField.integer('itemQuality')
+@FoxyBriefField.text('itemIcon')
 @FoxyFullEntity(table: 'foxy.dbc_currency_types')
 class CurrencyTypeEntity with _CurrencyTypeEntityMixin {
   @FoxyBriefField()

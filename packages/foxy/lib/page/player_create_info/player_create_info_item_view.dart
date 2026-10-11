@@ -10,11 +10,13 @@ import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/item_quality_color.dart';
 import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -118,6 +120,14 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
           label: '物品ID',
           width: 120,
           cell: (_, item) => Text(item.itemId.toString()),
+        ),
+        FoxyTableColumn.flex(
+          label: '物品名称',
+          cell: (_, item) => FoxyIconText(
+            iconPath: item.itemIcon,
+            name: item.displayName,
+            nameColor: ItemQualityColor.of(item.itemQuality),
+          ),
         ),
         FoxyTableColumn.fixed(
           label: '数量',

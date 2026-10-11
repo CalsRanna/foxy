@@ -4,6 +4,10 @@ import 'package:foxy_annotation/entity_annotations.dart';
 part 'player_create_info_item_entity.g.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('itemName')
+@FoxyBriefField.text('itemLocaleName')
+@FoxyBriefField.integer('itemQuality')
+@FoxyBriefField.text('itemIcon')
 @FoxyFullEntity(table: 'playercreateinfo_item')
 class PlayerCreateInfoItemEntity with _PlayerCreateInfoItemEntityMixin {
   @FoxyBriefField()
@@ -47,4 +51,10 @@ extension BriefPlayerCreateInfoItemEntityLabel
   /// 职业标签（战士/圣骑士/…），未知值回退为原始数字。
   String get classLabel =>
       PlayerCreateInfoConstants.playerClassOptions[class_] ?? class_.toString();
+}
+
+extension BriefPlayerCreateInfoItemEntityDisplay
+    on BriefPlayerCreateInfoItemEntity {
+  String get displayName =>
+      itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 }

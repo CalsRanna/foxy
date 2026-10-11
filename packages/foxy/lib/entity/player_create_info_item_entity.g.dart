@@ -8,6 +8,10 @@ final class BriefPlayerCreateInfoItemEntity {
   final int itemId;
   final int amount;
   final String note;
+  final String itemName;
+  final String itemLocaleName;
+  final int itemQuality;
+  final String itemIcon;
 
   const BriefPlayerCreateInfoItemEntity({
     this.race = 0,
@@ -15,6 +19,10 @@ final class BriefPlayerCreateInfoItemEntity {
     this.itemId = 0,
     this.amount = 1,
     this.note = '',
+    this.itemName = '',
+    this.itemLocaleName = '',
+    this.itemQuality = 0,
+    this.itemIcon = '',
   });
 
   factory BriefPlayerCreateInfoItemEntity.fromJson(Map<String, dynamic> json) {
@@ -40,11 +48,29 @@ final class BriefPlayerCreateInfoItemEntity {
           ? 0
           : (json['amount'] as num?)?.toInt() ?? 1,
       note: json['Note']?.toString() ?? '',
+      itemName: json['itemName']?.toString() ?? '',
+      itemLocaleName: json['itemLocaleName']?.toString() ?? '',
+      itemQuality: json['itemQuality'] == true
+          ? 1
+          : json['itemQuality'] == false
+          ? 0
+          : (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemIcon: json['itemIcon']?.toString() ?? '',
     );
   }
 
   @override
-  int get hashCode => Object.hashAll([race, class_, itemId, amount, note]);
+  int get hashCode => Object.hashAll([
+    race,
+    class_,
+    itemId,
+    amount,
+    note,
+    itemName,
+    itemLocaleName,
+    itemQuality,
+    itemIcon,
+  ]);
 
   PlayerCreateInfoItemKey get key {
     return PlayerCreateInfoItemKey(race: race, class_: class_, itemId: itemId);
@@ -58,7 +84,11 @@ final class BriefPlayerCreateInfoItemEntity {
             class_ == other.class_ &&
             itemId == other.itemId &&
             amount == other.amount &&
-            note == other.note;
+            note == other.note &&
+            itemName == other.itemName &&
+            itemLocaleName == other.itemLocaleName &&
+            itemQuality == other.itemQuality &&
+            itemIcon == other.itemIcon;
   }
 
   @override
@@ -68,7 +98,11 @@ final class BriefPlayerCreateInfoItemEntity {
         'class_: $class_, '
         'itemId: $itemId, '
         'amount: $amount, '
-        'note: $note'
+        'note: $note, '
+        'itemName: $itemName, '
+        'itemLocaleName: $itemLocaleName, '
+        'itemQuality: $itemQuality, '
+        'itemIcon: $itemIcon'
         ')';
   }
 }

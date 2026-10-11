@@ -11,6 +11,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
@@ -113,14 +114,20 @@ class _GameObjectLootTemplateViewState
               ),
               FoxyTableColumn.flex(
                 label: '物品名称',
-                cell: (_, item) => Text(
-                  item.reference != 0
-                      ? '[${item.displayName}]'
-                      : item.displayName,
-                  style: TextStyle(
-                    color: ItemQualityColor.of(item.itemQuality),
-                  ),
-                ),
+                cell: (_, item) {
+                  final qualityColor = ItemQualityColor.of(item.itemQuality);
+                  if (item.reference != 0) {
+                    return Text(
+                      '[${item.displayName}]',
+                      style: TextStyle(color: qualityColor),
+                    );
+                  }
+                  return FoxyIconText(
+                    iconPath: item.itemIcon,
+                    name: item.displayName,
+                    nameColor: qualityColor,
+                  );
+                },
               ),
               FoxyTableColumn.fixed(
                 label: '几率',

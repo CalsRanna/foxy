@@ -329,8 +329,14 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '物品名',
-            text: (BriefReferenceLootTemplateEntity t) =>
-                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
+            cell: (BriefReferenceLootTemplateEntity t) {
+              if (t.reference != 0) return Text('引用 #${t.reference}');
+              return FoxyIconText(
+                iconPath: t.itemIcon,
+                name: t.displayName,
+                nameColor: ItemQualityColor.of(t.itemQuality),
+              );
+            },
           ),
         ],
         idOf: (BriefReferenceLootTemplateEntity t) => t.entry,
@@ -1689,8 +1695,14 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '物品名',
-            text: (BriefDisenchantLootTemplateEntity row) =>
-                row.reference != 0 ? '引用 #${row.reference}' : row.displayName,
+            cell: (BriefDisenchantLootTemplateEntity row) {
+              if (row.reference != 0) return Text('引用 #${row.reference}');
+              return FoxyIconText(
+                iconPath: row.itemIcon,
+                name: row.displayName,
+                nameColor: ItemQualityColor.of(row.itemQuality),
+              );
+            },
           ),
         ],
         idOf: (BriefDisenchantLootTemplateEntity row) => row.entry,
@@ -2249,8 +2261,14 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '物品名',
-            text: (BriefCreatureLootTemplateEntity t) =>
-                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
+            cell: (BriefCreatureLootTemplateEntity t) {
+              if (t.reference != 0) return Text('引用 #${t.reference}');
+              return FoxyIconText(
+                iconPath: t.itemIcon,
+                name: t.displayName,
+                nameColor: ItemQualityColor.of(t.itemQuality),
+              );
+            },
           ),
         ],
         idOf: (BriefCreatureLootTemplateEntity t) => t.entry,
@@ -2283,8 +2301,14 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '物品名',
-            text: (BriefPickpocketingLootTemplateEntity t) =>
-                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
+            cell: (BriefPickpocketingLootTemplateEntity t) {
+              if (t.reference != 0) return Text('引用 #${t.reference}');
+              return FoxyIconText(
+                iconPath: t.itemIcon,
+                name: t.displayName,
+                nameColor: ItemQualityColor.of(t.itemQuality),
+              );
+            },
           ),
         ],
         idOf: (BriefPickpocketingLootTemplateEntity t) => t.entry,
@@ -2316,8 +2340,14 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '物品名',
-            text: (BriefSkinningLootTemplateEntity t) =>
-                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
+            cell: (BriefSkinningLootTemplateEntity t) {
+              if (t.reference != 0) return Text('引用 #${t.reference}');
+              return FoxyIconText(
+                iconPath: t.itemIcon,
+                name: t.displayName,
+                nameColor: ItemQualityColor.of(t.itemQuality),
+              );
+            },
           ),
         ],
         idOf: (BriefSkinningLootTemplateEntity t) => t.entry,
@@ -2349,8 +2379,14 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '物品名',
-            text: (BriefGameObjectLootTemplateEntity t) =>
-                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
+            cell: (BriefGameObjectLootTemplateEntity t) {
+              if (t.reference != 0) return Text('引用 #${t.reference}');
+              return FoxyIconText(
+                iconPath: t.itemIcon,
+                name: t.displayName,
+                nameColor: ItemQualityColor.of(t.itemQuality),
+              );
+            },
           ),
         ],
         idOf: (BriefGameObjectLootTemplateEntity t) => t.entry,

@@ -42,6 +42,7 @@ class NpcVendorRepository with RepositoryMixin, _NpcVendorRepositoryMixin {
       'it.name as itemName',
       if (localeEnabled) 'itl.Name as itemLocaleName',
       'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
@@ -54,6 +55,10 @@ class NpcVendorRepository with RepositoryMixin, _NpcVendorRepositoryMixin {
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info as didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
     builder = builder.where('nv.entry', entry);
     builder = builder.orderBy('nv.slot').orderBy('nv.item');
     builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);

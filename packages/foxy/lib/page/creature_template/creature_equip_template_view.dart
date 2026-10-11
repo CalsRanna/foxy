@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/item_quality_color.dart';
@@ -207,24 +208,36 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
         ),
         FoxyTableColumn.flex(
           label: '主手武器',
-          cell: (_, equip) => Text(
-            equip.displayName1,
-            style: TextStyle(color: ItemQualityColor.of(equip.quality1)),
-          ),
+          cell: (_, equip) {
+            if (equip.itemID1 == 0) return Text(equip.displayName1);
+            return FoxyIconText(
+              iconPath: equip.icon1,
+              name: equip.displayName1,
+              nameColor: ItemQualityColor.of(equip.quality1),
+            );
+          },
         ),
         FoxyTableColumn.flex(
           label: '副手武器',
-          cell: (_, equip) => Text(
-            equip.displayName2,
-            style: TextStyle(color: ItemQualityColor.of(equip.quality2)),
-          ),
+          cell: (_, equip) {
+            if (equip.itemID2 == 0) return Text(equip.displayName2);
+            return FoxyIconText(
+              iconPath: equip.icon2,
+              name: equip.displayName2,
+              nameColor: ItemQualityColor.of(equip.quality2),
+            );
+          },
         ),
         FoxyTableColumn.flex(
           label: '远程武器',
-          cell: (_, equip) => Text(
-            equip.displayName3,
-            style: TextStyle(color: ItemQualityColor.of(equip.quality3)),
-          ),
+          cell: (_, equip) {
+            if (equip.itemID3 == 0) return Text(equip.displayName3);
+            return FoxyIconText(
+              iconPath: equip.icon3,
+              name: equip.displayName3,
+              nameColor: ItemQualityColor.of(equip.quality3),
+            );
+          },
         ),
         FoxyTableColumn.fixed(
           label: '验证版本',

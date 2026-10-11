@@ -39,14 +39,42 @@ class PlayerCreateInfoItemRepository
     int class_, {
     int page = 1,
   }) async {
-    final results = await laconic
-        .table(_table)
-        .select(['race', 'class', 'itemid', 'amount', 'Note'])
-        .whereRaw('(`race` = 0 OR `race` = ?)', [race])
-        .whereRaw('(`class` = 0 OR `class` = ?)', [class_])
-        .orderBy('race')
-        .orderBy('`class`')
-        .orderBy('itemid')
+    var builder = laconic.table('$_table as pci');
+    builder = builder.select([
+      'pci.race',
+      'pci.`class`',
+      'pci.itemid',
+      'pci.amount',
+      'pci.Note',
+      'it.name as itemName',
+      if (localeEnabled) 'itl.Name as itemLocaleName',
+      'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
+    ]);
+    builder = builder.leftJoin(
+      'item_template as it',
+      (join) => join.on('pci.itemid', 'it.entry'),
+    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale as itl',
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
+      );
+    }
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info as didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = builder.whereRaw('(`pci`.`race` = 0 OR `pci`.`race` = ?)', [
+      race,
+    ]);
+    builder = builder.whereRaw('(`pci`.`class` = 0 OR `pci`.`class` = ?)', [
+      class_,
+    ]);
+    final results = await builder
+        .orderBy('pci.race')
+        .orderBy('pci.`class`')
+        .orderBy('pci.itemid')
         .limit(kPageSize)
         .offset((page - 1) * kPageSize)
         .get();

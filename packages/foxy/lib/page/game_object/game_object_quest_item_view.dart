@@ -8,6 +8,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
@@ -121,11 +122,10 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
               ),
               FoxyTableColumn.flex(
                 label: '物品名称',
-                cell: (_, item) => Text(
-                  item.displayName,
-                  style: TextStyle(
-                    color: ItemQualityColor.of(item.itemQuality),
-                  ),
+                cell: (_, item) => FoxyIconText(
+                  iconPath: item.itemIcon,
+                  name: item.displayName,
+                  nameColor: ItemQualityColor.of(item.itemQuality),
                 ),
               ),
               FoxyTableColumn.fixed(

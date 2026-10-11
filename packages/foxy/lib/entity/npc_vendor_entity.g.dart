@@ -12,6 +12,7 @@ final class BriefNpcVendorEntity {
   final String itemName;
   final String itemLocaleName;
   final int itemQuality;
+  final String itemIcon;
 
   const BriefNpcVendorEntity({
     this.entry = 0,
@@ -23,6 +24,7 @@ final class BriefNpcVendorEntity {
     this.itemName = '',
     this.itemLocaleName = '',
     this.itemQuality = 0,
+    this.itemIcon = '',
   });
 
   factory BriefNpcVendorEntity.fromJson(Map<String, dynamic> json) {
@@ -64,6 +66,7 @@ final class BriefNpcVendorEntity {
           : json['itemQuality'] == false
           ? 0
           : (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemIcon: json['itemIcon']?.toString() ?? '',
     );
   }
 
@@ -78,6 +81,7 @@ final class BriefNpcVendorEntity {
     itemName,
     itemLocaleName,
     itemQuality,
+    itemIcon,
   ]);
 
   NpcVendorKey get key {
@@ -96,7 +100,8 @@ final class BriefNpcVendorEntity {
             extendedCost == other.extendedCost &&
             itemName == other.itemName &&
             itemLocaleName == other.itemLocaleName &&
-            itemQuality == other.itemQuality;
+            itemQuality == other.itemQuality &&
+            itemIcon == other.itemIcon;
   }
 
   @override
@@ -110,7 +115,8 @@ final class BriefNpcVendorEntity {
         'extendedCost: $extendedCost, '
         'itemName: $itemName, '
         'itemLocaleName: $itemLocaleName, '
-        'itemQuality: $itemQuality'
+        'itemQuality: $itemQuality, '
+        'itemIcon: $itemIcon'
         ')';
   }
 }

@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/item_quality_color.dart';
@@ -187,9 +188,10 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
         ),
         FoxyTableColumn.flex(
           label: '物品名称',
-          cell: (_, questItem) => Text(
-            questItem.displayName,
-            style: TextStyle(color: ItemQualityColor.of(questItem.itemQuality)),
+          cell: (_, questItem) => FoxyIconText(
+            iconPath: questItem.itemIcon,
+            name: questItem.displayName,
+            nameColor: ItemQualityColor.of(questItem.itemQuality),
           ),
         ),
         FoxyTableColumn.fixed(
