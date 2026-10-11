@@ -11,6 +11,11 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
+  // Two tests below need `.dbc` and `.DBC` side by side, which a
+  // case-insensitive volume (Windows; macOS APFS by default) cannot hold, so
+  // they are skipped unless the temp filesystem really distinguishes case.
+  final caseSensitiveFs = _isCaseSensitiveFileSystem();
+
   const mysql = MysqlConfig(
     database: 'unused',
     username: 'unused',
@@ -154,43 +159,37 @@ void main() {
     expect(util.isRunning, isFalse);
   });
 
-  test(
-    'DBC 导入：扩展名大小写不敏感扫描',
-    () async {
-      final util = DbcSyncUtil();
-      final dir = await Directory.systemTemp.createTemp('foxy_import_case_');
-      addTearDown(() async {
-        if (await dir.exists()) await dir.delete(recursive: true);
-      });
+  test('DBC 导入：扩展名大小写不敏感扫描', () async {
+    final util = DbcSyncUtil();
+    final dir = await Directory.systemTemp.createTemp('foxy_import_case_');
+    addTearDown(() async {
+      if (await dir.exists()) await dir.delete(recursive: true);
+    });
 
-      final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
-      await DbcExportUtil().write(
-        definition: definition,
-        rows: [
-          {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
-        ],
-        outputDirectory: dir.path,
-      );
+    final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
+    await DbcExportUtil().write(
+      definition: definition,
+      rows: [
+        {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
+      ],
+      outputDirectory: dir.path,
+    );
 
-      final lower = File(p.join(dir.path, definition.fileName));
-      final upper = File(p.join(dir.path, 'SpellDuration.DBC'));
-      await lower.rename(upper.path);
+    final lower = File(p.join(dir.path, definition.fileName));
+    final upper = File(p.join(dir.path, 'SpellDuration.DBC'));
+    await lower.rename(upper.path);
 
-      final events = await util
-          .import(directory: dir.path, mysqlConfig: mysql)
-          .toList()
-          .timeout(const Duration(seconds: 15));
+    final events = await util
+        .import(directory: dir.path, mysqlConfig: mysql)
+        .toList()
+        .timeout(const Duration(seconds: 15));
 
-      final result = events.whereType<DbcSyncResult>().single;
-      final text = result.errors.map((e) => e.message).join('\n');
-      // DB connection only happens after a successful scan; the state must
-      // no longer be "no DBC files found".
-      expect(text, isNot(contains('未在目录中找到需要的 DBC 文件')));
-    },
-    skip: Platform.isWindows
-        ? 'Windows 文件系统大小写不敏感，无法可靠构造 .DBC 与 .dbc 差异'
-        : false,
-  );
+    final result = events.whereType<DbcSyncResult>().single;
+    final text = result.errors.map((e) => e.message).join('\n');
+    // DB connection only happens after a successful scan; the state must
+    // no longer be "no DBC files found".
+    expect(text, isNot(contains('未在目录中找到需要的 DBC 文件')));
+  }, skip: caseSensitiveFs ? false : '文件系统大小写不敏感，无法可靠构造 .DBC 与 .dbc 差异');
 
   test('DBC 导入：同一定义匹配多个文件时报错', () async {
     final util = DbcSyncUtil();
@@ -218,8 +217,26 @@ void main() {
 
     final result = events.whereType<DbcSyncResult>().single;
     expect(result.success, isFalse);
-    expect(result.errors.map((e) => e.message).join('\n'), contains('多个'));
-  }, skip: Platform.isWindows ? 'Windows 文件系统大小写不敏感，无法并存 .dbc 与 .DBC' : false);
+    expect(
+      result.errors.map((e) => e.message).join('\n'),
+      contains('multiple files match'),
+    );
+  }, skip: caseSensitiveFs ? false : '文件系统大小写不敏感，无法并存 .dbc 与 .DBC');
+}
+
+/// Whether the temp filesystem distinguishes file names by case.
+///
+/// The `.dbc`/`.DBC` tests above are only meaningful where writing
+/// `X.DBC` next to `x.dbc` yields two files; on Windows and on macOS APFS the
+/// second write lands on the first one instead.
+bool _isCaseSensitiveFileSystem() {
+  final probeDir = Directory.systemTemp.createTempSync('foxy_case_probe_');
+  try {
+    File(p.join(probeDir.path, 'probe.dbc')).writeAsStringSync('');
+    return !File(p.join(probeDir.path, 'PROBE.DBC')).existsSync();
+  } finally {
+    probeDir.deleteSync(recursive: true);
+  }
 }
 
 /// Fake DBC-export worker: registers its control port, then stays alive

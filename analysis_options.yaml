@@ -1,10 +1,13 @@
 # Workspace-root analysis options. Analyzer plugins can only be declared
 # here (at the root of the pub workspace), not in member packages.
 #
-# The plugin path uses an ABSOLUTE path because of
-# https://github.com/dart-lang/sdk/issues/61477: when member packages
-# `include` this file, relative plugin paths are resolved against the
-# including file's directory, not this one.
+# The plugin path is relative to this file: the analyzer resolves it against
+# the analysis options file that *declares* it, so the member packages can keep
+# pulling this file in via `include:` and still find the plugin
+# (https://github.com/dart-lang/sdk/issues/61477). Keep it portable — a
+# machine-specific absolute path resolves to nothing anywhere else, and the
+# failure is easy to miss: `flutter analyze` (the analyze gate in ci.yml) never
+# runs plugins, so only `dart analyze` would report the broken resolution.
 analyzer:
   exclude:
     - build/**
@@ -18,7 +21,7 @@ include: package:flutter_lints/flutter.yaml
 
 plugins:
   foxy_lint:
-    path: D:/Code/foxy/packages/foxy_lint
+    path: packages/foxy_lint
     diagnostics:
       entity_scalar_only: true
       repository_no_save: true
