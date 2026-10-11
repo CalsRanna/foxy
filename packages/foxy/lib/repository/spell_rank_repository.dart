@@ -47,7 +47,7 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
         .select([
           'sr.first_spell_id',
           'sr.spell_id',
-          'sr.`rank` as rank',
+          'sr.`rank` as `rank`',
           'fds.Name_lang_zhCN as firstSpellName',
           'fds.NameSubtext_lang_zhCN as firstSpellSubtext',
           'fdsi.TextureFilename as firstSpellTextureFilename',

@@ -49,7 +49,7 @@ class PlayerCreateInfoSkillRepository
     final classBit = PlayerCreateInfoConstants.classBit(classMask);
     final rows = await laconic
         .table(_table)
-        .select(['raceMask', 'classMask', 'skill', 'rank', 'comment'])
+        .select(['raceMask', 'classMask', 'skill', '`rank`', 'comment'])
         .whereRaw('(`raceMask` = 0 OR (`raceMask` & ?) <> 0)', [raceBit])
         .whereRaw('(`classMask` = 0 OR (`classMask` & ?) <> 0)', [classBit])
         .orderBy('raceMask')
