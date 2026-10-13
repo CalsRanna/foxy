@@ -61,10 +61,6 @@ class SpellRepository
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
-      'foxy.dbc_spell_duration as dsd',
-      (join) => join.on('ds.DurationIndex', 'dsd.ID'),
-    );
-    builder = builder.leftJoin(
       'foxy.dbc_spell_icon as dsi',
       (join) => join.on('ds.SpellIconID', 'dsi.ID'),
     );
