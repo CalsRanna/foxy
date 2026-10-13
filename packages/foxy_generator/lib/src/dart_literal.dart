@@ -32,7 +32,7 @@ String dartLiteral(Object? value, {String? asType}) {
 ///
 /// Also escapes `$`, otherwise `$` in table or column names would become
 /// string interpolation in the generated code. Remaining control characters
-/// (e.g. `\b`/`\f`) become `\x{...}` escapes so they can never leak a raw
+/// (e.g. `\b`/`\f`) become `\xHH` escapes so they can never leak a raw
 /// control byte into generated source.
 String dartStringLiteral(String value) {
   final buffer = StringBuffer("'");
@@ -50,7 +50,7 @@ String dartStringLiteral(String value) {
     } else if (rune == 0x09) {
       buffer.write(r'\t');
     } else if (rune < 0x20 || rune == 0x7f) {
-      buffer.write('\\x{${rune.toRadixString(16)}}');
+      buffer.write('\\x${rune.toRadixString(16).padLeft(2, '0')}');
     } else {
       buffer.writeCharCode(rune);
     }
