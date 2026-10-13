@@ -6,6 +6,7 @@ import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -100,24 +101,8 @@ class MpqExportUseCase {
         (throw StateError('MPQ export task ended without a result'));
   }
 
-  Future<List<DbcExportTable>> loadTables() async {
-    final tables = <DbcExportTable>[];
-    for (final definition in DbcDefinitions.all) {
-      final result = await _registry.countRows(definition.tableName);
-      tables.add(
-        DbcExportTable(
-          definition: definition,
-          recordCount: result.count,
-          countError: result.error,
-        ),
-      );
-    }
-    tables.sort(
-      (left, right) =>
-          left.definition.fileName.compareTo(right.definition.fileName),
-    );
-    return tables;
-  }
+  Future<List<DbcExportTable>> loadTables() =>
+      DbcExportShared.loadDbcExportTables(_registry);
 
   static int _parsePort(Object? value) {
     if (value is int) return value;
