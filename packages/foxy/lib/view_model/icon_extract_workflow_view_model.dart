@@ -2,7 +2,6 @@ import 'package:flutter/painting.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_summary.dart';
-import 'package:foxy/infrastructure/game_asset/blp_icon_provider.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
@@ -121,17 +120,14 @@ class IconExtractWorkflowViewModel {
         errorMessage.value = '提取已取消';
         status.value = WorkflowStatus.failed;
       } else if (nextResult.success) {
-        // The extraction rewrote the icon set on disk, so in-memory caches
-        // built from the previous state are stale: drop cached textures
-        // and, crucially, the negative-cache entries recorded for icons
-        // that were missing before extraction, so the new files show up
-        // immediately without an app restart. ImageCache.clear() only
-        // drops keep-alive entries; icons still on screen (live) are
-        // untouched. (Kept here, not in the use case: invalidating the
-        // render caches is an orchestration concern of the workflow, while
-        // the use case only manages files.)
+        // The extraction rewrote the icon set on disk, so the decoded
+        // textures built from the previous state are stale: drop them so
+        // the new files show up immediately without an app restart.
+        // ImageCache.clear() only drops keep-alive entries; icons still on
+        // screen (live) are untouched. (Kept here, not in the use case:
+        // invalidating the render cache is an orchestration concern of the
+        // workflow, while the use case only manages files.)
         PaintingBinding.instance.imageCache.clear();
-        BlpIconCache.instance.clear();
         status.value = WorkflowStatus.succeeded;
       } else {
         errorMessage.value = DbcSyncSummary.iconExtractionFailureSummary(

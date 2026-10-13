@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -29,51 +28,6 @@ class BlpIconKey {
   String toString() => 'BlpIconKey($name)';
 }
 
-/// Bounded negative cache for icon load failures (file missing or BLP
-/// corrupt/unsupported).
-///
-/// The [ImageCache] does not cache failed loads, so without this a newly
-/// visible row for a non-extracted icon would re-run `File.exists()` every
-/// time it scrolls back into view. Records are LRU-bounded (most icons are
-/// not extracted, but the total icon set is ~6300); [clear] is called after
-/// a successful extraction so newly written files are picked up.
-///
-/// Misses and decode failures share one cache: both render the same
-/// placeholder, and both are invalidated by extraction.
-class BlpIconCache {
-  static final BlpIconCache instance = BlpIconCache();
-
-  final int _maxEntries;
-
-  /// Insertion-ordered set; hits re-insert to promote to the back, and
-  /// overflow drops the front (least recently used).
-  final LinkedHashSet<String> _misses = LinkedHashSet();
-
-  BlpIconCache({int maxEntries = 2048}) : _maxEntries = maxEntries;
-
-  /// Records a failed load, evicting the least-recently-used entry when
-  /// over the bound.
-  void add(String name) {
-    _misses.remove(name);
-    _misses.add(name);
-    while (_misses.length > _maxEntries) {
-      _misses.remove(_misses.first);
-    }
-  }
-
-  bool contains(String name) {
-    if (!_misses.contains(name)) return false;
-    // Promote on hit so frequently scrolled icons stay cached longest.
-    _misses.remove(name);
-    _misses.add(name);
-    return true;
-  }
-
-  /// Empties the cache (called after icon extraction, so pre-extraction
-  /// misses are forgotten).
-  void clear() => _misses.clear();
-}
-
 /// Loads a game icon (BLP) through the Flutter [ImageCache].
 ///
 /// Input is the raw DBC icon path (e.g. `Interface\Icons\INV_Misc_Foo`);
@@ -82,25 +36,22 @@ class BlpIconCache {
 /// one-frame image. File layout and decoding are encapsulated here — the
 /// UI layer deals only with the logical icon path.
 ///
-/// Missing or corrupt files are recorded in the [BlpIconCache] negative
-/// cache and surface as a stream error (rendered by the caller's
-/// errorBuilder). Icons are extracted by the user from the client MPQs on
-/// the settings page (raw BLP format); the app ships no icons.
+/// Missing or corrupt files surface as a stream error (rendered by the
+/// caller's errorBuilder); the failed key is evicted from the [ImageCache]
+/// so a later load (e.g. after the icon is extracted) is retried. Icons
+/// are extracted by the user from the client MPQs on the settings page
+/// (raw BLP format); the app ships no icons.
 class BlpIconProvider extends ImageProvider<BlpIconKey> {
   /// Raw DBC icon path (backslashes, case-insensitive).
   final String rawPath;
-
-  /// Negative cache; injectable for tests, defaults to the app-wide one.
-  final BlpIconCache negativeCache;
 
   /// Icon directory override for tests; defaults to [GameIconPaths.iconDir].
   final String? iconDir;
 
   BlpIconProvider({
     required this.rawPath,
-    BlpIconCache? negativeCache,
     this.iconDir,
-  }) : negativeCache = negativeCache ?? BlpIconCache.instance;
+  });
 
   String _pathFor(String name) => iconDir == null
       ? GameIconPaths.blpPath(name)
@@ -116,32 +67,37 @@ class BlpIconProvider extends ImageProvider<BlpIconKey> {
 
   Future<ImageInfo> _load(BlpIconKey key) async {
     final name = key.name;
-    if (negativeCache.contains(name)) {
-      throw FileSystemException('icon previously failed to load', name);
-    }
-    final file = File(_pathFor(name));
-    if (!await file.exists()) {
-      negativeCache.add(name);
-      throw FileSystemException('icon file does not exist', file.path);
-    }
-    final bytes = await file.readAsBytes();
-    final BlpImage decoded;
     try {
-      decoded = BlpDecoder.decode(bytes);
-    } on Object {
-      // Corrupt/unsupported BLP: record and treat as missing.
-      negativeCache.add(name);
-      throw FileSystemException('failed to decode BLP', file.path);
+      final file = File(_pathFor(name));
+      if (!await file.exists()) {
+        throw FileSystemException('icon file does not exist', file.path);
+      }
+      final bytes = await file.readAsBytes();
+      final BlpImage decoded;
+      try {
+        decoded = BlpDecoder.decode(bytes);
+      } on Object {
+        // Corrupt/unsupported BLP: treat as missing.
+        throw FileSystemException('failed to decode BLP', file.path);
+      }
+      final completer = Completer<ui.Image>();
+      ui.decodeImageFromPixels(
+        decoded.rgba,
+        decoded.width,
+        decoded.height,
+        ui.PixelFormat.rgba8888,
+        completer.complete,
+      );
+      return ImageInfo(image: await completer.future, scale: 1.0);
+    } catch (_) {
+      // A failed load otherwise stays in the ImageCache's pending map and
+      // blocks any retry at the same key (e.g. after the icon is extracted).
+      // Evict it, like the built-in providers, so the next resolve reads
+      // from disk again. Safe to evict directly: _load always awaits file IO
+      // before it can fail, so the cache has already tracked the key.
+      PaintingBinding.instance.imageCache.evict(key);
+      rethrow;
     }
-    final completer = Completer<ui.Image>();
-    ui.decodeImageFromPixels(
-      decoded.rgba,
-      decoded.width,
-      decoded.height,
-      ui.PixelFormat.rgba8888,
-      completer.complete,
-    );
-    return ImageInfo(image: await completer.future, scale: 1.0);
   }
 
   @override

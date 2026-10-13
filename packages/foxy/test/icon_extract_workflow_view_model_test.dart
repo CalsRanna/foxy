@@ -14,8 +14,8 @@ import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
 void main() {
-  // The workflow invalidates the render caches (PaintingBinding /
-  // BlpIconCache) on success, which requires an initialized binding.
+  // The workflow invalidates the render cache (PaintingBinding) on
+  // success, which requires an initialized binding.
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late Directory tempDir;
@@ -82,15 +82,14 @@ void main() {
     expect(config['client_dir'], clientRoot.path);
   });
 
-  test('提取成功后清空图标缓存与负缓存', () async {
-    // 预加载一个真实图标进全局 ImageCache(keepAlive)并记录一条负缓存,
+  test('提取成功后清空图标缓存', () async {
+    // 预加载一个真实图标进全局 ImageCache(keepAlive),
     // 模拟提取前浏览过列表页的状态。
     await preloadIconIntoCache(
       'fixture_dxt1',
       p.dirname(File('test/fixture/icons/fixture_dxt1.blp').absolute.path),
     );
     expect(PaintingBinding.instance.imageCache.currentSize, greaterThan(0));
-    BlpIconCache.instance.add('pre_extraction_missing');
 
     final dataDir = Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
       ..createSync(recursive: true);
@@ -103,10 +102,9 @@ void main() {
     await _waitFor(() => vm.status.value == WorkflowStatus.succeeded);
     await startFuture;
 
-    // 提取改变了磁盘上的图标集:旧的解码缓存和提取前的负缓存必须失效,
-    // 新图标才能立即显示(无需重启)。
+    // 提取改变了磁盘上的图标集:旧的解码缓存必须失效,新图标才能立即显示
+    // (无需重启)。
     expect(PaintingBinding.instance.imageCache.currentSize, 0);
-    expect(BlpIconCache.instance.contains('pre_extraction_missing'), isFalse);
   });
 
   test('未选择目录时 start 失败并提示', () async {

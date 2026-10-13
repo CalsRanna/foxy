@@ -79,11 +79,12 @@ void main() {
   });
 
   testWidgets('缺失图标显示占位图标', (tester) async {
-    // 文件 IO 无法在 fake-async 区完成,先在真实异步区触发一次缺失路径
-    // (记录负缓存);之后 widget 的 resolve 命中负缓存,错误同步到达
-    // errorBuilder,无需 IO。
-    await tester.runAsync(() => preload('no_such_icon'));
     await tester.pumpWidget(iconApp(rawPath: 'no_such_icon'));
+    // 文件 IO 无法在 fake-async 区完成,借 runAsync 让真实异步的缺失探测跑完,
+    // 错误经 errorBuilder 显示占位图标。
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(RawImage), findsNothing);
     expect(find.byType(Icon), findsOneWidget);

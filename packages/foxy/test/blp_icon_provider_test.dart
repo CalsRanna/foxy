@@ -22,40 +22,6 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  group('BlpIconCache', () {
-    test('超限驱逐最久未记录项', () {
-      final cache = BlpIconCache(maxEntries: 3);
-      cache.add('a');
-      cache.add('b');
-      cache.add('c');
-      cache.add('d');
-      expect(cache.contains('a'), isFalse, reason: 'a 是最旧的,被驱逐');
-      expect(cache.contains('b'), isTrue);
-      expect(cache.contains('c'), isTrue);
-      expect(cache.contains('d'), isTrue);
-    });
-
-    test('命中提升 LRU 位置', () {
-      final cache = BlpIconCache(maxEntries: 3);
-      cache.add('a');
-      cache.add('b');
-      cache.add('c');
-      expect(cache.contains('a'), isTrue, reason: '命中 a 将其提升');
-      cache.add('d');
-      expect(cache.contains('a'), isTrue, reason: 'a 被提升后保住');
-      expect(cache.contains('b'), isFalse, reason: 'b 成为最旧,被驱逐');
-    });
-
-    test('clear 清空后重新记录', () {
-      final cache = BlpIconCache();
-      cache.add('a');
-      cache.clear();
-      expect(cache.contains('a'), isFalse);
-      cache.add('a');
-      expect(cache.contains('a'), isTrue);
-    });
-  });
-
   group('BlpIconProvider', () {
     test('obtainKey 归一化 rawPath', () async {
       final provider = BlpIconProvider(
@@ -77,10 +43,8 @@ void main() {
     });
 
     test('加载成功返回 64×64 图像', () async {
-      final cache = BlpIconCache();
       final provider = BlpIconProvider(
         rawPath: 'fixture_dxt1',
-        negativeCache: cache,
         iconDir: p.dirname(fixtureBlp),
       );
       final info = await loadViaStream(provider);
@@ -90,59 +54,85 @@ void main() {
       info.dispose();
     });
 
-    test('文件缺失抛错并记录负缓存', () async {
-      final cache = BlpIconCache();
+    test('文件缺失抛错,失败的 key 从 ImageCache 驱逐', () async {
+      PaintingBinding.instance.imageCache.clear();
       final provider = BlpIconProvider(
         rawPath: 'no_such_icon',
-        negativeCache: cache,
         iconDir: p.dirname(fixtureBlp),
       );
-      expect(await loadViaStream(provider), isNull);
-      expect(cache.contains('no_such_icon'), isTrue);
+      expect(await resolveViaStream(provider), isNull);
+      final key = await provider.obtainKey(const ImageConfiguration());
+      expect(
+        PaintingBinding.instance.imageCache.statusForKey(key).untracked,
+        isTrue,
+        reason: '失败的 key 不残留(否则会卡住后续重试)',
+      );
     });
 
-    test('损坏 BLP 抛错并记录负缓存', () async {
+    test('损坏 BLP 抛错,失败的 key 从 ImageCache 驱逐', () async {
+      PaintingBinding.instance.imageCache.clear();
       File(
         p.join(tempDir.path, 'broken.blp'),
       ).writeAsBytesSync(List.filled(128, 0));
-      final cache = BlpIconCache();
       final provider = BlpIconProvider(
         rawPath: 'broken',
-        negativeCache: cache,
         iconDir: tempDir.path,
       );
-      expect(await loadViaStream(provider), isNull);
-      expect(cache.contains('broken'), isTrue);
+      expect(await resolveViaStream(provider), isNull);
+      final key = await provider.obtainKey(const ImageConfiguration());
+      expect(
+        PaintingBinding.instance.imageCache.statusForKey(key).untracked,
+        isTrue,
+      );
     });
 
-    test('负缓存命中直接失败,不访问文件系统', () async {
-      // 即使文件真实存在,负缓存命中也必须短路(模拟提取前记录的缺失)。
-      final cache = BlpIconCache()..add('fixture_dxt1');
+    test('失败后文件出现,同一 key 可重新加载', () async {
+      PaintingBinding.instance.imageCache.clear();
+      // 先失败(文件不存在),此后再把文件放到位并重新 resolve:必须能加载成功,
+      // 证明失败的加载没有卡住该 key(自 evict 的意义)。
       final provider = BlpIconProvider(
-        rawPath: 'fixture_dxt1',
-        negativeCache: cache,
-        iconDir: p.dirname(fixtureBlp),
+        rawPath: 'late_icon',
+        iconDir: tempDir.path,
       );
-      expect(await loadViaStream(provider), isNull, reason: '负缓存命中直接抛错,不读文件');
+      expect(await resolveViaStream(provider), isNull);
+
+      File(
+        p.join(tempDir.path, 'late_icon.blp'),
+      ).writeAsBytesSync(File(fixtureBlp).readAsBytesSync());
+      final info = await resolveViaStream(provider);
+      expect(info, isNotNull);
+      info!.dispose();
     });
   });
 }
 
-/// 通过 ImageStream 加载,返回 ImageInfo 或 null(失败)。
+/// 通过 [ImageStream] 加载,返回 [ImageInfo] 或 null(失败)。
 Future<ImageInfo?> loadViaStream(BlpIconProvider provider) async {
   final key = await provider.obtainKey(const ImageConfiguration());
+  final stream = ImageStream()..setCompleter(provider.loadImage(key, _dummyDecode));
+  return _listen(stream);
+}
+
+/// 通过 [ImageProvider.resolve] 加载(经由 ImageCache),返回 [ImageInfo] 或 null。
+Future<ImageInfo?> resolveViaStream(BlpIconProvider provider) async {
+  final stream = provider.resolve(const ImageConfiguration());
+  return _listen(stream);
+}
+
+Future<ImageInfo?> _listen(ImageStream stream) {
   final completer = Completer<ImageInfo?>();
-  final stream = provider.loadImage(key, _dummyDecode);
-  stream.addListener(
-    ImageStreamListener(
-      (info, synchronousCall) {
-        if (!completer.isCompleted) completer.complete(info);
-      },
-      onError: (error, stackTrace) {
-        if (!completer.isCompleted) completer.complete(null);
-      },
-    ),
+  late ImageStreamListener listener;
+  listener = ImageStreamListener(
+    (info, synchronousCall) {
+      if (!completer.isCompleted) completer.complete(info);
+      stream.removeListener(listener);
+    },
+    onError: (error, stackTrace) {
+      if (!completer.isCompleted) completer.complete(null);
+      stream.removeListener(listener);
+    },
   );
+  stream.addListener(listener);
   return completer.future;
 }
 
