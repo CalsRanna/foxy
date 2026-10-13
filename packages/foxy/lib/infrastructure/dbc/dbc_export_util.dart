@@ -117,9 +117,14 @@ class DbcExportUtil {
       );
     }
 
+    final fieldByIndex = <int, Field>{
+      for (final field in definition.schema.fields) field.index: field,
+    };
     final records = <List<dynamic>>[];
     for (var index = 0; index < rows.length; index++) {
-      records.add(_rowToRecord(rows[index], definition.schema, index));
+      records.add(
+        _rowToRecord(rows[index], definition.schema, fieldByIndex, index),
+      );
     }
 
     final targetPath = p.join(outputDirectory, definition.fileName);
@@ -249,12 +254,9 @@ class DbcExportUtil {
   List<dynamic> _rowToRecord(
     Map<String, dynamic> row,
     DbcSchema schema,
+    Map<int, Field> fieldByIndex,
     int recordIndex,
   ) {
-    final fieldByIndex = <int, Field>{
-      for (final field in schema.fields) field.index: field,
-    };
-
     return List<dynamic>.generate(schema.format.length, (index) {
       final format = schema.format[index];
       final field = fieldByIndex[index];
