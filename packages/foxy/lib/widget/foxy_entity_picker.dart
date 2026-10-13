@@ -286,8 +286,10 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
     final values = _filterValues;
     final seq = ++_searchSeq;
     try {
-      final result = await widget.delegate.fetch(_page, values);
-      final count = await widget.delegate.count(values);
+      final (result, count) = await (
+        widget.delegate.fetch(_page, values),
+        widget.delegate.count(values),
+      ).wait;
       if (!mounted || seq != _searchSeq) return;
       setState(() {
         _items = result;
