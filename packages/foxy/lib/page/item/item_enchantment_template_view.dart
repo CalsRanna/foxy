@@ -91,15 +91,20 @@ class _ItemEnchantmentTemplateViewState
               Expanded(
                 child: FoxyFormItem(
                   label: '附魔ID',
-                  child: FoxyEntityPicker(
-                    delegate:
-                        viewModel.linkKey.value?.kind ==
-                            ItemEnchantmentKind.randomProperty
-                        ? FoxyEntityPickerDelegates.itemRandomProperties
-                        : FoxyEntityPickerDelegates.itemRandomSuffix,
-                    controller: viewModel.enchController,
-                    placeholder: 'Ench',
-                  ),
+                  child:
+                      viewModel.linkKey.value?.kind ==
+                          ItemEnchantmentKind.randomProperty
+                      ? FoxyEntityPicker(
+                          delegate:
+                              FoxyEntityPickerDelegates.itemRandomProperties,
+                          controller: viewModel.enchController,
+                          placeholder: 'Ench',
+                        )
+                      : FoxyEntityPicker(
+                          delegate: FoxyEntityPickerDelegates.itemRandomSuffix,
+                          controller: viewModel.enchController,
+                          placeholder: 'Ench',
+                        ),
                 ),
               ),
               Expanded(

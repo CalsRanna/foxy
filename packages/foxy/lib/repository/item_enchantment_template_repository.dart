@@ -162,23 +162,23 @@ class ItemEnchantmentTemplateRepository
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment as dsie_1',
-      (join) => join.on('random_ench.Enchantment_1', 'dsie_1.ID'),
+      (join) => join.on('random_ench.Enchantment0', 'dsie_1.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment as dsie_2',
-      (join) => join.on('random_ench.Enchantment_2', 'dsie_2.ID'),
+      (join) => join.on('random_ench.Enchantment1', 'dsie_2.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment as dsie_3',
-      (join) => join.on('random_ench.Enchantment_3', 'dsie_3.ID'),
+      (join) => join.on('random_ench.Enchantment2', 'dsie_3.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment as dsie_4',
-      (join) => join.on('random_ench.Enchantment_4', 'dsie_4.ID'),
+      (join) => join.on('random_ench.Enchantment3', 'dsie_4.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment as dsie_5',
-      (join) => join.on('random_ench.Enchantment_5', 'dsie_5.ID'),
+      (join) => join.on('random_ench.Enchantment4', 'dsie_5.ID'),
     );
     builder = builder.whereNotNull('random_ench.ID');
     return builder;
