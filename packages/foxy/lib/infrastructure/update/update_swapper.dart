@@ -8,15 +8,17 @@
 /// end, calls [UpdateSwapper.applyUpdate] to mirror-replace, then restarts
 /// the app.
 ///
-/// Two kinds of user data in the run directory must survive (see
+/// Three kinds of user data in the run directory must survive (see
 /// [preservedRelPaths]):
 /// - `config.yaml`: database connection and directory config
 ///   (`lib/infrastructure/config/config_util.dart`);
 /// - `data/icon/`: the extracted game-icon cache
-///   (`lib/infrastructure/game_asset/game_icon_paths.dart`).
+///   (`lib/infrastructure/game_asset/game_icon_paths.dart`);
+/// - `data/cover/`: the user-supplied login-page cover images
+///   (`lib/infrastructure/cover/cover_selector.dart`).
 /// Note that Flutter's own `data/flutter_assets` and `data/icudtl.dat`
-/// share `data/` with the icon cache, so only the `data/icon/` subtree can
-/// be excluded, never the whole directory.
+/// share `data/` with the icon cache, so only the `data/icon/` and
+/// `data/cover/` subtrees can be excluded, never the whole directory.
 library;
 
 import 'dart:io';
@@ -62,7 +64,11 @@ class UpdateSwapper {
   /// deleted or overwritten during an update.
   ///
   /// These are user-generated data and never appear in the release zip.
-  static const List<String> preservedRelPaths = ['config.yaml', 'data/icon'];
+  static const List<String> preservedRelPaths = [
+    'config.yaml',
+    'data/icon',
+    'data/cover',
+  ];
 
   /// Whether [relPath] hits the preserve list (itself or a subtree).
   static bool isPreserved(String relPath) {

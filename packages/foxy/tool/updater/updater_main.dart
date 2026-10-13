@@ -11,8 +11,8 @@
 /// 3. Poll-wait for the main process to exit (`--wait-pid`, up to 10
 ///    minutes; on timeout, skip the swap and restart the app directly);
 /// 4. Use [UpdateSwapper.applyUpdate] to mirror the new version onto the
-///    app directory (preserving config.yaml and data/icon/, see
-///    [UpdateSwapper.preservedRelPaths]);
+///    app directory (preserving config.yaml, data/icon/ and data/cover/,
+///    see [UpdateSwapper.preservedRelPaths]);
 /// 5. Delete the update temp directory;
 /// 6. Restart the main program with the app directory as its working
 ///    directory.

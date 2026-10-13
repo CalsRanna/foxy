@@ -33,6 +33,11 @@ void main() {
     icon1.writeAsStringSync('blp1');
     final icon2 = File(p.join(appDir.path, 'data', 'icon', 'icon2.blp'));
     icon2.writeAsStringSync('blp2');
+    final cover1 = File(p.join(appDir.path, 'data', 'cover', 'custom.jpg'));
+    cover1.parent.createSync(recursive: true);
+    cover1.writeAsStringSync('cover1');
+    final cover2 = File(p.join(appDir.path, 'data', 'cover', 'alt.png'));
+    cover2.writeAsStringSync('cover2');
 
     // New-version payload.
     File(p.join(payloadDir.path, 'foxy.exe')).writeAsStringSync('new-exe');
@@ -97,6 +102,16 @@ void main() {
       File(p.join(appDir.path, 'data', 'icon', 'icon2.blp')).readAsStringSync(),
       'blp2',
     );
+    expect(
+      File(
+        p.join(appDir.path, 'data', 'cover', 'custom.jpg'),
+      ).readAsStringSync(),
+      'cover1',
+    );
+    expect(
+      File(p.join(appDir.path, 'data', 'cover', 'alt.png')).readAsStringSync(),
+      'cover2',
+    );
   });
 
   test('isPreserved 命中自身与子树', () {
@@ -104,6 +119,9 @@ void main() {
     expect(UpdateSwapper.isPreserved('data/icon'), isTrue);
     expect(UpdateSwapper.isPreserved('data/icon/icon1.blp'), isTrue);
     expect(UpdateSwapper.isPreserved(r'data\icon\icon1.blp'), isTrue);
+    expect(UpdateSwapper.isPreserved('data/cover'), isTrue);
+    expect(UpdateSwapper.isPreserved('data/cover/custom.jpg'), isTrue);
+    expect(UpdateSwapper.isPreserved(r'data\cover\custom.jpg'), isTrue);
     expect(UpdateSwapper.isPreserved('data/flutter_assets/a.png'), isFalse);
     expect(UpdateSwapper.isPreserved('foxy.exe'), isFalse);
     expect(UpdateSwapper.isPreserved('data/icon_extra'), isFalse);
