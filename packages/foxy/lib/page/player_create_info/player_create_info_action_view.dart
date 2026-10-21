@@ -121,6 +121,12 @@ class _PlayerCreateInfoActionViewState
   Widget _buildDialog(BuildContext dialogContext, {required bool isEditing}) {
     return FoxyFormDialog(
       title: isEditing ? '编辑动作' : '新增动作',
+      actions: FoxyFormDialog.saveActions(
+        context: dialogContext,
+        submitting: viewModel.submitting,
+        onSubmit: viewModel.persist,
+        editing: isEditing,
+      ),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: DialogUtil.width),
         child: Column(
@@ -182,35 +188,6 @@ class _PlayerCreateInfoActionViewState
                   ),
                 ),
                 const Expanded(child: SizedBox()),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                ShadButton.outline(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  child: Text('取消'),
-                ),
-                Watch(
-                  (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () async {
-                      try {
-                        await viewModel.persist();
-                      } catch (error) {
-                        if (!mounted) return;
-                        DialogUtil.instance.error(
-                          '保存失败：${FoxyExceptions.message(error)}',
-                        );
-                        return;
-                      }
-                      if (!dialogContext.mounted) return;
-                      DialogUtil.instance.success('保存成功');
-                      Navigator.of(dialogContext).pop();
-                    },
-                    child: Text(isEditing ? '更新' : '保存'),
-                  ),
-                ),
               ],
             ),
           ],
@@ -316,7 +293,8 @@ class _PlayerCreateInfoActionViewState
   void _showDialog({required bool isEditing}) {
     DialogUtil.show(
       context: context,
-      builder: (c) => _buildDialog(c, isEditing: isEditing),
+      builder: (dialogContext) =>
+          _buildDialog(dialogContext, isEditing: isEditing),
     );
   }
 }

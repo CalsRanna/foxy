@@ -320,7 +320,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
         if (exporting) {
           // While a task is in flight, block every way out (Esc, back
           // gesture): closing the dialog mid-run would leave the task
-          // running in the background with no visible state.
+          // running in the background with no visible state. Cancel (the
+          // only exit shown here) is in-dialog.
           return PopScope(
             canPop: false,
             child: SettingDialogShell(
@@ -333,6 +334,17 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                 ratio: _vm.progress.value,
                 label: _vm.progressLabel.value,
                 detail: _vm.progressDetail.value,
+                trailing: ShadButton.outline(
+                  size: ShadButtonSize.sm,
+                  onPressed: workflowStatus == WorkflowStatus.cancelling
+                      ? null
+                      : _vm.cancel,
+                  child: Text(
+                    workflowStatus == WorkflowStatus.cancelling
+                        ? '正在取消…'
+                        : '取消导出',
+                  ),
+                ),
               ),
             ),
           );

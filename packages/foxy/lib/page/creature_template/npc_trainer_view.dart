@@ -58,9 +58,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
   }
 
   /// Dialog form (vertical layout)
-  Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.editingKey.value != null;
-
+  Widget _buildDialogForm() {
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
@@ -190,37 +188,6 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
               ),
               const Expanded(child: SizedBox()),
               const Expanded(child: SizedBox()),
-            ],
-          ),
-          SizedBox(height: 24),
-          // Button row
-          Row(
-            spacing: 8,
-            children: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: Text('取消'),
-              ),
-              Watch(
-                (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () async {
-                    try {
-                      await viewModel.persist();
-                    } catch (error) {
-                      if (!mounted) return;
-                      DialogUtil.instance.error(
-                        '保存失败：${FoxyExceptions.message(error)}',
-                      );
-                      return;
-                    }
-                    if (!dialogContext.mounted) return;
-                    DialogUtil.instance.success('保存成功');
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(isEditing ? '更新' : '保存'),
-                ),
-              ),
             ],
           ),
         ],
@@ -392,7 +359,12 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       builder: (dialogContext) => FoxyFormDialog(
         title: '新增训练师技能',
         description: '新增一条训练师技能记录',
-        child: _buildDialogForm(dialogContext),
+        actions: FoxyFormDialog.saveActions(
+          context: dialogContext,
+          submitting: viewModel.submitting,
+          onSubmit: viewModel.persist,
+        ),
+        child: _buildDialogForm(),
       ),
     );
   }
@@ -404,7 +376,13 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       builder: (dialogContext) => FoxyFormDialog(
         title: '编辑训练师技能',
         description: '编辑选中的训练师技能记录',
-        child: _buildDialogForm(dialogContext),
+        actions: FoxyFormDialog.saveActions(
+          context: dialogContext,
+          submitting: viewModel.submitting,
+          onSubmit: viewModel.persist,
+          editing: true,
+        ),
+        child: _buildDialogForm(),
       ),
     );
   }

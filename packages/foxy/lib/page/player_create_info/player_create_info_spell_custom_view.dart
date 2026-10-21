@@ -202,6 +202,12 @@ class _PlayerCreateInfoSpellCustomViewState
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: isEditing ? '编辑自定义法术' : '新增自定义法术',
+        actions: FoxyFormDialog.saveActions(
+          context: dialogContext,
+          submitting: viewModel.submitting,
+          onSubmit: viewModel.persist,
+          editing: isEditing,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
@@ -257,35 +263,6 @@ class _PlayerCreateInfoSpellCustomViewState
                 ),
                 const Expanded(child: SizedBox()),
                 const Expanded(child: SizedBox()),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                ShadButton.outline(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  child: const Text('取消'),
-                ),
-                Watch(
-                  (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () async {
-                      try {
-                        await viewModel.persist();
-                      } catch (error) {
-                        if (!mounted) return;
-                        DialogUtil.instance.error(
-                          '保存失败：${FoxyExceptions.message(error)}',
-                        );
-                        return;
-                      }
-                      if (!dialogContext.mounted) return;
-                      DialogUtil.instance.success('保存成功');
-                      Navigator.of(dialogContext).pop();
-                    },
-                    child: Text(isEditing ? '更新' : '保存'),
-                  ),
-                ),
               ],
             ),
           ],

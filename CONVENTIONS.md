@@ -64,6 +64,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 - UI 一致性约定（audit 2026-08 后确立）：
   - **错误提示一律阻塞模态**：`DialogUtil.instance.error('失败类型：${FoxyExceptions.message(error)}')`（标题"错误"，需手动确认）；禁止非阻塞错误 toast 或对话框内联错误。成功提示才用 `DialogUtil.instance.success(...)`（唯一 toast 入口，全库禁止裸 `ShadSonner.of`）。
   - 统一外壳：`FoxyFormDialog`（子表增删改对话框）、`FoxyLoadingIndicator`（加载态）、`DialogUtil.width`（对话框宽度唯一来源）。
+  - **对话框 footer**：按钮一律放 `ShadDialog.actions`（`FoxyFormDialog` 的 `actions:` 参数），不要写在 `child` 末尾——后者会随内容滚动、长表单要滚到底才看得见。子表增删改用 `FoxyFormDialog.saveActions(...)`：取消在左、主操作在右，保存失败走阻塞错误模态、成功 toast 后关闭；不要在 view 里自己拼 try/catch/pop。文案：新增态「保存」、编辑态「更新」；进行中态禁用主按钮并在面板里给出「取消 XX」。`test/foxy_form_dialog_test.dart` 会递归检查 `lib/page` 拦回退。
   - **间距**：新代码统一用 Row/Column 的 `spacing:` 参数；`SizedBox` 只做固定尺寸，不做元素间距。
   - **空态文案**：列表/表格统一"暂无数据"（`FoxyDataTable` 内置）；其他场景按语境自定，不必强行统一。
   - **控件映射**：数字 → `FoxyNumberInput`；文本 → `FoxyStringInput`；可空 → `FoxyNullableStringInput`；枚举 → `FoxyShadSelect`（placeholder 传字符串）；位标志 → `FoxyFlagPicker`；引用 → `FoxyEntityPicker`；本地化 → `FoxyLocalePicker`。placeholder 一律英文列名。

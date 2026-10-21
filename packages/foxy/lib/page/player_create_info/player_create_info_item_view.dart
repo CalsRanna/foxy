@@ -205,6 +205,12 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: isEditing ? '编辑起始物品' : '新增起始物品',
+        actions: FoxyFormDialog.saveActions(
+          context: dialogContext,
+          submitting: viewModel.submitting,
+          onSubmit: viewModel.persist,
+          editing: isEditing,
+        ),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: DialogUtil.width),
           child: Column(
@@ -268,35 +274,6 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                     ),
                   ),
                   const Expanded(child: SizedBox()),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  ShadButton.outline(
-                    onPressed: () => Navigator.of(dialogContext).pop(),
-                    child: const Text('取消'),
-                  ),
-                  Watch(
-                    (_) => ShadButton(
-                      enabled: !viewModel.submitting.value,
-                      onPressed: () async {
-                        try {
-                          await viewModel.persist();
-                        } catch (error) {
-                          if (!mounted) return;
-                          DialogUtil.instance.error(
-                            '保存失败：${FoxyExceptions.message(error)}',
-                          );
-                          return;
-                        }
-                        if (!dialogContext.mounted) return;
-                        DialogUtil.instance.success('保存成功');
-                        Navigator.of(dialogContext).pop();
-                      },
-                      child: Text(isEditing ? '更新' : '保存'),
-                    ),
-                  ),
                 ],
               ),
             ],

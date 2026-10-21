@@ -204,6 +204,12 @@ class _PlayerCreateInfoCastSpellViewState
       context: context,
       builder: (dialogContext) => FoxyFormDialog(
         title: title,
+        actions: FoxyFormDialog.saveActions(
+          context: dialogContext,
+          submitting: viewModel.submitting,
+          onSubmit: viewModel.persist,
+          editing: viewModel.editingKey.value != null,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
@@ -259,35 +265,6 @@ class _PlayerCreateInfoCastSpellViewState
                 ),
                 const Expanded(child: SizedBox()),
                 const Expanded(child: SizedBox()),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                ShadButton.outline(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  child: const Text('取消'),
-                ),
-                Watch(
-                  (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () async {
-                      try {
-                        await viewModel.persist();
-                      } catch (error) {
-                        if (!mounted) return;
-                        DialogUtil.instance.error(
-                          '保存失败：${FoxyExceptions.message(error)}',
-                        );
-                        return;
-                      }
-                      if (!dialogContext.mounted) return;
-                      DialogUtil.instance.success('保存成功');
-                      Navigator.of(dialogContext).pop();
-                    },
-                    child: const Text('保存'),
-                  ),
-                ),
               ],
             ),
           ],
