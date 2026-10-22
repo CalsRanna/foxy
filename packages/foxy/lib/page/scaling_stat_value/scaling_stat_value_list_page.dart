@@ -34,7 +34,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
     final children = [
       FoxyHeader('缩放属性值列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -35,7 +35,7 @@ class _QuestFactionRewardListPageState
     final children = [
       FoxyHeader('任务声望列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

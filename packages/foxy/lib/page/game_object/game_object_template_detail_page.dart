@@ -34,42 +34,44 @@ class _GameObjectTemplateDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      final entry = key;
-      const tabs = [Text('游戏对象模板'), Text('模板补充'), Text('任务物品'), Text('物品掉落')];
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: FoxyHeader('游戏对象详情'),
-          ),
-          FoxyTab(
-            tabs: tabs,
-            contents: [
-              GameObjectTemplateView(viewModel: viewModel),
-              GameObjectTemplateAddonView(
-                key: ValueKey('addon-$entry'),
-                gameObjectId: entry ?? 0,
-              ),
-              GameObjectQuestItemView(
-                key: ValueKey('quest-item-$entry'),
-                gameObjectId: entry ?? 0,
-              ),
-              GameObjectLootTemplateView(
-                key: ValueKey('loot-$entry'),
-                linkKey: entry ?? 0,
-              ),
-            ],
-            disabledIndexes: GameObjectTemplateDetailPage.disabledTabIndexes(
-              key,
-              tabs.length,
+    return SignalBuilder(
+      builder: (_) {
+        final key = viewModel.persistedKey.value;
+        final entry = key;
+        const tabs = [Text('游戏对象模板'), Text('模板补充'), Text('任务物品'), Text('物品掉落')];
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: FoxyHeader('游戏对象详情'),
             ),
-          ),
-        ],
-      );
-    });
+            FoxyTab(
+              tabs: tabs,
+              contents: [
+                GameObjectTemplateView(viewModel: viewModel),
+                GameObjectTemplateAddonView(
+                  key: ValueKey('addon-$entry'),
+                  gameObjectId: entry ?? 0,
+                ),
+                GameObjectQuestItemView(
+                  key: ValueKey('quest-item-$entry'),
+                  gameObjectId: entry ?? 0,
+                ),
+                GameObjectLootTemplateView(
+                  key: ValueKey('loot-$entry'),
+                  linkKey: entry ?? 0,
+                ),
+              ],
+              disabledIndexes: GameObjectTemplateDetailPage.disabledTabIndexes(
+                key,
+                tabs.length,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

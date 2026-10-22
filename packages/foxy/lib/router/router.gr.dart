@@ -9,6 +9,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+
 import 'package:auto_route/auto_route.dart' as _i60;
 import 'package:flutter/material.dart' as _i61;
 import 'package:foxy/entity/condition_entity.dart' as _i62;

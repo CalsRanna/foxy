@@ -95,7 +95,7 @@ final class EntityReader {
     };
     final fields = <EntityFieldModel>[];
     for (final field in classElement.fields.where(
-      (field) => !field.isStatic && !field.isSynthetic,
+      (field) => !field.isStatic && field.isOriginDeclaration,
     )) {
       fields.add(_readField(classElement, field, parameters));
     }

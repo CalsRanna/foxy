@@ -37,14 +37,11 @@ final class SaveNpcTextUseCase {
   final NpcTextLocaleRepository _localeRepository;
   final ActivityLogService _activityLogService;
   SaveNpcTextUseCase({
-    required DatabaseTransaction transaction,
-    required NpcTextRepository npcTextRepository,
-    required NpcTextLocaleRepository localeRepository,
-    required ActivityLogService activityLogService,
-  }) : _transaction = transaction,
-       _npcTextRepository = npcTextRepository,
-       _localeRepository = localeRepository,
-       _activityLogService = activityLogService;
+    required this._transaction,
+    required this._npcTextRepository,
+    required this._localeRepository,
+    required this._activityLogService,
+  });
 
   Future<SaveNpcTextResult> execute(SaveNpcTextInput input) async {
     final candidate = input.candidate;

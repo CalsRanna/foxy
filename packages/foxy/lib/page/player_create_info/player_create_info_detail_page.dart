@@ -36,53 +36,58 @@ class _PlayerCreateInfoDetailPageState
   final viewModel = GetIt.instance.get<PlayerCreateInfoDetailViewModel>();
 
   @override
-  Widget build(BuildContext context) => Watch((_) {
-    final key = viewModel.persistedKey.value;
-    const tabs = [
-      Text('出生信息'),
-      Text('动作按钮'),
-      Text('起始物品'),
-      Text('初始技能'),
-      Text('自定义法术'),
-      Text('登录施法'),
-    ];
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: FoxyHeader('出生信息详情'),
-        ),
-        FoxyTab(
-          tabs: tabs,
-          contents: [
-            PlayerCreateInfoView(viewModel: viewModel),
-            PlayerCreateInfoActionView(
-              race: key?.race,
-              playerClass: key?.class_,
-            ),
-            PlayerCreateInfoItemView(race: key?.race, playerClass: key?.class_),
-            PlayerCreateInfoSkillView(
-              race: key?.race,
-              playerClass: key?.class_,
-            ),
-            PlayerCreateInfoSpellCustomView(
-              race: key?.race,
-              playerClass: key?.class_,
-            ),
-            PlayerCreateInfoCastSpellView(
-              race: key?.race,
-              playerClass: key?.class_,
-            ),
-          ],
-          disabledIndexes: PlayerCreateInfoDetailPage.disabledTabIndexes(
-            key,
-            tabs.length,
+  Widget build(BuildContext context) => SignalBuilder(
+    builder: (_) {
+      final key = viewModel.persistedKey.value;
+      const tabs = [
+        Text('出生信息'),
+        Text('动作按钮'),
+        Text('起始物品'),
+        Text('初始技能'),
+        Text('自定义法术'),
+        Text('登录施法'),
+      ];
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: FoxyHeader('出生信息详情'),
           ),
-        ),
-      ],
-    );
-  });
+          FoxyTab(
+            tabs: tabs,
+            contents: [
+              PlayerCreateInfoView(viewModel: viewModel),
+              PlayerCreateInfoActionView(
+                race: key?.race,
+                playerClass: key?.class_,
+              ),
+              PlayerCreateInfoItemView(
+                race: key?.race,
+                playerClass: key?.class_,
+              ),
+              PlayerCreateInfoSkillView(
+                race: key?.race,
+                playerClass: key?.class_,
+              ),
+              PlayerCreateInfoSpellCustomView(
+                race: key?.race,
+                playerClass: key?.class_,
+              ),
+              PlayerCreateInfoCastSpellView(
+                race: key?.race,
+                playerClass: key?.class_,
+              ),
+            ],
+            disabledIndexes: PlayerCreateInfoDetailPage.disabledTabIndexes(
+              key,
+              tabs.length,
+            ),
+          ),
+        ],
+      );
+    },
+  );
 
   @override
   void dispose() {

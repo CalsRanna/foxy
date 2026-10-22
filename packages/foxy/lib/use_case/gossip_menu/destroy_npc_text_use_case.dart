@@ -19,14 +19,11 @@ final class DestroyNpcTextUseCase {
   final NpcTextLocaleRepository _localeRepository;
   final ActivityLogService _activityLogService;
   DestroyNpcTextUseCase({
-    required DatabaseTransaction transaction,
-    required NpcTextRepository npcTextRepository,
-    required NpcTextLocaleRepository localeRepository,
-    required ActivityLogService activityLogService,
-  }) : _transaction = transaction,
-       _npcTextRepository = npcTextRepository,
-       _localeRepository = localeRepository,
-       _activityLogService = activityLogService;
+    required this._transaction,
+    required this._npcTextRepository,
+    required this._localeRepository,
+    required this._activityLogService,
+  });
 
   Future<void> execute(DestroyNpcTextInput input) async {
     await _transaction.execute(() async {

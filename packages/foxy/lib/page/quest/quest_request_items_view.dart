@@ -83,8 +83,8 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
           Expanded(
             child: FoxyFormItem(
               label: '完成文本',
-              child: Watch(
-                (_) => FoxyLocalePicker(
+              child: SignalBuilder(
+                builder: (_) => FoxyLocalePicker(
                   entry: vm.editingKey.value,
                   controller: vm.completionTextController,
                   delegate: FoxyLocalePickerDelegates.questRequestItems,
@@ -99,8 +99,8 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
       ),
     ];
 
-    return Watch(
-      (_) => SingleChildScrollView(
+    return SignalBuilder(
+      builder: (_) => SingleChildScrollView(
         padding: const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,8 +113,8 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
             Row(
               spacing: 8,
               children: [
-                Watch(
-                  (_) => ShadButton(
+                SignalBuilder(
+                  builder: (_) => ShadButton(
                     enabled: !viewModel.submitting.value,
                     onPressed: () => _persist(),
                     child: Text('保存'),

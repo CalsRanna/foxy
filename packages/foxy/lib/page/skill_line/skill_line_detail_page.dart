@@ -32,21 +32,23 @@ class _SkillLineDetailPageState extends State<SkillLineDetailPage> {
           padding: const EdgeInsets.only(bottom: 12),
           child: FoxyHeader('专业技能详情'),
         ),
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          final skillLineId = key ?? 0;
-          return FoxyTab(
-            tabs: const [Text('基本信息'), Text('技能能力')],
-            contents: [
-              SkillLineView(viewModel: viewModel),
-              SkillLineAbilityView(
-                key: ValueKey('ability-$skillLineId'),
-                skillLineId: skillLineId,
-              ),
-            ],
-            disabledIndexes: key == null ? const {1} : const {},
-          );
-        }),
+        SignalBuilder(
+          builder: (_) {
+            final key = viewModel.persistedKey.value;
+            final skillLineId = key ?? 0;
+            return FoxyTab(
+              tabs: const [Text('基本信息'), Text('技能能力')],
+              contents: [
+                SkillLineView(viewModel: viewModel),
+                SkillLineAbilityView(
+                  key: ValueKey('ability-$skillLineId'),
+                  skillLineId: skillLineId,
+                ),
+              ],
+              disabledIndexes: key == null ? const {1} : const {},
+            );
+          },
+        ),
       ],
     );
   }

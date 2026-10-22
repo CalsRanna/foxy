@@ -111,7 +111,7 @@ final class SourceShape {
   /// whether the *hand-written class* declares the member (e.g. to require
   /// a query-method override or to reject a hand-written `_table`).
   bool declaresMember(ClassDeclaration cls, String memberName) {
-    for (final member in cls.members) {
+    for (final member in cls.body.members) {
       switch (member) {
         case MethodDeclaration():
           if (member.name.lexeme == memberName) return true;
@@ -128,7 +128,7 @@ final class SourceShape {
 
   /// The constructor named [ctorName] declared on [cls], or null.
   ConstructorDeclaration? constructor(ClassDeclaration cls, String ctorName) {
-    for (final member in cls.members) {
+    for (final member in cls.body.members) {
       if (member is ConstructorDeclaration && member.name?.lexeme == ctorName) {
         return member;
       }

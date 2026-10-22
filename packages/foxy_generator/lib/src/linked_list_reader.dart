@@ -85,9 +85,9 @@ final class LinkedListReader {
         'Bind to a generated Repository.',
       );
     }
-    final linkKeyValues = ConstantReader(
-      repositoryAnnotations.single,
-    ).read('linkKey').listValue;
+    final linkKeyValues = ConstantReader(repositoryAnnotations.single)
+        .read('linkKey')
+        .listValue;
     if (linkKeyValues.length != 1) {
       _fail(
         "$repositoryClassName's @FoxyRepository must declare exactly one "
@@ -107,7 +107,7 @@ final class LinkedListReader {
     final keyFieldNames = <String>[];
     String? linkFieldType;
     for (final field in entityElement.fields.where(
-      (field) => !field.isStatic && !field.isSynthetic,
+      (field) => !field.isStatic && field.isOriginDeclaration,
     )) {
       final annotations = _fullFieldChecker.annotationsOf(field).toList();
       if (annotations.length != 1) continue;

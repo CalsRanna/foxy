@@ -33,7 +33,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
     final children = [
       FoxyHeader('对话列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

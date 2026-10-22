@@ -114,7 +114,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
   Widget _buildInformationPanel() {
     var column = Column(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [Watch((_) => Text(viewModel.version.value))],
+      children: [SignalBuilder(builder: (_) => Text(viewModel.version.value))],
     );
     return Container(
       color: Theme.of(context).colorScheme.surface,
@@ -126,8 +126,8 @@ class _BootstrapPageState extends State<BootstrapPage> {
   }
 
   Widget _buildWorkspacePanel() {
-    return Watch(
-      (_) => BootstrapSimulatorForm(
+    return SignalBuilder(
+      builder: (_) => BootstrapSimulatorForm(
         key: const ValueKey('form'),
         hostController: viewModel.hostController,
         portController: viewModel.portController,

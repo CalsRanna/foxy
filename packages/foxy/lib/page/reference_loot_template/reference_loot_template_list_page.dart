@@ -37,7 +37,7 @@ class _ReferenceLootTemplateListPageState
     final children = [
       FoxyHeader('关联掉落列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

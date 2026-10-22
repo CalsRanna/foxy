@@ -36,7 +36,7 @@ class _SpellItemEnchantmentListPageState
     final children = [
       FoxyHeader('法术附魔列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

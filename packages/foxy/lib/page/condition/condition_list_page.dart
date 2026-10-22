@@ -38,7 +38,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
         children: [
           FoxyHeader('条件列表'),
           _buildFilter(),
-          Expanded(child: Watch((_) => _buildTable())),
+          Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
         ],
       ),
     );

@@ -3,15 +3,14 @@ description: "Foxy 代码生成器 — 读取 foxy_annotation 注解,生成 Enti
 publish_to: none
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.13.0
 
 resolution: workspace
 
 dependencies:
-  # 10.2.0: Flutter 3.44.9 的依赖 pin(meta 1.18.0 / test_api 0.7.11)限定了
-  # 链路上限;auto_route_generator 10.5.0 要求 analyzer <11,test 1.31.0 要求
-  # <13,meta 要求 13.1 以下,三者交集的上限是 10.2.0。
-  analyzer: ^10.2.0
+  # 13.3.0: auto_route_generator 10.6.0 与 test 1.31.1 都要求 analyzer <14,
+  # 13.3.0 是满足该上限的最新 analyzer 版本。
+  analyzer: ^13.3.0
   build: ^4.0.7
   foxy_annotation:
     path: ../foxy_annotation

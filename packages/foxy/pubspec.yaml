@@ -4,7 +4,7 @@ publish_to: "none"
 version: 1.2.7+808
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.13.0
 
 resolution: workspace
 
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   archive: ^4.0.9
-  # 11.x: auto_route_generator 10.6.0(支持 analyzer 12)要求 auto_route ^11.1.0。
+  # 11.x: auto_route_generator 10.6.0 要求 auto_route ^11.1.0。
   auto_route: ^11.1.0
   collection: ^1.19.1
   crypto: ^3.0.7
@@ -22,18 +22,19 @@ dependencies:
     path: ../foxy_annotation
   get_it: ^9.0.5
   http: ^1.6.0
-  laconic: ^4.1.0
-  laconic_mysql: ^3.4.0
+  laconic: ^5.0.1
+  laconic_mysql: ^4.0.1
   logger: ^2.4.0
+  # 3.x: shadcn_ui 0.57.3 依赖 lucide_icons_flutter ^3.0.0,4.x 无法解析。
   lucide_icons_flutter: ^3.1.14
   meta: ^1.17.0
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.2.2
   path: ^1.9.1
   pub_semver: ^2.2.0
-  shadcn_ui: ^0.55.0
+  shadcn_ui: ^0.57.3
   shared_preferences: ^2.3.5
-  signals: ^6.0.2
-  signals_flutter: ^6.0.2
+  signals: ^7.1.0
+  signals_flutter: ^7.1.0
   url_launcher: ^6.3.1
   window_manager: ^0.5.1
   yaml: ^3.1.3

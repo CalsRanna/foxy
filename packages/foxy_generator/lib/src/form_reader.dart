@@ -299,7 +299,7 @@ final class FormReader {
   ) {
     final keyFields = <(String, String)>[];
     for (final field in entityElement.fields.where(
-      (field) => !field.isStatic && !field.isSynthetic,
+      (field) => !field.isStatic && field.isOriginDeclaration,
     )) {
       final annotations = _fullFieldChecker.annotationsOf(field).toList();
       if (annotations.length != 1) continue;

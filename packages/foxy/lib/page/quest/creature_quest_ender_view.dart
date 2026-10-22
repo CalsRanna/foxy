@@ -29,9 +29,11 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+    return SignalBuilder(
+      builder: (context) {
+        return _buildTable();
+      },
+    );
   }
 
   @override
@@ -54,7 +56,8 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
     viewModel.initSignals(linkKey: widget.questId);
   }
 
-  Widget _buildDialogForm() {    return ConstrainedBox(
+  Widget _buildDialogForm() {
+    return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
         mainAxisSize: MainAxisSize.min,

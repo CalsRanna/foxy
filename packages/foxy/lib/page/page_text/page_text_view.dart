@@ -30,8 +30,8 @@ class PageTextView extends StatelessWidget {
     );
     final textInput = FoxyFormItem(
       label: '文本',
-      child: Watch(
-        (_) => FoxyLocalePicker(
+      child: SignalBuilder(
+        builder: (_) => FoxyLocalePicker(
           entry: viewModel.persistedKey.value,
           controller: viewModel.textController,
           delegate: FoxyLocalePickerDelegates.pageTextText,
@@ -79,8 +79,8 @@ class PageTextView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: Text('保存'),

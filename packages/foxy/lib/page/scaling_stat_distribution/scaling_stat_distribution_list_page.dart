@@ -37,7 +37,7 @@ class _ScalingStatDistributionListPageState
     final children = [
       FoxyHeader('属性缩放分布列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,9 +165,9 @@ class _ScalingStatDistributionListPageState
 
   /// Badge 内部的固定文本样式（shadcn Badge 实现为 small + 12px + w600）。
   /// 宽度测量必须与渲染完全一致——加粗会影响字形宽度。
-  TextStyle _badgeTextStyle(BuildContext context) => ShadTheme.of(
-    context,
-  ).textTheme.small.copyWith(fontSize: 12, fontWeight: FontWeight.w600);
+  TextStyle _badgeTextStyle(BuildContext context) =>
+      ShadTheme.of(context).textTheme.small
+          .copyWith(fontSize: 12, fontWeight: FontWeight.w600);
 
   /// 属性分布列：每个有效属性一个 Badge，按列实际宽度实时计算可容纳
   /// 数量，超出部分合并为 `+N`。

@@ -41,8 +41,8 @@ class _PlayerCreateInfoSpellCustomViewState
       .get<PlayerCreateInfoSpellCustomLinkedListViewModel>();
 
   @override
-  Widget build(BuildContext context) => Watch(
-    (_) => Padding(
+  Widget build(BuildContext context) => SignalBuilder(
+    builder: (_) => Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Column(
         spacing: 16,

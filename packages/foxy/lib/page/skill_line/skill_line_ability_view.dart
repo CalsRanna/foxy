@@ -35,9 +35,11 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+    return SignalBuilder(
+      builder: (context) {
+        return _buildTable();
+      },
+    );
   }
 
   @override

@@ -44,61 +44,63 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
           padding: const EdgeInsets.only(bottom: 12),
           child: FoxyHeader('任务详情'),
         ),
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          final questId = key ?? 0;
-          const tabs = [
-            Text('任务模板'),
-            Text('模板补充'),
-            Text('提交物品'),
-            Text('发放奖励'),
-            Text('开始生物'),
-            Text('结束生物'),
-            Text('开始物体'),
-            Text('结束物体'),
-          ];
-          return FoxyTab(
-            tabs: tabs,
-            contents: [
-              QuestTemplateView(
-                key: ValueKey('main-$key'),
-                viewModel: viewModel,
+        SignalBuilder(
+          builder: (_) {
+            final key = viewModel.persistedKey.value;
+            final questId = key ?? 0;
+            const tabs = [
+              Text('任务模板'),
+              Text('模板补充'),
+              Text('提交物品'),
+              Text('发放奖励'),
+              Text('开始生物'),
+              Text('结束生物'),
+              Text('开始物体'),
+              Text('结束物体'),
+            ];
+            return FoxyTab(
+              tabs: tabs,
+              contents: [
+                QuestTemplateView(
+                  key: ValueKey('main-$key'),
+                  viewModel: viewModel,
+                ),
+                QuestTemplateAddonView(
+                  key: ValueKey('addon-$questId'),
+                  questId: questId,
+                ),
+                QuestRequestItemsView(
+                  key: ValueKey('request-$questId'),
+                  questId: questId,
+                ),
+                QuestOfferRewardView(
+                  key: ValueKey('reward-$questId'),
+                  questId: questId,
+                ),
+                CreatureQuestStarterView(
+                  key: ValueKey('creature-start-$questId'),
+                  questId: questId,
+                ),
+                CreatureQuestEnderView(
+                  key: ValueKey('creature-end-$questId'),
+                  questId: questId,
+                ),
+                GameObjectQuestStarterView(
+                  key: ValueKey('gameobject-start-$questId'),
+                  questId: questId,
+                ),
+                GameObjectQuestEnderView(
+                  key: ValueKey('gameobject-end-$questId'),
+                  questId: questId,
+                ),
+              ],
+              disabledIndexes: QuestTemplateDetailPage.disabledTabIndexes(
+                key,
+                tabs.length,
               ),
-              QuestTemplateAddonView(
-                key: ValueKey('addon-$questId'),
-                questId: questId,
-              ),
-              QuestRequestItemsView(
-                key: ValueKey('request-$questId'),
-                questId: questId,
-              ),
-              QuestOfferRewardView(
-                key: ValueKey('reward-$questId'),
-                questId: questId,
-              ),
-              CreatureQuestStarterView(
-                key: ValueKey('creature-start-$questId'),
-                questId: questId,
-              ),
-              CreatureQuestEnderView(
-                key: ValueKey('creature-end-$questId'),
-                questId: questId,
-              ),
-              GameObjectQuestStarterView(
-                key: ValueKey('gameobject-start-$questId'),
-                questId: questId,
-              ),
-              GameObjectQuestEnderView(
-                key: ValueKey('gameobject-end-$questId'),
-                questId: questId,
-              ),
-            ],
-            disabledIndexes: QuestTemplateDetailPage.disabledTabIndexes(
-              key,
-              tabs.length,
-            ),
-          );
-        }),
+            );
+          },
+        ),
       ],
     );
   }

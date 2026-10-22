@@ -3,7 +3,7 @@ description: "Foxy monorepo workspace — AzerothCore 数据库可视化工具�
 publish_to: none
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.13.0
 
 workspace:
   - packages/foxy

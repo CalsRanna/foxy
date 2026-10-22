@@ -24,8 +24,8 @@ class UpdateDialog extends StatefulWidget {
 }
 
 class _UpdateDialogState extends State<UpdateDialog> {
-  /// The current-version display uses a signal: Watch subscribes directly,
-  /// avoiding a parent setState rebuilding the Watch and triggering
+  /// The current-version display uses a signal: SignalBuilder subscribes directly,
+  /// avoiding a parent setState rebuilding the SignalBuilder and triggering
   /// signals_flutter's didUpdateWidget→recompute chain that would break the
   /// subscription.
   final _currentVersion = signal<String?>(null);
@@ -36,212 +36,220 @@ class _UpdateDialogState extends State<UpdateDialog> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: DialogUtil.width,
-      child: Watch((_) {
-        final vm = _vm;
-        final checking = vm.checking.value;
-        final update = vm.availableUpdate.value;
-        final downloading = vm.downloadProgress.value != null;
-        final readyToRestart = vm.readyToRestart.value;
-        final error = vm.errorMessage.value;
-        final upToDate = vm.upToDate.value;
-        final theme = ShadTheme.of(context);
+      child: SignalBuilder(
+        builder: (_) {
+          final vm = _vm;
+          final checking = vm.checking.value;
+          final update = vm.availableUpdate.value;
+          final downloading = vm.downloadProgress.value != null;
+          final readyToRestart = vm.readyToRestart.value;
+          final error = vm.errorMessage.value;
+          final upToDate = vm.upToDate.value;
+          final theme = ShadTheme.of(context);
 
-        if (checking) {
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
-            child: SizedBox(
-              height: 120,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 12,
-                  children: [
-                    const FoxyLoadingIndicator(),
-                    const Text('正在检查更新…', style: TextStyle(fontSize: 13)),
-                    if (_currentVersion.value != null)
-                      Text(
-                        '当前版本 ${_currentVersion.value}',
-                        style: theme.textTheme.muted.copyWith(fontSize: 12),
-                      ),
-                  ],
+          if (checking) {
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
+              child: SizedBox(
+                height: 120,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 12,
+                    children: [
+                      const FoxyLoadingIndicator(),
+                      const Text('正在检查更新…', style: TextStyle(fontSize: 13)),
+                      if (_currentVersion.value != null)
+                        Text(
+                          '当前版本 ${_currentVersion.value}',
+                          style: theme.textTheme.muted.copyWith(fontSize: 12),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        if (downloading) {
-          final progress = vm.downloadProgress.value ?? 0;
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(LucideIcons.download, '正在下载更新'),
-            child: SettingDialogShell.progressPanel(
-              context,
-              ratio: progress,
-              label: '正在下载 Foxy ${update?.version ?? ''}',
-              detail: '下载完成后需要重启应用以完成更新',
-              trailing: ShadButton.outline(
-                size: ShadButtonSize.sm,
-                onPressed: vm.cancelDownload,
-                child: const Text('取消下载'),
+          if (downloading) {
+            final progress = vm.downloadProgress.value ?? 0;
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                LucideIcons.download,
+                '正在下载更新',
               ),
-            ),
-          );
-        }
+              child: SettingDialogShell.progressPanel(
+                context,
+                ratio: progress,
+                label: '正在下载 Foxy ${update?.version ?? ''}',
+                detail: '下载完成后需要重启应用以完成更新',
+                trailing: ShadButton.outline(
+                  size: ShadButtonSize.sm,
+                  onPressed: vm.cancelDownload,
+                  child: const Text('取消下载'),
+                ),
+              ),
+            );
+          }
 
-        if (readyToRestart) {
-          // A restart failure (e.g. missing foxy_updater.exe) is reported
-          // through errorMessage while readyToRestart stays set; surface it
-          // here instead of silently keeping the "ready" view.
-          final restartFailed = error != null;
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              restartFailed
-                  ? LucideIcons.triangleAlert
-                  : LucideIcons.circleCheck,
-              restartFailed ? '重启更新失败' : '更新已就绪',
-              iconColor: restartFailed
-                  ? theme.colorScheme.destructive
-                  : theme.colorScheme.primary,
-            ),
-            actions: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('稍后'),
+          if (readyToRestart) {
+            // A restart failure (e.g. missing foxy_updater.exe) is reported
+            // through errorMessage while readyToRestart stays set; surface it
+            // here instead of silently keeping the "ready" view.
+            final restartFailed = error != null;
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                restartFailed
+                    ? LucideIcons.triangleAlert
+                    : LucideIcons.circleCheck,
+                restartFailed ? '重启更新失败' : '更新已就绪',
+                iconColor: restartFailed
+                    ? theme.colorScheme.destructive
+                    : theme.colorScheme.primary,
               ),
-              if (!restartFailed)
+              actions: [
+                ShadButton.outline(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  child: const Text('稍后'),
+                ),
+                if (!restartFailed)
+                  ShadButton(
+                    onPressed: _confirmRestart,
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 6,
+                      children: [
+                        Icon(LucideIcons.refreshCw, size: 15),
+                        Text('立即重启'),
+                      ],
+                    ),
+                  ),
+              ],
+              child: SettingDialogShell.banner(
+                context,
+                text: restartFailed
+                    ? error
+                    : '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
+                          '点击「立即重启」将关闭 Foxy 并自动完成更新，重启后即为新版本。',
+                color: restartFailed
+                    ? theme.colorScheme.destructive
+                    : theme.colorScheme.primary,
+                icon: restartFailed
+                    ? LucideIcons.triangleAlert
+                    : LucideIcons.circleCheck,
+              ),
+            );
+          }
+
+          if (update != null) {
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                LucideIcons.sparkles,
+                '发现新版本 ${update.version}',
+                iconColor: theme.colorScheme.primary,
+              ),
+              actions: [
+                ShadButton.outline(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  child: const Text('稍后再说'),
+                ),
                 ShadButton(
-                  onPressed: _confirmRestart,
+                  onPressed: error == null ? _download : null,
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: 6,
                     children: [
-                      Icon(LucideIcons.refreshCw, size: 15),
-                      Text('立即重启'),
+                      Icon(LucideIcons.download, size: 15),
+                      Text('下载并更新'),
                     ],
                   ),
                 ),
-            ],
-            child: SettingDialogShell.banner(
-              context,
-              text: restartFailed
-                  ? error
-                  : '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
-                        '点击「立即重启」将关闭 Foxy 并自动完成更新，重启后即为新版本。',
-              color: restartFailed
-                  ? theme.colorScheme.destructive
-                  : theme.colorScheme.primary,
-              icon: restartFailed
-                  ? LucideIcons.triangleAlert
-                  : LucideIcons.circleCheck,
-            ),
-          );
-        }
-
-        if (update != null) {
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.sparkles,
-              '发现新版本 ${update.version}',
-              iconColor: theme.colorScheme.primary,
-            ),
-            actions: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('稍后再说'),
-              ),
-              ShadButton(
-                onPressed: error == null ? _download : null,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Icon(LucideIcons.download, size: 15),
-                    Text('下载并更新'),
-                  ],
-                ),
-              ),
-            ],
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 12,
-              children: [
-                SettingDialogShell.mutedHint(
-                  context,
-                  '当前版本 ${_currentVersion.value ?? '未知'} → '
-                  '新版本 ${update.version}（${update.buildNumber}）',
-                ),
-                _ReleaseNotes(notes: update.notes),
-                if (error != null)
-                  SettingDialogShell.banner(
-                    context,
-                    text: error,
-                    color: theme.colorScheme.destructive,
-                    icon: LucideIcons.triangleAlert,
-                  ),
               ],
-            ),
-          );
-        }
-
-        if (error != null) {
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.triangleAlert,
-              '检查更新失败',
-            ),
-            actions: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('关闭'),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 12,
+                children: [
+                  SettingDialogShell.mutedHint(
+                    context,
+                    '当前版本 ${_currentVersion.value ?? '未知'} → '
+                    '新版本 ${update.version}（${update.buildNumber}）',
+                  ),
+                  _ReleaseNotes(notes: update.notes),
+                  if (error != null)
+                    SettingDialogShell.banner(
+                      context,
+                      text: error,
+                      color: theme.colorScheme.destructive,
+                      icon: LucideIcons.triangleAlert,
+                    ),
+                ],
               ),
-              ShadButton(
-                onPressed: _retry,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.rotateCw, size: 15), Text('重试')],
+            );
+          }
+
+          if (error != null) {
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                LucideIcons.triangleAlert,
+                '检查更新失败',
+              ),
+              actions: [
+                ShadButton.outline(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  child: const Text('关闭'),
                 ),
+                ShadButton(
+                  onPressed: _retry,
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 6,
+                    children: [
+                      Icon(LucideIcons.rotateCw, size: 15),
+                      Text('重试'),
+                    ],
+                  ),
+                ),
+              ],
+              child: SettingDialogShell.banner(
+                context,
+                text: error,
+                color: theme.colorScheme.destructive,
+                icon: LucideIcons.triangleAlert,
               ),
-            ],
-            child: SettingDialogShell.banner(
-              context,
-              text: error,
-              color: theme.colorScheme.destructive,
-              icon: LucideIcons.triangleAlert,
-            ),
-          );
-        }
+            );
+          }
 
-        if (upToDate) {
+          if (upToDate) {
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                LucideIcons.circleCheck,
+                '已是最新版本',
+                iconColor: theme.colorScheme.primary,
+              ),
+              actions: [
+                ShadButton(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  child: const Text('完成'),
+                ),
+              ],
+              child: SettingDialogShell.banner(
+                context,
+                text: '当前已是最新版本，无需更新。',
+                color: theme.colorScheme.primary,
+                icon: LucideIcons.circleCheck,
+              ),
+            );
+          }
+
+          // Fallback: theoretically unreachable (check not triggered yet or
+          // state was reset).
           return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.circleCheck,
-              '已是最新版本',
-              iconColor: theme.colorScheme.primary,
-            ),
-            actions: [
-              ShadButton(
-                onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('完成'),
-              ),
-            ],
-            child: SettingDialogShell.banner(
-              context,
-              text: '当前已是最新版本，无需更新。',
-              color: theme.colorScheme.primary,
-              icon: LucideIcons.circleCheck,
-            ),
+            title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
+            child: const SizedBox(height: 120),
           );
-        }
-
-        // Fallback: theoretically unreachable (check not triggered yet or
-        // state was reset).
-        return SettingDialogShell(
-          title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
-          child: const SizedBox(height: 120),
-        );
-      }),
+        },
+      ),
     );
   }
 

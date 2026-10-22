@@ -158,191 +158,207 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildDbcSection() {
-    return Watch((_) {
-      // DBC tasks share the single DbcSyncUtil: nothing may run while an
-      // import/export/MPQ-export is in flight.
-      //
-      // Each isRunning is read into its own local first: a `||` chain would
-      // short-circuit once any task is busy, so the signals read later in
-      // the chain would be dropped from this Watch's dependency tracking
-      // and the buttons would never re-enable when that task finishes.
-      final importBusy = importViewModel.isRunning;
-      final exportBusy = exportViewModel.isRunning;
-      final mpqBusy = mpqViewModel.isRunning;
-      final combinedBusy = combinedViewModel.isRunning;
-      final busy = importBusy || exportBusy || mpqBusy || combinedBusy;
-      return _SettingSection(
-        title: 'DBC 数据管理',
-        children: [
-          _SettingItem(
-            title: '导入 DBC 文件',
-            description:
-                '从服务端目录自动检测的 DBC 目录导入数据，以 DBC 为准写入 foxy 库并覆盖对应表。'
-                '若需保留库内数据请先自行备份。',
-            trailing: ShadButton(
-              size: ShadButtonSize.sm,
-              onPressed: busy ? null : _showImportDialog,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.fileInput, size: 15), Text('导入')],
+    return SignalBuilder(
+      builder: (_) {
+        // DBC tasks share the single DbcSyncUtil: nothing may run while an
+        // import/export/MPQ-export is in flight.
+        //
+        // Each isRunning is read into its own local first: a `||` chain would
+        // short-circuit once any task is busy, so the signals read later in
+        // the chain would be dropped from this SignalBuilder's dependency tracking
+        // and the buttons would never re-enable when that task finishes.
+        final importBusy = importViewModel.isRunning;
+        final exportBusy = exportViewModel.isRunning;
+        final mpqBusy = mpqViewModel.isRunning;
+        final combinedBusy = combinedViewModel.isRunning;
+        final busy = importBusy || exportBusy || mpqBusy || combinedBusy;
+        return _SettingSection(
+          title: 'DBC 数据管理',
+          children: [
+            _SettingItem(
+              title: '导入 DBC 文件',
+              description:
+                  '从服务端目录自动检测的 DBC 目录导入数据，以 DBC 为准写入 foxy 库并覆盖对应表。'
+                  '若需保留库内数据请先自行备份。',
+              trailing: ShadButton(
+                size: ShadButtonSize.sm,
+                onPressed: busy ? null : _showImportDialog,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [Icon(LucideIcons.fileInput, size: 15), Text('导入')],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          _SettingItem(
-            title: '导出 DBC 文件',
-            description: '将数据库中的 DBC 表导出为 .dbc 文件，可搜索并勾选需要导出的表。',
-            trailing: ShadButton(
-              size: ShadButtonSize.sm,
-              onPressed: busy ? null : _showExportDialog,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.fileOutput, size: 15), Text('导出')],
+            const SizedBox(height: 16),
+            _SettingItem(
+              title: '导出 DBC 文件',
+              description: '将数据库中的 DBC 表导出为 .dbc 文件，可搜索并勾选需要导出的表。',
+              trailing: ShadButton(
+                size: ShadButtonSize.sm,
+                onPressed: busy ? null : _showExportDialog,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [
+                    Icon(LucideIcons.fileOutput, size: 15),
+                    Text('导出'),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildCombinedExportSection() {
-    return Watch((_) {
-      // The combined export drives the shared DbcSyncUtil, so it must not run
-      // while an import/export/MPQ-export is in flight. Same non-short-circuit
-      // pattern as the other sections: keep every isRunning read in the
-      // dependency set.
-      final combinedBusy = combinedViewModel.isRunning;
-      final importBusy = importViewModel.isRunning;
-      final exportBusy = exportViewModel.isRunning;
-      final mpqBusy = mpqViewModel.isRunning;
-      final busy = combinedBusy || importBusy || exportBusy || mpqBusy;
-      return _SettingSection(
-        title: '一键导出',
-        children: [
-          _SettingItem(
-            title: '同时导出 DBC 与 MPQ',
-            description:
-                '将选中的 DBC 表一次导出为 .dbc 文件到服务端目录，并打包 MPQ 补丁'
-                '（默认 patch-zhCN-5.MPQ）到客户端目录。MPQ 直接复用本次导出的'
-                ' DBC 文件，全程只读取一次数据库。',
-            trailing: ShadButton(
-              size: ShadButtonSize.sm,
-              onPressed: busy ? null : _showCombinedExportDialog,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.zap, size: 15), Text('一键导出')],
+    return SignalBuilder(
+      builder: (_) {
+        // The combined export drives the shared DbcSyncUtil, so it must not run
+        // while an import/export/MPQ-export is in flight. Same non-short-circuit
+        // pattern as the other sections: keep every isRunning read in the
+        // dependency set.
+        final combinedBusy = combinedViewModel.isRunning;
+        final importBusy = importViewModel.isRunning;
+        final exportBusy = exportViewModel.isRunning;
+        final mpqBusy = mpqViewModel.isRunning;
+        final busy = combinedBusy || importBusy || exportBusy || mpqBusy;
+        return _SettingSection(
+          title: '一键导出',
+          children: [
+            _SettingItem(
+              title: '同时导出 DBC 与 MPQ',
+              description:
+                  '将选中的 DBC 表一次导出为 .dbc 文件到服务端目录，并打包 MPQ 补丁'
+                  '（默认 patch-zhCN-5.MPQ）到客户端目录。MPQ 直接复用本次导出的'
+                  ' DBC 文件，全程只读取一次数据库。',
+              trailing: ShadButton(
+                size: ShadButtonSize.sm,
+                onPressed: busy ? null : _showCombinedExportDialog,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [Icon(LucideIcons.zap, size: 15), Text('一键导出')],
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildMpqSection() {
-    return Watch((_) {
-      // DBC tasks share the single DbcSyncUtil: the MPQ export must not run
-      // while an import/export is in flight. Same non-short-circuit pattern
-      // as the DBC section: keep every isRunning read in the dependency set.
-      final mpqBusy = mpqViewModel.isRunning;
-      final importBusy = importViewModel.isRunning;
-      final exportBusy = exportViewModel.isRunning;
-      final busy = mpqBusy || importBusy || exportBusy;
-      return _SettingSection(
-        title: 'MPQ 管理',
-        children: [
-          _SettingItem(
-            title: '导出 MPQ 补丁',
-            description:
-                '将选中的 DBC 表打包为 MPQ 补丁（默认 patch-zhCN-5.MPQ），'
-                '输出到客户端 MPQ 目录（如 Data\\zhCN）。'
-                '客户端启动时自动加载补丁，覆盖原始 DBC 文件。',
-            trailing: ShadButton(
-              size: ShadButtonSize.sm,
-              onPressed: busy ? null : _showMpqExportDialog,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.archive, size: 15), Text('导出')],
+    return SignalBuilder(
+      builder: (_) {
+        // DBC tasks share the single DbcSyncUtil: the MPQ export must not run
+        // while an import/export is in flight. Same non-short-circuit pattern
+        // as the DBC section: keep every isRunning read in the dependency set.
+        final mpqBusy = mpqViewModel.isRunning;
+        final importBusy = importViewModel.isRunning;
+        final exportBusy = exportViewModel.isRunning;
+        final busy = mpqBusy || importBusy || exportBusy;
+        return _SettingSection(
+          title: 'MPQ 管理',
+          children: [
+            _SettingItem(
+              title: '导出 MPQ 补丁',
+              description:
+                  '将选中的 DBC 表打包为 MPQ 补丁（默认 patch-zhCN-5.MPQ），'
+                  '输出到客户端 MPQ 目录（如 Data\\zhCN）。'
+                  '客户端启动时自动加载补丁，覆盖原始 DBC 文件。',
+              trailing: ShadButton(
+                size: ShadButtonSize.sm,
+                onPressed: busy ? null : _showMpqExportDialog,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [Icon(LucideIcons.archive, size: 15), Text('导出')],
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildIconSection() {
-    return Watch((_) {
-      final busy = iconViewModel.isRunning;
-      return _SettingSection(
-        title: '游戏图标',
-        children: [
-          _SettingItem(
-            title: '提取游戏图标',
-            description:
-                '从配置的客户端目录的 Data\\<语言> MPQ 归档中提取全部图标'
-                '（约 6300 个，BLP 原始格式）。未提取的图标在列表页显示占位符。',
-            trailing: ShadButton(
-              size: ShadButtonSize.sm,
-              onPressed: busy ? null : _showIconExtractDialog,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.download, size: 15), Text('提取')],
+    return SignalBuilder(
+      builder: (_) {
+        final busy = iconViewModel.isRunning;
+        return _SettingSection(
+          title: '游戏图标',
+          children: [
+            _SettingItem(
+              title: '提取游戏图标',
+              description:
+                  '从配置的客户端目录的 Data\\<语言> MPQ 归档中提取全部图标'
+                  '（约 6300 个，BLP 原始格式）。未提取的图标在列表页显示占位符。',
+              trailing: ShadButton(
+                size: ShadButtonSize.sm,
+                onPressed: busy ? null : _showIconExtractDialog,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [Icon(LucideIcons.download, size: 15), Text('提取')],
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildUpdateSection() {
-    return Watch((_) {
-      final version = updateViewModel.currentVersion.value;
-      return _SettingSection(
-        title: '关于与更新',
-        children: [
-          _SettingItem(
-            title: '检查更新',
-            description: version == null
-                ? '检查 Foxy 是否有新版本'
-                : '当前版本 $version，检查 Foxy 是否有新版本',
-            trailing: ShadButton(
-              size: ShadButtonSize.sm,
-              onPressed: _showUpdateDialog,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.refreshCw, size: 15), Text('检查更新')],
+    return SignalBuilder(
+      builder: (_) {
+        final version = updateViewModel.currentVersion.value;
+        return _SettingSection(
+          title: '关于与更新',
+          children: [
+            _SettingItem(
+              title: '检查更新',
+              description: version == null
+                  ? '检查 Foxy 是否有新版本'
+                  : '当前版本 $version，检查 Foxy 是否有新版本',
+              trailing: ShadButton(
+                size: ShadButtonSize.sm,
+                onPressed: _showUpdateDialog,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [
+                    Icon(LucideIcons.refreshCw, size: 15),
+                    Text('检查更新'),
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          _SettingItem(
-            title: '项目主页',
-            description: '访问 GitHub 仓库，查看更新记录、文档与反馈问题',
-            trailing: ShadButton.outline(
-              size: ShadButtonSize.sm,
-              onPressed: _openProjectPage,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [
-                  Icon(LucideIcons.externalLink, size: 15),
-                  Text('打开'),
-                ],
+            const SizedBox(height: 16),
+            _SettingItem(
+              title: '项目主页',
+              description: '访问 GitHub 仓库，查看更新记录、文档与反馈问题',
+              trailing: ShadButton.outline(
+                size: ShadButtonSize.sm,
+                onPressed: _openProjectPage,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [
+                    Icon(LucideIcons.externalLink, size: 15),
+                    Text('打开'),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 
   @override

@@ -4,18 +4,18 @@ version: 0.1.0
 publish_to: none
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.13.0
 
 resolution: workspace
 
 dependencies:
-  # 0.3.10 / 10.2.0: 与 workspace 的 analyzer 10.2.0 匹配(Flutter 3.44.9
-  # 依赖 pin 限制,见 foxy_generator 注释)。
-  analysis_server_plugin: ^0.3.10
-  analyzer: ^10.2.0
+  # 0.3.18 精确依赖 analyzer 13.3.0(0.3.25 需要 analyzer 14.6,被
+  # auto_route_generator 的 <14 上限挡住,见 foxy_generator 注释)。
+  analysis_server_plugin: ^0.3.18
+  analyzer: ^13.3.0
   path: ^1.9.1
 
 dev_dependencies:
-  analyzer_testing: ^0.2.1
+  analyzer_testing: ^0.3.2
   test: ^1.30.0
-  test_reflective_loader: ^0.4.0
+  test_reflective_loader: ^0.6.0

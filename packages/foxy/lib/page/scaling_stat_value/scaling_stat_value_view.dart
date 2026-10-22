@@ -294,8 +294,8 @@ class ScalingStatValueView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: Text('保存'),

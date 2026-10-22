@@ -10,7 +10,7 @@
 2. **Reader 读注解 / 源码**:在 `list_reader.dart` 里从注解或源码文本提取新信息,填进模型。
 3. **Emitter 产出代码**:在 `list_emitter.dart` 用 `StringBuffer` 拼新方法/字段,保持「Sort Members」成员顺序。
 4. **校验**:如果新能力有前提条件,在 Reader 里 `_fail`(带修复文案);模型级不变量放 `EntityValidator`(目前只有 Entity 层有独立 validator)。
-5. **回归**:跑 `dart run build_runner build --delete-conflicting-outputs` 全量重生成,再 `flutter test`。
+5. **回归**:跑 `dart run build_runner build` 全量重生成,再 `flutter test`。
 
 ### 需要同步维护的地方
 
@@ -131,16 +131,16 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 
 - `build_to: cache`,产物缓存在 `.dart_tool/build/generated/foxy/lib/...`;生成内容合并进 `.dart_tool/build/.../<part>.g.dart`(combining builder 汇总)。
 - 直接读手写文件旁的 `*.g.dart`(已落盘,如 `repository/currency_type_repository.g.dart`)——这是最终编译进手写类的代码。
-- `--delete-conflicting-outputs` 先清后建,排查「改了注解但生成没变」时先用它。
+- `build` 现在默认删除冲突产物(build_runner 2.16 起 `--delete-conflicting-outputs` 已移除,传入会被忽略);排查「改了注解但生成没变」时先 `dart run build_runner clean` 清缓存再 build。
 
 ### 常见「生成没生效」排查
 
 | 现象 | 原因与对策 |
 | --- | --- |
 | 改了注解,`flutter analyze` 不报 | 没重跑 `dart run build_runner build` |
-| 改了生成器代码,产物不变 | `build_runner` 缓存;`dart run build_runner build --delete-conflicting-outputs` |
+| 改了生成器代码,产物不变 | `build_runner` 缓存;`dart run build_runner clean` 后重新 build |
 | 生成文件报「找不到符号」 | 手写端缺少对应 `part` / 没混入 mixin / 基座没 import(见 `field_controller.dart` 顶部注释的 import 作用域说明) |
-| 生成文件与手写文件互相冲突 | `--delete-conflicting-outputs` 清掉陈旧产物再建 |
+| 生成文件与手写文件互相冲突 | `build` 默认删除冲突产物(build_runner 2.16 起该参数已移除) |
 
 ### 调试错误信息
 

@@ -28,190 +28,193 @@ class ConditionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final sourceType = viewModel.selectedSourceType.value;
-      final sourceGroup = viewModel.selectedSourceGroup.value;
-      final conditionType = viewModel.selectedConditionType.value;
-      final conditionValue1 = viewModel.selectedConditionValue1.value;
-      final referenceTemplate = viewModel.selectedSourceMode.value == 1;
-      final referenceCondition = viewModel.selectedConditionMode.value == 1;
-      final valueConfig = ConditionValueConfig.forType(
-        referenceCondition ? -1 : conditionType,
-        value1: conditionValue1,
-      );
+    return SignalBuilder(
+      builder: (_) {
+        final sourceType = viewModel.selectedSourceType.value;
+        final sourceGroup = viewModel.selectedSourceGroup.value;
+        final conditionType = viewModel.selectedConditionType.value;
+        final conditionValue1 = viewModel.selectedConditionValue1.value;
+        final referenceTemplate = viewModel.selectedSourceMode.value == 1;
+        final referenceCondition = viewModel.selectedConditionMode.value == 1;
+        final valueConfig = ConditionValueConfig.forType(
+          referenceCondition ? -1 : conditionType,
+          value1: conditionValue1,
+        );
 
-      return SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16,
-          children: [
-            FoxyFormSection(
-              title: '来源信息',
-              children: [
-                _row(
-                  FoxyFormItem(
-                    label: '来源模式',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.sourceModeController,
-                      options: ConditionDetailViewModel.modeOptions,
-                      placeholder: 'SourceTypeOrReferenceId',
+        return SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              FoxyFormSection(
+                title: '来源信息',
+                children: [
+                  _row(
+                    FoxyFormItem(
+                      label: '来源模式',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.sourceModeController,
+                        options: ConditionDetailViewModel.modeOptions,
+                        placeholder: 'SourceTypeOrReferenceId',
+                      ),
+                    ),
+                    FoxyFormItem(
+                      label: referenceTemplate ? '引用模板 ID' : '来源类型',
+                      child: referenceTemplate
+                          ? FoxyNumberInput<int>(
+                              controller: viewModel.sourceReferenceIdController,
+                              placeholder: 'SourceTypeOrReferenceId',
+                            )
+                          : FoxyShadSelect<int>(
+                              controller: viewModel.sourceTypeController,
+                              options: ConditionSourceTypes
+                                  .conditionSourceTypeLabels,
+                              placeholder: 'SourceTypeOrReferenceId',
+                            ),
+                    ),
+                    _sourceGroupItem(
+                      sourceType,
+                      referenceTemplate: referenceTemplate,
+                    ),
+                    _sourceEntryItem(sourceType, sourceGroup),
+                  ),
+                  _row(
+                    _sourceIdItem(
+                      sourceType,
+                      referenceTemplate: referenceTemplate,
+                    ),
+                    _numberItem(
+                      '逻辑分组',
+                      'ElseGroup',
+                      viewModel.elseGroupController,
+                    ),
+                    const SizedBox(),
+                    const SizedBox(),
+                  ),
+                ],
+              ),
+              FoxyFormSection(
+                title: '条件信息',
+                children: [
+                  _row(
+                    FoxyFormItem(
+                      label: '条件模式',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.conditionModeController,
+                        options: ConditionDetailViewModel.modeOptions,
+                        placeholder: 'ConditionTypeOrReference',
+                      ),
+                    ),
+                    FoxyFormItem(
+                      label: referenceCondition ? '引用条件 ID' : '条件类型',
+                      child: referenceCondition
+                          ? FoxyNumberInput<int>(
+                              controller:
+                                  viewModel.conditionReferenceIdController,
+                              placeholder: 'ConditionTypeOrReference',
+                            )
+                          : FoxyShadSelect<int>(
+                              controller: viewModel.conditionTypeController,
+                              options: ConditionType.conditionTypeLabels,
+                              placeholder: 'ConditionTypeOrReference',
+                            ),
+                    ),
+                    FoxyFormItem(
+                      label: '条件目标',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.conditionTargetController,
+                        options: _targetOptions(sourceType),
+                        placeholder: 'ConditionTarget',
+                      ),
+                    ),
+                    FoxyFormItem(
+                      label: '否定条件',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.negativeConditionController,
+                        options: ConditionValueConfig.conditionBooleanOptions,
+                        placeholder: 'NegativeCondition',
+                      ),
                     ),
                   ),
-                  FoxyFormItem(
-                    label: referenceTemplate ? '引用模板 ID' : '来源类型',
-                    child: referenceTemplate
-                        ? FoxyNumberInput<int>(
-                            controller: viewModel.sourceReferenceIdController,
-                            placeholder: 'SourceTypeOrReferenceId',
-                          )
-                        : FoxyShadSelect<int>(
-                            controller: viewModel.sourceTypeController,
-                            options:
-                                ConditionSourceTypes.conditionSourceTypeLabels,
-                            placeholder: 'SourceTypeOrReferenceId',
-                          ),
+                  _row(
+                    _valueItem(
+                      'ConditionValue1',
+                      valueConfig.value1,
+                      viewModel.conditionValue1Controller,
+                    ),
+                    _valueItem(
+                      'ConditionValue2',
+                      valueConfig.value2,
+                      viewModel.conditionValue2Controller,
+                    ),
+                    _valueItem(
+                      'ConditionValue3',
+                      valueConfig.value3,
+                      viewModel.conditionValue3Controller,
+                    ),
+                    const SizedBox(),
                   ),
-                  _sourceGroupItem(
-                    sourceType,
-                    referenceTemplate: referenceTemplate,
-                  ),
-                  _sourceEntryItem(sourceType, sourceGroup),
-                ),
-                _row(
-                  _sourceIdItem(
-                    sourceType,
-                    referenceTemplate: referenceTemplate,
-                  ),
-                  _numberItem(
-                    '逻辑分组',
-                    'ElseGroup',
-                    viewModel.elseGroupController,
-                  ),
-                  const SizedBox(),
-                  const SizedBox(),
-                ),
-              ],
-            ),
-            FoxyFormSection(
-              title: '条件信息',
-              children: [
-                _row(
-                  FoxyFormItem(
-                    label: '条件模式',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.conditionModeController,
-                      options: ConditionDetailViewModel.modeOptions,
-                      placeholder: 'ConditionTypeOrReference',
+                ],
+              ),
+              FoxyFormSection(
+                title: '错误与脚本',
+                children: [
+                  _row(
+                    FoxyFormItem(
+                      label: '法术失败类型',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.errorTypeController,
+                        options: ConditionErrorTypes.conditionErrorTypeOptions,
+                        placeholder: 'ErrorType',
+                        maxHeight: 360,
+                      ),
+                    ),
+                    FoxyFormItem(
+                      label: '自定义错误',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.errorTextIdController,
+                        options:
+                            ConditionErrorTypes.conditionCustomErrorOptions,
+                        placeholder: 'ErrorTextId',
+                        maxHeight: 360,
+                      ),
+                    ),
+                    FoxyFormItem(
+                      label: '脚本名称',
+                      child: FoxyStringInput(
+                        controller: viewModel.scriptNameController,
+                        placeholder: 'ScriptName',
+                      ),
+                    ),
+                    FoxyFormItem(
+                      label: '注释',
+                      child: FoxyStringInput(
+                        controller: viewModel.commentController,
+                        placeholder: 'Comment',
+                      ),
                     ),
                   ),
-                  FoxyFormItem(
-                    label: referenceCondition ? '引用条件 ID' : '条件类型',
-                    child: referenceCondition
-                        ? FoxyNumberInput<int>(
-                            controller:
-                                viewModel.conditionReferenceIdController,
-                            placeholder: 'ConditionTypeOrReference',
-                          )
-                        : FoxyShadSelect<int>(
-                            controller: viewModel.conditionTypeController,
-                            options: ConditionType.conditionTypeLabels,
-                            placeholder: 'ConditionTypeOrReference',
-                          ),
-                  ),
-                  FoxyFormItem(
-                    label: '条件目标',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.conditionTargetController,
-                      options: _targetOptions(sourceType),
-                      placeholder: 'ConditionTarget',
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  SignalBuilder(
+                    builder: (_) => ShadButton(
+                      enabled: !viewModel.submitting.value,
+                      onPressed: () => _persist(context),
+                      child: const Text('保存'),
                     ),
                   ),
-                  FoxyFormItem(
-                    label: '否定条件',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.negativeConditionController,
-                      options: ConditionValueConfig.conditionBooleanOptions,
-                      placeholder: 'NegativeCondition',
-                    ),
-                  ),
-                ),
-                _row(
-                  _valueItem(
-                    'ConditionValue1',
-                    valueConfig.value1,
-                    viewModel.conditionValue1Controller,
-                  ),
-                  _valueItem(
-                    'ConditionValue2',
-                    valueConfig.value2,
-                    viewModel.conditionValue2Controller,
-                  ),
-                  _valueItem(
-                    'ConditionValue3',
-                    valueConfig.value3,
-                    viewModel.conditionValue3Controller,
-                  ),
-                  const SizedBox(),
-                ),
-              ],
-            ),
-            FoxyFormSection(
-              title: '错误与脚本',
-              children: [
-                _row(
-                  FoxyFormItem(
-                    label: '法术失败类型',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.errorTypeController,
-                      options: ConditionErrorTypes.conditionErrorTypeOptions,
-                      placeholder: 'ErrorType',
-                      maxHeight: 360,
-                    ),
-                  ),
-                  FoxyFormItem(
-                    label: '自定义错误',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.errorTextIdController,
-                      options: ConditionErrorTypes.conditionCustomErrorOptions,
-                      placeholder: 'ErrorTextId',
-                      maxHeight: 360,
-                    ),
-                  ),
-                  FoxyFormItem(
-                    label: '脚本名称',
-                    child: FoxyStringInput(
-                      controller: viewModel.scriptNameController,
-                      placeholder: 'ScriptName',
-                    ),
-                  ),
-                  FoxyFormItem(
-                    label: '注释',
-                    child: FoxyStringInput(
-                      controller: viewModel.commentController,
-                      placeholder: 'Comment',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                Watch(
-                  (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () => _persist(context),
-                    child: const Text('保存'),
-                  ),
-                ),
-                ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
+                  ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   /// Reference-field picker built from [delegate]: the concrete row type

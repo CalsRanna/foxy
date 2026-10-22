@@ -70,11 +70,11 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   @override
   Widget build(BuildContext context) {
     var rightColumnChildren = [
-      Watch((_) => _buildBreadcrumb()),
+      SignalBuilder(builder: (_) => _buildBreadcrumb()),
       Expanded(child: AutoRouter()),
     ];
     final children = [
-      Watch((_) => _buildLeftBar()),
+      SignalBuilder(builder: (_) => _buildLeftBar()),
       VerticalDivider(
         color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         thickness: 1,

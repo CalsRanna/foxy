@@ -241,8 +241,8 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
       ),
     ];
 
-    return Watch(
-      (_) => SingleChildScrollView(
+    return SignalBuilder(
+      builder: (_) => SingleChildScrollView(
         padding: const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,8 +257,8 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
             Row(
               spacing: 8,
               children: [
-                Watch(
-                  (_) => ShadButton(
+                SignalBuilder(
+                  builder: (_) => ShadButton(
                     enabled: !viewModel.submitting.value,
                     onPressed: () => _persist(),
                     child: Text('保存'),

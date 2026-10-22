@@ -25,103 +25,108 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((context) {
-      viewModel.entity.value;
+    return SignalBuilder(
+      builder: (context) {
+        viewModel.entity.value;
 
-      return SingleChildScrollView(
-        padding: EdgeInsets.only(top: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16,
-          children: [
-            FoxyFormSection(
-              title: '法术加成',
-              children: [
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '编号',
-                        child: FoxyNumberInput<int>(
-                          controller: viewModel.entryController,
-                          placeholder: 'entry',
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(top: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              FoxyFormSection(
+                title: '法术加成',
+                children: [
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '编号',
+                          child: FoxyNumberInput<int>(
+                            controller: viewModel.entryController,
+                            placeholder: 'entry',
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '备注',
-                        child: FoxyStringInput(
-                          controller: viewModel.commentsController,
-                          placeholder: 'comments',
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '备注',
+                          child: FoxyStringInput(
+                            controller: viewModel.commentsController,
+                            placeholder: 'comments',
+                          ),
                         ),
                       ),
-                    ),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '法术强度',
-                        child: FoxyNumberInput<double>(
-                          controller: viewModel.directBonusController,
-                          placeholder: 'direct_bonus',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '法强（DOT）',
-                        child: FoxyNumberInput<double>(
-                          controller: viewModel.dotBonusController,
-                          placeholder: 'dot_bonus',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '攻击强度',
-                        child: FoxyNumberInput<double>(
-                          controller: viewModel.apBonusController,
-                          placeholder: 'ap_bonus',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '攻强（DOT）',
-                        child: FoxyNumberInput<double>(
-                          controller: viewModel.apDotBonusController,
-                          placeholder: 'ap_dot_bonus',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                Watch(
-                  (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () => _persist(),
-                    child: Text('保存'),
+                      const Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
+                    ],
                   ),
-                ),
-                ShadButton.ghost(onPressed: () => _goBack(), child: Text('取消')),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '法术强度',
+                          child: FoxyNumberInput<double>(
+                            controller: viewModel.directBonusController,
+                            placeholder: 'direct_bonus',
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '法强（DOT）',
+                          child: FoxyNumberInput<double>(
+                            controller: viewModel.dotBonusController,
+                            placeholder: 'dot_bonus',
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '攻击强度',
+                          child: FoxyNumberInput<double>(
+                            controller: viewModel.apBonusController,
+                            placeholder: 'ap_bonus',
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '攻强（DOT）',
+                          child: FoxyNumberInput<double>(
+                            controller: viewModel.apDotBonusController,
+                            placeholder: 'ap_dot_bonus',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  SignalBuilder(
+                    builder: (_) => ShadButton(
+                      enabled: !viewModel.submitting.value,
+                      onPressed: () => _persist(),
+                      child: Text('保存'),
+                    ),
+                  ),
+                  ShadButton.ghost(
+                    onPressed: () => _goBack(),
+                    child: Text('取消'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override

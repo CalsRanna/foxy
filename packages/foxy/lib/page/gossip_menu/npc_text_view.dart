@@ -31,8 +31,8 @@ class _NpcTextViewState extends State<NpcTextView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch(
-      (_) => SingleChildScrollView(
+    return SignalBuilder(
+      builder: (_) => SingleChildScrollView(
         padding: const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,8 +207,8 @@ class _NpcTextViewState extends State<NpcTextView> {
   Widget _buildActions() {
     return Row(
       children: [
-        Watch(
-          (_) => ShadButton(
+        SignalBuilder(
+          builder: (_) => ShadButton(
             enabled: !viewModel.submitting.value,
             onPressed: _persist,
             child: const Text('保存'),

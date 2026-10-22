@@ -40,9 +40,11 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+    return SignalBuilder(
+      builder: (context) {
+        return _buildTable();
+      },
+    );
   }
 
   @override
@@ -232,9 +234,8 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
                 ? Text(
                     '关联掉落',
                     style: TextStyle(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.5),
+                      color: Theme.of(context).colorScheme.onSurface
+                          .withValues(alpha: 0.5),
                     ),
                   )
                 : FoxyIconText(

@@ -42,8 +42,8 @@ class AchievementView extends StatelessWidget {
   Widget _buildActions(BuildContext context) {
     return Row(
       children: [
-        Watch(
-          (_) => ShadButton(
+        SignalBuilder(
+          builder: (_) => ShadButton(
             enabled: !viewModel.submitting.value,
             onPressed: () => _persist(context),
             child: Text('保存'),
@@ -114,50 +114,56 @@ class AchievementView extends StatelessWidget {
             Expanded(
               child: FoxyFormItem(
                 label: '标题',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.titleLangZhCNController,
-                    title: '标题本地化',
-                    placeholder: 'Title_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
-                    onSaved: viewModel.applyTitleLocales,
-                  );
-                }),
+                child: SignalBuilder(
+                  builder: (_) {
+                    final id = viewModel.persistedKey.value;
+                    return FoxyLocalePicker(
+                      entry: id,
+                      controller: viewModel.titleLangZhCNController,
+                      title: '标题本地化',
+                      placeholder: 'Title_lang_zhCN',
+                      delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
+                      onSaved: viewModel.applyTitleLocales,
+                    );
+                  },
+                ),
               ),
             ),
             Expanded(
               child: FoxyFormItem(
                 label: '描述',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.descriptionLangZhCNController,
-                    title: '描述本地化',
-                    placeholder: 'Description_lang_zhCN',
-                    delegate:
-                        FoxyLocalePickerDelegates.dbcAchievementDescription,
-                    onSaved: viewModel.applyDescriptionLocales,
-                  );
-                }),
+                child: SignalBuilder(
+                  builder: (_) {
+                    final id = viewModel.persistedKey.value;
+                    return FoxyLocalePicker(
+                      entry: id,
+                      controller: viewModel.descriptionLangZhCNController,
+                      title: '描述本地化',
+                      placeholder: 'Description_lang_zhCN',
+                      delegate:
+                          FoxyLocalePickerDelegates.dbcAchievementDescription,
+                      onSaved: viewModel.applyDescriptionLocales,
+                    );
+                  },
+                ),
               ),
             ),
             Expanded(
               child: FoxyFormItem(
                 label: '奖励',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.rewardLangZhCNController,
-                    title: '奖励文本本地化',
-                    placeholder: 'Reward_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
-                    onSaved: viewModel.applyRewardLocales,
-                  );
-                }),
+                child: SignalBuilder(
+                  builder: (_) {
+                    final id = viewModel.persistedKey.value;
+                    return FoxyLocalePicker(
+                      entry: id,
+                      controller: viewModel.rewardLangZhCNController,
+                      title: '奖励文本本地化',
+                      placeholder: 'Reward_lang_zhCN',
+                      delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
+                      onSaved: viewModel.applyRewardLocales,
+                    );
+                  },
+                ),
               ),
             ),
             const Expanded(child: SizedBox()),

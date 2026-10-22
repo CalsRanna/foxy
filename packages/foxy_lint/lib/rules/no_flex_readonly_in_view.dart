@@ -32,7 +32,7 @@ class NoFlexInView extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    registry.addNamedExpression(this, _FlexVisitor(this, context));
+    registry.addNamedArgument(this, _FlexVisitor(this, context));
   }
 }
 
@@ -44,9 +44,9 @@ class _FlexVisitor extends SimpleAstVisitor<void> {
   _FlexVisitor(this.rule, this.context);
 
   @override
-  void visitNamedExpression(NamedExpression node) {
+  void visitNamedArgument(NamedArgument node) {
     if (!isViewFile(context.definingUnit.file.path)) return;
-    if (node.name.label.name == 'flex') {
+    if (node.name.lexeme == 'flex') {
       rule.reportAtNode(node);
     }
   }
@@ -75,7 +75,7 @@ class NoReadOnlyInView extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    registry.addNamedExpression(this, _ReadOnlyVisitor(this, context));
+    registry.addNamedArgument(this, _ReadOnlyVisitor(this, context));
   }
 }
 
@@ -87,10 +87,10 @@ class _ReadOnlyVisitor extends SimpleAstVisitor<void> {
   _ReadOnlyVisitor(this.rule, this.context);
 
   @override
-  void visitNamedExpression(NamedExpression node) {
+  void visitNamedArgument(NamedArgument node) {
     if (!isViewFile(context.definingUnit.file.path)) return;
-    if (node.name.label.name != 'readOnly') return;
-    final expression = node.expression;
+    if (node.name.lexeme != 'readOnly') return;
+    final expression = node.argumentExpression;
     if (expression is BooleanLiteral && expression.value) {
       rule.reportAtNode(node);
     }

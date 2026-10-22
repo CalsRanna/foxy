@@ -34,7 +34,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) => _buildContent(context));
+    return SignalBuilder(builder: (_) => _buildContent(context));
   }
 
   @override

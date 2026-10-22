@@ -232,8 +232,8 @@ class EmoteTextView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: const Text('保存'),

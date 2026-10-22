@@ -33,7 +33,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) => _buildTable());
+    return SignalBuilder(builder: (_) => _buildTable());
   }
 
   @override
@@ -56,7 +56,8 @@ class _NpcVendorViewState extends State<NpcVendorView> {
     viewModel.initSignals(linkKey: widget.creatureId);
   }
 
-  Widget _buildDialogForm() {    return ConstrainedBox(
+  Widget _buildDialogForm() {
+    return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
         mainAxisSize: MainAxisSize.min,

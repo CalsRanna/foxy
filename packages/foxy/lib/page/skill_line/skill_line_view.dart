@@ -63,45 +63,51 @@ class SkillLineView extends StatelessWidget {
     // languages) ===
     final displayNameInput = FoxyFormItem(
       label: '名称',
-      child: Watch((_) {
-        final entry = viewModel.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: entry,
-          controller: viewModel.displayNameLangZhCNController,
-          title: '专业技能名称本地化',
-          placeholder: 'DisplayName_lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcSkillLineDisplayName,
-          onSaved: viewModel.applyDisplayNameLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final entry = viewModel.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: entry,
+            controller: viewModel.displayNameLangZhCNController,
+            title: '专业技能名称本地化',
+            placeholder: 'DisplayName_lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcSkillLineDisplayName,
+            onSaved: viewModel.applyDisplayNameLocales,
+          );
+        },
+      ),
     );
     final descriptionInput = FoxyFormItem(
       label: '描述',
-      child: Watch((_) {
-        final entry = viewModel.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: entry,
-          controller: viewModel.descriptionLangZhCNController,
-          title: '专业技能描述本地化',
-          placeholder: 'Description_lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcSkillLineDescription,
-          onSaved: viewModel.applyDescriptionLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final entry = viewModel.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: entry,
+            controller: viewModel.descriptionLangZhCNController,
+            title: '专业技能描述本地化',
+            placeholder: 'Description_lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcSkillLineDescription,
+            onSaved: viewModel.applyDescriptionLocales,
+          );
+        },
+      ),
     );
     final alternateVerbInput = FoxyFormItem(
       label: '备选动词',
-      child: Watch((_) {
-        final entry = viewModel.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: entry,
-          controller: viewModel.alternateVerbLangZhCNController,
-          title: '备选动词本地化',
-          placeholder: 'AlternateVerb_lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcSkillLineAlternateVerb,
-          onSaved: viewModel.applyAlternateVerbLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final entry = viewModel.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: entry,
+            controller: viewModel.alternateVerbLangZhCNController,
+            title: '备选动词本地化',
+            placeholder: 'AlternateVerb_lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcSkillLineAlternateVerb,
+            onSaved: viewModel.applyAlternateVerbLocales,
+          );
+        },
+      ),
     );
     final displayNameLangFlagsInput = FoxyFormItem(
       label: '名称语言标志',
@@ -199,8 +205,8 @@ class SkillLineView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: Text('保存'),

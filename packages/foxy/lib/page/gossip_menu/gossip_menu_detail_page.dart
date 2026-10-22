@@ -27,30 +27,35 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final key = viewModel.persistedKey.value;
-      return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: FoxyHeader('对话详情'),
-          ),
-          FoxyTab(
-            tabs: const [Text('对话'), Text('文本'), Text('选项')],
-            contents: [
-              GossipMenuView(viewModel: viewModel),
-              NpcTextView(key: ValueKey(key?.textId), textId: key?.textId ?? 0),
-              GossipMenuOptionView(
-                key: ValueKey(key?.menuId),
-                menuId: key?.menuId ?? 0,
-              ),
-            ],
-            disabledIndexes: key == null ? const {1, 2} : const {},
-          ),
-        ],
-      );
-    });
+    return SignalBuilder(
+      builder: (_) {
+        final key = viewModel.persistedKey.value;
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: FoxyHeader('对话详情'),
+            ),
+            FoxyTab(
+              tabs: const [Text('对话'), Text('文本'), Text('选项')],
+              contents: [
+                GossipMenuView(viewModel: viewModel),
+                NpcTextView(
+                  key: ValueKey(key?.textId),
+                  textId: key?.textId ?? 0,
+                ),
+                GossipMenuOptionView(
+                  key: ValueKey(key?.menuId),
+                  menuId: key?.menuId ?? 0,
+                ),
+              ],
+              disabledIndexes: key == null ? const {1, 2} : const {},
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

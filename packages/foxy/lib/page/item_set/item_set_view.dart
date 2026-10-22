@@ -82,8 +82,8 @@ class ItemSetView extends StatelessWidget {
   Widget _buildButtons(BuildContext context) {
     return Row(
       children: [
-        Watch(
-          (_) => ShadButton(
+        SignalBuilder(
+          builder: (_) => ShadButton(
             enabled: !viewModel.submitting.value,
             onPressed: () => _persist(context),
             child: Text('保存'),
@@ -158,17 +158,19 @@ class ItemSetView extends StatelessWidget {
             Expanded(
               child: FoxyFormItem(
                 label: '名称',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.nameLangZhCNController,
-                    title: '套装名称本地化',
-                    placeholder: 'Name_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcItemSetName,
-                    onSaved: viewModel.applyNameLocales,
-                  );
-                }),
+                child: SignalBuilder(
+                  builder: (_) {
+                    final id = viewModel.persistedKey.value;
+                    return FoxyLocalePicker(
+                      entry: id,
+                      controller: viewModel.nameLangZhCNController,
+                      title: '套装名称本地化',
+                      placeholder: 'Name_lang_zhCN',
+                      delegate: FoxyLocalePickerDelegates.dbcItemSetName,
+                      onSaved: viewModel.applyNameLocales,
+                    );
+                  },
+                ),
               ),
             ),
             const Expanded(child: SizedBox()),

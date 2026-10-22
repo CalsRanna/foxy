@@ -39,7 +39,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
         children: [
           FoxyHeader('出生信息列表'),
           _buildFilter(),
-          Expanded(child: Watch((_) => _buildTable())),
+          Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
         ],
       ),
     );

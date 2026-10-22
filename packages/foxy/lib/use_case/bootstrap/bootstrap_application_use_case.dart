@@ -51,14 +51,11 @@ final class BootstrapApplicationUseCase {
   final VersionRepository _versionRepository;
 
   BootstrapApplicationUseCase({
-    required ConfigUtil configUtil,
-    required FeatureRepository featureRepository,
-    required SettingRepository settingRepository,
-    required VersionRepository versionRepository,
-  }) : _configUtil = configUtil,
-       _featureRepository = featureRepository,
-       _settingRepository = settingRepository,
-       _versionRepository = versionRepository;
+    required this._configUtil,
+    required this._featureRepository,
+    required this._settingRepository,
+    required this._versionRepository,
+  });
 
   Future<BootstrapApplicationResult> execute(
     BootstrapApplicationInput input,

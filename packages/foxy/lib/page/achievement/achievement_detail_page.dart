@@ -31,15 +31,20 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
           padding: const EdgeInsets.only(bottom: 12),
           child: FoxyHeader('成就详情'),
         ),
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          return FoxyTab(
-            tabs: const [Text('成就')],
-            contents: [
-              AchievementView(key: ValueKey('main-$key'), viewModel: viewModel),
-            ],
-          );
-        }),
+        SignalBuilder(
+          builder: (_) {
+            final key = viewModel.persistedKey.value;
+            return FoxyTab(
+              tabs: const [Text('成就')],
+              contents: [
+                AchievementView(
+                  key: ValueKey('main-$key'),
+                  viewModel: viewModel,
+                ),
+              ],
+            );
+          },
+        ),
       ],
     );
   }

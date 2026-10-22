@@ -51,12 +51,11 @@ final class ExtractGameIconsUseCase {
   Completer<GameIconExtractionResult>? _activeCompleter;
 
   ExtractGameIconsUseCase({
-    required ConfigUtil configUtil,
+    required this._configUtil,
     String? outputDir,
     this.cancelGraceMs = const Duration(milliseconds: 5000),
     GameIconExtractWorkerEntry? workerEntry,
-  }) : _configUtil = configUtil,
-       outputDir = outputDir ?? GameIconPaths.iconDir,
+  }) : outputDir = outputDir ?? GameIconPaths.iconDir,
        workerEntry = workerEntry ?? runGameIconExtractWorker;
 
   bool get isRunning => _executing;
@@ -213,5 +212,6 @@ final class ExtractGameIconsUseCase {
 
 /// Isolate entry point for [ExtractGameIconsUseCase]; defaults to the real
 /// [runGameIconExtractWorker]. Injectable for deterministic tests.
-typedef GameIconExtractWorkerEntry =
-    Future<void> Function(GameIconExtractWorkerArgs args);
+typedef GameIconExtractWorkerEntry = Future<void> Function(
+  GameIconExtractWorkerArgs args,
+);

@@ -99,7 +99,7 @@ class XxxEntity with _XxxEntityMixin {
 6. 字段类型只允许标量(`int`/`double`/`String`/`bool`/nullable);`bool` 的 DB 语义是 tinyint(生成代码处理 1/0,但**实体字段仍声明为 `bool`**)。
 7. 子表实体照写,只是会被 linkKey 仓库消费(不含 special 注解,与主表同构)。
 
-✅ **验证**:运行 `dart run build_runner build --delete-conflicting-outputs`(全部生成一次,慢,几分钟),检查 `xxx_entity.g.dart` 已生成且 `analyze` 无该文件错误。**不要手改 .g.dart**。
+✅ **验证**:运行 `dart run build_runner build`(全部生成一次,慢,几分钟),检查 `xxx_entity.g.dart` 已生成且 `analyze` 无该文件错误。**不要手改 .g.dart**。
 
 ---
 
@@ -130,7 +130,7 @@ class XxxRepository
 6. **子表(linkKey)**:`@FoxyRepository(linkKey: ['entry'])`。生成的子集合方法带关联键位置参数;`@FoxyLinkedListViewModel` 按「同关联键下最大+1」分配自增。多关联键(复合)走手写(参考 `player_create_info_*` 仓库)。
 7. **写入前钩子**:`_beforeStore` / `_beforeUpdate` / `_beforeDestroy` 空实现,需要时覆写。
 
-✅ **验证**:`dart run build_runner build --delete-conflicting-outputs` 后 `xxx_repository.g.dart` 生成;`flutter analyze` 无错误。别名列场景检查生成器是否要求手写方法(构建期报错提示时按提示补)。
+✅ **验证**:`dart run build_runner build` 后 `xxx_repository.g.dart` 生成;`flutter analyze` 无错误。别名列场景检查生成器是否要求手写方法(构建期报错提示时按提示补)。
 
 ---
 
@@ -227,7 +227,7 @@ class XxxDetailPage extends StatefulWidget {
 ```
 
 - `initState` → `viewModel.initSignals(key: widget.xxxKey)`,异常包 `DialogUtil.instance.error('加载失败：…')`。
-- 结构:`ListView` + `FoxyHeader('X详情')` + `Watch((_) { ... FoxyTab(...) })`。
+- 结构:`ListView` + `FoxyHeader('X详情')` + `SignalBuilder(builder: (_) { ... FoxyTab(...) })`。
 - 带子表:`tabs: [Text('基本信息'), ...]`,`contents: [XxxView(viewModel:), XxxSubView(key: ValueKey('sub-$id'), parentId: id)]`,`disabledIndexes: key == null ? {1,...} : {}`(未保存时禁用子表 tab,先存主表)。
 - **新代码统一用 `didUpdateWidget` 里 `viewModel.setLinkKey(...)`**(比依赖 ValueKey 重建精确),同时保留 ValueKey 作为兜底。
 
@@ -247,11 +247,11 @@ class XxxDetailPage extends StatefulWidget {
 | 16 语言 locale | `FoxyLocalePicker`(见 4.4) |
 
 - placeholder **一律英文列名**;`Row/Column` 间距用 `spacing:` 参数,`SizedBox` 只做固定尺寸(CONVENTIONS.md UI 约定)。
-- 保存/取消:`Watch` 包 `ShadButton(enabled: !viewModel.submitting.value, onPressed: _persist)`;`_persist` 成功 `DialogUtil.instance.success('X数据已保存')`、失败 `DialogUtil.instance.error('保存失败：…')`;取消 → `RouterFacade.goBack()`。
+- 保存/取消:`SignalBuilder(builder: (_) => ShadButton(enabled: !viewModel.submitting.value, onPressed: _persist))`;`_persist` 成功 `DialogUtil.instance.success('X数据已保存')`、失败 `DialogUtil.instance.error('保存失败：…')`;取消 → `RouterFacade.goBack()`。
 
 ### 4.4 FoxyLocalePicker(DBC 宽表)
 
-样板 `skill_line_view.dart` 62-105 行:`Watch((_) { FoxyLocalePicker(entry: persistedKey, controller: zhCN 字段, title: 'X本地化', placeholder: 'Name_lang_zhCN', delegate: FoxyLocalePickerDelegates.xxx, onSaved: viewModel.applyNameLocales) })`。`entry` 来自 `persistedKey`,未保存时(entry == null)locale 编辑不可用。
+样板 `skill_line_view.dart` 64-107 行:`SignalBuilder(builder: (_) { FoxyLocalePicker(entry: persistedKey, controller: zhCN 字段, title: 'X本地化', placeholder: 'Name_lang_zhCN', delegate: FoxyLocalePickerDelegates.xxx, onSaved: viewModel.applyNameLocales) })`。`entry` 来自 `persistedKey`,未保存时(entry == null)locale 编辑不可用。
 
 ### 4.5 子表视图(linked list tab)
 
@@ -266,7 +266,7 @@ class XxxDetailPage extends StatefulWidget {
 
 ```bash
 cd packages/foxy
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
 
 这一次生成:全部新增 `.g.dart`(entity/repository/view_model)+ **`router.gr.dart`**(auto_route 重生成)。不需要改 `build.yaml`(`generate_for` 通配已覆盖 `lib/entity/**_entity.dart` 等)。
@@ -319,7 +319,7 @@ AutoRoute(page: GameEventDetailRoute.page),
 
 ### 7.3 重新生成路由
 
-`dart run build_runner build --delete-conflicting-outputs`(router.gr.dart 由 auto_route 生成,它就是步骤 5 那次一并生成的;若 7.1/7.2 是在步骤 5 之后改的,重跑一次)。
+`dart run build_runner build`(router.gr.dart 由 auto_route 生成,它就是步骤 5 那次一并生成的;若 7.1/7.2 是在步骤 5 之后改的,重跑一次)。
 
 ✅ **验证**:`router.gr.dart` 包含 `GameEventListRoute`;`RouterMenu.gameEvent.route` 可用;`flutter analyze` 无错误。
 
@@ -510,7 +510,7 @@ ls lib/widget/*.dart | wc -l                   # 30
 
 ```bash
 cd packages/foxy
-dart run build_runner build --delete-conflicting-outputs   # 幂等,应无新输出
+dart run build_runner build   # 幂等,应无新输出
 flutter analyze
 flutter test
 flutter run -d windows   # 或 macos

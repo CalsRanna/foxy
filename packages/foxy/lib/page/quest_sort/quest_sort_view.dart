@@ -28,17 +28,19 @@ class QuestSortView extends StatelessWidget {
     );
     final nameInput = FoxyFormItem(
       label: '名称',
-      child: Watch((_) {
-        final id = viewModel.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: id,
-          controller: viewModel.nameController,
-          title: '任务分类名称本地化',
-          placeholder: 'SortName_lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcQuestSortSortName,
-          onSaved: viewModel.applySortNameLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final id = viewModel.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: id,
+            controller: viewModel.nameController,
+            title: '任务分类名称本地化',
+            placeholder: 'SortName_lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcQuestSortSortName,
+            onSaved: viewModel.applySortNameLocales,
+          );
+        },
+      ),
     );
     final sortNameLangFlagsInput = FoxyFormItem(
       label: '名称语言标志',
@@ -71,8 +73,8 @@ class QuestSortView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: const Text('保存'),

@@ -34,17 +34,19 @@ class AreaTableView extends StatelessWidget {
     );
     final nameInput = FoxyFormItem(
       label: '名称',
-      child: Watch((_) {
-        final id = viewModel.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: id,
-          controller: viewModel.nameController,
-          title: '区域名称本地化',
-          placeholder: 'AreaName_lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcAreaTableAreaName,
-          onSaved: viewModel.applyAreaNameLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final id = viewModel.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: id,
+            controller: viewModel.nameController,
+            title: '区域名称本地化',
+            placeholder: 'AreaName_lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcAreaTableAreaName,
+            onSaved: viewModel.applyAreaNameLocales,
+          );
+        },
+      ),
     );
     final continentIdInput = FoxyFormItem(
       label: '地图',
@@ -277,8 +279,8 @@ class AreaTableView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: Text('保存'),

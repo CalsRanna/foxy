@@ -333,7 +333,7 @@ final class ListReader {
   String _readEntityKeyType(InterfaceElement entityElement, Element element) {
     final keyFieldTypes = <String>[];
     for (final field in entityElement.fields.where(
-      (field) => !field.isStatic && !field.isSynthetic,
+      (field) => !field.isStatic && field.isOriginDeclaration,
     )) {
       final annotations = _fullFieldChecker.annotationsOf(field).toList();
       if (annotations.length != 1) continue;

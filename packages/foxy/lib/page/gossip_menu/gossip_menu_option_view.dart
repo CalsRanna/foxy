@@ -37,7 +37,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) => _buildList());
+    return SignalBuilder(builder: (_) => _buildList());
   }
 
   @override
@@ -62,7 +62,8 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     }
   }
 
-  Widget _buildDialogForm() {    return ConstrainedBox(
+  Widget _buildDialogForm() {
+    return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -24,244 +24,258 @@ class SmartScriptView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final eventConfig = SmartScriptConstants.eventParameterConfig(
-        viewModel.selectedEventType.value,
-      );
-      final actionConfig = SmartScriptConstants.actionParameterConfig(
-        viewModel.selectedActionType.value,
-      );
-      final targetConfig = SmartScriptConstants.targetParameterConfig(
-        viewModel.selectedTargetType.value,
-      );
+    return SignalBuilder(
+      builder: (_) {
+        final eventConfig = SmartScriptConstants.eventParameterConfig(
+          viewModel.selectedEventType.value,
+        );
+        final actionConfig = SmartScriptConstants.actionParameterConfig(
+          viewModel.selectedActionType.value,
+        );
+        final targetConfig = SmartScriptConstants.targetParameterConfig(
+          viewModel.selectedTargetType.value,
+        );
 
-      return SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16,
-          children: [
-            FoxyFormSection(
-              title: '基础信息',
-              children: [
-                _row(
-                  _numberItem(
-                    '实体编号',
-                    'entryorguid',
-                    viewModel.entryOrGuidController,
-                  ),
-                  FoxyFormItem(
-                    label: '源类型',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.sourceTypeController,
-                      options: SmartScriptConstants.sourceTypes,
-                      placeholder: 'source_type',
+        return SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              FoxyFormSection(
+                title: '基础信息',
+                children: [
+                  _row(
+                    _numberItem(
+                      '实体编号',
+                      'entryorguid',
+                      viewModel.entryOrGuidController,
                     ),
-                  ),
-                  _numberItem('ID', 'id', viewModel.idController),
-                  _numberItem('链接事件 ID', 'link', viewModel.linkController),
-                ),
-                _row(
-                  FoxyFormItem(
-                    label: '备注',
-                    child: FoxyStringInput(
-                      controller: viewModel.commentController,
-                      placeholder: 'comment',
-                    ),
-                  ),
-                  const SizedBox(),
-                  const SizedBox(),
-                  const SizedBox(),
-                ),
-              ],
-            ),
-            FoxyFormSection(
-              title: '事件参数',
-              children: [
-                _row(
-                  FoxyFormItem(
-                    label: '事件类型',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.eventTypeController,
-                      options: SmartScriptConstants.eventTypesForSource(
-                        viewModel.selectedSourceType.value,
+                    FoxyFormItem(
+                      label: '源类型',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.sourceTypeController,
+                        options: SmartScriptConstants.sourceTypes,
+                        placeholder: 'source_type',
                       ),
-                      placeholder: 'event_type',
+                    ),
+                    _numberItem('ID', 'id', viewModel.idController),
+                    _numberItem('链接事件 ID', 'link', viewModel.linkController),
+                  ),
+                  _row(
+                    FoxyFormItem(
+                      label: '备注',
+                      child: FoxyStringInput(
+                        controller: viewModel.commentController,
+                        placeholder: 'comment',
+                      ),
+                    ),
+                    const SizedBox(),
+                    const SizedBox(),
+                    const SizedBox(),
+                  ),
+                ],
+              ),
+              FoxyFormSection(
+                title: '事件参数',
+                children: [
+                  _row(
+                    FoxyFormItem(
+                      label: '事件类型',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.eventTypeController,
+                        options: SmartScriptConstants.eventTypesForSource(
+                          viewModel.selectedSourceType.value,
+                        ),
+                        placeholder: 'event_type',
+                      ),
+                    ),
+                    FoxyFormItem(
+                      label: '阶段掩码',
+                      child: FoxyFlagPicker(
+                        controller: viewModel.eventPhaseMaskController,
+                        flags: SmartScriptConstants.eventPhaseFlagItems,
+                        title: '事件阶段掩码',
+                        placeholder: 'event_phase_mask',
+                      ),
+                    ),
+                    _numberItem(
+                      '触发几率',
+                      'event_chance',
+                      viewModel.eventChanceController,
+                    ),
+                    FoxyFormItem(
+                      label: '事件标志',
+                      child: FoxyFlagPicker(
+                        controller: viewModel.eventFlagsController,
+                        flags: SmartScriptConstants.eventFlagItems,
+                        title: '事件标志',
+                        placeholder: 'event_flags',
+                      ),
                     ),
                   ),
-                  FoxyFormItem(
-                    label: '阶段掩码',
-                    child: FoxyFlagPicker(
-                      controller: viewModel.eventPhaseMaskController,
-                      flags: SmartScriptConstants.eventPhaseFlagItems,
-                      title: '事件阶段掩码',
-                      placeholder: 'event_phase_mask',
+                  _row(
+                    _parameterItem(
+                      'event_param1',
+                      eventConfig.param1,
+                      viewModel.eventParam1Controller,
+                    ),
+                    _parameterItem(
+                      'event_param2',
+                      eventConfig.param2,
+                      viewModel.eventParam2Controller,
+                    ),
+                    _parameterItem(
+                      'event_param3',
+                      eventConfig.param3,
+                      viewModel.eventParam3Controller,
+                    ),
+                    _parameterItem(
+                      'event_param4',
+                      eventConfig.param4,
+                      viewModel.eventParam4Controller,
                     ),
                   ),
-                  _numberItem(
-                    '触发几率',
-                    'event_chance',
-                    viewModel.eventChanceController,
+                  _row(
+                    _parameterItem(
+                      'event_param5',
+                      eventConfig.param5,
+                      viewModel.eventParam5Controller,
+                    ),
+                    _parameterItem(
+                      'event_param6',
+                      eventConfig.param6,
+                      viewModel.eventParam6Controller,
+                    ),
+                    const SizedBox(),
+                    const SizedBox(),
                   ),
-                  FoxyFormItem(
-                    label: '事件标志',
-                    child: FoxyFlagPicker(
-                      controller: viewModel.eventFlagsController,
-                      flags: SmartScriptConstants.eventFlagItems,
-                      title: '事件标志',
-                      placeholder: 'event_flags',
+                ],
+              ),
+              FoxyFormSection(
+                title: '动作参数',
+                children: [
+                  _row(
+                    FoxyFormItem(
+                      label: '动作类型',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.actionTypeController,
+                        options: SmartScriptConstants.actionTypes,
+                        placeholder: 'action_type',
+                      ),
+                    ),
+                    _parameterItem(
+                      'action_param1',
+                      actionConfig.param1,
+                      viewModel.actionParam1Controller,
+                    ),
+                    _parameterItem(
+                      'action_param2',
+                      actionConfig.param2,
+                      viewModel.actionParam2Controller,
+                    ),
+                    _parameterItem(
+                      'action_param3',
+                      actionConfig.param3,
+                      viewModel.actionParam3Controller,
                     ),
                   ),
-                ),
-                _row(
-                  _parameterItem(
-                    'event_param1',
-                    eventConfig.param1,
-                    viewModel.eventParam1Controller,
+                  _row(
+                    _parameterItem(
+                      'action_param4',
+                      actionConfig.param4,
+                      viewModel.actionParam4Controller,
+                    ),
+                    _parameterItem(
+                      'action_param5',
+                      actionConfig.param5,
+                      viewModel.actionParam5Controller,
+                    ),
+                    _parameterItem(
+                      'action_param6',
+                      actionConfig.param6,
+                      viewModel.actionParam6Controller,
+                    ),
+                    const SizedBox(),
                   ),
-                  _parameterItem(
-                    'event_param2',
-                    eventConfig.param2,
-                    viewModel.eventParam2Controller,
-                  ),
-                  _parameterItem(
-                    'event_param3',
-                    eventConfig.param3,
-                    viewModel.eventParam3Controller,
-                  ),
-                  _parameterItem(
-                    'event_param4',
-                    eventConfig.param4,
-                    viewModel.eventParam4Controller,
-                  ),
-                ),
-                _row(
-                  _parameterItem(
-                    'event_param5',
-                    eventConfig.param5,
-                    viewModel.eventParam5Controller,
-                  ),
-                  _parameterItem(
-                    'event_param6',
-                    eventConfig.param6,
-                    viewModel.eventParam6Controller,
-                  ),
-                  const SizedBox(),
-                  const SizedBox(),
-                ),
-              ],
-            ),
-            FoxyFormSection(
-              title: '动作参数',
-              children: [
-                _row(
-                  FoxyFormItem(
-                    label: '动作类型',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.actionTypeController,
-                      options: SmartScriptConstants.actionTypes,
-                      placeholder: 'action_type',
+                ],
+              ),
+              FoxyFormSection(
+                title: '目标参数',
+                children: [
+                  _row(
+                    FoxyFormItem(
+                      label: '目标类型',
+                      child: FoxyShadSelect<int>(
+                        controller: viewModel.targetTypeController,
+                        options: SmartScriptConstants.targetTypes,
+                        placeholder: 'target_type',
+                      ),
+                    ),
+                    _parameterItem(
+                      'target_param1',
+                      targetConfig.param1,
+                      viewModel.targetParam1Controller,
+                    ),
+                    _parameterItem(
+                      'target_param2',
+                      targetConfig.param2,
+                      viewModel.targetParam2Controller,
+                    ),
+                    _parameterItem(
+                      'target_param3',
+                      targetConfig.param3,
+                      viewModel.targetParam3Controller,
                     ),
                   ),
-                  _parameterItem(
-                    'action_param1',
-                    actionConfig.param1,
-                    viewModel.actionParam1Controller,
-                  ),
-                  _parameterItem(
-                    'action_param2',
-                    actionConfig.param2,
-                    viewModel.actionParam2Controller,
-                  ),
-                  _parameterItem(
-                    'action_param3',
-                    actionConfig.param3,
-                    viewModel.actionParam3Controller,
-                  ),
-                ),
-                _row(
-                  _parameterItem(
-                    'action_param4',
-                    actionConfig.param4,
-                    viewModel.actionParam4Controller,
-                  ),
-                  _parameterItem(
-                    'action_param5',
-                    actionConfig.param5,
-                    viewModel.actionParam5Controller,
-                  ),
-                  _parameterItem(
-                    'action_param6',
-                    actionConfig.param6,
-                    viewModel.actionParam6Controller,
-                  ),
-                  const SizedBox(),
-                ),
-              ],
-            ),
-            FoxyFormSection(
-              title: '目标参数',
-              children: [
-                _row(
-                  FoxyFormItem(
-                    label: '目标类型',
-                    child: FoxyShadSelect<int>(
-                      controller: viewModel.targetTypeController,
-                      options: SmartScriptConstants.targetTypes,
-                      placeholder: 'target_type',
+                  _row(
+                    _parameterItem(
+                      'target_param4',
+                      targetConfig.param4,
+                      viewModel.targetParam4Controller,
+                    ),
+                    _doubleItem(
+                      'X 坐标',
+                      'target_x',
+                      viewModel.targetXController,
+                    ),
+                    _doubleItem(
+                      'Y 坐标',
+                      'target_y',
+                      viewModel.targetYController,
+                    ),
+                    _doubleItem(
+                      'Z 坐标',
+                      'target_z',
+                      viewModel.targetZController,
                     ),
                   ),
-                  _parameterItem(
-                    'target_param1',
-                    targetConfig.param1,
-                    viewModel.targetParam1Controller,
+                  _row(
+                    _doubleItem('朝向', 'target_o', viewModel.targetOController),
+                    const SizedBox(),
+                    const SizedBox(),
+                    const SizedBox(),
                   ),
-                  _parameterItem(
-                    'target_param2',
-                    targetConfig.param2,
-                    viewModel.targetParam2Controller,
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  SignalBuilder(
+                    builder: (_) => ShadButton(
+                      enabled: !viewModel.submitting.value,
+                      onPressed: () => _persist(context),
+                      child: const Text('保存'),
+                    ),
                   ),
-                  _parameterItem(
-                    'target_param3',
-                    targetConfig.param3,
-                    viewModel.targetParam3Controller,
-                  ),
-                ),
-                _row(
-                  _parameterItem(
-                    'target_param4',
-                    targetConfig.param4,
-                    viewModel.targetParam4Controller,
-                  ),
-                  _doubleItem('X 坐标', 'target_x', viewModel.targetXController),
-                  _doubleItem('Y 坐标', 'target_y', viewModel.targetYController),
-                  _doubleItem('Z 坐标', 'target_z', viewModel.targetZController),
-                ),
-                _row(
-                  _doubleItem('朝向', 'target_o', viewModel.targetOController),
-                  const SizedBox(),
-                  const SizedBox(),
-                  const SizedBox(),
-                ),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                Watch(
-                  (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () => _persist(context),
-                    child: const Text('保存'),
-                  ),
-                ),
-                ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
+                  ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   /// Reference-field picker built from [delegate]: the concrete row type

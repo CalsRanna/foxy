@@ -162,9 +162,7 @@ class IntFieldControllerGroup extends FieldController<int> {
   bool _syncing = false;
   final _listeners = <VoidCallback>[];
 
-  IntFieldControllerGroup({
-    IntegerFieldEditor editor = IntegerFieldEditor.number,
-  }) : _editor = editor {
+  IntFieldControllerGroup({this._editor = IntegerFieldEditor.number}) {
     numberController.addListener(_onNumberChanged);
     selectController.addListener(_onSelectChanged);
     flagController.addListener(_onFlagChanged);

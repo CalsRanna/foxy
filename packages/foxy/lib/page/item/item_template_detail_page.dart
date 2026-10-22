@@ -38,61 +38,63 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
           padding: const EdgeInsets.only(bottom: 12),
           child: FoxyHeader('物品详情'),
         ),
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          final template = viewModel.entity.value;
-          final entry = key ?? 0;
-          final enchantmentParentKey = template == null
-              ? null
-              : template.randomProperty != 0
-              ? ItemEnchantmentTemplateLinkKey(
-                  entry: template.randomProperty,
-                  kind: ItemEnchantmentKind.randomProperty,
-                )
-              : template.randomSuffix != 0
-              ? ItemEnchantmentTemplateLinkKey(
-                  entry: template.randomSuffix,
-                  kind: ItemEnchantmentKind.randomSuffix,
-                )
-              : null;
-          return FoxyTab(
-            tabs: const [
-              Text('物品模板'),
-              Text('随机附魔组'),
-              Text('物品掉落'),
-              Text('分解掉落'),
-              Text('选矿掉落'),
-              Text('研磨掉落'),
-            ],
-            contents: [
-              ItemTemplateView(
-                key: ValueKey('main-$key'),
-                viewModel: viewModel,
-              ),
-              ItemEnchantmentTemplateView(
-                key: ValueKey('enchantment-$enchantmentParentKey'),
-                linkKey: enchantmentParentKey,
-              ),
-              ItemLootTemplateView(
-                key: ValueKey('loot-$entry'),
-                linkKey: entry,
-              ),
-              DisenchantLootTemplateView(
-                key: ValueKey('disenchant-${template?.disenchantId ?? 0}'),
-                linkKey: template?.disenchantId ?? 0,
-              ),
-              ProspectingLootTemplateView(
-                key: ValueKey('prospecting-$entry'),
-                linkKey: entry,
-              ),
-              MillingLootTemplateView(
-                key: ValueKey('milling-$entry'),
-                linkKey: entry,
-              ),
-            ],
-            disabledIndexes: key == null ? const {1, 2, 3, 4, 5} : const {},
-          );
-        }),
+        SignalBuilder(
+          builder: (_) {
+            final key = viewModel.persistedKey.value;
+            final template = viewModel.entity.value;
+            final entry = key ?? 0;
+            final enchantmentParentKey = template == null
+                ? null
+                : template.randomProperty != 0
+                ? ItemEnchantmentTemplateLinkKey(
+                    entry: template.randomProperty,
+                    kind: ItemEnchantmentKind.randomProperty,
+                  )
+                : template.randomSuffix != 0
+                ? ItemEnchantmentTemplateLinkKey(
+                    entry: template.randomSuffix,
+                    kind: ItemEnchantmentKind.randomSuffix,
+                  )
+                : null;
+            return FoxyTab(
+              tabs: const [
+                Text('物品模板'),
+                Text('随机附魔组'),
+                Text('物品掉落'),
+                Text('分解掉落'),
+                Text('选矿掉落'),
+                Text('研磨掉落'),
+              ],
+              contents: [
+                ItemTemplateView(
+                  key: ValueKey('main-$key'),
+                  viewModel: viewModel,
+                ),
+                ItemEnchantmentTemplateView(
+                  key: ValueKey('enchantment-$enchantmentParentKey'),
+                  linkKey: enchantmentParentKey,
+                ),
+                ItemLootTemplateView(
+                  key: ValueKey('loot-$entry'),
+                  linkKey: entry,
+                ),
+                DisenchantLootTemplateView(
+                  key: ValueKey('disenchant-${template?.disenchantId ?? 0}'),
+                  linkKey: template?.disenchantId ?? 0,
+                ),
+                ProspectingLootTemplateView(
+                  key: ValueKey('prospecting-$entry'),
+                  linkKey: entry,
+                ),
+                MillingLootTemplateView(
+                  key: ValueKey('milling-$entry'),
+                  linkKey: entry,
+                ),
+              ],
+              disabledIndexes: key == null ? const {1, 2, 3, 4, 5} : const {},
+            );
+          },
+        ),
       ],
     );
   }

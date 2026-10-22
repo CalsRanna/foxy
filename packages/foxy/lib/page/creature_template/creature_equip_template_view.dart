@@ -35,9 +35,11 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+    return SignalBuilder(
+      builder: (context) {
+        return _buildTable();
+      },
+    );
   }
 
   @override
@@ -136,7 +138,6 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
               ),
             ],
           ),
-
         ],
       ),
     );

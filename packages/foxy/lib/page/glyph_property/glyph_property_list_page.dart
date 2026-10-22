@@ -35,7 +35,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
     final children = [
       FoxyHeader('雕文属性列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

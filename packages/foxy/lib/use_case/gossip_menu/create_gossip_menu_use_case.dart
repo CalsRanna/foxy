@@ -23,14 +23,11 @@ final class CreateGossipMenuUseCase {
   final NpcTextRepository _npcTextRepository;
   final ActivityLogService _activityLogService;
   CreateGossipMenuUseCase({
-    required DatabaseTransaction transaction,
-    required GossipMenuRepository gossipMenuRepository,
-    required NpcTextRepository npcTextRepository,
-    required ActivityLogService activityLogService,
-  }) : _transaction = transaction,
-       _gossipMenuRepository = gossipMenuRepository,
-       _npcTextRepository = npcTextRepository,
-       _activityLogService = activityLogService;
+    required this._transaction,
+    required this._gossipMenuRepository,
+    required this._npcTextRepository,
+    required this._activityLogService,
+  });
 
   Future<void> execute(CreateGossipMenuInput input) async {
     final candidate = input.candidate;

@@ -18,7 +18,7 @@ Foxy 面向自建魔兽世界服务器(如 AzerothCore)的管理员与开发者,
 ## 技术栈
 
 - **Flutter Desktop**(Windows 为主,macOS / Linux 亦构建)
-- **Dart 3.9.2+** / Flutter 3.44.x stable
+- **Dart 3.13+** / Flutter 3.47.x stable
 - **laconic + laconic_mysql**:查询构建器与 MySQL 驱动
 - **signals / signals_flutter**:响应式状态管理
 - **shadcn_ui + lucide_icons_flutter**:界面组件
@@ -50,7 +50,7 @@ foxy/
 核心设计:**注解声明 + 代码生成**。手写代码只通过 `@Foxy*` 注解声明"表是什么",机械样板(列表行 DTO、完整实体、仓库 CRUD、表单控制器、ViewModel 信号)由三个 build_runner builder 生成到 `.g.dart` part 文件,手写类通过 `with` 混入生成的 mixin。
 
 ```
-Page (Watch 订阅) ──► ViewModel (signals + 表单控制器) ──► UseCase / Repository ──► MySQL
+Page (SignalBuilder 订阅) ──► ViewModel (signals + 表单控制器) ──► UseCase / Repository ──► MySQL
                                                         └──► EventBus ──► ActivityLogListener ──► foxy.activity_log
 ```
 
@@ -63,7 +63,8 @@ Page (Watch 订阅) ──► ViewModel (signals + 表单控制器) ──► Us
 
 ### 环境要求
 
-- Flutter 3.44.x stable(Dart SDK ^3.9.2)
+- Flutter 3.47.x stable(Dart SDK ^3.13.0)
+- macOS 端构建需 macOS 12.0+(Flutter 3.47 与 file_selector_macos 0.9.5+2 起要求)
 - MySQL 5.7+ / 8.x(建议 utf8mb4;应用会自建 `foxy` 元数据库)
 
 ### 运行
@@ -71,7 +72,7 @@ Page (Watch 订阅) ──► ViewModel (signals + 表单控制器) ──► Us
 ```bash
 cd packages/foxy
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs   # 重新生成 .g.dart(耗时数分钟)
+dart run build_runner build   # 重新生成 .g.dart(耗时数分钟)
 flutter analyze
 flutter test
 flutter run -d windows

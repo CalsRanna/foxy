@@ -36,8 +36,8 @@ class _DashboardPageRoute extends State<DashboardPage> {
       padding: EdgeInsets.all(16.0),
       children: [
         _Header(),
-        Watch(
-          (context) => Welcome(
+        SignalBuilder(
+          builder: (context) => Welcome(
             activityLogCount: viewModel.activityCount.value,
             featureCount: viewModel.featureCount.value,
           ),
@@ -62,21 +62,23 @@ class _DashboardPageRoute extends State<DashboardPage> {
 
   Widget _buildWorkspace() {
     final leftChildren = [
-      Watch(
-        (_) => FrequentModuleComponent(
+      SignalBuilder(
+        builder: (_) => FrequentModuleComponent(
           features: featureState.favoriteFeatures.value,
           onMenuTap: _navigateToMenu,
         ),
       ),
       SizedBox(height: 16),
-      Watch((_) => Trend(activities: viewModel.recentActivities.value)),
+      SignalBuilder(
+        builder: (_) => Trend(activities: viewModel.recentActivities.value),
+      ),
     ];
     final leftColumn = Column(children: leftChildren);
     final rightChildren = [
       Introduction(),
       SizedBox(height: 16),
-      Watch(
-        (_) => Version(
+      SignalBuilder(
+        builder: (_) => Version(
           coreVersion: viewModel.coreVersion.value,
           revision: viewModel.coreRevision.value,
           databaseVersion: viewModel.databaseVersion.value,

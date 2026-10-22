@@ -52,8 +52,8 @@ class FoxyFormDialog extends StatelessWidget {
         onPressed: () => Navigator.of(context).pop(),
         child: const Text('取消'),
       ),
-      Watch(
-        (_) => ShadButton(
+      SignalBuilder(
+        builder: (_) => ShadButton(
           enabled: !submitting.value,
           onPressed: () async {
             try {

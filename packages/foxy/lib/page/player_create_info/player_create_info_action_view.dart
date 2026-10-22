@@ -36,8 +36,8 @@ class _PlayerCreateInfoActionViewState
 
   @override
   Widget build(BuildContext context) {
-    return Watch(
-      (_) => Padding(
+    return SignalBuilder(
+      builder: (_) => Padding(
         padding: const EdgeInsets.only(top: 16),
         child: Column(
           spacing: 16,
@@ -173,7 +173,7 @@ class _PlayerCreateInfoActionViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '动作',
-                    child: Watch((_) => _buildActionInput()),
+                    child: SignalBuilder(builder: (_) => _buildActionInput()),
                   ),
                 ),
                 Expanded(

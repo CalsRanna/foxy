@@ -33,7 +33,7 @@ class _PageTextListPageState extends State<PageTextListPage> {
     final children = [
       FoxyHeader('页面文本列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     return Padding(
       padding: const EdgeInsets.all(16.0),

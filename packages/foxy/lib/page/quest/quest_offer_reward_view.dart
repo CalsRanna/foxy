@@ -148,8 +148,8 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励文本',
-              child: Watch(
-                (_) => FoxyLocalePicker(
+              child: SignalBuilder(
+                builder: (_) => FoxyLocalePicker(
                   entry: vm.editingKey.value,
                   controller: vm.rewardTextController,
                   delegate: FoxyLocalePickerDelegates.questOfferReward,
@@ -166,8 +166,8 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
       ),
     ];
 
-    return Watch(
-      (_) => SingleChildScrollView(
+    return SignalBuilder(
+      builder: (_) => SingleChildScrollView(
         padding: const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,8 +180,8 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
             Row(
               spacing: 8,
               children: [
-                Watch(
-                  (_) => ShadButton(
+                SignalBuilder(
+                  builder: (_) => ShadButton(
                     enabled: !viewModel.submitting.value,
                     onPressed: () => _persist(),
                     child: Text('保存'),

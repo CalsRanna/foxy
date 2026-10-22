@@ -62,32 +62,37 @@ class _MorePageState extends State<MorePage> {
   }
 
   Widget _buildGrid() {
-    return Watch((_) {
-      final modules = viewModel.filteredModules.value;
-      if (modules.isEmpty) {
-        return Center(
-          child: Text('没有匹配的模块', style: ShadTheme.of(context).textTheme.muted),
-        );
-      }
-      return GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 3 / 2,
-        ),
-        itemCount: modules.length,
-        itemBuilder: (context, index) {
-          final module = modules[index];
-          return FoxyFeatureCard(
-            feature: module,
-            onTap: () => _navigateToModule(module),
-            onSecondaryTap: (position) =>
-                _showContextMenu(context, module, position),
+    return SignalBuilder(
+      builder: (_) {
+        final modules = viewModel.filteredModules.value;
+        if (modules.isEmpty) {
+          return Center(
+            child: Text(
+              '没有匹配的模块',
+              style: ShadTheme.of(context).textTheme.muted,
+            ),
           );
-        },
-      );
-    });
+        }
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 3 / 2,
+          ),
+          itemCount: modules.length,
+          itemBuilder: (context, index) {
+            final module = modules[index];
+            return FoxyFeatureCard(
+              feature: module,
+              onTap: () => _navigateToModule(module),
+              onSecondaryTap: (position) =>
+                  _showContextMenu(context, module, position),
+            );
+          },
+        );
+      },
+    );
   }
 
   Widget _buildSearch() {

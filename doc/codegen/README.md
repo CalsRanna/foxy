@@ -151,10 +151,10 @@ packages/foxy_generator/lib/
 
 ```bash
 # 重新生成全部 .g.dart(新增/修改注解后)
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 
 # 生成后校验(可选,能查出部分手写端与生成端不一致)
-dart run build_runner build --delete-conflicting-outputs && flutter analyze
+dart run build_runner build && flutter analyze
 ```
 
 生成的文件都带 `// GENERATED CODE - DO NOT MODIFY BY HAND`,不要手改。

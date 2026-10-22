@@ -31,9 +31,11 @@ class _CreatureQuestStarterViewState extends State<CreatureQuestStarterView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+    return SignalBuilder(
+      builder: (context) {
+        return _buildTable();
+      },
+    );
   }
 
   @override
@@ -56,7 +58,8 @@ class _CreatureQuestStarterViewState extends State<CreatureQuestStarterView> {
     viewModel.initSignals(linkKey: widget.questId);
   }
 
-  Widget _buildDialogForm() {    return ConstrainedBox(
+  Widget _buildDialogForm() {
+    return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: DialogUtil.width),
       child: Column(
         mainAxisSize: MainAxisSize.min,

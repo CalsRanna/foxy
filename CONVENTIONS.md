@@ -23,7 +23,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 ## 3. 代码生成铁律
 
 - **禁止手改 `*.g.dart`**：它们是 `// GENERATED CODE - DO NOT MODIFY BY HAND` part 文件（提交入库）。要改就改手写文件的注解，再重跑生成。
-- 任何注解改动、或新增 entity/repository/view_model 文件后，必须先 `dart run build_runner build --delete-conflicting-outputs` 才能编译。
+- 任何注解改动、或新增 entity/repository/view_model 文件后，必须先 `dart run build_runner build` 才能编译。
 - 生成物一律是 mixin（`_XxxMixin on RepositoryMixin` / `FieldControllerMixin`），通过 `with` 混入手写类；定制行为靠手写类覆写生成方法。
 - 改动注解或生成器**必须**补生成器测试（`packages/foxy_generator/test/`），见 `doc/codegen/extending.md`。
 
@@ -59,7 +59,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 
 ## 6. 状态管理与 UI
 
-- 状态用 **signals / signals_flutter**（VM 暴露 `signal(...)` 字段，页面用 `Watch`）；禁止 Provider / Riverpod / Bloc。
+- 状态用 **signals / signals_flutter**（VM 暴露 `signal(...)` 字段，页面用 `SignalBuilder`）；禁止 Provider / Riverpod / Bloc。
 - 组件用 shadcn_ui + lucide_icons_flutter；中文界面。
 - UI 一致性约定（audit 2026-08 后确立）：
   - **错误提示一律阻塞模态**：`DialogUtil.instance.error('失败类型：${FoxyExceptions.message(error)}')`（标题"错误"，需手动确认）；禁止非阻塞错误 toast 或对话框内联错误。成功提示才用 `DialogUtil.instance.success(...)`（唯一 toast 入口，全库禁止裸 `ShadSonner.of`）。
@@ -68,7 +68,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
   - **间距**：新代码统一用 Row/Column 的 `spacing:` 参数；`SizedBox` 只做固定尺寸，不做元素间距。
   - **空态文案**：列表/表格统一"暂无数据"（`FoxyDataTable` 内置）；其他场景按语境自定，不必强行统一。
   - **控件映射**：数字 → `FoxyNumberInput`；文本 → `FoxyStringInput`；可空 → `FoxyNullableStringInput`；枚举 → `FoxyShadSelect`（placeholder 传字符串）；位标志 → `FoxyFlagPicker`；引用 → `FoxyEntityPicker`；本地化 → `FoxyLocalePicker`。placeholder 一律英文列名。
-  - **详情页响应式两模式并存，均正确**：大模块在详情页层 `Watch` 包 `FoxyTab` + 主视图 `ValueKey('main-$key')` + `disabledTabIndexes`；小模块在视图内 per-field `Watch`。新模块按规模选择，不必改造存量。
+  - **详情页响应式两模式并存，均正确**：大模块在详情页层 `SignalBuilder` 包 `FoxyTab` + 主视图 `ValueKey('main-$key')` + `disabledTabIndexes`；小模块在视图内 per-field `SignalBuilder`。新模块按规模选择，不必改造存量。
   - **子表 linkKey 变化**：新代码统一在 `didUpdateWidget` 里调 `viewModel.setLinkKey(...)`（比依赖父页 ValueKey 重建更精确）。
 
 ## 7. 数据库层

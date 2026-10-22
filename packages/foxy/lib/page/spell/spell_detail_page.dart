@@ -43,49 +43,54 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
           padding: const EdgeInsets.only(bottom: 12),
           child: FoxyHeader('法术详情'),
         ),
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          final spellId = key ?? 0;
-          const tabs = [
-            Text('基本信息'),
-            Text('奖励系数'),
-            Text('自定义属性'),
-            Text('区域技能'),
-            Text('技能组'),
-            Text('链接技能'),
-            Text('技能排行'),
-            Text('技能掉落'),
-          ];
-          return FoxyTab(
-            tabs: tabs,
-            contents: [
-              SpellView(key: ValueKey('main-$key'), viewModel: viewModel),
-              SpellBonusDataView(
-                key: ValueKey('bonus-$spellId'),
-                spellId: spellId,
+        SignalBuilder(
+          builder: (_) {
+            final key = viewModel.persistedKey.value;
+            final spellId = key ?? 0;
+            const tabs = [
+              Text('基本信息'),
+              Text('奖励系数'),
+              Text('自定义属性'),
+              Text('区域技能'),
+              Text('技能组'),
+              Text('链接技能'),
+              Text('技能排行'),
+              Text('技能掉落'),
+            ];
+            return FoxyTab(
+              tabs: tabs,
+              contents: [
+                SpellView(key: ValueKey('main-$key'), viewModel: viewModel),
+                SpellBonusDataView(
+                  key: ValueKey('bonus-$spellId'),
+                  spellId: spellId,
+                ),
+                SpellCustomAttrView(
+                  key: ValueKey('custom-$spellId'),
+                  spellId: spellId,
+                ),
+                SpellAreaView(key: ValueKey('area-$spellId'), spellId: spellId),
+                SpellGroupView(
+                  key: ValueKey('group-$spellId'),
+                  spellId: spellId,
+                ),
+                SpellLinkedSpellView(
+                  key: ValueKey('linked-$spellId'),
+                  spellId: spellId,
+                ),
+                SpellRankView(key: ValueKey('rank-$spellId'), spellId: spellId),
+                SpellLootTemplateView(
+                  key: ValueKey('loot-$spellId'),
+                  spellId: spellId,
+                ),
+              ],
+              disabledIndexes: SpellDetailPage.disabledTabIndexes(
+                key,
+                tabs.length,
               ),
-              SpellCustomAttrView(
-                key: ValueKey('custom-$spellId'),
-                spellId: spellId,
-              ),
-              SpellAreaView(key: ValueKey('area-$spellId'), spellId: spellId),
-              SpellGroupView(key: ValueKey('group-$spellId'), spellId: spellId),
-              SpellLinkedSpellView(
-                key: ValueKey('linked-$spellId'),
-                spellId: spellId,
-              ),
-              SpellRankView(key: ValueKey('rank-$spellId'), spellId: spellId),
-              SpellLootTemplateView(
-                key: ValueKey('loot-$spellId'),
-                spellId: spellId,
-              ),
-            ],
-            disabledIndexes: SpellDetailPage.disabledTabIndexes(
-              key,
-              tabs.length,
-            ),
-          );
-        }),
+            );
+          },
+        ),
       ],
     );
   }

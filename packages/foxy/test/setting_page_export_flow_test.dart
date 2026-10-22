@@ -33,7 +33,7 @@ import 'package:signals/signals_flutter.dart';
 /// computation `a.isRunning || b.isRunning || c.isRunning` short-circuits
 /// once any task is busy (while the shared DbcSyncUtil runs, the import
 /// VM's `isRunning` is true), so the signals read later in the chain get
-/// dropped from the Watch's dependency set and the buttons never rebuild
+/// dropped from the SignalBuilder's dependency set and the buttons never rebuild
 /// when that task finishes.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -163,22 +163,28 @@ void main() {
           body: Column(
             children: [
               // 与设置页 DBC 区相同的 busy 组合。
-              Watch((_) {
-                rebuilds++;
-                final busy =
-                    importVm.isRunning ||
-                    exportVm.isRunning ||
-                    mpqVm.isRunning ||
-                    combinedVm.isRunning;
-                return Text('dbc:${busy ? 'busy' : 'free'}');
-              }),
-              // 与设置页 MPQ 区相同的组合（双 Watch 共享信号；组合任务
+              SignalBuilder(
+                builder: (_) {
+                  rebuilds++;
+                  final busy =
+                      importVm.isRunning ||
+                      exportVm.isRunning ||
+                      mpqVm.isRunning ||
+                      combinedVm.isRunning;
+                  return Text('dbc:${busy ? 'busy' : 'free'}');
+                },
+              ),
+              // 与设置页 MPQ 区相同的组合（双 SignalBuilder 共享信号；组合任务
               // 运行时通过共享 util 使 mpqVm 忙,无需单独读取）。
-              Watch((_) {
-                final busy =
-                    mpqVm.isRunning || importVm.isRunning || exportVm.isRunning;
-                return Text('mpq:${busy ? 'busy' : 'free'}');
-              }),
+              SignalBuilder(
+                builder: (_) {
+                  final busy =
+                      mpqVm.isRunning ||
+                      importVm.isRunning ||
+                      exportVm.isRunning;
+                  return Text('mpq:${busy ? 'busy' : 'free'}');
+                },
+              ),
             ],
           ),
         ),
@@ -199,7 +205,7 @@ void main() {
     expect(find.text('mpq:busy'), findsOneWidget);
 
     // 任务结束：util 复位 + MPQ succeeded。修复前：短路已丢弃
-    // mpqVm.status 依赖，若 util.running 也未作为依赖被跟踪，Watch
+    // mpqVm.status 依赖，若 util.running 也未作为依赖被跟踪，SignalBuilder
     // 永不重建，按钮永远禁用。
     util.running.value = false;
     mpqVm.status.value = WorkflowStatus.succeeded;

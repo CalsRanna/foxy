@@ -34,7 +34,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
     final children = [
       FoxyHeader('脚本列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

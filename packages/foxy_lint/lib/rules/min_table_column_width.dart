@@ -57,9 +57,9 @@ class _ColumnWidthVisitor extends SimpleAstVisitor<void> {
     if (!isFixedTableColumn && !isPickerColumn) return;
 
     for (final argument in node.argumentList.arguments) {
-      if (argument is! NamedExpression) continue;
-      if (argument.name.label.name != 'width') continue;
-      final value = argument.expression;
+      if (argument is! NamedArgument) continue;
+      if (argument.name.lexeme != 'width') continue;
+      final value = argument.argumentExpression;
       if (value is! IntegerLiteral) continue;
       final width = value.value;
       if (width == null || width < _minWidth) {

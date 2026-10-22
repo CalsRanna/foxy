@@ -124,8 +124,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final subclassInput = FoxyFormItem(
       label: '子类别',
-      child: Watch(
-        (_) => FoxyShadSelect<int>(
+      child: SignalBuilder(
+        builder: (_) => FoxyShadSelect<int>(
           controller: viewModel.subclassController,
           options: _currentSubclassOptions,
           placeholder: 'subclass',
@@ -1130,8 +1130,8 @@ class ItemTemplateView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: Text('保存'),

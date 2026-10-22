@@ -225,8 +225,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   final _dirController = StringFieldController();
   final _searchController = StringFieldController();
 
-  /// The following states use signals: Watch subscribes directly, avoiding
-  /// a parent setState rebuilding the Watch and triggering signals_flutter's
+  /// The following states use signals: SignalBuilder subscribes directly, avoiding
+  /// a parent setState rebuilding the SignalBuilder and triggering signals_flutter's
   /// didUpdateWidget→recompute chain that would break the subscription.
   final _outputDir = signal<String?>(null);
   final _loaded = signal(false);
@@ -237,54 +237,162 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: SettingDialogShell._dialogWidth,
-      child: Watch((_) {
-        // Explicitly subscribe to the list signal so select-all/deselect
-        // refreshes the whole table.
-        final allItems = _vm.items.value;
-        final workflowStatus = _vm.status.value;
-        final exporting =
-            workflowStatus == WorkflowStatus.preparing ||
-            workflowStatus == WorkflowStatus.running ||
-            workflowStatus == WorkflowStatus.cancelling;
-        final error = _vm.errorMessage.value;
-        final success = workflowStatus == WorkflowStatus.succeeded;
-        final theme = ShadTheme.of(context);
+      child: SignalBuilder(
+        builder: (_) {
+          // Explicitly subscribe to the list signal so select-all/deselect
+          // refreshes the whole table.
+          final allItems = _vm.items.value;
+          final workflowStatus = _vm.status.value;
+          final exporting =
+              workflowStatus == WorkflowStatus.preparing ||
+              workflowStatus == WorkflowStatus.running ||
+              workflowStatus == WorkflowStatus.cancelling;
+          final error = _vm.errorMessage.value;
+          final success = workflowStatus == WorkflowStatus.succeeded;
+          final theme = ShadTheme.of(context);
 
-        if (!_loaded.value && !exporting) {
+          if (!_loaded.value && !exporting) {
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                LucideIcons.fileOutput,
+                '导出 DBC',
+              ),
+              child: const SizedBox(
+                height: 140,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 12,
+                    children: [
+                      FoxyLoadingIndicator(),
+                      Text('正在读取表统计…', style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          if (success) {
+            final result = _vm.result.value;
+            final warnings = result?.warnings ?? const <DbcSyncWarning>[];
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                LucideIcons.circleCheck,
+                '导出完成',
+                iconColor: theme.colorScheme.primary,
+              ),
+              actions: [
+                ShadButton(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  child: const Text('完成'),
+                ),
+              ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 12,
+                children: [
+                  SettingDialogShell.banner(
+                    context,
+                    text:
+                        '成功导出 ${result?.completed ?? 0} 个文件'
+                        '${(result?.skipped ?? 0) > 0 ? '，跳过 ${result!.skipped} 个空表' : ''}。',
+                    color: theme.colorScheme.primary,
+                    icon: LucideIcons.circleCheck,
+                  ),
+                  if (warnings.isNotEmpty)
+                    SettingDialogShell.banner(
+                      context,
+                      text: warnings.map((w) => w.message).join('\n\n'),
+                      color: theme.colorScheme.destructive,
+                      icon: LucideIcons.alertTriangle,
+                    ),
+                  if (_outputDir.value != null)
+                    SettingDialogShell.mutedHint(
+                      context,
+                      '输出目录：${_outputDir.value}',
+                    ),
+                ],
+              ),
+            );
+          }
+
+          if (exporting) {
+            // While a task is in flight, block every way out (Esc, back
+            // gesture): closing the dialog mid-run would leave the task
+            // running in the background with no visible state. Cancel (the
+            // only exit shown here) is in-dialog.
+            return PopScope(
+              canPop: false,
+              child: SettingDialogShell(
+                title: SettingDialogShell.titleRow(
+                  LucideIcons.fileOutput,
+                  '正在导出 DBC',
+                ),
+                child: SettingDialogShell.progressPanel(
+                  context,
+                  ratio: _vm.progress.value,
+                  label: _vm.progressLabel.value,
+                  detail: _vm.progressDetail.value,
+                  trailing: ShadButton.outline(
+                    size: ShadButtonSize.sm,
+                    onPressed: workflowStatus == WorkflowStatus.cancelling
+                        ? null
+                        : _vm.cancel,
+                    child: Text(
+                      workflowStatus == WorkflowStatus.cancelling
+                          ? '正在取消…'
+                          : '取消导出',
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+
+          final items = _filterItems(allItems);
+          final selectedCount = allItems
+              .where((item) => item.selected && item.canSelect)
+              .length;
+          final selectableCount = allItems
+              .where((item) => item.canSelect)
+              .length;
+          final allSelected =
+              selectableCount > 0 &&
+              allItems
+                  .where((item) => item.canSelect)
+                  .every((item) => item.selected);
+          final failureCount = allItems
+              .where((item) => item.countFailed)
+              .length;
+
           return SettingDialogShell(
             title: SettingDialogShell.titleRow(
               LucideIcons.fileOutput,
               '导出 DBC',
             ),
-            child: const SizedBox(
-              height: 140,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 12,
-                  children: [
-                    FoxyLoadingIndicator(),
-                    Text('正在读取表统计…', style: TextStyle(fontSize: 13)),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-
-        if (success) {
-          final result = _vm.result.value;
-          final warnings = result?.warnings ?? const <DbcSyncWarning>[];
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.circleCheck,
-              '导出完成',
-              iconColor: theme.colorScheme.primary,
-            ),
             actions: [
-              ShadButton(
+              ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('完成'),
+                child: const Text('关闭'),
+              ),
+              ShadButton(
+                onPressed: selectedCount == 0 || _outputDir.value == null
+                    ? null
+                    : () async {
+                        _vm.setOutputDirectory(_outputDir.value!);
+                        try {
+                          await _vm.start();
+                        } catch (_) {
+                          // The workflow exposes the failure through errorMessage.
+                        }
+                      },
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [Icon(LucideIcons.play, size: 15), Text('开始导出')],
+                ),
               ),
             ],
             child: Column(
@@ -292,204 +400,105 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                SettingDialogShell.banner(
+                SettingDialogShell.mutedHint(
                   context,
-                  text:
-                      '成功导出 ${result?.completed ?? 0} 个文件'
-                      '${(result?.skipped ?? 0) > 0 ? '，跳过 ${result!.skipped} 个空表' : ''}。',
-                  color: theme.colorScheme.primary,
-                  icon: LucideIcons.circleCheck,
+                  '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。',
                 ),
-                if (warnings.isNotEmpty)
+                Text(
+                  '输出目录',
+                  style: theme.textTheme.small.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SettingDialogShell.pathField(
+                  controller: _dirController,
+                  placeholder: '选择导出目录',
+                  onBrowse: _browse,
+                  onChanged: (value) {
+                    final trimmed = value.trim();
+                    _outputDir.value = trimmed.isEmpty ? null : trimmed;
+                    _vm.setOutputDirectory(value);
+                  },
+                ),
+                if (error != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 8,
+                    children: [
+                      SettingDialogShell.banner(
+                        context,
+                        text: error,
+                        color: theme.colorScheme.destructive,
+                        icon: LucideIcons.triangleAlert,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ShadButton.outline(
+                          size: ShadButtonSize.sm,
+                          onPressed: _outputDir.value == null
+                              ? null
+                              : () {
+                                  _vm.setOutputDirectory(_outputDir.value!);
+                                  _vm.retry();
+                                },
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 6,
+                            children: [
+                              Icon(LucideIcons.rotateCw, size: 14),
+                              Text('重试'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                if (failureCount > 0)
                   SettingDialogShell.banner(
                     context,
-                    text: warnings.map((w) => w.message).join('\n\n'),
+                    text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
                     color: theme.colorScheme.destructive,
-                    icon: LucideIcons.alertTriangle,
+                    icon: LucideIcons.circleAlert,
                   ),
-                if (_outputDir.value != null)
-                  SettingDialogShell.mutedHint(
-                    context,
-                    '输出目录：${_outputDir.value}',
-                  ),
-              ],
-            ),
-          );
-        }
-
-        if (exporting) {
-          // While a task is in flight, block every way out (Esc, back
-          // gesture): closing the dialog mid-run would leave the task
-          // running in the background with no visible state. Cancel (the
-          // only exit shown here) is in-dialog.
-          return PopScope(
-            canPop: false,
-            child: SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.fileOutput,
-                '正在导出 DBC',
-              ),
-              child: SettingDialogShell.progressPanel(
-                context,
-                ratio: _vm.progress.value,
-                label: _vm.progressLabel.value,
-                detail: _vm.progressDetail.value,
-                trailing: ShadButton.outline(
-                  size: ShadButtonSize.sm,
-                  onPressed: workflowStatus == WorkflowStatus.cancelling
-                      ? null
-                      : _vm.cancel,
-                  child: Text(
-                    workflowStatus == WorkflowStatus.cancelling
-                        ? '正在取消…'
-                        : '取消导出',
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
-
-        final items = _filterItems(allItems);
-        final selectedCount = allItems
-            .where((item) => item.selected && item.canSelect)
-            .length;
-        final selectableCount = allItems.where((item) => item.canSelect).length;
-        final allSelected =
-            selectableCount > 0 &&
-            allItems
-                .where((item) => item.canSelect)
-                .every((item) => item.selected);
-        final failureCount = allItems.where((item) => item.countFailed).length;
-
-        return SettingDialogShell(
-          title: SettingDialogShell.titleRow(LucideIcons.fileOutput, '导出 DBC'),
-          actions: [
-            ShadButton.outline(
-              onPressed: () => Navigator.of(context).maybePop(),
-              child: const Text('关闭'),
-            ),
-            ShadButton(
-              onPressed: selectedCount == 0 || _outputDir.value == null
-                  ? null
-                  : () async {
-                      _vm.setOutputDirectory(_outputDir.value!);
-                      try {
-                        await _vm.start();
-                      } catch (_) {
-                        // The workflow exposes the failure through errorMessage.
-                      }
-                    },
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.play, size: 15), Text('开始导出')],
-              ),
-            ),
-          ],
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 12,
-            children: [
-              SettingDialogShell.mutedHint(
-                context,
-                '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。',
-              ),
-              Text(
-                '输出目录',
-                style: theme.textTheme.small.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SettingDialogShell.pathField(
-                controller: _dirController,
-                placeholder: '选择导出目录',
-                onBrowse: _browse,
-                onChanged: (value) {
-                  final trimmed = value.trim();
-                  _outputDir.value = trimmed.isEmpty ? null : trimmed;
-                  _vm.setOutputDirectory(value);
-                },
-              ),
-              if (error != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                Row(
                   spacing: 8,
                   children: [
-                    SettingDialogShell.banner(
-                      context,
-                      text: error,
-                      color: theme.colorScheme.destructive,
-                      icon: LucideIcons.triangleAlert,
+                    ShadButton.ghost(
+                      size: ShadButtonSize.sm,
+                      onPressed: selectableCount == 0
+                          ? null
+                          : () => _vm.setAllSelectableSelected(!allSelected),
+                      child: Text(allSelected ? '取消全选' : '全选'),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ShadButton.outline(
-                        size: ShadButtonSize.sm,
-                        onPressed: _outputDir.value == null
-                            ? null
-                            : () {
-                                _vm.setOutputDirectory(_outputDir.value!);
-                                _vm.retry();
-                              },
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 6,
-                          children: [
-                            Icon(LucideIcons.rotateCw, size: 14),
-                            Text('重试'),
-                          ],
+                    Text(
+                      '已选 $selectedCount / $selectableCount',
+                      style: theme.textTheme.muted.copyWith(fontSize: 12),
+                    ),
+                    const Spacer(),
+                    SizedBox(
+                      width: 200,
+                      child: ShadInput(
+                        controller: _searchController.controller,
+                        placeholder: const Text('搜索表名…'),
+                        leading: const Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Icon(LucideIcons.search, size: 14),
                         ),
                       ),
                     ),
                   ],
                 ),
-              if (failureCount > 0)
-                SettingDialogShell.banner(
-                  context,
-                  text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
-                  color: theme.colorScheme.destructive,
-                  icon: LucideIcons.circleAlert,
+                DbcTableSelectList(
+                  items: items,
+                  emptyText: _query.value.isEmpty ? '没有可导出的表' : '没有匹配的表',
+                  onToggle: (item) =>
+                      _vm.setItemSelected(item.tableName, !item.selected),
                 ),
-              Row(
-                spacing: 8,
-                children: [
-                  ShadButton.ghost(
-                    size: ShadButtonSize.sm,
-                    onPressed: selectableCount == 0
-                        ? null
-                        : () => _vm.setAllSelectableSelected(!allSelected),
-                    child: Text(allSelected ? '取消全选' : '全选'),
-                  ),
-                  Text(
-                    '已选 $selectedCount / $selectableCount',
-                    style: theme.textTheme.muted.copyWith(fontSize: 12),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 200,
-                    child: ShadInput(
-                      controller: _searchController.controller,
-                      placeholder: const Text('搜索表名…'),
-                      leading: const Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Icon(LucideIcons.search, size: 14),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              DbcTableSelectList(
-                items: items,
-                emptyText: _query.value.isEmpty ? '没有可导出的表' : '没有匹配的表',
-                onToggle: (item) =>
-                    _vm.setItemSelected(item.tableName, !item.selected),
-              ),
-            ],
-          ),
-        );
-      }),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -506,7 +515,11 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
     _searchController.addListener(() {
       _query.value = _searchController.collect().trim().toLowerCase();
     });
-    _bootstrap();
+    // signals_flutter 7's SignalBuilder marks itself dirty synchronously from
+    // its subscription callback, so a signal written during this widget's
+    // first build throws "setState() called during build". Prepare after the
+    // frame so the work runs outside the build phase.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _bootstrap());
   }
 
   Future<void> _bootstrap() async {
@@ -546,8 +559,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
 }
 
 class _DbcImportDialogState extends State<DbcImportDialog> {
-  /// The ready flag uses a signal: Watch subscribes directly, avoiding a
-  /// parent setState rebuilding the Watch and triggering signals_flutter's
+  /// The ready flag uses a signal: SignalBuilder subscribes directly, avoiding a
+  /// parent setState rebuilding the SignalBuilder and triggering signals_flutter's
   /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
 
@@ -557,141 +570,148 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: SettingDialogShell._dialogWidth,
-      child: Watch((_) {
-        if (!_ready.value) {
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(LucideIcons.fileInput, '导入 DBC'),
-            child: const SizedBox(
-              height: 120,
-              child: Center(child: FoxyLoadingIndicator()),
-            ),
-          );
-        }
-
-        final workflowStatus = _vm.status.value;
-        final importing =
-            workflowStatus == WorkflowStatus.preparing ||
-            workflowStatus == WorkflowStatus.running ||
-            workflowStatus == WorkflowStatus.cancelling;
-        final error = _vm.errorMessage.value;
-        final success = workflowStatus == WorkflowStatus.succeeded;
-        final theme = ShadTheme.of(context);
-
-        if (success) {
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.circleCheck,
-              '导入完成',
-              iconColor: theme.colorScheme.primary,
-            ),
-            actions: [
-              ShadButton(
-                onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('完成'),
-              ),
-            ],
-            child: SettingDialogShell.banner(
-              context,
-              text:
-                  '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
-                  '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个' : ''}。',
-              color: theme.colorScheme.primary,
-              icon: LucideIcons.circleCheck,
-            ),
-          );
-        }
-
-        if (importing) {
-          // Block Esc/back while a task is in flight: closing mid-run would
-          // leave the import running in the background with no visible
-          // state. Cancel (the only exit shown here) is in-dialog.
-          return PopScope(
-            canPop: false,
-            child: SettingDialogShell(
+      child: SignalBuilder(
+        builder: (_) {
+          if (!_ready.value) {
+            return SettingDialogShell(
               title: SettingDialogShell.titleRow(
                 LucideIcons.fileInput,
-                '正在导入 DBC',
+                '导入 DBC',
               ),
-              child: SettingDialogShell.progressPanel(
+              child: const SizedBox(
+                height: 120,
+                child: Center(child: FoxyLoadingIndicator()),
+              ),
+            );
+          }
+
+          final workflowStatus = _vm.status.value;
+          final importing =
+              workflowStatus == WorkflowStatus.preparing ||
+              workflowStatus == WorkflowStatus.running ||
+              workflowStatus == WorkflowStatus.cancelling;
+          final error = _vm.errorMessage.value;
+          final success = workflowStatus == WorkflowStatus.succeeded;
+          final theme = ShadTheme.of(context);
+
+          if (success) {
+            return SettingDialogShell(
+              title: SettingDialogShell.titleRow(
+                LucideIcons.circleCheck,
+                '导入完成',
+                iconColor: theme.colorScheme.primary,
+              ),
+              actions: [
+                ShadButton(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  child: const Text('完成'),
+                ),
+              ],
+              child: SettingDialogShell.banner(
                 context,
-                ratio: _vm.progress.value,
-                label: _vm.progressLabel.value,
-                detail: _vm.progressDetail.value,
-                trailing: ShadButton.outline(
-                  size: ShadButtonSize.sm,
-                  onPressed: workflowStatus == WorkflowStatus.cancelling
-                      ? null
-                      : _vm.cancel,
-                  child: Text(
-                    workflowStatus == WorkflowStatus.cancelling
-                        ? '正在取消…'
-                        : '取消导入',
+                text:
+                    '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
+                    '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个' : ''}。',
+                color: theme.colorScheme.primary,
+                icon: LucideIcons.circleCheck,
+              ),
+            );
+          }
+
+          if (importing) {
+            // Block Esc/back while a task is in flight: closing mid-run would
+            // leave the import running in the background with no visible
+            // state. Cancel (the only exit shown here) is in-dialog.
+            return PopScope(
+              canPop: false,
+              child: SettingDialogShell(
+                title: SettingDialogShell.titleRow(
+                  LucideIcons.fileInput,
+                  '正在导入 DBC',
+                ),
+                child: SettingDialogShell.progressPanel(
+                  context,
+                  ratio: _vm.progress.value,
+                  label: _vm.progressLabel.value,
+                  detail: _vm.progressDetail.value,
+                  trailing: ShadButton.outline(
+                    size: ShadButtonSize.sm,
+                    onPressed: workflowStatus == WorkflowStatus.cancelling
+                        ? null
+                        : _vm.cancel,
+                    child: Text(
+                      workflowStatus == WorkflowStatus.cancelling
+                          ? '正在取消…'
+                          : '取消导入',
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        final path = _vm.path.value;
-        final configured = path != null && path.trim().isNotEmpty;
-        return SettingDialogShell(
-          title: SettingDialogShell.titleRow(LucideIcons.fileInput, '导入 DBC'),
-          actions: [
-            ShadButton.outline(
-              onPressed: () => Navigator.of(context).maybePop(),
-              child: const Text('关闭'),
-            ),
-            ShadButton(
-              onPressed: configured ? _start : null,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
+          final path = _vm.path.value;
+          final configured = path != null && path.trim().isNotEmpty;
+          return SettingDialogShell(
+            title: SettingDialogShell.titleRow(LucideIcons.fileInput, '导入 DBC'),
+            actions: [
+              ShadButton.outline(
+                onPressed: () => Navigator.of(context).maybePop(),
+                child: const Text('关闭'),
               ),
-            ),
-          ],
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 14,
-            children: [
-              SettingDialogShell.mutedHint(
-                context,
-                '从配置的服务端 DBC 目录导入。导入以 DBC 为准：将覆盖数据库中'
-                '对应表的数据；若需保留库内数据请先自行备份。',
-              ),
-              Text(
-                '服务端 DBC 目录',
-                style: theme.textTheme.small.copyWith(
-                  fontWeight: FontWeight.w600,
+              ShadButton(
+                onPressed: configured ? _start : null,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
                 ),
               ),
-              if (configured)
-                SettingDialogShell.readonlyPath(context, path)
-              else
+            ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 14,
+              children: [
                 SettingDialogShell.mutedHint(
                   context,
-                  '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
+                  '从配置的服务端 DBC 目录导入。导入以 DBC 为准：将覆盖数据库中'
+                  '对应表的数据；若需保留库内数据请先自行备份。',
                 ),
-              if (error != null)
-                SettingDialogShell.banner(
-                  context,
-                  text: error,
-                  color: theme.colorScheme.destructive,
-                  icon: LucideIcons.triangleAlert,
+                Text(
+                  '服务端 DBC 目录',
+                  style: theme.textTheme.small.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-            ],
-          ),
-        );
-      }),
+                if (configured)
+                  SettingDialogShell.readonlyPath(context, path)
+                else
+                  SettingDialogShell.mutedHint(
+                    context,
+                    '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
+                  ),
+                if (error != null)
+                  SettingDialogShell.banner(
+                    context,
+                    text: error,
+                    color: theme.colorScheme.destructive,
+                    icon: LucideIcons.triangleAlert,
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
   @override
   void initState() {
     super.initState();
-    _prepare();
+    // See _DbcExportDialogState.initState: prepare after the first frame so the
+    // signal writes do not land during the build phase.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _prepare());
   }
 
   Future<void> _prepare() async {

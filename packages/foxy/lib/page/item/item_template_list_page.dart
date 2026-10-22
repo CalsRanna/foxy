@@ -35,8 +35,8 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('物品列表'),
-      Watch((_) => _buildFilter()),
-      Expanded(child: Watch((_) => _buildTable())),
+      SignalBuilder(builder: (_) => _buildFilter()),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

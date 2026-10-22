@@ -34,7 +34,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     final children = [
       FoxyHeader('生物列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

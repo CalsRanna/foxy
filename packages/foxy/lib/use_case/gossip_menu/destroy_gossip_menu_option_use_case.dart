@@ -13,14 +13,11 @@ final class DestroyGossipMenuOptionUseCase {
   final GossipMenuOptionLocaleRepository _localeRepository;
   final ActivityLogService _activityLogService;
   DestroyGossipMenuOptionUseCase({
-    required DatabaseTransaction transaction,
-    required GossipMenuOptionRepository optionRepository,
-    required GossipMenuOptionLocaleRepository localeRepository,
-    required ActivityLogService activityLogService,
-  }) : _transaction = transaction,
-       _optionRepository = optionRepository,
-       _localeRepository = localeRepository,
-       _activityLogService = activityLogService;
+    required this._transaction,
+    required this._optionRepository,
+    required this._localeRepository,
+    required this._activityLogService,
+  });
 
   Future<void> execute(GossipMenuOptionKey key) async {
     await _transaction.execute(() async {

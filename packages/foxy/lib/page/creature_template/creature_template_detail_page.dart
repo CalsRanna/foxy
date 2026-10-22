@@ -63,68 +63,70 @@ class _CreatureTemplateDetailPageState
           padding: const EdgeInsets.only(bottom: 12),
           child: FoxyHeader('生物详情'),
         ),
-        Watch((_) {
-          final key = viewModel.persistedKey.value;
-          final template = viewModel.entity.value;
-          final creatureId = key ?? 0;
-          return FoxyTab(
-            tabs: tabs,
-            contents: [
-              CreatureTemplateView(
-                key: ValueKey('main-$key'),
-                viewModel: viewModel,
+        SignalBuilder(
+          builder: (_) {
+            final key = viewModel.persistedKey.value;
+            final template = viewModel.entity.value;
+            final creatureId = key ?? 0;
+            return FoxyTab(
+              tabs: tabs,
+              contents: [
+                CreatureTemplateView(
+                  key: ValueKey('main-$key'),
+                  viewModel: viewModel,
+                ),
+                CreatureTemplateAddonView(
+                  key: ValueKey('addon-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                CreatureOnKillReputationView(
+                  key: ValueKey('reputation-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                CreatureTemplateResistanceView(
+                  key: ValueKey('resistance-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                CreatureTemplateSpellView(
+                  key: ValueKey('spell-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                CreatureEquipTemplateView(
+                  key: ValueKey('equip-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                CreatureQuestItemView(
+                  key: ValueKey('quest-item-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                NpcVendorView(
+                  key: ValueKey('vendor-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                NpcTrainerView(
+                  key: ValueKey('trainer-$creatureId'),
+                  creatureId: creatureId,
+                ),
+                CreatureLootTemplateView(
+                  key: ValueKey('loot-${template?.lootId ?? 0}'),
+                  linkKey: template?.lootId ?? 0,
+                ),
+                PickpocketingLootTemplateView(
+                  key: ValueKey('pickpocket-${template?.pickpocketLoot ?? 0}'),
+                  linkKey: template?.pickpocketLoot ?? 0,
+                ),
+                SkinningLootTemplateView(
+                  key: ValueKey('skinning-${template?.skinLoot ?? 0}'),
+                  linkKey: template?.skinLoot ?? 0,
+                ),
+              ],
+              disabledIndexes: CreatureTemplateDetailPage.disabledTabIndexes(
+                key,
+                tabs.length,
               ),
-              CreatureTemplateAddonView(
-                key: ValueKey('addon-$creatureId'),
-                creatureId: creatureId,
-              ),
-              CreatureOnKillReputationView(
-                key: ValueKey('reputation-$creatureId'),
-                creatureId: creatureId,
-              ),
-              CreatureTemplateResistanceView(
-                key: ValueKey('resistance-$creatureId'),
-                creatureId: creatureId,
-              ),
-              CreatureTemplateSpellView(
-                key: ValueKey('spell-$creatureId'),
-                creatureId: creatureId,
-              ),
-              CreatureEquipTemplateView(
-                key: ValueKey('equip-$creatureId'),
-                creatureId: creatureId,
-              ),
-              CreatureQuestItemView(
-                key: ValueKey('quest-item-$creatureId'),
-                creatureId: creatureId,
-              ),
-              NpcVendorView(
-                key: ValueKey('vendor-$creatureId'),
-                creatureId: creatureId,
-              ),
-              NpcTrainerView(
-                key: ValueKey('trainer-$creatureId'),
-                creatureId: creatureId,
-              ),
-              CreatureLootTemplateView(
-                key: ValueKey('loot-${template?.lootId ?? 0}'),
-                linkKey: template?.lootId ?? 0,
-              ),
-              PickpocketingLootTemplateView(
-                key: ValueKey('pickpocket-${template?.pickpocketLoot ?? 0}'),
-                linkKey: template?.pickpocketLoot ?? 0,
-              ),
-              SkinningLootTemplateView(
-                key: ValueKey('skinning-${template?.skinLoot ?? 0}'),
-                linkKey: template?.skinLoot ?? 0,
-              ),
-            ],
-            disabledIndexes: CreatureTemplateDetailPage.disabledTabIndexes(
-              key,
-              tabs.length,
-            ),
-          );
-        }),
+            );
+          },
+        ),
       ],
     );
   }

@@ -36,7 +36,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
     final children = [
       FoxyHeader('扩展价格列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -81,7 +81,7 @@ Never _fail(String message, Element element, String correction) {
 List<String> logNameFieldsOf(ClassElement entityElement) {
   final stringFields = <String>{};
   for (final field in entityElement.fields) {
-    if (field.isStatic || field.isSynthetic) continue;
+    if (field.isStatic || !field.isOriginDeclaration) continue;
     if (_fullFieldChecker.annotationsOf(field).length != 1) continue;
     final name = field.name;
     if (name == null) continue;

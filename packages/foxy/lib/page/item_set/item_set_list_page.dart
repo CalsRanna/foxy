@@ -33,7 +33,7 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
     final children = [
       FoxyHeader('套装列表'),
       _buildFilter(),
-      Expanded(child: Watch((_) => _buildTable())),
+      Expanded(child: SignalBuilder(builder: (_) => _buildTable())),
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

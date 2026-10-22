@@ -28,11 +28,7 @@ final class ImportDbcUseCase {
 
   var _executing = false;
 
-  ImportDbcUseCase({
-    required ConfigUtil configUtil,
-    required DbcSyncUtil dbcSyncUtil,
-  }) : _configUtil = configUtil,
-       _dbcSyncUtil = dbcSyncUtil;
+  ImportDbcUseCase({required this._configUtil, required this._dbcSyncUtil});
 
   bool get isRunning => _executing || _dbcSyncUtil.isRunning;
 

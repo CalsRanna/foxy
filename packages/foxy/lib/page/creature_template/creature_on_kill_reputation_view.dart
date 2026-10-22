@@ -33,8 +33,8 @@ class _CreatureOnKillReputationViewState
 
   @override
   Widget build(BuildContext context) {
-    return Watch(
-      (_) => SingleChildScrollView(
+    return SignalBuilder(
+      builder: (_) => SingleChildScrollView(
         padding: EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,8 +182,8 @@ class _CreatureOnKillReputationViewState
             Row(
               spacing: 8,
               children: [
-                Watch(
-                  (_) => ShadButton(
+                SignalBuilder(
+                  builder: (_) => ShadButton(
                     enabled: !viewModel.submitting.value,
                     onPressed: () => _persist(),
                     child: Text('保存'),

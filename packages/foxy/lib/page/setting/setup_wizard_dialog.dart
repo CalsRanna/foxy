@@ -68,40 +68,42 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       canPop: false,
       child: SizedBox(
         width: DialogUtil.width,
-        child: Watch((_) {
-          if (!_checked.value) {
+        child: SignalBuilder(
+          builder: (_) {
+            if (!_checked.value) {
+              return SettingDialogShell(
+                title: SettingDialogShell.titleRow(
+                  LucideIcons.wandSparkles,
+                  '首次设置',
+                ),
+                child: const SizedBox(
+                  height: 140,
+                  child: Center(child: FoxyLoadingIndicator()),
+                ),
+              );
+            }
             return SettingDialogShell(
               title: SettingDialogShell.titleRow(
                 LucideIcons.wandSparkles,
-                '首次设置',
+                '首次设置引导',
               ),
-              child: const SizedBox(
-                height: 140,
-                child: Center(child: FoxyLoadingIndicator()),
+              actions: _buildActions(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 18,
+                children: [
+                  _buildStepIndicator(),
+                  switch (_step.value) {
+                    0 => _buildDirectoryStep(0),
+                    1 => _buildDirectoryStep(1),
+                    _ => _buildStep3(),
+                  },
+                ],
               ),
             );
-          }
-          return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.wandSparkles,
-              '首次设置引导',
-            ),
-            actions: _buildActions(),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 18,
-              children: [
-                _buildStepIndicator(),
-                switch (_step.value) {
-                  0 => _buildDirectoryStep(0),
-                  1 => _buildDirectoryStep(1),
-                  _ => _buildStep3(),
-                },
-              ],
-            ),
-          );
-        }),
+          },
+        ),
       ),
     );
   }

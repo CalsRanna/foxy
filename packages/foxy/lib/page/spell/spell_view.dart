@@ -61,59 +61,67 @@ class SpellView extends StatelessWidget {
     // === Basic text (main form shows zhCN; globe button edits 16 languages) ===
     final nameInput = FoxyFormItem(
       label: '名称',
-      child: Watch((_) {
-        final entry = vm.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: entry,
-          controller: vm.nameLangZhCNController,
-          title: '法术名称本地化',
-          placeholder: 'Name_Lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcSpellName,
-          onSaved: vm.applyNameLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final entry = vm.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: entry,
+            controller: vm.nameLangZhCNController,
+            title: '法术名称本地化',
+            placeholder: 'Name_Lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcSpellName,
+            onSaved: vm.applyNameLocales,
+          );
+        },
+      ),
     );
     final subtextInput = FoxyFormItem(
       label: '子名称',
-      child: Watch((_) {
-        final entry = vm.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: entry,
-          controller: vm.nameSubtextLangZhCNController,
-          title: '法术副标题本地化',
-          placeholder: 'NameSubtext_Lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcSpellNameSubtext,
-          onSaved: vm.applyNameSubtextLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final entry = vm.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: entry,
+            controller: vm.nameSubtextLangZhCNController,
+            title: '法术副标题本地化',
+            placeholder: 'NameSubtext_Lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcSpellNameSubtext,
+            onSaved: vm.applyNameSubtextLocales,
+          );
+        },
+      ),
     );
     final descriptionInput = FoxyFormItem(
       label: '描述',
-      child: Watch((_) {
-        final entry = vm.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: entry,
-          controller: vm.descriptionLangZhCNController,
-          title: '法术描述本地化',
-          placeholder: 'Description_Lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcSpellDescription,
-          onSaved: vm.applyDescriptionLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final entry = vm.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: entry,
+            controller: vm.descriptionLangZhCNController,
+            title: '法术描述本地化',
+            placeholder: 'Description_Lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcSpellDescription,
+            onSaved: vm.applyDescriptionLocales,
+          );
+        },
+      ),
     );
     final auraDescriptionInput = FoxyFormItem(
       label: 'Buff描述',
-      child: Watch((_) {
-        final entry = vm.persistedKey.value;
-        return FoxyLocalePicker(
-          entry: entry,
-          controller: vm.auraDescriptionLangZhCNController,
-          title: '光环描述本地化',
-          placeholder: 'AuraDescription_Lang_zhCN',
-          delegate: FoxyLocalePickerDelegates.dbcSpellAuraDescription,
-          onSaved: vm.applyAuraDescriptionLocales,
-        );
-      }),
+      child: SignalBuilder(
+        builder: (_) {
+          final entry = vm.persistedKey.value;
+          return FoxyLocalePicker(
+            entry: entry,
+            controller: vm.auraDescriptionLangZhCNController,
+            title: '光环描述本地化',
+            placeholder: 'AuraDescription_Lang_zhCN',
+            delegate: FoxyLocalePickerDelegates.dbcSpellAuraDescription,
+            onSaved: vm.applyAuraDescriptionLocales,
+          );
+        },
+      ),
     );
     final nameLangFlagsInput = FoxyFormItem(
       label: '名称语言标志',
@@ -1286,8 +1294,8 @@ class SpellView extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              Watch(
-                (_) => ShadButton(
+              SignalBuilder(
+                builder: (_) => ShadButton(
                   enabled: !viewModel.submitting.value,
                   onPressed: () => _persist(context),
                   child: Text('保存'),
@@ -1303,405 +1311,407 @@ class SpellView extends StatelessWidget {
 
   /// Builds the reactive effect section
   Widget _buildEffectSection(String title, int i) {
-    return Watch((_) {
-      final effectValue = switch (i) {
-        0 => viewModel.effect0Signal.value,
-        1 => viewModel.effect1Signal.value,
-        2 => viewModel.effect2Signal.value,
-        _ => 0,
-      };
-      final auraValue = switch (i) {
-        0 => viewModel.effectAura0Signal.value,
-        1 => viewModel.effectAura1Signal.value,
-        2 => viewModel.effectAura2Signal.value,
-        _ => 0,
-      };
-      final miscOptions = _miscValueOptions(effectValue, auraValue);
-      final miscBOptions = _miscValueBOptions(effectValue, auraValue);
+    return SignalBuilder(
+      builder: (_) {
+        final effectValue = switch (i) {
+          0 => viewModel.effect0Signal.value,
+          1 => viewModel.effect1Signal.value,
+          2 => viewModel.effect2Signal.value,
+          _ => 0,
+        };
+        final auraValue = switch (i) {
+          0 => viewModel.effectAura0Signal.value,
+          1 => viewModel.effectAura1Signal.value,
+          2 => viewModel.effectAura2Signal.value,
+          _ => 0,
+        };
+        final miscOptions = _miscValueOptions(effectValue, auraValue);
+        final miscBOptions = _miscValueBOptions(effectValue, auraValue);
 
-      // Controllers by index
-      final effCtrl = switch (i) {
-        0 => viewModel.effect0Controller,
-        1 => viewModel.effect1Controller,
-        2 => viewModel.effect2Controller,
-        _ => viewModel.effect0Controller,
-      };
-      final basePointsCtrl = switch (i) {
-        0 => viewModel.effectBasePoints0Controller,
-        1 => viewModel.effectBasePoints1Controller,
-        2 => viewModel.effectBasePoints2Controller,
-        _ => viewModel.effectBasePoints0Controller,
-      };
-      final dieSidesCtrl = switch (i) {
-        0 => viewModel.effectDieSides0Controller,
-        1 => viewModel.effectDieSides1Controller,
-        2 => viewModel.effectDieSides2Controller,
-        _ => viewModel.effectDieSides0Controller,
-      };
-      final pointsPerLevelCtrl = switch (i) {
-        0 => viewModel.effectRealPointsPerLevel0Controller,
-        1 => viewModel.effectRealPointsPerLevel1Controller,
-        2 => viewModel.effectRealPointsPerLevel2Controller,
-        _ => viewModel.effectRealPointsPerLevel0Controller,
-      };
-      final mechanicCtrl = switch (i) {
-        0 => viewModel.effectMechanic0Controller,
-        1 => viewModel.effectMechanic1Controller,
-        2 => viewModel.effectMechanic2Controller,
-        _ => viewModel.effectMechanic0Controller,
-      };
-      final chainTargetsCtrl = switch (i) {
-        0 => viewModel.effectChainTargets0Controller,
-        1 => viewModel.effectChainTargets1Controller,
-        2 => viewModel.effectChainTargets2Controller,
-        _ => viewModel.effectChainTargets0Controller,
-      };
-      final auraCtrl = switch (i) {
-        0 => viewModel.effectAura0Controller,
-        1 => viewModel.effectAura1Controller,
-        2 => viewModel.effectAura2Controller,
-        _ => viewModel.effectAura0Controller,
-      };
-      final auraPeriodCtrl = switch (i) {
-        0 => viewModel.effectAuraPeriod0Controller,
-        1 => viewModel.effectAuraPeriod1Controller,
-        2 => viewModel.effectAuraPeriod2Controller,
-        _ => viewModel.effectAuraPeriod0Controller,
-      };
-      final amplitudeCtrl = switch (i) {
-        0 => viewModel.effectAmplitude0Controller,
-        1 => viewModel.effectAmplitude1Controller,
-        2 => viewModel.effectAmplitude2Controller,
-        _ => viewModel.effectAmplitude0Controller,
-      };
-      final targetACtrl = switch (i) {
-        0 => viewModel.implicitTargetA0Controller,
-        1 => viewModel.implicitTargetA1Controller,
-        2 => viewModel.implicitTargetA2Controller,
-        _ => viewModel.implicitTargetA0Controller,
-      };
-      final targetBCtrl = switch (i) {
-        0 => viewModel.implicitTargetB0Controller,
-        1 => viewModel.implicitTargetB1Controller,
-        2 => viewModel.implicitTargetB2Controller,
-        _ => viewModel.implicitTargetB0Controller,
-      };
-      final miscValueCtrl = switch (i) {
-        0 => viewModel.effectMiscValue0Controller,
-        1 => viewModel.effectMiscValue1Controller,
-        2 => viewModel.effectMiscValue2Controller,
-        _ => viewModel.effectMiscValue0Controller,
-      };
-      final miscValueBCtrl = switch (i) {
-        0 => viewModel.effectMiscValueB0Controller,
-        1 => viewModel.effectMiscValueB1Controller,
-        2 => viewModel.effectMiscValueB2Controller,
-        _ => viewModel.effectMiscValueB0Controller,
-      };
-      final radiusCtrl = switch (i) {
-        0 => viewModel.effectRadiusIndex0Controller,
-        1 => viewModel.effectRadiusIndex1Controller,
-        2 => viewModel.effectRadiusIndex2Controller,
-        _ => viewModel.effectRadiusIndex0Controller,
-      };
-      final chainAmpCtrl = switch (i) {
-        0 => viewModel.effectChainAmplitude0Controller,
-        1 => viewModel.effectChainAmplitude1Controller,
-        2 => viewModel.effectChainAmplitude2Controller,
-        _ => viewModel.effectChainAmplitude0Controller,
-      };
-      final bonusCoefCtrl = switch (i) {
-        0 => viewModel.effectBonusCoefficient0Controller,
-        1 => viewModel.effectBonusCoefficient1Controller,
-        2 => viewModel.effectBonusCoefficient2Controller,
-        _ => viewModel.effectBonusCoefficient0Controller,
-      };
-      final itemTypeCtrl = switch (i) {
-        0 => viewModel.effectItemType0Controller,
-        1 => viewModel.effectItemType1Controller,
-        2 => viewModel.effectItemType2Controller,
-        _ => viewModel.effectItemType0Controller,
-      };
-      final triggerSpellCtrl = switch (i) {
-        0 => viewModel.effectTriggerSpell0Controller,
-        1 => viewModel.effectTriggerSpell1Controller,
-        2 => viewModel.effectTriggerSpell2Controller,
-        _ => viewModel.effectTriggerSpell0Controller,
-      };
-      final comboCtrl = switch (i) {
-        0 => viewModel.effectPointsPerCombo0Controller,
-        1 => viewModel.effectPointsPerCombo1Controller,
-        2 => viewModel.effectPointsPerCombo2Controller,
-        _ => viewModel.effectPointsPerCombo0Controller,
-      };
-      final maskAController = switch (i) {
-        0 => viewModel.effectSpellClassMaskA0Controller,
-        1 => viewModel.effectSpellClassMaskA1Controller,
-        2 => viewModel.effectSpellClassMaskA2Controller,
-        _ => viewModel.effectSpellClassMaskA0Controller,
-      };
-      final maskBController = switch (i) {
-        0 => viewModel.effectSpellClassMaskB0Controller,
-        1 => viewModel.effectSpellClassMaskB1Controller,
-        2 => viewModel.effectSpellClassMaskB2Controller,
-        _ => viewModel.effectSpellClassMaskB0Controller,
-      };
-      final maskCController = switch (i) {
-        0 => viewModel.effectSpellClassMaskC0Controller,
-        1 => viewModel.effectSpellClassMaskC1Controller,
-        2 => viewModel.effectSpellClassMaskC2Controller,
-        _ => viewModel.effectSpellClassMaskC0Controller,
-      };
+        // Controllers by index
+        final effCtrl = switch (i) {
+          0 => viewModel.effect0Controller,
+          1 => viewModel.effect1Controller,
+          2 => viewModel.effect2Controller,
+          _ => viewModel.effect0Controller,
+        };
+        final basePointsCtrl = switch (i) {
+          0 => viewModel.effectBasePoints0Controller,
+          1 => viewModel.effectBasePoints1Controller,
+          2 => viewModel.effectBasePoints2Controller,
+          _ => viewModel.effectBasePoints0Controller,
+        };
+        final dieSidesCtrl = switch (i) {
+          0 => viewModel.effectDieSides0Controller,
+          1 => viewModel.effectDieSides1Controller,
+          2 => viewModel.effectDieSides2Controller,
+          _ => viewModel.effectDieSides0Controller,
+        };
+        final pointsPerLevelCtrl = switch (i) {
+          0 => viewModel.effectRealPointsPerLevel0Controller,
+          1 => viewModel.effectRealPointsPerLevel1Controller,
+          2 => viewModel.effectRealPointsPerLevel2Controller,
+          _ => viewModel.effectRealPointsPerLevel0Controller,
+        };
+        final mechanicCtrl = switch (i) {
+          0 => viewModel.effectMechanic0Controller,
+          1 => viewModel.effectMechanic1Controller,
+          2 => viewModel.effectMechanic2Controller,
+          _ => viewModel.effectMechanic0Controller,
+        };
+        final chainTargetsCtrl = switch (i) {
+          0 => viewModel.effectChainTargets0Controller,
+          1 => viewModel.effectChainTargets1Controller,
+          2 => viewModel.effectChainTargets2Controller,
+          _ => viewModel.effectChainTargets0Controller,
+        };
+        final auraCtrl = switch (i) {
+          0 => viewModel.effectAura0Controller,
+          1 => viewModel.effectAura1Controller,
+          2 => viewModel.effectAura2Controller,
+          _ => viewModel.effectAura0Controller,
+        };
+        final auraPeriodCtrl = switch (i) {
+          0 => viewModel.effectAuraPeriod0Controller,
+          1 => viewModel.effectAuraPeriod1Controller,
+          2 => viewModel.effectAuraPeriod2Controller,
+          _ => viewModel.effectAuraPeriod0Controller,
+        };
+        final amplitudeCtrl = switch (i) {
+          0 => viewModel.effectAmplitude0Controller,
+          1 => viewModel.effectAmplitude1Controller,
+          2 => viewModel.effectAmplitude2Controller,
+          _ => viewModel.effectAmplitude0Controller,
+        };
+        final targetACtrl = switch (i) {
+          0 => viewModel.implicitTargetA0Controller,
+          1 => viewModel.implicitTargetA1Controller,
+          2 => viewModel.implicitTargetA2Controller,
+          _ => viewModel.implicitTargetA0Controller,
+        };
+        final targetBCtrl = switch (i) {
+          0 => viewModel.implicitTargetB0Controller,
+          1 => viewModel.implicitTargetB1Controller,
+          2 => viewModel.implicitTargetB2Controller,
+          _ => viewModel.implicitTargetB0Controller,
+        };
+        final miscValueCtrl = switch (i) {
+          0 => viewModel.effectMiscValue0Controller,
+          1 => viewModel.effectMiscValue1Controller,
+          2 => viewModel.effectMiscValue2Controller,
+          _ => viewModel.effectMiscValue0Controller,
+        };
+        final miscValueBCtrl = switch (i) {
+          0 => viewModel.effectMiscValueB0Controller,
+          1 => viewModel.effectMiscValueB1Controller,
+          2 => viewModel.effectMiscValueB2Controller,
+          _ => viewModel.effectMiscValueB0Controller,
+        };
+        final radiusCtrl = switch (i) {
+          0 => viewModel.effectRadiusIndex0Controller,
+          1 => viewModel.effectRadiusIndex1Controller,
+          2 => viewModel.effectRadiusIndex2Controller,
+          _ => viewModel.effectRadiusIndex0Controller,
+        };
+        final chainAmpCtrl = switch (i) {
+          0 => viewModel.effectChainAmplitude0Controller,
+          1 => viewModel.effectChainAmplitude1Controller,
+          2 => viewModel.effectChainAmplitude2Controller,
+          _ => viewModel.effectChainAmplitude0Controller,
+        };
+        final bonusCoefCtrl = switch (i) {
+          0 => viewModel.effectBonusCoefficient0Controller,
+          1 => viewModel.effectBonusCoefficient1Controller,
+          2 => viewModel.effectBonusCoefficient2Controller,
+          _ => viewModel.effectBonusCoefficient0Controller,
+        };
+        final itemTypeCtrl = switch (i) {
+          0 => viewModel.effectItemType0Controller,
+          1 => viewModel.effectItemType1Controller,
+          2 => viewModel.effectItemType2Controller,
+          _ => viewModel.effectItemType0Controller,
+        };
+        final triggerSpellCtrl = switch (i) {
+          0 => viewModel.effectTriggerSpell0Controller,
+          1 => viewModel.effectTriggerSpell1Controller,
+          2 => viewModel.effectTriggerSpell2Controller,
+          _ => viewModel.effectTriggerSpell0Controller,
+        };
+        final comboCtrl = switch (i) {
+          0 => viewModel.effectPointsPerCombo0Controller,
+          1 => viewModel.effectPointsPerCombo1Controller,
+          2 => viewModel.effectPointsPerCombo2Controller,
+          _ => viewModel.effectPointsPerCombo0Controller,
+        };
+        final maskAController = switch (i) {
+          0 => viewModel.effectSpellClassMaskA0Controller,
+          1 => viewModel.effectSpellClassMaskA1Controller,
+          2 => viewModel.effectSpellClassMaskA2Controller,
+          _ => viewModel.effectSpellClassMaskA0Controller,
+        };
+        final maskBController = switch (i) {
+          0 => viewModel.effectSpellClassMaskB0Controller,
+          1 => viewModel.effectSpellClassMaskB1Controller,
+          2 => viewModel.effectSpellClassMaskB2Controller,
+          _ => viewModel.effectSpellClassMaskB0Controller,
+        };
+        final maskCController = switch (i) {
+          0 => viewModel.effectSpellClassMaskC0Controller,
+          1 => viewModel.effectSpellClassMaskC1Controller,
+          2 => viewModel.effectSpellClassMaskC2Controller,
+          _ => viewModel.effectSpellClassMaskC0Controller,
+        };
 
-      return FoxyFormSection(
-        title: title,
-        children: [
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '类型',
-                  child: FoxyShadSelect<int>(
-                    controller: effCtrl,
-                    options: SpellEnums.spellEffectOptions,
-                    placeholder: 'Effect',
+        return FoxyFormSection(
+          title: title,
+          children: [
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '类型',
+                    child: FoxyShadSelect<int>(
+                      controller: effCtrl,
+                      options: SpellEnums.spellEffectOptions,
+                      placeholder: 'Effect',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '基础值',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'BasePoints',
-                    controller: basePointsCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '基础值',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'BasePoints',
+                      controller: basePointsCtrl,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '波动值',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'DieSides',
-                    controller: dieSidesCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '波动值',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'DieSides',
+                      controller: dieSidesCtrl,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '每级加成',
-                  child: FoxyNumberInput<double>(
-                    placeholder: 'RealPointsPerLevel',
-                    controller: pointsPerLevelCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '每级加成',
+                    child: FoxyNumberInput<double>(
+                      placeholder: 'RealPointsPerLevel',
+                      controller: pointsPerLevelCtrl,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '机制',
-                  child: FoxyShadSelect<int>(
-                    controller: mechanicCtrl,
-                    options: SpellEnums.spellMechanicOptions,
-                    placeholder: 'Mechanic',
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '机制',
+                    child: FoxyShadSelect<int>(
+                      controller: mechanicCtrl,
+                      options: SpellEnums.spellMechanicOptions,
+                      placeholder: 'Mechanic',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '连锁目标',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'ChainTarget',
-                    controller: chainTargetsCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '连锁目标',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'ChainTarget',
+                      controller: chainTargetsCtrl,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '光环',
-                  child: FoxyShadSelect<int>(
-                    controller: auraCtrl,
-                    options: SpellEnums.spellAuraTypeOptions,
-                    placeholder: 'Aura',
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '光环',
+                    child: FoxyShadSelect<int>(
+                      controller: auraCtrl,
+                      options: SpellEnums.spellAuraTypeOptions,
+                      placeholder: 'Aura',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '光环周期',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'AuraPeriod',
-                    controller: auraPeriodCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '光环周期',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'AuraPeriod',
+                      controller: auraPeriodCtrl,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '效果值倍率',
-                  child: FoxyNumberInput<double>(
-                    placeholder: 'Amplitude',
-                    controller: amplitudeCtrl,
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '效果值倍率',
+                    child: FoxyNumberInput<double>(
+                      placeholder: 'Amplitude',
+                      controller: amplitudeCtrl,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '目标A',
-                  child: FoxyShadSelect<int>(
-                    controller: targetACtrl,
-                    options: SpellEnums.spellImplicitTargetOptions,
-                    placeholder: 'TargetA',
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '目标A',
+                    child: FoxyShadSelect<int>(
+                      controller: targetACtrl,
+                      options: SpellEnums.spellImplicitTargetOptions,
+                      placeholder: 'TargetA',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '目标B',
-                  child: FoxyShadSelect<int>(
-                    controller: targetBCtrl,
-                    options: SpellEnums.spellImplicitTargetOptions,
-                    placeholder: 'TargetB',
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '目标B',
+                    child: FoxyShadSelect<int>(
+                      controller: targetBCtrl,
+                      options: SpellEnums.spellImplicitTargetOptions,
+                      placeholder: 'TargetB',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: _miscValueLabel(effectValue, auraValue),
-                  child: _MiscValueInput(
-                    controller: miscValueCtrl,
-                    options: miscOptions,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: _miscValueLabel(effectValue, auraValue),
+                    child: _MiscValueInput(
+                      controller: miscValueCtrl,
+                      options: miscOptions,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: _miscValueBLabel(effectValue, auraValue),
-                  child: _MiscValueInput(
-                    controller: miscValueBCtrl,
-                    options: miscBOptions,
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FoxyFormItem(
+                    label: _miscValueBLabel(effectValue, auraValue),
+                    child: _MiscValueInput(
+                      controller: miscValueBCtrl,
+                      options: miscBOptions,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '半径',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'RadiusIndex',
-                    controller: radiusCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '半径',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'RadiusIndex',
+                      controller: radiusCtrl,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '效果伤害倍率',
-                  child: FoxyNumberInput<double>(
-                    placeholder: 'ChainAmplitude',
-                    controller: chainAmpCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '效果伤害倍率',
+                    child: FoxyNumberInput<double>(
+                      placeholder: 'ChainAmplitude',
+                      controller: chainAmpCtrl,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '效果加成倍率',
-                  child: FoxyNumberInput<double>(
-                    placeholder: 'BonusCoefficient',
-                    controller: bonusCoefCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '效果加成倍率',
+                    child: FoxyNumberInput<double>(
+                      placeholder: 'BonusCoefficient',
+                      controller: bonusCoefCtrl,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '物品类型',
-                  child: FoxyEntityPicker(
-                    delegate: FoxyEntityPickerDelegates.itemTemplate,
-                    controller: itemTypeCtrl,
-                    placeholder: 'ItemType',
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '物品类型',
+                    child: FoxyEntityPicker(
+                      delegate: FoxyEntityPickerDelegates.itemTemplate,
+                      controller: itemTypeCtrl,
+                      placeholder: 'ItemType',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '触发法术',
-                  child: FoxyEntityPicker(
-                    delegate: FoxyEntityPickerDelegates.spell,
-                    placeholder: 'TriggerSpell',
-                    controller: triggerSpellCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '触发法术',
+                    child: FoxyEntityPicker(
+                      delegate: FoxyEntityPickerDelegates.spell,
+                      placeholder: 'TriggerSpell',
+                      controller: triggerSpellCtrl,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '连击点数',
-                  child: FoxyNumberInput<double>(
-                    placeholder: 'PointsPerCombo',
-                    controller: comboCtrl,
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '连击点数',
+                    child: FoxyNumberInput<double>(
+                      placeholder: 'PointsPerCombo',
+                      controller: comboCtrl,
+                    ),
                   ),
                 ),
-              ),
-              const Expanded(child: SizedBox()),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '分类掩码A',
-                  child: FoxyFlagPicker(
-                    controller: maskAController,
-                    flags: SpellFlags.spellClassMaskBits,
-                    title: '分类掩码A',
-                    placeholder: 'MaskA',
+                const Expanded(child: SizedBox()),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '分类掩码A',
+                    child: FoxyFlagPicker(
+                      controller: maskAController,
+                      flags: SpellFlags.spellClassMaskBits,
+                      title: '分类掩码A',
+                      placeholder: 'MaskA',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '分类掩码B',
-                  child: FoxyFlagPicker(
-                    controller: maskBController,
-                    flags: SpellFlags.spellClassMaskBits,
-                    title: '分类掩码B',
-                    placeholder: 'MaskB',
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '分类掩码B',
+                    child: FoxyFlagPicker(
+                      controller: maskBController,
+                      flags: SpellFlags.spellClassMaskBits,
+                      title: '分类掩码B',
+                      placeholder: 'MaskB',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '分类掩码C',
-                  child: FoxyFlagPicker(
-                    controller: maskCController,
-                    flags: SpellFlags.spellClassMaskBits,
-                    title: '分类掩码C',
-                    placeholder: 'MaskC',
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '分类掩码C',
+                    child: FoxyFlagPicker(
+                      controller: maskCController,
+                      flags: SpellFlags.spellClassMaskBits,
+                      title: '分类掩码C',
+                      placeholder: 'MaskC',
+                    ),
                   ),
                 ),
-              ),
-              const Expanded(child: SizedBox()),
-            ],
-          ),
-        ],
-      );
-    });
+                const Expanded(child: SizedBox()),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _goBack() {

@@ -37,14 +37,11 @@ final class SaveGossipMenuOptionUseCase {
   final GossipMenuOptionLocaleRepository _localeRepository;
   final ActivityLogService _activityLogService;
   SaveGossipMenuOptionUseCase({
-    required DatabaseTransaction transaction,
-    required GossipMenuOptionRepository optionRepository,
-    required GossipMenuOptionLocaleRepository localeRepository,
-    required ActivityLogService activityLogService,
-  }) : _transaction = transaction,
-       _optionRepository = optionRepository,
-       _localeRepository = localeRepository,
-       _activityLogService = activityLogService;
+    required this._transaction,
+    required this._optionRepository,
+    required this._localeRepository,
+    required this._activityLogService,
+  });
 
   Future<SaveGossipMenuOptionResult> execute(
     SaveGossipMenuOptionInput input,

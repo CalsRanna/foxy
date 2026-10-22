@@ -41,12 +41,10 @@ class CombinedExportUseCase {
   var _cancelRequested = false;
 
   CombinedExportUseCase({
-    required DbcExportRegistry registry,
-    required DbcSyncUtil dbcSyncUtil,
-    required ConfigUtil configUtil,
-  }) : _registry = registry,
-       _dbcSyncUtil = dbcSyncUtil,
-       _configUtil = configUtil;
+    required this._registry,
+    required this._dbcSyncUtil,
+    required this._configUtil,
+  });
 
   /// For test subclasses that stub [execute]/[loadTables] and never touch
   /// the injected fields (late-final fields stay uninitialized until read).
