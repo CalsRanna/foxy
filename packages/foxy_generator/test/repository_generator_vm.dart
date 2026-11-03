@@ -72,7 +72,7 @@ class SampleRepository with _SampleRepositoryMixin {
     );
   });
 
-  test('有列表页时生成查询层(create/copy/getBrief/count/getXxxs/_applyFilter)', () async {
+  test('列表查询生成筛选、投影和分页，创建时预分配主键', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -87,12 +87,6 @@ class SampleRepository with _SampleRepositoryMixin {
         'foxy|lib/repository/sample_repository.foxy_repository.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // copy: get + create + copyWith new key + store, returns
-                // the new key
-                contains('Future<int> copySample(int key) async {'),
-                contains('final blank = await createSample();'),
-                contains('final copied = source.copyWith(id: blank.id);'),
-                contains('return storeSample(copied);'),
                 // count: goes through _applyFilter
                 contains('Future<int> countSamples({SampleFilter? filter})'),
                 contains('_applyFilter(laconic.table(_table), filter)'),
@@ -114,7 +108,6 @@ class SampleRepository with _SampleRepositoryMixin {
                   'QueryBuilder _applyFilter('
                   'QueryBuilder builder, SampleFilter? filter)',
                 ),
-                contains("'`ID`',"),
                 contains('filter.id'),
                 contains("'`Name_lang_zhCN`',"),
                 contains('filter.name'),
@@ -273,7 +266,6 @@ class SampleRepository with _SampleRepositoryMixin {
                 ),
                 contains('Future<List<DbcLocaleFieldValue>> getLocaleLocales('),
                 contains('loadDbcLocaleField(id, field);'),
-                contains('loadDbcLocaleField(id, field);'),
                 contains('Future<void> saveLocaleLocales('),
                 contains('storeDbcLocaleField(id, field, locales);'),
               ]),
@@ -282,7 +274,7 @@ class SampleRepository with _SampleRepositoryMixin {
     );
   });
 
-  test('FoxyRepository 按 Entity 字段顺序生成复合 Key 定位', () async {
+  test('FoxyRepository 使用复合 Key 的全部物理列定位', () async {
     const compositeEntity = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 

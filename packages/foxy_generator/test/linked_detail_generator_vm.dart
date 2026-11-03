@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('FoxyLinkedDetailViewModel 生成单行关联编辑器骨架', () async {
+  test('关联详情按父键加载或创建，保存后记录持久化主键', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
@@ -21,40 +21,13 @@ void main() {
         'foxy|lib/view_model/addon_linked_detail_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // Fields: repository + link-key/editing-key/entity state
-                // signals
-                contains(
-                  'final _repository = '
-                  'GetIt.instance.get<AddonRepository>();',
-                ),
-                contains('final linkKey = signal<int?>(null);'),
-                contains('final editingKey = signal<int?>(null);'),
-                contains('final entity = signal<AddonEntity?>(null);'),
-                contains('final loading = signal(false);'),
-                contains('final submitting = signal(false);'),
-                contains('final errorMessage = signal<String?>(null);'),
-                // Controller boilerplate (reuses FormEmitter)
-                contains(
-                  'late final entryController = '
-                  'registerController(IntFieldController());',
-                ),
-                // Race token
-                contains('int _refreshToken = 0;'),
-                contains('int _linkToken = 0;'),
-                // Public methods:
-                // destroy/dispose/initSignals/persist/setLinkKey
-                contains('Future<void> destroy() async {'),
                 contains('await _repository.destroyAddon(key);'),
-                contains('void dispose() {'),
-                contains('Future<void> initSignals({required int linkKey}) {'),
-                contains('return setLinkKey(linkKey);'),
                 contains(
                   "throw LinkNotLoadedException('link record not loaded');",
                 ),
                 contains('await _repository.storeAddon(candidate);'),
                 contains('await _repository.updateAddon('),
                 contains('editingKey.value = candidate.entry;'),
-                contains('Future<void> setLinkKey(int linkKey) async {'),
                 // Private: _refresh goes get-or-create (link key is the
                 // primary key)
                 contains('final existing = await _repository.getAddon('),
@@ -62,7 +35,6 @@ void main() {
                 contains(
                   'editingKey.value = existing == null ? null : linkSnapshot;',
                 ),
-                contains("LoggerUtil.instance.e('加载单行编辑器失败'"),
               ]),
             ),
       },

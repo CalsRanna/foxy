@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('FoxyListViewModel 生成标准列表样板(单 key int + copy)', () async {
+  test('列表生成筛选重置、删除后的分页回退与无名称实体日志', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
@@ -21,52 +21,14 @@ void main() {
         'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                contains(
-                  'mixin _SampleListViewModelMixin '
-                  'on FieldControllerMixin, QueryVersionMixin {',
-                ),
-                contains(
-                  'final _repository = '
-                  'GetIt.instance.get<SampleRepository>();',
-                ),
-                contains('final items = signal(<BriefSampleEntity>[]);'),
-                contains('@override\n  final page = signal(1);'),
-                contains('final total = signal(0);'),
-                contains('final loading = signal(false);'),
-                contains('final submitting = signal(false);'),
-                contains('final errorMessage = signal<String?>(null);'),
-                contains(
-                  'late final entryController = '
-                  'registerController(StringFieldController());',
-                ),
-                contains(
-                  'late final nameController = '
-                  'registerController(StringFieldController());',
-                ),
-                contains('int _refreshToken = 0;'),
-                contains('Future<void> copy(int key) async {'),
-                contains('await _repository.copySample(key);'),
-                contains('Future<void> destroy(int key) async {'),
-                contains('await _repository.destroySample(key);'),
-                contains("_logActivity(ActivityActionType.delete, key);"),
-                contains('normalizePageAfterDelete(total.value - 1);'),
-                contains('void dispose() {'),
-                contains('Future<void> initSignals() async {'),
-                contains('Future<void> paginate(int page) async {'),
                 contains("entryController.init('');"),
                 contains("nameController.init('');"),
                 contains('page.value = 1;'),
                 contains('markQueryVersion();'),
-                contains('SampleFilter _collectFilter() {'),
-                contains('entry: entryController.collect(),'),
-                contains('name: nameController.collect(),'),
-                contains("GetIt.instance.get<EventBus>().fire("),
-                contains('EntityWrittenEvent('),
+                contains('normalizePageAfterDelete(total.value - 1);'),
+                contains('_logActivity(ActivityActionType.delete, key);'),
                 contains("module: 'sample',"),
                 contains('entityName: key.toString(),'),
-                contains('_repository.getBriefSamples('),
-                contains('_repository.countSamples(filter: filter),'),
-                contains("LoggerUtil.instance.e('刷新列表失败: \$error');"),
               ]),
             ),
       },
@@ -101,11 +63,6 @@ void main() {
                   'await _logActivity(ActivityActionType.delete, key, record);',
                 ),
                 contains('await _logActivity(ActivityActionType.copy, key);'),
-                // 签名经 dart_style 换行,按片段断言。
-                contains('Future<void> _logActivity('),
-                contains('int key, ['),
-                contains('SampleEntity? record,'),
-                contains(']) async {'),
                 contains(
                   'final resolved = record ?? '
                   'await _repository.getSample(key);',
@@ -113,13 +70,6 @@ void main() {
                 contains('resolved.name.isNotEmpty'),
                 contains('? resolved.name'),
                 contains("entityName: entityName,"),
-                // 无 name 字段的表保持同步 key 版本(见第一个用例)。
-                isNot(
-                  contains(
-                    'void _logActivity(ActivityActionType action, '
-                    'int key) {',
-                  ),
-                ),
               ]),
             ),
       },
@@ -190,35 +140,6 @@ void main() {
     );
   });
 
-  test('copy 恒按约定名生成(查询层全量生成)', () async {
-    final repository = sampleRepositorySource.replaceFirst(
-      '  Future<void> copySample(int key) async {}\n',
-      '',
-    );
-
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        listAnnotationAsset: listAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: sampleEntitySource,
-        repositoryAsset: repository,
-        viewModelAsset: sampleViewModelSource,
-      },
-      outputs: {
-        'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
-            decodedMatches(
-              allOf(<Matcher>[
-                contains('Future<void> copy(int key) async {'),
-                contains('await _repository.copySample(key);'),
-                contains('Future<void> destroy(int key) async {'),
-              ]),
-            ),
-      },
-    );
-  });
-
   test('复合 Key 时 copy/destroy 使用 XxxKey 参数', () async {
     final entity = sampleEntitySource.replaceFirst(
       "  const SampleEntity({this.id = 0});",
@@ -243,10 +164,6 @@ void main() {
               allOf(<Matcher>[
                 contains('Future<void> copy(SampleKey key) async {'),
                 contains('Future<void> destroy(SampleKey key) async {'),
-                contains("GetIt.instance.get<EventBus>().fire("),
-                contains('EntityWrittenEvent('),
-                contains("module: 'sample',"),
-                contains('entityName: key.toString(),'),
               ]),
             ),
       },

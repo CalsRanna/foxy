@@ -35,33 +35,22 @@ void main() {
     return vm;
   }
 
-  test('无冲突时连续保存保持同一主键', () async {
-    final driver = _CollisionDriver(collide: false);
-    final vm = await form(driver);
-    await vm.persist();
-    expect(vm.persistedKey.value, driver.writtenId);
-    expect(vm.entity.value!.id, driver.writtenId);
-    expect(vm.idController.collect(), driver.writtenId);
-    await vm.persist();
-  });
+  for (final collide in [false, true]) {
+    test('${collide ? '主键冲突重分配' : '无冲突'}后同步实际主键并支持再次保存', () async {
+      final driver = _CollisionDriver(collide: collide);
+      final vm = await form(driver);
+      final expectedKey = collide ? 101 : 100;
+      await vm.persist();
 
-  test('主键冲突后实体和输入框同步实际写入主键', () async {
-    final driver = _CollisionDriver(collide: true);
-    final vm = await form(driver);
-    await vm.persist();
-    expect(driver.writtenId, 101);
-    expect(vm.persistedKey.value, 101);
-    expect(vm.entity.value!.id, 101);
-    expect(vm.idController.collect(), 101);
-  });
+      expect(driver.writtenId, expectedKey);
+      expect(vm.persistedKey.value, expectedKey);
+      expect(vm.entity.value!.id, expectedKey);
+      expect(vm.idController.collect(), expectedKey);
 
-  test('主键冲突重分配后再次保存成功', () async {
-    final driver = _CollisionDriver(collide: true);
-    final vm = await form(driver);
-    await vm.persist();
-    await vm.persist();
-    expect(driver.updatedKeys, [(101, 101)]);
-  });
+      await vm.persist();
+      expect(driver.updatedKeys, [(expectedKey, expectedKey)]);
+    });
+  }
 
   test('复制发生主键冲突时返回实际写入主键', () async {
     final driver = _CollisionDriver(collide: true);

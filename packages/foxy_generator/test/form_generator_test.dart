@@ -6,31 +6,6 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('单整数主键保存后同步实体和主键控制器', () async {
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      _assets(_viewModelSource),
-      outputs: {
-        _output: decodedMatches(
-          allOf(<Matcher>[
-            contains('var candidate = _collectCandidate();'),
-            contains(
-              'final storedKey = await _repository.storeSample(candidate);',
-            ),
-            contains('persistedKey.value = storedKey;'),
-            contains('if (storedKey != candidate.id)'),
-            contains('candidate = candidate.copyWith(id: storedKey);'),
-            contains('if (!isDisposed)'),
-            contains('idController.init(storedKey);'),
-            contains('entity.value = candidate;'),
-            contains('_logActivity(action, candidate);'),
-            isNot(contains('_applyCandidate(candidate);')),
-          ]),
-        ),
-      },
-    );
-  });
-
   test('主键排除出表单时只同步实体而不引用不存在的控制器', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),

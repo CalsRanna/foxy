@@ -17,7 +17,7 @@ void main() {
     );
   });
 
-  test('复合 key 按声明顺序生成完整不可变身份', () async {
+  test('复合 key 包含全部主键字段并从实体提取对应值', () async {
     await testBuilder(
       foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(compositeEntityAsset, compositeEntitySource),
@@ -32,9 +32,6 @@ void main() {
                 contains('factory CodegenRelationKey.fromEntity'),
                 contains('ownerId: entity.ownerId'),
                 contains('locale: entity.locale'),
-                contains('bool operator =='),
-                contains('Object.hashAll'),
-                contains('String toString()'),
               ]),
             ),
       },

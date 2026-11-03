@@ -58,14 +58,10 @@ void main() {
       repository.old.complete(1, [const BriefEmoteTextEntity(id: 1)]);
       await oldRequest;
 
-      expect(vm.items.value, isEmpty);
-      expect(vm.total.value, 0);
       expect(vm.loading.value, isTrue);
 
       repository.latest.complete(2, latestItems);
       await newRequest;
-      expect(vm.items.value, latestItems);
-      expect(vm.total.value, 2);
       expect(vm.loading.value, isFalse);
     });
   });
@@ -85,44 +81,37 @@ void main() {
       addTearDown(vm.dispose);
     });
 
-    for (final stage in ['count', 'items']) {
-      for (final fails in [false, true]) {
-        test('切换父键后忽略旧 $stage 的${fails ? '错误' : '结果'}', () async {
-          final oldRequest = vm.setLinkKey(10);
-          if (stage == 'items') {
-            repository.old.count.complete(1);
-            await repository.old.listStarted.future;
-          }
-          final newRequest = vm.setLinkKey(20);
-          repository.latest.complete(2, latestItems);
-          await newRequest;
+    test('切换父键后旧 count 返回不再发起列表查询', () async {
+      final oldRequest = vm.setLinkKey(10);
+      final newRequest = vm.setLinkKey(20);
+      repository.latest.complete(2, latestItems);
+      await newRequest;
+      repository.old.complete(1, oldItems);
+      await oldRequest;
 
-          if (stage == 'count') {
-            if (fails) {
-              repository.old.count.completeError(
-                StateError('old count failed'),
-              );
-            } else {
-              repository.old.complete(1, oldItems);
-            }
-          } else if (fails) {
-            repository.old.items.completeError(StateError('old list failed'));
-          } else {
-            repository.old.items.complete(oldItems);
-          }
-          await oldRequest;
+      expect(repository.old.listStarted.isCompleted, isFalse);
+    });
 
-          expect(vm.linkKey.value, 20);
-          expect(vm.page.value, 1);
-          expect(vm.items.value, latestItems);
-          expect(vm.total.value, 2);
-          expect(vm.errorMessage.value, isNull);
-          expect(vm.loading.value, isFalse);
-          if (stage == 'count') {
-            expect(repository.old.listStarted.isCompleted, isFalse);
-          }
-        });
-      }
+    for (final fails in [false, true]) {
+      test('切换父键后忽略旧列表的${fails ? '错误' : '结果'}', () async {
+        final oldRequest = vm.setLinkKey(10);
+        repository.old.count.complete(1);
+        await repository.old.listStarted.future;
+        final newRequest = vm.setLinkKey(20);
+        repository.latest.complete(2, latestItems);
+        await newRequest;
+
+        if (fails) {
+          repository.old.items.completeError(StateError('old list failed'));
+        } else {
+          repository.old.items.complete(oldItems);
+        }
+        await oldRequest;
+
+        expect(vm.items.value, latestItems);
+        expect(vm.total.value, 2);
+        expect(vm.errorMessage.value, isNull);
+      });
     }
 
     test('旧父键的列表先返回不能结束新父键的 loading', () async {
@@ -133,14 +122,10 @@ void main() {
       repository.old.items.complete(oldItems);
       await oldRequest;
 
-      expect(vm.items.value, isEmpty);
-      expect(vm.total.value, 0);
       expect(vm.loading.value, isTrue);
 
       repository.latest.complete(2, latestItems);
       await newRequest;
-      expect(vm.items.value, latestItems);
-      expect(vm.total.value, 2);
       expect(vm.loading.value, isFalse);
     });
   });

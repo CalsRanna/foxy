@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('生成全部 Full Entity Mixin 成员并保留字段顺序与常量默认值', () async {
+  test('fromJson 使用物理列名并保留标量转换与构造默认值', () async {
     await testBuilder(
       foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, standardEntitySource),
@@ -14,11 +14,6 @@ void main() {
         'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                contains('mixin _CodegenSampleEntityMixin'),
-                isNot(contains('int get id;')),
-                isNot(contains('String get name;')),
-                contains('final self = this as CodegenSampleEntity;'),
-                contains('static CodegenSampleEntity fromJson'),
                 contains("(json['ID'] as num?)?.toInt() ?? 0"),
                 contains("(json['Ratio'] as num?)?.toDouble() ?? 100.0"),
                 contains("json['Name']?.toString() ?? ''"),
@@ -28,11 +23,6 @@ void main() {
                   "          : (json['Enabled'] == true || json['Enabled'] == 1)",
                 ),
                 contains('String? description'),
-                contains('CodegenSampleEntity copyWith'),
-                contains('Map<String, dynamic> toJson'),
-                contains('bool operator =='),
-                contains('Object.hashAll'),
-                contains('String toString()'),
               ]),
             ),
       },

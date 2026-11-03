@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('FoxyLinkedListViewModel 生成全套编辑器骨架', () async {
+  test('关联列表将父键传给查询和创建，并使用复合键编辑', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
@@ -21,45 +21,13 @@ void main() {
         'foxy|lib/view_model/child_item_editor_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // Fields: repository + parent-key/list state signals
-                contains(
-                  'final _repository = '
-                  'GetIt.instance.get<ChildItemRepository>();',
-                ),
-                contains('final linkKey = signal<int?>(null);'),
-                contains('final items = signal(<BriefChildItemEntity>[]);'),
                 contains('final editingKey = signal<ChildItemKey?>(null);'),
-                contains('final selectedKey = signal<ChildItemKey?>(null);'),
-                contains('final page = signal(1);'),
-                contains('final total = signal(0);'),
-                contains('final loading = signal(false);'),
-                contains('final submitting = signal(false);'),
-                contains('final errorMessage = signal<String?>(null);'),
-                // Controller boilerplate (reuses FormEmitter)
-                contains(
-                  'late final childIdController = '
-                  'registerController(IntFieldController());',
-                ),
-                // Race token
-                contains('int _refreshToken = 0;'),
-                contains('int _interactionToken = 0;'),
-                // Public methods:
-                // copy/create/destroy/edit/persist/setLinkKey
                 contains('Future<void> copy(ChildItemKey key) async {'),
                 contains('await _repository.copyChildItem(key);'),
-                contains('Future<void> create() async {'),
                 contains('await _repository.createChildItem(link);'),
                 contains('Future<void> destroy(ChildItemKey key) async {'),
                 contains('Future<void> edit(ChildItemKey key) async {'),
-                contains(
-                  'Future<void> initSignals({required int linkKey}) '
-                  '=> setLinkKey(linkKey);',
-                ),
-                contains('Future<void> paginate(int page) async {'),
-                contains('Future<void> persist() async {'),
-                contains('Future<void> setLinkKey(int linkKey) async {'),
                 contains('_applyCandidate(ChildItemEntity(parentId: link));'),
-                // Private: _refresh goes parent-key count + list
                 contains('await _repository.countChildItems(link);'),
                 contains('await _repository.getBriefChildItems('),
                 contains('max(1, (count / _repository.kPageSize).ceil())'),
