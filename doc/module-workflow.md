@@ -331,10 +331,10 @@ AutoRoute(page: GameEventDetailRoute.page),
 
 ### 8.1 新建迁移文件
 
-`lib/database/migration/migration_YYYYMMDDHHMM.dart`,时间戳**严格大于**现有最大。确认方式:`ls lib/database/migration/ | sort | tail -1`(当前最大 `migration_202608090002.dart`);也用它确认迁移总数(当前 10)。样板 `migration_202608090000.dart`(features 种子,即下面的示例):
+`lib/infrastructure/database/migration/migration_YYYYMMDDHHMM.dart`,时间戳**严格大于**现有最大。确认方式:`ls lib/infrastructure/database/migration/ | sort | tail -1`(当前最大 `migration_202608090002.dart`);也用它确认迁移总数(当前 10)。样板 `migration_202608090000.dart`(features 种子,即下面的示例):
 
 ```dart
-import 'package:foxy/database/migration_runner.dart';
+import 'package:foxy/infrastructure/database/migration_runner.dart';
 import 'package:laconic/laconic.dart';
 
 class Migration202609030000 implements Migration {
@@ -368,14 +368,14 @@ class Migration202609030000 implements Migration {
 
 ### 8.2 注册迁移
 
-- `lib/database/migration_runner.dart`:import + `migrations` 列表末尾追加实例(按时间序)。
-- `packages/foxy/test/migration_runner_test.dart`:**迁移总数断言必须更新**(`hasLength(<总数>)`,当前 10;共 3 处),`containsAll` 列表加新迁移名。
+- `lib/infrastructure/database/migration_runner.dart`:import + `migrations` 列表末尾追加实例(按时间序)。
+- `packages/foxy/test/infrastructure/database/migration_runner_test.dart`:**迁移总数断言必须更新**(`hasLength(<总数>)`,当前 10;共 3 处),`containsAll` 列表加新迁移名。
 
 ### 8.3 图标注册(仅当使用新 icon)
 
 `lib/widget/foxy_feature_card.dart` 的 `_kFeatureIconMap` 加一行 `'calendarDays': LucideIcons.calendarDays`。**优先复用 map 中已有 icon**(list/bookOpen/mapPin/…),用新 icon 才加 map。map 缺失时降级为 `circleAlert`,不崩但显示错误图标 —— 所以 8.1 与 8.3 必须一起做。
 
-✅ **验证**:`flutter test test/migration_runner_test.dart` 通过;`flutter analyze` 通过。
+✅ **验证**:`flutter test test/infrastructure/database/migration_runner_test.dart` 通过;`flutter analyze` 通过。
 
 ---
 
@@ -400,9 +400,9 @@ class Migration202609030000 implements Migration {
 2. `lib/constant/dbc_locale_fields.dart`:16 语言字段注册(`DbcLocaleFields.xxxName.tableName` / `.columnPrefix` / `.flagsColumn`)。样板:同文件 `questSortSortName`。
 3. `lib/infrastructure/dbc/dbc_export_registry.dart`:导出注册(表名 → 导出任务,样板见 skill-line 提交 +35 行)。
 4. 相关测试同步更新:
-   - `packages/foxy/test/dbc_entity_export_fields_test.dart`(新增表的导出字段断言)
-   - `packages/foxy/test/dbc_locale_field_codec_test.dart`(locale 编解码握手)
-   - `packages/foxy/test/dbc_definitions_test.dart` 若有
+   - `packages/foxy/test/codegen/dbc_entity_export_fields_test.dart`(新增表的导出字段断言)
+   - `packages/foxy/test/infrastructure/dbc/dbc_locale_field_codec_test.dart`(locale 编解码握手)
+   - `packages/foxy/test/constant/dbc_definitions_test.dart` 若有
 5. 实体/repository 形态:实体 `@FoxyFullEntity(table: 'foxy.dbc_xxx')`;repository 混入 `DbcLocaleRepositoryMixin`(步骤 2.3);detail VM 手写(步骤 3.2);页面用 `FoxyLocalePicker`(步骤 4.4)。
 6. `foxy.features` 种子的 `category: 'dbc'`。
 
@@ -442,9 +442,9 @@ class Migration202609030000 implements Migration {
 
 | 文件 | 改什么 |
 | --- | --- |
-| `test/migration_runner_test.dart` | 迁移总数(3 处断言)+ `containsAll` |
-| (DBC 表)`test/dbc_entity_export_fields_test.dart` | 导出字段断言 |
-| (DBC 表)`test/dbc_locale_field_codec_test.dart` | locale 字段断言 |
+| `test/infrastructure/database/migration_runner_test.dart` | 迁移总数(3 处断言)+ `containsAll` |
+| (DBC 表)`test/codegen/dbc_entity_export_fields_test.dart` | 导出字段断言 |
+| (DBC 表)`test/infrastructure/dbc/dbc_locale_field_codec_test.dart` | locale 字段断言 |
 
 ### 新增测试的判定
 
@@ -474,8 +474,7 @@ cd packages/foxy_generator && dart test    # 只动了注解/生成器时才需�
 | --- | --- |
 | 第 5 行 | 功能描述 "…等 **130 余张**数据表的图形化编辑能力" → 更新为实际数 |
 | 第 9 行 | "*120+* 张 world 表" → 更新 |
-| 第 38 行 | "**102 个测试文件**"(仓库结构树)→ 更新 |
-| 第 103 行 | "共 **123 个** Dart 测试文件(应用 + 生成器 + lint 三个分项一并改)" → 更新 |
+| 仓库结构与测试说明 | 新增或移动测试目录时,同步被测职责与目录分类 |
 | 第 11 行 | DBC 表数 "约 50 张表"(仅 DBC 表新增时) |
 | 文档索引 | `doc/` 列表加本清单链接(如有) |
 
@@ -493,7 +492,7 @@ grep -c "registerFactory(" lib/di.dart         # 111
 grep -c "registerLazySingleton(" lib/di.dart   # 143
 grep -c "registerSingleton(" lib/di.dart       # 10
 ls lib/entity/*_entity.dart | wc -l            # 135 (含手写)
-ls lib/database/migration/*.dart | wc -l       # 10
+ls lib/infrastructure/database/migration/*.dart | wc -l       # 10
 ls lib/constant/*.dart | wc -l                 # 33
 ls lib/widget/*.dart | wc -l                   # 30
 ```

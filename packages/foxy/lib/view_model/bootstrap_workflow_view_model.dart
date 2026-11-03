@@ -1,8 +1,8 @@
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/page/bootstrap/bootstrap_port.dart';
+import 'package:foxy/view_model/bootstrap_port.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/use_case/bootstrap/bootstrap_application_use_case.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals/signals.dart';

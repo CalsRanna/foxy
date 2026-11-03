@@ -3,7 +3,7 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_npc_text_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_npc_text_use_case.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 

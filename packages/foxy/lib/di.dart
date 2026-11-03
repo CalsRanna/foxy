@@ -1,4 +1,4 @@
-import 'package:foxy/event/activity_log_listener.dart';
+import 'package:foxy/infrastructure/logging/activity_log_listener.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';

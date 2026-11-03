@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:foxy/database/database.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 
 /// Executes one application use case inside the active database transaction.
 ///

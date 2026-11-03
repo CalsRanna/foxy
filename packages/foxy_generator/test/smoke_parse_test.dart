@@ -172,8 +172,8 @@ const _sampleListViewModelSource = r'''
 import 'package:foxy/entity/codegen_sample_entity.dart';
 import 'package:foxy/repository/codegen_sample_repository.dart';
 import 'package:foxy_annotation/list_annotations.dart';
-import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/query_version_mixin.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
+import 'package:foxy/view_model/query_version_mixin.dart';
 
 part 'codegen_sample_list_view_model.g.dart';
 
@@ -189,7 +189,7 @@ const _sampleDetailViewModelSource = r'''
 import 'package:foxy/entity/codegen_sample_entity.dart';
 import 'package:foxy/repository/codegen_sample_repository.dart';
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 
 part 'codegen_sample_detail_view_model.g.dart';
 

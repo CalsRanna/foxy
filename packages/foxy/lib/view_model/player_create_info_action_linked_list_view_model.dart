@@ -7,7 +7,7 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 

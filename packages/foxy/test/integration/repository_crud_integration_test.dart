@@ -2,7 +2,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/database/database.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';

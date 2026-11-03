@@ -1,10 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/combined_export_dialog.dart';
+import 'package:foxy/page/setting/dbc_export_dialog.dart';
+import 'package:foxy/page/setting/dbc_import_dialog.dart';
 import 'package:foxy/page/setting/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/mpq_export_dialog.dart';
-import 'package:foxy/page/setting/setting_dialog_shell.dart';
 import 'package:foxy/page/setting/update_dialog.dart';
 import 'package:foxy/view_model/combined_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';

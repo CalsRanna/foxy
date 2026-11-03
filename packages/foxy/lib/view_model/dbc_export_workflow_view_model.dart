@@ -1,48 +1,12 @@
-import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_summary.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_summary.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
+import 'package:foxy/view_model/workflow/dbc_export_item.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-
-class DbcExportItem {
-  final DbcDefinition definition;
-  final int? recordCount;
-  final String? countError;
-  final bool selected;
-
-  const DbcExportItem({
-    required this.definition,
-    this.recordCount,
-    this.countError,
-    this.selected = true,
-  });
-
-  bool get canSelect => !countFailed;
-  bool get countFailed => countError != null;
-  String get dbcFileName => definition.fileName;
-
-  String get recordCountLabel {
-    if (countFailed) return '计数失败';
-    final count = recordCount ?? 0;
-    if (count == 0) return '空表';
-    return '$count 条';
-  }
-
-  String get tableName => definition.tableName;
-
-  DbcExportItem copyWith({bool? selected}) {
-    return DbcExportItem(
-      definition: definition,
-      recordCount: recordCount,
-      countError: countError,
-      selected: selected ?? this.selected,
-    );
-  }
-}
 
 class DbcExportWorkflowViewModel {
   final ExportDbcUseCase _useCase;

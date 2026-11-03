@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

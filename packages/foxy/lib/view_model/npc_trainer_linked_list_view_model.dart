@@ -6,7 +6,7 @@ import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';

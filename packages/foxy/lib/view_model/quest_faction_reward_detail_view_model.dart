@@ -5,7 +5,7 @@ import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 

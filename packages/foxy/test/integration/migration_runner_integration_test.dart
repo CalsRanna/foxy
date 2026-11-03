@@ -2,8 +2,8 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/database/database.dart';
-import 'package:foxy/database/migration_runner.dart';
+import 'package:foxy/infrastructure/database/database.dart';
+import 'package:foxy/infrastructure/database/migration_runner.dart';
 
 import 'integration_mysql.dart';
 

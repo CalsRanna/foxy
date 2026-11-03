@@ -2,7 +2,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/database/database.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';

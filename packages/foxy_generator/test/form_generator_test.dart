@@ -143,7 +143,7 @@ class SampleRepository {}
 
 const _viewModelSource = r'''
 import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 
 part 'sample_detail_view_model.g.dart';
 

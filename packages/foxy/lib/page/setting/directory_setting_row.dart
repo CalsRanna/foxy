@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/setting_dialog_shell.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 

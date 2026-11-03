@@ -8,7 +8,7 @@ import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_inline_error.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:get_it/get_it.dart';

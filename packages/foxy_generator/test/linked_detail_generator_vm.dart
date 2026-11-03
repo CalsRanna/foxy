@@ -189,7 +189,7 @@ const linkedDetailViewModelSource = r'''
 import 'package:foxy/entity/addon_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/addon_repository.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 
 part 'addon_linked_detail_view_model.g.dart';
 
@@ -230,7 +230,7 @@ const compositeViewModelSource = r'''
 import 'package:foxy/entity/composite_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/composite_repository.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 
 part 'composite_linked_detail_view_model.g.dart';
 

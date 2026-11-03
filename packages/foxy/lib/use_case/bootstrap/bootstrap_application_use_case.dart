@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/database/database.dart';
-import 'package:foxy/database/migration_runner.dart';
+import 'package:foxy/infrastructure/database/database.dart';
+import 'package:foxy/infrastructure/database/migration_runner.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';

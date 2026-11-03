@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/infrastructure/util/table_layout_util.dart';
+import 'package:foxy/widget/table_layout_util.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';

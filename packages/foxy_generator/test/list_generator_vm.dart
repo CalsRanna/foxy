@@ -414,8 +414,8 @@ const sampleViewModelSource = r'''
 import 'package:foxy/entity/sample_entity.dart';
 import 'package:foxy_annotation/list_annotations.dart';
 import 'package:foxy/repository/sample_repository.dart';
-import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/query_version_mixin.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
+import 'package:foxy/view_model/query_version_mixin.dart';
 
 part 'sample_list_view_model.g.dart';
 

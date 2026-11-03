@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Input that can explicitly switch between database `NULL` and plain

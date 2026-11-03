@@ -6,7 +6,7 @@ import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';

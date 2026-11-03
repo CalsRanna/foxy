@@ -1,4 +1,4 @@
-import 'package:foxy/database/database.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';

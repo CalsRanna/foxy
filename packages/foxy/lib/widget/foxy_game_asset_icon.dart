@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/infrastructure/game_asset/blp_icon_provider.dart';
+import 'package:foxy/widget/blp_icon_provider.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Unified rendering component for game icons (items/spells).

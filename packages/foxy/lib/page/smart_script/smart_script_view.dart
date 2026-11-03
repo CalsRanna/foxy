@@ -3,7 +3,7 @@ import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';

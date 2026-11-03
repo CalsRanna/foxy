@@ -110,7 +110,7 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 ### d. 测试与契约测试
 
 - 生成器单测验证注解到输出的映射、类型契约和非法声明诊断；断言应能指出具体会漏掉的回归，避免罗列固定 signal、token 或通用方法声明。
-- 保存、主键状态、异步竞态等行为使用真实生成产物测试(见 `packages/foxy/test/infrastructure/codegen/`)，同一行为不再另写一套复述实现的字符串断言。
+- 保存、主键状态、异步竞态等行为使用真实生成产物测试(见 `packages/foxy/test/codegen/`)，同一行为不再另写一套复述实现的字符串断言。
 - 合并重复的场景准备，保留能区分不同故障的断言。测试数量和覆盖率用于辅助检查，不作为增加用例的目标。
 
 ## 3. 复用模式(重要)
@@ -153,7 +153,7 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 - 关键回归点:
   - `test/game_data/*_game_data_test.dart`(项目内游戏数据定义与 AzerothCore 3.3.5 的一致性);
   - `test/database_editing/*_database_editing_test.dart`(模拟驱动或内存仓库上的编辑行为,覆盖身份保持与异常翻译);
-  - `test/infrastructure/codegen/`(真实生成代码的实体值语义、主键冲突后状态同步和复制返回值);
+  - `test/codegen/`(真实生成代码的实体值语义、主键冲突后状态同步和复制返回值);
   - `test/integration/`(真实 MySQL 集成测试,需要专用测试库;运行方式见仓库 README);
   - `packages/foxy_generator/test/`(生成器单测,注解声明 ↔ 生成代码一致性);
   - 直接调用生成方法的手写覆写(`@override`)是否仍编译。

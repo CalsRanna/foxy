@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/database/database.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
 /// Connection settings for the real-MySQL integration suite (tag

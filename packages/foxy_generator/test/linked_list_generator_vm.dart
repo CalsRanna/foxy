@@ -108,7 +108,7 @@ const editorViewModelSource = r'''
 import 'package:foxy/entity/child_item_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/repository/child_item_repository.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 
 part 'child_item_editor_view_model.g.dart';
 

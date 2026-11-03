@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:foxy/entity/feature_entity.dart';
-import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:signals/signals.dart';
 
 class MoreReadViewModel with FieldControllerMixin {

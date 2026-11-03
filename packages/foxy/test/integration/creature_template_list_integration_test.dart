@@ -2,7 +2,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/database/database.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:get_it/get_it.dart';
