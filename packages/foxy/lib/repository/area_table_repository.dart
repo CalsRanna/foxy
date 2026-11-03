@@ -27,8 +27,7 @@ class AreaTableRepository
       id: await nextMaxPlusOne(_table, 'ID'),
       areaBit: await nextMaxPlusOne(_table, 'AreaBit'),
     );
-    await storeAreaTable(copied);
-    return copied.id;
+    return storeAreaTable(copied);
   }
 
   @override
@@ -62,5 +61,30 @@ class AreaTableRepository
       );
     }
     return builder;
+  }
+
+  @override
+  Future<void> _beforeStore(AreaTableEntity areaTable) =>
+      _validate(areaTable, originalKey: null);
+
+  @override
+  Future<void> _beforeUpdate(int originalKey, AreaTableEntity areaTable) =>
+      _validate(areaTable, originalKey: originalKey);
+
+  Future<void> _validate(
+    AreaTableEntity value, {
+    required int? originalKey,
+  }) async {
+    if (value.parentAreaId > 0 &&
+        await getAreaTable(value.parentAreaId) == null) {
+      throw RecordNotFoundException(
+        'parent area ${value.parentAreaId} does not exist',
+      );
+    }
+    if (!await isAreaBitAvailable(value.areaBit, excludingKey: originalKey)) {
+      throw DuplicateKeyException(
+        'exploration bit index ${value.areaBit} is already used by another area',
+      );
+    }
   }
 }
