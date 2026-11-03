@@ -1,7 +1,7 @@
 // Item Template flag constant definitions
 // Source: AzerothCore SharedDefines.h, ItemDefines.h
 
-import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/model/flag_item.dart';
 
 abstract final class ItemFlags {
   /// SocketColor is a bitmask; the server allows any combination of the four

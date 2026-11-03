@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/game_object_constants.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 
 void main() {

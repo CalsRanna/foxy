@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';

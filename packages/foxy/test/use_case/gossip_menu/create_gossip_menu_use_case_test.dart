@@ -4,7 +4,7 @@ import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';

@@ -2,7 +2,7 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 

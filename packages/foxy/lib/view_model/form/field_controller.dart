@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
-import 'package:foxy/infrastructure/util/format_util.dart';
-import 'package:foxy/infrastructure/util/parse_util.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
+import 'package:foxy/view_model/form/format_util.dart';
+import 'package:foxy/view_model/form/field_parser.dart';
 
 // Exported for generated parts: the view-model .g.dart is `part of` the
 // parent library and cannot import on its own; the generated code's
 // FoxyException/FoxyExceptions.message resolve through this file's import scope
 // (AGENTS.md requires every generated-VM shell to mix in
 // FieldControllerMixin).
-export 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+export 'package:foxy/exception/foxy_exceptions.dart';
 
 /// Floating-point field: empty string counts as 0.0; invalid input throws
 /// [FormatException].
@@ -17,7 +17,7 @@ class DoubleFieldController extends NumberFieldController<double> {
   String format(double value) => FormatUtil.formatNum(value);
 
   @override
-  double parse(String text) => ParseUtil.parseDoubleField(text);
+  double parse(String text) => FieldParser.parseDoubleField(text);
 }
 
 /// Detail-form field controllers: co-locate "field type → format/parse
@@ -127,7 +127,7 @@ class FlagFieldController extends TextBackedFieldController<int> {
   /// Parses the display text produced by [formatFlagValue] back into an
   /// integer.
   static int parseFlagValue(String text) {
-    return ParseUtil.parseIntField(text.split(' ').first);
+    return FieldParser.parseIntField(text.split(' ').first);
   }
 }
 
@@ -138,7 +138,7 @@ class IntFieldController extends NumberFieldController<int> {
   String format(int value) => FormatUtil.formatNum(value);
 
   @override
-  int parse(String text) => ParseUtil.parseIntField(text);
+  int parse(String text) => FieldParser.parseIntField(text);
 }
 
 /// A group of typed controllers for one physical integer column.

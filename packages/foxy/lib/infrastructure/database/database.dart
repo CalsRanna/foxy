@@ -1,4 +1,4 @@
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 

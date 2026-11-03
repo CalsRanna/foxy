@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/window_button.dart';
+import 'package:foxy/widget/window/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
 class BootstrapWindowHeader extends StatelessWidget {

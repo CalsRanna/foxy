@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/database/database.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';

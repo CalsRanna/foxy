@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:crypto/crypto.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/update/update_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';

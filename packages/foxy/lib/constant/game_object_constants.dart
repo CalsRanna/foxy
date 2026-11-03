@@ -1,5 +1,5 @@
-import 'package:foxy/constant/flag_item.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/model/flag_item.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
 
 abstract final class GameObjectConstants {
   static const unusedGameObjectDataField =

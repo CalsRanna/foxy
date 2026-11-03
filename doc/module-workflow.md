@@ -373,7 +373,7 @@ class Migration202609030000 implements Migration {
 
 ### 8.3 图标注册(仅当使用新 icon)
 
-`lib/widget/foxy_feature_card.dart` 的 `_kFeatureIconMap` 加一行 `'calendarDays': LucideIcons.calendarDays`。**优先复用 map 中已有 icon**(list/bookOpen/mapPin/…),用新 icon 才加 map。map 缺失时降级为 `circleAlert`,不崩但显示错误图标 —— 所以 8.1 与 8.3 必须一起做。
+`lib/widget/feature/foxy_feature_card.dart` 的 `_kFeatureIconMap` 加一行 `'calendarDays': LucideIcons.calendarDays`。**优先复用 map 中已有 icon**(list/bookOpen/mapPin/…),用新 icon 才加 map。map 缺失时降级为 `circleAlert`,不崩但显示错误图标 —— 所以 8.1 与 8.3 必须一起做。
 
 ✅ **验证**:`flutter test test/infrastructure/database/migration_runner_test.dart` 通过;`flutter analyze` 通过。
 
@@ -398,7 +398,7 @@ class Migration202609030000 implements Migration {
 
 1. `lib/constant/dbc_definitions.dart`:`DbcDefinitions` 注册表(文件名 `Xxx.dbc`、schema 格式串、字段清单)。**schema 必须与 warcrafty 的 DBC 结构一致**,否则导入导出报错。样板:同文件 `quest_sort` 条目(`format: 'nssss…'` 与字段数一一对应)。
 2. `lib/constant/dbc_locale_fields.dart`:16 语言字段注册(`DbcLocaleFields.xxxName.tableName` / `.columnPrefix` / `.flagsColumn`)。样板:同文件 `questSortSortName`。
-3. `lib/infrastructure/dbc/dbc_export_registry.dart`:导出注册(表名 → 导出任务,样板见 skill-line 提交 +35 行)。
+3. `lib/repository/dbc_export_registry.dart`:导出注册(表名 → 导出任务,样板见 skill-line 提交 +35 行)。
 4. 相关测试同步更新:
    - `packages/foxy/test/codegen/dbc_entity_export_fields_test.dart`(新增表的导出字段断言)
    - `packages/foxy/test/infrastructure/dbc/dbc_locale_field_codec_test.dart`(locale 编解码握手)
@@ -414,11 +414,11 @@ class Migration202609030000 implements Migration {
 
 ### 11.1 实体 picker 委托
 
-若其他模块的表单要**选本模块的记录**,在 `lib/widget/foxy_entity_picker_delegates.dart` 加 static delegate(样板:skill-line 提交的 `skillLineCategory`,含 title/errorLabel/filters/columns/idOf/fetch/count)。然后**更新引用页面**(如 skill-line 把 `npc_trainer_view.dart` 中硬编码的文本改成了 picker)。
+若其他模块的表单要**选本模块的记录**,在 `lib/widget/picker/delegate/foxy_entity_picker_delegates.dart` 加 static delegate(样板:skill-line 提交的 `skillLineCategory`,含 title/errorLabel/filters/columns/idOf/fetch/count)。然后**更新引用页面**(如 skill-line 把 `npc_trainer_view.dart` 中硬编码的文本改成了 picker)。
 
 ### 11.2 locale picker 委托
 
-本模块有 16 语言字段且要在其他页面编辑时,在 `lib/widget/foxy_locale_picker_delegates.dart` 加 `_dbc(...)` 委托(样板 skill-line 提交:每个语言字段一个 delegate,引用仓库的 `getXxxLocales`/`saveXxxLocales`)。
+本模块有 16 语言字段且要在其他页面编辑时,在 `lib/widget/picker/delegate/foxy_locale_picker_delegates.dart` 加 `_dbc(...)` 委托(样板 skill-line 提交:每个语言字段一个 delegate,引用仓库的 `getXxxLocales`/`saveXxxLocales`)。
 
 ✅ **验证**:`flutter analyze`;引用的页面冒烟选择成功。
 
@@ -494,7 +494,7 @@ grep -c "registerSingleton(" lib/di.dart       # 10
 ls lib/entity/*_entity.dart | wc -l            # 135 (含手写)
 ls lib/infrastructure/database/migration/*.dart | wc -l       # 10
 ls lib/constant/*.dart | wc -l                 # 33
-ls lib/widget/*.dart | wc -l                   # 30
+rg --files lib/widget -g '*.dart' | wc -l      # 按职责分目录的共用组件
 ```
 
 以上计数是 README 各处数字的来源;CONVENTIONS.md **不含数字** —— 只有 foxy_lint 规则增删、或约定本身变化时才需要同步更新它。

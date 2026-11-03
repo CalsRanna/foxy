@@ -4,7 +4,7 @@ import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/page/achievement/achievement_list_page.dart';
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/view_model/achievement_list_view_model.dart';
-import 'package:foxy/widget/foxy_icon_text.dart';
+import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

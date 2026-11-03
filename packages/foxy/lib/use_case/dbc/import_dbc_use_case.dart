@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
 final class ImportDbcInput {

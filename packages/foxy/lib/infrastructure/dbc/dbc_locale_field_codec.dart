@@ -1,4 +1,4 @@
-import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 
 /// Bidirectional codec between the wide table's 16 language columns and the
 /// editor's 16 row values.

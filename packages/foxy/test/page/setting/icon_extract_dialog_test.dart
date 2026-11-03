@@ -6,7 +6,7 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
-import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
+import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:path/path.dart' as p;
 import 'package:shadcn_ui/shadcn_ui.dart';
 

@@ -4,7 +4,7 @@ import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/page/player_create_info/player_create_info_cast_spell_view.dart';
 import 'package:foxy/repository/player_create_info_cast_spell_repository.dart';
 import 'package:foxy/view_model/player_create_info_cast_spell_linked_list_view_model.dart';
-import 'package:foxy/widget/foxy_icon_text.dart';
+import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

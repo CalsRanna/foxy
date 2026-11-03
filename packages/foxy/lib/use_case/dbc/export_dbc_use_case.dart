@@ -1,25 +1,14 @@
 import 'dart:io';
 
 import 'package:foxy/constant/dbc_definitions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/model/dbc/dbc_export_table.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
+import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
-
-final class DbcExportTable {
-  final DbcDefinition definition;
-  final int? recordCount;
-  final Object? countError;
-
-  const DbcExportTable({
-    required this.definition,
-    this.recordCount,
-    this.countError,
-  });
-}
 
 final class ExportDbcInput {
   final List<DbcDefinition> definitions;

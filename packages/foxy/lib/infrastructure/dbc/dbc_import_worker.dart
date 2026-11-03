@@ -6,7 +6,7 @@ import 'dart:isolate';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/dbc/dbc_header_guard.dart';
 import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;

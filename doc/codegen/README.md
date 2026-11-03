@@ -144,7 +144,7 @@ packages/foxy_generator/lib/
 - `FieldControllerMixin`(`lib/view_model/form/field_controller.dart`):提供 `registerController` / `disposeControllers`,生成代码在 `on FieldControllerMixin` 下可直接声明 controller;
 - `QueryVersionMixin`(`lib/view_model/query_version_mixin.dart`):List ViewModel 的分页浏览基线(`queryVersion` / `markQueryVersion` / `normalizePageAfterDelete`);
 - `DbcLocaleRepositoryMixin`(`lib/repository/dbc_locale_repository_mixin.dart`):DBC 宽表本地化字段的加载/保存,Repository 生成器检测到它出现时生成 `get*Locales` / `save*Locales` 委托;
-- `FoxyException` 家族(`lib/infrastructure/errors/foxy_exceptions.dart`):生成代码抛的业务异常(`RecordNotFoundException` / `DuplicateKeyException` / `InvalidPrimaryKeyException` / `BusyException` / `LinkNotLoadedException` / `IdExhaustedException`);
+- `FoxyException` 家族(`lib/exception/foxy_exceptions.dart`):生成代码抛的业务异常(`RecordNotFoundException` / `DuplicateKeyException` / `InvalidPrimaryKeyException` / `BusyException` / `LinkNotLoadedException` / `IdExhaustedException`);
 - `MysqlErrorUtil.isDuplicateEntry`(`lib/infrastructure/database/mysql_error_util.dart`):把 MySQL duplicate entry 翻译成 `DuplicateKeyException`。
 
 ## 跑起来

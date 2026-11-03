@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/event/event_bus.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/repository/version_repository.dart';

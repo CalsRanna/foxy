@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/update/update_service.dart';
 import 'package:foxy/infrastructure/update/update_swapper.dart';
 import 'package:foxy/view_model/update_view_model.dart';

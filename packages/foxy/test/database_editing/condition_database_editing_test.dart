@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
-import 'package:foxy/infrastructure/logging/activity_log_listener.dart';
+import 'package:foxy/use_case/activity_log/activity_log_listener.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router_facade.dart';

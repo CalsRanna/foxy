@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/model/flag_item.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/entity/creature_loot_template_entity.dart';
@@ -12,7 +12,7 @@ import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_page.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';

@@ -1,4 +1,4 @@
-import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/model/flag_item.dart';
 
 abstract final class SpellItemEnchantmentConstants {
   /// `ItemModType` values handled by Player::ApplyEnchantment for type 5.

@@ -1,4 +1,4 @@
-import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 
 /// All registered DBC locale-field editor definitions.
 ///

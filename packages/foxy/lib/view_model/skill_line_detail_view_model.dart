@@ -1,5 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/event/entity_written_event.dart';

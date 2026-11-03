@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 
 /// In-memory ConfigUtil fake (the real one persists YAML to disk).

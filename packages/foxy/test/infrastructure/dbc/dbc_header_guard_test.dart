@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/dbc/dbc_header_guard.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:path/path.dart' as p;
 
 /// Verifies the DBC header payload cap: warcrafty's loader allocates

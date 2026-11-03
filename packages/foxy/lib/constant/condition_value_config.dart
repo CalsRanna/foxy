@@ -1,6 +1,6 @@
 import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/constant/flag_item.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/model/flag_item.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
 import 'package:foxy/constant/spell_enums.dart';
 
 class ConditionValueConfig {

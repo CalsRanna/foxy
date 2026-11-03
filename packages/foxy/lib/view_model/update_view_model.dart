@@ -9,7 +9,7 @@ library;
 
 import 'dart:io';
 
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/preferences/shared_preferences_util.dart';
 import 'package:foxy/infrastructure/update/update_service.dart';

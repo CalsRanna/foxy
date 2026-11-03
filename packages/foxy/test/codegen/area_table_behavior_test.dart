@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/event/event_bus.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/view_model/area_table_detail_view_model.dart';
 import 'package:get_it/get_it.dart';

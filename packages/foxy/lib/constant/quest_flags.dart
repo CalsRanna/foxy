@@ -1,4 +1,4 @@
-import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/model/flag_item.dart';
 
 abstract final class QuestFlags {
   static const questSpecialFlagsAllowedMask = 0x000001FF;

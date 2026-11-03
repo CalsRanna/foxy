@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/widget/database_locale_changes.dart';
+import 'package:foxy/model/locale/database_locale_changes.dart';
 
 void main() {
   test('persisted locale row keeps original identity separate from draft', () {

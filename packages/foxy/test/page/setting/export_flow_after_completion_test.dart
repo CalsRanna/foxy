@@ -4,13 +4,13 @@ import 'dart:isolate';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
+import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
-import 'package:foxy/view_model/mpq_export_workflow_view_model.dart';
+import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 
 /// Reproduces the reported bug: after an MPQ export completes, the next

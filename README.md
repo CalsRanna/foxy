@@ -65,26 +65,42 @@ Page (SignalBuilder 订阅) ──► ViewModel (signals + 表单控制器) ─�
 packages/foxy/lib/
 ├── constant/                # 游戏枚举、标志位、DBC schema 与字段定义
 ├── entity/                  # 表实体、列表 DTO 与键类型
-├── repository/              # 数据读写及仓储 mixin
-├── use_case/<module>/       # 跨表与导入导出业务流程
+├── model/                   # 跨层数据模型:DBC、本地化、选择器协议、工作进度
+├── exception/               # 业务异常与错误文案映射
+├── repository/              # 数据读写、查询偏好、DBC 导出仓储注册表
+├── use_case/<module>/       # 跨表、活动日志及导入导出业务流程
 ├── infrastructure/         # 数据库、文件、配置、平台服务
 │   ├── database/migration/ # 数据库迁移,与连接、事务、迁移 runner 放在同一层
 │   ├── dbc/                # DBC 编解码、导入导出 worker
 │   ├── mpq/                # MPQ 导出 worker
-│   └── logging/            # 日志服务与活动日志监听器
+│   └── logging/            # 技术日志输出
 ├── event/                  # 事件定义与事件总线
 ├── view_model/             # 页面状态、输入校验与分页状态
-│   ├── form/               # 字段控制器与生命周期管理
-│   └── workflow/           # 工作流共用状态与导出项模型
+│   ├── form/               # 字段控制器、数字解析与显示格式
+│   └── workflow/           # 手写工作流 ViewModel、状态、导出项与结果文案
 ├── page/<module>/          # 页面与模块专用组件
-│   └── setting/            # 独立导入/导出弹窗、表格组件与共用弹窗外壳
-├── widget/                 # 跨页面组件、布局工具与 Flutter 图片适配器
+│   ├── dashboard/component/ # 仪表盘专用卡片与内容
+│   ├── scaffold/           # 主外壳、首次引导与目录/DBC 提醒
+│   └── setting/            # 设置页面、导入导出弹窗及其表格组件
+├── widget/                 # 跨页面组件,按职责分目录
+│   ├── form/               # 表单字段与表单布局
+│   ├── table/              # 表格、分页与列宽计算
+│   ├── picker/             # 通用选择器
+│   │   ├── delegate/       # 业务仓储到选择器的适配
+│   │   └── locale/         # 本地化选择器与编辑器
+│   ├── dialog/             # 共用弹窗外壳与反馈
+│   ├── directory/          # 设置页与首次引导共用的目录配置组件
+│   ├── game_asset/         # 游戏图标与 Flutter 图片适配器
+│   ├── update/             # 设置页与仪表盘共用的更新弹窗
+│   └── layout|menu|window|feature/ # 布局、菜单、窗口按钮与模块卡片
+├── theme/                  # 显示配色
 ├── router/                 # 路由与导航
 ├── di.dart                 # 依赖装配
+├── foxy_app.dart           # 应用主题与路由外壳
 └── main.dart               # 应用入口
 ```
 
-生成式 Entity、Repository、ViewModel 的文件路径由生成器推导,继续保留在各自层的根目录。页面专用显示辅助函数随页面放置;字段控制器和分页状态归 ViewModel;数据库连接、事务和迁移统一归基础设施。新增文件的具体规则见 `CONVENTIONS.md`。
+生成式 Entity、Repository、ViewModel 的文件路径由生成器推导,继续保留在各自层的根目录。页面专用组件随实际使用模块放置;跨页面组件按职责归入 `widget/`;共享数据协议归 `model/`。基础设施不依赖业务仓储或页面层,活动日志记录策略在 `use_case/activity_log/` 中装配。新增文件的具体规则见 `CONVENTIONS.md`。
 
 ## 快速开始
 
@@ -135,7 +151,8 @@ icons_extracted: true
 - **game_data 测试**(`test/game_data/`):枚举/标志常量与 AzerothCore 服务端取值一致性,纯内存运行。
 - **database_editing 测试**(`test/database_editing/`):复合主键值语义、编辑流程、查询构建行为,纯内存运行。
 - **identity 测试**(`test/identity/`):身份/状态保持语义(活动日志 ID、locale 草稿、路由面包屑)。
-- **分层测试**(`test/constant/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`):目录与被测代码对应,覆盖常量、更新服务、DBC 编解码、BLP/MPQ、表单控制器、业务流程及界面交互。
+- **分层测试**(`test/constant/`、`test/model/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`):目录与被测代码对应,覆盖常量、更新服务、DBC 编解码、BLP/MPQ、表单控制器、业务流程及界面交互。
+- **依赖边界测试**(`test/architecture/`):检查基础设施、数据模型、仓储、业务流程和界面状态的依赖方向,避免文件再次进入错误的层。
 - **生成产物行为测试**(`test/codegen/`):真实生成代码的实体序列化、主键状态与列表刷新行为。
 - **集成测试**(`test/integration/`,标签 `integration`):对真实 MySQL 运行应用自身的启动链路(建库、全部迁移、utf8mb4 自愈、features 种子中文回读)与仓储读写(生成器的 store/update/destroy、异常映射、手写列表方法,含 locale JOIN、like 转义、联表分页、locale 批量事务回滚、creature_template 清单的精简夹具、DBC 导入的暂存表→行数/重复 ID 校验→原子改名链路,以及导出→导入往返;夹具表建在专用 `foxy_it_world` 库)。默认跳过(见 `dart_test.yaml`);本地先起一次性实例(`docker run -d --rm -p 3307:3306 -e MYSQL_ROOT_PASSWORD=foxy mysql:8.0`),再 `flutter test --tags integration --run-skipped -j 1`(DBC 用例还需 `FOXY_TEST_MYSQL_ALLOW_DBC_WRITE=1`,它会替换 `foxy.dbc_*` 表);CI 由 `ci.yml` 的 `database-integration` job 在 MySQL 8 容器上运行。
 - **生成器测试**(`packages/foxy_generator/test/`):`dart test` 纯 Dart 运行。

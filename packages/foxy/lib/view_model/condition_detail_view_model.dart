@@ -3,7 +3,7 @@ import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
@@ -17,8 +17,8 @@ import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
-import 'package:foxy/widget/foxy_data_table.dart';
-import 'package:foxy/widget/foxy_enum_picker.dart';
+import 'package:foxy/widget/table/foxy_data_table.dart';
+import 'package:foxy/widget/picker/foxy_enum_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

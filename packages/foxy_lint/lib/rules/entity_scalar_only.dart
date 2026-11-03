@@ -5,7 +5,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 
-import 'package:foxy_lint/rules/file_scopes.dart';
+import 'package:foxy_lint/src/file_scopes.dart';
 
 /// Entity fields must be scalar types (int/double/String/bool); collection
 /// types must be split into explicit per-column fields.

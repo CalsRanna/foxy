@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 
 /// Hard cap on the DBC record payload claimed by a file header. warcrafty's
 /// loader allocates the full `recordCount * recordSize + stringBlockSize`

@@ -5,7 +5,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_import_worker.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';

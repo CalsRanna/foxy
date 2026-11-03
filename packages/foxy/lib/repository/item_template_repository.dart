@@ -3,7 +3,7 @@ import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/infrastructure/util/parse_util.dart';
+import 'package:foxy/infrastructure/database/parse_util.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:get_it/get_it.dart';

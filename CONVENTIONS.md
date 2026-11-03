@@ -22,11 +22,14 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 
 手写支撑代码按职责放置：
 
-- `view_model/` 管理页面状态、输入校验和分页；字段控制器放 `view_model/form/`，跨工作流的状态与展示模型放 `view_model/workflow/`。这些代码不应放在 `widget/` 或依赖 `page/`。
-- `widget/` 放跨页面组件及其 UI 适配器、布局工具；只服务一个页面模块的组件和显示辅助函数放 `page/<module>/`。
+- `entity/` 放数据库表实体、列表 DTO 与键；跨层数据协议放 `model/`，包括 DBC 本地化、字段配置、选择器数据、任务进度。`constant/` 保留实际常量与定义注册表，`exception/` 放业务异常。
+- `view_model/` 管理页面状态、输入校验和分页；字段控制器、数字解析与格式化放 `view_model/form/`，手写工作流、共用状态与展示模型放 `view_model/workflow/`。这些代码不依赖 `page/`、`widget/` 或路由。
+- `widget/` 的组件按 `form/`、`table/`、`picker/`、`dialog/`、`directory/`、`game_asset/`、`update/`、`layout/`、`menu/`、`window/`、`feature/` 归类；业务仓储到选择器的适配集中在 `widget/picker/delegate/`，选择器的数据协议放 `model/`。
+- 只服务一个页面模块的组件和显示辅助函数放 `page/<module>/`；仪表盘卡片放 `page/dashboard/component/`，首次引导与启动提醒放 `page/scaffold/`。应用主题与路由外壳 `FoxyApp` 和 `main.dart` 同处 `lib/` 根目录，显示配色放 `theme/`。
 - `infrastructure/` 放数据库、文件与平台服务；数据库连接、事务和迁移统一放 `infrastructure/database/`，DBC 与 MPQ worker 分别放 `infrastructure/dbc/`、`infrastructure/mpq/`。
-- `event/` 放事件定义和总线；负责日志落库的监听器放 `infrastructure/logging/`。
-- 独立弹窗按类名拆为对应文件；`SettingDialogShell` 仅提供设置弹窗共用外壳，导入、导出及表格组件各自维护。
+- `infrastructure/` 不依赖仓储或业务流程；组合仓储的 DBC 导出注册表与查询偏好放 `repository/`，技术日志输出留在 `infrastructure/logging/`。
+- `event/` 放事件定义和总线；活动日志记录策略及订阅监听器放 `use_case/activity_log/`。
+- 独立弹窗按类名拆为对应文件；共用的 `SettingDialogShell` 放 `widget/dialog/`，设置页专用的导入、导出及表格组件留在 `page/setting/`。
 
 ## 3. 代码生成铁律
 
@@ -60,7 +63,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 
 ## 5. 错误处理
 
-- 所有业务错误是 `sealed class FoxyException` 的子类型（`lib/infrastructure/errors/foxy_exceptions.dart`）：`RecordNotFoundException`、`DuplicateKeyException`、`InvalidPrimaryKeyException`、`BusyException`、`LinkNotLoadedException`、`IdExhaustedException`、`ValidationException`、`CopyNotSupportedException`、`DatabaseNotConnectedException`、`UpdateException`（带 `UpdateErrorKind`）。
+- 所有业务错误是 `sealed class FoxyException` 的子类型（`lib/exception/foxy_exceptions.dart`）：`RecordNotFoundException`、`DuplicateKeyException`、`InvalidPrimaryKeyException`、`BusyException`、`LinkNotLoadedException`、`IdExhaustedException`、`ValidationException`、`CopyNotSupportedException`、`DatabaseNotConnectedException`、`UpdateException`（带 `UpdateErrorKind`）。
 - 异常 `implements Exception`（无 `Exception:` 前缀），消息一律英文，仅供日志。
 - 用户可见的中文文案由 `FoxyExceptions.message(error)` 集中映射 —— **UI 展示错误的唯一入口**。
 - 驱动边界的重复键判定统一走 `MysqlErrorUtil.isDuplicateEntry`：`LaconicException.driver == 'mysql' && code == '1062'`（不遍历 cause 链，不解析消息）。
@@ -72,7 +75,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 - UI 一致性约定（audit 2026-08 后确立）：
   - **错误提示一律阻塞模态**：`DialogUtil.instance.error('失败类型：${FoxyExceptions.message(error)}')`（标题"错误"，需手动确认）；禁止非阻塞错误 toast 或对话框内联错误。成功提示才用 `DialogUtil.instance.success(...)`（唯一 toast 入口，全库禁止裸 `ShadSonner.of`）。
   - 统一外壳：`FoxyFormDialog`（子表增删改对话框）、`FoxyLoadingIndicator`（加载态）、`DialogUtil.width`（对话框宽度唯一来源）。
-  - **对话框 footer**：按钮一律放 `ShadDialog.actions`（`FoxyFormDialog` 的 `actions:` 参数），不要写在 `child` 末尾——后者会随内容滚动、长表单要滚到底才看得见。子表增删改用 `FoxyFormDialog.saveActions(...)`：取消在左、主操作在右，保存失败走阻塞错误模态、成功 toast 后关闭；不要在 view 里自己拼 try/catch/pop。文案：新增态「保存」、编辑态「更新」；进行中态禁用主按钮并在面板里给出「取消 XX」。`test/widget/foxy_form_dialog_test.dart` 会递归检查 `lib/page` 拦回退。
+  - **对话框 footer**：按钮一律放 `ShadDialog.actions`（`FoxyFormDialog` 的 `actions:` 参数），不要写在 `child` 末尾——后者会随内容滚动、长表单要滚到底才看得见。子表增删改用 `FoxyFormDialog.saveActions(...)`：取消在左、主操作在右，保存失败走阻塞错误模态、成功 toast 后关闭；不要在 view 里自己拼 try/catch/pop。文案：新增态「保存」、编辑态「更新」；进行中态禁用主按钮并在面板里给出「取消 XX」。`test/widget/dialog/foxy_form_dialog_test.dart` 会递归检查 `lib/page` 拦回退。
   - **间距**：新代码统一用 Row/Column 的 `spacing:` 参数；`SizedBox` 只做固定尺寸，不做元素间距。
   - **空态文案**：列表/表格统一"暂无数据"（`FoxyDataTable` 内置）；其他场景按语境自定，不必强行统一。
   - **控件映射**：数字 → `FoxyNumberInput`；文本 → `FoxyStringInput`；可空 → `FoxyNullableStringInput`；枚举 → `FoxyEnumPicker`（title 必填，placeholder 传字符串）；位标志 → `FoxyFlagPicker`；引用 → `FoxyEntityPicker`；本地化 → `FoxyLocalePicker`。placeholder 一律英文列名。
@@ -97,7 +100,8 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
   - 游戏数据测试（`test/game_data/`）：枚举/标志/列布局与服务端取值一致，纯内存。
   - 编辑语义测试（`test/database_editing/`）：键值语义、编辑流程、查询构建，纯内存。
   - 身份保持测试（`test/identity/`）：活动日志行 ID、locale 草稿 vs 原值、路由面包屑。
-  - 分层测试（`test/constant/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`）：按被测代码的位置组织；页面测试按模块细分，跨页面编辑行为放 `test/page/`。
+  - 分层测试（`test/constant/`、`test/model/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`）：按被测代码的位置组织；页面测试按模块细分，跨页面编辑行为放 `test/page/`。
+  - 依赖边界测试（`test/architecture/`）：检查各层允许的依赖，防止基础设施引用业务层、数据模型引用 UI、ViewModel 引用页面或组件。
   - 真实生成产物行为测试（`test/codegen/`）：实体序列化、主键状态与列表刷新；生成器本身的单测仍放 `packages/foxy_generator/test/`。
   - 集成测试（`test/integration/`，标签 `integration`）：对真实 MySQL 跑应用启动链路与仓储读写。
 - 集成测试默认跳过（见 `dart_test.yaml`），普通 `flutter test` 不需要数据库；本地用 `flutter test --tags integration --run-skipped -j 1` 运行，DBC 用例还需 `FOXY_TEST_MYSQL_ALLOW_DBC_WRITE=1`。必须串行（`-j 1`），且绝不能指向 `foxy` schema 有意义的库。

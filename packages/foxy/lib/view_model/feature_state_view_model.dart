@@ -1,5 +1,5 @@
 import 'package:foxy/entity/feature_entity.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';

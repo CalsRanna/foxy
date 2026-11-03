@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/widget/foxy_card.dart';
-import 'package:foxy/widget/foxy_feature_card.dart';
+import 'package:foxy/page/dashboard/component/foxy_card.dart';
+import 'package:foxy/widget/feature/foxy_feature_card.dart';
 
 /// Dashboard "frequent modules" grid. Receives only the already-filtered
 /// favorite list and depends on no ViewModel; filtering and reactivity are

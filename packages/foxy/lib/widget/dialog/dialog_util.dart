@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
-import 'package:foxy/widget/foxy_loading_indicator.dart';
+import 'package:foxy/widget/layout/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Foxy dialog entry point: uniform sizing, project-wide behaviors, and

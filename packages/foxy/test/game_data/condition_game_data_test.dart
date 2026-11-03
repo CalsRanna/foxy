@@ -3,7 +3,7 @@ import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/condition_source_types.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
 import 'package:foxy/entity/condition_entity.dart';
 
 void main() {

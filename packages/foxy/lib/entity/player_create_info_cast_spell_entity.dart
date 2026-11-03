@@ -1,4 +1,4 @@
-import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/model/flag_item.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 

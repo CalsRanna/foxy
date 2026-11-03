@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/setting/setting_dialog_shell.dart';
-import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
+import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/foxy_loading_indicator.dart';
+import 'package:foxy/widget/layout/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 

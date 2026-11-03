@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:foxy/constant/dbc_definitions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/model/dbc/dbc_export_table.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
+import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
-import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 

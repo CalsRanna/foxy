@@ -5,7 +5,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 
-import 'package:foxy_lint/rules/file_scopes.dart';
+import 'package:foxy_lint/src/file_scopes.dart';
 
 /// Entity/ViewModel/View files must not use collection loops
 /// (`List.generate` or `for-in` over a collection); fields must be

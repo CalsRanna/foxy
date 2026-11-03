@@ -59,9 +59,9 @@ import 'package:signals_flutter/signals_flutter.dart';
   void test_widgetImport_reports() async {
     await assertDiagnostics(
       r'''
-import 'package:foxy/widget/foxy_tab.dart';
+import 'package:foxy/widget/layout/foxy_tab.dart';
 ''',
-      [lint(0, 43), error(_uriDoesNotExist(), 7, 35)],
+      [lint(0, 50), error(_uriDoesNotExist(), 7, 42)],
     );
   }
 

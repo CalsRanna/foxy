@@ -1,13 +1,13 @@
 import 'package:foxy/infrastructure/database/database.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 
 // Exported for generated parts: the repository .g.dart is `part of` the
 // parent library and cannot import on its own; the generated code's
 // FoxyException throw sites resolve through this file's import scope.
-export 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+export 'package:foxy/exception/foxy_exceptions.dart';
 
 mixin RepositoryMixin {
   final kPageSize = 50;

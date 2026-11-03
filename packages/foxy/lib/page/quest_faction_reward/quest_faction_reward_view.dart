@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/quest_faction_reward_detail_view_model.dart';
-import 'package:foxy/widget/foxy_form_item.dart';
-import 'package:foxy/widget/foxy_form_section.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/form/foxy_form_item.dart';
+import 'package:foxy/widget/form/foxy_form_section.dart';
+import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

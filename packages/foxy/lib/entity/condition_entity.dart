@@ -1,8 +1,8 @@
 import 'package:foxy/constant/condition_source_types.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
-import 'package:foxy/constant/flag_item.dart';
-import 'package:foxy/constant/integer_field_spec.dart';
+import 'package:foxy/model/flag_item.dart';
+import 'package:foxy/model/form/integer_field_spec.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'condition_entity.g.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class BootstrapSimulatorForm extends StatelessWidget {

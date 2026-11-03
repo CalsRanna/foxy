@@ -1,4 +1,4 @@
-import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
+import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
