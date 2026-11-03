@@ -3,94 +3,41 @@ import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
-  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
-    final log = ActivityLogEntity(
-      module: 'spell_item_enchantment',
-      actionType: action,
-      entityName: t.nameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
-  }
+part 'spell_item_enchantment_detail_view_model.g.dart';
 
-  final _repository = GetIt.instance.get<SpellItemEnchantmentRepository>();
-
-  final entity = signal<SpellItemEnchantmentEntity?>(null);
-  final persistedKey = signal<int?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
-
-  /// Basic
-  late final idController = registerController(IntFieldController());
-  late final nameController = registerController(StringFieldController());
-  late final chargesController = registerController(IntFieldController());
-
-  /// Effect
-  late final effect0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final effect1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final effect2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-
-  /// EffectPointsMin
-  late final effectPointsMin0Controller = registerController(
-    IntFieldController(),
-  );
-  late final effectPointsMin1Controller = registerController(
-    IntFieldController(),
-  );
-  late final effectPointsMin2Controller = registerController(
-    IntFieldController(),
-  );
-
-  /// EffectPointsMax
-  late final effectPointsMax0Controller = registerController(
-    IntFieldController(),
-  );
-  late final effectPointsMax1Controller = registerController(
-    IntFieldController(),
-  );
-  late final effectPointsMax2Controller = registerController(
-    IntFieldController(),
-  );
-
-  /// EffectArg: switches number/enum/reference edit semantics with the
-  /// Effect type
-  late final effectArg0Controller = registerController(
-    IntFieldControllerGroup(),
-  );
-  late final effectArg1Controller = registerController(
-    IntFieldControllerGroup(),
-  );
-  late final effectArg2Controller = registerController(
-    IntFieldControllerGroup(),
-  );
-
-  /// Other
-  late final itemVisualController = registerController(IntFieldController());
-  late final nameLangFlagsController = registerController(IntFieldController());
-  late final flagsController = registerController(FlagFieldController());
-  late final srcItemIdController = registerController(IntFieldController());
-  late final conditionIdController = registerController(IntFieldController());
-  late final requiredSkillIdController = registerController(
-    IntFieldController(),
-  );
-  late final requiredSkillRankController = registerController(
-    IntFieldController(),
-  );
-  late final minLevelController = registerController(IntFieldController());
+@FoxyDetailViewModel(
+  selects: {'effect0', 'effect1', 'effect2'},
+  flags: {'flags'},
+  groups: {'effectArg0', 'effectArg1', 'effectArg2'},
+  // Other locales are kept in entity and edited through the locale dialog.
+  exclude: {
+    'nameLangEnUS',
+    'nameLangKoKR',
+    'nameLangFrFR',
+    'nameLangDeDE',
+    'nameLangZhTW',
+    'nameLangEsES',
+    'nameLangEsMX',
+    'nameLangRuRU',
+    'nameLangJaJP',
+    'nameLangPtPT',
+    'nameLangPtBR',
+    'nameLangItIT',
+    'nameLangUnk1',
+    'nameLangUnk2',
+    'nameLangUnk3',
+  },
+)
+class SpellItemEnchantmentDetailViewModel
+    with FieldControllerMixin, _SpellItemEnchantmentDetailViewModelMixin {
+  StringFieldController get nameController => nameLangZhCNController;
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
     entity.value = entity.value!.copyWith(
@@ -114,99 +61,7 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
     nameController.init(values.zhCN);
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
-  /// Collects data from all controllers to build the SpellItemEnchantment
-
-  Future<void> initSignals({int? key}) async {
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      if (key == null) {
-        final blank = await _repository.createSpellItemEnchantment();
-        if (isDisposed) return;
-        entity.value = blank;
-        _applyCandidate(blank);
-        persistedKey.value = null;
-        return;
-      }
-      final result = await _repository.getSpellItemEnchantment(key);
-      if (result == null) {
-        throw RecordNotFoundException('record not found');
-      }
-      if (isDisposed) return;
-      entity.value = result;
-      _applyCandidate(result);
-      persistedKey.value = key;
-    } catch (error, stackTrace) {
-      errorMessage.value = FoxyExceptions.message(error);
-      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  /// Leaves the page
-  Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        // store returns the actual written key: a duplicate-key retry may
-        // reallocate it, so persistedKey must reflect reality.
-        final storedKey = await _repository.storeSpellItemEnchantment(
-          candidate,
-        );
-        persistedKey.value = storedKey;
-      } else {
-        await _repository.updateSpellItemEnchantment(originalKey, candidate);
-        persistedKey.value = candidate.id;
-      }
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  void _applyCandidate(SpellItemEnchantmentEntity entry) {
-    idController.init(entry.id);
-    nameController.init(entry.nameLangZhCN);
-    chargesController.init(entry.charges);
-    effect0Controller.init(entry.effect0);
-    effect1Controller.init(entry.effect1);
-    effect2Controller.init(entry.effect2);
-    effectPointsMin0Controller.init(entry.effectPointsMin0);
-    effectPointsMin1Controller.init(entry.effectPointsMin1);
-    effectPointsMin2Controller.init(entry.effectPointsMin2);
-    effectPointsMax0Controller.init(entry.effectPointsMax0);
-    effectPointsMax1Controller.init(entry.effectPointsMax1);
-    effectPointsMax2Controller.init(entry.effectPointsMax2);
-    effectArg0Controller.init(entry.effectArg0);
-    effectArg1Controller.init(entry.effectArg1);
-    effectArg2Controller.init(entry.effectArg2);
-    itemVisualController.init(entry.itemVisual);
-    nameLangFlagsController.init(entry.nameLangFlags);
-    flagsController.init(entry.flags);
-    srcItemIdController.init(entry.srcItemId);
-    conditionIdController.init(entry.conditionId);
-    requiredSkillIdController.init(entry.requiredSkillId);
-    requiredSkillRankController.init(entry.requiredSkillRank);
-    minLevelController.init(entry.minLevel);
-  }
-
+  @override
   SpellItemEnchantmentEntity _collectCandidate() {
     // Overlay UI fields from the loaded entity, so hidden columns such as
     // multi-language ones are never cleared.
@@ -235,5 +90,16 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
       requiredSkillRank: requiredSkillRankController.collect(),
       minLevel: minLevelController.collect(),
     );
+  }
+
+  @override
+  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
+    final log = ActivityLogEntity(
+      module: 'spell_item_enchantment',
+      actionType: action,
+      entityName: t.nameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
   }
 }

@@ -21,22 +21,6 @@ class SpellItemEnchantmentRepository
   String get dbcLocaleTableName => _table;
 
   @override
-  Future<int> copySpellItemEnchantment(int key) async {
-    final source = await getSpellItemEnchantment(key);
-    if (source == null) {
-      throw RecordNotFoundException('record not found');
-    }
-    final copied = source.copyWith(id: await _getNextId());
-    await storeSpellItemEnchantment(copied);
-    return copied.id;
-  }
-
-  @override
-  Future<SpellItemEnchantmentEntity> createSpellItemEnchantment() async {
-    return SpellItemEnchantmentEntity(id: await _getNextId());
-  }
-
-  @override
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     SpellItemEnchantmentFilter? filter,
@@ -53,15 +37,5 @@ class SpellItemEnchantmentRepository
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 0x7fffffff) {
-      throw IdExhaustedException(
-        'SpellItemEnchantment ID exceeds DBC int32 range',
-      );
-    }
-    return id;
   }
 }
