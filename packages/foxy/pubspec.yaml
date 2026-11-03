@@ -56,6 +56,9 @@ dev_dependencies:
   test: ^1.30.0
 
 flutter:
+  config:
+    enable-swift-package-manager: true
+
   uses-material-design: true
 
   assets:

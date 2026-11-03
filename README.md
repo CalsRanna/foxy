@@ -64,7 +64,7 @@ Page (SignalBuilder 订阅) ──► ViewModel (signals + 表单控制器) ─�
 ### 环境要求
 
 - Flutter 3.47.x stable(Dart SDK ^3.13.0)
-- macOS 端构建需 macOS 12.0+(Flutter 3.47 与 file_selector_macos 0.9.5+2 起要求)
+- macOS 端构建需 macOS 12.0+(Flutter 3.47 与 file_selector_macos 0.9.5+2 起要求)与 Xcode,原生插件统一使用 Swift Package Manager,无需安装 CocoaPods
 - MySQL 5.7+ / 8.x(建议 utf8mb4;应用会自建 `foxy` 元数据库)
 
 ### 运行
@@ -79,6 +79,8 @@ flutter run -d windows
 ```
 
 > 注:根目录为 workspace,所有 Flutter 命令请在 `packages/foxy` 下执行;代码生成器与 lint 包的纯 Dart 测试分别用 `cd packages/foxy_generator && dart test`、`cd packages/foxy_lint && dart test`。
+
+macOS 使用 `flutter run -d macos` 或 `flutter build macos --release`,Flutter 会自动生成并解析 Swift Package Manager 插件依赖。使用 Xcode 时打开 `packages/foxy/macos/Runner.xcworkspace`。新增原生插件时需确认其 macOS 实现支持 Swift Package Manager。
 
 ### 配置
 
