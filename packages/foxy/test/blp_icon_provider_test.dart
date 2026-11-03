@@ -71,9 +71,8 @@ void main() {
 
     test('损坏 BLP 抛错,失败的 key 从 ImageCache 驱逐', () async {
       PaintingBinding.instance.imageCache.clear();
-      File(
-        p.join(tempDir.path, 'broken.blp'),
-      ).writeAsBytesSync(List.filled(128, 0));
+      File(p.join(tempDir.path, 'broken.blp'))
+          .writeAsBytesSync(List.filled(128, 0));
       final provider = BlpIconProvider(
         rawPath: 'broken',
         iconDir: tempDir.path,
@@ -96,9 +95,8 @@ void main() {
       );
       expect(await resolveViaStream(provider), isNull);
 
-      File(
-        p.join(tempDir.path, 'late_icon.blp'),
-      ).writeAsBytesSync(File(fixtureBlp).readAsBytesSync());
+      File(p.join(tempDir.path, 'late_icon.blp'))
+          .writeAsBytesSync(File(fixtureBlp).readAsBytesSync());
       final info = await resolveViaStream(provider);
       expect(info, isNotNull);
       info!.dispose();
@@ -109,7 +107,8 @@ void main() {
 /// 通过 [ImageStream] 加载,返回 [ImageInfo] 或 null(失败)。
 Future<ImageInfo?> loadViaStream(BlpIconProvider provider) async {
   final key = await provider.obtainKey(const ImageConfiguration());
-  final stream = ImageStream()..setCompleter(provider.loadImage(key, _dummyDecode));
+  final stream = ImageStream()
+    ..setCompleter(provider.loadImage(key, _dummyDecode));
   return _listen(stream);
 }
 

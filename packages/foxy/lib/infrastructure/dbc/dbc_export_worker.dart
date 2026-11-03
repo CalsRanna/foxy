@@ -215,8 +215,9 @@ abstract final class DbcExportWorker {
 
 /// Loads the rows of one DBC table (table name → rows). Kept injectable so
 /// the export core can be unit-tested without a database.
-typedef DbcExportRowLoader =
-    Future<List<Map<String, dynamic>>> Function(String tableName);
+typedef DbcExportRowLoader = Future<List<Map<String, dynamic>>> Function(
+  String tableName,
+);
 
 /// Aggregated result of [DbcExportWorker.writeFiles]; `errors` uses the worker wire
 /// format (map list) so it can travel back through the SendPort as-is.

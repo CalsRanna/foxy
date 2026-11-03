@@ -17,12 +17,10 @@ void main() {
 
     // Old-version files (to be replaced/deleted).
     File(p.join(appDir.path, 'foxy.exe')).writeAsStringSync('old-exe');
-    File(
-      p.join(appDir.path, 'data', 'flutter_assets', 'old.png'),
-    ).createSync(recursive: true);
-    File(
-      p.join(appDir.path, 'data', 'icudtl.dat'),
-    ).writeAsStringSync('old-icu');
+    File(p.join(appDir.path, 'data', 'flutter_assets', 'old.png'))
+        .createSync(recursive: true);
+    File(p.join(appDir.path, 'data', 'icudtl.dat'))
+        .writeAsStringSync('old-icu');
     File(p.join(appDir.path, 'stale.dll')).writeAsStringSync('stale');
     Directory(p.join(appDir.path, 'empty_dir')).createSync();
 
@@ -46,9 +44,8 @@ void main() {
     );
     asset.parent.createSync(recursive: true);
     asset.writeAsStringSync('png');
-    File(
-      p.join(payloadDir.path, 'data', 'icudtl.dat'),
-    ).writeAsStringSync('new-icu');
+    File(p.join(payloadDir.path, 'data', 'icudtl.dat'))
+        .writeAsStringSync('new-icu');
     File(p.join(payloadDir.path, 'new_file.dll')).writeAsStringSync('new-dll');
   });
 
@@ -66,9 +63,8 @@ void main() {
     // New-version files are in place.
     expect(File(p.join(appDir.path, 'foxy.exe')).readAsStringSync(), 'new-exe');
     expect(
-      File(
-        p.join(appDir.path, 'data', 'flutter_assets', 'new.png'),
-      ).readAsStringSync(),
+      File(p.join(appDir.path, 'data', 'flutter_assets', 'new.png'))
+          .readAsStringSync(),
       'png',
     );
     expect(
@@ -82,9 +78,8 @@ void main() {
     // Old-version leftovers are deleted.
     expect(File(p.join(appDir.path, 'stale.dll')).existsSync(), isFalse);
     expect(
-      File(
-        p.join(appDir.path, 'data', 'flutter_assets', 'old.png'),
-      ).existsSync(),
+      File(p.join(appDir.path, 'data', 'flutter_assets', 'old.png'))
+          .existsSync(),
       isFalse,
     );
     // Empty directories are cleaned up.
@@ -103,9 +98,8 @@ void main() {
       'blp2',
     );
     expect(
-      File(
-        p.join(appDir.path, 'data', 'cover', 'custom.jpg'),
-      ).readAsStringSync(),
+      File(p.join(appDir.path, 'data', 'cover', 'custom.jpg'))
+          .readAsStringSync(),
       'cover1',
     );
     expect(

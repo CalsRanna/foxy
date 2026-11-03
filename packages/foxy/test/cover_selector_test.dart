@@ -61,9 +61,9 @@ void main() {
     writeBytes('h.DS_Store', kPngBytes);
     writeBytes('Thumbs.db', kPngBytes);
 
-    final names = CoverSelector.listCandidates(
-      tempDir.path,
-    ).map((file) => p.basename(file.path)).toList();
+    final names = CoverSelector.listCandidates(tempDir.path)
+        .map((file) => p.basename(file.path))
+        .toList();
     expect(names, ['a.png', 'b.PNG', 'c.Jpg', 'd.webp']);
   });
 
@@ -105,9 +105,9 @@ void main() {
     final sub = Directory(p.join(tempDir.path, 'sub'))..createSync();
     File(p.join(sub.path, 'nested.png')).writeAsBytesSync(kPngBytes);
 
-    final names = CoverSelector.listCandidates(
-      tempDir.path,
-    ).map((file) => p.relative(file.path, from: tempDir.path)).toList();
+    final names = CoverSelector.listCandidates(tempDir.path)
+        .map((file) => p.relative(file.path, from: tempDir.path))
+        .toList();
     expect(names, ['root.png']);
   });
 
@@ -122,9 +122,8 @@ void main() {
     expect(first, isNotNull);
     expect(first!.path, second!.path);
     expect(
-      CoverSelector.listCandidates(
-        tempDir.path,
-      ).any((file) => file.path == first.path),
+      CoverSelector.listCandidates(tempDir.path)
+          .any((file) => file.path == first.path),
       isTrue,
     );
   });

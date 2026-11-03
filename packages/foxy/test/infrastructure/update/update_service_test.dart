@@ -475,9 +475,8 @@ void main() {
         ),
       );
       expect(
-        File(
-          p.join(Directory.systemTemp.path, 'foxy_update_9.9.9.zip'),
-        ).existsSync(),
+        File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.9.zip'))
+            .existsSync(),
         isFalse,
       );
     });
@@ -533,9 +532,8 @@ void main() {
         ),
       );
       expect(
-        File(
-          p.join(Directory.systemTemp.path, 'foxy_update_9.9.7.zip'),
-        ).existsSync(),
+        File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.7.zip'))
+            .existsSync(),
         isFalse,
       );
     });
@@ -603,16 +601,14 @@ void main() {
         'new-binary',
       );
       expect(
-        File(
-          p.join(payloadRoot.path, 'data', 'flutter_assets', 'asset.png'),
-        ).existsSync(),
+        File(p.join(payloadRoot.path, 'data', 'flutter_assets', 'asset.png'))
+            .existsSync(),
         isTrue,
       );
       // The zip is cleaned up after extraction.
       expect(
-        File(
-          p.join(Directory.systemTemp.path, 'foxy_update_9.9.6.zip'),
-        ).existsSync(),
+        File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.6.zip'))
+            .existsSync(),
         isFalse,
       );
     });

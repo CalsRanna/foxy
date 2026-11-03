@@ -50,44 +50,36 @@ void main() {
       ];
       final sameKeys = <Object>[
         PickpocketingLootTemplateKey.fromEntity(
-          _candidateFor(
-            'pickpocketing_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('pickpocketing_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
         SkinningLootTemplateKey.fromEntity(
-          _candidateFor(
-            'skinning_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('skinning_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
         ItemLootTemplateKey.fromEntity(
-          _candidateFor(
-            'item_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('item_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
         DisenchantLootTemplateKey.fromEntity(
-          _candidateFor(
-            'disenchant_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('disenchant_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
         ProspectingLootTemplateKey.fromEntity(
-          _candidateFor(
-            'prospecting_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('prospecting_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
         MillingLootTemplateKey.fromEntity(
-          _candidateFor(
-            'milling_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('milling_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
         ReferenceLootTemplateKey.fromEntity(
-          _candidateFor(
-            'reference_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('reference_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
         GameObjectLootTemplateKey.fromEntity(
-          _candidateFor(
-            'gameobject_loot_template',
-          ).copyWith(reference: 31, groupId: 41),
+          _candidateFor('gameobject_loot_template')
+              .copyWith(reference: 31, groupId: 41),
         ),
       ];
 

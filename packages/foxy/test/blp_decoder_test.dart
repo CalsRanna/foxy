@@ -101,16 +101,14 @@ void main() {
   group('真实客户端 fixture（与原始 PNG 对照）', () {
     for (final variant in ['dxt1', 'dxt3', 'dxt5']) {
       test('$variant RGB 与对应 PNG 逐像素一致', () async {
-        final blpBytes = File(
-          'test/fixture/icons/fixture_$variant.blp',
-        ).readAsBytesSync();
+        final blpBytes = File('test/fixture/icons/fixture_$variant.blp')
+            .readAsBytesSync();
         final image = BlpDecoder.decode(blpBytes);
         expect(image.width, 64);
         expect(image.height, 64);
 
-        final pngBytes = File(
-          'test/fixture/icons/fixture_$variant.png',
-        ).readAsBytesSync();
+        final pngBytes = File('test/fixture/icons/fixture_$variant.png')
+            .readAsBytesSync();
         final codec = await ui.instantiateImageCodec(pngBytes);
         final frame = await codec.getNextFrame();
         final pngData = await frame.image.toByteData(

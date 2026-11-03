@@ -28,9 +28,7 @@ void main() {
 
     final tables = await DbcExportShared.loadDbcExportTables(registry);
 
-    final failed = tables.firstWhere(
-      (table) => table.definition == failing,
-    );
+    final failed = tables.firstWhere((table) => table.definition == failing);
     expect(failed.countError, isNotNull);
     expect(failed.recordCount, isNull);
     expect(

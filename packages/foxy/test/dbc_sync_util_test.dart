@@ -206,9 +206,8 @@ void main() {
       ],
       outputDirectory: dir.path,
     );
-    await File(
-      p.join(dir.path, definition.fileName),
-    ).copy(p.join(dir.path, 'SpellDuration.DBC'));
+    await File(p.join(dir.path, definition.fileName))
+        .copy(p.join(dir.path, 'SpellDuration.DBC'));
 
     final events = await util
         .import(directory: dir.path, mysqlConfig: mysql)

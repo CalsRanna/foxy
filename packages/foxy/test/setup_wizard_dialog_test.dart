@@ -34,16 +34,14 @@ void main() {
   setUp(() {
     tempDir = Directory.systemTemp.createTempSync('foxy_wizard_test_');
     clientRoot = Directory(p.join(tempDir.path, 'client'))..createSync();
-    Directory(
-      p.join(clientRoot.path, 'Data', 'zhCN'),
-    ).createSync(recursive: true);
+    Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
+        .createSync(recursive: true);
     _createFakeClientMpq(p.join(clientRoot.path, 'Data', 'zhCN'));
     // Server root with a standard data/dbc layout, so the real
     // ServerDirResolver finds it when the wizard step 2 saves.
     serverRoot = Directory(p.join(tempDir.path, 'server'))..createSync();
-    Directory(
-      p.join(serverRoot.path, 'data', 'dbc'),
-    ).createSync(recursive: true);
+    Directory(p.join(serverRoot.path, 'data', 'dbc'))
+        .createSync(recursive: true);
     File(p.join(serverRoot.path, 'data', 'dbc', 'Spell.dbc')).createSync();
     outputDir = Directory(p.join(tempDir.path, 'out'))..createSync();
 

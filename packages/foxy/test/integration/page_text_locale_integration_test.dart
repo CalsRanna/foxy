@@ -198,9 +198,9 @@ create table `page_text` (
       expect(await locale.countPageTextLocales(7), 2);
 
       expect(
-        (await locale.getBriefPageTextLocales(
-          id: 7,
-        )).map((row) => row.locale).toList(),
+        (await locale.getBriefPageTextLocales(id: 7))
+            .map((row) => row.locale)
+            .toList(),
         ['deDE', 'zhCN'],
         reason: '按 locale 排序',
       );
@@ -267,9 +267,9 @@ create table `page_text` (
         throwsA(isA<RecordNotFoundException>()),
       );
       expect(
-        (await locale.getBriefPageTextLocales(
-          id: 5,
-        )).map((row) => row.locale).toList(),
+        (await locale.getBriefPageTextLocales(id: 5))
+            .map((row) => row.locale)
+            .toList(),
         ['frFR', 'zhCN'],
         reason: '事务回滚后先前删除的 locale 行应仍在',
       );

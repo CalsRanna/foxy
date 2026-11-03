@@ -48,10 +48,7 @@ class BlpIconProvider extends ImageProvider<BlpIconKey> {
   /// Icon directory override for tests; defaults to [GameIconPaths.iconDir].
   final String? iconDir;
 
-  BlpIconProvider({
-    required this.rawPath,
-    this.iconDir,
-  });
+  BlpIconProvider({required this.rawPath, this.iconDir});
 
   String _pathFor(String name) => iconDir == null
       ? GameIconPaths.blpPath(name)

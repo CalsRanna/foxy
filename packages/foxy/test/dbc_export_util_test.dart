@@ -293,12 +293,10 @@ void main() {
     });
 
     test('拷贝覆盖目标目录中已有的同名文件', () async {
-      File(
-        p.join(sourceDir.path, 'SpellDuration.dbc'),
-      ).writeAsBytesSync([1, 2, 3]);
-      File(
-        p.join(targetDir.path, 'SpellDuration.dbc'),
-      ).writeAsBytesSync([9, 9]);
+      File(p.join(sourceDir.path, 'SpellDuration.dbc'))
+          .writeAsBytesSync([1, 2, 3]);
+      File(p.join(targetDir.path, 'SpellDuration.dbc'))
+          .writeAsBytesSync([9, 9]);
 
       final errors = await DbcExportUtil.copyDbcFiles(
         sourceDirectory: sourceDir.path,
