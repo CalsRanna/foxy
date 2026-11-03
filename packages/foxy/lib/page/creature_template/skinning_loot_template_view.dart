@@ -14,7 +14,7 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/item_quality_color.dart';
@@ -117,7 +117,8 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '需要任务',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '需要任务',
                     controller: viewModel.questRequiredController,
                     options: CreatureEnums.booleanOptions,
                     placeholder: 'QuestRequired',

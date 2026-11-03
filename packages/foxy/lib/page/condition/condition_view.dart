@@ -14,7 +14,7 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
@@ -53,7 +53,8 @@ class ConditionView extends StatelessWidget {
                   _row(
                     FoxyFormItem(
                       label: '来源模式',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '来源模式',
                         controller: viewModel.sourceModeController,
                         options: ConditionDetailViewModel.modeOptions,
                         placeholder: 'SourceTypeOrReferenceId',
@@ -66,7 +67,8 @@ class ConditionView extends StatelessWidget {
                               controller: viewModel.sourceReferenceIdController,
                               placeholder: 'SourceTypeOrReferenceId',
                             )
-                          : FoxyShadSelect<int>(
+                          : FoxyEnumPicker<int>(
+                              title: '来源类型',
                               controller: viewModel.sourceTypeController,
                               options: ConditionSourceTypes
                                   .conditionSourceTypeLabels,
@@ -100,7 +102,8 @@ class ConditionView extends StatelessWidget {
                   _row(
                     FoxyFormItem(
                       label: '条件模式',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '条件模式',
                         controller: viewModel.conditionModeController,
                         options: ConditionDetailViewModel.modeOptions,
                         placeholder: 'ConditionTypeOrReference',
@@ -114,7 +117,8 @@ class ConditionView extends StatelessWidget {
                                   viewModel.conditionReferenceIdController,
                               placeholder: 'ConditionTypeOrReference',
                             )
-                          : FoxyShadSelect<int>(
+                          : FoxyEnumPicker<int>(
+                              title: '条件类型',
                               controller: viewModel.conditionTypeController,
                               options: ConditionType.conditionTypeLabels,
                               placeholder: 'ConditionTypeOrReference',
@@ -122,7 +126,8 @@ class ConditionView extends StatelessWidget {
                     ),
                     FoxyFormItem(
                       label: '条件目标',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '条件目标',
                         controller: viewModel.conditionTargetController,
                         options: _targetOptions(sourceType),
                         placeholder: 'ConditionTarget',
@@ -130,7 +135,8 @@ class ConditionView extends StatelessWidget {
                     ),
                     FoxyFormItem(
                       label: '否定条件',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '否定条件',
                         controller: viewModel.negativeConditionController,
                         options: ConditionValueConfig.conditionBooleanOptions,
                         placeholder: 'NegativeCondition',
@@ -163,21 +169,21 @@ class ConditionView extends StatelessWidget {
                   _row(
                     FoxyFormItem(
                       label: '法术失败类型',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '法术失败类型',
                         controller: viewModel.errorTypeController,
                         options: ConditionErrorTypes.conditionErrorTypeOptions,
                         placeholder: 'ErrorType',
-                        maxHeight: 360,
                       ),
                     ),
                     FoxyFormItem(
                       label: '自定义错误',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '自定义错误',
                         controller: viewModel.errorTextIdController,
                         options:
                             ConditionErrorTypes.conditionCustomErrorOptions,
                         placeholder: 'ErrorTextId',
-                        maxHeight: 360,
                       ),
                     ),
                     FoxyFormItem(
@@ -322,7 +328,8 @@ class ConditionView extends StatelessWidget {
     if (!referenceTemplate && sourceType == 30) {
       return FoxyFormItem(
         label: '对象类型',
-        child: FoxyShadSelect<int>(
+        child: FoxyEnumPicker<int>(
+          title: '对象类型',
           controller: viewModel.sourceGroupController.selectController,
           options: const {0: '生物', 1: '游戏对象'},
           placeholder: 'SourceGroup',
@@ -354,7 +361,8 @@ class ConditionView extends StatelessWidget {
     if (!referenceTemplate && sourceType == 22) {
       return FoxyFormItem(
         label: 'SmartAI类型',
-        child: FoxyShadSelect<int>(
+        child: FoxyEnumPicker<int>(
+          title: 'SmartAI类型',
           controller: viewModel.sourceIdController.selectController,
           options: SmartScriptConstants.sourceTypes,
           placeholder: 'SourceId',
@@ -385,7 +393,8 @@ class ConditionView extends StatelessWidget {
         controller: controllers.numberController,
         placeholder: column,
       ),
-      IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
+      IntegerSelectFieldSpec(:final options) => FoxyEnumPicker<int>(
+        title: spec.label,
         controller: controllers.selectController,
         options: options,
         placeholder: column,

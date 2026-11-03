@@ -15,7 +15,7 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
@@ -93,7 +93,8 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '类型',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '类型',
                     controller: viewModel.optionTypeController,
                     options: GossipMenuOptionConstants.gossipOptionTypes,
                     placeholder: 'OptionType',
@@ -109,7 +110,8 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '图标',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '图标',
                     controller: viewModel.optionIconController,
                     options: GossipMenuOptionConstants.gossipOptionIcons,
                     placeholder: 'OptionIcon',
@@ -156,7 +158,8 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '输入密码',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '输入密码',
                     controller: viewModel.boxCodedController,
                     options: GossipMenuOptionConstants.gossipBooleanOptions,
                     placeholder: 'BoxCoded',

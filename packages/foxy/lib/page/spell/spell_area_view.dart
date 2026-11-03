@@ -16,7 +16,7 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_icon_text.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
@@ -170,7 +170,8 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '性别',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '性别',
                     controller: viewModel.genderController,
                     options: SpellEnums.spellAreaGenderOptions,
                     placeholder: 'gender',
@@ -186,7 +187,8 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '自动施放',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '自动施放',
                     controller: viewModel.autocastController,
                     options: CreatureEnums.booleanOptions,
                     placeholder: 'autocast',

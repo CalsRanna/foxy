@@ -50,7 +50,7 @@ final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
   IntegerFieldEditor get editor => IntegerFieldEditor.reference;
 }
 
-/// Strict enum dropdown ([FoxyShadSelect]).
+/// Strict enum picker ([FoxyEnumPicker]).
 final class IntegerSelectFieldSpec<R> extends IntegerFieldSpec<R> {
   final Map<int, String> options;
 

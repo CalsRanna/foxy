@@ -8,7 +8,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -45,7 +45,8 @@ class ItemExtendedCostView extends StatelessWidget {
     );
     final arenaBracketInput = FoxyFormItem(
       label: '最低竞技槽位',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '最低竞技槽位',
         controller: viewModel.arenaBracketController,
         options: ItemExtendedCostConstants.arenaSlotOptions,
         placeholder: 'ArenaBracket',

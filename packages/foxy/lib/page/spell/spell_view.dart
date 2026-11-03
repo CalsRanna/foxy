@@ -15,15 +15,15 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class _MiscValueDropdown extends _MiscValueOptions {
+class _MiscValueEnumPicker extends _MiscValueOptions {
   final Map<int, String> items;
-  const _MiscValueDropdown(this.items);
+  const _MiscValueEnumPicker(this.items);
 }
 
 class _MiscValueFlagPicker extends _MiscValueOptions {
@@ -203,7 +203,8 @@ class SpellView extends StatelessWidget {
     );
     final mechanicInput = FoxyFormItem(
       label: '机制',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '机制',
         controller: vm.mechanicController,
         options: SpellEnums.spellMechanicOptions,
         placeholder: 'Mechanic',
@@ -211,7 +212,8 @@ class SpellView extends StatelessWidget {
     );
     final defenseTypeInput = FoxyFormItem(
       label: '伤害类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '伤害类型',
         controller: vm.defenseTypeController,
         options: SpellEnums.spellDmgClassOptions,
         placeholder: 'DefenseType',
@@ -219,7 +221,8 @@ class SpellView extends StatelessWidget {
     );
     final dispelTypeInput = FoxyFormItem(
       label: '驱散类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '驱散类型',
         controller: vm.dispelTypeController,
         options: SpellEnums.spellDispelTypeOptions,
         placeholder: 'DispelType',
@@ -227,7 +230,8 @@ class SpellView extends StatelessWidget {
     );
     final preventionTypeInput = FoxyFormItem(
       label: '防止类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '防止类型',
         controller: vm.preventionTypeController,
         options: SpellEnums.spellPreventionTypeOptions,
         placeholder: 'PreventionType',
@@ -329,7 +333,8 @@ class SpellView extends StatelessWidget {
     // === Targets ===
     final targetCreatureTypeInput = FoxyFormItem(
       label: '目标生物类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '目标生物类型',
         controller: vm.targetCreatureTypeController,
         options: CreatureEnums.creatureTypeOptions,
         placeholder: 'TargetCreatureType',
@@ -362,7 +367,8 @@ class SpellView extends StatelessWidget {
     // === States ===
     final casterAuraStateInput = FoxyFormItem(
       label: '施法者状态',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '施法者状态',
         controller: vm.casterAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
         placeholder: 'CasterAuraState',
@@ -370,7 +376,8 @@ class SpellView extends StatelessWidget {
     );
     final targetAuraStateInput = FoxyFormItem(
       label: '目标状态',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '目标状态',
         controller: vm.targetAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
         placeholder: 'TargetAuraState',
@@ -426,7 +433,8 @@ class SpellView extends StatelessWidget {
     );
     final powerTypeInput = FoxyFormItem(
       label: '能量类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '能量类型',
         controller: vm.powerTypeController,
         options: SpellEnums.spellPowerTypeOptions,
         placeholder: 'PowerType',
@@ -604,7 +612,8 @@ class SpellView extends StatelessWidget {
     // === Spell-family mask ===
     final spellClassSetInput = FoxyFormItem(
       label: '法术族',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '法术族',
         controller: vm.spellClassSetController,
         options: SpellEnums.spellFamilyNameOptions,
         placeholder: 'SpellClassSet',
@@ -617,7 +626,8 @@ class SpellView extends StatelessWidget {
     // === Equip restrictions ===
     final equippedItemClassInput = FoxyFormItem(
       label: '装备类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '装备类型',
         controller: vm.equippedItemClassController,
         options: SpellEnums.spellItemClassOptions,
         placeholder: 'EquippedItemClass',
@@ -811,7 +821,8 @@ class SpellView extends StatelessWidget {
     );
     final minReputationInput = FoxyFormItem(
       label: '最低声望等级',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '最低声望等级',
         controller: vm.minReputationController,
         options: SpellEnums.spellReputationRankOptions,
         placeholder: 'MinReputation',
@@ -891,7 +902,8 @@ class SpellView extends StatelessWidget {
     );
     final excludeCasterAuraStateInput = FoxyFormItem(
       label: '排除自身状态',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '排除自身状态',
         controller: vm.excludeCasterAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
         placeholder: 'ExcludeCasterAuraState',
@@ -899,7 +911,8 @@ class SpellView extends StatelessWidget {
     );
     final excludeTargetAuraStateInput = FoxyFormItem(
       label: '排除目标状态',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '排除目标状态',
         controller: vm.excludeTargetAuraStateController,
         options: SpellEnums.auraStateTypeOptions,
         placeholder: 'ExcludeTargetAuraState',
@@ -1471,7 +1484,8 @@ class SpellView extends StatelessWidget {
                 Expanded(
                   child: FoxyFormItem(
                     label: '类型',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '$title · 类型',
                       controller: effCtrl,
                       options: SpellEnums.spellEffectOptions,
                       placeholder: 'Effect',
@@ -1513,7 +1527,8 @@ class SpellView extends StatelessWidget {
                 Expanded(
                   child: FoxyFormItem(
                     label: '机制',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '$title · 机制',
                       controller: mechanicCtrl,
                       options: SpellEnums.spellMechanicOptions,
                       placeholder: 'Mechanic',
@@ -1532,7 +1547,8 @@ class SpellView extends StatelessWidget {
                 Expanded(
                   child: FoxyFormItem(
                     label: '光环',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '$title · 光环',
                       controller: auraCtrl,
                       options: SpellEnums.spellAuraTypeOptions,
                       placeholder: 'Aura',
@@ -1565,7 +1581,8 @@ class SpellView extends StatelessWidget {
                 Expanded(
                   child: FoxyFormItem(
                     label: '目标A',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '$title · 目标A',
                       controller: targetACtrl,
                       options: SpellEnums.spellImplicitTargetOptions,
                       placeholder: 'TargetA',
@@ -1575,7 +1592,8 @@ class SpellView extends StatelessWidget {
                 Expanded(
                   child: FoxyFormItem(
                     label: '目标B',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '$title · 目标B',
                       controller: targetBCtrl,
                       options: SpellEnums.spellImplicitTargetOptions,
                       placeholder: 'TargetB',
@@ -1586,6 +1604,8 @@ class SpellView extends StatelessWidget {
                   child: FoxyFormItem(
                     label: _miscValueLabel(effectValue, auraValue),
                     child: _MiscValueInput(
+                      title:
+                          '$title · ${_miscValueLabel(effectValue, auraValue)}',
                       controller: miscValueCtrl,
                       options: miscOptions,
                     ),
@@ -1600,6 +1620,8 @@ class SpellView extends StatelessWidget {
                   child: FoxyFormItem(
                     label: _miscValueBLabel(effectValue, auraValue),
                     child: _MiscValueInput(
+                      title:
+                          '$title · ${_miscValueBLabel(effectValue, auraValue)}',
                       controller: miscValueBCtrl,
                       options: miscBOptions,
                     ),
@@ -1736,7 +1758,7 @@ class SpellView extends StatelessWidget {
     if (effect == 0) return null;
     return switch (effect) {
       6 => switch (aura) {
-        174 => _MiscValueDropdown(
+        174 => _MiscValueEnumPicker(
           SpellEnums.statsEnumOptions,
         ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — uses the Stats enum!
         _ => null,
@@ -1804,22 +1826,24 @@ class SpellView extends StatelessWidget {
         13 || 87 || 174 || 237 || 238 => _MiscValueFlagPicker(
           SpellFlags.spellSchoolMaskOptions,
         ), // school mask → FlagPicker!
-        22 || 83 => _MiscValueDropdown(
+        22 || 83 => _MiscValueEnumPicker(
           CreatureEnums.damageSchoolOptions,
-        ), // single resistance → dropdown
-        29 || 137 || 175 || 182 || 212 || 268 => _MiscValueDropdown(
+        ), // single resistance → enum picker
+        29 || 137 || 175 || 182 || 212 || 268 => _MiscValueEnumPicker(
           SpellEnums.statTypeOptions,
-        ), // single stat → dropdown
+        ), // single stat → enum picker
         30 || 98 => null, // spell ID → number
-        31 => _MiscValueDropdown(SpellEnums.speedTypeOptions),
-        36 => _MiscValueDropdown(SpellEnums.shapeshiftFormOptions),
-        99 => _MiscValueDropdown(SpellEnums.attackPowerTypeOptions),
-        107 || 108 => _MiscValueDropdown(SpellEnums.spellModOpOptions),
+        31 => _MiscValueEnumPicker(SpellEnums.speedTypeOptions),
+        36 => _MiscValueEnumPicker(SpellEnums.shapeshiftFormOptions),
+        99 => _MiscValueEnumPicker(SpellEnums.attackPowerTypeOptions),
+        107 || 108 => _MiscValueEnumPicker(SpellEnums.spellModOpOptions),
         _ => null,
       };
     }
     return switch (effect) {
-      30 => _MiscValueDropdown(SpellEnums.energizePowerTypeOptions), // ENERGIZE
+      30 => _MiscValueEnumPicker(
+        SpellEnums.energizePowerTypeOptions,
+      ), // ENERGIZE
       74 => _MiscValueEntityPicker(
         // APPLY_GLYPH — GlyphProperties.dbc ID
         FoxyEntityPickerDelegates.glyphProperty,
@@ -1840,17 +1864,22 @@ class SpellView extends StatelessWidget {
   }
 }
 
-/// Dynamically switches between number input / dropdown / FlagPicker by
+/// Dynamically switches between number input / EnumPicker / FlagPicker by
 /// context.
 ///
 /// The data source is always the VM's [IntFieldController]; Select/Flag
 /// modes use a local adapter controller that writes the int back through a
 /// listener.
 class _MiscValueInput extends StatefulWidget {
+  final String title;
   final IntFieldController controller;
   final _MiscValueOptions? options;
 
-  const _MiscValueInput({required this.controller, this.options});
+  const _MiscValueInput({
+    required this.title,
+    required this.controller,
+    this.options,
+  });
 
   @override
   State<_MiscValueInput> createState() => _MiscValueInputState();
@@ -1862,7 +1891,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
 
   bool get _isFlagMode => widget.options is _MiscValueFlagPicker;
 
-  bool get _isSelectMode => widget.options is _MiscValueDropdown;
+  bool get _isSelectMode => widget.options is _MiscValueEnumPicker;
 
   @override
   Widget build(BuildContext context) {
@@ -1875,9 +1904,10 @@ class _MiscValueInputState extends State<_MiscValueInput> {
       );
     }
     if (_isSelectMode) {
-      return FoxyShadSelect<int>(
+      return FoxyEnumPicker<int>(
+        title: widget.title,
         controller: _selectController!,
-        options: (widget.options! as _MiscValueDropdown).items,
+        options: (widget.options! as _MiscValueEnumPicker).items,
         placeholder: '选择...',
       );
     }

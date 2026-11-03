@@ -8,7 +8,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -36,7 +36,8 @@ class PlayerCreateInfoView extends StatelessWidget {
                   Expanded(
                     child: FoxyFormItem(
                       label: '种族',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '种族',
                         controller: viewModel.raceController,
                         options: PlayerCreateInfoConstants.playerRaceOptions,
                         placeholder: 'race',
@@ -46,7 +47,8 @@ class PlayerCreateInfoView extends StatelessWidget {
                   Expanded(
                     child: FoxyFormItem(
                       label: '职业',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '职业',
                         controller: viewModel.classController,
                         options: PlayerCreateInfoConstants.playerClassOptions,
                         placeholder: 'class',

@@ -13,7 +13,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_signed_entity_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
@@ -43,7 +43,8 @@ class QuestTemplateView extends StatelessWidget {
           Expanded(
             child: FoxyFormItem(
               label: '任务方式',
-              child: FoxyShadSelect<int>(
+              child: FoxyEnumPicker<int>(
+                title: '任务方式',
                 controller: vm.questTypeController,
                 options: QuestEnums.questMethodOptions,
                 placeholder: 'QuestType',
@@ -425,7 +426,8 @@ class QuestTemplateView extends StatelessWidget {
           Expanded(
             child: FoxyFormItem(
               label: '经验难度',
-              child: FoxyShadSelect<int>(
+              child: FoxyEnumPicker<int>(
+                title: '经验难度',
                 controller: vm.rewardXpDifficultyController,
                 options: QuestEnums.questRewardDifficultyOptions,
                 placeholder: 'RewardXPDifficulty',
@@ -444,7 +446,8 @@ class QuestTemplateView extends StatelessWidget {
           Expanded(
             child: FoxyFormItem(
               label: '金币难度',
-              child: FoxyShadSelect<int>(
+              child: FoxyEnumPicker<int>(
+                title: '金币难度',
                 controller: vm.rewardMoneyDifficultyController,
                 options: QuestEnums.questRewardDifficultyOptions,
                 placeholder: 'RewardMoneyDifficulty',

@@ -14,16 +14,14 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-// Module-level constant option tables: stable references so FoxyShadSelect
-// can cache its ShadOption lists. (They used to be getters rebuilding a Map
-// on every build, which broke the dropdown option cache.)
+// Module-level constant option tables shared by the enum pickers.
 class ItemTemplateView extends StatelessWidget {
   static const Map<int, String> _ammoTypeOptions = {0: '无', 2: '箭', 3: '子弹'};
 
@@ -108,7 +106,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final qualityInput = FoxyFormItem(
       label: '品质',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '品质',
         controller: viewModel.qualityController,
         options: ItemEnums.itemQualityOptions,
         placeholder: 'Quality',
@@ -116,7 +115,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final classInput = FoxyFormItem(
       label: '类别',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '类别',
         controller: viewModel.classNameController,
         options: _itemClassOptions,
         placeholder: 'class',
@@ -124,8 +124,10 @@ class ItemTemplateView extends StatelessWidget {
     );
     final subclassInput = FoxyFormItem(
       label: '子类别',
-      child: SignalBuilder(
-        builder: (_) => FoxyShadSelect<int>(
+      child: ListenableBuilder(
+        listenable: viewModel.classNameController.controller,
+        builder: (context, child) => FoxyEnumPicker<int>(
+          title: '子类别',
           controller: viewModel.subclassController,
           options: _currentSubclassOptions,
           placeholder: 'subclass',
@@ -141,7 +143,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final materialInput = FoxyFormItem(
       label: '材质',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '材质',
         controller: viewModel.materialController,
         options: ItemEnums.itemMaterialOptions,
         placeholder: 'Material',
@@ -157,7 +160,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final inventoryTypeInput = FoxyFormItem(
       label: '佩戴位置',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '佩戴位置',
         controller: viewModel.inventoryTypeController,
         options: _inventoryTypeOptions,
         placeholder: 'InventoryType',
@@ -165,7 +169,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final sheathInput = FoxyFormItem(
       label: '挂载类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '挂载类型',
         controller: viewModel.sheathController,
         options: ItemEnums.itemSheathOptions,
         placeholder: 'sheath',
@@ -173,7 +178,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final bondingInput = FoxyFormItem(
       label: '绑定类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '绑定类型',
         controller: viewModel.bondingController,
         options: ItemEnums.itemBondingOptions,
         placeholder: 'bonding',
@@ -287,7 +293,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final foodTypeInput = FoxyFormItem(
       label: '食物类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '食物类型',
         controller: viewModel.foodTypeController,
         options: ItemEnums.itemFoodTypeOptions,
         placeholder: 'FoodType',
@@ -495,7 +502,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final ammoTypeInput = FoxyFormItem(
       label: '弹药类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '弹药类型',
         controller: viewModel.ammoTypeController,
         options: _ammoTypeOptions,
         placeholder: 'ammo_type',
@@ -503,7 +511,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final dmgType1Input = FoxyFormItem(
       label: '伤害类型1',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '伤害类型1',
         controller: viewModel.dmgType1Controller,
         options: CreatureEnums.damageSchoolOptions,
         placeholder: 'dmg_type1',
@@ -525,7 +534,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final dmgType2Input = FoxyFormItem(
       label: '伤害类型2',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '伤害类型2',
         controller: viewModel.dmgType2Controller,
         options: CreatureEnums.damageSchoolOptions,
         placeholder: 'dmg_type2',
@@ -766,7 +776,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final requiredReputationRankInput = FoxyFormItem(
       label: '声望等级',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '声望等级',
         options: ItemEnums.itemReputationRankOptions,
         placeholder: 'RequiredReputationRank',
         controller: viewModel.requiredReputationRankController,
@@ -949,7 +960,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final pageMaterialInput = FoxyFormItem(
       label: '页面材质',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '页面材质',
         controller: viewModel.pageMaterialController,
         options: _pageMaterialOptions,
         placeholder: 'PageMaterial',
@@ -957,7 +969,8 @@ class ItemTemplateView extends StatelessWidget {
     );
     final languageIdInput = FoxyFormItem(
       label: '语言',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '语言',
         controller: viewModel.languageIdController,
         options: _languageOptions,
         placeholder: 'LanguageID',
@@ -1172,7 +1185,8 @@ class ItemTemplateView extends StatelessWidget {
           Expanded(
             child: FoxyFormItem(
               label: '触发类型',
-              child: FoxyShadSelect<int>(
+              child: FoxyEnumPicker<int>(
+                title: '法术 $number · 触发类型',
                 controller: triggerController,
                 options: ItemEnums.itemSpellTriggerOptions,
                 placeholder: 'spelltrigger_$number',
@@ -1249,7 +1263,8 @@ class ItemTemplateView extends StatelessWidget {
         Expanded(
           child: FoxyFormItem(
             label: '属性类型$firstNumber',
-            child: FoxyShadSelect<int>(
+            child: FoxyEnumPicker<int>(
+              title: '属性类型$firstNumber',
               controller: firstTypeController,
               options: ItemEnums.itemStatTypeOptions,
               placeholder: 'stat_type$firstNumber',
@@ -1268,7 +1283,8 @@ class ItemTemplateView extends StatelessWidget {
         Expanded(
           child: FoxyFormItem(
             label: '属性类型$secondNumber',
-            child: FoxyShadSelect<int>(
+            child: FoxyEnumPicker<int>(
+              title: '属性类型$secondNumber',
               controller: secondTypeController,
               options: ItemEnums.itemStatTypeOptions,
               placeholder: 'stat_type$secondNumber',

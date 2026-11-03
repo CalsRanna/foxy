@@ -12,7 +12,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
@@ -139,7 +139,8 @@ class _PlayerCreateInfoActionViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '种族',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '种族',
                       controller: viewModel.raceController,
                       options: PlayerCreateInfoConstants.playerRaceOptions,
                       placeholder: 'race',
@@ -149,7 +150,8 @@ class _PlayerCreateInfoActionViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '职业',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '职业',
                       controller: viewModel.classController,
                       options: PlayerCreateInfoConstants.playerClassOptions,
                       placeholder: 'class',
@@ -179,7 +181,8 @@ class _PlayerCreateInfoActionViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '类型',
-                    child: FoxyShadSelect<int>(
+                    child: FoxyEnumPicker<int>(
+                      title: '类型',
                       controller: viewModel.typeController,
                       options: PlayerCreateInfoConstants
                           .playerActionButtonTypeOptions,

@@ -9,7 +9,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -60,7 +60,8 @@ class _CreatureOnKillReputationViewState
                     Expanded(
                       child: FoxyFormItem(
                         label: '区分阵营',
-                        child: FoxyShadSelect<int>(
+                        child: FoxyEnumPicker<int>(
+                          title: '区分阵营',
                           controller: viewModel.teamDependentController,
                           options: CreatureEnums.booleanOptions,
                           placeholder: 'TeamDependent',
@@ -129,7 +130,8 @@ class _CreatureOnKillReputationViewState
                     Expanded(
                       child: FoxyFormItem(
                         label: '最高声望1',
-                        child: FoxyShadSelect<int>(
+                        child: FoxyEnumPicker<int>(
+                          title: '最高声望1',
                           controller: viewModel.maxStanding1Controller,
                           options: CreatureEnums.maxStandingOptions,
                           placeholder: 'MaxStanding1',
@@ -139,7 +141,8 @@ class _CreatureOnKillReputationViewState
                     Expanded(
                       child: FoxyFormItem(
                         label: '最高声望2',
-                        child: FoxyShadSelect<int>(
+                        child: FoxyEnumPicker<int>(
+                          title: '最高声望2',
                           controller: viewModel.maxStanding2Controller,
                           options: CreatureEnums.maxStandingOptions,
                           placeholder: 'MaxStanding2',
@@ -156,7 +159,8 @@ class _CreatureOnKillReputationViewState
                     Expanded(
                       child: FoxyFormItem(
                         label: '包括声望组1',
-                        child: FoxyShadSelect<int>(
+                        child: FoxyEnumPicker<int>(
+                          title: '包括声望组1',
                           controller: viewModel.isTeamAward1Controller,
                           options: CreatureEnums.booleanOptions,
                           placeholder: 'IsTeamAward1',
@@ -166,7 +170,8 @@ class _CreatureOnKillReputationViewState
                     Expanded(
                       child: FoxyFormItem(
                         label: '包括声望组2',
-                        child: FoxyShadSelect<int>(
+                        child: FoxyEnumPicker<int>(
+                          title: '包括声望组2',
                           controller: viewModel.isTeamAward2Controller,
                           options: CreatureEnums.booleanOptions,
                           placeholder: 'IsTeamAward2',

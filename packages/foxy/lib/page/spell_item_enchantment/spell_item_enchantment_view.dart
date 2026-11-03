@@ -11,7 +11,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -323,7 +323,8 @@ class SpellItemEnchantmentView extends StatelessWidget {
         if (type == 4) {
           return FoxyFormItem(
             label: '抗性系别 $slot',
-            child: FoxyShadSelect<int>(
+            child: FoxyEnumPicker<int>(
+              title: '抗性系别 $slot',
               controller: argumentController.selectController,
               options: SpellItemEnchantmentConstants
                   .spellItemEnchantmentSchoolOptions,
@@ -334,7 +335,8 @@ class SpellItemEnchantmentView extends StatelessWidget {
         if (type == 5) {
           return FoxyFormItem(
             label: '附魔属性 $slot',
-            child: FoxyShadSelect<int>(
+            child: FoxyEnumPicker<int>(
+              title: '附魔属性 $slot',
               controller: argumentController.selectController,
               options:
                   SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
@@ -359,7 +361,8 @@ class SpellItemEnchantmentView extends StatelessWidget {
   ) {
     return FoxyFormItem(
       label: '效果类型 $slot',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '效果类型 $slot',
         controller: controller,
         options:
             SpellItemEnchantmentConstants.spellItemEnchantmentEffectTypeOptions,

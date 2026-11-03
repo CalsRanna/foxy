@@ -10,7 +10,7 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
@@ -53,7 +53,8 @@ class SmartScriptView extends StatelessWidget {
                     ),
                     FoxyFormItem(
                       label: '源类型',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '源类型',
                         controller: viewModel.sourceTypeController,
                         options: SmartScriptConstants.sourceTypes,
                         placeholder: 'source_type',
@@ -82,7 +83,8 @@ class SmartScriptView extends StatelessWidget {
                   _row(
                     FoxyFormItem(
                       label: '事件类型',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '事件类型',
                         controller: viewModel.eventTypeController,
                         options: SmartScriptConstants.eventTypesForSource(
                           viewModel.selectedSourceType.value,
@@ -158,7 +160,8 @@ class SmartScriptView extends StatelessWidget {
                   _row(
                     FoxyFormItem(
                       label: '动作类型',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '动作类型',
                         controller: viewModel.actionTypeController,
                         options: SmartScriptConstants.actionTypes,
                         placeholder: 'action_type',
@@ -206,7 +209,8 @@ class SmartScriptView extends StatelessWidget {
                   _row(
                     FoxyFormItem(
                       label: '目标类型',
-                      child: FoxyShadSelect<int>(
+                      child: FoxyEnumPicker<int>(
+                        title: '目标类型',
                         controller: viewModel.targetTypeController,
                         options: SmartScriptConstants.targetTypes,
                         placeholder: 'target_type',
@@ -332,7 +336,8 @@ class SmartScriptView extends StatelessWidget {
         controller: controllers.numberController,
         placeholder: column,
       ),
-      IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
+      IntegerSelectFieldSpec(:final options) => FoxyEnumPicker<int>(
+        title: spec.label,
         controller: controllers.selectController,
         options: options,
         placeholder: column,

@@ -12,7 +12,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
@@ -77,7 +77,8 @@ class CreatureTemplateView extends StatelessWidget {
     );
     final unitClassInput = FoxyFormItem(
       label: '单位职业',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '单位职业',
         controller: viewModel.unitClassController,
         options: CreatureEnums.unitClassOptions,
         placeholder: 'unit_class',
@@ -85,7 +86,8 @@ class CreatureTemplateView extends StatelessWidget {
     );
     final rankInput = FoxyFormItem(
       label: '稀有等级',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '稀有等级',
         controller: viewModel.rankController,
         options: CreatureEnums.rankOptions,
         placeholder: 'rank',
@@ -93,7 +95,8 @@ class CreatureTemplateView extends StatelessWidget {
     );
     final racialLeaderInput = FoxyFormItem(
       label: '种族领袖',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '种族领袖',
         controller: viewModel.racialLeaderController,
         options: CreatureEnums.booleanOptions,
         placeholder: 'RacialLeader',
@@ -109,7 +112,8 @@ class CreatureTemplateView extends StatelessWidget {
     );
     final familyInput = FoxyFormItem(
       label: '生物族群',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '生物族群',
         controller: viewModel.familyController,
         options: CreatureEnums.creatureFamilyOptions,
         placeholder: 'family',
@@ -117,7 +121,8 @@ class CreatureTemplateView extends StatelessWidget {
     );
     final typeInput = FoxyFormItem(
       label: '生物类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '生物类型',
         controller: viewModel.typeController,
         options: CreatureEnums.creatureTypeOptions,
         placeholder: 'type',
@@ -125,7 +130,8 @@ class CreatureTemplateView extends StatelessWidget {
     );
     final regenerateHealthInput = FoxyFormItem(
       label: '自动回复生命',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '自动回复生命',
         controller: viewModel.regenHealthController,
         options: CreatureEnums.booleanOptions,
         placeholder: 'RegenHealth',
@@ -190,7 +196,8 @@ class CreatureTemplateView extends StatelessWidget {
     /// Type/faction inputs
     final expInput = FoxyFormItem(
       label: '属性资料片',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性资料片',
         controller: viewModel.expController,
         options: CreatureEnums.expansionOptions,
         placeholder: 'exp',
@@ -278,7 +285,8 @@ class CreatureTemplateView extends StatelessWidget {
     /// Modifier
     final damageSchoolInput = FoxyFormItem(
       label: '近战伤害学派',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '近战伤害学派',
         controller: viewModel.damageSchoolController,
         options: CreatureEnums.damageSchoolOptions,
         placeholder: 'dmgschool',
@@ -458,7 +466,8 @@ class CreatureTemplateView extends StatelessWidget {
     );
     final movementTypeInput = FoxyFormItem(
       label: '默认移动方式',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '默认移动方式',
         controller: viewModel.movementTypeController,
         options: CreatureEnums.movementTypeOptions,
         placeholder: 'movementType',

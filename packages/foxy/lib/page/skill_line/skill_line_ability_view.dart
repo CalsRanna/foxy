@@ -15,7 +15,7 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -94,7 +94,8 @@ class _SkillLineAbilityViewState extends State<SkillLineAbilityView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '获得方式',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '获得方式',
                     controller: viewModel.acquireMethodController,
                     options: SkillLineConstants.skillAcquireMethodOptions,
                     placeholder: 'AcquireMethod',

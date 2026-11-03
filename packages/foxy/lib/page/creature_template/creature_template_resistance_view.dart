@@ -10,7 +10,7 @@ import 'package:foxy/widget/foxy_data_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -84,7 +84,8 @@ class _CreatureTemplateResistanceViewState
               Expanded(
                 child: FoxyFormItem(
                   label: '抗性类型',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEnumPicker<int>(
+                    title: '抗性类型',
                     controller: viewModel.schoolController,
                     options: CreatureEnums.resistanceSchoolOptions,
                     placeholder: 'School',

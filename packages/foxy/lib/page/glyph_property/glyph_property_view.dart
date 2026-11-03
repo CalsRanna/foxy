@@ -8,7 +8,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -41,7 +41,8 @@ class GlyphPropertyView extends StatelessWidget {
     );
     final glyphSlotFlagsInput = FoxyFormItem(
       label: '雕文类型',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '雕文类型',
         controller: viewModel.glyphSlotFlagsController,
         options: GlyphPropertyConstants.glyphPropertySlotTypeOptions,
         placeholder: 'GlyphSlotFlags',

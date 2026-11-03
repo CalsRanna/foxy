@@ -10,7 +10,7 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
@@ -69,7 +69,8 @@ class ReferenceLootTemplateView extends StatelessWidget {
     );
     final questRequiredInput = FoxyFormItem(
       label: '需要任务',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '需要任务',
         controller: viewModel.questRequiredController,
         options: CreatureEnums.booleanOptions,
         placeholder: 'QuestRequired',

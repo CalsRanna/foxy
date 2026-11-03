@@ -9,7 +9,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
@@ -96,7 +96,8 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                     Expanded(
                       child: FoxyFormItem(
                         label: '可见距离类型',
-                        child: FoxyShadSelect<int>(
+                        child: FoxyEnumPicker<int>(
+                          title: '可见距离类型',
                           controller:
                               viewModel.visibilityDistanceTypeController,
                           options: CreatureEnums.visibilityDistanceTypeOptions,

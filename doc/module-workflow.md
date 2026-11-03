@@ -241,7 +241,7 @@ class XxxDetailPage extends StatefulWidget {
 | int / double | `FoxyNumberInput<T>` |
 | String | `FoxyStringInput` |
 | String? | `FoxyNullableStringInput` |
-| bool / 枚举 int | `FoxyShadSelect<T>`(placeholder 传字符串) |
+| bool / 枚举 int | `FoxyEnumPicker<T>`(title 必填，placeholder 传字符串) |
 | 位标志 int | `FoxyFlagPicker` |
 | 外键引用 | `FoxyEntityPicker(delegate:)` |
 | 16 语言 locale | `FoxyLocalePicker`(见 4.4) |

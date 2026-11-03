@@ -12,7 +12,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
@@ -99,7 +99,8 @@ class GameObjectTemplateView extends StatelessWidget {
                       Expanded(
                         child: FoxyFormItem(
                           label: '类型',
-                          child: FoxyShadSelect<int>(
+                          child: FoxyEnumPicker<int>(
+                            title: '类型',
                             controller: viewModel.typeController,
                             options: GameObjectConstants.gameObjectTypeOptions,
                             placeholder: 'type',
@@ -249,7 +250,8 @@ class GameObjectTemplateView extends StatelessWidget {
         controller: controllers.numberController,
         placeholder: column,
       ),
-      IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
+      IntegerSelectFieldSpec(:final options) => FoxyEnumPicker<int>(
+        title: spec.label,
         controller: controllers.selectController,
         options: options,
         placeholder: column,

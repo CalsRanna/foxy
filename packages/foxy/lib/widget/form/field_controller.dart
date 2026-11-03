@@ -146,7 +146,7 @@ class IntFieldController extends NumberFieldController<int> {
 ///
 /// A dynamic field's edit semantics switch with the discriminator field
 /// (number/enum/Flags/reference); a single [IntFieldController] cannot be
-/// handed to `FoxyShadSelect`/`FoxyFlagPicker` directly.
+/// handed to `FoxyEnumPicker`/`FoxyFlagPicker` directly.
 /// This class holds three existing typed controllers and forwards reads/
 /// writes by the current [editor], solving the "one physical int field
 /// needs several existing typed controllers" adaptation; it takes no part
@@ -321,7 +321,7 @@ class NullableStringFieldController extends TextBackedFieldController<String?> {
 sealed class NumberFieldController<T extends num>
     extends TextBackedFieldController<T> {}
 
-/// Dropdown field: holds a [ShadSelectController], falling back to
+/// Single-selection field: holds a [ShadSelectController], falling back to
 /// [fallback] when nothing is selected.
 ///
 /// [fallback] makes the previously scattered `?? 0` semantics explicit, so

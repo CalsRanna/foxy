@@ -6,7 +6,7 @@ import 'package:foxy/view_model/scaling_stat_distribution_detail_view_model.dart
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -36,7 +36,8 @@ class ScalingStatDistributionView extends StatelessWidget {
 
     final statId0Input = FoxyFormItem(
       label: '属性类型 0',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 0',
         controller: viewModel.statId0Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -52,7 +53,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId1Input = FoxyFormItem(
       label: '属性类型 1',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 1',
         controller: viewModel.statId1Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -68,7 +70,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId2Input = FoxyFormItem(
       label: '属性类型 2',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 2',
         controller: viewModel.statId2Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -84,7 +87,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId3Input = FoxyFormItem(
       label: '属性类型 3',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 3',
         controller: viewModel.statId3Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -100,7 +104,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId4Input = FoxyFormItem(
       label: '属性类型 4',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 4',
         controller: viewModel.statId4Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -116,7 +121,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId5Input = FoxyFormItem(
       label: '属性类型 5',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 5',
         controller: viewModel.statId5Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -132,7 +138,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId6Input = FoxyFormItem(
       label: '属性类型 6',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 6',
         controller: viewModel.statId6Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -148,7 +155,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId7Input = FoxyFormItem(
       label: '属性类型 7',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 7',
         controller: viewModel.statId7Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -164,7 +172,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId8Input = FoxyFormItem(
       label: '属性类型 8',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 8',
         controller: viewModel.statId8Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
@@ -180,7 +189,8 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId9Input = FoxyFormItem(
       label: '属性类型 9',
-      child: FoxyShadSelect<int>(
+      child: FoxyEnumPicker<int>(
+        title: '属性类型 9',
         controller: viewModel.statId9Controller,
         options:
             ScalingStatDistributionConstants.scalingStatDistributionStatOptions,
