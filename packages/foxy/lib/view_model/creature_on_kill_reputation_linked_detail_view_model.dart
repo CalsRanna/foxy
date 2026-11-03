@@ -12,7 +12,7 @@ import 'package:signals/signals.dart';
 part 'creature_on_kill_reputation_linked_detail_view_model.g.dart';
 
 @FoxyLinkedDetailViewModel(
-  selects: {'maxStanding1', 'maxStanding2', 'teamDependent'},
+  enums: {'maxStanding1', 'maxStanding2', 'teamDependent'},
 )
 class CreatureOnKillReputationLinkedDetailViewModel
     with

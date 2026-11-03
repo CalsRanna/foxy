@@ -52,7 +52,7 @@ void main() {
     expect(_picker('使用动作目标'), findsNothing);
     await _pick(tester, '动作类型', 1);
     expect(vm.selectedActionType.value, 1);
-    expect(vm.actionParam3Controller.editor, IntegerFieldEditor.select);
+    expect(vm.actionParam3Controller.editor, IntegerFieldEditor.enumValue);
     await _pick(tester, '使用动作目标', 1);
     expect(vm.actionParam3Controller.collect(), 1);
     await _pick(tester, '动作类型', 4);
@@ -71,7 +71,7 @@ void main() {
     await _pumpEditor(tester, ConditionView(viewModel: vm));
     await _pick(tester, '条件类型', 6);
     expect(vm.selectedConditionType.value, 6);
-    expect(vm.conditionValue1Controller.editor, IntegerFieldEditor.select);
+    expect(vm.conditionValue1Controller.editor, IntegerFieldEditor.enumValue);
     await _pick(tester, '阵营', 469);
     expect(vm.conditionValue1Controller.collect(), 469);
     await _pick(tester, '条件类型', 27);

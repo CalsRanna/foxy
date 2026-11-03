@@ -12,7 +12,7 @@ import 'package:signals/signals.dart';
 part 'scaling_stat_distribution_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  selects: {
+  enums: {
     'statId0': 0,
     'statId1': 0,
     'statId2': 0,

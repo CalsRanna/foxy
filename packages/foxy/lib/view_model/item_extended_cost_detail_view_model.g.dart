@@ -19,7 +19,7 @@ mixin _ItemExtendedCostDetailViewModelMixin on FieldControllerMixin {
   late final honorPointsController = registerController(IntFieldController());
   late final arenaPointsController = registerController(IntFieldController());
   late final arenaBracketController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final itemID0Controller = registerController(IntFieldController());
   late final itemID1Controller = registerController(IntFieldController());

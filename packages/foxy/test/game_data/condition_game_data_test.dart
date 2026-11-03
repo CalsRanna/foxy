@@ -57,12 +57,12 @@ void main() {
     );
     expect(item.value2.label, '数量');
     expect(
-      (item.value3 as IntegerSelectFieldSpec).options,
+      (item.value3 as IntegerEnumFieldSpec).options,
       ConditionValueConfig.conditionBooleanOptions,
     );
 
     final instance = ConditionValueConfig.forType(13);
-    expect((instance.value3 as IntegerSelectFieldSpec).options.keys.toSet(), {
+    expect((instance.value3 as IntegerEnumFieldSpec).options.keys.toSet(), {
       0,
       1,
       2,

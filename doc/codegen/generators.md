@@ -177,8 +177,9 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 - 只能标注 `XxxViewModel`;文件位置正确;`part`;必须混入 `_XxxViewModelMixin`,且 `FieldControllerMixin` 必须在 `with` 列表里**位于** `_XxxViewModelMixin` **之前**(mixin 解析顺序,否则生成的 `registerController` 调用无法解析)。
 - **绑定实体**:`entity:` 显式传入时校验;省略时按 `convention.entityClassNameOfViewModel` 推导(最长后缀剥离,所以 `@FoxyDetailViewModel` 标在手写 `*LinkedListViewModel` 类上也能正确解析),再经 `resolveFullEntity` 解析。
 - 实体必须有 unnamed generative 构造;从构造参数(仅 named initializing formal)读字段,顺序 = 构造参数顺序。
-- **例外集合读取 + 互斥校验**:`selects`(Map 显式 fallback **或** Set 推导 fallback,见下)/ `flags` / `groups` / `exclude`(Set);`nullable` 已删除——`String?` 类型本身就是声明;一个字段只能属于一个集合;所有例外字段名必须真实存在于实体(拼错即报错)。
-- **类型推断**(`_readField`):`groups` 只支持 `int`;`String?` 自动走 `NullableStringFieldController`(无需声明);`selects` Set 形态的 fallback 从实体构造器同名参数常量默认值推导(`_deriveSelectFallback`,取不到报错提示改用 Map);`flags` 只支持 `int`;其余必须 ∈ {int, double, String, bool}。
+- **例外集合读取 + 互斥校验**:`enums`(Map 显式 fallback **或** Set 推导 fallback,见下)/ `flags` / `groups` / `exclude`(Set);`nullable` 已删除——`String?` 类型本身就是声明;一个字段只能属于一个集合;所有例外字段名必须真实存在于实体(拼错即报错)。
+- **类型推断**(`_readField`):`groups` 只支持 `int`;`String?` 自动走 `NullableStringFieldController`(无需声明);`enums` Set 形态的 fallback 从实体构造器同名参数常量默认值推导(`_deriveEnumFallback`,取不到报错提示改用 Map);`flags` 只支持 `int`;其余必须 ∈ {int, double, String, bool}。
+- **枚举字段模型**:`enums` 声明读取为 `FormFieldKind.enumValue`,默认值保存在 `FormFieldModel.enumFallback`;Emitter 通过 `_enumExpression` 生成对应类型的 `EnumFieldController`。
 - **Key 推断**(`_readEntityKeyField`):从 `@FoxyFullField(key: true)`;单 key 返回 (类型, 名),复合 key 返回 (`XxxKey`, null)——后者不能用于 Linked Detail。
 - **repository 推导 + 骨架开关**:`repository:` 显式传入时 `skeletonEnabled = true`;省略时探测同名 `lib/repository/<base>_repository.dart` 是否存在且含 `@FoxyRepository`(约定:存在即启用行为骨架);`skeleton: false` 显式关闭(与 `repository:` 互斥,构建期校验)——只读/特殊持久化表单的出口。
 
@@ -193,8 +194,8 @@ controller 声明(`_controllerDeclaration`):
 | plain int | `late final xController = registerController(IntFieldController());` |
 | plain double | `... DoubleFieldController());` |
 | plain String | `... StringFieldController());` |
-| plain bool | `... SelectFieldController<int>(fallback: 0));`(多行) |
-| select | `... SelectFieldController<int/String>(fallback: ...));`(多行) |
+| plain bool | `... EnumFieldController<int>(fallback: 0));`(多行) |
+| enumValue | `... EnumFieldController<int/String>(fallback: ...));`(多行) |
 | flag | `... FlagFieldController());` |
 | group | `... IntFieldControllerGroup());` |
 | nullable | `... NullableStringFieldController());` |

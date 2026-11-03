@@ -4,10 +4,10 @@ part of 'player_create_info_item_linked_list_view_model.dart';
 
 mixin _PlayerCreateInfoItemLinkedListViewModelMixin on FieldControllerMixin {
   late final raceController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final classController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final itemIdController = registerController(IntFieldController());
   late final amountController = registerController(IntFieldController());

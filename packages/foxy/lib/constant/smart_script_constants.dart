@@ -549,7 +549,7 @@ abstract final class SmartScriptConstants {
         return _g(
           IntegerNumberFieldSpec('文本组 ID'),
           IntegerNumberFieldSpec('持续时间'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '使用动作目标',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -577,7 +577,7 @@ abstract final class SmartScriptConstants {
       case 4:
         return _g(
           IntegerNumberFieldSpec('声音 ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅自身',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -606,7 +606,7 @@ abstract final class SmartScriptConstants {
             '任务 ID',
             reference: SmartParameterReference.quest,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '直接添加',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -663,11 +663,11 @@ abstract final class SmartScriptConstants {
           ),
           IntegerNumberFieldSpec('临时召唤类型'),
           IntegerNumberFieldSpec('持续时间'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '攻击触发者',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '攻击所有者',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -693,14 +693,14 @@ abstract final class SmartScriptConstants {
         );
       case 20:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '允许自动攻击',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
         );
       case 21:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '允许战斗移动',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -714,7 +714,7 @@ abstract final class SmartScriptConstants {
         );
       case 25:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '播放表情',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -737,7 +737,7 @@ abstract final class SmartScriptConstants {
           ),
           IntegerNumberFieldSpec('Credit ID'),
           IntegerNumberFieldSpec('Credit 类型'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '存活状态',
             options: SmartScriptConstants.livingStateOptions,
           ),
@@ -777,7 +777,7 @@ abstract final class SmartScriptConstants {
             '生物 Entry',
             reference: SmartParameterReference.creature,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '更新等级',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -789,7 +789,7 @@ abstract final class SmartScriptConstants {
       case 39:
         return _g(
           IntegerNumberFieldSpec('半径'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '播放表情',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -800,7 +800,7 @@ abstract final class SmartScriptConstants {
         return _g(
           IntegerNumberFieldSpec('延迟'),
           IntegerNumberFieldSpec('强制刷新计时'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '从世界移除',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -832,7 +832,7 @@ abstract final class SmartScriptConstants {
       case 207:
       case 211:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '状态',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -861,7 +861,7 @@ abstract final class SmartScriptConstants {
             '路径 ID',
             reference: SmartParameterReference.waypointPath,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '重复',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -881,7 +881,7 @@ abstract final class SmartScriptConstants {
             '任务 ID',
             reference: SmartParameterReference.quest,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '任务失败',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -906,12 +906,12 @@ abstract final class SmartScriptConstants {
         );
       case 60:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '飞行',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
           IntegerNumberFieldSpec('速度'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '禁用重力',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -927,7 +927,7 @@ abstract final class SmartScriptConstants {
         return _g(
           IntegerNumberFieldSpec('计数器 ID'),
           IntegerNumberFieldSpec('值'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '重置',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -938,11 +938,11 @@ abstract final class SmartScriptConstants {
         return _g(IntegerNumberFieldSpec('目标列表 ID'));
       case 66:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '立即转向',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '随机朝向',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -962,17 +962,17 @@ abstract final class SmartScriptConstants {
       case 69:
         return _g(
           IntegerNumberFieldSpec('点 ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '运输坐标',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '受控移动',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
           IntegerNumberFieldSpec('接触距离'),
           IntegerNumberFieldSpec('战斗距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '禁用强制终点',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1003,7 +1003,7 @@ abstract final class SmartScriptConstants {
         return _g(
           IntegerNumberFieldSpec('定时列表 ID'),
           IntegerNumberFieldSpec('计时类型'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '允许覆盖',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1032,7 +1032,7 @@ abstract final class SmartScriptConstants {
             '施法标志',
             flags: SmartScriptConstants.smartCastFlagItems,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '施法目标类型',
             options: SmartScriptConstants.targetTypes,
           ),
@@ -1062,7 +1062,7 @@ abstract final class SmartScriptConstants {
         );
       case 92:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '包含延迟法术',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1070,7 +1070,7 @@ abstract final class SmartScriptConstants {
             '法术 ID',
             reference: SmartParameterReference.spell,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '包含瞬发法术',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1090,7 +1090,7 @@ abstract final class SmartScriptConstants {
         return _g(
           IntegerNumberFieldSpec('水平速度'),
           IntegerNumberFieldSpec('垂直速度'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '自身跳跃',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1123,11 +1123,11 @@ abstract final class SmartScriptConstants {
       case 107:
         return _g(
           IntegerNumberFieldSpec('生物组 ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '攻击触发者',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '攻击所有者',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1152,7 +1152,7 @@ abstract final class SmartScriptConstants {
             '路径 ID 2',
             reference: SmartParameterReference.waypointPath,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '重复',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1165,7 +1165,7 @@ abstract final class SmartScriptConstants {
           IntegerNumberFieldSpec('声音 ID 2'),
           IntegerNumberFieldSpec('声音 ID 3'),
           IntegerNumberFieldSpec('声音 ID 4'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅自身',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1185,7 +1185,7 @@ abstract final class SmartScriptConstants {
       case 124:
         return _g(
           IntegerNumberFieldSpec('装备 ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '强制加载',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1199,11 +1199,11 @@ abstract final class SmartScriptConstants {
       case 132:
         return _g(
           IntegerNumberFieldSpec('SpawnGroup ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '忽略刷新',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '强制',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1226,7 +1226,7 @@ abstract final class SmartScriptConstants {
       case 201:
         return _g(
           IntegerNumberFieldSpec('点 ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '禁用强制终点',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1244,11 +1244,11 @@ abstract final class SmartScriptConstants {
         );
       case 212:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '停止移动',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '移动过期',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1256,7 +1256,7 @@ abstract final class SmartScriptConstants {
       case 216:
         return _g(
           IntegerNumberFieldSpec('声音 ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅自身',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1268,7 +1268,7 @@ abstract final class SmartScriptConstants {
           IntegerNumberFieldSpec('声音 ID 2'),
           IntegerNumberFieldSpec('声音 ID 3'),
           IntegerNumberFieldSpec('声音 ID 4'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅自身',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1303,7 +1303,7 @@ abstract final class SmartScriptConstants {
       case 220:
         return _g(
           IntegerNumberFieldSpec('系统文本 ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '喊话',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1323,18 +1323,18 @@ abstract final class SmartScriptConstants {
       case 223:
         return _g(
           IntegerNumberFieldSpec('Action ID'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '负值',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '副本目标',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
         );
       case 225:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '使用触发者 ID',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1342,7 +1342,7 @@ abstract final class SmartScriptConstants {
         );
       case 226:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '状态',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1350,7 +1350,7 @@ abstract final class SmartScriptConstants {
           IntegerNumberFieldSpec('生成最长时间'),
           IntegerNumberFieldSpec('刷新延迟'),
           IntegerNumberFieldSpec('尸体延迟'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '不消失',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1373,7 +1373,7 @@ abstract final class SmartScriptConstants {
         return _g(IntegerNumberFieldSpec('法术视觉 ID'));
       case 230:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '跟随状态',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1383,7 +1383,7 @@ abstract final class SmartScriptConstants {
       case 231:
         return _g(
           IntegerNumberFieldSpec('朝向模式'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '目标类型',
             options: SmartScriptConstants.targetTypes,
           ),
@@ -1398,7 +1398,7 @@ abstract final class SmartScriptConstants {
             '路径 ID',
             reference: SmartParameterReference.waypointPath,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '重复',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1414,7 +1414,7 @@ abstract final class SmartScriptConstants {
             '路径 ID 2',
             reference: SmartParameterReference.waypointPath,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '重复',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1430,11 +1430,11 @@ abstract final class SmartScriptConstants {
         );
       case 238:
         return _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '禁用声望奖励',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '禁用掉落奖励',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1476,7 +1476,7 @@ abstract final class SmartScriptConstants {
             : _unused,
         hasParam6
             ? type == 110
-                  ? IntegerSelectFieldSpec(
+                  ? IntegerEnumFieldSpec(
                       '范围最大值',
                       options: SmartScriptConstants.smartBooleanOptions,
                     )
@@ -1494,7 +1494,7 @@ abstract final class SmartScriptConstants {
       5 => _g(
         IntegerNumberFieldSpec('冷却最短时间'),
         IntegerNumberFieldSpec('冷却最长时间'),
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '仅玩家',
           options: SmartScriptConstants.smartBooleanOptions,
         ),
@@ -1513,20 +1513,20 @@ abstract final class SmartScriptConstants {
         IntegerNumberFieldSpec('冷却最长时间'),
       ),
       10 || 26 => _g(
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '敌对模式',
           options: SmartScriptConstants.losHostilityOptions,
         ),
         IntegerNumberFieldSpec('最大距离'),
         IntegerNumberFieldSpec('冷却最短时间'),
         IntegerNumberFieldSpec('冷却最长时间'),
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '仅玩家',
           options: SmartScriptConstants.smartBooleanOptions,
         ),
       ),
       11 => _g(
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '重生条件',
           options: SmartScriptConstants.respawnConditionOptions,
         ),
@@ -1566,7 +1566,7 @@ abstract final class SmartScriptConstants {
         IntegerNumberFieldSpec('半径'),
         IntegerNumberFieldSpec('重复最短时间'),
         IntegerNumberFieldSpec('重复最长时间'),
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '仅战斗中',
           options: SmartScriptConstants.smartBooleanOptions,
         ),
@@ -1609,7 +1609,7 @@ abstract final class SmartScriptConstants {
         IntegerNumberFieldSpec('冷却最长时间'),
       ),
       29 => _g(
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '移除时触发',
           options: SmartScriptConstants.smartBooleanOptions,
         ),
@@ -1664,7 +1664,7 @@ abstract final class SmartScriptConstants {
         IntegerNumberFieldSpec('Action ID'),
       ),
       64 => _g(
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '过滤方式',
           options: SmartScriptConstants.gossipHelloFilterOptions,
         ),
@@ -1722,7 +1722,7 @@ abstract final class SmartScriptConstants {
         IntegerNumberFieldSpec('重复最长时间'),
       ),
       103 || 104 => _g(
-        IntegerSelectFieldSpec(
+        IntegerEnumFieldSpec(
           '单位类型',
           options: SmartScriptConstants.nearUnitTypeOptions,
         ),
@@ -1756,7 +1756,7 @@ abstract final class SmartScriptConstants {
       switch (type) {
         3 || 4 || 5 || 6 => _g(
           IntegerNumberFieldSpec('最大距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅玩家',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1773,7 +1773,7 @@ abstract final class SmartScriptConstants {
           ),
           IntegerNumberFieldSpec('最小距离'),
           IntegerNumberFieldSpec('最大距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '存活状态',
             options: SmartScriptConstants.livingStateOptions,
           ),
@@ -1791,7 +1791,7 @@ abstract final class SmartScriptConstants {
             reference: SmartParameterReference.creature,
           ),
           IntegerNumberFieldSpec('最大距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '存活状态',
             options: SmartScriptConstants.livingStateOptions,
           ),
@@ -1820,7 +1820,7 @@ abstract final class SmartScriptConstants {
           IntegerNumberFieldSpec('最大距离'),
         ),
         16 => _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '包含宠物',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1837,7 +1837,7 @@ abstract final class SmartScriptConstants {
             reference: SmartParameterReference.creature,
           ),
           IntegerNumberFieldSpec('最大距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '死亡目标',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1848,13 +1848,13 @@ abstract final class SmartScriptConstants {
             reference: SmartParameterReference.gameObject,
           ),
           IntegerNumberFieldSpec('最大距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅已生成',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
         ),
         23 => _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '控制/所有者',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1862,18 +1862,18 @@ abstract final class SmartScriptConstants {
         24 => _g(IntegerNumberFieldSpec('最大距离')),
         25 || 26 => _g(
           IntegerNumberFieldSpec('最大距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅玩家',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
         ),
         28 => _g(
           IntegerNumberFieldSpec('最大距离'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '仅玩家',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '要求视线',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1885,7 +1885,7 @@ abstract final class SmartScriptConstants {
             '法术 ID',
             reference: SmartParameterReference.spell,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '反向',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1895,7 +1895,7 @@ abstract final class SmartScriptConstants {
         202 => _g(
           IntegerNumberFieldSpec('范围'),
           IntegerNumberFieldSpec('数量'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '以自身为中心',
             options: SmartScriptConstants.smartBooleanOptions,
           ),
@@ -1916,13 +1916,13 @@ abstract final class SmartScriptConstants {
         ),
         205 => _g(
           IntegerNumberFieldSpec('存储索引'),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '对象类型',
             options: SmartScriptConstants.instanceStorageTypeOptions,
           ),
         ),
         206 => _g(
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '编队目标',
             options: SmartScriptConstants.formationTargetTypeOptions,
           ),
@@ -1930,7 +1930,7 @@ abstract final class SmartScriptConstants {
             '生物 Entry',
             reference: SmartParameterReference.creature,
           ),
-          IntegerSelectFieldSpec(
+          IntegerEnumFieldSpec(
             '排除自身',
             options: SmartScriptConstants.smartBooleanOptions,
           ),

@@ -1867,7 +1867,7 @@ class SpellView extends StatelessWidget {
 /// Dynamically switches between number input / EnumPicker / FlagPicker by
 /// context.
 ///
-/// The data source is always the VM's [IntFieldController]; Select/Flag
+/// The data source is always the VM's [IntFieldController]; Enum/Flag
 /// modes use a local adapter controller that writes the int back through a
 /// listener.
 class _MiscValueInput extends StatefulWidget {
@@ -1886,12 +1886,12 @@ class _MiscValueInput extends StatefulWidget {
 }
 
 class _MiscValueInputState extends State<_MiscValueInput> {
-  SelectFieldController<int>? _selectController;
+  EnumFieldController<int>? _enumController;
   FlagFieldController? _flagController;
 
   bool get _isFlagMode => widget.options is _MiscValueFlagPicker;
 
-  bool get _isSelectMode => widget.options is _MiscValueEnumPicker;
+  bool get _isEnumMode => widget.options is _MiscValueEnumPicker;
 
   @override
   Widget build(BuildContext context) {
@@ -1903,10 +1903,10 @@ class _MiscValueInputState extends State<_MiscValueInput> {
         placeholder: 'MiscValue',
       );
     }
-    if (_isSelectMode) {
+    if (_isEnumMode) {
       return FoxyEnumPicker<int>(
         title: widget.title,
-        controller: _selectController!,
+        controller: _enumController!,
         options: (widget.options! as _MiscValueEnumPicker).items,
         placeholder: '选择...',
       );
@@ -1948,19 +1948,19 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   }
 
   void _disposeAdapters() {
-    _selectController?.removeListener(_onSelectChanged);
-    _selectController?.dispose();
-    _selectController = null;
+    _enumController?.removeListener(_onEnumChanged);
+    _enumController?.dispose();
+    _enumController = null;
     _flagController?.removeListener(_onFlagChanged);
     _flagController?.dispose();
     _flagController = null;
   }
 
   void _ensureAdapters() {
-    if (_isSelectMode && _selectController == null) {
-      _selectController = SelectFieldController<int>(fallback: 0);
-      _selectController!.init(widget.controller.collect());
-      _selectController!.addListener(_onSelectChanged);
+    if (_isEnumMode && _enumController == null) {
+      _enumController = EnumFieldController<int>(fallback: 0);
+      _enumController!.init(widget.controller.collect());
+      _enumController!.addListener(_onEnumChanged);
     }
     if (_isFlagMode && _flagController == null) {
       _flagController = FlagFieldController();
@@ -1975,9 +1975,9 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     widget.controller.init(flag.collect());
   }
 
-  void _onSelectChanged() {
-    final select = _selectController;
-    if (select == null) return;
-    widget.controller.init(select.collect());
+  void _onEnumChanged() {
+    final enumController = _enumController;
+    if (enumController == null) return;
+    widget.controller.init(enumController.collect());
   }
 }

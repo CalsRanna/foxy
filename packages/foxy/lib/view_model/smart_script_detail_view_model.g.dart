@@ -17,12 +17,12 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
 
   late final entryOrGuidController = registerController(IntFieldController());
   late final sourceTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final idController = registerController(IntFieldController());
   late final linkController = registerController(IntFieldController());
   late final eventTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final eventPhaseMaskController = registerController(
     FlagFieldController(),
@@ -48,7 +48,7 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
     IntFieldControllerGroup(),
   );
   late final actionTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final actionParam1Controller = registerController(
     IntFieldControllerGroup(),
@@ -69,7 +69,7 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
     IntFieldControllerGroup(),
   );
   late final targetTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final targetParam1Controller = registerController(
     IntFieldControllerGroup(),

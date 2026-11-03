@@ -228,7 +228,7 @@ class _NpcTextViewState extends State<NpcTextView> {
     required DatabaseLocaleEditorDelegate text0Delegate,
     required DatabaseLocaleEditorDelegate text1Delegate,
     required IntFieldController broadcastController,
-    required SelectFieldController<int> languageController,
+    required EnumFieldController<int> languageController,
     required DoubleFieldController probabilityController,
     required IntFieldController delay0Controller,
     required IntFieldController emote0Controller,

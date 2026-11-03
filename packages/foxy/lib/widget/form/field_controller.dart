@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/infrastructure/util/format_util.dart';
 import 'package:foxy/infrastructure/util/parse_util.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 
 // Exported for generated parts: the view-model .g.dart is `part of` the
 // parent library and cannot import on its own; the generated code's
@@ -34,7 +33,7 @@ class DoubleFieldController extends NumberFieldController<double> {
 ///   late final nameController = registerController(StringFieldController());
 ///   late final speedController = registerController(DoubleFieldController());
 ///   late final flagsController = registerController(FlagFieldController());
-///   late final typeController = registerController(SelectFieldController<int>(fallback: 0));
+///   late final typeController = registerController(EnumFieldController<int>(fallback: 0));
 ///
 ///   void initForm(Entity e) {
 ///     entryController.init(e.entry);
@@ -153,8 +152,9 @@ class IntFieldController extends NumberFieldController<int> {
 /// in labels, options, reference resolution or widget building.
 class IntFieldControllerGroup extends FieldController<int> {
   final IntFieldController numberController = IntFieldController();
-  final SelectFieldController<int> selectController =
-      SelectFieldController<int>(fallback: 0);
+  final EnumFieldController<int> enumController = EnumFieldController<int>(
+    fallback: 0,
+  );
   final FlagFieldController flagController = FlagFieldController();
 
   IntegerFieldEditor _editor;
@@ -164,7 +164,7 @@ class IntFieldControllerGroup extends FieldController<int> {
 
   IntFieldControllerGroup({this._editor = IntegerFieldEditor.number}) {
     numberController.addListener(_onNumberChanged);
-    selectController.addListener(_onSelectChanged);
+    enumController.addListener(_onEnumChanged);
     flagController.addListener(_onFlagChanged);
   }
 
@@ -178,7 +178,7 @@ class IntFieldControllerGroup extends FieldController<int> {
     return switch (_editor) {
       IntegerFieldEditor.number ||
       IntegerFieldEditor.reference => numberController.collect(),
-      IntegerFieldEditor.select => selectController.collect(),
+      IntegerFieldEditor.enumValue => enumController.collect(),
       IntegerFieldEditor.flags => flagController.collect(),
     };
   }
@@ -208,7 +208,7 @@ class IntFieldControllerGroup extends FieldController<int> {
   @override
   void dispose() {
     numberController.dispose();
-    selectController.dispose();
+    enumController.dispose();
     flagController.dispose();
     _listeners.clear();
   }
@@ -248,9 +248,9 @@ class IntFieldControllerGroup extends FieldController<int> {
     _syncFromValue(value);
   }
 
-  void _onSelectChanged() {
+  void _onEnumChanged() {
     if (_syncing) return;
-    _syncFromValue(selectController.collect());
+    _syncFromValue(enumController.collect());
   }
 
   void _setAll(int value) {
@@ -258,7 +258,7 @@ class IntFieldControllerGroup extends FieldController<int> {
     _syncing = true;
     try {
       numberController.init(value);
-      selectController.init(value);
+      enumController.init(value);
       flagController.init(value);
     } finally {
       _syncing = false;
@@ -321,28 +321,28 @@ class NullableStringFieldController extends TextBackedFieldController<String?> {
 sealed class NumberFieldController<T extends num>
     extends TextBackedFieldController<T> {}
 
-/// Single-selection field: holds a [ShadSelectController], falling back to
-/// [fallback] when nothing is selected.
+/// Enum field: holds one nullable value, falling back to [fallback] when
+/// nothing is selected.
 ///
 /// [fallback] makes the previously scattered `?? 0` semantics explicit, so
 /// every field's default is documented.
-class SelectFieldController<T> extends FieldController<T> {
-  final controller = ShadSelectController<T>();
+class EnumFieldController<T> extends FieldController<T> {
+  final controller = ValueNotifier<T?>(null);
   final T fallback;
 
-  SelectFieldController({required this.fallback});
+  EnumFieldController({required this.fallback});
 
   @override
   void addListener(VoidCallback listener) => controller.addListener(listener);
 
   @override
-  T collect() => controller.value.firstOrNull ?? fallback;
+  T collect() => controller.value ?? fallback;
 
   @override
   void dispose() => controller.dispose();
 
   @override
-  void init(T value) => controller.value = {value};
+  void init(T value) => controller.value = value;
 
   @override
   void removeListener(VoidCallback listener) =>

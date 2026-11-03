@@ -42,14 +42,14 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
   late final menuIdController = registerController(IntFieldController());
   late final optionIdController = registerController(IntFieldController());
   late final optionIconController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final optionTextController = registerController(StringFieldController());
   late final optionBroadcastTextIdController = registerController(
     IntFieldController(),
   );
   late final optionTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final optionNpcFlagController = registerController(
     FlagFieldController(),
@@ -57,7 +57,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
   late final actionMenuIdController = registerController(IntFieldController());
   late final actionPoiIdController = registerController(IntFieldController());
   late final boxCodedController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final boxMoneyController = registerController(IntFieldController());
   late final boxTextController = registerController(StringFieldController());

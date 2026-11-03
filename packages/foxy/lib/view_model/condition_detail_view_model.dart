@@ -55,10 +55,10 @@ class ConditionDetailViewModel with FieldControllerMixin {
 
   // Source: two semantic controller groups — mode + type/reference ID
   late final sourceModeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final sourceTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final sourceReferenceIdController = registerController(
     IntFieldController(),
@@ -72,16 +72,16 @@ class ConditionDetailViewModel with FieldControllerMixin {
 
   // Condition: two semantic controller groups — mode + type/reference ID
   late final conditionModeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final conditionTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final conditionReferenceIdController = registerController(
     IntFieldController(),
   );
   late final conditionTargetController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final conditionValue1Controller = registerController(
     IntFieldControllerGroup(),
@@ -94,13 +94,13 @@ class ConditionDetailViewModel with FieldControllerMixin {
   );
   // Non-key fields
   late final negativeConditionController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final errorTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final errorTextIdController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final scriptNameController = registerController(StringFieldController());
   late final commentController = registerController(StringFieldController());
@@ -325,10 +325,10 @@ class ConditionDetailViewModel with FieldControllerMixin {
       return;
     }
     sourceGroupController.configure(
-      type == 30 ? IntegerFieldEditor.select : IntegerFieldEditor.number,
+      type == 30 ? IntegerFieldEditor.enumValue : IntegerFieldEditor.number,
     );
     sourceIdController.configure(
-      type == 22 ? IntegerFieldEditor.select : IntegerFieldEditor.number,
+      type == 22 ? IntegerFieldEditor.enumValue : IntegerFieldEditor.number,
     );
   }
 

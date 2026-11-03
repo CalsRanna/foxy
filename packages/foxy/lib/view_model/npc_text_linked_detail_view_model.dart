@@ -26,7 +26,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability0Controller = registerController(
     DoubleFieldController(),
@@ -43,7 +43,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability1Controller = registerController(
     DoubleFieldController(),
@@ -60,7 +60,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability2Controller = registerController(
     DoubleFieldController(),
@@ -77,7 +77,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang3Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability3Controller = registerController(
     DoubleFieldController(),
@@ -94,7 +94,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang4Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability4Controller = registerController(
     DoubleFieldController(),
@@ -111,7 +111,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang5Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability5Controller = registerController(
     DoubleFieldController(),
@@ -128,7 +128,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang6Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability6Controller = registerController(
     DoubleFieldController(),
@@ -145,7 +145,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final lang7Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final probability7Controller = registerController(
     DoubleFieldController(),

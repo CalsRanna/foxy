@@ -20,7 +20,7 @@ mixin _GemPropertyDetailViewModelMixin on FieldControllerMixin {
   late final maxCountInvController = registerController(IntFieldController());
   late final maxCountItemController = registerController(IntFieldController());
   late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
 
   void dispose() {

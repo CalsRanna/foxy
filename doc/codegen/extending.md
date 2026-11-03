@@ -164,7 +164,7 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 以下取舍是刻意的,扩展前先确认你是否要打破:
 
 1. **生成代码不 import 依赖自身**:part 文件是 `part of 父库`,生成代码里的 `FoxyException` / `FoxyExceptions.message` / `RecordNotFoundException` 靠父文件(混入 `FieldControllerMixin` 的类)的 import 作用域解析(见 `field_controller.dart` 顶部注释)。新增生成代码引用的符号时,确保它在父文件 import 链上,或在基座里 `export`。
-2. **`selects` / `flags` / `groups` / `exclude` 互斥**:一个字段只能属于一个例外集合(FormReader 校验)。这是刻意约束,防止同一个字段被两种控制器语义解释;可空文本由实体 `String?` 类型自动推断,没有 `nullable:` 参数。
+2. **`enums` / `flags` / `groups` / `exclude` 互斥**:一个字段只能属于一个例外集合(FormReader 校验)。这是刻意约束,防止同一个字段被两种控制器语义解释;可空文本由实体 `String?` 类型自动推断,没有 `nullable:` 参数。
 3. **`@FoxyLinkedListViewModel` 只支持单关联键**:复合关联键(如 `player_create_info` 按 `(race, class)`)保持手写。扩展成支持复合键需要动 Reader(linkKey 读取)+ Emitter(`_linkParams` / `_linkWheres`)+ 命名约定,收益是消掉一批手写文件,代价是生成复杂度上升——按需取舍。
 4. **`@FoxyListViewModel` 只支持 `@FoxyFilter.text`**:筛选类型目前只有文本;扩展为支持 integer/decimal/boolean 需要同步改 `ListReader._readFilterFields`(目前显式拒绝非 text)与 `ListEmitter`(controller 类型推断),以及 `_applyFilter` 的「与默认值不等才生效」语义。
 5. **Repository 不得手写 `_table`**:表名单一来源在 Entity 注解,生成 mixin 提供实例 getter `_table`;手写类再声明同名成员会被构建期拒绝(`Remove the _table member`)。表名只从 `@FoxyFullEntity.table`(或类名推导)来。

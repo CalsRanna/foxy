@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 
 part 'glyph_property_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(selects: {'glyphSlotFlags'})
+@FoxyDetailViewModel(enums: {'glyphSlotFlags'})
 class GlyphPropertyDetailViewModel
     with FieldControllerMixin, _GlyphPropertyDetailViewModelMixin {
   /// Collects data from all controllers to build the GlyphProperty

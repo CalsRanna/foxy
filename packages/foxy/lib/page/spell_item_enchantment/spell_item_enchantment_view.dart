@@ -283,7 +283,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
 
   Widget _effectAmountInput(
     int slot,
-    SelectFieldController<int> typeController,
+    EnumFieldController<int> typeController,
     IntFieldController amountController,
   ) {
     return ListenableBuilder(
@@ -303,7 +303,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
 
   Widget _effectArgumentInput(
     int slot,
-    SelectFieldController<int> typeController,
+    EnumFieldController<int> typeController,
     IntFieldControllerGroup argumentController,
   ) {
     return ListenableBuilder(
@@ -325,7 +325,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
             label: '抗性系别 $slot',
             child: FoxyEnumPicker<int>(
               title: '抗性系别 $slot',
-              controller: argumentController.selectController,
+              controller: argumentController.enumController,
               options: SpellItemEnchantmentConstants
                   .spellItemEnchantmentSchoolOptions,
               placeholder: 'EffectArg$slot',
@@ -337,7 +337,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
             label: '附魔属性 $slot',
             child: FoxyEnumPicker<int>(
               title: '附魔属性 $slot',
-              controller: argumentController.selectController,
+              controller: argumentController.enumController,
               options:
                   SpellItemEnchantmentConstants.spellItemEnchantmentStatOptions,
               placeholder: 'EffectArg$slot',
@@ -355,10 +355,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
     );
   }
 
-  FoxyFormItem _effectTypeInput(
-    int slot,
-    SelectFieldController<int> controller,
-  ) {
+  FoxyFormItem _effectTypeInput(int slot, EnumFieldController<int> controller) {
     return FoxyFormItem(
       label: '效果类型 $slot',
       child: FoxyEnumPicker<int>(

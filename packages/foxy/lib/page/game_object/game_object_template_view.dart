@@ -250,9 +250,9 @@ class GameObjectTemplateView extends StatelessWidget {
         controller: controllers.numberController,
         placeholder: column,
       ),
-      IntegerSelectFieldSpec(:final options) => FoxyEnumPicker<int>(
+      IntegerEnumFieldSpec(:final options) => FoxyEnumPicker<int>(
         title: spec.label,
-        controller: controllers.selectController,
+        controller: controllers.enumController,
         options: options,
         placeholder: column,
       ),

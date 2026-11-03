@@ -237,25 +237,24 @@ final class FormEmitter {
       ..writeln('  }');
   }
 
-  /// Aligned with hand-written style: the `SelectFieldController` family
+  /// Aligned with hand-written style: the `EnumFieldController` family
   /// uses the multi-line form, everything else single-line.
   String _controllerDeclaration(FormFieldModel field) {
     final controller = controllerName(field);
     final expression = switch ((field.kind, field.dartType)) {
-      (FormFieldKind.select, _) => _selectExpression(field),
+      (FormFieldKind.enumValue, _) => _enumExpression(field),
       (FormFieldKind.flag, _) => 'FlagFieldController()',
       (FormFieldKind.group, _) => 'IntFieldControllerGroup()',
       (FormFieldKind.nullable, _) => 'NullableStringFieldController()',
       (FormFieldKind.plain, 'int') => 'IntFieldController()',
       (FormFieldKind.plain, 'double') => 'DoubleFieldController()',
       (FormFieldKind.plain, 'String') => 'StringFieldController()',
-      (FormFieldKind.plain, 'bool') =>
-        'SelectFieldController<int>(fallback: 0)',
+      (FormFieldKind.plain, 'bool') => 'EnumFieldController<int>(fallback: 0)',
       _ => throw InvalidGenerationSourceError(
         'Unsupported field ${field.dartName}: ${field.dartType}',
       ),
     };
-    if (expression.startsWith('SelectFieldController')) {
+    if (expression.startsWith('EnumFieldController')) {
       return '  late final ${controller}Controller = registerController(\n'
           '    $expression,\n'
           '  );';
@@ -312,14 +311,14 @@ final class FormEmitter {
   String _entityParameterName(String entityClassName) =>
       entityParameterName(entityClassName);
 
-  /// `SelectFieldController` expression: the fallback type decides the
+  /// `EnumFieldController` expression: the fallback type decides the
   /// generic type and the literal.
-  String _selectExpression(FormFieldModel field) {
-    final fallback = field.selectFallback;
+  String _enumExpression(FormFieldModel field) {
+    final fallback = field.enumFallback;
     if (fallback is String) {
-      return 'SelectFieldController<String>'
+      return 'EnumFieldController<String>'
           '(fallback: ${dartStringLiteral(fallback)})';
     }
-    return 'SelectFieldController<int>(fallback: $fallback)';
+    return 'EnumFieldController<int>(fallback: $fallback)';
   }
 }

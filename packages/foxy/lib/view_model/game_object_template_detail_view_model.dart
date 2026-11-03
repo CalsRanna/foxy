@@ -39,7 +39,7 @@ part 'game_object_template_detail_view_model.g.dart';
     'data8',
     'data9',
   },
-  selects: {'type'},
+  enums: {'type'},
 )
 class GameObjectTemplateDetailViewModel
     with FieldControllerMixin, _GameObjectTemplateDetailViewModelMixin {

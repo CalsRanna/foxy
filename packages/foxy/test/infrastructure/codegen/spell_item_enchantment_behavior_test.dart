@@ -47,7 +47,7 @@ void main() {
     vm.effect0Controller.init(2);
     vm.effectArg0Controller.numberController.controller.text = '-7';
     vm.effect1Controller.init(5);
-    vm.effectArg1Controller.selectController.init(48);
+    vm.effectArg1Controller.enumController.init(48);
     vm.effect2Controller.init(7);
     vm.effectArg2Controller.numberController.init(321);
     vm.flagsController.init(9);
@@ -67,7 +67,7 @@ void main() {
 
     vm.idController.init(2);
     vm.nameLangFlagsController.init(127);
-    vm.effectArg1Controller.selectController.init(29);
+    vm.effectArg1Controller.enumController.init(29);
     vm.applyNameLocales([
       for (final locale in DbcLocale.values)
         DbcLocaleFieldValue(locale: locale, value: 'edited ${locale.code}'),
@@ -96,7 +96,7 @@ void main() {
     final vm = await form();
     vm.nameController.init('新附魔');
     vm.effect0Controller.init(5);
-    vm.effectArg0Controller.selectController.init(48);
+    vm.effectArg0Controller.enumController.init(48);
     await vm.persist();
     expect(vm.persistedKey.value, 12);
     expect(vm.entity.value!.id, 12);

@@ -7,9 +7,9 @@ import 'package:meta/meta_meta.dart';
 /// - Ordinary fields infer their controller from the Dart type: `int →
 ///   IntFieldController`, `double → DoubleFieldController`, `String →
 ///   StringFieldController`, `String? → NullableStringFieldController`,
-///   `bool → SelectFieldController<int>(fallback: 0)` (paired with a
+///   `bool → EnumFieldController<int>(fallback: 0)` (paired with a
 ///   `collect() == 1` conversion).
-/// - Exception fields (select/flag/exclude) must be declared here
+/// - Exception fields (enum/flag/exclude) must be declared here
 ///   explicitly; a misspelled field name is caught by the validator at
 ///   generation time.
 /// - The entity is derived from the class name (`XxxDetailViewModel` →
@@ -22,11 +22,11 @@ class FoxyDetailViewModel {
   /// omitted, derived from the class name.
   final Type? entity;
 
-  /// Exception: select-field names with a fallback. Two shapes:
-  /// a Map `{'type': 0}` (explicit fallback for `SelectFieldController`)
+  /// Exception: enum-field names with a fallback. Two shapes:
+  /// a Map `{'type': 0}` (explicit fallback for `EnumFieldController`)
   /// or a Set `{'type'}` (fallback derived from the entity constructor
   /// default for the same field).
-  final Object selects;
+  final Object enums;
 
   /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
@@ -52,7 +52,7 @@ class FoxyDetailViewModel {
 
   const FoxyDetailViewModel({
     this.entity,
-    this.selects = const {},
+    this.enums = const {},
     this.flags = const {},
     this.groups = const {},
     this.exclude = const {},
@@ -82,9 +82,9 @@ class FoxyLinkedListViewModel {
   /// the class name.
   final Type? repository;
 
-  /// Exception: select-field names with a fallback (Map with explicit
+  /// Exception: enum-field names with a fallback (Map with explicit
   /// fallback, or Set deriving it from the entity constructor default).
-  final Object selects;
+  final Object enums;
 
   /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
@@ -100,7 +100,7 @@ class FoxyLinkedListViewModel {
   const FoxyLinkedListViewModel({
     this.entity,
     this.repository,
-    this.selects = const {},
+    this.enums = const {},
     this.flags = const {},
     this.groups = const {},
     this.exclude = const {},
@@ -128,9 +128,9 @@ class FoxyLinkedDetailViewModel {
   /// destroy/create. When omitted, derived from the class name.
   final Type? repository;
 
-  /// Exception: select-field names with a fallback (Map with explicit
+  /// Exception: enum-field names with a fallback (Map with explicit
   /// fallback, or Set deriving it from the entity constructor default).
-  final Object selects;
+  final Object enums;
 
   /// Exception: controller name → `FlagFieldController`.
   final Set<String> flags;
@@ -146,7 +146,7 @@ class FoxyLinkedDetailViewModel {
   const FoxyLinkedDetailViewModel({
     this.entity,
     this.repository,
-    this.selects = const {},
+    this.enums = const {},
     this.flags = const {},
     this.groups = const {},
     this.exclude = const {},

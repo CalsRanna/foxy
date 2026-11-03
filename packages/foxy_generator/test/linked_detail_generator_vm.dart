@@ -15,12 +15,17 @@ void main() {
         repositoryAnnotationAsset: repositoryAnnotationSource,
         entityAsset: addonEntitySource,
         repositoryAsset: addonRepositorySource,
-        viewModelAsset: linkedDetailViewModelSource,
+        viewModelAsset: linkedDetailViewModelSource.replaceFirst(
+          'repository: AddonRepository,',
+          "repository: AddonRepository, enums: {'comment'},",
+        ),
       },
       outputs: {
         'foxy|lib/view_model/addon_linked_detail_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
+                contains("EnumFieldController<String>(fallback: '')"),
+                contains('comment: commentController.collect(),'),
                 contains('await _repository.destroyAddon(key);'),
                 contains(
                   "throw LinkNotLoadedException('link record not loaded');",

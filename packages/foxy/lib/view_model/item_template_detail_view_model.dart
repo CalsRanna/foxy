@@ -24,7 +24,7 @@ part 'item_template_detail_view_model.g.dart';
     'socketColor2',
     'socketColor3',
   },
-  selects: {
+  enums: {
     'ammoType',
     'bonding',
     'className',

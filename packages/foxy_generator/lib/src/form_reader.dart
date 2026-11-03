@@ -19,7 +19,7 @@ const _fullFieldChecker = TypeChecker.fromUrl(
 /// Field types supported by default inference (non-nullable).
 ///
 /// `bool` has no dedicated controller; the library-wide convention is
-/// `SelectFieldController<int>(fallback: 0)` plus a `collect() == 1`
+/// `EnumFieldController<int>(fallback: 0)` plus a `collect() == 1`
 /// conversion, see pickpocketing_loot_template_linked_list_view_model.dart.
 const _supportedPlainTypes = {'int', 'double', 'String', 'bool'};
 
@@ -112,17 +112,17 @@ final class FormReader {
       );
     }
 
-    // `selects` accepts two shapes: a Map (explicit fallback, e.g.
+    // `enums` accepts two shapes: a Map (explicit fallback, e.g.
     // {'type': 0}) or a Set (fallback derived from the entity constructor
     // default for the same field, e.g. {'type'}).
-    final (declaredSelects, derivedSelects) = _readSelects(annotation, element);
+    final (declaredEnums, derivedEnums) = _readEnums(annotation, element);
     final flags = _readStringSet(annotation, 'flags');
     final groups = _readStringSet(annotation, 'groups');
     final exclude = _readStringSet(annotation, 'exclude');
     _validateDistinctExceptions(
       className,
       entityClassName,
-      {...declaredSelects.keys, ...derivedSelects},
+      {...declaredEnums.keys, ...derivedEnums},
       flags,
       groups,
       exclude,
@@ -137,8 +137,8 @@ final class FormReader {
       constructorFieldNames.add(parameter.name!);
     }
     for (final name in {
-      ...declaredSelects.keys,
-      ...derivedSelects,
+      ...declaredEnums.keys,
+      ...derivedEnums,
       ...flags,
       ...groups,
       ...exclude,
@@ -165,8 +165,8 @@ final class FormReader {
           entityClassName,
           name,
           parameter,
-          declaredSelects,
-          derivedSelects,
+          declaredEnums,
+          derivedEnums,
           flags,
           groups,
           element,
@@ -339,8 +339,8 @@ final class FormReader {
     String entityClassName,
     String name,
     FormalParameterElement parameter,
-    Map<String, Object> declaredSelects,
-    Set<String> derivedSelects,
+    Map<String, Object> declaredEnums,
+    Set<String> derivedEnums,
     Set<String> flags,
     Set<String> groups,
     Element element,
@@ -376,30 +376,30 @@ final class FormReader {
         kind: FormFieldKind.nullable,
       );
     }
-    final selectFallback = declaredSelects[name];
-    if (selectFallback != null) {
-      final supported = selectFallback is int
+    final enumFallback = declaredEnums[name];
+    if (enumFallback != null) {
+      final supported = enumFallback is int
           ? type == 'int'
-          : selectFallback is String && type == 'String';
+          : enumFallback is String && type == 'String';
       if (!supported) {
         _fail(
-          '$entityClassName.$name is marked as selects but its type is '
-              '$type ($selectFallback).',
+          '$entityClassName.$name is marked as enums but its type is '
+              '$type ($enumFallback).',
           element,
-          'The selects fallback type must match the field type '
+          'The enums fallback type must match the field type '
               '(int/String).',
         );
       }
       return FormFieldModel(
         dartName: name,
         dartType: type,
-        kind: FormFieldKind.select,
-        selectFallback: selectFallback,
+        kind: FormFieldKind.enumValue,
+        enumFallback: enumFallback,
       );
     }
-    if (derivedSelects.contains(name)) {
+    if (derivedEnums.contains(name)) {
       // Set form: the fallback comes from the entity constructor default.
-      final fallback = _deriveSelectFallback(
+      final fallback = _deriveEnumFallback(
         name,
         parameter,
         entityClassName,
@@ -410,18 +410,18 @@ final class FormReader {
           : fallback is String && type == 'String';
       if (!supported) {
         _fail(
-          '$entityClassName.$name is marked as selects but its type is '
+          '$entityClassName.$name is marked as enums but its type is '
               '$type (constructor default $fallback).',
           element,
-          'The selects fallback type must match the field type '
+          'The enums fallback type must match the field type '
               '(int/String).',
         );
       }
       return FormFieldModel(
         dartName: name,
         dartType: type,
-        kind: FormFieldKind.select,
-        selectFallback: fallback,
+        kind: FormFieldKind.enumValue,
+        enumFallback: fallback,
       );
     }
     if (flags.contains(name)) {
@@ -443,7 +443,7 @@ final class FormReader {
       _fail(
         'The type of $entityClassName.$name ($type) is not supported yet.',
         element,
-        'Mark the field as an exception with selects/flags/exclude, or '
+        'Mark the field as an exception with enums/flags/exclude, or '
             'wait for extended type support.',
       );
     }
@@ -454,21 +454,21 @@ final class FormReader {
     );
   }
 
-  /// Reads the `selects` exception set, which accepts two shapes:
+  /// Reads the `enums` exception set, which accepts two shapes:
   /// a Map `{'name': fallback}` (explicit fallback) or a Set `{'name'}`
   /// (fallback derived from the entity constructor default).
-  (Map<String, Object>, Set<String>) _readSelects(
+  (Map<String, Object>, Set<String>) _readEnums(
     ConstantReader annotation,
     Element element,
   ) {
-    final reader = annotation.read('selects');
+    final reader = annotation.read('enums');
     if (reader.isNull) return (const {}, const {});
     if (reader.isMap) {
       final map = reader.mapValue;
       return (
         {
           for (final entry in map.entries)
-            entry.key!.toStringValue()!: _readSelectValue(entry.value!),
+            entry.key!.toStringValue()!: _readEnumValue(entry.value!),
         },
         const {},
       );
@@ -480,17 +480,17 @@ final class FormReader {
       );
     }
     _fail(
-      'selects must be a Map (explicit fallback) or a Set (derived '
+      'enums must be a Map (explicit fallback) or a Set (derived '
           'fallback).',
       element,
-      "Write selects as Map({'fieldName': fallback}) or "
+      "Write enums as Map({'fieldName': fallback}) or "
           "Set({'fieldName'}).",
     );
   }
 
-  /// Derives the select fallback from the entity constructor's constant
+  /// Derives the enum fallback from the entity constructor's constant
   /// default for the same field (`this.type = 0` → `0`).
-  Object _deriveSelectFallback(
+  Object _deriveEnumFallback(
     String name,
     FormalParameterElement parameter,
     String entityClassName,
@@ -498,11 +498,11 @@ final class FormReader {
   ) {
     if (!parameter.hasDefaultValue) {
       _fail(
-        '$entityClassName.$name is marked as selects but its constructor '
+        '$entityClassName.$name is marked as enums but its constructor '
             'parameter has no default value.',
         element,
         'Add a constant default value to this.$name, or declare the '
-            'fallback explicitly in Map form: selects: {\'$name\': ...}.',
+            'fallback explicitly in Map form: enums: {\'$name\': ...}.',
       );
     }
     final value = parameter.computeConstantValue();
@@ -512,7 +512,7 @@ final class FormReader {
             'constant.',
         element,
         'Declare the fallback explicitly in Map form instead: '
-            'selects: {\'$name\': ...}.',
+            'enums: {\'$name\': ...}.',
       );
     }
     final intValue = value.toIntValue();
@@ -523,17 +523,17 @@ final class FormReader {
       "$entityClassName.$name's constructor default type is not int/String.",
       element,
       'Declare the fallback explicitly in Map form instead: '
-          'selects: {\'$name\': ...}.',
+          'enums: {\'$name\': ...}.',
     );
   }
 
-  Object _readSelectValue(DartObject value) {
+  Object _readEnumValue(DartObject value) {
     final intValue = value.toIntValue();
     if (intValue != null) return intValue;
     final stringValue = value.toStringValue();
     if (stringValue != null) return stringValue;
     throw InvalidGenerationSourceError(
-      'selects only supports int or String fallback',
+      'enums only supports int or String fallback',
     );
   }
 
@@ -546,14 +546,14 @@ final class FormReader {
   void _validateDistinctExceptions(
     String className,
     String entityClassName,
-    Set<String> selects,
+    Set<String> enums,
     Set<String> flags,
     Set<String> groups,
     Set<String> exclude,
     Element element,
   ) {
     final conflicts = <String, Set<String>>{
-      'selects': selects,
+      'enums': enums,
       'flags': flags,
       'groups': groups,
       'exclude': exclude,

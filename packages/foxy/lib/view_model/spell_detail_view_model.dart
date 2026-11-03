@@ -77,16 +77,16 @@ class SpellDetailViewModel with FieldControllerMixin {
     FlagFieldController(),
   );
   late final mechanicController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final defenseTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final dispelTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final preventionTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   // === Casting params ===
   late final castingTimeIndexController = registerController(
@@ -117,7 +117,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
   // === Targets ===
   late final targetCreatureTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final targetsController = registerController(FlagFieldController());
   late final maxTargetsController = registerController(IntFieldController());
@@ -126,10 +126,10 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
   // === States ===
   late final casterAuraStateController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final targetAuraStateController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellMissileIDController = registerController(
     IntFieldController(),
@@ -150,7 +150,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final powerTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final runeCostIDController = registerController(IntFieldController());
   late final manaCostController = registerController(IntFieldController());
@@ -198,7 +198,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final procChargesController = registerController(IntFieldController());
   // === Spell family ===
   late final spellClassSetController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellClassMask0Controller = registerController(
     FlagFieldController(),
@@ -211,7 +211,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
   // === Effect 0 ===
   late final effect0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectBasePoints0Controller = registerController(
     IntFieldController(),
@@ -223,13 +223,13 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final effectMechanic0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectChainTargets0Controller = registerController(
     IntFieldController(),
   );
   late final effectAura0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectAuraPeriod0Controller = registerController(
     IntFieldController(),
@@ -238,10 +238,10 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final implicitTargetA0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final implicitTargetB0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectMiscValue0Controller = registerController(
     IntFieldController(),
@@ -278,7 +278,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
   // === Effect 1 ===
   late final effect1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectBasePoints1Controller = registerController(
     IntFieldController(),
@@ -290,13 +290,13 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final effectMechanic1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectChainTargets1Controller = registerController(
     IntFieldController(),
   );
   late final effectAura1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectAuraPeriod1Controller = registerController(
     IntFieldController(),
@@ -305,10 +305,10 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final implicitTargetA1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final implicitTargetB1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectMiscValue1Controller = registerController(
     IntFieldController(),
@@ -345,7 +345,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
   // === Effect 2 ===
   late final effect2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectBasePoints2Controller = registerController(
     IntFieldController(),
@@ -357,13 +357,13 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final effectMechanic2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectChainTargets2Controller = registerController(
     IntFieldController(),
   );
   late final effectAura2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectAuraPeriod2Controller = registerController(
     IntFieldController(),
@@ -372,10 +372,10 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final implicitTargetA2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final implicitTargetB2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final effectMiscValue2Controller = registerController(
     IntFieldController(),
@@ -412,7 +412,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
   // === Equip restrictions ===
   late final equippedItemClassController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final equippedItemSubclassController = registerController(
     IntFieldController(),
@@ -454,10 +454,10 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
   late final minFactionIDController = registerController(IntFieldController());
   late final minReputationController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final excludeCasterAuraStateController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final excludeCasterAuraSpellController = registerController(
     IntFieldController(),
@@ -466,7 +466,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final excludeTargetAuraStateController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellPriorityController = registerController(IntFieldController());
   late final modalNextSpellController = registerController(
@@ -1091,9 +1091,9 @@ class SpellDetailViewModel with FieldControllerMixin {
     );
   }
 
-  /// Listens to SelectFieldController changes and syncs them to a signal.
+  /// Listens to EnumFieldController changes and syncs them to a signal.
   ///
-  /// Uses [SelectFieldController.addListener] to observe linkage changes.
+  /// Uses [EnumFieldController.addListener] to observe linkage changes.
   void _wireEffectSignals() {
     if (_effectSignalsWired) return;
     _effectSignalsWired = true;

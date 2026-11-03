@@ -26,16 +26,16 @@ mixin _CreatureOnKillReputationLinkedDetailViewModelMixin
     IntFieldController(),
   );
   late final maxStanding1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final maxStanding2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final isTeamAward1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final isTeamAward2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final rewOnKillRepValue1Controller = registerController(
     DoubleFieldController(),
@@ -44,7 +44,7 @@ mixin _CreatureOnKillReputationLinkedDetailViewModelMixin
     DoubleFieldController(),
   );
   late final teamDependentController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
 
   void _afterApplyCandidate(

@@ -5,8 +5,8 @@ enum FormFieldKind {
   /// Inferred from the field's Dart type (Int/Double/String/Bool).
   plain,
 
-  /// `SelectFieldController`。
-  select,
+  /// `EnumFieldController`.
+  enumValue,
 
   /// `FlagFieldController`。
   flag,
@@ -26,14 +26,14 @@ final class FormFieldModel {
   final String dartType;
   final FormFieldKind kind;
 
-  /// Fallback value when `kind == select` (int or String).
-  final Object? selectFallback;
+  /// Fallback value when `kind == enumValue` (int or String).
+  final Object? enumFallback;
 
   const FormFieldModel({
     required this.dartName,
     required this.dartType,
     required this.kind,
-    this.selectFallback,
+    this.enumFallback,
   });
 }
 

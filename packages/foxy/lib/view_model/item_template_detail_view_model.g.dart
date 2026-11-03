@@ -21,29 +21,29 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
     StringFieldController(),
   );
   late final qualityController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final classNameController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final subclassController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final soundOverrideSubclassController = registerController(
     IntFieldController(),
   );
   late final materialController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final displayIdController = registerController(IntFieldController());
   late final inventoryTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final sheathController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final bondingController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final itemsetController = registerController(IntFieldController());
   late final randomPropertyController = registerController(
@@ -58,7 +58,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
   late final stackableController = registerController(IntFieldController());
   late final totemCategoryController = registerController(IntFieldController());
   late final foodTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final bagFamilyController = registerController(FlagFieldController());
   late final containerSlotsController = registerController(
@@ -83,17 +83,17 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
     DoubleFieldController(),
   );
   late final dmgType1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final dmgMin1Controller = registerController(DoubleFieldController());
   late final dmgMax1Controller = registerController(DoubleFieldController());
   late final dmgType2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final dmgMin2Controller = registerController(DoubleFieldController());
   late final dmgMax2Controller = registerController(DoubleFieldController());
   late final ammoTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final armorController = registerController(IntFieldController());
   late final blockController = registerController(IntFieldController());
@@ -104,43 +104,43 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
     FlagFieldController(),
   );
   late final statType1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue1Controller = registerController(IntFieldController());
   late final statType2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue2Controller = registerController(IntFieldController());
   late final statType3Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue3Controller = registerController(IntFieldController());
   late final statType4Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue4Controller = registerController(IntFieldController());
   late final statType5Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue5Controller = registerController(IntFieldController());
   late final statType6Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue6Controller = registerController(IntFieldController());
   late final statType7Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue7Controller = registerController(IntFieldController());
   late final statType8Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue8Controller = registerController(IntFieldController());
   late final statType9Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue9Controller = registerController(IntFieldController());
   late final statType10Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final statValue10Controller = registerController(IntFieldController());
   late final holyResController = registerController(IntFieldController());
@@ -151,7 +151,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
   late final arcaneResController = registerController(IntFieldController());
   late final spellId1Controller = registerController(IntFieldController());
   late final spellTrigger1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellCharges1Controller = registerController(IntFieldController());
   late final spellPpmRate1Controller = registerController(
@@ -168,7 +168,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
   );
   late final spellId2Controller = registerController(IntFieldController());
   late final spellTrigger2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellCharges2Controller = registerController(IntFieldController());
   late final spellPpmRate2Controller = registerController(
@@ -185,7 +185,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
   );
   late final spellId3Controller = registerController(IntFieldController());
   late final spellTrigger3Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellCharges3Controller = registerController(IntFieldController());
   late final spellPpmRate3Controller = registerController(
@@ -202,7 +202,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
   );
   late final spellId4Controller = registerController(IntFieldController());
   late final spellTrigger4Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellCharges4Controller = registerController(IntFieldController());
   late final spellPpmRate4Controller = registerController(
@@ -219,7 +219,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
   );
   late final spellId5Controller = registerController(IntFieldController());
   late final spellTrigger5Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellCharges5Controller = registerController(IntFieldController());
   late final spellPpmRate5Controller = registerController(
@@ -257,7 +257,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
   late final requiredReputationRankController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final requiredDisenchantSkillController = registerController(
     IntFieldController(),
@@ -282,10 +282,10 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
   );
   late final pageTextController = registerController(IntFieldController());
   late final pageMaterialController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final languageIdController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final scriptNameController = registerController(StringFieldController());
   late final verifiedBuildController = registerController(IntFieldController());

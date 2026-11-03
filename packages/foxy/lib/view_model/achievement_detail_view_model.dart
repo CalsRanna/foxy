@@ -34,7 +34,7 @@ class AchievementDetailViewModel with FieldControllerMixin {
   /// Basic
   late final idController = registerController(IntFieldController());
   late final factionController = registerController(
-    SelectFieldController<int>(fallback: -1),
+    EnumFieldController<int>(fallback: -1),
   );
   late final instanceIdController = registerController(IntFieldController());
   late final supercedesController = registerController(IntFieldController());

@@ -18,7 +18,7 @@ mixin _GlyphPropertyDetailViewModelMixin on FieldControllerMixin {
   late final idController = registerController(IntFieldController());
   late final spellIdController = registerController(IntFieldController());
   late final glyphSlotFlagsController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final spellIconIdController = registerController(IntFieldController());
 

@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 
 part 'talent_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(selects: {'flags'})
+@FoxyDetailViewModel(enums: {'flags'})
 class TalentDetailViewModel
     with FieldControllerMixin, _TalentDetailViewModelMixin {
   /// Collects data from all controllers to build the Talent

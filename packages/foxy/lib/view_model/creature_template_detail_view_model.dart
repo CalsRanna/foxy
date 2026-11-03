@@ -20,7 +20,7 @@ part 'creature_template_detail_view_model.g.dart';
     'unitFlags',
     'unitFlags2',
   },
-  selects: {
+  enums: {
     'damageSchool': 0,
     'exp': 0,
     'family': 0,

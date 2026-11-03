@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 part 'smart_script_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  selects: {'sourceType', 'eventType', 'actionType', 'targetType'},
+  enums: {'sourceType', 'eventType', 'actionType', 'targetType'},
   flags: {'eventPhaseMask', 'eventFlags'},
   groups: {
     'eventParam1',

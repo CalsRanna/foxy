@@ -16,10 +16,10 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
   final errorMessage = signal<String?>(null);
 
   late final raceController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final classController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final mapController = registerController(IntFieldController());
   late final zoneController = registerController(IntFieldController());

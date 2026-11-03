@@ -13,6 +13,6 @@ import 'package:signals/signals.dart';
 
 part 'skill_line_ability_linked_list_view_model.g.dart';
 
-@FoxyLinkedListViewModel(selects: {'acquireMethod'})
+@FoxyLinkedListViewModel(enums: {'acquireMethod'})
 class SkillLineAbilityLinkedListViewModel
     with FieldControllerMixin, _SkillLineAbilityLinkedListViewModelMixin {}

@@ -99,15 +99,15 @@ void main() {
   test('trap type、boolean、椅子高度为 select 规格，未使用槽位回落未使用 number', () {
     expect(
       GameObjectConstants.dataFieldSpec(6, 4),
-      isA<IntegerSelectFieldSpec>(),
+      isA<IntegerEnumFieldSpec>(),
     );
     expect(
       GameObjectConstants.dataFieldSpec(0, 0),
-      isA<IntegerSelectFieldSpec>(),
+      isA<IntegerEnumFieldSpec>(),
     );
     expect(
       GameObjectConstants.dataFieldSpec(7, 1),
-      isA<IntegerSelectFieldSpec>(),
+      isA<IntegerEnumFieldSpec>(),
     );
     expect(
       GameObjectConstants.dataFieldSpec(4, 0),

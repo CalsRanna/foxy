@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 
 part 'item_extended_cost_detail_view_model.g.dart';
 
-@FoxyDetailViewModel(selects: {'arenaBracket'})
+@FoxyDetailViewModel(enums: {'arenaBracket'})
 class ItemExtendedCostDetailViewModel
     with FieldControllerMixin, _ItemExtendedCostDetailViewModelMixin {
   /// Collects data from all controllers to build the ItemExtendedCost

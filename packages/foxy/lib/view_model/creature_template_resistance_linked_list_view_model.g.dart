@@ -27,7 +27,7 @@ mixin _CreatureTemplateResistanceLinkedListViewModelMixin
 
   late final creatureIDController = registerController(IntFieldController());
   late final schoolController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final resistanceController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());

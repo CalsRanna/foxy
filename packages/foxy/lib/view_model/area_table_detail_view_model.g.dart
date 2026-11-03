@@ -39,7 +39,7 @@ mixin _AreaTableDetailViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
   late final factionGroupMaskController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final liquidTypeId0Controller = registerController(IntFieldController());
   late final liquidTypeId1Controller = registerController(IntFieldController());

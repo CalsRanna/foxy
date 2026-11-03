@@ -5,7 +5,7 @@ import 'package:foxy/constant/flag_item.dart';
 /// The four states are mutually exclusive, decided uniquely by the concrete
 /// subtype of [IntegerFieldSpec], replacing the old nullable
 /// `reference/options/flags` combination inference.
-enum IntegerFieldEditor { number, select, flags, reference }
+enum IntegerFieldEditor { number, enumValue, flags, reference }
 
 /// Edit spec of a dynamic integer field: describes "which existing
 /// component edits this integer column".
@@ -51,11 +51,11 @@ final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
 }
 
 /// Strict enum picker ([FoxyEnumPicker]).
-final class IntegerSelectFieldSpec<R> extends IntegerFieldSpec<R> {
+final class IntegerEnumFieldSpec<R> extends IntegerFieldSpec<R> {
   final Map<int, String> options;
 
-  const IntegerSelectFieldSpec(super.label, {required this.options});
+  const IntegerEnumFieldSpec(super.label, {required this.options});
 
   @override
-  IntegerFieldEditor get editor => IntegerFieldEditor.select;
+  IntegerFieldEditor get editor => IntegerFieldEditor.enumValue;
 }

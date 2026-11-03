@@ -35,7 +35,7 @@ mixin _TalentDetailViewModelMixin on FieldControllerMixin {
   late final prereqRank1Controller = registerController(IntFieldController());
   late final prereqRank2Controller = registerController(IntFieldController());
   late final flagsController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final requiredSpellIdController = registerController(
     IntFieldController(),

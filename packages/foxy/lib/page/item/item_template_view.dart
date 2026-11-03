@@ -1161,7 +1161,7 @@ class ItemTemplateView extends StatelessWidget {
   List<Widget> _buildSpellRows({
     required int number,
     required IntFieldController idController,
-    required SelectFieldController<int> triggerController,
+    required EnumFieldController<int> triggerController,
     required IntFieldController chargesController,
     required DoubleFieldController ppmRateController,
     required IntFieldController cooldownController,
@@ -1251,10 +1251,10 @@ class ItemTemplateView extends StatelessWidget {
 
   Widget _buildStatRow({
     required int firstNumber,
-    required SelectFieldController<int> firstTypeController,
+    required EnumFieldController<int> firstTypeController,
     required IntFieldController firstValueController,
     required int secondNumber,
-    required SelectFieldController<int> secondTypeController,
+    required EnumFieldController<int> secondTypeController,
     required IntFieldController secondValueController,
   }) {
     return Row(

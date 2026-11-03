@@ -68,6 +68,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
   - **间距**：新代码统一用 Row/Column 的 `spacing:` 参数；`SizedBox` 只做固定尺寸，不做元素间距。
   - **空态文案**：列表/表格统一"暂无数据"（`FoxyDataTable` 内置）；其他场景按语境自定，不必强行统一。
   - **控件映射**：数字 → `FoxyNumberInput`；文本 → `FoxyStringInput`；可空 → `FoxyNullableStringInput`；枚举 → `FoxyEnumPicker`（title 必填，placeholder 传字符串）；位标志 → `FoxyFlagPicker`；引用 → `FoxyEntityPicker`；本地化 → `FoxyLocalePicker`。placeholder 一律英文列名。
+  - **枚举字段**：控制器用 `EnumFieldController<T>`，生成器注解用 `enums`；动态整数枚举用 `IntegerEnumFieldSpec<R>`、`IntegerFieldEditor.enumValue` 和 `IntFieldControllerGroup.enumController`。Enum 表示有限候选值，支持 `int` / `String`，不要求 Dart `enum` 类型。选择器只在确认或双击时写回，取消保留原值；控制器的空值与 fallback 规则见 [字段控制器说明](doc/codegen/usage.md#枚举字段与动态编辑器)。
   - **详情页响应式两模式并存，均正确**：大模块在详情页层 `SignalBuilder` 包 `FoxyTab` + 主视图 `ValueKey('main-$key')` + `disabledTabIndexes`；小模块在视图内 per-field `SignalBuilder`。新模块按规模选择，不必改造存量。
   - **子表 linkKey 变化**：新代码统一在 `didUpdateWidget` 里调 `viewModel.setLinkKey(...)`（比依赖父页 ValueKey 重建更精确）。
 

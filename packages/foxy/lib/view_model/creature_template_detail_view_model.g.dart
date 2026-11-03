@@ -38,7 +38,7 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
   late final damageSchoolController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final detectionRangeController = registerController(
     DoubleFieldController(),
@@ -46,14 +46,14 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
   late final dynamicFlagsController = registerController(FlagFieldController());
   late final entryController = registerController(IntFieldController());
   late final expController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final experienceModifierController = registerController(
     DoubleFieldController(),
   );
   late final factionController = registerController(IntFieldController());
   late final familyController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final flagsExtraController = registerController(FlagFieldController());
   late final gossipMenuIdController = registerController(IntFieldController());
@@ -76,7 +76,7 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
   late final minGoldController = registerController(IntFieldController());
   late final movementIdController = registerController(IntFieldController());
   late final movementTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final nameController = registerController(StringFieldController());
   late final npcFlagController = registerController(FlagFieldController());
@@ -87,7 +87,7 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
   late final racialLeaderController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final rangeAttackTimeController = registerController(
     IntFieldController(),
@@ -96,10 +96,10 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
     DoubleFieldController(),
   );
   late final rankController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final regenHealthController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final scriptNameController = registerController(StringFieldController());
   late final skinLootController = registerController(IntFieldController());
@@ -111,11 +111,11 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
   late final speedWalkController = registerController(DoubleFieldController());
   late final subNameController = registerController(StringFieldController());
   late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final typeFlagsController = registerController(FlagFieldController());
   late final unitClassController = registerController(
-    SelectFieldController<int>(fallback: 1),
+    EnumFieldController<int>(fallback: 1),
   );
   late final unitFlagsController = registerController(FlagFieldController());
   late final unitFlags2Controller = registerController(FlagFieldController());

@@ -15,12 +15,17 @@ void main() {
         repositoryAnnotationAsset: repositoryAnnotationSource,
         entityAsset: childEntitySource,
         repositoryAsset: childRepositorySource,
-        viewModelAsset: editorViewModelSource,
+        viewModelAsset: editorViewModelSource.replaceFirst(
+          'repository: ChildItemRepository,',
+          "repository: ChildItemRepository, enums: {'childId': 7},",
+        ),
       },
       outputs: {
         'foxy|lib/view_model/child_item_editor_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
+                contains('EnumFieldController<int>(fallback: 7)'),
+                contains('childId: childIdController.collect(),'),
                 contains('final editingKey = signal<ChildItemKey?>(null);'),
                 contains('Future<void> copy(ChildItemKey key) async {'),
                 contains('await _repository.copyChildItem(key);'),

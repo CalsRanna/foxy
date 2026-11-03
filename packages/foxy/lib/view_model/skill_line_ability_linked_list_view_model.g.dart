@@ -37,7 +37,7 @@ mixin _SkillLineAbilityLinkedListViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
   late final acquireMethodController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final trivialSkillLineRankHighController = registerController(
     IntFieldController(),

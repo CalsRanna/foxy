@@ -330,7 +330,7 @@ class ConditionView extends StatelessWidget {
         label: '对象类型',
         child: FoxyEnumPicker<int>(
           title: '对象类型',
-          controller: viewModel.sourceGroupController.selectController,
+          controller: viewModel.sourceGroupController.enumController,
           options: const {0: '生物', 1: '游戏对象'},
           placeholder: 'SourceGroup',
         ),
@@ -363,7 +363,7 @@ class ConditionView extends StatelessWidget {
         label: 'SmartAI类型',
         child: FoxyEnumPicker<int>(
           title: 'SmartAI类型',
-          controller: viewModel.sourceIdController.selectController,
+          controller: viewModel.sourceIdController.enumController,
           options: SmartScriptConstants.sourceTypes,
           placeholder: 'SourceId',
         ),
@@ -393,9 +393,9 @@ class ConditionView extends StatelessWidget {
         controller: controllers.numberController,
         placeholder: column,
       ),
-      IntegerSelectFieldSpec(:final options) => FoxyEnumPicker<int>(
+      IntegerEnumFieldSpec(:final options) => FoxyEnumPicker<int>(
         title: spec.label,
-        controller: controllers.selectController,
+        controller: controllers.enumController,
         options: options,
         placeholder: column,
       ),

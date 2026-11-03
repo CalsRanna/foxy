@@ -119,7 +119,7 @@ class ConditionValueConfig {
     if (type < 0) return const ConditionValueConfig(_unused, _unused, _unused);
     if (type == 31) {
       return _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '对象类型',
           options: {3: '单位', 4: '玩家', 5: '游戏对象', 7: '尸体'},
         ),
@@ -139,11 +139,11 @@ class ConditionValueConfig {
     }
     if (type == 42) {
       return _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '状态模式',
           options: {0: '精确状态', 1: '站立/坐下分类'},
         ),
-        IntegerSelectFieldSpec<ConditionValueReference>(
+        IntegerEnumFieldSpec<ConditionValueReference>(
           '站立状态',
           options: value1 == 0
               ? const {
@@ -168,7 +168,7 @@ class ConditionValueConfig {
           '法术 ID',
           reference: ConditionValueReference.spell,
         ),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '效果索引',
           options: {0: '效果 0', 1: '效果 1', 2: '效果 2'},
         ),
@@ -179,7 +179,7 @@ class ConditionValueConfig {
           reference: ConditionValueReference.item,
         ),
         const IntegerNumberFieldSpec<ConditionValueReference>('数量'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '包含银行',
           options: ConditionValueConfig.conditionBooleanOptions,
         ),
@@ -207,7 +207,7 @@ class ConditionValueConfig {
         ),
       ),
       6 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '阵营',
           options: {469: '联盟', 67: '部落'},
         ),
@@ -226,7 +226,7 @@ class ConditionValueConfig {
         ),
       ),
       10 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '最低醉酒状态',
           options: {0: '清醒', 1: '微醺', 2: '醉酒', 3: '酩酊'},
         ),
@@ -241,7 +241,7 @@ class ConditionValueConfig {
       13 => _config(
         const IntegerNumberFieldSpec<ConditionValueReference>('数据条目'),
         const IntegerNumberFieldSpec<ConditionValueReference>('期望值'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '实例信息类型',
           options: {0: '数据', 1: 'GUID 数据', 2: '首领状态', 3: '64位数据'},
         ),
@@ -277,7 +277,7 @@ class ConditionValueConfig {
         ),
       ),
       20 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '性别',
           options: {0: '男性', 1: '女性'},
         ),
@@ -301,7 +301,7 @@ class ConditionValueConfig {
         ),
       ),
       24 => _config(
-        IntegerSelectFieldSpec<ConditionValueReference>(
+        IntegerEnumFieldSpec<ConditionValueReference>(
           '生物类型',
           options: {
             for (final entry in CreatureEnums.creatureTypeOptions.entries)
@@ -320,7 +320,7 @@ class ConditionValueConfig {
       ),
       27 => _config(
         const IntegerNumberFieldSpec<ConditionValueReference>('等级'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '比较类型',
           options: ConditionValueConfig.conditionComparisonOptions,
         ),
@@ -331,7 +331,7 @@ class ConditionValueConfig {
           reference: ConditionValueReference.creature,
         ),
         const IntegerNumberFieldSpec<ConditionValueReference>('搜索距离'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '搜索死亡生物',
           options: ConditionValueConfig.conditionBooleanOptions,
         ),
@@ -342,7 +342,7 @@ class ConditionValueConfig {
           reference: ConditionValueReference.gameObject,
         ),
         const IntegerNumberFieldSpec<ConditionValueReference>('搜索距离'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '对象状态',
           options: {0: '不检查', 1: '就绪', 2: '非就绪'},
         ),
@@ -354,11 +354,11 @@ class ConditionValueConfig {
         ),
       ),
       33 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '另一条件目标',
           options: ConditionValueConfig.conditionTargetOptions,
         ),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '关系类型',
           options: {
             0: '自身',
@@ -371,7 +371,7 @@ class ConditionValueConfig {
         ),
       ),
       34 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '另一条件目标',
           options: ConditionValueConfig.conditionTargetOptions,
         ),
@@ -381,12 +381,12 @@ class ConditionValueConfig {
         ),
       ),
       35 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '另一条件目标',
           options: ConditionValueConfig.conditionTargetOptions,
         ),
         const IntegerNumberFieldSpec<ConditionValueReference>('距离'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '比较类型',
           options: ConditionValueConfig.conditionComparisonOptions,
         ),
@@ -398,14 +398,14 @@ class ConditionValueConfig {
       106 => const ConditionValueConfig(_unused, _unused, _unused),
       37 => _config(
         const IntegerNumberFieldSpec<ConditionValueReference>('生命值'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '比较类型',
           options: ConditionValueConfig.conditionComparisonOptions,
         ),
       ),
       38 => _config(
         const IntegerNumberFieldSpec<ConditionValueReference>('生命值百分比'),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '比较类型',
           options: ConditionValueConfig.conditionComparisonOptions,
         ),
@@ -431,20 +431,20 @@ class ConditionValueConfig {
           '任务 ID',
           reference: ConditionValueReference.quest,
         ),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '目标索引',
           options: {0: '目标 0', 1: '目标 1', 2: '目标 2', 3: '目标 3'},
         ),
         const IntegerNumberFieldSpec<ConditionValueReference>('目标计数'),
       ),
       49 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '地图难度',
           options: ConditionValueConfig.conditionDifficultyOptions,
         ),
       ),
       102 => _config(
-        IntegerSelectFieldSpec<ConditionValueReference>(
+        IntegerEnumFieldSpec<ConditionValueReference>(
           '光环类型',
           options: ConditionValueConfig.conditionAuraTypeOptions,
         ),
@@ -458,11 +458,11 @@ class ConditionValueConfig {
         const IntegerNumberFieldSpec<ConditionValueReference>('期望值'),
       ),
       105 => _config(
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '检查当前难度',
           options: ConditionValueConfig.conditionBooleanOptions,
         ),
-        const IntegerSelectFieldSpec<ConditionValueReference>(
+        const IntegerEnumFieldSpec<ConditionValueReference>(
           '地图难度',
           options: ConditionValueConfig.conditionDifficultyOptions,
         ),

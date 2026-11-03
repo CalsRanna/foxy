@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 
 part 'player_create_info_item_linked_list_view_model.g.dart';
 
-@FoxyDetailViewModel(selects: {'class_', 'race'}, skeleton: false)
+@FoxyDetailViewModel(enums: {'class_', 'race'}, skeleton: false)
 class PlayerCreateInfoItemLinkedListViewModel
     with FieldControllerMixin, _PlayerCreateInfoItemLinkedListViewModelMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoItemRepository>();

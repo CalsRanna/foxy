@@ -26,7 +26,7 @@ mixin _SpellLinkedSpellLinkedListViewModelMixin on FieldControllerMixin {
   late final spellTriggerController = registerController(IntFieldController());
   late final spellEffectController = registerController(IntFieldController());
   late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final commentController = registerController(StringFieldController());
 

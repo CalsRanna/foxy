@@ -17,7 +17,7 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
 
   late final entryController = registerController(IntFieldController());
   late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final displayIdController = registerController(IntFieldController());
   late final nameController = registerController(StringFieldController());

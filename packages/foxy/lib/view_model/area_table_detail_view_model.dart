@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 part 'area_table_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  selects: {'factionGroupMask'},
+  enums: {'factionGroupMask'},
   flags: {'flags'},
   // Other locales are kept in entity and edited through the locale dialog.
   exclude: {

@@ -15,7 +15,7 @@
 | `@FoxyRepository(~~entity~~, linkKey)` | Repository class | `entity:` 省略时推导为 `类名去 Repository + Entity`;`linkKey` 声明关联键后生成子表形态(不可推导,必须显式) |
 | `@FoxyFilter` | Repository class | 声明列表筛选字段(单事实来源) |
 | `@FoxyListViewModel(~~entity, repository~~)` | List ViewModel | entity/repository 都从类名推导(`XxxListViewModel` → `XxxEntity` / `XxxRepository`) |
-| `@FoxyDetailViewModel(~~entity, repository~~, selects/flags/groups/exclude, skeleton)` | Detail ViewModel | entity 推导;repository 省略时同名仓库存在即生成行为骨架,`skeleton: false` 关闭 |
+| `@FoxyDetailViewModel(~~entity, repository~~, enums/flags/groups/exclude, skeleton)` | Detail ViewModel | entity 推导;repository 省略时同名仓库存在即生成行为骨架,`skeleton: false` 关闭 |
 | `@FoxyLinkedListViewModel(~~entity, repository~~, ...)` | 子表列表 ViewModel | entity/repository 推导;生成关联键子集列表 + 行编辑骨架 |
 | `@FoxyLinkedDetailViewModel(~~entity, repository~~, ...)` | 一对一子表 ViewModel | entity/repository 推导;生成 get-or-create 单行编辑器骨架 |
 
@@ -28,7 +28,7 @@
 | VM 绑定的实体/仓库 | 类名去 VM 后缀 + `Entity`/`Repository` | `entity:` / `repository:` |
 | 表单行为骨架 | 同名 `XxxRepository` 存在即启用 | `skeleton: false` |
 | nullable 字段控制器 | `String?` 类型即声明 | —(无需任何声明) |
-| select fallback | 实体构造器同名参数默认值 | `selects: {'type': 0}`(Map 显式) |
+| enum fallback | 实体构造器同名参数默认值 | `enums: {'type': 0}`(Map 显式) |
 
 ## 5 种模块形态
 
@@ -98,7 +98,7 @@ class CreatureTemplateListViewModel
 **`view_model/creature_template_detail_view_model.dart`**
 ```dart
 @FoxyDetailViewModel(
-  selects: {'type', 'faction'},             // Set：fallback 从构造器默认值推导
+  enums: {'type', 'faction'},             // Set：fallback 从构造器默认值推导
   flags: {'unitFlags', 'typeFlags'},        // 例外：FlagFieldController
   // repository 省略：同名仓库存在，行为骨架自动启用
 )
@@ -134,7 +134,7 @@ Future<CreatureLootTemplateEntity> createCreatureLootTemplate(int entry)
 
 ```dart
 @FoxyLinkedListViewModel(
-  selects: {'item'},                       // Set：fallback 从构造器默认值推导
+  enums: {'item'},                       // Set：fallback 从构造器默认值推导
 )
 class CreatureLootTemplateLinkedListViewModel
     with FieldControllerMixin, _CreatureLootTemplateLinkedListViewModelMixin {}
@@ -163,20 +163,37 @@ class CreatureTemplateAddonLinkedDetailViewModel
 | `int` | `IntFieldController` | |
 | `double` | `DoubleFieldController` | |
 | `String` | `StringFieldController` | |
-| `bool` | `SelectFieldController<int>(fallback: 0)` | `collect() == 1` 转换;toJson 时 `1/0` |
+| `bool` | `EnumFieldController<int>(fallback: 0)` | `collect() == 1` 转换;toJson 时 `1/0` |
 | `String?` | `NullableStringFieldController` | 类型即声明,无需任何注解 |
-| 例外:int | `SelectFieldController<int>(fallback)` | `selects: {'字段'}`(Set,fallback 取构造器默认值)或 `selects: {'字段': fallback}`(Map 显式覆盖) |
-| 例外:String | `SelectFieldController<String>(fallback)` | 同上 |
+| 例外:int | `EnumFieldController<int>(fallback: ...)` | `enums: {'字段'}`(Set,fallback 取构造器默认值)或 `enums: {'字段': fallback}`(Map 显式覆盖) |
+| 例外:String | `EnumFieldController<String>(fallback: ...)` | 同上 |
 | 例外:int(位标志) | `FlagFieldController` | 加 `flags: {...}` |
 | 例外:int(动态组) | `IntFieldControllerGroup` | 加 `groups: {...}` |
 | 不进表单 | — | 加 `exclude: {...}` |
 
 约束(构建期校验,拼错即报错):
 
-- `bool` 没有专用 controller,一律走 Select(见 `pickpocketing_loot_template_linked_list_view_model.dart` 的既有做法);
-- `selects` fallback 类型必须与字段类型一致(int/String);Set 形态推导失败(构造器默认值不是 int/String 常量)时改用 Map 显式;
+- `bool` 没有专用 controller,一律走 `EnumFieldController<int>`(见 `pickpocketing_loot_template_linked_list_view_model.dart` 的既有做法);
+- `enums` fallback 类型必须与字段类型一致(int/String);Set 形态推导失败(构造器默认值不是 int/String 常量)时改用 Map 显式;
 - `groups` 只支持 `int`;`flags` 只支持 `int`;
-- 一个字段只能属于一个例外集合(selects/flags/groups/exclude 互斥)。
+- 一个字段只能属于一个例外集合(enums/flags/groups/exclude 互斥)。
+
+### 枚举字段与动态编辑器
+
+`EnumFieldController<T>` 配合 `FoxyEnumPicker<T>` 使用。这里的 Enum 表示有限候选值,支持 `int` / `String`,不要求 Dart `enum` 类型。控制器通过 `ValueNotifier<T?>` 保存单个值:`null` 表示未选择,仅在 `collect()` 时返回 fallback,不会把 fallback 写入选择状态。`init(value)` 设置实际值;相同值不重复通知,`0` 和空字符串仍是有效值。
+
+`FoxyEnumPicker` 的 `options` 为值到显示名称的映射,`title` 必填,`placeholder` 为字符串。对话框内单击只修改草稿,确认或双击才写回控制器;取消、Esc 和点击遮罩保留原值。未选择时显示占位文字;不在 `options` 中的已有值显示原值,不会自动替换为 fallback。
+
+动态整数列由 `IntFieldControllerGroup` 管理,枚举模式的对应关系如下:
+
+| 层次 | 命名与用法 |
+| --- | --- |
+| 字段定义 | `IntegerEnumFieldSpec<R>(label, options: options)` |
+| 编辑模式 | `IntegerFieldEditor.enumValue` |
+| 分组内控制器 | `group.enumController` |
+| 页面控件 | `FoxyEnumPicker<int>(controller: group.enumController, options: spec.options, title: spec.label)` |
+
+按字段定义调用 `group.configure(spec.editor)` 切换编辑模式,由分组同步数字、枚举和位标志控制器。具体页面可参考 `condition_view.dart`、`game_object_template_view.dart` 和 `smart_script_view.dart`。
 
 ## 覆写模式
 
@@ -215,7 +232,7 @@ class CreatureTemplateAddonLinkedDetailViewModel
 | `XxxEntity must declare @FoxyBriefEntity` | 查询层生成 `getBrief*` 返回 `BriefXxxEntity` | 给 Entity 加 `@FoxyBriefEntity()`(表格行展示模型声明) |
 | `... derives file xxx.dart, but it does not exist` / `cannot find class` | 推导的仓库/实体未迁移或类名不符 | 创建并迁移同名类,或在注解显式声明 |
 | `... cannot derive an entity class name` | VM 类名无约定后缀 | 用 `XxxListViewModel` 等规范命名 |
-| `... constructor default is not a constant int/String` | `selects` Set 形态推导 fallback 失败 | 改用 Map 显式:`selects: {'字段': fallback}` |
+| `... constructor default is not a constant int/String` | `enums` Set 形态推导 fallback 失败 | 改用 Map 显式:`enums: {'字段': fallback}` |
 | `... cannot declare both repository and skeleton: false` | 两个互斥参数同时传 | 只保留一个 |
 | `... cannot infer the physical column` | `@FoxyFilter` 名与实体字段不一致 | 显式 `column:` 或改名 |
 | `... must use the parameterless @FoxyBriefField()` | 字段级误用带参形式 | 类级具名构造函数是投影别名,字段级只能无参 |

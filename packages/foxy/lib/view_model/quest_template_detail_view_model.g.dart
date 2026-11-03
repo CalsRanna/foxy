@@ -17,7 +17,7 @@ mixin _QuestTemplateDetailViewModelMixin on FieldControllerMixin {
 
   late final idController = registerController(IntFieldController());
   late final questTypeController = registerController(
-    SelectFieldController<int>(fallback: 2),
+    EnumFieldController<int>(fallback: 2),
   );
   late final questLevelController = registerController(IntFieldController());
   late final minLevelController = registerController(IntFieldController());
@@ -42,11 +42,11 @@ mixin _QuestTemplateDetailViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
   late final rewardXpDifficultyController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final rewardMoneyController = registerController(IntFieldController());
   late final rewardMoneyDifficultyController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final rewardDisplaySpellController = registerController(
     IntFieldController(),

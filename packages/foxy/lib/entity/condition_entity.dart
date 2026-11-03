@@ -118,7 +118,7 @@ extension BriefConditionEntityLabel on BriefConditionEntity {
       value1: conditionValue1,
     ).value1;
     return switch (spec) {
-      IntegerSelectFieldSpec(:final options) =>
+      IntegerEnumFieldSpec(:final options) =>
         options[conditionValue1] ?? conditionValue1.toString(),
       IntegerFlagsFieldSpec(:final flags) => FlagItem.maskLabel(
         conditionValue1,

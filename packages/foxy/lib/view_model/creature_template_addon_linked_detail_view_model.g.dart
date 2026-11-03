@@ -24,7 +24,7 @@ mixin _CreatureTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
   late final bytes1Controller = registerController(IntFieldController());
   late final bytes2Controller = registerController(IntFieldController());
   late final visibilityDistanceTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final aurasController = registerController(StringFieldController());
 

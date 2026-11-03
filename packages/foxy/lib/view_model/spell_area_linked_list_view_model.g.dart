@@ -30,10 +30,10 @@ mixin _SpellAreaLinkedListViewModelMixin on FieldControllerMixin {
   late final auraSpellController = registerController(IntFieldController());
   late final racemaskController = registerController(FlagFieldController());
   late final genderController = registerController(
-    SelectFieldController<int>(fallback: 2),
+    EnumFieldController<int>(fallback: 2),
   );
   late final autocastController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final questStartStatusController = registerController(
     FlagFieldController(),

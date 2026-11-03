@@ -4,15 +4,15 @@ part of 'player_create_info_action_linked_list_view_model.dart';
 
 mixin _PlayerCreateInfoActionLinkedListViewModelMixin on FieldControllerMixin {
   late final raceController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final classController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final buttonController = registerController(IntFieldController());
   late final actionController = registerController(IntFieldController());
   late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
 
   void _afterApplyCandidate(

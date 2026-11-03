@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 part 'spell_area_linked_list_view_model.g.dart';
 
 @FoxyLinkedListViewModel(
-  selects: {'autocast', 'gender'},
+  enums: {'autocast', 'gender'},
   flags: {'questEndStatus', 'questStartStatus', 'racemask'},
 )
 class SpellAreaLinkedListViewModel

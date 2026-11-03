@@ -13,7 +13,7 @@ part 'quest_template_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
   flags: {'allowableRaces', 'flags'},
-  selects: {'questType', 'rewardMoneyDifficulty', 'rewardXpDifficulty'},
+  enums: {'questType', 'rewardMoneyDifficulty', 'rewardXpDifficulty'},
 )
 class QuestTemplateDetailViewModel
     with FieldControllerMixin, _QuestTemplateDetailViewModelMixin {}

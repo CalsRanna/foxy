@@ -12,7 +12,7 @@ const _options = {1: '苹果', 21: '香蕉', 3: '菠萝'};
 
 void main() {
   testWidgets('未初始化显示占位文字，不将 fallback 写入选择', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 1);
+    final controller = EnumFieldController<int>(fallback: 1);
     await _pumpPicker(tester, controller);
     expect(_input(tester).controller!.text, isEmpty);
     expect(find.text('请选择'), findsOneWidget);
@@ -21,13 +21,32 @@ void main() {
     expect(_confirmButton(tester).enabled, isFalse);
     await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
-    expect(controller.controller.value, isEmpty);
+    expect(controller.controller.value, isNull);
     expect(controller.collect(), 1);
     await _dispose(tester, controller);
   });
 
+  testWidgets('外部清空单值状态后恢复占位文字和未选择状态', (tester) async {
+    final controller = EnumFieldController<int>(fallback: 1)..init(21);
+    await _pumpPicker(tester, controller);
+    expect(_input(tester).controller!.text, '香蕉');
+
+    controller.controller.value = null;
+    await tester.pumpAndSettle();
+    expect(_input(tester).controller!.text, isEmpty);
+    expect(find.text('请选择'), findsOneWidget);
+    expect(controller.collect(), 1);
+
+    await _open(tester);
+    expect(find.text('当前值: 未选择'), findsOneWidget);
+    expect(_confirmButton(tester).enabled, isFalse);
+    await tester.tap(find.text('取消'));
+    await tester.pumpAndSettle();
+    await _dispose(tester, controller);
+  });
+
   testWidgets('窄字段显示长名称时保持单行且无溢出', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(1);
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
     await _pumpPicker(
       tester,
       controller,
@@ -41,7 +60,7 @@ void main() {
   });
 
   testWidgets('未知值显示原值，打开和取消不改变它', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(42);
+    final controller = EnumFieldController<int>(fallback: 0)..init(42);
     await _pumpPicker(tester, controller);
     expect(_input(tester).controller!.text, '42');
     await _open(tester);
@@ -53,7 +72,7 @@ void main() {
   });
 
   testWidgets('单击只修改草稿，确定后写回并通知一次', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(1);
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
     var changes = 0;
     controller.addListener(() => changes++);
     await _pumpPicker(tester, controller);
@@ -72,7 +91,7 @@ void main() {
   });
 
   testWidgets('双击提交选中的值', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(1);
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
     await _pumpPicker(tester, controller);
     await _open(tester);
     await tester.tap(find.text('香蕉'));
@@ -86,7 +105,7 @@ void main() {
 
   for (final close in ['取消', 'Esc', '遮罩']) {
     testWidgets('$close 丢弃草稿，不通知字段监听器', (tester) async {
-      final controller = SelectFieldController<int>(fallback: 0)..init(1);
+      final controller = EnumFieldController<int>(fallback: 0)..init(1);
       var changes = 0;
       controller.addListener(() => changes++);
       await _pumpPicker(tester, controller);
@@ -111,7 +130,7 @@ void main() {
   }
 
   testWidgets('按名称和值搜索，清空及重新打开恢复全部选项', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(1);
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
     await _pumpPicker(tester, controller);
     await _open(tester);
     await tester.enterText(_search, ' 香 ');
@@ -141,8 +160,8 @@ void main() {
   });
 
   testWidgets('外部初始化、选项更新与 controller 替换同步显示', (tester) async {
-    final first = SelectFieldController<int>(fallback: 0)..init(1);
-    final second = SelectFieldController<int>(fallback: 0)..init(3);
+    final first = EnumFieldController<int>(fallback: 0)..init(1);
+    final second = EnumFieldController<int>(fallback: 0)..init(3);
     await _pumpPicker(tester, first);
     first.init(21);
     await tester.pump();
@@ -160,7 +179,7 @@ void main() {
   });
 
   testWidgets('字符串枚举搜索忽略大小写并提交字符串值', (tester) async {
-    final controller = SelectFieldController<String>(fallback: 'a')..init('a');
+    final controller = EnumFieldController<String>(fallback: 'a')..init('a');
     await _pumpPicker(
       tester,
       controller,
@@ -179,7 +198,7 @@ void main() {
   });
 
   testWidgets('键盘打开、搜索、上下选择、回车提交并恢复焦点', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(1);
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
     await _pumpPicker(tester, controller);
     _input(tester).focusNode!.requestFocus();
     await tester.pump();
@@ -203,7 +222,7 @@ void main() {
   });
 
   testWidgets('长列表键盘选择保持选中行可见', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(0);
+    final controller = EnumFieldController<int>(fallback: 0)..init(0);
     await _pumpPicker(
       tester,
       controller,
@@ -222,7 +241,7 @@ void main() {
   });
 
   testWidgets('焦点在取消按钮时回车取消而非提交', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(1);
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
     await _pumpPicker(tester, controller);
     await _open(tester);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
@@ -239,7 +258,7 @@ void main() {
   });
 
   testWidgets('空选项无匹配且无法确认', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(42);
+    final controller = EnumFieldController<int>(fallback: 0)..init(42);
     await _pumpPicker(tester, controller, options: const <int, String>{});
     await _open(tester);
     expect(find.text('无匹配选项'), findsOneWidget);
@@ -253,8 +272,8 @@ void main() {
 
   testWidgets('动态整数分组只在确认后同步其他编辑器', (tester) async {
     final group = IntFieldControllerGroup()..init(1);
-    group.configure(IntegerFieldEditor.select);
-    await _pumpPicker(tester, group.selectController);
+    group.configure(IntegerFieldEditor.enumValue);
+    await _pumpPicker(tester, group.enumController);
     await _open(tester);
     await tester.tap(find.text('香蕉'));
     await tester.pumpAndSettle();
@@ -272,7 +291,7 @@ void main() {
   });
 
   testWidgets('嵌套对话框取消及确认只关闭 picker，保留外层草稿', (tester) async {
-    final controller = SelectFieldController<int>(fallback: 0)..init(1);
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
     final draft = TextEditingController(text: '未保存的备注');
     await tester.pumpWidget(
       ShadApp(
@@ -338,7 +357,7 @@ ShadButton _confirmButton(WidgetTester tester) =>
 
 Future<void> _pumpPicker<T>(
   WidgetTester tester,
-  SelectFieldController<T> controller, {
+  EnumFieldController<T> controller, {
   Map<T, String>? options,
   double width = 280,
 }) async {
@@ -369,7 +388,7 @@ Future<void> _open(WidgetTester tester) async {
 
 Future<void> _dispose<T>(
   WidgetTester tester,
-  SelectFieldController<T> controller,
+  EnumFieldController<T> controller,
 ) async {
   await tester.pumpWidget(const SizedBox());
   controller.dispose();

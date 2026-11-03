@@ -110,8 +110,8 @@ void main() {
     await tester.pump();
 
     expect(tester.takeException(), isNull);
-    // Value3 = contains bank (select); value 1 shows "Yes"; other selects
-    // are 0.
+    // Value3 = contains bank (enum); value 1 shows "Yes"; other enum
+    // fields are 0.
     expect(find.text('包含银行'), findsOneWidget);
     expect(find.text('是'), findsOneWidget);
 

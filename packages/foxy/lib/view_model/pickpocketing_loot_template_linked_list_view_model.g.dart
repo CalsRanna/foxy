@@ -29,7 +29,7 @@ mixin _PickpocketingLootTemplateLinkedListViewModelMixin
   late final referenceController = registerController(IntFieldController());
   late final chanceController = registerController(DoubleFieldController());
   late final questRequiredController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    EnumFieldController<int>(fallback: 0),
   );
   late final lootModeController = registerController(FlagFieldController());
   late final groupIdController = registerController(IntFieldController());

@@ -8,7 +8,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// Selects one predefined value in a searchable dialog.
 /// Only confirmation writes the dialog's selection back to [controller].
 class FoxyEnumPicker<T> extends StatefulWidget {
-  final SelectFieldController<T> controller;
+  final EnumFieldController<T> controller;
   final Map<T, String> options;
   final String title;
   final String? placeholder;
@@ -56,7 +56,7 @@ class _FoxyEnumPickerState<T> extends State<FoxyEnumPicker<T>> {
   }
 
   void _syncText() {
-    final value = widget.controller.controller.value.firstOrNull;
+    final value = widget.controller.controller.value;
     _textController.text = value == null
         ? ''
         : widget.options[value] ?? value.toString();
@@ -100,7 +100,7 @@ class _FoxyEnumPickerState<T> extends State<FoxyEnumPicker<T>> {
       builder: (context) => _EnumPickerDialog<T>(
         title: widget.title,
         options: widget.options,
-        initialValue: widget.controller.controller.value.firstOrNull,
+        initialValue: widget.controller.controller.value,
       ),
     );
     if (!mounted) return;

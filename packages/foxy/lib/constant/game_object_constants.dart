@@ -68,7 +68,7 @@ abstract final class GameObjectConstants {
   static const gameObjectDataSchemas = <int, GameObjectDataSchema>{
     // GameObjectDoor
     0: GameObjectDataSchema({
-      0: IntegerSelectFieldSpec(
+      0: IntegerEnumFieldSpec(
         '初始开启',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -77,20 +77,20 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.lock,
       ),
       2: IntegerNumberFieldSpec('自动关闭时间'),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '无伤害免疫',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       4: IntegerNumberFieldSpec('开启文本 ID'),
       5: IntegerNumberFieldSpec('关闭文本 ID'),
-      6: IntegerSelectFieldSpec(
+      6: IntegerEnumFieldSpec(
         '寻路忽略',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
     }),
     // GameObjectButton
     1: GameObjectDataSchema({
-      0: IntegerSelectFieldSpec(
+      0: IntegerEnumFieldSpec(
         '初始开启',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -103,17 +103,17 @@ abstract final class GameObjectConstants {
         '关联陷阱',
         reference: GameObjectDataReference.gameObjectTemplate,
       ),
-      4: IntegerSelectFieldSpec(
+      4: IntegerEnumFieldSpec(
         '无伤害免疫',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      5: IntegerSelectFieldSpec(
+      5: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       6: IntegerNumberFieldSpec('开启文本 ID'),
       7: IntegerNumberFieldSpec('关闭文本 ID'),
-      8: IntegerSelectFieldSpec(
+      8: IntegerEnumFieldSpec(
         '忽略视线',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -131,20 +131,20 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.gossipMenu,
       ),
       4: IntegerNumberFieldSpec('自定义动画'),
-      5: IntegerSelectFieldSpec(
+      5: IntegerEnumFieldSpec(
         '无伤害免疫',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       6: IntegerNumberFieldSpec('开启文本 ID'),
-      7: IntegerSelectFieldSpec(
+      7: IntegerEnumFieldSpec(
         '忽略视线',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      8: IntegerSelectFieldSpec(
+      8: IntegerEnumFieldSpec(
         '允许骑乘使用',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      9: IntegerSelectFieldSpec(
+      9: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -160,7 +160,7 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.gameObjectLoot,
       ),
       2: IntegerNumberFieldSpec('刷新时间'),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '消耗型',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -176,51 +176,51 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.questTemplate,
       ),
       9: IntegerNumberFieldSpec('等级'),
-      10: IntegerSelectFieldSpec(
+      10: IntegerEnumFieldSpec(
         '忽略视线',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      11: IntegerSelectFieldSpec(
+      11: IntegerEnumFieldSpec(
         '离开保留掉落',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      12: IntegerSelectFieldSpec(
+      12: IntegerEnumFieldSpec(
         '不受战斗限制',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      13: IntegerSelectFieldSpec(
+      13: IntegerEnumFieldSpec(
         '记录掉落',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       14: IntegerNumberFieldSpec('开启文本 ID'),
-      15: IntegerSelectFieldSpec(
+      15: IntegerEnumFieldSpec(
         '组掉落规则',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      16: IntegerSelectFieldSpec(
+      16: IntegerEnumFieldSpec(
         '浮动提示',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
     }),
     // GameObjectGeneric
     5: GameObjectDataSchema({
-      0: IntegerSelectFieldSpec(
+      0: IntegerEnumFieldSpec(
         '浮动提示',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      1: IntegerSelectFieldSpec(
+      1: IntegerEnumFieldSpec(
         '高亮',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      2: IntegerSelectFieldSpec(
+      2: IntegerEnumFieldSpec(
         '仅服务端',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      4: IntegerSelectFieldSpec(
+      4: IntegerEnumFieldSpec(
         '水面漂浮',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -241,32 +241,32 @@ abstract final class GameObjectConstants {
         '法术 ID',
         reference: GameObjectDataReference.spell,
       ),
-      4: IntegerSelectFieldSpec(
+      4: IntegerEnumFieldSpec(
         '陷阱类型',
         options: GameObjectConstants.gameObjectTrapTypeOptions,
       ),
       5: IntegerNumberFieldSpec('冷却时间'),
       6: IntegerNumberFieldSpec('自动关闭时间'),
       7: IntegerNumberFieldSpec('启动延迟'),
-      8: IntegerSelectFieldSpec(
+      8: IntegerEnumFieldSpec(
         '仅服务端',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      9: IntegerSelectFieldSpec(
+      9: IntegerEnumFieldSpec(
         '潜行',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      10: IntegerSelectFieldSpec(
+      10: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      11: IntegerSelectFieldSpec(
+      11: IntegerEnumFieldSpec(
         '不可见',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       12: IntegerNumberFieldSpec('开启文本 ID'),
       13: IntegerNumberFieldSpec('关闭文本 ID'),
-      14: IntegerSelectFieldSpec(
+      14: IntegerEnumFieldSpec(
         '忽略图腾',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -274,11 +274,11 @@ abstract final class GameObjectConstants {
     // GameObjectChair
     7: GameObjectDataSchema({
       0: IntegerNumberFieldSpec('座位数量'),
-      1: IntegerSelectFieldSpec(
+      1: IntegerEnumFieldSpec(
         '椅子高度',
         options: GameObjectConstants.gameObjectChairHeightOptions,
       ),
-      2: IntegerSelectFieldSpec(
+      2: IntegerEnumFieldSpec(
         '仅创建者使用',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -295,7 +295,7 @@ abstract final class GameObjectConstants {
         '关联陷阱',
         reference: GameObjectDataReference.gameObjectTemplate,
       ),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '仅服务端',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -303,11 +303,11 @@ abstract final class GameObjectConstants {
         '任务 ID',
         reference: GameObjectDataReference.questTemplate,
       ),
-      5: IntegerSelectFieldSpec(
+      5: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      6: IntegerSelectFieldSpec(
+      6: IntegerEnumFieldSpec(
         '浮动提示',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -320,7 +320,7 @@ abstract final class GameObjectConstants {
       ),
       1: IntegerNumberFieldSpec('语言 ID'),
       2: IntegerNumberFieldSpec('页面材质'),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '允许骑乘使用',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -338,7 +338,7 @@ abstract final class GameObjectConstants {
       2: IntegerNumberFieldSpec('事件 ID'),
       3: IntegerNumberFieldSpec('自动关闭时间'),
       4: IntegerNumberFieldSpec('自定义动画'),
-      5: IntegerSelectFieldSpec(
+      5: IntegerEnumFieldSpec(
         '消耗型',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -353,7 +353,7 @@ abstract final class GameObjectConstants {
         '法术 ID',
         reference: GameObjectDataReference.spell,
       ),
-      11: IntegerSelectFieldSpec(
+      11: IntegerEnumFieldSpec(
         '无伤害免疫',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -361,21 +361,21 @@ abstract final class GameObjectConstants {
         '关联陷阱',
         reference: GameObjectDataReference.gameObjectTemplate,
       ),
-      13: IntegerSelectFieldSpec(
+      13: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       14: IntegerNumberFieldSpec('开启文本 ID'),
       15: IntegerNumberFieldSpec('关闭文本 ID'),
-      16: IntegerSelectFieldSpec(
+      16: IntegerEnumFieldSpec(
         '忽略视线',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      17: IntegerSelectFieldSpec(
+      17: IntegerEnumFieldSpec(
         '允许骑乘使用',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      18: IntegerSelectFieldSpec(
+      18: IntegerEnumFieldSpec(
         '浮动提示',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -383,7 +383,7 @@ abstract final class GameObjectConstants {
         '对话菜单',
         reference: GameObjectDataReference.gossipMenu,
       ),
-      20: IntegerSelectFieldSpec(
+      20: IntegerEnumFieldSpec(
         '设置世界状态',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -391,7 +391,7 @@ abstract final class GameObjectConstants {
     // GameObjectTransport
     11: GameObjectDataSchema({
       0: IntegerNumberFieldSpec('暂停时间'),
-      1: IntegerSelectFieldSpec(
+      1: IntegerEnumFieldSpec(
         '初始开启',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -442,7 +442,7 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.map,
       ),
       7: IntegerNumberFieldSpec('世界状态 ID'),
-      8: IntegerSelectFieldSpec(
+      8: IntegerEnumFieldSpec(
         '可停止',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -458,7 +458,7 @@ abstract final class GameObjectConstants {
         '动画法术',
         reference: GameObjectDataReference.spell,
       ),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '持续存在',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -467,11 +467,11 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.spell,
       ),
       5: IntegerNumberFieldSpec('目标数量'),
-      6: IntegerSelectFieldSpec(
+      6: IntegerEnumFieldSpec(
         '要求同组',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      7: IntegerSelectFieldSpec(
+      7: IntegerEnumFieldSpec(
         '跳过目标检查',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -491,15 +491,15 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.spell,
       ),
       1: IntegerNumberFieldSpec('使用次数'),
-      2: IntegerSelectFieldSpec(
+      2: IntegerEnumFieldSpec(
         '仅队伍',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '允许骑乘使用',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      4: IntegerSelectFieldSpec(
+      4: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -532,12 +532,12 @@ abstract final class GameObjectConstants {
         '归还法术',
         reference: GameObjectDataReference.spell,
       ),
-      5: IntegerSelectFieldSpec(
+      5: IntegerEnumFieldSpec(
         '无伤害免疫',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       6: IntegerNumberFieldSpec('开启文本 ID'),
-      7: IntegerSelectFieldSpec(
+      7: IntegerEnumFieldSpec(
         '忽略视线',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -567,7 +567,7 @@ abstract final class GameObjectConstants {
         '拾取法术',
         reference: GameObjectDataReference.spell,
       ),
-      3: IntegerSelectFieldSpec(
+      3: IntegerEnumFieldSpec(
         '无伤害免疫',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -598,23 +598,23 @@ abstract final class GameObjectConstants {
       15: IntegerNumberFieldSpec('最大优势'),
       16: IntegerNumberFieldSpec('最短时间'),
       17: IntegerNumberFieldSpec('最长时间'),
-      18: IntegerSelectFieldSpec(
+      18: IntegerEnumFieldSpec(
         '大型对象',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
-      19: IntegerSelectFieldSpec(
+      19: IntegerEnumFieldSpec(
         '高亮',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
       20: IntegerNumberFieldSpec('初始值'),
-      21: IntegerSelectFieldSpec(
+      21: IntegerEnumFieldSpec(
         '单向',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
     }),
     // GameObjectAuraGenerator
     30: GameObjectDataSchema({
-      0: IntegerSelectFieldSpec(
+      0: IntegerEnumFieldSpec(
         '初始开启',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -629,7 +629,7 @@ abstract final class GameObjectConstants {
         reference: GameObjectDataReference.spell,
       ),
       5: IntegerNumberFieldSpec('条件 ID 2'),
-      6: IntegerSelectFieldSpec(
+      6: IntegerEnumFieldSpec(
         '仅服务端',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),
@@ -644,7 +644,7 @@ abstract final class GameObjectConstants {
     }),
     // GameObjectBarberChair
     32: GameObjectDataSchema({
-      0: IntegerSelectFieldSpec(
+      0: IntegerEnumFieldSpec(
         '椅子高度',
         options: GameObjectConstants.gameObjectChairHeightOptions,
       ),
@@ -681,7 +681,7 @@ abstract final class GameObjectConstants {
     // GameObjectTrapDoor
     35: GameObjectDataSchema({
       0: IntegerNumberFieldSpec('暂停时触发'),
-      1: IntegerSelectFieldSpec(
+      1: IntegerEnumFieldSpec(
         '初始开启',
         options: GameObjectConstants.gameObjectBooleanOptions,
       ),

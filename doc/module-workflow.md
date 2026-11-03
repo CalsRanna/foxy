@@ -166,14 +166,16 @@ class XxxListViewModel
 
 ```dart
 @FoxyDetailViewModel(
-  selects: {'type'},             // int/String 字段 → SelectFieldController
+  enums: {'type'},               // int/String 字段 → EnumFieldController
   flags: {'flags'},              // int 位标志 → FlagFieldController
   groups: {'stat'},              // int 动态组 → IntFieldControllerGroup
   exclude: {'field'},            // 不进表单的字段
 )
 ```
 
-规则:实体字段类型 → 控制器类型(`int`→`Int`、`double`→`Double`、`String`→`String`、`String?`→`NullableString`、`bool`→`SelectFieldController<int>`);`selects/flags/groups` 相互排斥、一个字段只能属于一个;fallback 类型必须匹配字段类型。手写形态下,`@FoxyInventoryHost` 不存在这个场景 —— 全手写 controller 注册:见 `quest_sort_detail_view_model.dart` 的 `registerController(...)`。
+规则:实体字段类型 → 控制器类型(`int`→`Int`、`double`→`Double`、`String`→`String`、`String?`→`NullableString`、`bool`→`EnumFieldController<int>`);`enums/flags/groups` 相互排斥、一个字段只能属于一个;fallback 类型必须匹配字段类型。手写形态下,`@FoxyInventoryHost` 不存在这个场景 —— 全手写 controller 注册:见 `quest_sort_detail_view_model.dart` 的 `registerController(...)`。
+
+动态整数列的枚举分支声明为 `IntegerEnumFieldSpec`,对应 `IntegerFieldEditor.enumValue`;页面把分组的 `enumController` 交给 `FoxyEnumPicker`。空值、fallback 和确认写回规则见[枚举字段与动态编辑器](codegen/usage.md#枚举字段与动态编辑器)。
 
 手写 Detail VM 必须实现的 6 件事(照抄 `quest_sort_detail_view_model.dart`):
 `entity/persistedKey/loading/submitting/errorMessage` 信号 + `dispose()`;`initSignals({key})`(null 时调 `createXxx` 取默认行;有 key 时 `getXxx`,null 抛 `RecordNotFoundException`);`persist()`(first→`storeXxx` 并用返回值刷新 `persistedKey`;existing→`updateXxx`;成功 `_logActivity`);`_applyCandidate` / `_collectCandidate`;locale 应用方法(有 locale 时)。
@@ -183,7 +185,7 @@ class XxxListViewModel
 - 子表列表:样板 `lib/view_model/skill_line_ability_linked_list_view_model.dart`:
 
 ```dart
-@FoxyLinkedListViewModel(selects: {'acquireMethod'})
+@FoxyLinkedListViewModel(enums: {'acquireMethod'})
 class XxxLinkedListViewModel
     with FieldControllerMixin, _XxxLinkedListViewModelMixin {}
 ```
@@ -384,7 +386,7 @@ class Migration202609030000 implements Migration {
 1. 新建 `lib/constant/xxx_constants.dart`(样板 `skill_line_constants.dart` — 3.3.5a 的 AcquireMethod 枚举)。
 2. 新建 `packages/foxy/test/game_data/xxx_game_data_test.dart`,**常量取值与 AzerothCore 3.3.5 服务端一致**(样板 `quest_sort_game_data_test.dart`、`talent_game_data_test.dart` —— 引用 `DbcDefinitions` / `DbcLocaleFields` 或常量类,断言字段名/schema/枚举值)。
 
-判定:模块的 flag/enum 在页面或仓库中被解释(如 `SkillLineConstants.skillAcquireMethodOptions` 用于 ShadSelect)就必须进 constant + 测试;若字段只是**原样透传**(`int` 显示/编辑,不做语义解释),不需要。
+判定:模块的 flag/enum 在页面或仓库中被解释(如 `SkillLineConstants.skillAcquireMethodOptions` 用于 `FoxyEnumPicker`)就必须进 constant + 测试;若字段只是**原样透传**(`int` 显示/编辑,不做语义解释),不需要。
 
 ✅ **验证**:`flutter test test/game_data/` 全绿。
 

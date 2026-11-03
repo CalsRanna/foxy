@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 part 'spell_item_enchantment_detail_view_model.g.dart';
 
 @FoxyDetailViewModel(
-  selects: {'effect0', 'effect1', 'effect2'},
+  enums: {'effect0', 'effect1', 'effect2'},
   flags: {'flags'},
   groups: {'effectArg0', 'effectArg1', 'effectArg2'},
   // Other locales are kept in entity and edited through the locale dialog.

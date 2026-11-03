@@ -9,47 +9,47 @@ void main() {
       group.init(7);
 
       expect(group.numberController.collect(), 7);
-      expect(group.selectController.collect(), 7);
+      expect(group.enumController.collect(), 7);
       expect(group.flagController.collect(), 7);
       expect(group.collect(), 7);
 
       group.dispose();
     });
 
-    test('select 修改为 1 后 number/flags 同步为 1', () {
+    test('enum 修改为 1 后 number/flags 同步为 1', () {
       final group = IntFieldControllerGroup();
       group.init(0);
 
-      group.selectController.init(1);
+      group.enumController.init(1);
 
       expect(group.numberController.collect(), 1);
       expect(group.flagController.collect(), 1);
-      expect(group.selectController.collect(), 1);
+      expect(group.enumController.collect(), 1);
       expect(group.collect(), 1);
 
       group.dispose();
     });
 
-    test('number 输入修改后 select/flags 同步', () {
+    test('number 输入修改后 enum/flags 同步', () {
       final group = IntFieldControllerGroup();
       group.init(0);
 
       group.numberController.controller.text = '42';
 
-      expect(group.selectController.collect(), 42);
+      expect(group.enumController.collect(), 42);
       expect(group.flagController.collect(), 42);
 
       group.dispose();
     });
 
-    test('flags 修改后 number/select 同步', () {
+    test('flags 修改后 number/enum 同步', () {
       final group = IntFieldControllerGroup();
       group.init(0);
 
       group.flagController.controller.text = '9 (0x00000009)';
 
       expect(group.numberController.collect(), 9);
-      expect(group.selectController.collect(), 9);
+      expect(group.enumController.collect(), 9);
 
       group.dispose();
     });
@@ -57,8 +57,8 @@ void main() {
     test('collect() 按当前 editor 转发', () {
       final group = IntFieldControllerGroup()..init(5);
 
-      group.configure(IntegerFieldEditor.select);
-      group.selectController.init(3);
+      group.configure(IntegerFieldEditor.enumValue);
+      group.enumController.init(3);
       expect(group.collect(), 3);
 
       group.configure(IntegerFieldEditor.flags);
@@ -90,19 +90,19 @@ void main() {
 
       expect(notified, 0);
       expect(group.numberController.controller.text, '-');
-      expect(group.selectController.collect(), 7);
+      expect(group.enumController.collect(), 7);
 
       group.dispose();
     });
 
-    test('从非法 number 草稿切到 select 时恢复最后合法整数', () {
+    test('从非法 number 草稿切到 enum 时恢复最后合法整数', () {
       final group = IntFieldControllerGroup()..init(7);
       group.numberController.controller.text = '-';
 
-      group.configure(IntegerFieldEditor.select);
+      group.configure(IntegerFieldEditor.enumValue);
 
       expect(group.numberController.controller.text, '7');
-      expect(group.selectController.collect(), 7);
+      expect(group.enumController.collect(), 7);
       expect(group.collect(), 7);
 
       group.dispose();
@@ -125,8 +125,8 @@ void main() {
       var notified = 0;
       group.addListener(() => notified++);
 
-      group.configure(IntegerFieldEditor.select);
-      group.configure(IntegerFieldEditor.select);
+      group.configure(IntegerFieldEditor.enumValue);
+      group.configure(IntegerFieldEditor.enumValue);
       group.configure(IntegerFieldEditor.number);
       group.configure(IntegerFieldEditor.number);
 
