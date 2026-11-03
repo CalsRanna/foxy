@@ -18,22 +18,6 @@ class QuestInfoRepository
   String get dbcLocaleTableName => _table;
 
   @override
-  Future<int> copyQuestInfo(int key) async {
-    final source = await getQuestInfo(key);
-    if (source == null) {
-      throw RecordNotFoundException('record not found');
-    }
-    final copied = source.copyWith(id: await _getNextId());
-    await storeQuestInfo(copied);
-    return copied.id;
-  }
-
-  @override
-  Future<QuestInfoEntity> createQuestInfo() async {
-    return QuestInfoEntity(id: await _getNextId());
-  }
-
-  @override
   QueryBuilder _applyFilter(QueryBuilder builder, QuestInfoFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -49,8 +33,19 @@ class QuestInfoRepository
     return builder;
   }
 
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
+  @override
+  Future<int> nextMaxPlusOne(
+    String table,
+    String column, {
+    Map<String, Object?> where = const {},
+    int firstValue = 1,
+  }) async {
+    final id = await super.nextMaxPlusOne(
+      table,
+      column,
+      where: where,
+      firstValue: firstValue,
+    );
     if (id > 65535) {
       throw IdExhaustedException(
         'quest info ID exceeds the QuestInfoID referenceable range',

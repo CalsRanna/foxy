@@ -3,36 +3,38 @@ import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
+import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class QuestSortDetailViewModel with FieldControllerMixin {
-  void _logActivity(ActivityActionType action, QuestSortEntity t) {
-    final log = ActivityLogEntity(
-      module: 'quest_sort',
-      actionType: action,
-      entityName: t.sortNameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
-  }
+part 'quest_sort_detail_view_model.g.dart';
 
-  final _repository = GetIt.instance.get<QuestSortRepository>();
-
-  final entity = signal<QuestSortEntity?>(null);
-  final persistedKey = signal<int?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
-
-  late final idController = registerController(IntFieldController());
-  late final nameController = registerController(StringFieldController());
-  late final sortNameLangFlagsController = registerController(
-    IntFieldController(),
-  );
+@FoxyDetailViewModel(
+  // Other locales are kept in entity and edited through the locale dialog.
+  exclude: {
+    'sortNameLangEnUS',
+    'sortNameLangKoKR',
+    'sortNameLangFrFR',
+    'sortNameLangDeDE',
+    'sortNameLangZhTW',
+    'sortNameLangEsES',
+    'sortNameLangEsMX',
+    'sortNameLangRuRU',
+    'sortNameLangJaJP',
+    'sortNameLangPtPT',
+    'sortNameLangPtBR',
+    'sortNameLangItIT',
+    'sortNameLangUnk1',
+    'sortNameLangUnk2',
+    'sortNameLangUnk3',
+  },
+)
+class QuestSortDetailViewModel
+    with FieldControllerMixin, _QuestSortDetailViewModelMixin {
+  StringFieldController get nameController => sortNameLangZhCNController;
 
   void applySortNameLocales(List<DbcLocaleFieldValue> values) {
     entity.value = entity.value!.copyWith(
@@ -56,79 +58,23 @@ class QuestSortDetailViewModel with FieldControllerMixin {
     nameController.init(values.zhCN);
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? key}) async {
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      if (key == null) {
-        final blank = await _repository.createQuestSort();
-        if (isDisposed) return;
-        entity.value = blank;
-        _applyCandidate(blank);
-        persistedKey.value = null;
-        return;
-      }
-      final result = await _repository.getQuestSort(key);
-      if (result == null) {
-        throw RecordNotFoundException('record not found');
-      }
-      if (isDisposed) return;
-      entity.value = result;
-      _applyCandidate(result);
-      persistedKey.value = key;
-    } catch (error, stackTrace) {
-      errorMessage.value = FoxyExceptions.message(error);
-      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        // store returns the actual written key: a duplicate-key retry may
-        // reallocate it, so persistedKey must reflect reality.
-        final storedKey = await _repository.storeQuestSort(candidate);
-        persistedKey.value = storedKey;
-      } else {
-        await _repository.updateQuestSort(originalKey, candidate);
-        persistedKey.value = candidate.id;
-      }
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  void _applyCandidate(QuestSortEntity table) {
-    idController.init(table.id);
-    nameController.init(table.sortNameLangZhCN);
-    sortNameLangFlagsController.init(table.sortNameLangFlags);
-  }
-
+  @override
   QuestSortEntity _collectCandidate() {
     return entity.value!.copyWith(
       id: idController.collect(),
       sortNameLangZhCN: nameController.collect(),
       sortNameLangFlags: sortNameLangFlagsController.collect(),
     );
+  }
+
+  @override
+  void _logActivity(ActivityActionType action, QuestSortEntity t) {
+    final log = ActivityLogEntity(
+      module: 'quest_sort',
+      actionType: action,
+      entityName: t.sortNameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
   }
 }

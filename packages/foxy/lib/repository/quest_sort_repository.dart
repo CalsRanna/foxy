@@ -18,22 +18,6 @@ class QuestSortRepository
   String get dbcLocaleTableName => _table;
 
   @override
-  Future<int> copyQuestSort(int key) async {
-    final source = await getQuestSort(key);
-    if (source == null) {
-      throw RecordNotFoundException('record not found');
-    }
-    final copied = source.copyWith(id: await _getNextId());
-    await storeQuestSort(copied);
-    return copied.id;
-  }
-
-  @override
-  Future<QuestSortEntity> createQuestSort() async {
-    return QuestSortEntity(id: await _getNextId());
-  }
-
-  @override
   QueryBuilder _applyFilter(QueryBuilder builder, QuestSortFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -49,8 +33,19 @@ class QuestSortRepository
     return builder;
   }
 
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
+  @override
+  Future<int> nextMaxPlusOne(
+    String table,
+    String column, {
+    Map<String, Object?> where = const {},
+    int firstValue = 1,
+  }) async {
+    final id = await super.nextMaxPlusOne(
+      table,
+      column,
+      where: where,
+      firstValue: firstValue,
+    );
     if (id > 32768) {
       throw IdExhaustedException(
         'quest sort ID exceeds the QuestSortID referenceable range',
