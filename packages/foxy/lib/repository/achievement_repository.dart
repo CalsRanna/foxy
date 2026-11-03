@@ -21,22 +21,6 @@ class AchievementRepository
   String get dbcLocaleTableName => _table;
 
   @override
-  Future<int> copyAchievement(int key) async {
-    final source = await getAchievement(key);
-    if (source == null) {
-      throw RecordNotFoundException('record not found');
-    }
-    final copied = source.copyWith(id: await _getNextId());
-    await storeAchievement(copied);
-    return copied.id;
-  }
-
-  @override
-  Future<AchievementEntity> createAchievement() async {
-    return AchievementEntity(id: await _getNextId());
-  }
-
-  @override
   QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -103,8 +87,19 @@ class AchievementRepository
     return builder;
   }
 
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
+  @override
+  Future<int> nextMaxPlusOne(
+    String table,
+    String column, {
+    Map<String, Object?> where = const {},
+    int firstValue = 1,
+  }) async {
+    final id = await super.nextMaxPlusOne(
+      table,
+      column,
+      where: where,
+      firstValue: firstValue,
+    );
     if (id > 0xffff) {
       throw IdExhaustedException(
         'no free smallint unsigned ID left in Achievement.dbc',
