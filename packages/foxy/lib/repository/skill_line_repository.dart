@@ -31,28 +31,10 @@ class SkillLineRepository
   ) => storeDbcLocaleField(id, field, locales);
 
   @override
-  Future<int> copySkillLine(int key) async {
-    final source = await getSkillLine(key);
-    if (source == null) {
-      throw RecordNotFoundException('record not found');
-    }
-    final copied = SkillLineEntity.fromJson({
-      ...source.toJson(),
-      'ID': await nextMaxPlusOne(_table, 'ID'),
-    });
-    await storeSkillLine(copied);
-    return copied.id;
-  }
-
-  @override
   Future<int> countSkillLines({SkillLineFilter? filter}) async {
     var builder = laconic.table('$_table as sl');
     return _applyFilter(builder, filter).count();
   }
-
-  @override
-  Future<SkillLineEntity> createSkillLine() async =>
-      SkillLineEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   @override
   Future<List<BriefSkillLineEntity>> getBriefSkillLines({

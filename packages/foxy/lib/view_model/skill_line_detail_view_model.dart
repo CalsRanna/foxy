@@ -3,65 +3,67 @@ import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/event/entity_written_event.dart';
+import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-/// Hand-written (not generated): the three multi-language groups are edited
-/// through [FoxyLocalePicker], which merges all 16 languages back into the
-/// entity — a generated controller-based collect would drop the hidden
-/// languages.
-class SkillLineDetailViewModel with FieldControllerMixin {
-  void _logActivity(ActivityActionType action, SkillLineEntity t) {
-    final log = ActivityLogEntity(
-      module: 'skill_line',
-      actionType: action,
-      entityName: t.displayNameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
-  }
+part 'skill_line_detail_view_model.g.dart';
 
-  final _repository = GetIt.instance.get<SkillLineRepository>();
-
-  final entity = signal<SkillLineEntity?>(null);
-  final persistedKey = signal<int?>(null);
-  final loading = signal(false);
-  final submitting = signal(false);
-  final errorMessage = signal<String?>(null);
-
-  /// Primary key; prefilled with MAX+1 by [createSkillLine] on create,
-  /// still editable afterwards.
-  late final idController = registerController(IntFieldController());
-
-  // === Basic ===
-  late final categoryIdController = registerController(IntFieldController());
-  late final skillCostsIdController = registerController(IntFieldController());
-  late final spellIconIdController = registerController(IntFieldController());
-  late final canLinkController = registerController(IntFieldController());
-
-  // === Localized text (zhCN input + Flags) ===
-  late final displayNameLangZhCNController = registerController(
-    StringFieldController(),
-  );
-  late final displayNameLangFlagsController = registerController(
-    IntFieldController(),
-  );
-  late final descriptionLangZhCNController = registerController(
-    StringFieldController(),
-  );
-  late final descriptionLangFlagsController = registerController(
-    IntFieldController(),
-  );
-  late final alternateVerbLangZhCNController = registerController(
-    StringFieldController(),
-  );
-  late final alternateVerbLangFlagsController = registerController(
-    IntFieldController(),
-  );
-
+@FoxyDetailViewModel(
+  // Other locales are kept in entity and edited through the locale dialogs.
+  exclude: {
+    'displayNameLangEnUS',
+    'displayNameLangKoKR',
+    'displayNameLangFrFR',
+    'displayNameLangDeDE',
+    'displayNameLangZhTW',
+    'displayNameLangEsES',
+    'displayNameLangEsMX',
+    'displayNameLangRuRU',
+    'displayNameLangJaJP',
+    'displayNameLangPtPT',
+    'displayNameLangPtBR',
+    'displayNameLangItIT',
+    'displayNameLangUnk1',
+    'displayNameLangUnk2',
+    'displayNameLangUnk3',
+    'descriptionLangEnUS',
+    'descriptionLangKoKR',
+    'descriptionLangFrFR',
+    'descriptionLangDeDE',
+    'descriptionLangZhTW',
+    'descriptionLangEsES',
+    'descriptionLangEsMX',
+    'descriptionLangRuRU',
+    'descriptionLangJaJP',
+    'descriptionLangPtPT',
+    'descriptionLangPtBR',
+    'descriptionLangItIT',
+    'descriptionLangUnk1',
+    'descriptionLangUnk2',
+    'descriptionLangUnk3',
+    'alternateVerbLangEnUS',
+    'alternateVerbLangKoKR',
+    'alternateVerbLangFrFR',
+    'alternateVerbLangDeDE',
+    'alternateVerbLangZhTW',
+    'alternateVerbLangEsES',
+    'alternateVerbLangEsMX',
+    'alternateVerbLangRuRU',
+    'alternateVerbLangJaJP',
+    'alternateVerbLangPtPT',
+    'alternateVerbLangPtBR',
+    'alternateVerbLangItIT',
+    'alternateVerbLangUnk1',
+    'alternateVerbLangUnk2',
+    'alternateVerbLangUnk3',
+  },
+)
+class SkillLineDetailViewModel
+    with FieldControllerMixin, _SkillLineDetailViewModelMixin {
   /// After the dialog saves the display-name localization, merges it back
   /// into the current Entity and syncs the main-language input.
   void applyDisplayNameLocales(List<DbcLocaleFieldValue> values) {
@@ -134,82 +136,7 @@ class SkillLineDetailViewModel with FieldControllerMixin {
     alternateVerbLangZhCNController.init(values.zhCN);
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? key}) async {
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      if (key == null) {
-        final blank = await _repository.createSkillLine();
-        if (isDisposed) return;
-        entity.value = blank;
-        _applyCandidate(blank);
-        persistedKey.value = null;
-        return;
-      }
-      final result = await _repository.getSkillLine(key);
-      if (result == null) {
-        throw RecordNotFoundException('record not found');
-      }
-      if (isDisposed) return;
-      entity.value = result;
-      _applyCandidate(result);
-      persistedKey.value = key;
-    } catch (error, stackTrace) {
-      errorMessage.value = FoxyExceptions.message(error);
-      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        // store returns the actual written key: a duplicate-key retry may
-        // reallocate it, so persistedKey must reflect reality.
-        final storedKey = await _repository.storeSkillLine(candidate);
-        persistedKey.value = storedKey;
-      } else {
-        await _repository.updateSkillLine(originalKey, candidate);
-        persistedKey.value = candidate.id;
-      }
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  void _applyCandidate(SkillLineEntity skillLine) {
-    idController.init(skillLine.id);
-    categoryIdController.init(skillLine.categoryId);
-    skillCostsIdController.init(skillLine.skillCostsId);
-    spellIconIdController.init(skillLine.spellIconId);
-    canLinkController.init(skillLine.canLink);
-    displayNameLangZhCNController.init(skillLine.displayNameLangZhCN);
-    displayNameLangFlagsController.init(skillLine.displayNameLangFlags);
-    descriptionLangZhCNController.init(skillLine.descriptionLangZhCN);
-    descriptionLangFlagsController.init(skillLine.descriptionLangFlags);
-    alternateVerbLangZhCNController.init(skillLine.alternateVerbLangZhCN);
-    alternateVerbLangFlagsController.init(skillLine.alternateVerbLangFlags);
-  }
-
+  @override
   SkillLineEntity _collectCandidate() {
     // Overlay UI fields from the loaded entity, so hidden columns such as
     // multi-language ones are never cleared.
@@ -226,5 +153,16 @@ class SkillLineDetailViewModel with FieldControllerMixin {
       alternateVerbLangZhCN: alternateVerbLangZhCNController.collect(),
       alternateVerbLangFlags: alternateVerbLangFlagsController.collect(),
     );
+  }
+
+  @override
+  void _logActivity(ActivityActionType action, SkillLineEntity t) {
+    final log = ActivityLogEntity(
+      module: 'skill_line',
+      actionType: action,
+      entityName: t.displayNameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
   }
 }
