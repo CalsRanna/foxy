@@ -3,6 +3,8 @@ import 'package:build_test/build_test.dart';
 import 'package:foxy_generator/builder.dart';
 import 'package:test/test.dart';
 
+import 'generator_test_support.dart' show foxyAnnotationSource;
+
 void main() {
   test('可重复 FoxyFilter 注解生成无 Entity 后缀的 Filter DTO', () async {
     await testBuilder(
@@ -78,33 +80,7 @@ void main() {
 
 const annotationAsset = 'foxy_annotation|lib/repository_annotations.dart';
 
-const annotationSource = r'''
-enum FoxyFilterType { boolean, decimal, integer, text }
-
-class FoxyFilter {
-  final Object defaultValue;
-  final String name;
-  final FoxyFilterType type;
-
-  const FoxyFilter.boolean(this.name, {bool this.defaultValue = false})
-    : type = FoxyFilterType.boolean;
-
-  const FoxyFilter.decimal(this.name, {double this.defaultValue = 0.0})
-    : type = FoxyFilterType.decimal;
-
-  const FoxyFilter.integer(this.name, {int this.defaultValue = 0})
-    : type = FoxyFilterType.integer;
-
-  const FoxyFilter.text(this.name, {String this.defaultValue = ''})
-    : type = FoxyFilterType.text;
-}
-
-class FoxyRepository {
-  final Type entity;
-
-  const FoxyRepository(this.entity);
-}
-''';
+final annotationSource = foxyAnnotationSource('repository_annotations.dart');
 
 const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
 

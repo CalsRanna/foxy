@@ -143,11 +143,26 @@ void main() {
               '@FoxyBriefEntity()',
         )
         .replaceFirst(
-          '@FoxyBriefField()\n'
-              "@FoxyFullField('ID', key: true)",
-          "@FoxyFullField('ID', key: true)\n"
-              '@FoxyBriefField()',
+          '  @FoxyBriefField()\n'
+              "  @FoxyFullField('ID', key: true)",
+          "  @FoxyFullField('ID', key: true)\n"
+              '  @FoxyBriefField()',
         );
+    expect(
+      reordered,
+      contains(
+        "@FoxyFullEntity(table: 'foxy.codegen_sample')\n"
+        '@FoxyBriefEntity()',
+      ),
+    );
+    expect(
+      reordered,
+      contains(
+        "  @FoxyFullField('ID', key: true)\n"
+        '  @FoxyBriefField()\n'
+        '  final int id;',
+      ),
+    );
     const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';
     String? firstSource;
     String? secondSource;
