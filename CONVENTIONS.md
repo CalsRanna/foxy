@@ -30,6 +30,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 - `infrastructure/` 不依赖仓储或业务流程；组合仓储的 DBC 导出注册表与查询偏好放 `repository/`，技术日志输出留在 `infrastructure/logging/`。
 - `event/` 放事件定义和总线；活动日志记录策略及订阅监听器放 `use_case/activity_log/`。
 - 独立弹窗按类名拆为对应文件；共用的 `SettingDialogShell` 放 `widget/dialog/`，设置页专用的导入、导出及表格组件留在 `page/setting/`。
+- Linux 与 Windows 的原生启动代码统一放各自的 `runner/`，平台根目录的 CMake 配置通过 `add_subdirectory("runner")` 引入；`flutter/` 保留 Flutter 管理的构建与插件注册文件。
 
 ## 3. 代码生成铁律
 
