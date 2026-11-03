@@ -34,8 +34,7 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     }
     final blank = await createPageText();
     final copied = source.copyWith(id: blank.id);
-    await storePageText(copied);
-    return copied.id;
+    return storePageText(copied);
   }
 
   Future<int> countPageTexts({PageTextFilter? filter}) async {

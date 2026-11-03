@@ -34,8 +34,7 @@ mixin _QuestInfoRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     final blank = await createQuestInfo();
     final copied = source.copyWith(id: blank.id);
-    await storeQuestInfo(copied);
-    return copied.id;
+    return storeQuestInfo(copied);
   }
 
   Future<int> countQuestInfos({QuestInfoFilter? filter}) async {

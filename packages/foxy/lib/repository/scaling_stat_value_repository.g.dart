@@ -39,8 +39,7 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
     }
     final blank = await createScalingStatValue();
     final copied = source.copyWith(id: blank.id);
-    await storeScalingStatValue(copied);
-    return copied.id;
+    return storeScalingStatValue(copied);
   }
 
   Future<int> countScalingStatValues({ScalingStatValueFilter? filter}) async {

@@ -48,8 +48,7 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     }
     final blank = await createCreatureTemplate();
     final copied = source.copyWith(entry: blank.entry);
-    await storeCreatureTemplate(copied);
-    return copied.entry;
+    return storeCreatureTemplate(copied);
   }
 
   Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async {

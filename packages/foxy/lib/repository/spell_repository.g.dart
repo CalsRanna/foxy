@@ -34,8 +34,7 @@ mixin _SpellRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     final blank = await createSpell();
     final copied = source.copyWith(id: blank.id);
-    await storeSpell(copied);
-    return copied.id;
+    return storeSpell(copied);
   }
 
   Future<int> countSpells({SpellFilter? filter}) async {

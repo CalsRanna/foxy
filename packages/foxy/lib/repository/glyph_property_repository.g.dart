@@ -32,8 +32,7 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     }
     final blank = await createGlyphProperty();
     final copied = source.copyWith(id: blank.id);
-    await storeGlyphProperty(copied);
-    return copied.id;
+    return storeGlyphProperty(copied);
   }
 
   Future<int> countGlyphProperties({GlyphPropertyFilter? filter}) async {

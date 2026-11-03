@@ -37,8 +37,7 @@ mixin _ItemTemplateRepositoryMixin on RepositoryMixin {
     }
     final blank = await createItemTemplate();
     final copied = source.copyWith(entry: blank.entry);
-    await storeItemTemplate(copied);
-    return copied.entry;
+    return storeItemTemplate(copied);
   }
 
   Future<int> countItemTemplates({ItemTemplateFilter? filter}) async {

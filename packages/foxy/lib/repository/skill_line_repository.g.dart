@@ -34,8 +34,7 @@ mixin _SkillLineRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     final blank = await createSkillLine();
     final copied = source.copyWith(id: blank.id);
-    await storeSkillLine(copied);
-    return copied.id;
+    return storeSkillLine(copied);
   }
 
   Future<int> countSkillLines({SkillLineFilter? filter}) async {

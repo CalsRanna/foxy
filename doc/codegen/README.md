@@ -102,14 +102,14 @@ packages/foxy_generator/lib/
 生成的代码都是 `mixin _XxxMixin on ...`,手写类通过 `with` 混入。原因:
 
 - 手写类可 `@override` 生成方法(如 `CurrencyTypeRepository` 覆写 `countCurrencyTypes`),mixin 的覆写语义是天然的「显式覆盖」钩子;
-- 一个 part 文件只含一个 mixin + 一个公开类(Filter)+ 一个 `const _table`,`on` 子句(`on RepositoryMixin`)保证生成代码能调用基座成员;
+- Repository part 包含 mixin 和按需生成的公开 Filter 类,表名由 mixin 的 `_table` getter 提供;`on` 子句(`on RepositoryMixin`)保证生成代码能调用基座成员;
 - Entity 的 `Full mixin` 同理,手写 `class XxxEntity with _XxxEntityMixin` 通过 mixin 拿到 `fromJson`/`copyWith`/`==`/`hashCode`/`toString`。
 
 ## 设计原则
 
 1. **单一事实来源(Single Source of Truth)**
    - 物理列名只在 `@FoxyFullField('列名')` 声明一次;Repository/Filter/List 的列名要么从 Entity 推断,要么显式声明,绝不重复手写;
-   - 物理表名只在 Entity 的 `@FoxyFullEntity(table:)`(或类名推导)声明一次;Repository 生成 part 产出库级 `const _table`,手写代码与生成代码都引用它,手写 `static const _table` 会被构建期拒绝;
+   - 物理表名只在 Entity 的 `@FoxyFullEntity(table:)`(或类名推导)声明一次;Repository 生成 mixin 提供实例 getter `_table`,手写代码与生成代码都引用它,手写 `static const _table` 会被构建期拒绝;
    - 筛选字段只在 Repository 的 `@FoxyFilter` 声明;List ViewModel 的筛选控制器由生成器从 `@FoxyFilter` 读取(不在 List 注解里重复);
    - Entity 的 key 字段是唯一 key 来源,Repository/Form/List 都从它推断 key 类型与名字。
 
@@ -121,9 +121,9 @@ packages/foxy_generator/lib/
 
 3. **失败要早、信息要准**
    - 校验分两层:`Reader` 里做「结构校验」(注解用法、命名、文件位置、`part` 声明、mixin 混入与顺序、`factory fromJson` 委托、`_table` 是否手写残留),`EntityValidator` 做「模型校验」(表名非空、列名唯一、Brief 覆盖 key 等);
-   - 结构校验基于 analyzer **语法级 AST**(`source_shape.dart` 的 `parseString` 助手),不依赖源码文本格式,与 `.g.dart` 是否已生成无关;跨文件「注解存在性」探测(如 List ViewModel 是否存在)仍是文本检查;
+   - 结构校验基于 analyzer **语法级 AST**(`source_shape.dart` 的 `parseString` 助手),不依赖源码文本格式,与 `.g.dart` 是否已生成无关;跨文件「注解存在性」探测也通过 AST 检查实际类注解,不会把注释或字符串中的注解名当成声明;
    - **生成器明知基线无法正确时强制覆写**:别名列 filter(`column: 'it.name'`)或类级 `@FoxyBriefField.*` 别名字段来自 JOIN 表,生成器无法表达 JOIN——此时构建期要求手写类必须自行声明 `countXxxs` / `getBriefXxxs`,否则报错;生成层仍保留完整基线(含合格的反引号限定符 `` `it`.`name` ``),由手写覆写接管;
-   - 所有 `_fail` 都抛 `InvalidGenerationSourceError`,带 `message + todo`(错误消息英文,`todo` 以 `Fix:` 开头),`flutter analyze` / `build_runner` 会把错误钉到出错元素;运行期异常同理保持英文,用户文案统一经 `foxyErrorMessage` 映射;
+   - Reader/Validator 通过 `InvalidGenerationSourceError` 报告错误并附修复提示(英文),`build_runner` 会把错误钉到出错元素;运行期异常同理保持英文,用户文案统一经 `FoxyExceptions.message` 映射;
    - 生成代码的「运行时不变式」也尽量前移:例如 store 前校验主键 > 0、update 未命中 0 行抛 `RecordNotFoundException`,把数据库静默失败变成显式业务异常。
 
 4. **生成代码贴近手写风格**
@@ -142,7 +142,7 @@ packages/foxy_generator/lib/
 
 - `RepositoryMixin`(`lib/repository/repository_mixin.dart`):提供 `laconic` 访问、`localeEnabled`、`kPageSize`、`nextMaxPlusOne`、`prepareWriteJson` 等;
 - `FieldControllerMixin`(`lib/widget/form/field_controller.dart`):提供 `registerController` / `disposeControllers`,生成代码在 `on FieldControllerMixin` 下可直接声明 controller;
-- `QueryVersionMixin`(`lib/widget/query_version_mixin.dart`):List ViewModel 的分页浏览基线(`queryVersion` / `markQueryVersion` / `normalizePageAfterDelete`);
+- `QueryVersionMixin`(`lib/view_model/query_version_mixin.dart`):List ViewModel 的分页浏览基线(`queryVersion` / `markQueryVersion` / `normalizePageAfterDelete`);
 - `DbcLocaleRepositoryMixin`(`lib/repository/dbc_locale_repository_mixin.dart`):DBC 宽表本地化字段的加载/保存,Repository 生成器检测到它出现时生成 `get*Locales` / `save*Locales` 委托;
 - `FoxyException` 家族(`lib/infrastructure/errors/foxy_exceptions.dart`):生成代码抛的业务异常(`RecordNotFoundException` / `DuplicateKeyException` / `InvalidPrimaryKeyException` / `BusyException` / `LinkNotLoadedException` / `IdExhaustedException`);
 - `MysqlErrorUtil.isDuplicateEntry`(`lib/infrastructure/database/mysql_error_util.dart`):把 MySQL duplicate entry 翻译成 `DuplicateKeyException`。

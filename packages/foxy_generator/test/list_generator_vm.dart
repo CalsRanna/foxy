@@ -260,7 +260,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'sample_repository.g.dart';
 
-@FoxyRepository(SampleEntity)
+@FoxyRepository(entity: SampleEntity)
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class SampleRepository with _SampleRepositoryMixin {}
@@ -465,7 +465,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'sample_repository.g.dart';
 
-@FoxyRepository(SampleEntity)
+@FoxyRepository(entity: SampleEntity)
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class SampleRepository with _SampleRepositoryMixin {
@@ -498,7 +498,7 @@ import 'package:foxy/entity/sample_entity.dart';
 import 'package:foxy_annotation/list_annotations.dart';
 import 'package:foxy/repository/sample_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/query_version_mixin.dart';
+import 'package:foxy/view_model/query_version_mixin.dart';
 
 part 'sample_list_view_model.g.dart';
 
@@ -512,7 +512,7 @@ class SampleListViewModel
 ///
 /// Copies silently drift when annotations gain parameters or change
 /// defaults, letting tests pass against stale definitions. Tests run from
-/// the repository root (see AGENTS.md).
+/// the foxy_generator package root.
 final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 final listAnnotationSource = foxyAnnotationSource('list_annotations.dart');

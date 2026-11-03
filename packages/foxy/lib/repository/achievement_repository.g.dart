@@ -34,8 +34,7 @@ mixin _AchievementRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     final blank = await createAchievement();
     final copied = source.copyWith(id: blank.id);
-    await storeAchievement(copied);
-    return copied.id;
+    return storeAchievement(copied);
   }
 
   Future<int> countAchievements({AchievementFilter? filter}) async {

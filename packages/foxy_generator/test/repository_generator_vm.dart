@@ -92,7 +92,7 @@ class SampleRepository with _SampleRepositoryMixin {
                 contains('Future<int> copySample(int key) async {'),
                 contains('final blank = await createSample();'),
                 contains('final copied = source.copyWith(id: blank.id);'),
-                contains('return copied.id;'),
+                contains('return storeSample(copied);'),
                 // count: goes through _applyFilter
                 contains('Future<int> countSamples({SampleFilter? filter})'),
                 contains('_applyFilter(laconic.table(_table), filter)'),
@@ -364,7 +364,7 @@ class SampleEntity {
     final entity = scalarEntitySource.replaceAll('SampleEntity', 'OtherEntity');
     final source = scalarRepositorySource
         .replaceFirst(
-          '@FoxyRepository(SampleEntity)',
+          '@FoxyRepository(entity: SampleEntity)',
           '@FoxyRepository(entity: OtherEntity)',
         )
         .replaceFirst(
@@ -570,7 +570,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'sample_property_repository.g.dart';
 
-@FoxyRepository(SamplePropertyEntity)
+@FoxyRepository(entity: SamplePropertyEntity)
 @FoxyFilter.text('id')
 class SamplePropertyRepository with _SamplePropertyRepositoryMixin {}
 ''';
@@ -593,7 +593,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'sample_repository.g.dart';
 
-@FoxyRepository(SampleEntity)
+@FoxyRepository(entity: SampleEntity)
 class SampleRepository with _SampleRepositoryMixin {}
 ''';
 
@@ -625,7 +625,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'sample_repository.g.dart';
 
-@FoxyRepository(SampleEntity)
+@FoxyRepository(entity: SampleEntity)
 @FoxyFilter.text('id')
 @FoxyFilter.text('name', column: 'Name_lang_zhCN')
 class SampleRepository with _SampleRepositoryMixin {}
@@ -693,7 +693,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'child_record_repository.g.dart';
 
-@FoxyRepository(ChildRecordEntity, linkKey: ['parentId'])
+@FoxyRepository(entity: ChildRecordEntity, linkKey: ['parentId'])
 class ChildRecordRepository with _ChildRecordRepositoryMixin {}
 ''';
 
@@ -719,7 +719,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 part 'locale_repository.g.dart';
 
-@FoxyRepository(LocaleEntity)
+@FoxyRepository(entity: LocaleEntity)
 class LocaleRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _LocaleRepositoryMixin {
   @override
@@ -736,7 +736,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'sample_repository.g.dart';
 
-@FoxyRepository(SampleEntity)
+@FoxyRepository(entity: SampleEntity)
 @FoxyFilter.text('id')
 @FoxyFilter.text('name', column: 'it.name')
 class SampleRepository with _SampleRepositoryMixin {
@@ -786,7 +786,7 @@ final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 ///
 /// Copies silently drift when annotations gain parameters or change
 /// defaults, letting tests pass against stale definitions. Tests run from
-/// the repository root (see AGENTS.md).
+/// the foxy_generator package root.
 final repositoryAnnotationSource = foxyAnnotationSource(
   'repository_annotations.dart',
 );

@@ -98,7 +98,7 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
     submitting.value = true;
     errorMessage.value = null;
     try {
-      final candidate = _collectCandidate();
+      var candidate = _collectCandidate();
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -108,6 +108,12 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
           candidate,
         );
         persistedKey.value = storedKey;
+        if (storedKey != candidate.id) {
+          candidate = candidate.copyWith(id: storedKey);
+          if (!isDisposed) {
+            idController.init(storedKey);
+          }
+        }
       } else {
         await _repository.updateScalingStatDistribution(originalKey, candidate);
         persistedKey.value = candidate.id;

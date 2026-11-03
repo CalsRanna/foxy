@@ -95,7 +95,7 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
     submitting.value = true;
     errorMessage.value = null;
     try {
-      final candidate = _collectCandidate();
+      var candidate = _collectCandidate();
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -103,6 +103,12 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
       if (originalKey == null) {
         final storedKey = await _repository.storeGameObjectTemplate(candidate);
         persistedKey.value = storedKey;
+        if (storedKey != candidate.entry) {
+          candidate = candidate.copyWith(entry: storedKey);
+          if (!isDisposed) {
+            entryController.init(storedKey);
+          }
+        }
       } else {
         await _repository.updateGameObjectTemplate(originalKey, candidate);
         persistedKey.value = candidate.entry;

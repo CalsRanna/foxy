@@ -10,8 +10,8 @@ import 'generator_test_support.dart';
 
 /// Matcher that captures a generated part and asserts it parses as valid
 /// Dart. The existing generator tests assert with string `contains` and
-/// would never catch structural breakage (e.g. a reserved-word parameter
-/// name, an int assigned to a String key) — this smoke layer does.
+/// do not catch syntax errors such as reserved-word parameter names. This
+/// smoke layer checks syntax only; type and runtime checks live in the app.
 final _parseable = _ParseableDart();
 
 void main() {
@@ -48,7 +48,7 @@ void main() {
     );
   });
 
-  test('Form/List/LinkedList/LinkedDetail 生成产物可解析为合法 Dart', () async {
+  test('Form/List 生成产物可解析为合法 Dart', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
@@ -149,7 +149,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'codegen_sample_repository.g.dart';
 
-@FoxyRepository(CodegenSampleEntity)
+@FoxyRepository(entity: CodegenSampleEntity)
 @FoxyFilter.text('id')
 @FoxyFilter.text('name')
 class CodegenSampleRepository with _CodegenSampleRepositoryMixin {}
@@ -162,9 +162,9 @@ import 'package:foxy_annotation/repository_annotations.dart';
 part 'codegen_relation_repository.g.dart';
 
 // Composite key with a String component: no query layer (no list VM, no
-// linkKey), so the generated surface is destroy/get/getXxxs only — no
-// create with `nextMaxPlusOne` on a String key.
-@FoxyRepository(CodegenRelationEntity)
+// linkKey), so only CRUD is generated — no create with
+// `nextMaxPlusOne` on a String key.
+@FoxyRepository(entity: CodegenRelationEntity)
 class CodegenRelationRepository with _CodegenRelationRepositoryMixin {}
 ''';
 
@@ -196,7 +196,6 @@ part 'codegen_sample_detail_view_model.g.dart';
 @FoxyDetailViewModel(
   entity: CodegenSampleEntity,
   repository: CodegenSampleRepository,
-  nullable: {'description'},
 )
 class CodegenSampleDetailViewModel
     with FieldControllerMixin, _CodegenSampleDetailViewModelMixin {}
@@ -207,7 +206,7 @@ final class _ParseableDart extends Matcher {
   bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     // testBuilder hands matchers the raw output bytes, not a String.
     final content = item is String ? item : utf8.decode(item as List<int>);
-    final result = parseString(content: content);
+    final result = parseString(content: content, throwIfDiagnostics: false);
     if (result.errors.isNotEmpty) {
       matchState['errors'] = result.errors
           .map((e) => '${e.message} at ${e.offset}')

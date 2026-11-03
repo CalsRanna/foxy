@@ -34,8 +34,7 @@ mixin _QuestSortRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     final blank = await createQuestSort();
     final copied = source.copyWith(id: blank.id);
-    await storeQuestSort(copied);
-    return copied.id;
+    return storeQuestSort(copied);
   }
 
   Future<int> countQuestSorts({QuestSortFilter? filter}) async {

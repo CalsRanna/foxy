@@ -34,8 +34,7 @@ mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     final blank = await createItemSet();
     final copied = source.copyWith(id: blank.id);
-    await storeItemSet(copied);
-    return copied.id;
+    return storeItemSet(copied);
   }
 
   Future<int> countItemSets({ItemSetFilter? filter}) async {

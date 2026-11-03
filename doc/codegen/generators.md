@@ -127,7 +127,7 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 
 读取流程与校验:
 
-1. **结构校验**(基于 `source_shape.dart` 语法级 AST,免符号解析、与 `.g.dart` 是否已生成无关):类名以 `Repository` 结尾;文件位置正确;`part` 声明;必须混入 `_XxxRepositoryMixin`;**手写 `_table` 直接报错**——表名单一来源在 Entity 注解,生成 part 产出 `const _table`。
+1. **结构校验**(基于 `source_shape.dart` 语法级 AST,免符号解析、与 `.g.dart` 是否已生成无关):类名以 `Repository` 结尾;文件位置正确;`part` 声明;必须混入 `_XxxRepositoryMixin`;**手写 `_table` 直接报错**——表名单一来源在 Entity 注解,生成 mixin 提供实例 getter `_table`。
 2. **绑定实体**:`@FoxyRepository(entity:)` 显式传入时校验命名一对一(安全网);省略时按 `convention.entityClassNameOfRepository` 推导,再经 `resolveFullEntity` 解析出 ClassElement 并读表名。
 3. **Key 推断**:扫描实体 `@FoxyFullField(key: true)` 字段;**nullable 的 key 直接报错**(SQL `列 = NULL` 恒不成立,`_whereKey` 会静默匹配 0 行误报「原记录不存在」)。
 4. **Brief 投影列**:字段级 `@FoxyBriefField()` 的物理列收集到 `briefProjectionColumns`(查询 select 用);类级 `@FoxyBriefField.text/integer/...` 是 JOIN 别名,不计入。
@@ -142,7 +142,7 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 
 | 方法 | 形态 | 说明 |
 | --- | --- | --- |
-| `copyXxx(key)` | 主/子表 | `get` → 不存在抛 `RecordNotFoundException` → `create`(子表带关联键)→ `copyWith`(key 换成新分配)→ `store`;返回新 key |
+| `copyXxx(key)` | 主/子表 | `get` → 不存在抛 `RecordNotFoundException` → `create`(子表带关联键)→ `copyWith`(key 换成新分配)→ `store`;单 int key 返回 store 的实际写入 key,其他 key 从候选实体构造 |
 | `countXxxs(...)` | 主表:`({filter})` | `_applyFilter(laconic.table(t), filter).count()` |
 | | 子表:`(linkKey)` | `laconic.table(t).where('`entry`', entry).count()`(无 filter) |
 | `createXxx()` | 主表 | 全 key 字段 `nextMaxPlusOne(table, '`ID`')` |
@@ -153,7 +153,7 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 | | 子表:`(linkKey, {page})` | select 投影列 → where 关联键 → orderBy → limit/offset |
 | `getXxxs()` | 仅主表 | 全量列表(`orderBy key`),供 DBC export 等消费方 |
 | `get*Locales` / `save*Locales` | 仅 locale helpers | 委托 `loadDbcLocaleField` / `storeDbcLocaleField` |
-| `storeXxx(entity)` | 主/子表 | 单 int key 且 `<= 0` 抛 `InvalidPrimaryKeyException` → `_beforeStore` → `prepareWriteJson(toJson())` → insert,duplicate 翻译 `DuplicateKeyException` |
+| `storeXxx(entity)` | 主/子表 | 单 int key 且 `<= 0` 抛 `InvalidPrimaryKeyException` → `_beforeStore` → `prepareWriteJson(toJson())` → insert;符合重分配规则的重复键重试一次,再次冲突抛 `DuplicateKeyException`;单 int key 返回实际写入 key,其他 key 返回 void |
 | `updateXxx(originalKey, entity)` | 主/子表 | `_beforeUpdate` → update,duplicate 翻译;**「未命中 0 行」判断在 try 之外**(否则会被 duplicate 分支重新检查)→ 抛 `RecordNotFoundException` |
 | `_applyFilter` | 仅主表 | 对每个 filter 字段:`bool/decimal/integer` 与默认值不等才生效;`text` 非空才生效;`builder.where('`col`', value)` |
 | `_beforeStore` / `_beforeUpdate` / `_beforeDestroy` | 恒生成 | 空实现覆写钩子 |
@@ -162,7 +162,8 @@ final 类:字段(原序)→ 无名构造(带默认值)→ `fromJson` → `copyWi
 几个细节:
 
 - **列名反引号**:`_column` 把物理列名包反引号再写 Dart 字符串(`'`rank`'`),laconic 不转义标识符,反引号统一规避 MySQL 保留字(`index`、`rank`),无需白名单;**含 `.` 的列名按段加反引号**(`` `it`.`name` ``,而不是把 `it.name` 当成单个标识符)。
-- **`const _table`**:表名单一来源在 Entity 注解,生成 part 在 mixin 之后产出库级 `const _table = '...'`(满足「Sort Members」:Filter < `_XxxMixin` < `_table`);生成代码与手写代码都按裸名引用它,mixin 实例方法可裸名访问库级顶层常量。
+- **`_table` getter**:表名单一来源在 Entity 注解,生成 mixin 提供 `String get _table => '...';`;生成代码与手写实例方法都引用这个 getter,无需重复声明表名。
+- **重复键重分配**:显式 `autoIncrementKey` 指定重分配字段,否则仅在恰好一个非 link 的 int key 时重分配;作用域由 `linkKey` 与 `autoIncrementScope` 合并。复合主键的 store 仍返回 void,不反馈重分配后的 key。
 - **子表 `copy` 关联键**:`copyXxx` 时 `create(linkKey)` 用 `source.linkKey`,保证复制仍落在同一关联键下。
 
 ---
@@ -204,9 +205,10 @@ controller 名 = 字段名去尾部 `_`(`class_` → `class`,Dart 保留字转�
 
 - `dispose()` → `disposeControllers()`;
 - `initSignals({key})`:无 key → `createXxx()` 预建空白行 + `_applyCandidate`;有 key → `getXxx(key)`,null 抛 `RecordNotFoundException`;错误写 `errorMessage` + `LoggerUtil.e` + rethrow;finally `loading=false`;
-- `persist()`:`submitting` 防重入(`BusyException`)→ `_collectCandidate` → 按 `persistedKey` 区分 store/update → 写回 `persistedKey`(单 key 用 `candidate.key`,复合用 `XxxKey.fromEntity`)→ `_logActivity(action, candidate)` → 错误 `foxyErrorMessage` + rethrow;
+- `persist()`:`submitting` 防重入(`BusyException`)→ `_collectCandidate` → 按 `persistedKey` 区分 store/update → 写回 `persistedKey`(新建单 int key 使用 store 返回值;更新使用 candidate key,复合用 `XxxKey.fromEntity`)→ 更新 `entity` → `_logActivity(action, candidate)` → 错误 `FoxyExceptions.message` + rethrow;
 - `_afterApplyCandidate(entity)` 空钩子;`_applyCandidate(entity)` 逐 controller `init`(bool 转 1/0)+ 末尾调 `_afterApplyCandidate`;`_collectCandidate()` 逐 controller `collect`(bool `== 1` 还原);
-- `_logActivity(action, entity)` 空实现覆写钩子。
+- 单 int key 在 store 重分配主键后,同步候选实体与主键 controller;其他 controller 保留当前输入,已销毁表单不再写 controller。
+- `_logActivity(action, entity)` 默认通过 EventBus 发布 `EntityWrittenEvent`,由 `ActivityLogListener` 持久化;可手写覆写。
 
 ---
 
@@ -231,7 +233,7 @@ controller 名 = 字段名去尾部 `_`(`class_` → `class`,Dart 保留字转�
 - `copy(key)` / `destroy(key)`:`submitting` 防重入 → 调仓库 → `_logActivity` → (destroy 额外 `normalizePageAfterDelete`)→ `_refresh`;错误写 `errorMessage` + rethrow。
 - `initSignals()` → `_refresh()`;`paginate(page)` / `reset()` / `search()` 都会 `markQueryVersion()`(表格回顶)。
 - `_collectFilter()` 逐 controller `collect` 构 `XxxFilter`。
-- `_refresh()`:竞态 token(`++_refreshToken`)→ `getBriefXxxs` 与 `countXxxs` **并行**(`.wait`)→ token 不匹配直接丢弃;`items` / `total` 写入;`loading` 由 token 守卫;错误 `foxyErrorMessage`(token 不匹配则静默)。
+- `_refresh()`:竞态 token(`++_refreshToken`)→ `getBriefXxxs` 与 `countXxxs` **并行**(`.wait`)→ token 不匹配直接丢弃;`items` / `total` 写入;`loading` 由 token 守卫;错误 `FoxyExceptions.message`(token 不匹配则静默)。
 
 ---
 
@@ -247,7 +249,7 @@ controller 名 = 字段名去尾部 `_`(`class_` → `class`,Dart 保留字转�
 
 ### Emitter([linked_list_emitter.dart])→ `_XxxLinkedListViewModelMixin on FieldControllerMixin`
 
-字段:`_repository` → `linkKey`(int? 信号)→ `items` → `editingKey` / `selectedKey` → `page` / `total` / `loading` / `submitting` / `errorMessage` → 各字段 controller(复用 `FormEmitter` 的 controller 样板,`skeletonEnabled: false` 关掉行为骨架,`substring` 取 mixin 主体)。
+字段:`_repository` → `linkKey`(int? 信号)→ `items` → `editingKey` / `selectedKey` → `page` / `total` / `loading` / `submitting` / `errorMessage` → 各字段 controller(复用 `FormEmitter` 的 controller 样板,`skeletonEnabled: false` 关掉行为骨架,通过 `emitBody` 直接复用成员源码)。
 
 方法(全部带**双竞态守卫**:`_refreshToken` + `_interactionToken`,且每次操作前快照 `linkKey`,结束后校验 `linkKey.value != link` 则丢弃结果——防止 Tab 切换后旧数据回写):
 
@@ -278,7 +280,7 @@ controller 名 = 字段名去尾部 `_`(`class_` → `class`,Dart 保留字转�
 - `initSignals({linkKey})` → `setLinkKey(linkKey)`;
 - `persist()`:`linkKey` 非空校验;`_collectCandidate`;按 `editingKey` 区分 store/update;守卫后写 `entity` / `editingKey`(用 `candidate.singleKeyFieldName`)→ `_refresh`;
 - `setLinkKey(linkKey)`:已加载同 key 直接 return;**get-or-create 语义**在 `_refresh`:`getXxx(link)` → null 时 `createXxx(link)` 预建默认行 → `_applyCandidate`(编辑键:已有记录为 link,新预建为 null);
-- `_refresh()`:token 守卫;linkKey 为 null 清空实体;错误 `foxyErrorMessage` + `LoggerUtil.e` + rethrow。
+- `_refresh()`:token 守卫;linkKey 为 null 清空实体;错误 `FoxyExceptions.message` + `LoggerUtil.e` + rethrow。
 
 ---
 

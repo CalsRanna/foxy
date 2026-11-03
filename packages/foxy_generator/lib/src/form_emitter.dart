@@ -134,10 +134,8 @@ final class FormEmitter {
 
   void _emitPersist(StringBuffer buffer, FormGenerationModel model) {
     // For a single int primary key the generated store returns the actual
-    // written key (duplicate-key retry may reallocate it); the persisted
-    // key must reflect reality, not the pre-filled candidate. The storedKey
-    // assignment lives *inside* the create branch — referencing it after
-    // the if/else would be undefined on the update path.
+    // written key (duplicate-key retry may reallocate it). Keep the entity
+    // and key controller aligned without resetting other in-flight edits.
     final singleIntKey =
         model.singleKeyFieldName != null && model.keyType == 'int';
     final updateKeyWrite = model.singleKeyFieldName != null
@@ -151,7 +149,9 @@ final class FormEmitter {
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
-      ..writeln('      final candidate = _collectCandidate();')
+      ..writeln(
+        '      ${singleIntKey ? 'var' : 'final'} candidate = _collectCandidate();',
+      )
       ..writeln('      final originalKey = persistedKey.value;')
       ..writeln('      final action = originalKey == null')
       ..writeln('          ? ActivityActionType.create')
@@ -165,7 +165,29 @@ final class FormEmitter {
         singleIntKey
             ? '        persistedKey.value = storedKey;'
             : '        persistedKey.value = $updateKeyWrite;',
-      )
+      );
+    if (singleIntKey) {
+      final keyField = model.fields
+          .where((field) => field.dartName == model.singleKeyFieldName)
+          .firstOrNull;
+      buffer
+        ..writeln(
+          '        if (storedKey != candidate.${model.singleKeyFieldName}) {',
+        )
+        ..writeln(
+          '          candidate = candidate.copyWith(${model.singleKeyFieldName}: storedKey);',
+        );
+      if (keyField != null) {
+        buffer
+          ..writeln('          if (!isDisposed) {')
+          ..writeln(
+            '            ${controllerName(keyField)}Controller.init(storedKey);',
+          )
+          ..writeln('          }');
+      }
+      buffer.writeln('        }');
+    }
+    buffer
       ..writeln('      } else {')
       ..writeln(
         '        await _repository.update${model.baseName}('

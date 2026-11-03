@@ -67,7 +67,7 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
     submitting.value = true;
     errorMessage.value = null;
     try {
-      final candidate = _collectCandidate();
+      var candidate = _collectCandidate();
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -75,6 +75,12 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
       if (originalKey == null) {
         final storedKey = await _repository.storeQuestFactionReward(candidate);
         persistedKey.value = storedKey;
+        if (storedKey != candidate.id) {
+          candidate = candidate.copyWith(id: storedKey);
+          if (!isDisposed) {
+            idController.init(storedKey);
+          }
+        }
       } else {
         await _repository.updateQuestFactionReward(originalKey, candidate);
         persistedKey.value = candidate.id;

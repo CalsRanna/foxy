@@ -30,8 +30,7 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
     }
     final blank = await createGemProperty();
     final copied = source.copyWith(id: blank.id);
-    await storeGemProperty(copied);
-    return copied.id;
+    return storeGemProperty(copied);
   }
 
   Future<int> countGemProperties({GemPropertyFilter? filter}) async {

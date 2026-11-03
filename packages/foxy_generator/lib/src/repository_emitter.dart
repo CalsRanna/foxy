@@ -144,12 +144,17 @@ final class RepositoryEmitter {
     for (final field in model.keyFields) {
       buffer.writeln('      ${field.dartName}: blank.${field.dartName},');
     }
+    buffer.writeln('    );');
+    if (model.keyType == 'int') {
+      buffer.writeln('    return store${model.baseName}(copied);');
+    } else {
+      buffer
+        ..writeln('    await store${model.baseName}(copied);')
+        ..writeln(
+          '    return ${model.keyFields.length == 1 ? 'copied.${model.keyFields.single.dartName}' : '${model.baseName}Key.fromEntity(copied)'};',
+        );
+    }
     buffer
-      ..writeln('    );')
-      ..writeln('    await store${model.baseName}(copied);')
-      ..writeln(
-        '    return ${model.keyFields.length == 1 ? 'copied.${model.keyFields.single.dartName}' : '${model.baseName}Key.fromEntity(copied)'};',
-      )
       ..writeln('  }')
       ..writeln();
   }

@@ -32,8 +32,7 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     }
     final blank = await createItemExtendedCost();
     final copied = source.copyWith(id: blank.id);
-    await storeItemExtendedCost(copied);
-    return copied.id;
+    return storeItemExtendedCost(copied);
   }
 
   Future<int> countItemExtendedCosts({ItemExtendedCostFilter? filter}) async {

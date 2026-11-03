@@ -34,8 +34,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     }
     final blank = await createQuestTemplate();
     final copied = source.copyWith(id: blank.id);
-    await storeQuestTemplate(copied);
-    return copied.id;
+    return storeQuestTemplate(copied);
   }
 
   Future<int> countQuestTemplates({QuestTemplateFilter? filter}) async {

@@ -204,7 +204,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'addon_repository.g.dart';
 
-@FoxyRepository(AddonEntity, linkKey: ['entry'])
+@FoxyRepository(entity: AddonEntity, linkKey: ['entry'])
 class AddonRepository with _AddonRepositoryMixin {}
 ''';
 
@@ -245,7 +245,7 @@ import 'package:foxy_annotation/repository_annotations.dart';
 
 part 'composite_repository.g.dart';
 
-@FoxyRepository(CompositeEntity)
+@FoxyRepository(entity: CompositeEntity)
 class CompositeRepository with _CompositeRepositoryMixin {}
 ''';
 

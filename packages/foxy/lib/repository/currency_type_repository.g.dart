@@ -34,8 +34,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     }
     final blank = await createCurrencyType();
     final copied = source.copyWith(id: blank.id);
-    await storeCurrencyType(copied);
-    return copied.id;
+    return storeCurrencyType(copied);
   }
 
   Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) async {

@@ -32,8 +32,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     }
     final blank = await createQuestFactionReward();
     final copied = source.copyWith(id: blank.id);
-    await storeQuestFactionReward(copied);
-    return copied.id;
+    return storeQuestFactionReward(copied);
   }
 
   Future<int> countQuestFactionRewards({

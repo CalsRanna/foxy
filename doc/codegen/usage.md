@@ -24,7 +24,7 @@
 | 事实 | 约定(默认) | 配置(例外) |
 | --- | --- | --- |
 | 表名 | `snake_case(类名去 Entity)` | `@FoxyFullEntity(table: 'xxx')` |
-| 仓库绑定的实体 | 类名去 `Repository` + `Entity` | `@FoxyRepository(XxxEntity)` |
+| 仓库绑定的实体 | 类名去 `Repository` + `Entity` | `@FoxyRepository(entity: XxxEntity)` |
 | VM 绑定的实体/仓库 | 类名去 VM 后缀 + `Entity`/`Repository` | `entity:` / `repository:` |
 | 表单行为骨架 | 同名 `XxxRepository` 存在即启用 | `skeleton: false` |
 | nullable 字段控制器 | `String?` 类型即声明 | —(无需任何声明) |
@@ -82,7 +82,7 @@ class CreatureTemplateRepository
     with RepositoryMixin, _CreatureTemplateRepositoryMixin {}
 ```
 
-> 表名不用手写:单一来源在 Entity 注解(或类名推导),生成 part 产出库级 `const _table`,手写代码按裸名引用即可。
+> 表名不用手写:单一来源在 Entity 注解(或类名推导),生成 mixin 提供实例 getter `_table`,手写代码按裸名引用即可。
 
 **`view_model/creature_template_list_view_model.dart`**
 ```dart
@@ -183,14 +183,18 @@ class CreatureTemplateAddonLinkedDetailViewModel
 生成代码是 mixin,手写类可以:
 
 - **`@override` 生成方法**:如 `CurrencyTypeRepository` 覆写 `countCurrencyTypes`(加物品 join),`getBriefCurrencyTypes`(选中文名);生成器不阻止,编译器保证签名一致;
-- **覆写空实现钩子**:
+- **覆写钩子和行为**:
   - `Repository._beforeStore` / `_beforeUpdate` / `_beforeDestroy`(写前校验或补充字段);
   - `Form._afterApplyCandidate`(加载实体后的联动,如编辑规格刷新);
-  - `Form._logActivity` / `List._logActivity`(活动日志,entityName 各页不同);
+  - `Form._logActivity` / `List._logActivity`(已有默认 EventBus 活动日志实现,可定制 entityName);
   - `List._refresh` 内部整体可覆写(不常见);
 - **别名列 / Brief 别名字段必须手写查询方法**:filter 用别名列(`@FoxyFilter.text('name', column: 'it.name')`)或实体有类级 `@FoxyBriefField.*` 别名字段时,count/getBrief 需要 JOIN,生成器无法表达——**必须**在 Repository 里手写 `countXxxs` / `getBriefXxxs`(否则构建期报错)。表名仍引用生成的 `_table`:`laconic.table('$_table as ct')`;
 - **给 Repository 混入 `DbcLocaleRepositoryMixin` 并声明 `dbcLocaleTableName`**:生成器检测到后生成 `get*Locales` / `save*Locales` 委托;
 - **保持手写方法不进生成范围**:Repository 里没被 `@FoxyRepository` 覆盖的私有方法照常可用(如 `CurrencyTypeRepository._applyLocaleFilter` / `_getNextId`)。
+
+### 单整数主键写入结果
+
+`storeXxx` 返回实际写入主键:重复键重试可能使它与候选实体不同。生成的详情表单会同步 `persistedKey`、实体和主键输入框,生成的 `copyXxx` 直接返回 store 的结果。手写覆写保存或复制逻辑时,也应使用此返回值;其他字段的输入不应因主键同步而被重置。
 
 ## 常见错误与修复
 
@@ -203,7 +207,7 @@ class CreatureTemplateAddonLinkedDetailViewModel
 | `XxxEntity must keep the fromJson factory delegate with the conventional signature` | factory 签名不符 | 委托到 `_XxxEntityMixin.fromJson(json)` |
 | `XxxEntity has no physical primary key field` | 没有 `@FoxyFullField(key: true)` | 至少一个 key 字段 |
 | `XxxRepository must mix in _XxxRepositoryMixin` | 没混入 | `with RepositoryMixin, _XxxRepositoryMixin` |
-| `XxxRepository hand-writes _table ...` | 手写了 `static const _table` | 删除——表名由 Entity 注解推导,生成 part 产出 `const _table` |
+| `XxxRepository hand-writes _table ...` | 手写了 `static const _table` | 删除——表名由 Entity 注解推导,生成 mixin 提供实例 getter `_table` |
 | `countXxxs must be hand-written ...` / `getBriefXxxs must be hand-written ...` | filter 用了别名列(`column: 'it.name'`)或实体有类级 Brief 别名字段,生成器无法表达 JOIN | 在 Repository 里手写这些方法(带 JOIN) |
 | `Xxx is missing part 'xxx.g.dart'` | 缺 part | 补上 |
 | `Xxx must mix in FieldControllerMixin` / `...Mixin` | List VM 缺基座 | 加 `FieldControllerMixin, QueryVersionMixin` |

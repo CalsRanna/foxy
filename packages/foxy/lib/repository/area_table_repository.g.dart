@@ -34,8 +34,7 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     final blank = await createAreaTable();
     final copied = source.copyWith(id: blank.id);
-    await storeAreaTable(copied);
-    return copied.id;
+    return storeAreaTable(copied);
   }
 
   Future<int> countAreaTables({AreaTableFilter? filter}) async {

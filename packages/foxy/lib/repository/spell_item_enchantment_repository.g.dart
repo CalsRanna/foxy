@@ -40,8 +40,7 @@ mixin _SpellItemEnchantmentRepositoryMixin
     }
     final blank = await createSpellItemEnchantment();
     final copied = source.copyWith(id: blank.id);
-    await storeSpellItemEnchantment(copied);
-    return copied.id;
+    return storeSpellItemEnchantment(copied);
   }
 
   Future<int> countSpellItemEnchantments({

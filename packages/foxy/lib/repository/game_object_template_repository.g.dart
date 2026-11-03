@@ -37,8 +37,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     }
     final blank = await createGameObjectTemplate();
     final copied = source.copyWith(entry: blank.entry);
-    await storeGameObjectTemplate(copied);
-    return copied.entry;
+    return storeGameObjectTemplate(copied);
   }
 
   Future<int> countGameObjectTemplates({

@@ -34,8 +34,7 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
     }
     final blank = await createTalent();
     final copied = source.copyWith(id: blank.id);
-    await storeTalent(copied);
-    return copied.id;
+    return storeTalent(copied);
   }
 
   Future<int> countTalents({TalentFilter? filter}) async {

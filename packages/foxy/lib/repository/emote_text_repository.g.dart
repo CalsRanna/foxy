@@ -34,8 +34,7 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
     }
     final blank = await createEmoteText();
     final copied = source.copyWith(id: blank.id);
-    await storeEmoteText(copied);
-    return copied.id;
+    return storeEmoteText(copied);
   }
 
   Future<int> countEmoteTexts({EmoteTextFilter? filter}) async {

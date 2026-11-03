@@ -32,8 +32,7 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     }
     final blank = await createScalingStatDistribution();
     final copied = source.copyWith(id: blank.id);
-    await storeScalingStatDistribution(copied);
-    return copied.id;
+    return storeScalingStatDistribution(copied);
   }
 
   Future<int> countScalingStatDistributions({
