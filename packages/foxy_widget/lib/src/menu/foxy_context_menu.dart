@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Context-menu toolkit, showing a ShadContextMenu at a given position.
-abstract final class ContextMenu {
+abstract final class FoxyContextMenu {
   /// Shows a context menu at the given position
   ///
   /// [context] - BuildContext

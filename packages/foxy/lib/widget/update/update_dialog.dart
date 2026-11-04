@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
 import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_loading_indicator.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';

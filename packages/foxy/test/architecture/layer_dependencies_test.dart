@@ -77,7 +77,9 @@ void main() {
         for (final match in directive.allMatches(file.readAsStringSync())) {
           final uri = Uri.parse(match.group(1)!);
           final segments = uri.pathSegments;
-          if (segments.first == 'foxy' && !allowed.contains(segments[1])) {
+          if ((segments.first == 'foxy' && !allowed.contains(segments[1])) ||
+              (segments.first == 'foxy_widget' &&
+                  !allowed.contains('widget'))) {
             violations.add('${file.path} imports $uri');
           }
           if (entry.key == 'model' &&

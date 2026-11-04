@@ -7,12 +7,8 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/quest_sort_list_view_model.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
-import 'package:foxy/widget/menu/context_menu.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_header.dart';
-import 'package:foxy/widget/table/foxy_pagination.dart';
-import 'package:foxy/widget/table/foxy_data_table.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -123,7 +119,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
       ],
       onRowDoubleTap: (item) => _navigateToDetail(key: item.key),
       onRowSecondaryTapDownWithDetails: (item, details) {
-        ContextMenu.show(
+        FoxyContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [

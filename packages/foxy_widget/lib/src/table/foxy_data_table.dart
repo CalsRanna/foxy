@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/table/table_layout_util.dart';
-import 'package:foxy/widget/layout/foxy_loading_indicator.dart';
+import 'package:foxy_widget/src/layout/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// One column of [FoxyDataTable]: a fixed-pixel column or a flex column
@@ -160,12 +160,8 @@ class _FoxyDataTableState<T> extends State<FoxyDataTable<T>> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Remaining width for flex columns; floors at 120 in windows
-        // narrower than the fixed columns (same rule as TableLayoutUtil.flexColumnWidth).
-        final remaining = TableLayoutUtil.flexColumnWidth(
-          constraints.maxWidth,
-          fixedTotal,
-        );
+        // Remaining width for flex columns; floors at 120 in narrow windows.
+        final remaining = max(120.0, constraints.maxWidth - fixedTotal);
         final rows = widget.rows;
 
         Widget table = ShadTable(

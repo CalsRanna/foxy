@@ -14,15 +14,20 @@ import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/view_model/condition_detail_view_model.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
-import 'package:foxy/widget/table/foxy_data_table.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
+  setUp(() {
+    GetIt.instance.registerSingleton(FoxyStateViewModel());
+  });
+
   tearDown(() => GetIt.instance.reset());
 
   testWidgets('物品类别确认后更新子类别选项，取消保持原类别', (tester) async {

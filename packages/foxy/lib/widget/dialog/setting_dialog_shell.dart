@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_loading_indicator.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Common shell for settings-related dialogs (title + content + actions).

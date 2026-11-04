@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// Inline dialog error notice, replacing [DialogUtil.error] inside
-/// dialogs.
+/// Inline error notice for dialogs.
 ///
 /// When an in-dialog operation (save, query, etc.) fails, show an inline
 /// error, keeping the dialog state (inputs, filters, pagination) and not

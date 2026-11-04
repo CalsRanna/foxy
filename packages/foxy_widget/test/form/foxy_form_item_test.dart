@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/widget/form/foxy_form_item.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 
 void main() {
   testWidgets('表单标签最多允许六个汉字宽度', (tester) async {

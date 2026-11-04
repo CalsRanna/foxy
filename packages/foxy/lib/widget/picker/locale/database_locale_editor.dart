@@ -3,7 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/model/locale/database_locale_changes.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Legacy name kept for compatibility.

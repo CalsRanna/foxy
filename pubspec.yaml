@@ -10,3 +10,4 @@ workspace:
   - packages/foxy_annotation
   - packages/foxy_generator
   - packages/foxy_lint
+  - packages/foxy_widget

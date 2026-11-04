@@ -52,6 +52,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         uri == 'dart:ui' ||
         uri.startsWith('package:foxy/page/') ||
         uri.startsWith('package:foxy/widget/') ||
+        uri.startsWith('package:foxy_widget/') ||
         uri == 'package:signals_flutter/signals_flutter.dart') {
       rule.reportAtNode(node);
     }

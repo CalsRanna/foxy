@@ -20,6 +20,8 @@ dependencies:
   file_selector: ^1.1.0
   foxy_annotation:
     path: ../foxy_annotation
+  foxy_widget:
+    path: ../foxy_widget
   get_it: ^9.0.5
   http: ^1.6.0
   laconic: ^5.0.1

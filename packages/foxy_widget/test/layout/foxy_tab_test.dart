@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/widget/layout/foxy_tab.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 
 /// Harness that grows the tab list at runtime, exercising FoxyTab's
 /// didUpdateWidget tab-state rebuild.
-class _DynamicTabsHarness extends StatefulWidget {
-  const _DynamicTabsHarness();
+class _FoxyDynamicTabsHarness extends StatefulWidget {
+  const _FoxyDynamicTabsHarness();
 
   @override
-  State<_DynamicTabsHarness> createState() => _DynamicTabsHarnessState();
+  State<_FoxyDynamicTabsHarness> createState() =>
+      _FoxyDynamicTabsHarnessState();
 }
 
-class _DynamicTabsHarnessState extends State<_DynamicTabsHarness> {
+class _FoxyDynamicTabsHarnessState extends State<_FoxyDynamicTabsHarness> {
   var extraTab = false;
 
   @override
@@ -47,7 +48,7 @@ class _DynamicTabsHarnessState extends State<_DynamicTabsHarness> {
 
 void main() {
   testWidgets('tabs 列表变长后点击新 tab 不越界', (tester) async {
-    await tester.pumpWidget(const _DynamicTabsHarness());
+    await tester.pumpWidget(const _FoxyDynamicTabsHarness());
     await tester.pump();
 
     await tester.tap(find.text('加 tab'));

@@ -6,10 +6,9 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/more_read_view_model.dart';
-import 'package:foxy/widget/menu/context_menu.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/feature/foxy_feature_card.dart';
-import 'package:foxy/widget/layout/foxy_header.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -135,7 +134,7 @@ class _MorePageState extends State<MorePage> {
     FeatureEntity feature,
     Offset position,
   ) {
-    ContextMenu.show(
+    FoxyContextMenu.show(
       context: context,
       position: position,
       items: [

@@ -15,6 +15,7 @@ import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/condition_detail_view_model.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/game_object_template_detail_view_model.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
@@ -30,6 +31,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
+    GetIt.instance.registerSingleton(FoxyStateViewModel());
     GetIt.instance.registerSingleton<EventBus>(EventBus(sync: true));
     GetIt.instance.registerSingleton<ActivityLogRepository>(
       _RecordingActivityLogRepository(),

@@ -34,6 +34,14 @@ jobs:
         working-directory: packages/foxy
         run: flutter test
 
+      - name: Analyze widget package
+        working-directory: packages/foxy_widget
+        run: flutter analyze
+
+      - name: Test widget package
+        working-directory: packages/foxy_widget
+        run: flutter test
+
       # Workspace members: generator and lint plugin tests run as plain
       # Dart (no Flutter runtime), so they have their own steps.
       # `-j 1` serializes the test files: build_test suites initialize the

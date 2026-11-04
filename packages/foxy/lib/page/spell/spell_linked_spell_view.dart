@@ -3,16 +3,12 @@ import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/spell_linked_spell_linked_list_view_model.dart';
-import 'package:foxy/widget/menu/context_menu.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/form/foxy_form_item.dart';
 import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
-import 'package:foxy/widget/table/foxy_pagination.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
-import 'package:foxy/widget/table/foxy_data_table.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
@@ -180,7 +176,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       },
       onRowSecondaryTapDownWithDetails: (item, details) {
         viewModel.selectedKey.value = item.key;
-        ContextMenu.show(
+        FoxyContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [

@@ -4,8 +4,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/page/currency_type/currency_type_view.dart';
 import 'package:foxy/view_model/currency_type_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_tab.dart';
-import 'package:foxy/widget/layout/foxy_header.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()

@@ -1,0 +1,18 @@
+name: foxy_widget
+description: "Foxy 通用 UI 组件，不依赖业务实体、仓储、路由或应用状态。"
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shadcn_ui: ^0.57.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

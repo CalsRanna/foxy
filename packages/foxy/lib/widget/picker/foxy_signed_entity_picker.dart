@@ -3,9 +3,7 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/model/picker/signed_entity_source.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
-import 'package:foxy/widget/table/foxy_data_table.dart';
-import 'package:foxy/widget/table/foxy_pagination.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Signed-route picker: single input + search button; the dialog routes by

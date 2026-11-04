@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/model/flag_item.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
-import 'package:foxy/widget/table/foxy_data_table.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Flag picker: shows the formatted value; clicking the input or the

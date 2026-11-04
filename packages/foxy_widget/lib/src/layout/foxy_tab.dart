@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/layout/lazy_indexed_stack.dart';
+import 'package:foxy_widget/src/layout/foxy_lazy_indexed_stack.dart';
 
 class FoxyTab extends StatefulWidget {
   final List<Widget> tabs;
@@ -94,7 +94,7 @@ class _FoxyTabState extends State<FoxyTab> {
       // The indicator lives in the Stack (viewport) coordinate space, so its
       // offset must subtract the tab bar's scroll offset to stay aligned.
       left: _getOffset() - _scrollOffset,
-      child: _Indicator(width: width[index]),
+      child: _FoxyTabIndicator(width: width[index]),
     );
 
     return Column(
@@ -105,7 +105,7 @@ class _FoxyTabState extends State<FoxyTab> {
         AnimatedOpacity(
           opacity: _opacity,
           duration: Duration(milliseconds: 150),
-          child: LazyIndexedStack(index: index, children: widget.contents),
+          child: FoxyLazyIndexedStack(index: index, children: widget.contents),
         ),
       ],
     );
@@ -223,9 +223,9 @@ class _FoxyTabState extends State<FoxyTab> {
   }
 }
 
-class _Indicator extends StatelessWidget {
+class _FoxyTabIndicator extends StatelessWidget {
   final double width;
-  const _Indicator({required this.width});
+  const _FoxyTabIndicator({required this.width});
 
   @override
   Widget build(BuildContext context) {

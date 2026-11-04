@@ -4,19 +4,15 @@ import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
-import 'package:foxy/widget/menu/context_menu.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/foxy_flag_picker.dart';
-import 'package:foxy/widget/form/foxy_form_item.dart';
 import 'package:foxy/widget/picker/locale/foxy_locale_picker.dart';
 import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
-import 'package:foxy/widget/table/foxy_pagination.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
-import 'package:foxy/widget/table/foxy_data_table.dart';
 import 'package:foxy/widget/dialog/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -315,7 +311,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       ],
       onRowDoubleTap: (o) => _showEditDialog(o.key),
       onRowSecondaryTapDownWithDetails: (o, details) {
-        ContextMenu.show(
+        FoxyContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [

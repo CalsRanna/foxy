@@ -8,7 +8,7 @@ import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/view_model/workflow/dbc_export_item.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_loading_indicator.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 

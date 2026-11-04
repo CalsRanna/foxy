@@ -18,7 +18,7 @@ import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_header.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';

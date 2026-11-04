@@ -7,8 +7,7 @@ import 'package:foxy/page/gossip_menu/gossip_menu_view.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view.dart';
 import 'package:foxy/view_model/gossip_menu_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_tab.dart';
-import 'package:foxy/widget/layout/foxy_header.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 

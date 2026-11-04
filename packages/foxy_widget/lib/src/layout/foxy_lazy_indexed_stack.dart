@@ -12,21 +12,21 @@ import 'package:flutter/material.dart';
 /// Fits children containing "bounded-height" components (e.g. ShadTable)
 /// that already self-size via shrinkWrap — avoiding the rebuild cascade of
 /// size measurement.
-class LazyIndexedStack extends StatefulWidget {
+class FoxyLazyIndexedStack extends StatefulWidget {
   final int index;
   final List<Widget> children;
 
-  const LazyIndexedStack({
+  const FoxyLazyIndexedStack({
     super.key,
     required this.index,
     required this.children,
   });
 
   @override
-  State<LazyIndexedStack> createState() => _LazyIndexedStackState();
+  State<FoxyLazyIndexedStack> createState() => _FoxyLazyIndexedStackState();
 }
 
-class _LazyIndexedStackState extends State<LazyIndexedStack> {
+class _FoxyLazyIndexedStackState extends State<FoxyLazyIndexedStack> {
   final Set<int> _visited = {};
 
   @override

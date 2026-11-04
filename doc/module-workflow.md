@@ -214,7 +214,7 @@ class XxxLinkedListViewModel
 - 表格列:`FoxyTableColumn.fixed(label, width, cell)` / `.flex`;长内容列注意 `min_table_column_width` lint 规则(列宽给足)。
 - 交互三件套(照抄 `skill_line_list_page.dart` 171-210 行):
   - 双击行 → `_navigateToDetail(key:)`;
-  - 右键 `ContextMenu` → 编辑/复制/删除;
+  - 右键 `FoxyContextMenu` → 编辑/复制/删除;
   - 复制/删除前 `DialogUtil.instance.confirm(...)`,成功后 `DialogUtil.instance.success(...)`,失败 `DialogUtil.instance.error('失败类型：${FoxyExceptions.message(error)}')` —— **错误一律阻塞模态,禁止 toast**(UI 一致性约定)。
 - 导航:`GetIt.instance.get<RouterFacade>().navigateToDetail(route: XxxDetailRoute(key: key), parentMenu: RouterMenu.xxx)`。
 

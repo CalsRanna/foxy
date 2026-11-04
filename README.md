@@ -28,7 +28,7 @@ Foxy 面向自建魔兽世界服务器(如 AzerothCore)的管理员与开发者,
 
 ## 仓库结构
 
-本仓库是 Dart pub workspace monorepo,包含四个包:
+本仓库是 Dart pub workspace monorepo,包含五个包:
 
 ```
 foxy/
@@ -40,7 +40,8 @@ foxy/
 │   │   └── windows|linux|macos/  # 平台工程
 │   ├── foxy_annotation/      # 代码生成注解定义(Entity/Repository/ViewModel)
 │   ├── foxy_generator/       # source_gen 代码生成器(读注解,产出 .g.dart)
-│   └── foxy_lint/            # 项目专属 analyzer 插件(9 条 lint 规则)
+│   ├── foxy_lint/            # 项目专属 analyzer 插件(9 条 lint 规则)
+│   └── foxy_widget/          # 不依赖业务的 Flutter 通用组件及其测试
 ├── doc/codegen/              # 代码生成系统文档
 └── pubspec.yaml              # workspace 根
 ```
@@ -82,9 +83,9 @@ packages/foxy/lib/
 │   ├── dashboard/component/ # 仪表盘专用卡片与内容
 │   ├── scaffold/           # 主外壳、首次引导与目录/DBC 提醒
 │   └── setting/            # 设置页面、导入导出弹窗及其表格组件
-├── widget/                 # 跨页面组件,按职责分目录
-│   ├── form/               # 表单字段与表单布局
-│   ├── table/              # 表格、分页与列宽计算
+├── widget/                 # 依赖业务、应用状态或平台服务的跨页面组件
+│   ├── form/               # 依赖字段控制器的输入组件
+│   ├── table/              # 应用页面的 badge 折叠布局计算
 │   ├── picker/             # 通用选择器
 │   │   ├── delegate/       # 业务仓储到选择器的适配
 │   │   └── locale/         # 本地化选择器与编辑器
@@ -92,7 +93,7 @@ packages/foxy/lib/
 │   ├── directory/          # 设置页与首次引导共用的目录配置组件
 │   ├── game_asset/         # 游戏图标与 Flutter 图片适配器
 │   ├── update/             # 设置页与仪表盘共用的更新弹窗
-│   └── layout|menu|window|feature/ # 布局、菜单、窗口按钮与模块卡片
+│   └── window|feature/      # 窗口按钮与模块卡片
 ├── theme/                  # 显示配色
 ├── router/                 # 路由与导航
 ├── di.dart                 # 依赖装配
@@ -101,6 +102,8 @@ packages/foxy/lib/
 ```
 
 生成式 Entity、Repository、ViewModel 的文件路径由生成器推导,继续保留在各自层的根目录。页面专用组件随实际使用模块放置;跨页面组件按职责归入 `widget/`;共享数据协议归 `model/`。基础设施不依赖业务仓储或页面层,活动日志记录策略在 `use_case/activity_log/` 中装配。新增文件的具体规则见 `CONVENTIONS.md`。
+
+不依赖业务的布局、表格、分页、表单布局、上下文菜单和错误提示位于 `packages/foxy_widget/lib/src/`,应用统一通过 `package:foxy_widget/foxy_widget.dart` 使用。该包运行时只依赖 Flutter 和 `shadcn_ui`,不引用 `foxy` 的实体、仓储、路由或应用状态;应用页面的 badge 折叠布局计算留在应用包。
 
 ## 快速开始
 
@@ -157,6 +160,7 @@ icons_extracted: true
 - **集成测试**(`test/integration/`,标签 `integration`):对真实 MySQL 运行应用自身的启动链路(建库、全部迁移、utf8mb4 自愈、features 种子中文回读)与仓储读写(生成器的 store/update/destroy、异常映射、手写列表方法,含 locale JOIN、like 转义、联表分页、locale 批量事务回滚、creature_template 清单的精简夹具、DBC 导入的暂存表→行数/重复 ID 校验→原子改名链路,以及导出→导入往返;夹具表建在专用 `foxy_it_world` 库)。默认跳过(见 `dart_test.yaml`);本地先起一次性实例(`docker run -d --rm -p 3307:3306 -e MYSQL_ROOT_PASSWORD=foxy mysql:8.0`),再 `flutter test --tags integration --run-skipped -j 1`(DBC 用例还需 `FOXY_TEST_MYSQL_ALLOW_DBC_WRITE=1`,它会替换 `foxy.dbc_*` 表);CI 由 `ci.yml` 的 `database-integration` job 在 MySQL 8 容器上运行。
 - **生成器测试**(`packages/foxy_generator/test/`):`dart test` 纯 Dart 运行。
 - **lint 测试**(`packages/foxy_lint/test/`):analyzer 官方测试框架。
+- **通用组件测试**(`packages/foxy_widget/test/`):在该包目录运行 `flutter test`,覆盖表单布局、动态 Tab 和表格滚动保持。
 
 ## 构建与发布
 
@@ -166,7 +170,7 @@ icons_extracted: true
 2. 打 tag 并推送:`git tag vX.Y.Z && git push origin vX.Y.Z`;
 3. 单 job 依次执行:`flutter build windows --release` → 编译更新器 → 打包 zip → 生成 `latest.yaml`(含 SHA-256,保留最近 3 条) → 发布 GitHub Release。
 
-analyze + 三包测试不在这条流水线里,由 `.github/workflows/ci.yml` 在 push 与 PR 时运行,环境为 Windows,与发布构建保持一致。发布出问题时,删除该 tag 再重新推送即可重跑;同一 tag 重复推送会自动取消旧 run。
+应用与通用组件包的 analyze,以及应用、组件、生成器和 lint 四包测试不在这条流水线里,由 `.github/workflows/ci.yml` 在 push 与 PR 时运行,环境为 Windows,与发布构建保持一致。发布出问题时,删除该 tag 再重新推送即可重跑;同一 tag 重复推送会自动取消旧 run。
 
 更新入口固定为 `releases/latest/download/latest.yaml`,应用启动时自动检查(24 小时内不重复),也可在设置页手动检查。
 

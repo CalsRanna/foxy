@@ -4,8 +4,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/page/emote_text/emote_text_view.dart';
 import 'package:foxy/view_model/emote_text_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/layout/foxy_tab.dart';
-import 'package:foxy/widget/layout/foxy_header.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()

@@ -23,17 +23,17 @@ class FoxyPagination extends StatelessWidget {
     final count = max(1, (total / pageSize).ceil());
     final canGoLeft = page > 1;
     final canGoRight = page < count;
-    final left = _Tile(
+    final left = _FoxyPaginationTile(
       disabled: !canGoLeft,
       onClick: canGoLeft ? () => change(-1, count) : null,
       child: const Icon(LucideIcons.chevronLeft),
     );
-    final right = _Tile(
+    final right = _FoxyPaginationTile(
       disabled: !canGoRight,
       onClick: canGoRight ? () => change(1, count) : null,
       child: const Icon(LucideIcons.chevronRight),
     );
-    final first = _Tile(
+    final first = _FoxyPaginationTile(
       active: page == 1,
       onClick: () => handleClick(1),
       child: const Text('1'),
@@ -42,21 +42,21 @@ class FoxyPagination extends StatelessWidget {
     // Only show last when count > 1, avoiding a duplicate "1"
     final showLast = count > 1;
     final last = showLast
-        ? _Tile(
+        ? _FoxyPaginationTile(
             active: page == count,
             onClick: () => handleClick(count),
             child: Text('$count'),
           )
         : null;
 
-    List<_Tile> tiles = [];
+    List<_FoxyPaginationTile> tiles = [];
     // Middle page numbers only needed when count > 2
     if (count > 2) {
       final lower = max(2, page - 2);
       final upper = min(page + 2, count - 1);
       for (var i = lower; i <= upper; i++) {
         tiles.add(
-          _Tile(
+          _FoxyPaginationTile(
             active: page == i,
             onClick: () => handleClick(i),
             child: Text('$i'),
@@ -64,14 +64,14 @@ class FoxyPagination extends StatelessWidget {
         );
       }
       if (lower > 2) {
-        final less = _Tile(
+        final less = _FoxyPaginationTile(
           onClick: () => change(-3, count),
           child: const Text('...'),
         );
         tiles.insert(0, less);
       }
       if (upper < count - 2) {
-        final more = _Tile(
+        final more = _FoxyPaginationTile(
           onClick: () => change(3, count),
           child: const Text('...'),
         );
@@ -94,12 +94,12 @@ class FoxyPagination extends StatelessWidget {
   }
 }
 
-class _Tile extends StatefulWidget {
+class _FoxyPaginationTile extends StatefulWidget {
   final bool active;
   final bool disabled;
   final void Function()? onClick;
   final Widget child;
-  const _Tile({
+  const _FoxyPaginationTile({
     this.active = false,
     this.disabled = false,
     this.onClick,
@@ -107,10 +107,10 @@ class _Tile extends StatefulWidget {
   });
 
   @override
-  State<_Tile> createState() => _TileState();
+  State<_FoxyPaginationTile> createState() => _FoxyPaginationTileState();
 }
 
-class _TileState extends State<_Tile> {
+class _FoxyPaginationTileState extends State<_FoxyPaginationTile> {
   bool hovered = false;
 
   @override

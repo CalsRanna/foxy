@@ -3,13 +3,9 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/creature_template_resistance_linked_list_view_model.dart';
-import 'package:foxy/widget/menu/context_menu.dart';
-import 'package:foxy/widget/dialog/foxy_inline_error.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/table/foxy_data_table.dart';
-import 'package:foxy/widget/form/foxy_form_item.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
-import 'package:foxy/widget/table/foxy_pagination.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/foxy_form_dialog.dart';
 import 'package:get_it/get_it.dart';
@@ -176,7 +172,7 @@ class _CreatureTemplateResistanceViewState
         _showEditDialog(context);
       },
       onRowSecondaryTapDownWithDetails: (resistance, details) {
-        ContextMenu.show(
+        FoxyContextMenu.show(
           context: context,
           position: details.globalPosition,
           items: [

@@ -72,6 +72,15 @@ import 'dart:async';
 Future<void> f() async {}
 ''');
   }
+
+  void test_widgetPackageImport_reports() async {
+    await assertDiagnostics(
+      r'''
+import 'package:foxy_widget/foxy_widget.dart';
+''',
+      [lint(0, 46), error(_uriDoesNotExist(), 7, 38)],
+    );
+  }
 }
 
 /// The same blocked import in a non-entity file is out of scope: only the

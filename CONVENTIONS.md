@@ -24,7 +24,9 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 
 - `entity/` 放数据库表实体、列表 DTO 与键；跨层数据协议放 `model/`，包括 DBC 本地化、字段配置、选择器数据、任务进度。`constant/` 保留实际常量与定义注册表，`exception/` 放业务异常。
 - `view_model/` 管理页面状态、输入校验和分页；字段控制器、数字解析与格式化放 `view_model/form/`，手写工作流、共用状态与展示模型放 `view_model/workflow/`。这些代码不依赖 `page/`、`widget/` 或路由。
-- `widget/` 的组件按 `form/`、`table/`、`picker/`、`dialog/`、`directory/`、`game_asset/`、`update/`、`layout/`、`menu/`、`window/`、`feature/` 归类；业务仓储到选择器的适配集中在 `widget/picker/delegate/`，选择器的数据协议放 `model/`。
+- `foxy_widget` 放不依赖业务的布局、表格、分页、表单布局、上下文菜单和错误提示，应用通过 `package:foxy_widget/foxy_widget.dart` 使用，禁止跨包导入其 `src/`。组件接收展示数据、Widget 和回调，不引用业务实体、仓储、应用路由或全局状态。
+- `foxy_widget` 的 Dart 文件名以 `foxy_` 开头，类名以 `Foxy` 开头；私有类使用 `_Foxy` 前缀，测试文件和测试辅助类遵守同样约定。
+- 应用的 `widget/` 保留依赖字段控制器、业务或平台服务的组件，按 `form/`、`picker/`、`dialog/`、`directory/`、`game_asset/`、`update/`、`window/`、`feature/` 归类；`widget/table/` 保留页面的 badge 折叠布局计算；业务仓储到选择器的适配集中在 `widget/picker/delegate/`，选择器的数据协议放 `model/`。
 - 只服务一个页面模块的组件和显示辅助函数放 `page/<module>/`；仪表盘卡片放 `page/dashboard/component/`，首次引导与启动提醒放 `page/scaffold/`。应用主题与路由外壳 `FoxyApp` 和 `main.dart` 同处 `lib/` 根目录，显示配色放 `theme/`。
 - `infrastructure/` 放数据库、文件与平台服务；数据库连接、事务和迁移统一放 `infrastructure/database/`，DBC 与 MPQ worker 分别放 `infrastructure/dbc/`、`infrastructure/mpq/`。
 - `infrastructure/` 不依赖仓储或业务流程；组合仓储的 DBC 导出注册表与查询偏好放 `repository/`，技术日志输出留在 `infrastructure/logging/`。
@@ -104,6 +106,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
   - 分层测试（`test/constant/`、`test/model/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`）：按被测代码的位置组织；页面测试按模块细分，跨页面编辑行为放 `test/page/`。
   - 依赖边界测试（`test/architecture/`）：检查各层允许的依赖，防止基础设施引用业务层、数据模型引用 UI、ViewModel 引用页面或组件。
   - 真实生成产物行为测试（`test/codegen/`）：实体序列化、主键状态与列表刷新；生成器本身的单测仍放 `packages/foxy_generator/test/`。
+  - 通用组件测试（`packages/foxy_widget/test/`）：随组件放在独立包中，使用该包公开入口测试组件行为；包内实现工具可在同包测试中直接导入。
   - 集成测试（`test/integration/`，标签 `integration`）：对真实 MySQL 跑应用启动链路与仓储读写。
 - 集成测试默认跳过（见 `dart_test.yaml`），普通 `flutter test` 不需要数据库；本地用 `flutter test --tags integration --run-skipped -j 1` 运行，DBC 用例还需 `FOXY_TEST_MYSQL_ALLOW_DBC_WRITE=1`。必须串行（`-j 1`），且绝不能指向 `foxy` schema 有意义的库。
 - 新增注解 / 生成器**必须**加生成器测试（`packages/foxy_generator/test/`，`dart test` 纯 Dart 运行）。
