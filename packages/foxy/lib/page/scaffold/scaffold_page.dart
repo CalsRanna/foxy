@@ -7,12 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:foxy/page/scaffold/dbc_reminder_dialog.dart';
 import 'package:foxy/page/scaffold/server_dir_reminder_dialog.dart';
 import 'package:foxy/page/scaffold/setup_wizard_dialog.dart';
+import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
+import 'package:foxy/view_model/workflow/combined_export_workflow_view_model.dart';
+import 'package:foxy/view_model/workflow/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
+import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/window/window_button.dart';
@@ -49,6 +53,8 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
 }
 
 class _NavigateSettingIntent extends Intent {}
+
+class _CombinedExportIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
   final featureState = GetIt.instance.get<FeatureStateViewModel>();
@@ -90,10 +96,18 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     if (kIsWeb) return scaffold;
     if (Platform.isAndroid || Platform.isIOS) return scaffold;
     return Actions(
-      actions: _ShortcutManager.instance.actions,
+      actions: {
+        ..._ShortcutManager.instance.actions,
+        _CombinedExportIntent: CallbackAction<_CombinedExportIntent>(
+          onInvoke: (_) {
+            _showCombinedExportDialog();
+            return null;
+          },
+        ),
+      },
       child: Shortcuts(
         shortcuts: _ShortcutManager.instance.shortcuts,
-        child: scaffold,
+        child: Focus(autofocus: true, child: scaffold),
       ),
     );
   }
@@ -237,6 +251,22 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     );
   }
 
+  void _showCombinedExportDialog() {
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    final combinedVm = GetIt.instance.get<CombinedExportWorkflowViewModel>();
+    if (combinedVm.isRunning ||
+        GetIt.instance.get<DbcImportWorkflowViewModel>().isRunning ||
+        GetIt.instance.get<DbcExportWorkflowViewModel>().isRunning ||
+        GetIt.instance.get<MpqExportWorkflowViewModel>().isRunning) {
+      return;
+    }
+    DialogUtil.show(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => CombinedExportDialog(vm: combinedVm),
+    );
+  }
+
   void _showServerDirReminderDialog() {
     DialogUtil.show(
       context: context,
@@ -276,9 +306,17 @@ class _ShortcutManager {
     final meta = Platform.isMacOS ? true : false;
     final commaActivator = SingleActivator(comma, control: control, meta: meta);
     final keyQActivator = SingleActivator(keyQ, control: control, meta: meta);
+    final exportActivator = SingleActivator(
+      LogicalKeyboardKey.keyE,
+      control: control,
+      meta: meta,
+      shift: true,
+      includeRepeats: false,
+    );
     return {
       commaActivator: _NavigateSettingIntent(),
       keyQActivator: _ExitAppIntent(),
+      exportActivator: _CombinedExportIntent(),
     };
   }
 }
