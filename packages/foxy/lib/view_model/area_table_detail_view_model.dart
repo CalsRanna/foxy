@@ -93,11 +93,11 @@ class AreaTableDetailViewModel
   }
 
   @override
-  void _logActivity(ActivityActionType action, AreaTableEntity t) {
+  void _logActivity(ActivityActionType action, AreaTableEntity areaTable) {
     final log = ActivityLogEntity(
       module: 'area_table',
       actionType: action,
-      entityName: t.areaNameLangZhCN,
+      entityName: areaTable.areaNameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));

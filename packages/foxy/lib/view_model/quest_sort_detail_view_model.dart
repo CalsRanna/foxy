@@ -68,11 +68,11 @@ class QuestSortDetailViewModel
   }
 
   @override
-  void _logActivity(ActivityActionType action, QuestSortEntity t) {
+  void _logActivity(ActivityActionType action, QuestSortEntity questSort) {
     final log = ActivityLogEntity(
       module: 'quest_sort',
       actionType: action,
-      entityName: t.sortNameLangZhCN,
+      entityName: questSort.sortNameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));

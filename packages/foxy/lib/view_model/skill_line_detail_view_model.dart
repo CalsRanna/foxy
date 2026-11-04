@@ -156,11 +156,11 @@ class SkillLineDetailViewModel
   }
 
   @override
-  void _logActivity(ActivityActionType action, SkillLineEntity t) {
+  void _logActivity(ActivityActionType action, SkillLineEntity skillLine) {
     final log = ActivityLogEntity(
       module: 'skill_line',
       actionType: action,
-      entityName: t.displayNameLangZhCN,
+      entityName: skillLine.displayNameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));

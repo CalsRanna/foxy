@@ -68,11 +68,11 @@ class QuestInfoDetailViewModel
   }
 
   @override
-  void _logActivity(ActivityActionType action, QuestInfoEntity t) {
+  void _logActivity(ActivityActionType action, QuestInfoEntity questInfo) {
     final log = ActivityLogEntity(
       module: 'quest_info',
       actionType: action,
-      entityName: t.infoNameLangZhCN,
+      entityName: questInfo.infoNameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));

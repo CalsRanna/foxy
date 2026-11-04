@@ -93,11 +93,14 @@ class SpellItemEnchantmentDetailViewModel
   }
 
   @override
-  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
+  void _logActivity(
+    ActivityActionType action,
+    SpellItemEnchantmentEntity spellItemEnchantment,
+  ) {
     final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
       actionType: action,
-      entityName: t.nameLangZhCN,
+      entityName: spellItemEnchantment.nameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));

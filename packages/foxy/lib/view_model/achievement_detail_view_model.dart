@@ -147,11 +147,11 @@ class AchievementDetailViewModel
   }
 
   @override
-  void _logActivity(ActivityActionType action, AchievementEntity t) {
+  void _logActivity(ActivityActionType action, AchievementEntity achievement) {
     final log = ActivityLogEntity(
       module: 'achievement',
       actionType: action,
-      entityName: t.titleLangZhCN,
+      entityName: achievement.titleLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
