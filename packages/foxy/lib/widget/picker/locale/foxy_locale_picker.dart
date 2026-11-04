@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/model/locale/foxy_locale_editor_delegate.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/widget/picker/locale/database_locale_editor.dart';
 import 'package:foxy/widget/picker/locale/dbc_locale_field_editor.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// Locale-field picker: ShadInput + globe button.
 ///
@@ -60,18 +63,27 @@ class FoxyLocalePicker extends StatefulWidget {
 class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
   @override
   Widget build(BuildContext context) {
-    final canOpen = widget.entry != null || widget.ownerKey != null;
-    return ShadInput(
-      controller: widget.controller.controller,
-      placeholder: Text(widget.placeholder ?? ''),
-      trailing: ShadButton.ghost(
-        height: 20,
-        width: 20,
-        padding: EdgeInsets.zero,
-        enabled: canOpen,
-        onPressed: canOpen ? _openLocaleDialog : null,
-        child: Icon(LucideIcons.globe, size: 12),
-      ),
+    return SignalBuilder(
+      builder: (_) {
+        final showLocaleButton =
+            widget.delegate is DbcLocaleFieldEditorDelegate ||
+            GetIt.instance.get<FoxyStateViewModel>().localeEnabled.value;
+        final canOpen = widget.entry != null || widget.ownerKey != null;
+        return ShadInput(
+          controller: widget.controller.controller,
+          placeholder: Text(widget.placeholder ?? ''),
+          trailing: showLocaleButton
+              ? ShadButton.ghost(
+                  height: 20,
+                  width: 20,
+                  padding: EdgeInsets.zero,
+                  enabled: canOpen,
+                  onPressed: canOpen ? _openLocaleDialog : null,
+                  child: Icon(LucideIcons.globe, size: 12),
+                )
+              : null,
+        );
+      },
     );
   }
 

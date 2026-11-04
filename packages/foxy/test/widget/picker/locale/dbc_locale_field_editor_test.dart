@@ -5,13 +5,87 @@ import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
 import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/model/locale/database_locale_changes.dart';
 import 'package:foxy/model/locale/foxy_locale_editor_delegate.dart';
+import 'package:foxy/repository/locale_query_settings.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/picker/locale/database_locale_editor.dart';
 import 'package:foxy/widget/picker/locale/dbc_locale_field_editor.dart';
 import 'package:foxy/widget/picker/locale/foxy_locale_picker.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
+  late FoxyStateViewModel stateVm;
+
+  setUp(() {
+    GetIt.instance.registerSingleton(LocaleQuerySettings());
+    stateVm = FoxyStateViewModel();
+    GetIt.instance.registerSingleton(stateVm);
+    stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: true);
+  });
+
+  tearDown(() => GetIt.instance.reset());
+
+  for (final composite in [false, true]) {
+    testWidgets('${composite ? '复合主键' : '普通'}数据库按钮随 locale 开关显隐且保留输入', (
+      tester,
+    ) async {
+      stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: false);
+      final controller = StringFieldController()..init('主表内容');
+      addTearDown(controller.dispose);
+      var loads = 0;
+      final FoxyLocaleEditorDelegate delegate = composite
+          ? CompositeKeyLocaleEditorDelegate(
+              fields: ['locale', 'name'],
+              fieldLabels: ['语言', '名称'],
+              onLoad: (key) async {
+                loads++;
+                return [];
+              },
+              onSave: (key, changes) async {},
+            )
+          : DatabaseLocaleEditorDelegate(
+              fields: ['locale', 'name'],
+              fieldLabels: ['语言', '名称'],
+              onLoad: (entry) async {
+                loads++;
+                return [];
+              },
+              onSave: (entry, changes) async {},
+            );
+      await tester.pumpWidget(
+        _wrap(
+          FoxyLocalePicker(
+            entry: composite ? null : 1,
+            ownerKey: composite ? (1, 2) : null,
+            controller: controller,
+            title: '名称',
+            delegate: delegate,
+          ),
+        ),
+      );
+
+      expect(find.byIcon(LucideIcons.globe), findsNothing);
+      expect(tester.widget<ShadInput>(find.byType(ShadInput)).trailing, isNull);
+      await tester.enterText(find.byType(ShadInput), '未保存的输入');
+
+      stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: true);
+      await tester.pumpAndSettle();
+      expect(find.byIcon(LucideIcons.globe), findsOneWidget);
+      expect(
+        tester.widget<ShadButton>(find.byType(ShadButton)).enabled,
+        isTrue,
+      );
+      expect(controller.collect(), '未保存的输入');
+
+      stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: false);
+      await tester.pumpAndSettle();
+      expect(find.byIcon(LucideIcons.globe), findsNothing);
+      expect(controller.collect(), '未保存的输入');
+      expect(loads, 0);
+    });
+  }
+
   testWidgets('普通数据库 Delegate 打开动态行编辑器', (tester) async {
     final delegate = DatabaseLocaleEditorDelegate(
       fields: ['locale', 'name'],
@@ -122,7 +196,8 @@ void main() {
     expect(saved!.deletedLocales, ['zhCN']);
   });
 
-  testWidgets('DBC Delegate 打开固定行编辑器且无添加删除', (tester) async {
+  testWidgets('关闭 locale JOIN 时 DBC 仍打开固定行编辑器且无添加删除', (tester) async {
+    stateVm.setLocaleSettings(hasLocaleTables: false, localeEnabled: false);
     final field = DbcLocaleFields.areaTableAreaName;
     final initial = DbcLocaleFieldCodec.empty();
     initial[4] = initial[4].copyWith(value: '艾尔文森林');
