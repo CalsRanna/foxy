@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy_game_file/src/dbc_file_exception.dart';
 
 /// Hard cap on the DBC record payload claimed by a file header. warcrafty's
 /// loader allocates the full `recordCount * recordSize + stringBlockSize`
@@ -36,7 +36,7 @@ abstract final class DbcHeaderGuard {
           stringBlockSize < 0 ||
           payload <= maxPayloadBytes;
       if (!safe) {
-        throw ValidationException(
+        throw DbcFileException(
           'DBC payload too large: $recordCount records × $recordSize bytes '
           '+ $stringBlockSize string block exceeds the $maxPayloadBytes '
           'byte safety cap ($path)',

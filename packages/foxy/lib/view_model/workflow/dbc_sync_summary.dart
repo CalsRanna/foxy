@@ -1,5 +1,5 @@
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
-import 'package:foxy/model/game_asset/game_icon_extract_progress.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 
 /// Failure-summary formatting for the DBC/icon workflows.
 abstract final class DbcSyncSummary {

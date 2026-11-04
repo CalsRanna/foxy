@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/game_asset/blp_icon_provider.dart';
+import 'package:foxy_widget/src/game_asset/foxy_blp_icon_provider.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Unified rendering component for game icons (items/spells).
 ///
 /// Input is the raw icon path from the DBC (e.g.
-/// `Interface\Icons\INV_Misc_Foo`), loaded via [BlpIconProvider] through
+/// `Interface\Icons\INV_Misc_Foo`), loaded via [FoxyBlpIconProvider] through
 /// the Flutter [ImageCache]: the provider normalizes the name, resolves
 /// `data/icon/<bare name>.blp` under the runtime working directory, and
 /// decodes the BLP.
@@ -28,7 +28,7 @@ class FoxyGameAssetIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image(
-      image: BlpIconProvider(rawPath: rawPath),
+      image: FoxyBlpIconProvider(rawPath: rawPath),
       width: size,
       height: size,
       fit: BoxFit.cover,

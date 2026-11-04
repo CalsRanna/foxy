@@ -4,9 +4,7 @@ import 'dart:isolate';
 
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/game_asset/game_icon_extract_worker.dart';
-import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
-import 'package:foxy/model/game_asset/game_icon_extract_progress.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 
 final class ExtractGameIconsInput {
   final String clientDir;

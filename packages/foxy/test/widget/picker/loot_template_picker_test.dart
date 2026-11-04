@@ -4,7 +4,7 @@ import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

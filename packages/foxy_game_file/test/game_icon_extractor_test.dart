@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
-import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
-import 'package:foxy/infrastructure/game_asset/game_mpq_source.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
 
 void main() {
   late Directory tempDir;

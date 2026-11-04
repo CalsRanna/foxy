@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
@@ -70,7 +70,7 @@ void main() {
   void expectArchiveDbc(String mpqPath, String dbcName, int expectedRecords) {
     final archive = MpqArchive.open(mpqPath);
     try {
-      final inArchive = '${MpqExportWorker.dbcArchivePath}$dbcName';
+      final inArchive = '${MpqFilePacker.dbcArchivePath}$dbcName';
       expect(archive.files, contains(inArchive));
       final bytes = archive.extract(inArchive);
       final tmp = File(p.join(tempDir.path, 'verify.dbc'))
@@ -118,7 +118,7 @@ void main() {
       expect(archive.files, isNot(contains('stale.txt')));
       expect(
         archive.files,
-        contains('${MpqExportWorker.dbcArchivePath}${duration.fileName}'),
+        contains('${MpqFilePacker.dbcArchivePath}${duration.fileName}'),
       );
     } finally {
       archive.close();
@@ -182,59 +182,5 @@ void main() {
       ),
       throwsA(isA<FileSystemException>()),
     );
-  });
-
-  group('packDbcFiles', () {
-    late Directory srcDir;
-
-    setUp(() {
-      srcDir = Directory(p.join(tempDir.path, 'src'))..createSync();
-    });
-
-    test('打包已有 .dbc 文件目录为 MPQ 并可回读', () async {
-      // 直接用真实 DBC 写入器产出合法 .dbc 文件,而非伪造字节。
-      await DbcExportUtil().write(
-        definition: duration,
-        rows: durationRows(),
-        outputDirectory: srcDir.path,
-      );
-      File(p.join(srcDir.path, 'notes.txt')).writeAsBytesSync([4]);
-      final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-
-      final summary = await MpqExportWorker.packDbcFiles(
-        directory: srcDir.path,
-        mpqFilePath: mpqPath,
-        isCancelled: () => false,
-      );
-
-      expect(summary.completed, 1);
-      expect(summary.errors, isEmpty);
-      expect(await File(mpqPath).exists(), isTrue);
-      expectArchiveDbc(mpqPath, duration.fileName, 2);
-    });
-
-    test('空目录不生成归档并返回空汇总', () async {
-      final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-
-      final summary = await MpqExportWorker.packDbcFiles(
-        directory: srcDir.path,
-        mpqFilePath: mpqPath,
-        isCancelled: () => false,
-      );
-
-      expect(summary.completed, 0);
-      expect(await File(mpqPath).exists(), isFalse);
-    });
-
-    test('目录不存在时抛 FileSystemException', () async {
-      await expectLater(
-        MpqExportWorker.packDbcFiles(
-          directory: p.join(tempDir.path, 'missing'),
-          mpqFilePath: p.join(outDir.path, 'patch.mpq'),
-          isCancelled: () => false,
-        ),
-        throwsA(isA<FileSystemException>()),
-      );
-    });
   });
 }

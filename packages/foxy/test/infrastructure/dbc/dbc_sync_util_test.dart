@@ -3,7 +3,7 @@ import 'dart:isolate';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
@@ -167,8 +167,8 @@ void main() {
     });
 
     final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
-    await DbcExportUtil().write(
-      definition: definition,
+    await DbcFileWriter().write(
+      schema: definition.schema,
       rows: [
         {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
       ],
@@ -199,8 +199,8 @@ void main() {
     });
 
     final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
-    await DbcExportUtil().write(
-      definition: definition,
+    await DbcFileWriter().write(
+      schema: definition.schema,
       rows: [
         {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
       ],

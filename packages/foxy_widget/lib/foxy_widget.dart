@@ -1,6 +1,9 @@
 export 'package:foxy_widget/src/feedback/foxy_inline_error.dart';
 export 'package:foxy_widget/src/form/foxy_form_item.dart';
 export 'package:foxy_widget/src/form/foxy_form_section.dart';
+export 'package:foxy_widget/src/game_asset/foxy_blp_icon_provider.dart';
+export 'package:foxy_widget/src/game_asset/foxy_game_asset_icon.dart';
+export 'package:foxy_widget/src/game_asset/foxy_icon_text.dart';
 export 'package:foxy_widget/src/layout/foxy_header.dart';
 export 'package:foxy_widget/src/layout/foxy_loading_indicator.dart';
 export 'package:foxy_widget/src/layout/foxy_tab.dart';

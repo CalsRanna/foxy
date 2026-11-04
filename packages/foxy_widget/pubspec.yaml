@@ -1,5 +1,5 @@
 name: foxy_widget
-description: "Foxy 通用 UI 组件，不依赖业务实体、仓储、路由或应用状态。"
+description: "Foxy 共用 UI 组件与游戏图标显示，不依赖业务实体、仓储、路由或应用状态。"
 publish_to: none
 
 environment:
@@ -10,6 +10,9 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
+  foxy_game_file:
+    path: ../foxy_game_file
+  path: ^1.9.1
   shadcn_ui: ^0.57.3
 
 dev_dependencies:

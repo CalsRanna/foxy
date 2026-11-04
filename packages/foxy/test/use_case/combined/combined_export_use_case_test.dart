@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/repository/dbc_export_registry.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
@@ -39,8 +39,8 @@ void main() {
     final sub = cancelPort.listen((_) {});
     args.sendPort.send(('control', cancelPort.sendPort));
     args.sendPort.send(('status', 'scanning', 'ok', null));
-    await DbcExportUtil().write(
-      definition: DbcDefinitions.byTable['dbc_spell_duration']!,
+    await DbcFileWriter().write(
+      schema: DbcDefinitions.byTable['dbc_spell_duration']!.schema,
       rows: const [
         {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
       ],
@@ -52,7 +52,7 @@ void main() {
     cancelPort.close();
   }
 
-  /// Scripted pack worker: packs with the real [MpqExportWorker.packDbcFiles] so the
+  /// Scripted pack worker: packs with the real [MpqFilePacker.packDbcFiles] so the
   /// produced archive is verifiable. Throws when the DBC file written by the
   /// DBC phase is missing — a failure here surfaces as a worker error, i.e.
   /// the reuse of the temp dir is asserted through the result.
@@ -63,7 +63,7 @@ void main() {
     if (!await File(p.join(args.directory, 'SpellDuration.dbc')).exists()) {
       throw StateError('pack input directory missing SpellDuration.dbc');
     }
-    final summary = await MpqExportWorker.packDbcFiles(
+    final packed = await MpqFilePacker.packDbcFiles(
       directory: args.directory,
       mpqFilePath: args.mpqFilePath,
       isCancelled: () => false,
@@ -79,13 +79,7 @@ void main() {
             total,
           )),
     );
-    args.sendPort.send((
-      'result',
-      summary.completed,
-      summary.skipped,
-      summary.errors,
-      false,
-    ));
+    args.sendPort.send(('result', packed, 0, <Map<String, String?>>[], false));
     await sub.cancel();
     cancelPort.close();
   }
@@ -177,8 +171,8 @@ void main() {
         final cancelPort = ReceivePort();
         final sub = cancelPort.listen((_) {});
         args.sendPort.send(('control', cancelPort.sendPort));
-        await DbcExportUtil().write(
-          definition: DbcDefinitions.byTable['dbc_spell_duration']!,
+        await DbcFileWriter().write(
+          schema: DbcDefinitions.byTable['dbc_spell_duration']!.schema,
           rows: const [
             {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
           ],

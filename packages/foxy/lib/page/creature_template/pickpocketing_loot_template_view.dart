@@ -9,7 +9,6 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/foxy_flag_picker.dart';
-import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';

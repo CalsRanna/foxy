@@ -13,7 +13,7 @@
 /// - `config.yaml`: database connection and directory config
 ///   (`lib/infrastructure/config/config_util.dart`);
 /// - `data/icon/`: the extracted game-icon cache
-///   (`lib/infrastructure/game_asset/game_icon_paths.dart`);
+///   (`GameIconPaths` in `package:foxy_game_file/foxy_game_file.dart`);
 /// - `data/cover/`: the user-supplied login-page cover images
 ///   (`lib/infrastructure/cover/cover_selector.dart`).
 /// Note that Flutter's own `data/flutter_assets` and `data/icudtl.dat`

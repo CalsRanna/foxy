@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/infrastructure/dbc/dbc_header_guard.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
@@ -364,109 +364,73 @@ abstract final class DbcImportWorker {
     int totalFiles,
     bool Function() isCancelled,
   ) async {
-    DbcHeaderGuard.assertPayloadSafe(file.path);
-    final loader = DbcLoader(file.path, file.format);
-    final recordCount = loader.recordCount;
-    if (recordCount == 0) return 0;
+    try {
+      final reader = DbcFileReader(file.path, schema: file.schema);
+      final recordCount = reader.recordCount;
+      if (recordCount == 0) return 0;
 
-    const maxBatchBytes = 1 << 20;
-    final columns = DbcImportWorker.insertColumns([
-      for (final field in file.fields) field.name,
-    ]);
-    final sqlPrefix = 'insert into $table ($columns) values ';
-    final prefixBytes = utf8.encode(sqlPrefix).length;
-    final rows = <String>[];
-    var batchBytes = prefixBytes;
-    var imported = 0;
+      const maxBatchBytes = 1 << 20;
+      final columns = DbcImportWorker.insertColumns([
+        for (final field in file.fields) field.name,
+      ]);
+      final sqlPrefix = 'insert into $table ($columns) values ';
+      final prefixBytes = utf8.encode(sqlPrefix).length;
+      final rows = <String>[];
+      var batchBytes = prefixBytes;
+      var imported = 0;
 
-    Future<void> flush() async {
-      if (rows.isEmpty) return;
-      await laconic.statement('$sqlPrefix${rows.join(',')}');
-      imported += rows.length;
-      rows.clear();
-      batchBytes = prefixBytes;
-      _sendCount(
-        sendPort,
-        '${file.name}.dbc',
-        completedFiles,
-        totalFiles,
-        imported,
-        recordCount,
-      );
-    }
-
-    for (final record in loader.records) {
-      _throwIfCancelled(isCancelled());
-      final row = _recordSql(record, file.fields, record.index);
-      final rowBytes = utf8.encode(row).length + (rows.isEmpty ? 0 : 1);
-      if (rows.isEmpty && prefixBytes + rowBytes > maxBatchBytes) {
-        throw ValidationException(
-          '${file.name}.dbc record ${record.index + 1} exceeds the 1 MiB '
-          'import batch limit',
+      Future<void> flush() async {
+        if (rows.isEmpty) return;
+        await laconic.statement('$sqlPrefix${rows.join(',')}');
+        imported += rows.length;
+        rows.clear();
+        batchBytes = prefixBytes;
+        _sendCount(
+          sendPort,
+          '${file.name}.dbc',
+          completedFiles,
+          totalFiles,
+          imported,
+          recordCount,
         );
       }
-      if (rows.isNotEmpty && batchBytes + rowBytes > maxBatchBytes) {
-        await flush();
+
+      for (var index = 0; index < recordCount; index++) {
         _throwIfCancelled(isCancelled());
+        final record = reader.readRecord(index);
+        final row = _recordSql(record, file.fields);
+        final rowBytes = utf8.encode(row).length + (rows.isEmpty ? 0 : 1);
+        if (rows.isEmpty && prefixBytes + rowBytes > maxBatchBytes) {
+          throw ValidationException(
+            '${file.name}.dbc record ${record.index + 1} exceeds the 1 MiB '
+            'import batch limit',
+          );
+        }
+        if (rows.isNotEmpty && batchBytes + rowBytes > maxBatchBytes) {
+          await flush();
+          _throwIfCancelled(isCancelled());
+        }
+        rows.add(row);
+        batchBytes += rowBytes;
       }
-      rows.add(row);
-      batchBytes += rowBytes;
+      await flush();
+      return imported;
+    } on DbcFileException catch (error) {
+      throw ValidationException(error.message);
     }
-    await flush();
-    return imported;
   }
 
-  /// uint64 values ≥2^63 cannot be represented in Dart's signed int64;
-  /// warcrafty reads them as negative int64, and writing a negative number
-  /// into a BIGINT UNSIGNED column fails with an opaque MySQL 1264. Surface
-  /// a field-indexed diagnostic instead of letting the raw driver error
-  /// through.
-  static String _uint64ToString(dynamic record, int index) {
-    final value = record.getInt64(index);
-    if (value < 0) {
-      throw ValidationException(
-        'uint64 field $index has high bit set (value ≥ 2^63), '
-        'which exceeds the signed 64-bit storage limit',
-      );
-    }
-    return value.toString();
-  }
-
-  static String _readAndEscape(dynamic record, int index, String type) {
-    return switch (type) {
-      'string' => _escapeString(record.getString(index) as String),
-      'float' => record.getFloat(index).toString(),
-      'int32' || 'id' => record.getInt(index).toString(),
-      // uint32 read as unsigned: getInt turns flags ≥2^31 negative, so they
-      // must be restored to positive before storing into an UNSIGNED column.
-      'uint32' => record.getUint(index).toString(),
-      'int64' => record.getInt64(index).toString(),
-      // uint64 high bits (≥2^63) exceed Dart's int range: getInt64 goes
-      // negative and BIGINT UNSIGNED rejects it with MySQL 1264 (opaque).
-      // Detect it and surface a field-indexed message instead.
-      'uint64' => _uint64ToString(record, index),
-      'int16' || 'uint16' => record.getInt16(index).toString(),
-      'int8' => record.getInt8(index).toString(),
-      'uint8' => record.getUint8(index).toString(),
-      'boolean' => record.getInt(index) != 0 ? '1' : '0',
-      'sort' => 'NULL',
-      _ => 'NULL',
-    };
-  }
-
-  // warcrafty 1.0.2's public entry point does not actually export DbcRecord;
-  // keep dynamic here to avoid depending on private paths under
-  // package:warcrafty/src.
-  static String _recordSql(
-    dynamic record,
-    List<_FieldDef> fields,
-    int rowOrder,
-  ) {
-    final values = <String>[];
-    for (final field in fields) {
-      values.add(_readAndEscape(record, field.index, field.type));
-    }
-    return DbcImportWorker.valueTuple(values, rowOrder);
+  static String _recordSql(DbcFileRecord record, List<_FieldDef> fields) {
+    final values = <String>[
+      for (final field in fields)
+        switch (record.values[field.name]) {
+          null => 'NULL',
+          String value => _escapeString(value),
+          bool value => value ? '1' : '0',
+          final value => value.toString(),
+        },
+    ];
+    return DbcImportWorker.valueTuple(values, record.index);
   }
 
   static Future<List<_FileDef>> _scanDirectory(String directory) async {
@@ -491,16 +455,11 @@ abstract final class DbcImportWorker {
         name: definition.schema.name,
         path: entry.path,
         tableName: definition.qualifiedTableName,
-        format: definition.schema.format,
+        schema: definition.schema,
         fields: [
           for (final field in definition.schema.fields)
             if (!field.type.isSkip)
-              (
-                index: field.index,
-                name: field.name,
-                type: field.type.name,
-                sqlType: _sqlType(field.type),
-              ),
+              (name: field.name, sqlType: _sqlType(field.type)),
         ],
       );
     }
@@ -620,13 +579,13 @@ typedef DbcImportWorkerArgs = ({
   String jobId,
 });
 
-typedef _FieldDef = ({int index, String name, String type, String sqlType});
+typedef _FieldDef = ({String name, String sqlType});
 
 typedef _FileDef = ({
   String name,
   String path,
   String tableName,
-  String format,
+  DbcSchema schema,
   List<_FieldDef> fields,
 });
 

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
@@ -55,8 +55,8 @@ abstract final class DbcExportWorker {
         if (rows.isEmpty) {
           skipped++;
         } else {
-          await DbcExportUtil().write(
-            definition: definition,
+          await DbcFileWriter().write(
+            schema: definition.schema,
             rows: rows,
             outputDirectory: outputDirectory,
           );

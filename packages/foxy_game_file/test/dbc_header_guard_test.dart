@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/infrastructure/dbc/dbc_header_guard.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:test/test.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
 
 /// Verifies the DBC header payload cap: warcrafty's loader allocates
@@ -41,7 +40,7 @@ void main() {
     writeHeader('evil.dbc', recordCount: 1 << 30, recordSize: 1 << 20);
     expect(
       () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'evil.dbc')),
-      throwsA(isA<ValidationException>()),
+      throwsA(isA<DbcFileException>()),
     );
   });
 
@@ -54,7 +53,7 @@ void main() {
     );
     expect(
       () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'evil2.dbc')),
-      throwsA(isA<ValidationException>()),
+      throwsA(isA<DbcFileException>()),
     );
   });
 
@@ -95,7 +94,7 @@ void main() {
       () => DbcHeaderGuard.assertPayloadSafe(
         p.join(tempDir.path, 'boundary_bad.dbc'),
       ),
-      throwsA(isA<ValidationException>()),
+      throwsA(isA<DbcFileException>()),
     );
   });
 

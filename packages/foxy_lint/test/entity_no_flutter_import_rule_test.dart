@@ -81,6 +81,15 @@ import 'package:foxy_widget/foxy_widget.dart';
       [lint(0, 46), error(_uriDoesNotExist(), 7, 38)],
     );
   }
+
+  void test_gameAssetCoreImport_doesNotReport() async {
+    await assertDiagnostics(
+      r'''
+import 'package:foxy_game_file/foxy_game_file.dart';
+''',
+      [error(_uriDoesNotExist(), 7, 44)],
+    );
+  }
 }
 
 /// The same blocked import in a non-entity file is out of scope: only the

@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/widget/game_asset/blp_icon_provider.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
@@ -15,16 +15,16 @@ void main() {
 
   setUp(() {
     tempDir = Directory.systemTemp.createTempSync('foxy_blp_provider_test_');
-    fixtureBlp = File('test/fixture/icons/fixture_dxt1.blp').absolute.path;
+    fixtureBlp = File('test/fixture/icons/foxy_fixture_dxt1.blp').absolute.path;
   });
 
   tearDown(() {
     tempDir.deleteSync(recursive: true);
   });
 
-  group('BlpIconProvider', () {
+  group('FoxyBlpIconProvider', () {
     test('obtainKey 归一化 rawPath', () async {
-      final provider = BlpIconProvider(
+      final provider = FoxyBlpIconProvider(
         rawPath: 'Interface\\Icons\\INV_Misc_Foo',
       );
       final key = await provider.obtainKey(const ImageConfiguration());
@@ -33,18 +33,18 @@ void main() {
 
     test('provider 相等性基于 rawPath', () {
       expect(
-        BlpIconProvider(rawPath: 'a') == BlpIconProvider(rawPath: 'a'),
+        FoxyBlpIconProvider(rawPath: 'a') == FoxyBlpIconProvider(rawPath: 'a'),
         isTrue,
       );
       expect(
-        BlpIconProvider(rawPath: 'a') == BlpIconProvider(rawPath: 'b'),
+        FoxyBlpIconProvider(rawPath: 'a') == FoxyBlpIconProvider(rawPath: 'b'),
         isFalse,
       );
     });
 
     test('加载成功返回 64×64 图像', () async {
-      final provider = BlpIconProvider(
-        rawPath: 'fixture_dxt1',
+      final provider = FoxyBlpIconProvider(
+        rawPath: 'foxy_fixture_dxt1',
         iconDir: p.dirname(fixtureBlp),
       );
       final info = await loadViaStream(provider);
@@ -56,7 +56,7 @@ void main() {
 
     test('文件缺失抛错,失败的 key 从 ImageCache 驱逐', () async {
       PaintingBinding.instance.imageCache.clear();
-      final provider = BlpIconProvider(
+      final provider = FoxyBlpIconProvider(
         rawPath: 'no_such_icon',
         iconDir: p.dirname(fixtureBlp),
       );
@@ -73,7 +73,7 @@ void main() {
       PaintingBinding.instance.imageCache.clear();
       File(p.join(tempDir.path, 'broken.blp'))
           .writeAsBytesSync(List.filled(128, 0));
-      final provider = BlpIconProvider(
+      final provider = FoxyBlpIconProvider(
         rawPath: 'broken',
         iconDir: tempDir.path,
       );
@@ -89,7 +89,7 @@ void main() {
       PaintingBinding.instance.imageCache.clear();
       // 先失败(文件不存在),此后再把文件放到位并重新 resolve:必须能加载成功,
       // 证明失败的加载没有卡住该 key(自 evict 的意义)。
-      final provider = BlpIconProvider(
+      final provider = FoxyBlpIconProvider(
         rawPath: 'late_icon',
         iconDir: tempDir.path,
       );
@@ -105,7 +105,7 @@ void main() {
 }
 
 /// 通过 [ImageStream] 加载,返回 [ImageInfo] 或 null(失败)。
-Future<ImageInfo?> loadViaStream(BlpIconProvider provider) async {
+Future<ImageInfo?> loadViaStream(FoxyBlpIconProvider provider) async {
   final key = await provider.obtainKey(const ImageConfiguration());
   final stream = ImageStream()
     ..setCompleter(provider.loadImage(key, _dummyDecode));
@@ -113,7 +113,7 @@ Future<ImageInfo?> loadViaStream(BlpIconProvider provider) async {
 }
 
 /// 通过 [ImageProvider.resolve] 加载(经由 ImageCache),返回 [ImageInfo] 或 null。
-Future<ImageInfo?> resolveViaStream(BlpIconProvider provider) async {
+Future<ImageInfo?> resolveViaStream(FoxyBlpIconProvider provider) async {
   final stream = provider.resolve(const ImageConfiguration());
   return _listen(stream);
 }
@@ -135,10 +135,10 @@ Future<ImageInfo?> _listen(ImageStream stream) {
   return completer.future;
 }
 
-/// BlpIconProvider 用 decodeImageFromPixels 自行解码,不触发该回调。
+/// FoxyBlpIconProvider 用 decodeImageFromPixels 自行解码,不触发该回调。
 Future<ui.Codec> _dummyDecode(
   ui.ImmutableBuffer buffer, {
   ui.TargetImageSizeCallback? getTargetSize,
 }) {
-  throw StateError('decode callback should not be used by BlpIconProvider');
+  throw StateError('decode callback should not be used by FoxyBlpIconProvider');
 }

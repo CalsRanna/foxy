@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/infrastructure/game_asset/blp_decoder.dart';
+import 'package:foxy_widget/src/game_asset/foxy_blp_decoder.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ void main() {
         0,
       ); // c0=red, all pixels use index 0
       final blp = buildBlp2(tile(block, 256));
-      final image = BlpDecoder.decode(blp);
+      final image = FoxyBlpDecoder.decode(blp);
       expect(image.width, 64);
       expect(image.height, 64);
       expect(image.rgba.length, 64 * 64 * 4);
@@ -38,7 +38,7 @@ void main() {
         alphaDepth: 8,
         alphaEncoding: 1,
       );
-      final image = BlpDecoder.decode(blp);
+      final image = FoxyBlpDecoder.decode(blp);
       for (var i = 0; i < 64 * 64; i++) {
         expect(image.rgba[i * 4 + 3], 136, reason: 'DXT3 alpha 8→136');
         expect(image.rgba[i * 4 + 1], 255);
@@ -53,7 +53,7 @@ void main() {
         alphaDepth: 8,
         alphaEncoding: 7,
       );
-      final image = BlpDecoder.decode(blp);
+      final image = FoxyBlpDecoder.decode(blp);
       for (var i = 0; i < 64 * 64; i++) {
         expect(image.rgba[i * 4 + 3], 255);
         expect(image.rgba[i * 4 + 2], 255);
@@ -80,20 +80,20 @@ void main() {
         alphaDepth: 8,
         alphaEncoding: 7,
       );
-      expect(BlpDecoder.decode(blp6).rgba[3], 0);
-      expect(BlpDecoder.decode(blp7).rgba[3], 255);
+      expect(FoxyBlpDecoder.decode(blp6).rgba[3], 0);
+      expect(FoxyBlpDecoder.decode(blp7).rgba[3], 255);
     });
 
-    test('损坏输入抛 BlpFormatException', () {
+    test('损坏输入抛 FoxyBlpFormatException', () {
       expect(
-        () => BlpDecoder.decode(Uint8List.fromList('BLP1'.codeUnits)),
-        throwsA(isA<BlpFormatException>()),
+        () => FoxyBlpDecoder.decode(Uint8List.fromList('BLP1'.codeUnits)),
+        throwsA(isA<FoxyBlpFormatException>()),
       );
       expect(
-        () => BlpDecoder.decode(
+        () => FoxyBlpDecoder.decode(
           Uint8List.fromList('nonsense'.codeUnits),
         ), // header too short
-        throwsA(isA<BlpFormatException>()),
+        throwsA(isA<FoxyBlpFormatException>()),
       );
     });
   });
@@ -101,13 +101,13 @@ void main() {
   group('真实客户端 fixture（与原始 PNG 对照）', () {
     for (final variant in ['dxt1', 'dxt3', 'dxt5']) {
       test('$variant RGB 与对应 PNG 逐像素一致', () async {
-        final blpBytes = File('test/fixture/icons/fixture_$variant.blp')
+        final blpBytes = File('test/fixture/icons/foxy_fixture_$variant.blp')
             .readAsBytesSync();
-        final image = BlpDecoder.decode(blpBytes);
+        final image = FoxyBlpDecoder.decode(blpBytes);
         expect(image.width, 64);
         expect(image.height, 64);
 
-        final pngBytes = File('test/fixture/icons/fixture_$variant.png')
+        final pngBytes = File('test/fixture/icons/foxy_fixture_$variant.png')
             .readAsBytesSync();
         final codec = await ui.instantiateImageCodec(pngBytes);
         final frame = await codec.getNextFrame();

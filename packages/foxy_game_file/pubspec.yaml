@@ -1,0 +1,17 @@
+name: foxy_game_file
+description: "Foxy 游戏文件：DBC 读写、MPQ 读取与打包、图标提取，纯 Dart 实现。"
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  meta: ^1.17.0
+  path: ^1.9.1
+  warcrafty: ^2.1.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.30.0

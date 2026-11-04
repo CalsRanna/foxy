@@ -6,7 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
-import 'package:foxy/widget/game_asset/blp_icon_provider.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
@@ -150,7 +150,7 @@ void main() {
 /// moves a completed image into its keep-alive store via the internal
 /// pending-image listener, which a direct loadImage call bypasses.
 Future<void> preloadIconIntoCache(String name, String iconDir) async {
-  final stream = BlpIconProvider(
+  final stream = FoxyBlpIconProvider(
     rawPath: name,
     iconDir: iconDir,
   ).resolve(const ImageConfiguration());

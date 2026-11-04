@@ -146,7 +146,7 @@ import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/repository/zone_intro_music_repository.dart';
 import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
-import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/theme/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 

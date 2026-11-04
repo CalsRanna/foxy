@@ -1,7 +1,7 @@
 import 'package:flutter/painting.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/model/game_asset/game_icon_extract_progress.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/view_model/workflow/dbc_sync_summary.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';

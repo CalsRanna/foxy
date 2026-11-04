@@ -82,6 +82,10 @@ void main() {
                   !allowed.contains('widget'))) {
             violations.add('${file.path} imports $uri');
           }
+          if ({'foxy_game_file', 'foxy_widget'}.contains(segments.first) &&
+              segments[1] == 'src') {
+            violations.add('${file.path} imports a private package API: $uri');
+          }
           if (entry.key == 'model' &&
               {
                 'flutter',

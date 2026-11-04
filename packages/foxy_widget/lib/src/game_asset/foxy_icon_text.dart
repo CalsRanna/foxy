@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/game_asset/foxy_game_asset_icon.dart';
+import 'package:foxy_widget/src/game_asset/foxy_game_asset_icon.dart';
 
 /// Single-line "game icon + name" row, used for name columns in list pages
 /// and entity pickers.

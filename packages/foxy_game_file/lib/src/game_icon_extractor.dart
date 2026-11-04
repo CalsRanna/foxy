@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
-import 'package:foxy/infrastructure/game_asset/game_mpq_source.dart';
-import 'package:foxy/model/game_asset/game_icon_extract_progress.dart';
+import 'package:foxy_game_file/src/game_icon_paths.dart';
+import 'package:foxy_game_file/src/game_mpq_source.dart';
+import 'package:foxy_game_file/src/game_icon_extract_progress.dart';
 import 'package:path/path.dart' as p;
 
 /// Extracts game icons from the WoW client's locale MPQs into a local

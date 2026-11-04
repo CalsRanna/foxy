@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/model/dbc/dbc_sync_progress.dart';
+import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
 enum DbcExportPhase { writing, validating, committing }
 
-class DbcExportUtil {
+class DbcFileWriter {
   /// Probes whether files can be created in [path] (e.g. macOS sandbox or
   /// permission failures surface here as an explicit Chinese error instead
   /// of a cryptic "Cannot open file" from inside the worker).
@@ -41,8 +39,8 @@ class DbcExportUtil {
   /// truncated DBC in place. Used after exporting into a temp directory (the
   /// DBC export and the combined DBC+MPQ export both land files in the
   /// target this way). Copying continues across individual failures, which
-  /// are returned as committing-stage [DbcSyncError]s.
-  static Future<List<DbcSyncError>> copyDbcFiles({
+  /// are returned as committing-stage [DbcFileCopyError]s.
+  static Future<List<DbcFileCopyError>> copyDbcFiles({
     required String sourceDirectory,
     required String targetDirectory,
     bool Function()? isCancelled,
@@ -55,7 +53,7 @@ class DbcExportUtil {
           entity,
     ]..sort((left, right) => left.path.compareTo(right.path));
 
-    final errors = <DbcSyncError>[];
+    final errors = <DbcFileCopyError>[];
     for (final file in files) {
       if (isCancelled?.call() ?? false) break;
       final targetPath = p.join(targetDirectory, p.basename(file.path));
@@ -71,9 +69,8 @@ class DbcExportUtil {
         );
       } catch (error) {
         errors.add(
-          DbcSyncError(
+          DbcFileCopyError(
             fileName: p.basename(file.path),
-            stage: DbcSyncStage.committing,
             message: error.toString(),
           ),
         );
@@ -104,7 +101,7 @@ class DbcExportUtil {
   }
 
   Future<void> write({
-    required DbcDefinition definition,
+    required DbcSchema schema,
     required List<Map<String, dynamic>> rows,
     required String outputDirectory,
     void Function(DbcExportPhase phase)? onPhase,
@@ -118,16 +115,14 @@ class DbcExportUtil {
     }
 
     final fieldByIndex = <int, Field>{
-      for (final field in definition.schema.fields) field.index: field,
+      for (final field in schema.fields) field.index: field,
     };
     final records = <List<dynamic>>[];
     for (var index = 0; index < rows.length; index++) {
-      records.add(
-        _rowToRecord(rows[index], definition.schema, fieldByIndex, index),
-      );
+      records.add(_rowToRecord(rows[index], schema, fieldByIndex, index));
     }
 
-    final targetPath = p.join(outputDirectory, definition.fileName);
+    final targetPath = p.join(outputDirectory, '${schema.name}.dbc');
     final suffix = DateTime.now().microsecondsSinceEpoch;
     final temporaryPath = '$targetPath.foxy.$suffix.tmp';
     final backupPath = '$targetPath.foxy.$suffix.bak';
@@ -137,12 +132,12 @@ class DbcExportUtil {
 
     try {
       onPhase?.call(DbcExportPhase.writing);
-      final writer = DbcWriter(temporaryPath, definition.schema.format);
+      final writer = DbcWriter(temporaryPath, schema.format);
       await writer.writeAsync(records);
       onPhase?.call(DbcExportPhase.validating);
       _validateWrittenFile(
         temporaryPath,
-        definition.schema,
+        schema,
         expectedRecords: records.length,
       );
       onPhase?.call(DbcExportPhase.committing);
@@ -299,4 +294,11 @@ class DbcExportUtil {
       );
     }
   }
+}
+
+final class DbcFileCopyError {
+  final String fileName;
+  final String message;
+
+  const DbcFileCopyError({required this.fileName, required this.message});
 }

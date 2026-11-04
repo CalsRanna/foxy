@@ -8,7 +8,6 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/reference_loot_template_list_view_model.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:foxy/theme/item_quality_color.dart';
 import 'package:get_it/get_it.dart';

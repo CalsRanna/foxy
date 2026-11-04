@@ -3,8 +3,8 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart';
-import 'package:foxy/infrastructure/game_asset/blp_decoder.dart';
-import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
+import 'package:foxy_widget/src/game_asset/foxy_blp_decoder.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
 
 /// Logical identity of a game icon: the bare, normalized icon file name.
@@ -12,20 +12,21 @@ import 'package:path/path.dart' as p;
 /// Used as the [ImageCache] key; equality is by name, so two providers
 /// created from the same raw DBC path (e.g. on rebuild) share one cache
 /// entry.
-class BlpIconKey {
+class FoxyBlpIconKey {
   /// Lowercase bare file name (directory and extension stripped).
   final String name;
 
-  const BlpIconKey(this.name);
+  const FoxyBlpIconKey(this.name);
 
   @override
-  bool operator ==(Object other) => other is BlpIconKey && other.name == name;
+  bool operator ==(Object other) =>
+      other is FoxyBlpIconKey && other.name == name;
 
   @override
   int get hashCode => name.hashCode;
 
   @override
-  String toString() => 'BlpIconKey($name)';
+  String toString() => 'FoxyBlpIconKey($name)';
 }
 
 /// Loads a game icon (BLP) through the Flutter [ImageCache].
@@ -41,28 +42,30 @@ class BlpIconKey {
 /// so a later load (e.g. after the icon is extracted) is retried. Icons
 /// are extracted by the user from the client MPQs on the settings page
 /// (raw BLP format); the app ships no icons.
-class BlpIconProvider extends ImageProvider<BlpIconKey> {
+class FoxyBlpIconProvider extends ImageProvider<FoxyBlpIconKey> {
   /// Raw DBC icon path (backslashes, case-insensitive).
   final String rawPath;
 
   /// Icon directory override for tests; defaults to [GameIconPaths.iconDir].
   final String? iconDir;
 
-  BlpIconProvider({required this.rawPath, this.iconDir});
+  FoxyBlpIconProvider({required this.rawPath, this.iconDir});
 
   String _pathFor(String name) => iconDir == null
       ? GameIconPaths.blpPath(name)
       : p.join(iconDir!, '$name.blp');
 
   @override
-  Future<BlpIconKey> obtainKey(ImageConfiguration configuration) async =>
-      BlpIconKey(GameIconPaths.normalizeIconName(rawPath));
+  Future<FoxyBlpIconKey> obtainKey(ImageConfiguration configuration) async =>
+      FoxyBlpIconKey(GameIconPaths.normalizeIconName(rawPath));
 
   @override
-  ImageStreamCompleter loadImage(BlpIconKey key, ImageDecoderCallback decode) =>
-      OneFrameImageStreamCompleter(_load(key));
+  ImageStreamCompleter loadImage(
+    FoxyBlpIconKey key,
+    ImageDecoderCallback decode,
+  ) => OneFrameImageStreamCompleter(_load(key));
 
-  Future<ImageInfo> _load(BlpIconKey key) async {
+  Future<ImageInfo> _load(FoxyBlpIconKey key) async {
     final name = key.name;
     try {
       final file = File(_pathFor(name));
@@ -70,9 +73,9 @@ class BlpIconProvider extends ImageProvider<BlpIconKey> {
         throw FileSystemException('icon file does not exist', file.path);
       }
       final bytes = await file.readAsBytes();
-      final BlpImage decoded;
+      final FoxyBlpImage decoded;
       try {
-        decoded = BlpDecoder.decode(bytes);
+        decoded = FoxyBlpDecoder.decode(bytes);
       } on Object {
         // Corrupt/unsupported BLP: treat as missing.
         throw FileSystemException('failed to decode BLP', file.path);
@@ -99,7 +102,7 @@ class BlpIconProvider extends ImageProvider<BlpIconKey> {
 
   @override
   bool operator ==(Object other) =>
-      other is BlpIconProvider &&
+      other is FoxyBlpIconProvider &&
       other.rawPath == rawPath &&
       other.iconDir == iconDir;
 
@@ -107,5 +110,5 @@ class BlpIconProvider extends ImageProvider<BlpIconKey> {
   int get hashCode => Object.hash(rawPath, iconDir);
 
   @override
-  String toString() => 'BlpIconProvider($rawPath)';
+  String toString() => 'FoxyBlpIconProvider($rawPath)';
 }

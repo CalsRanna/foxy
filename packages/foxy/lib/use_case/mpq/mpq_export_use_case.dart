@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/model/dbc/dbc_export_table.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
@@ -71,7 +71,7 @@ class MpqExportUseCase {
     if (_dbcSyncUtil.isRunning) {
       throw BusyException('another DBC task is already running');
     }
-    await DbcExportUtil.ensureWritableDirectory(outputDirectory);
+    await DbcFileWriter.ensureWritableDirectory(outputDirectory);
 
     final config = await _configUtil.load();
     final mysqlConfig = MysqlConfig(

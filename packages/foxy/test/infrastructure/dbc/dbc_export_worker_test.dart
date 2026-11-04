@@ -80,7 +80,7 @@ void main() {
       definitions: [duration, icon],
       loadRows: (table) async {
         if (table == duration.tableName) return durationRows();
-        // Missing TextureFilename → DbcExportUtil rejects the row.
+        // Missing TextureFilename → DbcFileWriter rejects the row.
         return [
           {'ID': 1},
         ];

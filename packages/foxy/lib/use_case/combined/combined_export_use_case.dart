@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/model/dbc/dbc_export_table.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
@@ -88,8 +88,8 @@ class CombinedExportUseCase {
     if (_dbcSyncUtil.isRunning) {
       throw BusyException('another DBC task is already running');
     }
-    await DbcExportUtil.ensureWritableDirectory(dbcOutputDirectory);
-    await DbcExportUtil.ensureWritableDirectory(mpqDirectory);
+    await DbcFileWriter.ensureWritableDirectory(dbcOutputDirectory);
+    await DbcFileWriter.ensureWritableDirectory(mpqDirectory);
 
     final mysqlConfig = await DbcExportShared.mysqlConfigFromSaved(_configUtil);
 
@@ -117,7 +117,7 @@ class CombinedExportUseCase {
           message: '正在拷贝到 DBC 目录...',
         ),
       );
-      final copyErrors = await DbcExportUtil.copyDbcFiles(
+      final copyErrors = await DbcFileWriter.copyDbcFiles(
         sourceDirectory: tempDir.path,
         targetDirectory: dbcOutputDirectory,
         isCancelled: () => _cancelRequested,
@@ -140,7 +140,17 @@ class CombinedExportUseCase {
         operation: DbcSyncOperation.export,
         completed: packResult?.completed ?? workerResult.completed,
         skipped: packResult?.skipped ?? workerResult.skipped,
-        errors: [...workerResult.errors, ...copyErrors, ...?packResult?.errors],
+        errors: [
+          ...workerResult.errors,
+          ...copyErrors.map(
+            (error) => DbcSyncError(
+              fileName: error.fileName,
+              stage: DbcSyncStage.committing,
+              message: error.message,
+            ),
+          ),
+          ...?packResult?.errors,
+        ],
         cancelled:
             _cancelRequested ||
             workerResult.cancelled ||

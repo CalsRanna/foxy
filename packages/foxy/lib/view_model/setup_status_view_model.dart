@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/server/server_dir_resolver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';

@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/widget/game_asset/blp_icon_provider.dart';
-import 'package:foxy/widget/game_asset/foxy_game_asset_icon.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
@@ -17,7 +16,11 @@ void main() {
     // (data/icon under the package root); stage the fixture BLPs there.
     iconDir = Directory(p.join(Directory.current.path, 'data', 'icon'))
       ..createSync(recursive: true);
-    for (final name in ['fixture_dxt1', 'fixture_dxt3', 'fixture_dxt5']) {
+    for (final name in [
+      'foxy_fixture_dxt1',
+      'foxy_fixture_dxt3',
+      'foxy_fixture_dxt5',
+    ]) {
       File('test/fixture/icons/$name.blp')
           .copySync(p.join(iconDir.path, '$name.blp'));
     }
@@ -29,7 +32,7 @@ void main() {
     Directory(p.dirname(iconDir.path)).deleteSync(recursive: true);
   });
 
-  Widget iconApp({String rawPath = 'fixture_dxt1', double size = 40}) {
+  Widget iconApp({String rawPath = 'foxy_fixture_dxt1', double size = 40}) {
     return MaterialApp(
       home: Center(
         child: FoxyGameAssetIcon(
@@ -47,7 +50,7 @@ void main() {
   /// moves a completed image into its keep-alive store via the internal
   /// pending-image listener, which a direct loadImage call bypasses.
   Future<void> preload(String name) async {
-    final stream = BlpIconProvider(rawPath: name)
+    final stream = FoxyBlpIconProvider(rawPath: name)
         .resolve(const ImageConfiguration());
     final completer = Completer<ImageInfo?>();
     late ImageStreamListener listener;
@@ -70,7 +73,7 @@ void main() {
   }
 
   testWidgets('成功图标显示 RawImage', (tester) async {
-    await tester.runAsync(() => preload('fixture_dxt1'));
+    await tester.runAsync(() => preload('foxy_fixture_dxt1'));
     await tester.pumpWidget(iconApp());
     await tester.pumpAndSettle();
     expect(find.byType(RawImage), findsOneWidget);
@@ -89,7 +92,7 @@ void main() {
   });
 
   testWidgets('图标被缓存驱逐后,仍在显示的图标重绘不崩溃', (tester) async {
-    await tester.runAsync(() => preload('fixture_dxt1'));
+    await tester.runAsync(() => preload('foxy_fixture_dxt1'));
     await tester.pumpWidget(iconApp());
     await tester.pumpAndSettle();
     expect(find.byType(RawImage), findsOneWidget);
@@ -98,9 +101,9 @@ void main() {
     // 引用的图片只释放缓存句柄,底层纹理被 ImageCache 保活 —— 与
     // _checkCacheSize 的容量驱逐同一路径)。
     await tester.runAsync(() async {
-      await preload('fixture_dxt3');
+      await preload('foxy_fixture_dxt3');
       final evicted = PaintingBinding.instance.imageCache.evict(
-        const BlpIconKey('fixture_dxt1'),
+        const FoxyBlpIconKey('foxy_fixture_dxt1'),
         includeLive: false,
       );
       expect(evicted, isTrue);
@@ -117,14 +120,14 @@ void main() {
 
   testWidgets('换图标时正常加载新图标', (tester) async {
     await tester.runAsync(() async {
-      await preload('fixture_dxt1');
-      await preload('fixture_dxt3');
+      await preload('foxy_fixture_dxt1');
+      await preload('foxy_fixture_dxt3');
     });
     await tester.pumpWidget(iconApp());
     await tester.pumpAndSettle();
     expect(find.byType(RawImage), findsOneWidget);
 
-    await tester.pumpWidget(iconApp(rawPath: 'fixture_dxt3'));
+    await tester.pumpWidget(iconApp(rawPath: 'foxy_fixture_dxt3'));
     await tester.pumpAndSettle();
     expect(find.byType(RawImage), findsOneWidget);
   });

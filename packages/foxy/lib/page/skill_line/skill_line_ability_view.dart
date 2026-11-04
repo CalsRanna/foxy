@@ -6,7 +6,6 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/skill_line_ability_linked_list_view_model.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/game_asset/foxy_icon_text.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/foxy_flag_picker.dart';

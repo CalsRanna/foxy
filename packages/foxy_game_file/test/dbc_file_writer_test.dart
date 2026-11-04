@@ -1,20 +1,19 @@
 import 'dart:io';
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:test/test.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
 void main() {
   late Directory directory;
-  late DbcDefinition definition;
-  late DbcExportUtil util;
+  late DbcSchema schema;
+  late DbcFileWriter util;
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('foxy_dbc_export_test_');
-    definition = DbcDefinitions.byTable['dbc_spell_duration']!;
-    util = DbcExportUtil();
+    schema = Definitions.spellDuration;
+    util = DbcFileWriter();
   });
 
   tearDown(() async {
@@ -35,43 +34,43 @@ void main() {
     };
   }
 
-  test('DbcExportUtil 写入后可以使用 warcrafty 回读', () async {
+  test('DbcFileWriter 写入后可以使用 warcrafty 回读', () async {
     await util.write(
-      definition: definition,
+      schema: schema,
       rows: [sampleRow()],
       outputDirectory: directory.path,
     );
 
-    final path = p.join(directory.path, definition.fileName);
-    final loader = DbcLoader(path, definition.schema.format);
+    final path = p.join(directory.path, '${schema.name}.dbc');
+    final loader = DbcLoader(path, schema.format);
     expect(loader.recordCount, 1);
-    expect(loader.fieldCount, definition.schema.format.length);
+    expect(loader.fieldCount, schema.format.length);
     expect(loader.getRecord(0).getInt(0), 1);
     expect(loader.getRecord(0).getInt(1), 1000);
   });
 
-  test('DbcExportUtil 按传入行顺序写入,不重排 ID', () async {
+  test('DbcFileWriter 按传入行顺序写入,不重排 ID', () async {
     // Order-sensitive DBCs (Talent.dbc) require the file to keep the
     // original row order; the writer must never re-sort by ID.
     await util.write(
-      definition: definition,
+      schema: schema,
       rows: [sampleRow(id: 2), sampleRow(id: 1)],
       outputDirectory: directory.path,
     );
 
-    final path = p.join(directory.path, definition.fileName);
-    final loader = DbcLoader(path, definition.schema.format);
+    final path = p.join(directory.path, '${schema.name}.dbc');
+    final loader = DbcLoader(path, schema.format);
     expect(loader.recordCount, 2);
     expect(loader.getRecord(0).getInt(0), 2);
     expect(loader.getRecord(1).getInt(0), 1);
   });
 
-  test('DbcExportUtil 遇到缺失字段时失败且不生成目标文件', () async {
-    final target = File(p.join(directory.path, definition.fileName));
+  test('DbcFileWriter 遇到缺失字段时失败且不生成目标文件', () async {
+    final target = File(p.join(directory.path, '${schema.name}.dbc'));
 
     await expectLater(
       util.write(
-        definition: definition,
+        schema: schema,
         rows: [
           {'ID': 1},
         ],
@@ -83,13 +82,13 @@ void main() {
     expect(await target.exists(), isFalse);
   });
 
-  test('DbcExportUtil 校验失败时保留已有目标文件', () async {
-    final target = File(p.join(directory.path, definition.fileName));
+  test('DbcFileWriter 校验失败时保留已有目标文件', () async {
+    final target = File(p.join(directory.path, '${schema.name}.dbc'));
     await target.writeAsString('original');
 
     await expectLater(
       util.write(
-        definition: definition,
+        schema: schema,
         rows: [
           {'ID': 1},
         ],
@@ -101,19 +100,19 @@ void main() {
     expect(await target.readAsString(), 'original');
   });
 
-  test('DbcExportUtil 对相同记录生成确定性文件', () async {
+  test('DbcFileWriter 对相同记录生成确定性文件', () async {
     final rows = [sampleRow()];
-    final target = File(p.join(directory.path, definition.fileName));
+    final target = File(p.join(directory.path, '${schema.name}.dbc'));
 
     await util.write(
-      definition: definition,
+      schema: schema,
       rows: rows,
       outputDirectory: directory.path,
     );
     final first = await target.readAsBytes();
 
     await util.write(
-      definition: definition,
+      schema: schema,
       rows: rows,
       outputDirectory: directory.path,
     );
@@ -122,31 +121,31 @@ void main() {
     expect(second, first);
   });
 
-  test('DbcExportUtil 目标文件已存在时成功覆盖', () async {
-    final target = File(p.join(directory.path, definition.fileName));
+  test('DbcFileWriter 目标文件已存在时成功覆盖', () async {
+    final target = File(p.join(directory.path, '${schema.name}.dbc'));
     await util.write(
-      definition: definition,
+      schema: schema,
       rows: [sampleRow(duration: 1)],
       outputDirectory: directory.path,
     );
     final first = await target.readAsBytes();
 
     await util.write(
-      definition: definition,
+      schema: schema,
       rows: [sampleRow(duration: 999)],
       outputDirectory: directory.path,
     );
     final second = await target.readAsBytes();
 
     expect(second, isNot(equals(first)));
-    final loader = DbcLoader(target.path, definition.schema.format);
+    final loader = DbcLoader(target.path, schema.format);
     expect(loader.getRecord(0).getInt(1), 999);
   });
 
-  test('DbcExportUtil 拒绝将小数静默截断为整数', () async {
+  test('DbcFileWriter 拒绝将小数静默截断为整数', () async {
     await expectLater(
       util.write(
-        definition: definition,
+        schema: schema,
         rows: [
           {'ID': 1, 'Duration': 1.5, 'DurationPerLevel': 0, 'MaxDuration': 10},
         ],
@@ -156,10 +155,10 @@ void main() {
     );
   });
 
-  test('DbcExportUtil 拒绝超出 int32 范围的数值', () async {
+  test('DbcFileWriter 拒绝超出 int32 范围的数值', () async {
     await expectLater(
       util.write(
-        definition: definition,
+        schema: schema,
         rows: [sampleRow(id: 2147483648)],
         outputDirectory: directory.path,
       ),
@@ -167,10 +166,10 @@ void main() {
     );
   });
 
-  test('DbcExportUtil 输出目录不存在时失败', () async {
+  test('DbcFileWriter 输出目录不存在时失败', () async {
     await expectLater(
       util.write(
-        definition: definition,
+        schema: schema,
         rows: [sampleRow()],
         outputDirectory: p.join(directory.path, 'missing_subdir'),
       ),
@@ -178,23 +177,19 @@ void main() {
     );
   });
 
-  test('DbcExportUtil 支持中文、空字符串与重复字符串', () async {
-    final icon = DbcDefinitions.byTable['dbc_spell_icon']!;
+  test('DbcFileWriter 支持中文、空字符串与重复字符串', () async {
+    final icon = Definitions.spellIcon;
     final rows = [
       {'ID': 1, 'TextureFilename': ''},
       {'ID': 2, 'TextureFilename': '法术/图标_测试'},
       {'ID': 3, 'TextureFilename': '法术/图标_测试'},
     ];
 
-    await util.write(
-      definition: icon,
-      rows: rows,
-      outputDirectory: directory.path,
-    );
+    await util.write(schema: icon, rows: rows, outputDirectory: directory.path);
 
     final loader = DbcLoader(
-      p.join(directory.path, icon.fileName),
-      icon.schema.format,
+      p.join(directory.path, '${icon.name}.dbc'),
+      icon.format,
     );
     expect(loader.recordCount, 3);
     expect(loader.getRecord(0).getString(1), '');
@@ -241,7 +236,7 @@ void main() {
   test('导出阶段回调依次经过 writing/validating/committing', () async {
     final phases = <DbcExportPhase>[];
     await util.write(
-      definition: definition,
+      schema: schema,
       rows: [sampleRow()],
       outputDirectory: directory.path,
       onPhase: phases.add,
@@ -272,7 +267,7 @@ void main() {
         ..writeAsBytesSync([1, 2, 3]);
       File(p.join(sourceDir.path, 'notes.txt')).writeAsBytesSync([4]);
 
-      final errors = await DbcExportUtil.copyDbcFiles(
+      final errors = await DbcFileWriter.copyDbcFiles(
         sourceDirectory: sourceDir.path,
         targetDirectory: targetDir.path,
       );
@@ -298,7 +293,7 @@ void main() {
       File(p.join(targetDir.path, 'SpellDuration.dbc'))
           .writeAsBytesSync([9, 9]);
 
-      final errors = await DbcExportUtil.copyDbcFiles(
+      final errors = await DbcFileWriter.copyDbcFiles(
         sourceDirectory: sourceDir.path,
         targetDirectory: targetDir.path,
       );
@@ -314,7 +309,7 @@ void main() {
       File(p.join(sourceDir.path, 'A.dbc')).writeAsBytesSync([1]);
       File(p.join(sourceDir.path, 'B.dbc')).writeAsBytesSync([2]);
 
-      final errors = await DbcExportUtil.copyDbcFiles(
+      final errors = await DbcFileWriter.copyDbcFiles(
         sourceDirectory: sourceDir.path,
         targetDirectory: targetDir.path,
         isCancelled: () => true,

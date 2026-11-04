@@ -1,20 +1,20 @@
 import 'dart:typed_data';
 
 /// BLP2 image decoder (main mipmap only).
-abstract final class BlpDecoder {
+abstract final class FoxyBlpDecoder {
   /// Decodes a BLP2 image to RGBA (main mipmap only).
   ///
   /// All 3.3.5a client icons are BLP2 64×64, encoded as DXT1/DXT3/DXT5
   /// (measured distribution DXT1 2210 / DXT3 1922 / DXT5 2175; no JPEG, no
   /// palette variants). Supports both compressed-texture and raw-BGRA
-  /// encodings; the JPEG variant throws [BlpFormatException].
-  static BlpImage decode(Uint8List bytes) {
+  /// encodings; the JPEG variant throws [FoxyBlpFormatException].
+  static FoxyBlpImage decode(Uint8List bytes) {
     if (bytes.length < 84 ||
         bytes[0] != 0x42 ||
         bytes[1] != 0x4C ||
         bytes[2] != 0x50 ||
         bytes[3] != 0x32) {
-      throw const BlpFormatException('not a valid BLP2 file');
+      throw const FoxyBlpFormatException('not a valid BLP2 file');
     }
     final bd = ByteData.sublistView(bytes);
     final type = bd.getUint32(4, Endian.little);
@@ -27,19 +27,21 @@ abstract final class BlpDecoder {
     final mip0Size = bd.getUint32(20 + 64, Endian.little);
 
     if (type != 1) {
-      throw BlpFormatException('unsupported BLP type ($type, JPEG variant)');
+      throw FoxyBlpFormatException(
+        'unsupported BLP type ($type, JPEG variant)',
+      );
     }
     if (width == 0 || height == 0) {
-      throw const BlpFormatException('invalid image dimensions');
+      throw const FoxyBlpFormatException('invalid image dimensions');
     }
     // The width/height declared in the header is untrustworthy (game icons
     // are always 64×64): an oversized declaration would blow up memory during
     // the `width * height * 4` allocation, so cap it at a sane bound first.
     if (width > 4096 || height > 4096) {
-      throw const BlpFormatException('image dimensions out of range');
+      throw const FoxyBlpFormatException('image dimensions out of range');
     }
     if (mip0Offset + mip0Size > bytes.length) {
-      throw const BlpFormatException('mip0 data out of bounds');
+      throw const FoxyBlpFormatException('mip0 data out of bounds');
     }
 
     final rgba = Uint8List(width * height * 4);
@@ -55,7 +57,7 @@ abstract final class BlpDecoder {
         // Uncompressed BGRA.
         final expected = width * height * 4;
         if (src.length < expected) {
-          throw const BlpFormatException('insufficient uncompressed data');
+          throw const FoxyBlpFormatException('insufficient uncompressed data');
         }
         for (var i = 0; i < width * height; i++) {
           rgba[i * 4] = src[i * 4 + 2];
@@ -64,9 +66,9 @@ abstract final class BlpDecoder {
           rgba[i * 4 + 3] = src[i * 4 + 3];
         }
       default:
-        throw BlpFormatException('unsupported encoding ($encoding)');
+        throw FoxyBlpFormatException('unsupported encoding ($encoding)');
     }
-    return BlpImage(width: width, height: height, rgba: rgba);
+    return FoxyBlpImage(width: width, height: height, rgba: rgba);
   }
 
   /// Decodes a DXT1/3/5 block into [dst] (RGBA, non-premultiplied alpha).
@@ -79,7 +81,7 @@ abstract final class BlpDecoder {
     for (var by = 0; by < blocksY; by++) {
       for (var bx = 0; bx < blocksX; bx++) {
         if (p + blockBytes > src.length) {
-          throw const BlpFormatException('insufficient DXT data');
+          throw const FoxyBlpFormatException('insufficient DXT data');
         }
         var alphaBase = -1;
         final colorBase = mode == 1 ? p : p + 8;
@@ -162,22 +164,22 @@ abstract final class BlpDecoder {
 }
 
 /// Unsupported BLP format or corrupted data.
-final class BlpFormatException implements Exception {
+final class FoxyBlpFormatException implements Exception {
   final String message;
-  const BlpFormatException(this.message);
+  const FoxyBlpFormatException(this.message);
 
   @override
-  String toString() => 'BlpFormatException: $message';
+  String toString() => 'FoxyBlpFormatException: $message';
 }
 
 /// BLP2 decode result: RGBA pixels (4 bytes per pixel, non-premultiplied
 /// alpha).
-final class BlpImage {
+final class FoxyBlpImage {
   final int width;
   final int height;
   final Uint8List rgba;
 
-  const BlpImage({
+  const FoxyBlpImage({
     required this.width,
     required this.height,
     required this.rgba,
