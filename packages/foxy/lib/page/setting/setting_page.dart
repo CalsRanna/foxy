@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_import_dialog.dart';
@@ -13,6 +15,7 @@ import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/layout/foxy_header.dart';
@@ -101,6 +104,8 @@ class _SettingItem extends StatelessWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  final stateViewModel = GetIt.instance.get<FoxyStateViewModel>();
+  bool _savingLocale = false;
   final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
@@ -126,6 +131,8 @@ class _SettingPageState extends State<SettingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                _buildLocaleSection(),
+                const SizedBox(height: 24),
                 _SettingSection(
                   title: '目录设置',
                   children: [
@@ -156,6 +163,52 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ],
     );
+  }
+
+  Widget _buildLocaleSection() {
+    return SignalBuilder(
+      builder: (_) {
+        final hasLocaleTables = stateViewModel.hasLocaleTables.value;
+        return _SettingSection(
+          title: '本地化设置',
+          children: [
+            _SettingItem(
+              title: '使用独立本地化表',
+              description: hasLocaleTables
+                  ? '开启后优先显示本地化表内容，关闭后使用主表内容。修改后重新查询生效。'
+                  : '当前数据库未检测到本地化表。',
+              trailing: ShadSwitch(
+                value: stateViewModel.localeEnabled.value,
+                enabled: hasLocaleTables && !_savingLocale,
+                onChanged: _setLocaleEnabled,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _setLocaleEnabled(bool enabled) async {
+    setState(() => _savingLocale = true);
+    try {
+      await GetIt.instance.get<ConfigUtil>().update({
+        'locale_enabled': enabled,
+      });
+      stateViewModel.setLocaleSettings(
+        hasLocaleTables: stateViewModel.hasLocaleTables.value,
+        localeEnabled: enabled,
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(context).show(
+        ShadToast(
+          description: Text('保存本地化设置失败：${FoxyExceptions.message(error)}'),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _savingLocale = false);
+    }
   }
 
   Widget _buildDbcSection() {

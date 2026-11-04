@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/repository/dbc_export_registry.dart';
+import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
@@ -20,6 +21,7 @@ import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
@@ -44,13 +46,13 @@ void main() {
   late DbcExportWorkflowViewModel exportVm;
   late MpqExportWorkflowViewModel mpqVm;
   late CombinedExportWorkflowViewModel combinedVm;
+  late _MemoryConfigUtil cfg;
+  late FoxyStateViewModel stateVm;
+  late LocaleQuerySettings localeSettings;
 
   setUp(() {
     tempDir = Directory.systemTemp.createTempSync('foxy_setting_flow_');
-    final cfg = _MemoryConfigUtil({
-      'mpq_dir': tempDir.path,
-      'dbc_dir': tempDir.path,
-    });
+    cfg = _MemoryConfigUtil({'mpq_dir': tempDir.path, 'dbc_dir': tempDir.path});
     util = DbcSyncUtil(
       exportWorkerEntry: _SuccessWorker.run,
       mpqWorkerEntry: _SuccessMpqWorker.run,
@@ -59,6 +61,11 @@ void main() {
 
     GetIt.instance.reset();
     GetIt.instance.registerSingleton<ConfigUtil>(cfg);
+    localeSettings = LocaleQuerySettings();
+    GetIt.instance.registerSingleton(localeSettings);
+    stateVm = FoxyStateViewModel();
+    GetIt.instance.registerSingleton(stateVm);
+    stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: true);
     GetIt.instance.registerSingleton<DbcSyncUtil>(util);
     GetIt.instance.registerSingleton<DbcExportRegistry>(registry);
 
@@ -154,6 +161,57 @@ void main() {
 
   ShadButton buttonOf(WidgetTester tester, Finder finder) =>
       tester.widget<ShadButton>(finder);
+
+  testWidgets('本地化开关保存配置并同步后续查询设置', (tester) async {
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    final toggle = find.byType(ShadSwitch);
+    expect(tester.widget<ShadSwitch>(toggle).value, isTrue);
+
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+
+    expect(cfg.data['locale_enabled'], isFalse);
+    expect(stateVm.localeEnabled.value, isFalse);
+    expect(localeSettings.localeEnabled, isFalse);
+    expect(tester.widget<ShadSwitch>(toggle).value, isFalse);
+    expect(cfg.data['dbc_dir'], tempDir.path);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    expect(tester.widget<ShadSwitch>(toggle).value, isFalse);
+
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(cfg.data['locale_enabled'], isTrue);
+    expect(stateVm.localeEnabled.value, isTrue);
+    expect(localeSettings.localeEnabled, isTrue);
+  });
+
+  testWidgets('未检测到本地化表时不可开启', (tester) async {
+    stateVm.setLocaleSettings(hasLocaleTables: false, localeEnabled: false);
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+
+    final toggle = tester.widget<ShadSwitch>(find.byType(ShadSwitch));
+    expect(toggle.value, isFalse);
+    expect(toggle.enabled, isFalse);
+    expect(find.text('当前数据库未检测到本地化表。'), findsOneWidget);
+    expect(cfg.data.containsKey('locale_enabled'), isFalse);
+  });
+
+  testWidgets('保存本地化设置失败时保留原开关和查询状态', (tester) async {
+    cfg.failUpdate = true;
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    await tester.tap(find.byType(ShadSwitch));
+    await tester.pumpAndSettle();
+
+    final toggle = tester.widget<ShadSwitch>(find.byType(ShadSwitch));
+    expect(toggle.value, isTrue);
+    expect(toggle.enabled, isTrue);
+    expect(stateVm.localeEnabled.value, isTrue);
+    expect(localeSettings.localeEnabled, isTrue);
+    expect(cfg.data.containsKey('locale_enabled'), isFalse);
+    expect(find.textContaining('保存本地化设置失败'), findsOneWidget);
+  });
 
   testWidgets('短路回归：共享 util 忙时重算，任务结束必须恢复按钮', (tester) async {
     var rebuilds = 0;
@@ -395,6 +453,7 @@ final class _FakeRegistry implements DbcExportRegistry {
 /// In-memory ConfigUtil (no real IO), mirroring the wizard-test fake.
 final class _MemoryConfigUtil extends ConfigUtil {
   final Map<String, dynamic> data;
+  bool failUpdate = false;
 
   _MemoryConfigUtil(this.data);
 
@@ -406,6 +465,7 @@ final class _MemoryConfigUtil extends ConfigUtil {
 
   @override
   Future<void> update(Map<String, dynamic> values) async {
+    if (failUpdate) throw const FileSystemException('permission denied');
     data.addAll(values);
   }
 }

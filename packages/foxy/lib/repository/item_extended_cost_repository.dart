@@ -38,7 +38,7 @@ class ItemExtendedCostRepository
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table as iec');
-    const fields = [
+    final fields = [
       'iec.ID',
       'iec.HonorPoints',
       'iec.ArenaPoints',
@@ -60,11 +60,11 @@ class ItemExtendedCostRepository
       // item_template list: displayid -> ItemDisplayInfo icon, Quality
       // for the name color.
       'it.Name as itemName0',
-      'itl.Name as itemLocaleName0',
+      if (localeEnabled) 'itl.Name as itemLocaleName0',
       'it.Quality as itemQuality0',
       'didi.InventoryIcon0 as itemIcon0',
       'it2.Name as itemName1',
-      'itl2.Name as itemLocaleName1',
+      if (localeEnabled) 'itl2.Name as itemLocaleName1',
       'it2.Quality as itemQuality1',
       'didi2.InventoryIcon0 as itemIcon1',
     ];
@@ -73,10 +73,12 @@ class ItemExtendedCostRepository
       'acore_world.item_template as it',
       (join) => join.on('iec.ItemID0', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'acore_world.item_template_locale as itl',
-      (join) => join.on('iec.ItemID0', 'itl.ID').where('itl.locale', 'zhCN'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'acore_world.item_template_locale as itl',
+        (join) => join.on('iec.ItemID0', 'itl.ID').where('itl.locale', 'zhCN'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info as didi',
       (join) => join.on('it.displayid', 'didi.ID'),
@@ -85,10 +87,13 @@ class ItemExtendedCostRepository
       'acore_world.item_template as it2',
       (join) => join.on('iec.ItemID1', 'it2.entry'),
     );
-    builder = builder.leftJoin(
-      'acore_world.item_template_locale as itl2',
-      (join) => join.on('iec.ItemID1', 'itl2.ID').where('itl2.locale', 'zhCN'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'acore_world.item_template_locale as itl2',
+        (join) =>
+            join.on('iec.ItemID1', 'itl2.ID').where('itl2.locale', 'zhCN'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info as didi2',
       (join) => join.on('it2.displayid', 'didi2.ID'),
