@@ -1,9 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/model/flag_item.dart';
-import 'package:foxy/constant/item_constants.dart';
-import 'package:foxy/constant/item_enums.dart';
-import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_loot_template_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
@@ -62,33 +58,6 @@ void main() {
     );
     expect(entity.statsCount, 2);
     expect(entity.toJson(), isNot(contains('StatsCount')));
-  });
-
-  test('item_template 枚举、运行时保留值和 Flags 覆盖 AzerothCore 取值集', () {
-    expect(ItemConstants.itemClasses, hasLength(17));
-    expect(ItemConstants.itemInventoryTypes, hasLength(29));
-    expect(ItemEnums.itemQualityOptions.keys.toSet(), {0, 1, 2, 3, 4, 5, 6, 7});
-    expect(ItemEnums.itemBondingOptions.keys.toSet(), {0, 1, 2, 3, 4, 5});
-    expect(ItemEnums.itemMaterialOptions.keys.toSet(), {
-      for (var value = -1; value <= 8; value++) value,
-    });
-    expect(ItemEnums.itemSpellTriggerOptions.keys.toSet(), {0, 1, 2, 4, 5, 6});
-    expect(ItemEnums.itemStatTypeOptions.keys.toSet(), {
-      for (var value = 0; value < 49; value++) value,
-    });
-    expect(ItemEnums.itemStatTypeOptions[22], '近战被命中等级');
-    expect(ItemEnums.itemStatTypeOptions[28], '近战急速等级');
-    expect(ItemEnums.itemStatTypeOptions[40], contains('3.3.5a 未使用'));
-    expect(ItemEnums.itemStatTypeOptions[41], contains('已弃用'));
-    expect(ItemEnums.itemStatTypeOptions[42], contains('已弃用'));
-    expect(ItemEnums.itemReputationRankOptions.keys.toSet(), {
-      for (var value = 0; value < 8; value++) value,
-    });
-    expect(_valuesOf(ItemFlags.itemFlagOptions), _bits(0, 31));
-    expect(_valuesOf(ItemFlags.itemFlagsExtraOptions), _bits(0, 31));
-    expect(_valuesOf(ItemFlags.itemFlagsCustomOptions), {1, 2, 4});
-    expect(_valuesOf(ItemFlags.itemBagFamilyOptions), _bits(0, 14));
-    expect(_valuesOf(ItemFlags.itemSocketColorFlagOptions), {1, 2, 4, 8});
   });
 
   test('5 个关联 Tab 的 Entity 字段和复合主键正确', () {
@@ -154,11 +123,3 @@ void main() {
     expect(DbcDefinitions.byTable['dbc_holidays']?.fileName, 'Holidays.dbc');
   });
 }
-
-Set<int> _bits(int start, int end) => {
-  for (var bit = start; bit <= end; bit++) 1 << bit,
-};
-
-Set<int> _valuesOf(List<FlagItem> flags) => {
-  for (final flag in flags) flag.value,
-};

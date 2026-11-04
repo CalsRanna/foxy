@@ -1,4 +1,4 @@
-import 'package:foxy/constant/spell_item_enchantment_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'spell_item_enchantment_entity.g.dart';

@@ -20,6 +20,8 @@ dependencies:
   file_selector: ^1.1.0
   foxy_annotation:
     path: ../foxy_annotation
+  foxy_game_definition:
+    path: ../foxy_game_definition
   foxy_game_file:
     path: ../foxy_game_file
   foxy_widget:

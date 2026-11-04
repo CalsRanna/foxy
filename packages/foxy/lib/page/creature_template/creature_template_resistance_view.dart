@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/creature_template_resistance_linked_list_view_model.dart';

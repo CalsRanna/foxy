@@ -8,6 +8,7 @@ environment:
 workspace:
   - packages/foxy
   - packages/foxy_annotation
+  - packages/foxy_game_definition
   - packages/foxy_game_file
   - packages/foxy_generator
   - packages/foxy_lint

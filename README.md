@@ -28,7 +28,7 @@ Foxy 面向自建魔兽世界服务器(如 AzerothCore)的管理员与开发者,
 
 ## 仓库结构
 
-本仓库是 Dart pub workspace monorepo,包含六个包:
+本仓库是 Dart pub workspace monorepo,包含七个包:
 
 ```
 foxy/
@@ -39,6 +39,7 @@ foxy/
 │   │   ├── tool/             # 发布工具与更新器
 │   │   └── windows|linux|macos/  # 平台工程
 │   ├── foxy_annotation/      # 代码生成注解定义(Entity/Repository/ViewModel)
+│   ├── foxy_game_definition/ # 纯 Dart 的游戏枚举、标志位与参数定义
 │   ├── foxy_game_file/       # 纯 Dart 的 DBC 读写、MPQ 读取与打包、图标提取
 │   ├── foxy_generator/       # source_gen 代码生成器(读注解,产出 .g.dart)
 │   ├── foxy_lint/            # 项目专属 analyzer 插件(9 条 lint 规则)
@@ -65,7 +66,7 @@ Page (SignalBuilder 订阅) ──► ViewModel (signals + 表单控制器) ─�
 
 ```text
 packages/foxy/lib/
-├── constant/                # 游戏枚举、标志位、DBC schema 与字段定义
+├── constant/                # 应用的 DBC 表映射与多语言字段注册
 ├── entity/                  # 表实体、列表 DTO 与键类型
 ├── model/                   # 跨层数据模型:DBC、本地化、选择器协议、工作进度
 ├── exception/               # 业务异常与错误文案映射
@@ -105,6 +106,8 @@ packages/foxy/lib/
 
 布局、表格、分页、表单布局、上下文菜单、错误提示和游戏图标显示位于 `packages/foxy_widget/lib/src/`,应用统一通过 `package:foxy_widget/foxy_widget.dart` 使用。该包依赖 Flutter、`shadcn_ui`、`path` 和 `foxy_game_file`,不引用 `foxy` 的实体、仓储、路由或应用状态;应用页面的 badge 折叠布局计算留在应用包。`FoxyBlpIconProvider`、`FoxyGameAssetIcon` 和 `FoxyIconText` 是公开显示接口;`FoxyBlpDecoder` 及解码结果、异常类型是包内实现,不从公共入口导出。
 
+游戏枚举、标志位、数值范围,以及 Condition、SmartScript、GameObject 的参数定义位于纯 Dart 包 `packages/foxy_game_definition/`,通过 `package:foxy_game_definition/foxy_game_definition.dart` 使用。`FlagItem` 和 `IntegerFieldSpec` 随定义放在该包,不依赖 Flutter 或运行时第三方库。主应用负责组件渲染和引用对象查询;DBC 表映射 `DbcDefinitions`、多语言字段注册 `DbcLocaleFields` 及本地化模型留在应用包。
+
 DBC 文件读取、写入、头校验、复制替换,以及 MPQ 读取、打包、图标提取和路径规则位于纯 Dart 包 `packages/foxy_game_file/`,通过 `package:foxy_game_file/foxy_game_file.dart` 使用。依赖方向为 `foxy → foxy_widget → foxy_game_file`,主应用也可直接使用文件包。`DbcFileReader` 返回字段值与原文件行索引,`DbcFileWriter` 接收 schema 与记录,`MpqFilePacker` 打包已有 DBC 文件。数据库查询、SQL 拼接、暂存表切换、表映射、配置和任务编排留在 `foxy`。文件包不依赖 Flutter 或数据库;提取的 BLP 原始文件由 `foxy_widget` 解码显示。
 
 ## 快速开始
@@ -126,7 +129,7 @@ flutter test
 flutter run -d windows
 ```
 
-> 注:根目录为 workspace,应用的 Flutter 命令请在 `packages/foxy` 下执行;组件包在 `packages/foxy_widget` 执行 `flutter test`,资源包在 `packages/foxy_game_file` 执行 `dart test`。代码生成器与 lint 包的纯 Dart 测试分别用 `cd packages/foxy_generator && dart test`、`cd packages/foxy_lint && dart test`。
+> 注:根目录为 workspace,应用的 Flutter 命令请在 `packages/foxy` 下执行;组件包在 `packages/foxy_widget` 执行 `flutter test`,游戏定义包和文件包分别在 `packages/foxy_game_definition`、`packages/foxy_game_file` 执行 `dart test`。代码生成器与 lint 包的纯 Dart 测试分别用 `cd packages/foxy_generator && dart test`、`cd packages/foxy_lint && dart test`。
 
 macOS 使用 `flutter run -d macos` 或 `flutter build macos --release`,Flutter 会自动生成并解析 Swift Package Manager 插件依赖。使用 Xcode 时打开 `packages/foxy/macos/Runner.xcworkspace`。新增原生插件时需确认其 macOS 实现支持 Swift Package Manager。
 
@@ -153,7 +156,7 @@ icons_extracted: true
 
 应用测试按被测职责和跨模块行为分类,生成器与 lint 测试保留在各自包内:
 
-- **game_data 测试**(`test/game_data/`):枚举/标志常量与 AzerothCore 服务端取值一致性,纯内存运行。
+- **game_data 测试**(`test/game_data/`):实体、仓储和 DBC 表映射对游戏定义的使用,纯内存运行。
 - **database_editing 测试**(`test/database_editing/`):复合主键值语义、编辑流程、查询构建行为,纯内存运行。
 - **identity 测试**(`test/identity/`):身份/状态保持语义(活动日志 ID、locale 草稿、路由面包屑)。
 - **分层测试**(`test/constant/`、`test/model/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`):目录与被测代码对应,覆盖常量、更新服务、DBC 数据库同步与 MPQ 导出编排、表单控制器、业务流程及界面交互。
@@ -164,6 +167,7 @@ icons_extracted: true
 - **lint 测试**(`packages/foxy_lint/test/`):analyzer 官方测试框架。
 - **组件测试**(`packages/foxy_widget/test/`):在该包目录运行 `flutter test`,覆盖表单布局、动态 Tab、表格滚动保持、BLP 像素解码、图片缓存和显示。BLP/PNG 样本随测试保存在该包中。
 - **游戏文件测试**(`packages/foxy_game_file/test/`):在该包目录运行 `dart test`,覆盖 DBC 读取、写入与往返、头校验、文件替换、MPQ 打包读取与图标提取。数据库同步、任务取消与工作流测试仍留在 `foxy`。
+- **游戏定义测试**(`packages/foxy_game_definition/test/`):在该包目录运行 `dart test`,覆盖枚举、标志位、动态参数含义和标签展开,验证与 AzerothCore 服务端取值的一致性。
 
 ## 构建与发布
 

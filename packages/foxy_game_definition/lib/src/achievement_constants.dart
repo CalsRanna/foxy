@@ -1,4 +1,4 @@
-import 'package:foxy/model/flag_item.dart';
+import 'package:foxy_game_definition/src/flag_item.dart';
 
 abstract final class AchievementConstants {
   static const achievementKnownFlagMask = 0x000003ff;

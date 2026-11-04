@@ -42,6 +42,14 @@ jobs:
         working-directory: packages/foxy_widget
         run: flutter test
 
+      - name: Analyze game definition package
+        working-directory: packages/foxy_game_definition
+        run: dart analyze
+
+      - name: Test game definition package
+        working-directory: packages/foxy_game_definition
+        run: dart test
+
       - name: Analyze game file package
         working-directory: packages/foxy_game_file
         run: dart analyze

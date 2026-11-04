@@ -1,4 +1,4 @@
-import 'package:foxy/model/flag_item.dart';
+import 'package:foxy_game_definition/src/flag_item.dart';
 
 abstract final class PlayerCreateInfoConstants {
   /// `playercreateinfo.race` uses ChrRaces.dbc IDs accepted by ObjectMgr.

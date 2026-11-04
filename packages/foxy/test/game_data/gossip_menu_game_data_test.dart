@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
@@ -40,37 +39,6 @@ void main() {
       number++;
     }
     expect(NpcTextEntity.fromJson(source).toJson(), source);
-  });
-
-  test('Gossip option 类型、图标和语言枚举与当前 core 一致', () {
-    expect(GossipMenuOptionConstants.gossipOptionTypes.keys.toSet(), {
-      for (var value = 0; value <= 20; value++) value,
-    });
-    expect(GossipMenuOptionConstants.gossipOptionIcons.keys.toSet(), {
-      for (var value = 0; value <= 13; value++) value,
-      for (var value = 16; value <= 20; value++) value,
-    });
-    expect(GossipMenuOptionConstants.npcTextLanguages.keys.toSet(), {
-      0,
-      1,
-      2,
-      3,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      33,
-      35,
-      36,
-      37,
-      38,
-    });
-    expect(GossipMenuOptionConstants.gossipBooleanOptions, {0: '否', 1: '是'});
   });
 
   test('NPC 标识掩码展开为标签，未命中回退', () {

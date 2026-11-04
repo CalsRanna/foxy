@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/form/integer_field_spec.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/view_model/form/format_util.dart';
 import 'package:foxy/view_model/form/field_parser.dart';
 

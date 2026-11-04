@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/constant/gossip_menu_option_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';

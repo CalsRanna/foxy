@@ -1,0 +1,12 @@
+name: foxy_game_definition
+description: "Foxy 游戏枚举、标志位和参数定义，纯 Dart 实现。"
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.30.0

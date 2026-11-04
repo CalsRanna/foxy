@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/model/flag_item.dart';
+import 'package:test/test.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 void main() {
   const flags = [

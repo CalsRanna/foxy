@@ -1,4 +1,4 @@
-import 'package:foxy/model/flag_item.dart';
+import 'package:foxy_game_definition/src/flag_item.dart';
 
 /// The kind of editor an integer physical column should currently use.
 ///

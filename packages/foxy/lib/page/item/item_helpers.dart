@@ -1,4 +1,4 @@
-import 'package:foxy/constant/item_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 /// Item class / inventory type / subclass display-name helpers.
 abstract final class ItemHelpers {

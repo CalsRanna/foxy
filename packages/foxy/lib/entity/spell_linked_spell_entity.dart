@@ -1,4 +1,4 @@
-import 'package:foxy/constant/spell_enums.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'spell_linked_spell_entity.g.dart';

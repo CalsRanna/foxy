@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
-import 'package:foxy/constant/gem_property_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';

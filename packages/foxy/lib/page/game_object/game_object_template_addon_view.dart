@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/game_object_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/game_object_template_addon_linked_detail_view_model.dart';
 import 'package:foxy_widget/foxy_widget.dart';

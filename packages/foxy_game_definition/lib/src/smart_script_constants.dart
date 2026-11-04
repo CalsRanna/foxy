@@ -1,7 +1,7 @@
-import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/model/flag_item.dart';
-import 'package:foxy/constant/game_object_constants.dart';
-import 'package:foxy/model/form/integer_field_spec.dart';
+import 'package:foxy_game_definition/src/creature_flags.dart';
+import 'package:foxy_game_definition/src/flag_item.dart';
+import 'package:foxy_game_definition/src/game_object_constants.dart';
+import 'package:foxy_game_definition/src/integer_field_spec.dart';
 
 /// SmartAI parameter configuration: parameter specs per action/event
 /// target type, event-type filter per source type.

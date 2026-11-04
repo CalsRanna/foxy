@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/model/form/integer_field_spec.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';

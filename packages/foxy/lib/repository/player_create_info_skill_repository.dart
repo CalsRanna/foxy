@@ -1,4 +1,4 @@
-import 'package:foxy/constant/player_create_info_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/player_create_info_skill_entity.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

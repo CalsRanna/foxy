@@ -1,4 +1,4 @@
-import 'package:foxy/constant/smart_script_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/activity_log_entity.dart';

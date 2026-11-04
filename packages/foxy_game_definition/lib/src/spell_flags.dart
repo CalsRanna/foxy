@@ -1,7 +1,7 @@
 // Spell flag constant definitions
 // Source: AzerothCore SharedDefines.h SpellAttr0-7, SpellDefines.h
 
-import 'package:foxy/model/flag_item.dart';
+import 'package:foxy_game_definition/src/flag_item.dart';
 
 abstract final class SpellFlags {
   /// Spell-school mask (SchoolMask)

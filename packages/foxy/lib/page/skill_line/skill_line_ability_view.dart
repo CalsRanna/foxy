@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/player_create_info_constants.dart';
-import 'package:foxy/constant/skill_line_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/skill_line_ability_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/skill_line_ability_linked_list_view_model.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/gossip_menu_option_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/model/locale/foxy_locale_editor_delegate.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/form/field_controller.dart';

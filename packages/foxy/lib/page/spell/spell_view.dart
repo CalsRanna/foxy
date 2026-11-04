@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/model/flag_item.dart';
-import 'package:foxy/constant/spell_enums.dart';
-import 'package:foxy/constant/spell_flags.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';

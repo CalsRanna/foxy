@@ -1,4 +1,4 @@
-import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'scaling_stat_distribution_entity.g.dart';

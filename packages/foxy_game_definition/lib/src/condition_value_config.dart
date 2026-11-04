@@ -1,7 +1,7 @@
-import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/model/flag_item.dart';
-import 'package:foxy/model/form/integer_field_spec.dart';
-import 'package:foxy/constant/spell_enums.dart';
+import 'package:foxy_game_definition/src/creature_enums.dart';
+import 'package:foxy_game_definition/src/flag_item.dart';
+import 'package:foxy_game_definition/src/integer_field_spec.dart';
+import 'package:foxy_game_definition/src/spell_enums.dart';
 
 class ConditionValueConfig {
   static final conditionAuraTypeOptions = Map<int, String>.unmodifiable(

@@ -22,10 +22,11 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 
 手写支撑代码按职责放置：
 
-- `entity/` 放数据库表实体、列表 DTO 与键；跨层数据协议放 `model/`，包括 DBC 本地化、字段配置、选择器数据、任务进度。`constant/` 保留实际常量与定义注册表，`exception/` 放业务异常。
+- `entity/` 放数据库表实体、列表 DTO 与键；跨层数据协议放 `model/`，包括 DBC 本地化、字段配置、选择器数据、任务进度。`constant/` 保留应用的 DBC 表映射与多语言字段注册，`exception/` 放业务异常。
 - `view_model/` 管理页面状态、输入校验和分页；字段控制器、数字解析与格式化放 `view_model/form/`，手写工作流、共用状态与展示模型放 `view_model/workflow/`。这些代码不依赖 `page/`、`widget/` 或路由。
 - `foxy_widget` 放项目共用的布局、表格、分页、表单布局、上下文菜单、错误提示与游戏图标显示，应用通过 `package:foxy_widget/foxy_widget.dart` 使用，禁止跨包导入其 `src/`。组件不引用应用实体、仓储、路由或全局状态；游戏图标通过 `foxy_game_file` 获取路径规则。`FoxyBlpDecoder` 及解码结果、异常类型属于图片 Provider 的内部实现，不从公共入口导出。
 - `foxy_widget` 的 Dart 文件名以 `foxy_` 开头，类名以 `Foxy` 开头；私有类使用 `_Foxy` 前缀，测试文件和测试辅助类遵守同样约定。
+- `foxy_game_definition` 是纯 Dart 游戏定义包，放枚举、标志位、数值范围和动态参数元数据，以及 `FlagItem`、`IntegerFieldSpec` 等基础类型；实现平铺在 `lib/src/`。不依赖 Flutter、其他 Foxy 包、数据库或应用状态。入口为 `package:foxy_game_definition/foxy_game_definition.dart`，禁止跨包导入 `src/`。组件渲染和引用对象查询由应用负责；DBC 表映射、多语言字段注册及本地化模型留在 `foxy`。
 - `foxy_game_file` 是纯 Dart 包，放 DBC 文件读取、写入、头校验、复制替换，MPQ 读取、打包、图标提取及路径规则；实现平铺在 `lib/src/`。不依赖 Flutter、`foxy_widget`、应用配置、数据库、仓储、路由或状态。入口为 `package:foxy_game_file/foxy_game_file.dart`，禁止跨包导入 `src/`。DBC 记录保留原文件行索引；数据库表映射、SQL、暂存表切换和任务编排由 `foxy` 负责。BLP 解码与显示由 `foxy_widget` 负责。
 - 应用的 `widget/` 保留依赖字段控制器、业务或平台服务的组件，按 `form/`、`picker/`、`dialog/`、`directory/`、`update/`、`window/`、`feature/` 归类；`widget/table/` 保留页面的 badge 折叠布局计算；业务仓储到选择器的适配集中在 `widget/picker/delegate/`，选择器的数据协议放 `model/`。
 - 只服务一个页面模块的组件和显示辅助函数放 `page/<module>/`；仪表盘卡片放 `page/dashboard/component/`，首次引导与启动提醒放 `page/scaffold/`。应用主题与路由外壳 `FoxyApp` 和 `main.dart` 同处 `lib/` 根目录，显示配色放 `theme/`。
@@ -96,12 +97,12 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 - **活动日志**：每次 create/update/delete/copy 由生成的 `_logActivity` 经 `EventBus` 发 `EntityWrittenEvent`；**单个** `ActivityLogListener`（eager singleton）通过 `ActivityLogService.recordBestEffort` 落库（日志永不拖垮主写入）。
 - **事务**：跨表用例用 `DatabaseTransaction.execute()`（`lib/infrastructure/database/database_transaction.dart`）；嵌套调用经 zone marker **合并**为同一事务（laconic_mysql 每次 `transaction()` 都新开连接，嵌套会独立提交）。Repository 从不协调事务。
 - **本地化**：`RepositoryMixin.localeEnabled` 控制 zhCN JOIN 开关；`@FoxyBriefField.text` 标记 locale 展示名列；DBC 宽表用 `DbcLocaleRepositoryMixin` + `DbcLocaleFields`（16 语言）。
-- **游戏语义知识**（flags、enums、DBC schema、locale 字段表）集中在 `lib/constant/`，不得散落在页面里。
+- **游戏语义知识**（flags、enums、动态参数定义）集中在 `foxy_game_definition`；应用的 DBC schema 与数据库表映射、locale 字段注册集中在 `foxy/lib/constant/`，不得散落在页面里。
 
 ## 8. 测试
 
 - 分类与位置：
-  - 游戏数据测试（`test/game_data/`）：枚举/标志/列布局与服务端取值一致，纯内存。
+  - 游戏数据测试（`test/game_data/`）：实体、仓储、DBC 表映射和列布局对游戏定义的使用，纯内存。
   - 编辑语义测试（`test/database_editing/`）：键值语义、编辑流程、查询构建，纯内存。
   - 身份保持测试（`test/identity/`）：活动日志行 ID、locale 草稿 vs 原值、路由面包屑。
   - 分层测试（`test/constant/`、`test/model/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`）：按被测代码的位置组织；页面测试按模块细分，跨页面编辑行为放 `test/page/`。
@@ -109,6 +110,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
   - 真实生成产物行为测试（`test/codegen/`）：实体序列化、主键状态与列表刷新；生成器本身的单测仍放 `packages/foxy_generator/test/`。
   - 组件测试（`packages/foxy_widget/test/`）：使用公开入口测试组件、图片缓存与显示；内部 BLP 解码器在同包测试中直接导入，BLP/PNG fixture 随包放置。应用工作流测试保留自身所需的 fixture。
   - 游戏文件测试（`packages/foxy_game_file/test/`）：通过公开入口测试 DBC 读写与文件校验、MPQ 打包读取和图标提取，使用纯 Dart 的 `dart test` 运行。
+  - 游戏定义测试（`packages/foxy_game_definition/test/`）：通过公开入口验证枚举、标志位、参数定义和标签展开，使用纯 Dart 的 `dart test` 运行。
   - 集成测试（`test/integration/`，标签 `integration`）：对真实 MySQL 跑应用启动链路与仓储读写。
 - 集成测试默认跳过（见 `dart_test.yaml`），普通 `flutter test` 不需要数据库；本地用 `flutter test --tags integration --run-skipped -j 1` 运行，DBC 用例还需 `FOXY_TEST_MYSQL_ALLOW_DBC_WRITE=1`。必须串行（`-j 1`），且绝不能指向 `foxy` schema 有意义的库。
 - 新增注解 / 生成器**必须**加生成器测试（`packages/foxy_generator/test/`，`dart test` 纯 Dart 运行）。

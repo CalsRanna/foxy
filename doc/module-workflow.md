@@ -381,14 +381,14 @@ class Migration202609030000 implements Migration {
 
 ## 步骤 9:游戏数据常量与 game_data 测试(仅当模块引入游戏语义)
 
-`lib/constant/` 存放游戏语义常量(标志位、枚举值、DBC schema、默认值)。**新增有游戏语义的常量时**:
+`packages/foxy_game_definition/` 存放游戏语义常量、标志位、枚举值与动态参数定义。应用的 DBC 表映射和多语言字段注册保留在 `lib/constant/`。**新增有游戏语义的常量时**:
 
-1. 新建 `lib/constant/xxx_constants.dart`(样板 `skill_line_constants.dart` — 3.3.5a 的 AcquireMethod 枚举)。
-2. 新建 `packages/foxy/test/game_data/xxx_game_data_test.dart`,**常量取值与 AzerothCore 3.3.5 服务端一致**(样板 `quest_sort_game_data_test.dart`、`talent_game_data_test.dart` —— 引用 `DbcDefinitions` / `DbcLocaleFields` 或常量类,断言字段名/schema/枚举值)。
+1. 新建 `packages/foxy_game_definition/lib/src/xxx_constants.dart` 并加入包的公开入口(样板 `skill_line_constants.dart` — 3.3.5a 的 AcquireMethod 枚举)。
+2. 新建 `packages/foxy_game_definition/test/xxx_test.dart`,通过公开入口验证**常量取值与 AzerothCore 3.3.5 服务端一致**(样板 `talent_test.dart`、`game_object_test.dart`)。实体、仓储或 DBC 注册表相关断言留在 `packages/foxy/test/game_data/`。
 
-判定:模块的 flag/enum 在页面或仓库中被解释(如 `SkillLineConstants.skillAcquireMethodOptions` 用于 `FoxyEnumPicker`)就必须进 constant + 测试;若字段只是**原样透传**(`int` 显示/编辑,不做语义解释),不需要。
+判定:模块的 flag/enum 在页面或仓库中被解释(如 `SkillLineConstants.skillAcquireMethodOptions` 用于 `FoxyEnumPicker`)就必须进入游戏定义包并添加测试;若字段只是**原样透传**(`int` 显示/编辑,不做语义解释),不需要。
 
-✅ **验证**:`flutter test test/game_data/` 全绿。
+✅ **验证**:在 `packages/foxy_game_definition` 跑 `dart test`;在 `packages/foxy` 跑 `flutter test test/game_data/`。
 
 ---
 
@@ -450,7 +450,7 @@ class Migration202609030000 implements Migration {
 
 | 场景 | 新增 |
 | --- | --- |
-| 有游戏语义常量(步骤 9) | `test/game_data/xxx_game_data_test.dart` |
+| 有游戏语义常量(步骤 9) | `packages/foxy_game_definition/test/xxx_test.dart`;应用使用行为在 `test/game_data/` |
 | 复合键/特殊编辑语义(键值语义、编辑流程、查询构建) | `test/database_editing/xxx_database_editing_test.dart`(纯内存,不连库) |
 | DBC 表 | 步骤 10 的三个测试 |
 | 无以上特殊点 | **不强制**;但改动生成器/注解时必须加生成器套件测试(`packages/foxy_generator/test/`,见 `doc/codegen/extending.md`) |
@@ -493,7 +493,8 @@ grep -c "registerLazySingleton(" lib/di.dart   # 143
 grep -c "registerSingleton(" lib/di.dart       # 10
 ls lib/entity/*_entity.dart | wc -l            # 135 (含手写)
 ls lib/infrastructure/database/migration/*.dart | wc -l       # 10
-ls lib/constant/*.dart | wc -l                 # 33
+ls lib/constant/*.dart | wc -l                 # 2 (DBC 注册表)
+ls ../foxy_game_definition/lib/src/*.dart | wc -l # 31 (游戏定义与基础类型)
 rg --files lib/widget -g '*.dart' | wc -l      # 按职责分目录的共用组件
 ```
 

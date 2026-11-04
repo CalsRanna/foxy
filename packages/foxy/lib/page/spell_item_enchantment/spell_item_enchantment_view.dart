@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/spell_item_enchantment_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/view_model/form/field_controller.dart';

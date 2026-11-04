@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/prospecting_loot_template_linked_list_view_model.dart';

@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/constant/loot_template_constants.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 
 void main() {
@@ -45,13 +43,5 @@ void main() {
       'MaxCount': 2,
       'Comment': 'Bloodstone',
     });
-  });
-
-  test('LootMode Flags 覆盖 SharedDefines.h 及 core base 数据专用位', () {
-    expect(
-      CreatureFlags.lootModeFlagOptions.map((flag) => flag.value).toSet(),
-      {0x0001, 0x0002, 0x0004, 0x0008, 0x0010, 0x0020, 0x8000},
-    );
-    expect(LootTemplateConstants.lootTemplateValidLootModeMask, 0x803f);
   });
 }

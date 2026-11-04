@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/condition_error_types.dart';
-import 'package:foxy/constant/condition_source_types.dart';
-import 'package:foxy/constant/condition_type.dart';
-import 'package:foxy/constant/condition_value_config.dart';
-import 'package:foxy/model/form/integer_field_spec.dart';
-import 'package:foxy/constant/smart_script_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/view_model/form/field_controller.dart';

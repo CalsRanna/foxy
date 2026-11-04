@@ -151,7 +151,8 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
 
 - 在 `packages/foxy` 跑 `flutter test`(含游戏数据对照与生成代码行为,`integration` 标签默认跳过);在 `packages/foxy_generator` 跑 `dart test -j 1`。
 - 关键回归点:
-  - `test/game_data/*_game_data_test.dart`(项目内游戏数据定义与 AzerothCore 3.3.5 的一致性);
+  - `packages/foxy_game_definition/test/`(游戏定义与 AzerothCore 3.3.5 的一致性,在该包运行 `dart test`);
+  - `test/game_data/*_game_data_test.dart`(实体、仓储和 DBC 表映射对游戏定义的使用);
   - `test/database_editing/*_database_editing_test.dart`(模拟驱动或内存仓库上的编辑行为,覆盖身份保持与异常翻译);
   - `test/codegen/`(真实生成代码的实体值语义、主键冲突后状态同步和复制返回值);
   - `test/integration/`(真实 MySQL 集成测试,需要专用测试库;运行方式见仓库 README);

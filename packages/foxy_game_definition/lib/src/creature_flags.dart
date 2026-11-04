@@ -1,7 +1,7 @@
 // Creature Template flag constant definitions
 // Source: AzerothCore SharedDefines.h, UnitDefines.h
 
-import 'package:foxy/model/flag_item.dart';
+import 'package:foxy_game_definition/src/flag_item.dart';
 
 abstract final class CreatureFlags {
   /// Unit-flag options

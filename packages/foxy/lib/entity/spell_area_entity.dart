@@ -1,5 +1,4 @@
-import 'package:foxy/model/flag_item.dart';
-import 'package:foxy/constant/spell_flags.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
 
 part 'spell_area_entity.g.dart';

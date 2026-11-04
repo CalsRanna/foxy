@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/area_table_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('AreaTeams 与 AreaFlags 对应当前 core 和 3.3.5a DBC', () {

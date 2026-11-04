@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/glyph_property_constants.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
