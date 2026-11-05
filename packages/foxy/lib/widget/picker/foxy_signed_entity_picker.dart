@@ -294,18 +294,15 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
   }
 
   Future<void> _search() async {
+    final id = _idController.text;
+    final name = _nameController.text;
     final seq = ++_searchSeq;
     setState(() => _items = []);
     try {
-      final result = await _source.fetch(
-        _page,
-        _idController.text,
-        _nameController.text,
-      );
-      final count = await _source.count(
-        _idController.text,
-        _nameController.text,
-      );
+      final (result, count) = await (
+        _source.fetch(_page, id, name),
+        _source.count(id, name),
+      ).wait;
       if (!mounted || seq != _searchSeq) return;
       setState(() {
         _items = result;
