@@ -129,7 +129,7 @@ void main() {
     await tester.enterText(_search, '香蕉');
     await tester.pumpAndSettle();
     expect(_confirmButton(tester).enabled, isFalse);
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.tap(find.text('确定'), warnIfMissed: false);
     expect(find.byType(ShadDialog), findsOneWidget);
 
     await tester.enterText(_search, '');
@@ -249,46 +249,76 @@ void main() {
     await _dispose(tester, controller);
   });
 
-  testWidgets('键盘打开、搜索、上下选择、回车提交并恢复焦点', (tester) async {
+  testWidgets('主输入框不再通过独立快捷键打开弹窗', (tester) async {
     final controller = EnumFieldController<int>(fallback: 0)..init(1);
     await _pumpPicker(tester, controller);
-    _input(tester).focusNode!.requestFocus();
-    await tester.pump();
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
-    expect(tester.widget<EditableText>(_search).focusNode.hasFocus, isTrue);
-    await tester.enterText(_search, '香');
-    await tester.pumpAndSettle();
-    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
-    expect(controller.collect(), 21);
-    expect(_input(tester).focusNode!.hasFocus, isTrue);
-    await tester.sendKeyEvent(LogicalKeyboardKey.space);
-    await tester.pumpAndSettle();
-    await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
+    for (final key in [
+      LogicalKeyboardKey.enter,
+      LogicalKeyboardKey.numpadEnter,
+      LogicalKeyboardKey.space,
+    ]) {
+      _input(tester).focusNode!.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(key);
+      await tester.pumpAndSettle();
+      expect(find.byType(ShadDialog), findsNothing);
+    }
     expect(controller.collect(), 1);
     await _dispose(tester, controller);
   });
 
-  testWidgets('长列表键盘选择保持选中行可见', (tester) async {
-    final controller = EnumFieldController<int>(fallback: 0)..init(0);
-    await _pumpPicker(
-      tester,
-      controller,
-      options: {for (var i = 0; i < 60; i++) i: '选项 $i'},
-    );
+  testWidgets('搜索框方向键不切换选项，回车和输入提交不确认', (tester) async {
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
+    await _pumpPicker(tester, controller);
     await _open(tester);
-    for (var i = 0; i < 20; i++) {
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    for (final key in [
+      LogicalKeyboardKey.arrowDown,
+      LogicalKeyboardKey.arrowUp,
+      LogicalKeyboardKey.enter,
+      LogicalKeyboardKey.numpadEnter,
+    ]) {
+      tester.widget<EditableText>(_search).focusNode.requestFocus();
       await tester.pump();
+      await tester.sendKeyEvent(key);
+      await tester.pumpAndSettle();
+      expect(_selectedRadioValues(tester), [1]);
+      expect(find.byType(ShadDialog), findsOneWidget);
     }
-    expect(find.text('选项 20').hitTestable(), findsOneWidget);
+    await tester.tap(_search);
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(find.byType(ShadDialog), findsOneWidget);
+    expect(controller.collect(), 1);
+    await _dispose(tester, controller);
+  });
+
+  testWidgets('Radio 和确定按钮保留默认键盘行为', (tester) async {
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
+    await _pumpPicker(tester, controller);
+    await _open(tester);
+    final radio = find.byWidgetPredicate(
+      (widget) => widget is ShadRadio<int> && widget.value == 21,
+    );
+    Focus.of(
+      tester.element(
+        find.descendant(of: radio, matching: find.byType(ShadDecorator)),
+      ),
+    ).requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(_selectedRadioValues(tester), [21]);
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
-    expect(controller.collect(), 20);
+    expect(find.byType(ShadDialog), findsOneWidget);
+    expect(controller.collect(), 1);
+
+    Focus.of(tester.element(find.text('确定'))).requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.byType(ShadDialog), findsNothing);
+    expect(controller.collect(), 21);
     await _dispose(tester, controller);
   });
 
@@ -296,7 +326,7 @@ void main() {
     final controller = EnumFieldController<int>(fallback: 0)..init(1);
     await _pumpPicker(tester, controller);
     await _open(tester);
-    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.tap(find.text('香蕉'));
     await tester.pump();
     final cancel = find.widgetWithText(ShadButton, '取消');
     Focus.of(tester.element(find.text('取消'))).requestFocus();
@@ -314,8 +344,8 @@ void main() {
     await _pumpPicker(tester, controller, options: const <int, String>{});
     await _open(tester);
     expect(find.text('无匹配选项'), findsOneWidget);
-    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    expect(_confirmButton(tester).enabled, isFalse);
+    await tester.tap(find.text('确定'), warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(find.byType(ShadDialog), findsOneWidget);
     expect(controller.collect(), 42);

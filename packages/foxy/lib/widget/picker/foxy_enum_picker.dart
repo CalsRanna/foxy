@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy_widget/foxy_widget.dart';
@@ -64,29 +63,22 @@ class _FoxyEnumPickerState<T> extends State<FoxyEnumPicker<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.enter): _openDialog,
-        const SingleActivator(LogicalKeyboardKey.numpadEnter): _openDialog,
-        const SingleActivator(LogicalKeyboardKey.space): _openDialog,
-      },
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: ShadInput(
-          controller: _textController,
-          focusNode: _focusNode,
-          placeholder: Text(widget.placeholder ?? ''),
-          readOnly: true,
-          showCursor: false,
-          enableInteractiveSelection: false,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: ShadInput(
+        controller: _textController,
+        focusNode: _focusNode,
+        placeholder: Text(widget.placeholder ?? ''),
+        readOnly: true,
+        showCursor: false,
+        enableInteractiveSelection: false,
+        onPressed: _openDialog,
+        trailing: ShadButton.ghost(
+          height: 20,
+          width: 20,
+          padding: EdgeInsets.zero,
           onPressed: _openDialog,
-          trailing: ShadButton.ghost(
-            height: 20,
-            width: 20,
-            padding: EdgeInsets.zero,
-            onPressed: _openDialog,
-            child: const Icon(LucideIcons.list, size: 12),
-          ),
+          child: const Icon(LucideIcons.list, size: 12),
         ),
       ),
     );
@@ -126,9 +118,6 @@ class _EnumPickerDialog<T> extends StatefulWidget {
 }
 
 class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
-  // FoxyDataTable uses ShadTable's fixed 48-pixel rows, including its header.
-  static const _rowHeight = 48.0;
-  final _scrollController = ScrollController();
   final _selectionController = ShadRadioController<T>();
   late List<MapEntry<T, String>> _rows;
   int _queryVersion = 0;
@@ -149,7 +138,6 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _selectionController.dispose();
     super.dispose();
   }
@@ -171,27 +159,6 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
     if (!_hasSelection) _selectionController.value = null;
   }
 
-  void _moveSelection(int direction) {
-    if (_rows.isEmpty) return;
-    final current = _rows.indexWhere((row) => row.key == _selectedValue);
-    final index = current < 0
-        ? (direction > 0 ? 0 : _rows.length - 1)
-        : (current + direction).clamp(0, _rows.length - 1);
-    _selectionController.value = _rows[index].key;
-    if (_scrollController.hasClients) {
-      final position = _scrollController.position;
-      final top = index * _rowHeight;
-      final bottom = top + _rowHeight;
-      final visibleHeight = position.viewportDimension - _rowHeight;
-      final offset = top < position.pixels
-          ? top
-          : bottom > position.pixels + visibleHeight
-          ? bottom - visibleHeight
-          : position.pixels;
-      _scrollController.jumpTo(offset.clamp(0, position.maxScrollExtent));
-    }
-  }
-
   void _confirm() {
     if (_hasSelection) {
       Navigator.of(context).pop(_selectedValue);
@@ -206,84 +173,69 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
         : widget.options.containsKey(initial)
         ? '${widget.options[initial]} ($initial)'
         : initial.toString();
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.enter): _confirm,
-        const SingleActivator(LogicalKeyboardKey.numpadEnter): _confirm,
-        const SingleActivator(LogicalKeyboardKey.arrowDown): () =>
-            _moveSelection(1),
-        const SingleActivator(LogicalKeyboardKey.arrowUp): () =>
-            _moveSelection(-1),
-        const SingleActivator(LogicalKeyboardKey.escape): () =>
-            Navigator.of(context).pop(),
-      },
-      child: ShadDialog(
-        title: Text(widget.title),
-        description: Text('当前值: $currentText'),
-        scrollable: false,
-        constraints: DialogUtil.constraints(context),
-        actions: [
-          ShadButton.outline(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('取消'),
+    return ShadDialog(
+      title: Text(widget.title),
+      description: Text('当前值: $currentText'),
+      scrollable: false,
+      constraints: DialogUtil.constraints(context),
+      actions: [
+        ShadButton.outline(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('取消'),
+        ),
+        ShadButton(
+          enabled: _hasSelection,
+          onPressed: _confirm,
+          child: const Text('确定'),
+        ),
+      ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8,
+        children: [
+          ShadInput(
+            autofocus: true,
+            placeholder: const Text('搜索名称或值'),
+            onChanged: _search,
           ),
-          ShadButton(
-            enabled: _hasSelection,
-            onPressed: _confirm,
-            child: const Text('确定'),
+          Flexible(
+            child: _rows.isEmpty
+                ? const Center(child: Text('无匹配选项'))
+                : FoxyDataTable<MapEntry<T, String>>(
+                    rows: _rows,
+                    pinnedRowCount: 1,
+                    queryVersion: _queryVersion,
+                    onRowTap: (row) => _selectionController.value = row.key,
+                    onRowDoubleTap: (row) => Navigator.of(context).pop(row.key),
+                    columns: [
+                      FoxyTableColumn.fixed(
+                        label: '',
+                        width: 120,
+                        cell: (_, row) => ShadRadioGroup<T>(
+                          controller: _selectionController,
+                          items: [ShadRadio<T>(value: row.key)],
+                        ),
+                      ),
+                      FoxyTableColumn.fixed(
+                        label: '值',
+                        width: 120,
+                        cell: (_, row) => Text(row.key.toString()),
+                      ),
+                      FoxyTableColumn.flex(
+                        label: '名称',
+                        cell: (_, row) => Tooltip(
+                          message: row.value,
+                          child: Text(
+                            row.value,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ],
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 8,
-          children: [
-            ShadInput(
-              autofocus: true,
-              placeholder: const Text('搜索名称或值'),
-              onChanged: _search,
-              onSubmitted: (_) => _confirm(),
-            ),
-            Flexible(
-              child: _rows.isEmpty
-                  ? const Center(child: Text('无匹配选项'))
-                  : FoxyDataTable<MapEntry<T, String>>(
-                      rows: _rows,
-                      pinnedRowCount: 1,
-                      queryVersion: _queryVersion,
-                      verticalScrollController: _scrollController,
-                      onRowTap: (row) => _selectionController.value = row.key,
-                      onRowDoubleTap: (row) =>
-                          Navigator.of(context).pop(row.key),
-                      columns: [
-                        FoxyTableColumn.fixed(
-                          label: '',
-                          width: 120,
-                          cell: (_, row) => ShadRadioGroup<T>(
-                            controller: _selectionController,
-                            items: [ShadRadio<T>(value: row.key)],
-                          ),
-                        ),
-                        FoxyTableColumn.fixed(
-                          label: '值',
-                          width: 120,
-                          cell: (_, row) => Text(row.key.toString()),
-                        ),
-                        FoxyTableColumn.flex(
-                          label: '名称',
-                          cell: (_, row) => Tooltip(
-                            message: row.value,
-                            child: Text(
-                              row.value,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
-          ],
-        ),
       ),
     );
   }
