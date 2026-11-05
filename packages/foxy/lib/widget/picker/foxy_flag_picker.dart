@@ -5,11 +5,11 @@ import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// Flag picker: shows the formatted value; clicking the input or the
+/// Flag picker: shows the decimal value; clicking the input or the
 /// trailing button opens the edit dialog.
 ///
-/// `ShadInput.readOnly` only prevents hand-editing the `"123 (0x…)"`
-/// format string; all editing goes through the dialog.
+/// `ShadInput.readOnly` prevents hand-editing the value; all editing goes
+/// through the dialog.
 ///
 /// [controller] is initialized by the ViewModel
 /// ([FlagFieldController.init]); after the dialog confirms, the formatted

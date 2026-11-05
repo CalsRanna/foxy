@@ -118,11 +118,8 @@ class FlagFieldController extends TextBackedFieldController<int> {
   @override
   int parse(String text) => parseFlagValue(text);
 
-  /// Formats a flag integer as display text, e.g. `123 (0x0000007B)`.
-  static String formatFlagValue(int value) {
-    final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
-    return '$value (0x$hex)';
-  }
+  /// Formats a flag integer as its decimal value, e.g. `123`.
+  static String formatFlagValue(int value) => value.toString();
 
   /// Parses the display text produced by [formatFlagValue] back into an
   /// integer.
