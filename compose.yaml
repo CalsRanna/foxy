@@ -1,0 +1,56 @@
+services:
+  database:
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${FOXY_MYSQL_PORT:-63306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${FOXY_MYSQL_PASSWORD:-foxy_local_dev}
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - MYSQL_PWD="$${MYSQL_ROOT_PASSWORD}" mysql --protocol=TCP -h127.0.0.1 -uroot -e 'SELECT 1' >/dev/null
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  db-import:
+    image: acore/ac-wotlk-db-import:master
+    # Upstream currently publishes only linux/amd64 images.
+    platform: linux/amd64
+    environment:
+      AC_DISABLE_INTERACTIVE: "1"
+      AC_LOGIN_DATABASE_INFO: "database;3306;root;${FOXY_MYSQL_PASSWORD:-foxy_local_dev};acore_auth"
+      AC_WORLD_DATABASE_INFO: "database;3306;root;${FOXY_MYSQL_PASSWORD:-foxy_local_dev};acore_world"
+      AC_CHARACTER_DATABASE_INFO: "database;3306;root;${FOXY_MYSQL_PASSWORD:-foxy_local_dev};acore_characters"
+      AC_CLOSE_IDLE_CONNECTIONS: "0"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  client-data:
+    image: acore/ac-wotlk-client-data:master
+    platform: linux/amd64
+    user: "0:0"
+    volumes:
+      - ./data/azerothcore:/data
+    entrypoint: ["/bin/bash", "-ec"]
+    command:
+      - |
+        # Preserve DBC edits on subsequent starts.
+        if [ -f /data/.dbc-v20.0 ]; then
+          exit 0
+        fi
+        curl -fL --retry 3 https://github.com/wowgaming/client-data/releases/download/v20.0/Data.zip -o /tmp/data.zip
+        unzip -qo /tmp/data.zip 'dbc/*' -d /data
+        # Foxy must be able to export DBC files from the host on Linux too.
+        chmod -R a+rwX /data
+        touch /data/.dbc-v20.0
+        rm /tmp/data.zip
+
+volumes:
+  mysql-data:

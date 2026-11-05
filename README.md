@@ -118,6 +118,35 @@ DBC 文件读取、写入、头校验、复制替换,以及 MPQ 读取、打包�
 - macOS 端构建需 macOS 12.0+(Flutter 3.47 与 file_selector_macos 0.9.5+2 起要求)与 Xcode,原生插件统一使用 Swift Package Manager,无需安装 CocoaPods
 - MySQL 5.7+ / 8.x(建议 utf8mb4;应用会自建 `foxy` 元数据库)
 
+### Docker 准备本地数据库与 DBC
+
+没有安装 AzerothCore 服务端时,可在仓库根目录通过一个 Compose 文件准备 Foxy 所需的数据:
+
+```bash
+docker compose up -d
+docker compose logs -f db-import client-data
+```
+
+需要 Docker Engine / Docker Desktop(包含 Compose)。`database` 启动 MySQL 8.0,`db-import` 等数据库健康后导入官方 AzerothCore 数据,`client-data` 下载官方 v20.0 数据包并仅解压 DBC 到 `data/azerothcore/dbc`。无需克隆或编译 AzerothCore。首次会下载约 1.2 GB 的数据压缩包及 Docker 镜像,需要联网;两个初始化容器成功退出(`Exited (0)`)是正常状态,MySQL 会持续运行。
+
+Foxy 仍作为本机桌面应用运行,连接参数填写:
+
+| 配置 | 默认值 |
+| --- | --- |
+| 主机 | `127.0.0.1` |
+| 端口 | `63306` |
+| 数据库 | `acore_world` |
+| 用户名 | `root` |
+| 密码 | `foxy_local_dev` |
+
+首次引导没有游戏客户端时选择“跳过图标提取”,“服务端目录”选择本机的 `<仓库目录>/data/azerothcore`,然后完成 DBC 导入。该目录不需要服务端程序;Foxy 会自动创建 `foxy` 元数据库。DBC 文件位于本机目录,不能填写容器内的 `/data` 路径。
+
+MySQL 数据保存在命名卷,DBC 保存在已被 Git 忽略的 `data/` 目录。再次启动会保留已有 DBC 文件,不会覆盖 Foxy 导出的修改。日常停止使用 `docker compose stop`,重新启动使用 `docker compose up -d`;`docker compose down` 保留数据,而 `docker compose down -v` 会删除数据库卷。
+
+可在第一次启动前通过环境变量 `FOXY_MYSQL_PORT`、`FOXY_MYSQL_PASSWORD` 修改端口和密码;数据库卷初始化后修改变量不会更改现有 MySQL 密码。默认只绑定本机回环地址。AzerothCore 官方镜像目前仅提供 x86_64 版本,Compose 已指定 `linux/amd64`,ARM 电脑需要 Docker 的 x86_64 仿真支持。
+
+上游参考:[AzerothCore Docker 配置](https://github.com/azerothcore/acore-docker)、[客户端数据 v20.0](https://github.com/wowgaming/client-data/releases/tag/v20.0)。
+
 ### 运行
 
 ```bash
