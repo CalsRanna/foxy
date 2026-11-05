@@ -129,24 +129,32 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
   // FoxyDataTable uses ShadTable's fixed 48-pixel rows, including its header.
   static const _rowHeight = 48.0;
   final _scrollController = ScrollController();
+  final _selectionController = ShadRadioController<T>();
   late List<MapEntry<T, String>> _rows;
-  T? _selectedValue;
   int _queryVersion = 0;
+
+  T? get _selectedValue => _selectionController.value;
+
+  bool get _hasSelection => _rows.any((row) => row.key == _selectedValue);
 
   @override
   void initState() {
     super.initState();
     _rows = widget.options.entries.toList();
     if (widget.options.containsKey(widget.initialValue)) {
-      _selectedValue = widget.initialValue;
+      _selectionController.value = widget.initialValue;
     }
+    _selectionController.addListener(_onSelectionChanged);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _selectionController.dispose();
     super.dispose();
   }
+
+  void _onSelectionChanged() => setState(() {});
 
   void _search(String query) {
     final q = query.trim().toLowerCase();
@@ -160,6 +168,7 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
           .toList();
       _queryVersion++;
     });
+    if (!_hasSelection) _selectionController.value = null;
   }
 
   void _moveSelection(int direction) {
@@ -168,7 +177,7 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
     final index = current < 0
         ? (direction > 0 ? 0 : _rows.length - 1)
         : (current + direction).clamp(0, _rows.length - 1);
-    setState(() => _selectedValue = _rows[index].key);
+    _selectionController.value = _rows[index].key;
     if (_scrollController.hasClients) {
       final position = _scrollController.position;
       final top = index * _rowHeight;
@@ -184,7 +193,7 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
   }
 
   void _confirm() {
-    if (_rows.any((row) => row.key == _selectedValue)) {
+    if (_hasSelection) {
       Navigator.of(context).pop(_selectedValue);
     }
   }
@@ -219,7 +228,7 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
             child: const Text('取消'),
           ),
           ShadButton(
-            enabled: _rows.any((row) => row.key == _selectedValue),
+            enabled: _hasSelection,
             onPressed: _confirm,
             child: const Text('确定'),
           ),
@@ -242,13 +251,18 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
                       pinnedRowCount: 1,
                       queryVersion: _queryVersion,
                       verticalScrollController: _scrollController,
-                      keyOf: (row) => row.key,
-                      selectedKey: _selectedValue,
-                      onRowTap: (row) =>
-                          setState(() => _selectedValue = row.key),
+                      onRowTap: (row) => _selectionController.value = row.key,
                       onRowDoubleTap: (row) =>
                           Navigator.of(context).pop(row.key),
                       columns: [
+                        FoxyTableColumn.fixed(
+                          label: '',
+                          width: 120,
+                          cell: (_, row) => ShadRadioGroup<T>(
+                            controller: _selectionController,
+                            items: [ShadRadio<T>(value: row.key)],
+                          ),
+                        ),
                         FoxyTableColumn.fixed(
                           label: '值',
                           width: 120,

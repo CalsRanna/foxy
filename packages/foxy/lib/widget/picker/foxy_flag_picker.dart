@@ -96,6 +96,7 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
         pinnedRowCount: 1,
         rows: flags,
         onRowTap: (flag) => _toggleFlag(flag.value),
+        onRowDoubleTap: (flag) => Navigator.of(context).pop(flag.value),
         columns: [
           FoxyTableColumn.fixed(
             label: '',

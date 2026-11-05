@@ -114,6 +114,8 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
   int _searchSeq = 0;
   String? _errorMessage;
 
+  bool get _hasSelection => _items.any((item) => item.id == _selectedId);
+
   @override
   Widget build(BuildContext context) {
     return ShadDialog(
@@ -135,7 +137,8 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
               child: const Text('取消'),
             ),
             ShadButton(
-              onPressed: () => Navigator.of(context).pop(_confirmValue()),
+              enabled: _hasSelection,
+              onPressed: _confirm,
               child: const Text('确定'),
             ),
           ],
@@ -179,10 +182,10 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
 
   /// Encoded value on confirm: positive sources backfill a positive ID,
   /// negative sources a negative ID.
-  int? _confirmValue() {
-    final id = _selectedId;
-    if (id == null) return null;
-    return _isPositive ? id : -id;
+  void _confirm() {
+    if (!_hasSelection) return;
+    final id = _selectedId!;
+    Navigator.of(context).pop(_isPositive ? id : -id);
   }
 
   Widget _buildFilter() {
@@ -250,8 +253,10 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
             _userSelected = true;
           });
         },
-        onRowDoubleTap: (row) =>
-            Navigator.of(context).pop(_isPositive ? row.id : -row.id),
+        onRowDoubleTap: (row) {
+          _selectedId = row.id;
+          _confirm();
+        },
         columns: [
           FoxyTableColumn.fixed(
             label: '编号',
@@ -290,6 +295,7 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
 
   Future<void> _search() async {
     final seq = ++_searchSeq;
+    setState(() => _items = []);
     try {
       final result = await _source.fetch(
         _page,
@@ -305,14 +311,19 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
         _items = result;
         _total = count;
         _errorMessage = null;
+        if (!_hasSelection) {
+          _selectedId = null;
+          _userSelected = false;
+        }
       });
     } catch (e) {
       LoggerUtil.instance.e('${_source.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
-      setState(
-        () => _errorMessage =
-            '${_source.errorLabel}: ${FoxyExceptions.message(e)}',
-      );
+      setState(() {
+        _selectedId = null;
+        _userSelected = false;
+        _errorMessage = '${_source.errorLabel}: ${FoxyExceptions.message(e)}';
+      });
     }
   }
 }

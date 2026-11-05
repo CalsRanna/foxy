@@ -111,6 +111,9 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   List<String> get _filterValues =>
       _filterControllers.map((c) => c.text).toList();
 
+  bool get _hasSelection =>
+      _items.any((item) => widget.delegate.idOf(item) == _selectedId);
+
   @override
   Widget build(BuildContext context) {
     return ShadDialog(
@@ -132,7 +135,8 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
               child: Text('取消'),
             ),
             ShadButton(
-              onPressed: () => Navigator.of(context).pop(_selectedId),
+              enabled: _hasSelection,
+              onPressed: _confirm,
               child: Text('确定'),
             ),
           ],
@@ -228,8 +232,10 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
           _userSelected = true;
         });
       },
-      onRowDoubleTap: (item) =>
-          Navigator.of(context).pop(widget.delegate.idOf(item)),
+      onRowDoubleTap: (item) {
+        _selectedId = widget.delegate.idOf(item);
+        _confirm();
+      },
       columns: [
         for (final col in columns)
           if (col.width != null)
@@ -259,6 +265,10 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
         : Text(text);
   }
 
+  void _confirm() {
+    if (_hasSelection) Navigator.of(context).pop(_selectedId);
+  }
+
   void _doSearch() {
     _page = 1;
     _queryVersion++;
@@ -283,6 +293,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   Future<void> _search() async {
     final values = _filterValues;
     final seq = ++_searchSeq;
+    setState(() => _items = []);
     try {
       final (result, count) = await (
         widget.delegate.fetch(_page, values),
@@ -293,16 +304,22 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
         _items = result;
         _total = count;
         _errorMessage = null; // a successful search clears the previous error
+        if (!_hasSelection) {
+          _selectedId = null;
+          _userSelected = false;
+        }
       });
     } catch (e) {
       LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
       if (!mounted || seq != _searchSeq) return;
       // The UI only shows user copy mapped by FoxyExceptions.message; raw
       // exception strings go to the log.
-      setState(
-        () => _errorMessage =
-            '${widget.delegate.errorLabel}: ${FoxyExceptions.message(e)}',
-      );
+      setState(() {
+        _selectedId = null;
+        _userSelected = false;
+        _errorMessage =
+            '${widget.delegate.errorLabel}: ${FoxyExceptions.message(e)}';
+      });
     }
   }
 }

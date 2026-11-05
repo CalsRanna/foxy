@@ -6,6 +6,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
 import 'package:foxy/widget/dialog/foxy_form_dialog.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 const _options = {1: '苹果', 21: '香蕉', 3: '菠萝'};
@@ -87,6 +88,57 @@ void main() {
     expect(changes, 1);
     expect(_input(tester).controller!.text, '香蕉');
     expect(find.byType(ShadDialog), findsNothing);
+    await _dispose(tester, controller);
+  });
+
+  testWidgets('Radio 表示唯一选中项，点击 Radio 或行只更新草稿', (tester) async {
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
+    await _pumpPicker(tester, controller);
+    await _open(tester);
+
+    final table = tester.widget<FoxyDataTable<MapEntry<int, String>>>(
+      find.byType(FoxyDataTable<MapEntry<int, String>>),
+    );
+    expect(table.selectedKey, isNull);
+    expect(find.byType(ShadRadio<int>), findsNWidgets(3));
+    expect(_selectedRadioValues(tester), [1]);
+
+    await tester.tap(
+      find.byWidgetPredicate((w) => w is ShadRadio<int> && w.value == 21),
+    );
+    await tester.pumpAndSettle();
+    expect(_selectedRadioValues(tester), [21]);
+    expect(controller.collect(), 1);
+
+    await tester.tap(find.text('菠萝'));
+    await tester.pumpAndSettle();
+    expect(_selectedRadioValues(tester), [3]);
+    expect(controller.collect(), 1);
+
+    await tester.tap(find.text('确定'));
+    await tester.pumpAndSettle();
+    expect(controller.collect(), 3);
+    await _dispose(tester, controller);
+  });
+
+  testWidgets('筛选移除选中项后不可确认，清空搜索也不恢复旧选择', (tester) async {
+    final controller = EnumFieldController<int>(fallback: 0)..init(1);
+    await _pumpPicker(tester, controller);
+    await _open(tester);
+
+    await tester.enterText(_search, '香蕉');
+    await tester.pumpAndSettle();
+    expect(_confirmButton(tester).enabled, isFalse);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    expect(find.byType(ShadDialog), findsOneWidget);
+
+    await tester.enterText(_search, '');
+    await tester.pumpAndSettle();
+    expect(_selectedRadioValues(tester), isEmpty);
+    expect(_confirmButton(tester).enabled, isFalse);
+    await tester.tap(find.text('取消'));
+    await tester.pumpAndSettle();
+    expect(controller.collect(), 1);
     await _dispose(tester, controller);
   });
 
@@ -347,6 +399,17 @@ Finder get _search => find.descendant(
   of: find.byType(ShadDialog).last,
   matching: find.byType(EditableText),
 );
+
+List<int> _selectedRadioValues(WidgetTester tester) => tester
+    .elementList(find.byType(ShadRadio<int>))
+    .where((element) {
+      final group = element
+          .findAncestorStateOfType<ShadRadioGroupState<int>>()!;
+      return group.effectiveController.value ==
+          (element.widget as ShadRadio<int>).value;
+    })
+    .map((element) => (element.widget as ShadRadio<int>).value)
+    .toList();
 
 ShadInput _input(WidgetTester tester) => tester.widget<ShadInput>(
   find.byWidgetPredicate((widget) => widget is ShadInput && widget.readOnly),
