@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -8,16 +7,6 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// Takes the [NumberFieldController] held by the ViewModel. Type parameter
 /// [T] identifies the field's numeric type.
 class FoxyNumberInput<T extends num> extends StatelessWidget {
-  // RegExp construction compiles; big detail forms (e.g. spell with 67,
-  // creature with 50 inputs) rebuild every frame, so hoisted to static
-  // final for reuse.
-  static final _floatRegExp = RegExp(r'[0-9.\-]');
-  static final _intRegExp = RegExp(r'[0-9\-]');
-  static final _floatFormatter = FilteringTextInputFormatter.allow(
-    _floatRegExp,
-  );
-  static final _intFormatter = FilteringTextInputFormatter.allow(_intRegExp);
-
   final NumberFieldController<T> controller;
   final String? placeholder;
 
@@ -38,7 +27,6 @@ class FoxyNumberInput<T extends num> extends StatelessWidget {
         decimal: _isFloat,
         signed: true,
       ),
-      inputFormatters: [_isFloat ? _floatFormatter : _intFormatter],
     );
   }
 }
