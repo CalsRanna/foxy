@@ -1,7 +1,7 @@
 import 'package:foxy/entity/dbc_item_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'dbc_item_repository.g.dart';

@@ -1,6 +1,6 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
   static const _table = 'playercreateinfo_cast_spell';

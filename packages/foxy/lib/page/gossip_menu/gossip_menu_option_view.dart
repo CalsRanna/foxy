@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/picker/foxy_entity_picker.dart';
+import 'package:foxy/widget/dialog/foxy_form_dialog.dart';
+import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
+import 'package:foxy/widget/picker/foxy_entity_picker.dart';
+import 'package:foxy/widget/picker/foxy_enum_picker.dart';
 import 'package:foxy/widget/picker/foxy_flag_picker.dart';
 import 'package:foxy/widget/picker/locale/foxy_locale_picker.dart';
-import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
-import 'package:foxy/widget/form/foxy_number_input.dart';
-import 'package:foxy/widget/picker/foxy_enum_picker.dart';
-import 'package:foxy/widget/dialog/foxy_form_dialog.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -366,6 +366,24 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     }
   }
 
+  Future<void> _destroy(GossipMenuOptionKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
+    }
+  }
+
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create(showForm: false);
@@ -388,24 +406,6 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
         child: _buildDialogForm(),
       ),
     );
-  }
-
-  Future<void> _destroy(GossipMenuOptionKey key) async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '确认删除',
-      description: '确定要删除这条记录吗？此操作不可撤销。',
-      confirmText: '删除',
-      destructive: true,
-    );
-    if (!confirmed) return;
-    try {
-      await viewModel.destroy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('删除成功');
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
-    }
   }
 
   Future<void> _showEditDialog(GossipMenuOptionKey key) async {

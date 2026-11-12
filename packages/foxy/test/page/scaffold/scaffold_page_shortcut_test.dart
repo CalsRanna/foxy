@@ -214,21 +214,6 @@ void main() {
   });
 }
 
-class _MemoryConfigUtil extends ConfigUtil {
-  @override
-  Future<Map<String, dynamic>> load() async => {};
-}
-
-class _CompleteSetupViewModel extends SetupStatusViewModel {
-  _CompleteSetupViewModel({required super.configUtil});
-
-  @override
-  Future<void> prepare() async {}
-
-  @override
-  bool get isSetupComplete => true;
-}
-
 class _CombinedExportUseCase extends CombinedExportUseCase {
   _CombinedExportUseCase() : super.protected();
 
@@ -237,6 +222,16 @@ class _CombinedExportUseCase extends CombinedExportUseCase {
 
   @override
   Future<List<DbcExportTable>> loadTables() async => [];
+}
+
+class _CompleteSetupViewModel extends SetupStatusViewModel {
+  _CompleteSetupViewModel({required super.configUtil});
+
+  @override
+  bool get isSetupComplete => true;
+
+  @override
+  Future<void> prepare() async {}
 }
 
 class _EmptyRegistry implements DbcExportRegistry {
@@ -249,4 +244,9 @@ class _EmptyRegistry implements DbcExportRegistry {
 
   @override
   Future<List<Map<String, dynamic>>> loadRows(String tableName) async => [];
+}
+
+class _MemoryConfigUtil extends ConfigUtil {
+  @override
+  Future<Map<String, dynamic>> load() async => {};
 }

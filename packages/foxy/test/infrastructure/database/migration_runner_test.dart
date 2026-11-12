@@ -156,12 +156,6 @@ final class _FakeDriver implements DatabaseDriver {
     this.latin1Tables = const [],
   });
 
-  void _maybeFail(String sql) {
-    if (failOnSql != null && sql.contains(failOnSql!)) {
-      throw StateError('boom: $sql');
-    }
-  }
-
   @override
   Future<int> affectingStatement(
     String sql, [
@@ -171,15 +165,6 @@ final class _FakeDriver implements DatabaseDriver {
     _maybeFail(sql);
     _recordInsert(sql, params);
     return 1;
-  }
-
-  /// laconic routes inserts without auto-increment columns through
-  /// [statement]; both paths are recorded.
-  void _recordInsert(String sql, List<Object?> params) {
-    if (sql.toLowerCase().contains('migrations') &&
-        sql.toLowerCase().contains('insert')) {
-      appliedMigrations.add(params.first.toString());
-    }
   }
 
   @override
@@ -250,4 +235,19 @@ final class _FakeDriver implements DatabaseDriver {
 
   @override
   Future<T> transaction<T>(Future<T> Function() action) => action();
+
+  void _maybeFail(String sql) {
+    if (failOnSql != null && sql.contains(failOnSql!)) {
+      throw StateError('boom: $sql');
+    }
+  }
+
+  /// laconic routes inserts without auto-increment columns through
+  /// [statement]; both paths are recorded.
+  void _recordInsert(String sql, List<Object?> params) {
+    if (sql.toLowerCase().contains('migrations') &&
+        sql.toLowerCase().contains('insert')) {
+      appliedMigrations.add(params.first.toString());
+    }
+  }
 }

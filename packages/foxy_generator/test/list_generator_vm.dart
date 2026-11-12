@@ -362,8 +362,6 @@ const listAnnotationAsset = 'foxy_annotation|lib/list_annotations.dart';
 const repositoryAnnotationAsset =
     'foxy_annotation|lib/repository_annotations.dart';
 const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
-const viewModelAsset = 'foxy|lib/view_model/sample_list_view_model.dart';
-
 const sampleEntitySource = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
@@ -423,6 +421,8 @@ part 'sample_list_view_model.g.dart';
 class SampleListViewModel
     with FieldControllerMixin, QueryVersionMixin, _SampleListViewModelMixin {}
 ''';
+
+const viewModelAsset = 'foxy|lib/view_model/sample_list_view_model.dart';
 
 /// Reads the real annotation source directly instead of keeping a
 /// hand-copied duplicate in tests.

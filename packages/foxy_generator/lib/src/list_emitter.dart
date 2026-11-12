@@ -128,6 +128,45 @@ final class ListEmitter {
     return buffer.toString();
   }
 
+  /// Shared `_logActivity` hook rendering (name-resolving DB lookup or the
+  /// key-only fallback), see LogActivityHookEmitter.
+  LogActivityHookEmitter logActivityHook(ListGenerationModel model) =>
+      LogActivityHookEmitter(
+        entityClassName: model.entityClassName,
+        keyParameter: model.keyParameter,
+        getMethodName: 'get${_baseName(model)}',
+        moduleName: model.moduleName,
+        logNameFields: model.logNameFields,
+      );
+
+  String _baseName(ListGenerationModel model) => model.repositoryClassName
+      .substring(0, model.repositoryClassName.length - 'Repository'.length);
+
+  void _emitCopy(StringBuffer buffer, ListGenerationModel model) {
+    buffer
+      ..writeln('  Future<void> copy(${model.keyParameter}) async {')
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
+      ..writeln('    submitting.value = true;')
+      ..writeln('    errorMessage.value = null;')
+      ..writeln('    try {')
+      ..writeln('      await _repository.${model.copyMethodName}(key);')
+      ..writeln(
+        model.logNameFields.isEmpty
+            ? '      _logActivity(ActivityActionType.copy, key);'
+            : '      await _logActivity(ActivityActionType.copy, key);',
+      )
+      ..writeln('      await _refresh();')
+      ..writeln('    } catch (error) {')
+      ..writeln('      errorMessage.value = FoxyExceptions.message(error);')
+      ..writeln('      rethrow;')
+      ..writeln('    } finally {')
+      ..writeln('      submitting.value = false;')
+      ..writeln('    }')
+      ..writeln('  }');
+  }
+
   void _emitFields(StringBuffer buffer, ListGenerationModel model) {
     buffer
       ..writeln(
@@ -157,43 +196,4 @@ final class ListEmitter {
     }
     buffer.writeln('  int _refreshToken = 0;');
   }
-
-  void _emitCopy(StringBuffer buffer, ListGenerationModel model) {
-    buffer
-      ..writeln('  Future<void> copy(${model.keyParameter}) async {')
-      ..writeln('    if (submitting.value) {')
-      ..writeln("      throw BusyException('operation already in progress');")
-      ..writeln('    }')
-      ..writeln('    submitting.value = true;')
-      ..writeln('    errorMessage.value = null;')
-      ..writeln('    try {')
-      ..writeln('      await _repository.${model.copyMethodName}(key);')
-      ..writeln(
-        model.logNameFields.isEmpty
-            ? '      _logActivity(ActivityActionType.copy, key);'
-            : '      await _logActivity(ActivityActionType.copy, key);',
-      )
-      ..writeln('      await _refresh();')
-      ..writeln('    } catch (error) {')
-      ..writeln('      errorMessage.value = FoxyExceptions.message(error);')
-      ..writeln('      rethrow;')
-      ..writeln('    } finally {')
-      ..writeln('      submitting.value = false;')
-      ..writeln('    }')
-      ..writeln('  }');
-  }
-
-  String _baseName(ListGenerationModel model) => model.repositoryClassName
-      .substring(0, model.repositoryClassName.length - 'Repository'.length);
-
-  /// Shared `_logActivity` hook rendering (name-resolving DB lookup or the
-  /// key-only fallback), see LogActivityHookEmitter.
-  LogActivityHookEmitter logActivityHook(ListGenerationModel model) =>
-      LogActivityHookEmitter(
-        entityClassName: model.entityClassName,
-        keyParameter: model.keyParameter,
-        getMethodName: 'get${_baseName(model)}',
-        moduleName: model.moduleName,
-        logNameFields: model.logNameFields,
-      );
 }

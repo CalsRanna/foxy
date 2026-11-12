@@ -117,6 +117,33 @@ void main() {
   });
 }
 
+/// Fake combined export use case: records executed inputs and returns a
+/// success result; loadTables is scripted. The superclass fields are never
+/// touched.
+final class _FakeCombinedExportUseCase extends CombinedExportUseCase {
+  List<DbcExportTable> tables = [];
+
+  final executedInputs = <CombinedExportInput>[];
+  _FakeCombinedExportUseCase() : super.protected();
+
+  @override
+  bool get isRunning => false;
+
+  @override
+  Future<DbcSyncResult> execute(CombinedExportInput input) async {
+    executedInputs.add(input);
+    return const DbcSyncResult(
+      operation: DbcSyncOperation.export,
+      completed: 1,
+      skipped: 0,
+      errors: [],
+    );
+  }
+
+  @override
+  Future<List<DbcExportTable>> loadTables() async => tables;
+}
+
 /// In-memory ConfigUtil (no real IO), mirroring the wizard-test fake.
 final class _MemoryConfigUtil extends ConfigUtil {
   final Map<String, dynamic> data;
@@ -132,32 +159,5 @@ final class _MemoryConfigUtil extends ConfigUtil {
   @override
   Future<void> update(Map<String, dynamic> values) async {
     data.addAll(values);
-  }
-}
-
-/// Fake combined export use case: records executed inputs and returns a
-/// success result; loadTables is scripted. The superclass fields are never
-/// touched.
-final class _FakeCombinedExportUseCase extends CombinedExportUseCase {
-  _FakeCombinedExportUseCase() : super.protected();
-
-  List<DbcExportTable> tables = [];
-  final executedInputs = <CombinedExportInput>[];
-
-  @override
-  bool get isRunning => false;
-
-  @override
-  Future<List<DbcExportTable>> loadTables() async => tables;
-
-  @override
-  Future<DbcSyncResult> execute(CombinedExportInput input) async {
-    executedInputs.add(input);
-    return const DbcSyncResult(
-      operation: DbcSyncOperation.export,
-      completed: 1,
-      skipped: 0,
-      errors: [],
-    );
   }
 }

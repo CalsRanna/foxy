@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/spell_entity.dart';
@@ -17,8 +16,9 @@ import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -105,20 +105,6 @@ void main() {
   });
 }
 
-Finder _picker(String title) => find.byWidgetPredicate(
-  (widget) => widget is FoxyEnumPicker<int> && widget.title == title,
-);
-
-Future<void> _pumpEditor(WidgetTester tester, Widget editor) async {
-  tester.view.physicalSize = const Size(1600, 1000);
-  tester.view.devicePixelRatio = 1;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
-  await tester.pumpWidget(ShadApp(home: Scaffold(body: editor)));
-  await tester.pumpAndSettle();
-  expect(tester.takeException(), isNull);
-}
-
 Future<void> _pick(
   WidgetTester tester,
   String title,
@@ -154,6 +140,20 @@ Future<void> _pick(
       matching: find.text(confirm ? '确定' : '取消'),
     ),
   );
+  await tester.pumpAndSettle();
+  expect(tester.takeException(), isNull);
+}
+
+Finder _picker(String title) => find.byWidgetPredicate(
+  (widget) => widget is FoxyEnumPicker<int> && widget.title == title,
+);
+
+Future<void> _pumpEditor(WidgetTester tester, Widget editor) async {
+  tester.view.physicalSize = const Size(1600, 1000);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+  await tester.pumpWidget(ShadApp(home: Scaffold(body: editor)));
   await tester.pumpAndSettle();
   expect(tester.takeException(), isNull);
 }

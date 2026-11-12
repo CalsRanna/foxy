@@ -1,16 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
-import 'package:foxy/widget/table/table_layout_util.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/scaling_stat_distribution_list_view_model.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
+import 'package:foxy/widget/table/table_layout_util.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -26,6 +26,10 @@ class ScalingStatDistributionListPage extends StatefulWidget {
 
 class _ScalingStatDistributionListPageState
     extends State<ScalingStatDistributionListPage> {
+  static const _badgePadding = EdgeInsets.symmetric(horizontal: 8);
+
+  static const _badgeSpacing = 4.0;
+
   final viewModel = GetIt.instance.get<ScalingStatDistributionListViewModel>();
 
   @override
@@ -55,6 +59,27 @@ class _ScalingStatDistributionListPageState
     viewModel.initSignals();
   }
 
+  /// Badge 内部的固定文本样式（shadcn Badge 实现为 small + 12px + w600）。
+  /// 宽度测量必须与渲染完全一致——加粗会影响字形宽度。
+  TextStyle _badgeTextStyle(BuildContext context) =>
+      ShadTheme.of(context).textTheme.small
+          .copyWith(fontSize: 12, fontWeight: FontWeight.w600);
+
+  /// 一个 Badge 的总宽度：文本 + 左右 padding。测量使用的字体样式和
+  /// padding 与渲染完全一致，保证计数与实际布局吻合。
+  double _badgeWidth(
+    BuildContext context,
+    String text,
+    TextDirection direction,
+  ) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: _badgeTextStyle(context)),
+      maxLines: 1,
+      textDirection: direction,
+    )..layout();
+    return painter.width + _badgePadding.horizontal;
+  }
+
   Widget _buildFilter() {
     var idInput = FoxyStringInput(
       controller: viewModel.idController,
@@ -78,6 +103,67 @@ class _ScalingStatDistributionListPageState
     return ShadCard(
       padding: const EdgeInsets.all(16),
       child: Row(spacing: 16, children: credentialChildren),
+    );
+  }
+
+  /// 属性分布列：每个有效属性一个 Badge，按列实际宽度实时计算可容纳
+  /// 数量，超出部分合并为 `+N`。
+  Widget _buildStatBadges(
+    BriefScalingStatDistributionEntity item,
+    double maxWidth,
+  ) {
+    final entries = ScalingStatDistributionEntity.statEntries(
+      [
+        item.statId0,
+        item.statId1,
+        item.statId2,
+        item.statId3,
+        item.statId4,
+        item.statId5,
+        item.statId6,
+        item.statId7,
+        item.statId8,
+        item.statId9,
+      ],
+      [
+        item.bonus0,
+        item.bonus1,
+        item.bonus2,
+        item.bonus3,
+        item.bonus4,
+        item.bonus5,
+        item.bonus6,
+        item.bonus7,
+        item.bonus8,
+        item.bonus9,
+      ],
+    );
+    if (entries.isEmpty) return const Text('-');
+    final direction = Directionality.of(context);
+    final widths = [
+      for (final (statId, bonus) in entries)
+        _badgeWidth(context, _statLabel(statId, bonus), direction),
+    ];
+    final count = TableLayoutUtil.fittingBadgeCount(
+      widths,
+      (hidden) => _badgeWidth(context, '+$hidden', direction),
+      _badgeSpacing,
+      maxWidth,
+    );
+    final hidden = entries.length - count;
+    return Wrap(
+      spacing: _badgeSpacing,
+      runSpacing: 2,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        for (final (statId, bonus) in entries.take(count))
+          ShadBadge.secondary(
+            padding: _badgePadding,
+            child: Text(_statLabel(statId, bonus)),
+          ),
+        if (hidden > 0)
+          ShadBadge.outline(padding: _badgePadding, child: Text('+$hidden')),
+      ],
     );
   }
 
@@ -156,94 +242,6 @@ class _ScalingStatDistributionListPageState
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
-  static const _badgePadding = EdgeInsets.symmetric(horizontal: 8);
-  static const _badgeSpacing = 4.0;
-
-  /// Badge 内部的固定文本样式（shadcn Badge 实现为 small + 12px + w600）。
-  /// 宽度测量必须与渲染完全一致——加粗会影响字形宽度。
-  TextStyle _badgeTextStyle(BuildContext context) =>
-      ShadTheme.of(context).textTheme.small
-          .copyWith(fontSize: 12, fontWeight: FontWeight.w600);
-
-  /// 属性分布列：每个有效属性一个 Badge，按列实际宽度实时计算可容纳
-  /// 数量，超出部分合并为 `+N`。
-  Widget _buildStatBadges(
-    BriefScalingStatDistributionEntity item,
-    double maxWidth,
-  ) {
-    final entries = ScalingStatDistributionEntity.statEntries(
-      [
-        item.statId0,
-        item.statId1,
-        item.statId2,
-        item.statId3,
-        item.statId4,
-        item.statId5,
-        item.statId6,
-        item.statId7,
-        item.statId8,
-        item.statId9,
-      ],
-      [
-        item.bonus0,
-        item.bonus1,
-        item.bonus2,
-        item.bonus3,
-        item.bonus4,
-        item.bonus5,
-        item.bonus6,
-        item.bonus7,
-        item.bonus8,
-        item.bonus9,
-      ],
-    );
-    if (entries.isEmpty) return const Text('-');
-    final direction = Directionality.of(context);
-    final widths = [
-      for (final (statId, bonus) in entries)
-        _badgeWidth(context, _statLabel(statId, bonus), direction),
-    ];
-    final count = TableLayoutUtil.fittingBadgeCount(
-      widths,
-      (hidden) => _badgeWidth(context, '+$hidden', direction),
-      _badgeSpacing,
-      maxWidth,
-    );
-    final hidden = entries.length - count;
-    return Wrap(
-      spacing: _badgeSpacing,
-      runSpacing: 2,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        for (final (statId, bonus) in entries.take(count))
-          ShadBadge.secondary(
-            padding: _badgePadding,
-            child: Text(_statLabel(statId, bonus)),
-          ),
-        if (hidden > 0)
-          ShadBadge.outline(padding: _badgePadding, child: Text('+$hidden')),
-      ],
-    );
-  }
-
-  String _statLabel(int statId, int bonus) =>
-      '${ScalingStatDistributionConstants.scalingStatDistributionStatOptions[statId] ?? statId}($bonus)';
-
-  /// 一个 Badge 的总宽度：文本 + 左右 padding。测量使用的字体样式和
-  /// padding 与渲染完全一致，保证计数与实际布局吻合。
-  double _badgeWidth(
-    BuildContext context,
-    String text,
-    TextDirection direction,
-  ) {
-    final painter = TextPainter(
-      text: TextSpan(text: text, style: _badgeTextStyle(context)),
-      maxLines: 1,
-      textDirection: direction,
-    )..layout();
-    return painter.width + _badgePadding.horizontal;
-  }
-
   Future<void> _copy(int key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
@@ -287,4 +285,7 @@ class _ScalingStatDistributionListPageState
       parentMenu: RouterMenu.scalingStatDistribution,
     );
   }
+
+  String _statLabel(int statId, int bonus) =>
+      '${ScalingStatDistributionConstants.scalingStatDistributionStatOptions[statId] ?? statId}($bonus)';
 }

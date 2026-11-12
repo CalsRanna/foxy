@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
-import 'package:foxy/view_model/form/format_util.dart';
 import 'package:foxy/view_model/form/field_parser.dart';
+import 'package:foxy/view_model/form/format_util.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 // Exported for generated parts: the view-model .g.dart is `part of` the
 // parent library and cannot import on its own; the generated code's
@@ -18,6 +18,34 @@ class DoubleFieldController extends NumberFieldController<double> {
 
   @override
   double parse(String text) => FieldParser.parseDoubleField(text);
+}
+
+/// Enum field: holds one nullable value, falling back to [fallback] when
+/// nothing is selected.
+///
+/// [fallback] makes the previously scattered `?? 0` semantics explicit, so
+/// every field's default is documented.
+class EnumFieldController<T> extends FieldController<T> {
+  final controller = ValueNotifier<T?>(null);
+  final T fallback;
+
+  EnumFieldController({required this.fallback});
+
+  @override
+  void addListener(VoidCallback listener) => controller.addListener(listener);
+
+  @override
+  T collect() => controller.value ?? fallback;
+
+  @override
+  void dispose() => controller.dispose();
+
+  @override
+  void init(T value) => controller.value = value;
+
+  @override
+  void removeListener(VoidCallback listener) =>
+      controller.removeListener(listener);
 }
 
 /// Detail-form field controllers: co-locate "field type → format/parse
@@ -226,6 +254,11 @@ class IntFieldControllerGroup extends FieldController<int> {
     }
   }
 
+  void _onEnumChanged() {
+    if (_syncing) return;
+    _syncFromValue(enumController.collect());
+  }
+
   void _onFlagChanged() {
     if (_syncing) return;
     final text = flagController.controller.text.trim();
@@ -243,11 +276,6 @@ class IntFieldControllerGroup extends FieldController<int> {
     // the validation layer.
     if (value == null) return;
     _syncFromValue(value);
-  }
-
-  void _onEnumChanged() {
-    if (_syncing) return;
-    _syncFromValue(enumController.collect());
   }
 
   void _setAll(int value) {
@@ -317,34 +345,6 @@ class NullableStringFieldController extends TextBackedFieldController<String?> {
 /// [FormatException].
 sealed class NumberFieldController<T extends num>
     extends TextBackedFieldController<T> {}
-
-/// Enum field: holds one nullable value, falling back to [fallback] when
-/// nothing is selected.
-///
-/// [fallback] makes the previously scattered `?? 0` semantics explicit, so
-/// every field's default is documented.
-class EnumFieldController<T> extends FieldController<T> {
-  final controller = ValueNotifier<T?>(null);
-  final T fallback;
-
-  EnumFieldController({required this.fallback});
-
-  @override
-  void addListener(VoidCallback listener) => controller.addListener(listener);
-
-  @override
-  T collect() => controller.value ?? fallback;
-
-  @override
-  void dispose() => controller.dispose();
-
-  @override
-  void init(T value) => controller.value = value;
-
-  @override
-  void removeListener(VoidCallback listener) =>
-      controller.removeListener(listener);
-}
 
 /// Plain text field: passed through verbatim.
 class StringFieldController extends TextBackedFieldController<String> {

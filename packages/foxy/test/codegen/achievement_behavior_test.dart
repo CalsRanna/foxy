@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/achievement_entity.dart';
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/view_model/achievement_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
@@ -201,12 +201,6 @@ final _source = AchievementEntity.fromJson({
       '${prefix}_${locale.code}': 'original $prefix ${locale.code}',
 });
 
-class _Repository extends AchievementRepository {
-  @override
-  final Laconic laconic;
-  _Repository(this.laconic);
-}
-
 class _Driver implements DatabaseDriver {
   int maxId = 10;
   bool collide = false;
@@ -218,6 +212,24 @@ class _Driver implements DatabaseDriver {
   final SqlGrammar grammar = MysqlGrammar();
 
   @override
+  Future<int> affectingStatement(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
+    updates.add(List.of(params));
+    return 1;
+  }
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<int> insertAndGetId(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async => throw UnimplementedError();
+
+  @override
   Future<List<LaconicResult>> select(
     String sql, [
     List<Object?> params = const [],
@@ -226,7 +238,6 @@ class _Driver implements DatabaseDriver {
       sql.toLowerCase().contains('max(') ? {'max_id': maxId} : _source.toJson(),
     ),
   ];
-
   @override
   Future<void> statement(String sql, [List<Object?> params = const []]) async {
     insertAttempts++;
@@ -242,21 +253,11 @@ class _Driver implements DatabaseDriver {
   }
 
   @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    updates.add(List.of(params));
-    return 1;
-  }
-
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => throw UnimplementedError();
-  @override
   Future<T> transaction<T>(Future<T> Function() action) => action();
+}
+
+class _Repository extends AchievementRepository {
+  @override
+  final Laconic laconic;
+  _Repository(this.laconic);
 }

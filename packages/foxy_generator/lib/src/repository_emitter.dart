@@ -48,35 +48,6 @@ final class RepositoryEmitter {
     return buffer.toString();
   }
 
-  /// Locale helpers delegate to DbcLocaleRepositoryMixin's
-  /// loadDbcLocaleField/storeDbcLocaleField; the generated mixin's on clause
-  /// must be widened to that mixin (the repository class already mixes it in).
-  String _onClause(RepositoryGenerationModel model) =>
-      model.localeHelpersEnabled
-      ? 'RepositoryMixin, DbcLocaleRepositoryMixin'
-      : 'RepositoryMixin';
-
-  void _emitGetLocales(StringBuffer buffer, RepositoryGenerationModel model) {
-    buffer
-      ..writeln(
-        '  Future<List<DbcLocaleFieldValue>> get${model.baseName}Locales('
-        'int id, DbcLocaleFieldDefinition field) =>',
-      )
-      ..writeln('      loadDbcLocaleField(id, field);')
-      ..writeln();
-  }
-
-  void _emitSaveLocales(StringBuffer buffer, RepositoryGenerationModel model) {
-    buffer
-      ..writeln(
-        '  Future<void> save${model.baseName}Locales('
-        'int id, DbcLocaleFieldDefinition field, '
-        'List<DbcLocaleFieldValue> locales) =>',
-      )
-      ..writeln('      storeDbcLocaleField(id, field, locales);')
-      ..writeln();
-  }
-
   /// Physical column names are always wrapped in backticks and written as
   /// Dart string literals.
   ///
@@ -345,6 +316,27 @@ final class RepositoryEmitter {
       ..writeln();
   }
 
+  void _emitGetLocales(StringBuffer buffer, RepositoryGenerationModel model) {
+    buffer
+      ..writeln(
+        '  Future<List<DbcLocaleFieldValue>> get${model.baseName}Locales('
+        'int id, DbcLocaleFieldDefinition field) =>',
+      )
+      ..writeln('      loadDbcLocaleField(id, field);')
+      ..writeln();
+  }
+
+  void _emitSaveLocales(StringBuffer buffer, RepositoryGenerationModel model) {
+    buffer
+      ..writeln(
+        '  Future<void> save${model.baseName}Locales('
+        'int id, DbcLocaleFieldDefinition field, '
+        'List<DbcLocaleFieldValue> locales) =>',
+      )
+      ..writeln('      storeDbcLocaleField(id, field, locales);')
+      ..writeln();
+  }
+
   void _emitStore(StringBuffer buffer, RepositoryGenerationModel model) {
     final parameter = model.entityParameterName;
     // The store returns the *actual* primary key: the duplicate-key retry
@@ -536,17 +528,35 @@ final class RepositoryEmitter {
   String _linkParams(List<RepositoryKeyFieldModel> links) =>
       links.map((p) => '${p.dartType} ${p.dartName}').join(', ');
 
-  /// Link-key where chain: `where('`race`', race).where('`class`', class_)`.
-  String _linkWheres(List<RepositoryKeyFieldModel> links) => links
-      .map((p) => '.where(${_column(p.columnName)}, ${p.dartName})')
-      .join();
-
   /// Link-key where map literal: `'`race`': race, '`class`': class_`.
   /// Backticks are unconditional (like [_column]): laconic splices these
   /// keys into SQL verbatim, so a reserved-word link column (e.g. `index`)
   /// must be quoted.
   String _linkWhereMap(List<RepositoryKeyFieldModel> links) =>
       links.map((p) => "${_column(p.columnName)}: ${p.dartName}").join(', ');
+
+  /// Link-key where chain: `where('`race`', race).where('`class`', class_)`.
+  String _linkWheres(List<RepositoryKeyFieldModel> links) => links
+      .map((p) => '.where(${_column(p.columnName)}, ${p.dartName})')
+      .join();
+
+  /// Locale helpers delegate to DbcLocaleRepositoryMixin's
+  /// loadDbcLocaleField/storeDbcLocaleField; the generated mixin's on clause
+  /// must be widened to that mixin (the repository class already mixes it in).
+  String _onClause(RepositoryGenerationModel model) =>
+      model.localeHelpersEnabled
+      ? 'RepositoryMixin, DbcLocaleRepositoryMixin'
+      : 'RepositoryMixin';
+
+  /// `.orderBy('`ID`')`, or a chained `.orderBy(...).orderBy(...)` for
+  /// composite keys.
+  String _orderByClause(RepositoryGenerationModel model) {
+    final buffer = StringBuffer();
+    for (final field in model.keyFields) {
+      buffer.write('.orderBy(${_column(field.columnName)})');
+    }
+    return buffer.toString();
+  }
 
   /// Sequence-column where map for the retry path, referenced via the entity
   /// parameter, e.g. `'CreatureID': loot.CreatureID` (_column already returns
@@ -563,14 +573,4 @@ final class RepositoryEmitter {
             '${_column(model.keyFields.firstWhere((f) => f.dartName == name).columnName)}: $parameter.$name',
       )
       .join(', ');
-
-  /// `.orderBy('`ID`')`, or a chained `.orderBy(...).orderBy(...)` for
-  /// composite keys.
-  String _orderByClause(RepositoryGenerationModel model) {
-    final buffer = StringBuffer();
-    for (final field in model.keyFields) {
-      buffer.write('.orderBy(${_column(field.columnName)})');
-    }
-    return buffer.toString();
-  }
 }

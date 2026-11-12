@@ -514,36 +514,16 @@ class SampleRepository with _SampleRepositoryMixin {
   });
 }
 
-const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
-const entityAsset = 'foxy|lib/entity/sample_entity.dart';
-const listViewModelAsset = 'foxy|lib/view_model/sample_list_view_model.dart';
-const listAnnotationAsset = 'foxy_annotation|lib/list_annotations.dart';
-const propertyEntityAsset = 'foxy|lib/entity/sample_property_entity.dart';
-const repositoryAnnotationAsset =
-    'foxy_annotation|lib/repository_annotations.dart';
-
-const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
-
-const propertyRepositoryAsset =
-    'foxy|lib/repository/sample_property_repository.dart';
-
-const repositoryMixinAsset = 'foxy|lib/repository/repository_mixin.dart';
-const dbcLocaleMixinAsset =
-    'foxy|lib/repository/dbc_locale_repository_mixin.dart';
-const childEntityAsset = 'foxy|lib/entity/child_record_entity.dart';
-const childRepositoryAsset = 'foxy|lib/repository/child_record_repository.dart';
-const localeEntityAsset = 'foxy|lib/entity/locale_entity.dart';
-const localeRepositoryAsset = 'foxy|lib/repository/locale_repository.dart';
-const propertyListViewModelAsset =
-    'foxy|lib/view_model/sample_property_list_view_model.dart';
-
-/// Consonant + y base name (SampleProperty → SampleProperties).
-const propertyEntitySource = r'''
+/// Entity whose Brief declares a class-level projection alias
+/// (`localeName`): the alias comes from a JOINed table the generator cannot
+/// express, so getBrief must be hand-written (validated by the reader).
+const aliasBriefEntitySource = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
 @FoxyBriefEntity()
+@FoxyBriefField.text('localeName')
 @FoxyFullEntity(table: 'foxy.sample')
-class SamplePropertyEntity {
+class SampleEntity {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
@@ -552,41 +532,8 @@ class SamplePropertyEntity {
   @FoxyFullField('Name')
   final String name;
 
-  const SamplePropertyEntity({this.id = 0, this.name = ''});
+  const SampleEntity({this.id = 0, this.name = ''});
 }
-''';
-
-const propertyRepositorySource = r'''
-import 'package:foxy/entity/sample_property_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
-
-part 'sample_property_repository.g.dart';
-
-@FoxyRepository(entity: SamplePropertyEntity)
-@FoxyFilter.text('id')
-class SamplePropertyRepository with _SamplePropertyRepositoryMixin {}
-''';
-
-const scalarEntitySource = r'''
-import 'package:foxy_annotation/entity_annotations.dart';
-
-@FoxyFullEntity(table: 'foxy.sample')
-class SampleEntity {
-  @FoxyFullField('ID', key: true)
-  final int id;
-
-  const SampleEntity({this.id = 0});
-}
-''';
-
-const scalarRepositorySource = r'''
-import 'package:foxy/entity/sample_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
-
-part 'sample_repository.g.dart';
-
-@FoxyRepository(entity: SampleEntity)
-class SampleRepository with _SampleRepositoryMixin {}
 ''';
 
 /// Entity with a Brief projection and key, for query-layer generation
@@ -608,48 +555,7 @@ class SampleEntity {
   const SampleEntity({this.id = 0, this.name = ''});
 }
 ''';
-
-/// Repository declaring a text filter (with explicit column), for
-/// query-layer generation tests.
-const filterRepositorySource = r'''
-import 'package:foxy/entity/sample_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
-
-part 'sample_repository.g.dart';
-
-@FoxyRepository(entity: SampleEntity)
-@FoxyFilter.text('id')
-@FoxyFilter.text('name', column: 'Name_lang_zhCN')
-class SampleRepository with _SampleRepositoryMixin {}
-''';
-
-/// List-page presence marker: the Repository generator must enable the
-/// query layer only when the list ViewModel actually declares
-/// `@FoxyListViewModel` (a shape check, not mere file existence).
-const listViewModelSource = r'''
-import 'package:foxy/entity/sample_entity.dart';
-import 'package:foxy/repository/sample_repository.dart';
-import 'package:foxy_annotation/list_annotations.dart';
-
-@FoxyListViewModel(
-  entity: SampleEntity,
-  repository: SampleRepository,
-)
-class SampleListViewModel {}
-''';
-
-/// Property-flavoured list ViewModel for the y→ies pluralization test.
-const propertyListViewModelSource = r'''
-import 'package:foxy/entity/sample_property_entity.dart';
-import 'package:foxy/repository/sample_property_repository.dart';
-import 'package:foxy_annotation/list_annotations.dart';
-
-@FoxyListViewModel(
-  entity: SamplePropertyEntity,
-  repository: SamplePropertyRepository,
-)
-class SamplePropertyListViewModel {}
-''';
+const childEntityAsset = 'foxy|lib/entity/child_record_entity.dart';
 
 /// Child-table entity: parent key ParentID + auto-increment ChildID.
 const childEntitySource = r'''
@@ -677,6 +583,7 @@ class ChildRecordEntity {
   });
 }
 ''';
+const childRepositoryAsset = 'foxy|lib/repository/child_record_repository.dart';
 
 /// Child-table repository declaring linkKey.
 const childRepositorySource = r'''
@@ -689,35 +596,8 @@ part 'child_record_repository.g.dart';
 class ChildRecordRepository with _ChildRecordRepositoryMixin {}
 ''';
 
-/// Repository mixing in DbcLocaleRepositoryMixin (the locale-helper
-/// generation trigger).
-const localeEntitySource = r'''
-import 'package:foxy_annotation/entity_annotations.dart';
-
-@FoxyFullEntity(table: 'foxy.sample')
-class LocaleEntity {
-  @FoxyFullField('ID', key: true)
-  final int id;
-
-  const LocaleEntity({this.id = 0});
-}
-''';
-
-const localeRepositorySource = r'''
-import 'package:foxy/entity/locale_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
-import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
-import 'package:foxy/repository/repository_mixin.dart';
-
-part 'locale_repository.g.dart';
-
-@FoxyRepository(entity: LocaleEntity)
-class LocaleRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin, _LocaleRepositoryMixin {
-  @override
-  String get dbcLocaleTableName => _table;
-}
-''';
+const dbcLocaleMixinAsset =
+    'foxy|lib/repository/dbc_locale_repository_mixin.dart';
 
 /// Repository declaring a filter on a JOINed table (dotted column): the
 /// query layer cannot express the JOIN, so count/getBrief must be
@@ -743,16 +623,82 @@ class SampleRepository with _SampleRepositoryMixin {
 }
 ''';
 
-/// Entity whose Brief declares a class-level projection alias
-/// (`localeName`): the alias comes from a JOINed table the generator cannot
-/// express, so getBrief must be hand-written (validated by the reader).
-const aliasBriefEntitySource = r'''
+const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
+const entityAsset = 'foxy|lib/entity/sample_entity.dart';
+
+/// Repository declaring a text filter (with explicit column), for
+/// query-layer generation tests.
+const filterRepositorySource = r'''
+import 'package:foxy/entity/sample_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+
+part 'sample_repository.g.dart';
+
+@FoxyRepository(entity: SampleEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name', column: 'Name_lang_zhCN')
+class SampleRepository with _SampleRepositoryMixin {}
+''';
+const listAnnotationAsset = 'foxy_annotation|lib/list_annotations.dart';
+const listViewModelAsset = 'foxy|lib/view_model/sample_list_view_model.dart';
+
+/// List-page presence marker: the Repository generator must enable the
+/// query layer only when the list ViewModel actually declares
+/// `@FoxyListViewModel` (a shape check, not mere file existence).
+const listViewModelSource = r'''
+import 'package:foxy/entity/sample_entity.dart';
+import 'package:foxy/repository/sample_repository.dart';
+import 'package:foxy_annotation/list_annotations.dart';
+
+@FoxyListViewModel(
+  entity: SampleEntity,
+  repository: SampleRepository,
+)
+class SampleListViewModel {}
+''';
+const localeEntityAsset = 'foxy|lib/entity/locale_entity.dart';
+
+/// Repository mixing in DbcLocaleRepositoryMixin (the locale-helper
+/// generation trigger).
+const localeEntitySource = r'''
+import 'package:foxy_annotation/entity_annotations.dart';
+
+@FoxyFullEntity(table: 'foxy.sample')
+class LocaleEntity {
+  @FoxyFullField('ID', key: true)
+  final int id;
+
+  const LocaleEntity({this.id = 0});
+}
+''';
+
+const localeRepositoryAsset = 'foxy|lib/repository/locale_repository.dart';
+
+const localeRepositorySource = r'''
+import 'package:foxy/entity/locale_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
+import 'package:foxy/repository/repository_mixin.dart';
+
+part 'locale_repository.g.dart';
+
+@FoxyRepository(entity: LocaleEntity)
+class LocaleRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _LocaleRepositoryMixin {
+  @override
+  String get dbcLocaleTableName => _table;
+}
+''';
+
+const propertyEntityAsset = 'foxy|lib/entity/sample_property_entity.dart';
+
+/// Consonant + y base name (SampleProperty → SampleProperties).
+const propertyEntitySource = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
 @FoxyBriefEntity()
-@FoxyBriefField.text('localeName')
 @FoxyFullEntity(table: 'foxy.sample')
-class SampleEntity {
+class SamplePropertyEntity {
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
@@ -761,11 +707,68 @@ class SampleEntity {
   @FoxyFullField('Name')
   final String name;
 
-  const SampleEntity({this.id = 0, this.name = ''});
+  const SamplePropertyEntity({this.id = 0, this.name = ''});
 }
 ''';
 
-final repositoryMixinSource = foxyAppSource('repository/repository_mixin.dart');
+const propertyListViewModelAsset =
+    'foxy|lib/view_model/sample_property_list_view_model.dart';
+
+/// Property-flavoured list ViewModel for the y→ies pluralization test.
+const propertyListViewModelSource = r'''
+import 'package:foxy/entity/sample_property_entity.dart';
+import 'package:foxy/repository/sample_property_repository.dart';
+import 'package:foxy_annotation/list_annotations.dart';
+
+@FoxyListViewModel(
+  entity: SamplePropertyEntity,
+  repository: SamplePropertyRepository,
+)
+class SamplePropertyListViewModel {}
+''';
+
+const propertyRepositoryAsset =
+    'foxy|lib/repository/sample_property_repository.dart';
+
+const propertyRepositorySource = r'''
+import 'package:foxy/entity/sample_property_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+
+part 'sample_property_repository.g.dart';
+
+@FoxyRepository(entity: SamplePropertyEntity)
+@FoxyFilter.text('id')
+class SamplePropertyRepository with _SamplePropertyRepositoryMixin {}
+''';
+
+const repositoryAnnotationAsset =
+    'foxy_annotation|lib/repository_annotations.dart';
+
+const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
+
+const repositoryMixinAsset = 'foxy|lib/repository/repository_mixin.dart';
+
+const scalarEntitySource = r'''
+import 'package:foxy_annotation/entity_annotations.dart';
+
+@FoxyFullEntity(table: 'foxy.sample')
+class SampleEntity {
+  @FoxyFullField('ID', key: true)
+  final int id;
+
+  const SampleEntity({this.id = 0});
+}
+''';
+
+const scalarRepositorySource = r'''
+import 'package:foxy/entity/sample_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+
+part 'sample_repository.g.dart';
+
+@FoxyRepository(entity: SampleEntity)
+class SampleRepository with _SampleRepositoryMixin {}
+''';
 
 final dbcLocaleMixinSource = foxyAppSource(
   'repository/dbc_locale_repository_mixin.dart',
@@ -782,3 +785,5 @@ final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 final repositoryAnnotationSource = foxyAnnotationSource(
   'repository_annotations.dart',
 );
+
+final repositoryMixinSource = foxyAppSource('repository/repository_mixin.dart');

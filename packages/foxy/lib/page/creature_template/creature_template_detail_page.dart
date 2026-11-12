@@ -21,11 +21,6 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {
-  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
-    if (entry != null && entry > 0) return const {};
-    return {for (var index = 1; index < tabCount; index++) index};
-  }
-
   final int? creatureTemplateKey;
 
   const CreatureTemplateDetailPage({super.key, this.creatureTemplateKey});
@@ -33,6 +28,11 @@ class CreatureTemplateDetailPage extends StatefulWidget {
   @override
   State<CreatureTemplateDetailPage> createState() =>
       _CreatureTemplateDetailPageState();
+
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
 }
 
 class _CreatureTemplateDetailPageState

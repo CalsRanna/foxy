@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-class _Probe with RepositoryMixin {}
-
 void main() {
   final probe = _Probe();
 
@@ -73,3 +71,5 @@ void main() {
     });
   });
 }
+
+class _Probe with RepositoryMixin {}

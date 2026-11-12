@@ -3,8 +3,8 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart';
-import 'package:foxy_widget/src/game_asset/foxy_blp_decoder.dart';
 import 'package:foxy_game_file/foxy_game_file.dart';
+import 'package:foxy_widget/src/game_asset/foxy_blp_decoder.dart';
 import 'package:path/path.dart' as p;
 
 /// Logical identity of a game icon: the bare, normalized icon file name.
@@ -19,11 +19,11 @@ class FoxyBlpIconKey {
   const FoxyBlpIconKey(this.name);
 
   @override
-  bool operator ==(Object other) =>
-      other is FoxyBlpIconKey && other.name == name;
+  int get hashCode => name.hashCode;
 
   @override
-  int get hashCode => name.hashCode;
+  bool operator ==(Object other) =>
+      other is FoxyBlpIconKey && other.name == name;
 
   @override
   String toString() => 'FoxyBlpIconKey($name)';
@@ -51,19 +51,27 @@ class FoxyBlpIconProvider extends ImageProvider<FoxyBlpIconKey> {
 
   FoxyBlpIconProvider({required this.rawPath, this.iconDir});
 
-  String _pathFor(String name) => iconDir == null
-      ? GameIconPaths.blpPath(name)
-      : p.join(iconDir!, '$name.blp');
+  @override
+  int get hashCode => Object.hash(rawPath, iconDir);
 
   @override
-  Future<FoxyBlpIconKey> obtainKey(ImageConfiguration configuration) async =>
-      FoxyBlpIconKey(GameIconPaths.normalizeIconName(rawPath));
+  bool operator ==(Object other) =>
+      other is FoxyBlpIconProvider &&
+      other.rawPath == rawPath &&
+      other.iconDir == iconDir;
 
   @override
   ImageStreamCompleter loadImage(
     FoxyBlpIconKey key,
     ImageDecoderCallback decode,
   ) => OneFrameImageStreamCompleter(_load(key));
+
+  @override
+  Future<FoxyBlpIconKey> obtainKey(ImageConfiguration configuration) async =>
+      FoxyBlpIconKey(GameIconPaths.normalizeIconName(rawPath));
+
+  @override
+  String toString() => 'FoxyBlpIconProvider($rawPath)';
 
   Future<ImageInfo> _load(FoxyBlpIconKey key) async {
     final name = key.name;
@@ -100,15 +108,7 @@ class FoxyBlpIconProvider extends ImageProvider<FoxyBlpIconKey> {
     }
   }
 
-  @override
-  bool operator ==(Object other) =>
-      other is FoxyBlpIconProvider &&
-      other.rawPath == rawPath &&
-      other.iconDir == iconDir;
-
-  @override
-  int get hashCode => Object.hash(rawPath, iconDir);
-
-  @override
-  String toString() => 'FoxyBlpIconProvider($rawPath)';
+  String _pathFor(String name) => iconDir == null
+      ? GameIconPaths.blpPath(name)
+      : p.join(iconDir!, '$name.blp');
 }

@@ -1,7 +1,7 @@
 import 'package:foxy/entity/talent_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'talent_repository.g.dart';
@@ -22,15 +22,15 @@ class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
   }
 
   @override
-  Future<TalentEntity> createTalent() async {
-    return TalentEntity(id: await _getNextId());
-  }
-
-  @override
   Future<int> countTalents({TalentFilter? filter}) async {
     var builder = laconic.table('$_table as dt');
     builder = _applyFilter(builder, filter);
     return builder.count();
+  }
+
+  @override
+  Future<TalentEntity> createTalent() async {
+    return TalentEntity(id: await _getNextId());
   }
 
   @override

@@ -2,15 +2,15 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/infrastructure/cover/cover_selector.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/cover/cover_selector.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/bootstrap/bootstrap_simulator_form.dart';
 import 'package:foxy/page/bootstrap/bootstrap_window_header.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/view_model/workflow/bootstrap_workflow_view_model.dart';
 import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
+import 'package:foxy/view_model/workflow/bootstrap_workflow_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
@@ -73,6 +73,16 @@ class _BootstrapPageState extends State<BootstrapPage> {
     _prepare();
   }
 
+  /// Built-in fallback when no user cover is available or decoding fails.
+  Widget _buildAssetCover() {
+    return Image.asset(
+      'asset/image/cover.webp',
+      fit: BoxFit.cover,
+      height: double.infinity,
+      width: double.infinity,
+    );
+  }
+
   Widget _buildCoverPanel() {
     final surfaceColor = Theme.of(context).colorScheme.surface;
     var image = _coverFile == null
@@ -98,16 +108,6 @@ class _BootstrapPageState extends State<BootstrapPage> {
         image,
         Container(decoration: boxDecoration),
       ],
-    );
-  }
-
-  /// Built-in fallback when no user cover is available or decoding fails.
-  Widget _buildAssetCover() {
-    return Image.asset(
-      'asset/image/cover.webp',
-      fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
     );
   }
 

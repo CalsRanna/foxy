@@ -110,23 +110,6 @@ void main() {
   });
 }
 
-ItemTemplateEntity _candidate() {
-  return const ItemTemplateEntity(
-    entry: 56807,
-    className: 16,
-    subclass: 8,
-    soundOverrideSubclass: -1,
-    material: 0,
-    displayId: 58830,
-    inventoryType: 0,
-    sheath: 2,
-  );
-}
-
-List<LaconicQuery> _dbcQueries(List<LaconicQuery> queries) {
-  return queries.where((q) => q.sql.contains('dbc_item')).toList();
-}
-
 ({List<LaconicQuery> queries, ItemTemplateRepository repository}) _build({
   List<Map<String, Object?>> selectResult = const [],
   bool Function(String sql)? selectThrowsFor,
@@ -145,6 +128,23 @@ List<LaconicQuery> _dbcQueries(List<LaconicQuery> queries) {
     _TestDbcItemRepository(laconic),
   );
   return (queries: queries, repository: _TestItemTemplateRepository(laconic));
+}
+
+ItemTemplateEntity _candidate() {
+  return const ItemTemplateEntity(
+    entry: 56807,
+    className: 16,
+    subclass: 8,
+    soundOverrideSubclass: -1,
+    material: 0,
+    displayId: 58830,
+    inventoryType: 0,
+    sheath: 2,
+  );
+}
+
+List<LaconicQuery> _dbcQueries(List<LaconicQuery> queries) {
+  return queries.where((q) => q.sql.contains('dbc_item')).toList();
 }
 
 class _RecordingDriver implements DatabaseDriver {

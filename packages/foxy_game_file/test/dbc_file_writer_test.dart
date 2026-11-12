@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:test/test.dart';
 import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
 import 'package:warcrafty/warcrafty.dart';
 
 void main() {

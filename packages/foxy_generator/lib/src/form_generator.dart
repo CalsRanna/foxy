@@ -2,11 +2,10 @@
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_annotation/form_annotations.dart';
 import 'package:foxy_generator/src/form_emitter.dart';
 import 'package:foxy_generator/src/form_reader.dart';
+import 'package:source_gen/source_gen.dart';
 
 final class FoxyViewModelGenerator
     extends GeneratorForAnnotation<FoxyDetailViewModel> {

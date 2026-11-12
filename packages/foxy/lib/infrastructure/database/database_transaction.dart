@@ -14,10 +14,10 @@ import 'package:foxy/infrastructure/database/database.dart';
 /// this zone marker is present, [execute] runs the action on the outer
 /// transaction instead of opening a second one.
 class DatabaseTransaction {
-  const DatabaseTransaction();
-
   /// Zone marker for the active outer transaction.
   static const _txKey = #foxyTransactionActive;
+
+  const DatabaseTransaction();
 
   Future<T> execute<T>(Future<T> Function() action) async {
     if (Zone.current[_txKey] == true) {

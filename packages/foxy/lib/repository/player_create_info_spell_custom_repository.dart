@@ -1,8 +1,8 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:laconic/laconic.dart';
 
 part 'player_create_info_spell_custom_repository.g.dart';

@@ -4,19 +4,25 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:foxy_lint/rules/class_file_name_match.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(ClassFileNameMatchRuleTest);
+  });
+}
+
 /// Tests the ClassFileNameMatch rule through the official analyzer_testing
 /// harness. The probed file is named `quest_flags.dart` (set in setUp), so
 /// a namespace class named `QuestFlags` must not report.
 @reflectiveTest
 class ClassFileNameMatchRuleTest extends AnalysisRuleTest {
   @override
+  String get testFileName => 'quest_flags.dart';
+
+  @override
   void setUp() {
     rule = ClassFileNameMatch();
     super.setUp();
   }
-
-  @override
-  String get testFileName => 'quest_flags.dart';
 
   void testNamespaceClassMatchingNameDoesNotReport() async {
     await assertNoDiagnostics(r'''
@@ -55,10 +61,4 @@ class QuestFlags {
 }
 ''');
   }
-}
-
-void main() {
-  defineReflectiveSuite(() {
-    defineReflectiveTests(ClassFileNameMatchRuleTest);
-  });
 }

@@ -10,15 +10,36 @@ import 'package:path/path.dart' as p;
 /// Pure static functions with injectable randomness, so the picking logic
 /// stays unit-testable without real images or a Flutter engine.
 class CoverSelector {
-  CoverSelector._();
+  /// Extensions accepted as cover images. Gif is intentionally excluded:
+  /// animated images are not suitable as a static cover.
+  static const supportedExtensions = {'.png', '.jpg', '.jpeg', '.webp'};
+
+  static const _pngMagic = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+
+  static const _jpegMagic = [0xFF, 0xD8];
+
+  static const _riffMagic = [0x52, 0x49, 0x46, 0x46]; // 'RIFF'
+
+  static const _webpMagic = [0x57, 0x45, 0x42, 0x50]; // 'WEBP'
 
   /// User cover images directory, same location as config.yaml.
   static String get defaultDirPath =>
       p.join(Directory.current.path, 'data', 'cover');
 
-  /// Extensions accepted as cover images. Gif is intentionally excluded:
-  /// animated images are not suitable as a static cover.
-  static const supportedExtensions = {'.png', '.jpg', '.jpeg', '.webp'};
+  CoverSelector._();
+
+  /// Magic-byte validation (first 12 bytes of the header), so a file whose
+  /// extension lies — e.g. a .txt renamed to .png — never reaches the
+  /// decoder. Public so tests can feed synthetic headers without touching
+  /// the file system.
+  static bool isSupportedImageHeader(List<int> header) {
+    if (_startsWith(header, _pngMagic)) return true;
+    if (_startsWith(header, _jpegMagic)) return true;
+    // WebP: 'RIFF' container with a 'WEBP' chunk type at offset 8.
+    return header.length >= 12 &&
+        _startsWith(header, _riffMagic) &&
+        _startsWith(header.sublist(8), _webpMagic);
+  }
 
   /// Returns image files directly inside [dirPath] that pass both the
   /// extension whitelist and the magic-byte header check, sorted by path
@@ -53,24 +74,6 @@ class CoverSelector {
     final shuffled = [...candidates]..shuffle(random ?? Random());
     return shuffled.first;
   }
-
-  /// Magic-byte validation (first 12 bytes of the header), so a file whose
-  /// extension lies — e.g. a .txt renamed to .png — never reaches the
-  /// decoder. Public so tests can feed synthetic headers without touching
-  /// the file system.
-  static bool isSupportedImageHeader(List<int> header) {
-    if (_startsWith(header, _pngMagic)) return true;
-    if (_startsWith(header, _jpegMagic)) return true;
-    // WebP: 'RIFF' container with a 'WEBP' chunk type at offset 8.
-    return header.length >= 12 &&
-        _startsWith(header, _riffMagic) &&
-        _startsWith(header.sublist(8), _webpMagic);
-  }
-
-  static const _pngMagic = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
-  static const _jpegMagic = [0xFF, 0xD8];
-  static const _riffMagic = [0x52, 0x49, 0x46, 0x46]; // 'RIFF'
-  static const _webpMagic = [0x57, 0x45, 0x42, 0x50]; // 'WEBP'
 
   static bool _hasValidHeader(File file) {
     try {

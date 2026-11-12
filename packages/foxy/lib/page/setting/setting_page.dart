@@ -5,19 +5,19 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_import_dialog.dart';
-import 'package:foxy/widget/directory/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/mpq_export_dialog.dart';
-import 'package:foxy/widget/update/update_dialog.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/view_model/workflow/combined_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
-import 'package:foxy/view_model/setup_status_view_model.dart';
-import 'package:foxy/view_model/foxy_state_view_model.dart';
-import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/directory/directory_setting_row.dart';
+import 'package:foxy/widget/update/update_dialog.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -30,38 +30,6 @@ class SettingPage extends StatefulWidget {
 
   @override
   State<SettingPage> createState() => _SettingPageState();
-}
-
-/// Settings group: top divider + title + bottom divider + item list.
-class _SettingSection extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const _SettingSection({required this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    final divider = Divider(
-      height: 1,
-      color: theme.colorScheme.border.withValues(alpha: 0.6),
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        divider,
-        const SizedBox(height: 16),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 16),
-        divider,
-        const SizedBox(height: 16),
-        ...children,
-      ],
-    );
-  }
 }
 
 /// Single-row settings item: title + description + right-side action,
@@ -165,50 +133,56 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildLocaleSection() {
+  @override
+  void dispose() {
+    exportViewModel.dispose();
+    mpqViewModel.dispose();
+    combinedViewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupViewModel.prepare();
+    updateViewModel.prepare();
+  }
+
+  Widget _buildCombinedExportSection() {
     return SignalBuilder(
       builder: (_) {
-        final hasLocaleTables = stateViewModel.hasLocaleTables.value;
+        // The combined export drives the shared DbcSyncUtil, so it must not run
+        // while an import/export/MPQ-export is in flight. Same non-short-circuit
+        // pattern as the other sections: keep every isRunning read in the
+        // dependency set.
+        final combinedBusy = combinedViewModel.isRunning;
+        final importBusy = importViewModel.isRunning;
+        final exportBusy = exportViewModel.isRunning;
+        final mpqBusy = mpqViewModel.isRunning;
+        final busy = combinedBusy || importBusy || exportBusy || mpqBusy;
         return _SettingSection(
-          title: '本地化设置',
+          title: '一键导出',
           children: [
             _SettingItem(
-              title: '使用独立本地化表',
-              description: hasLocaleTables
-                  ? '开启后优先显示本地化表内容，关闭后使用主表内容。修改后重新查询生效。'
-                  : '当前数据库未检测到本地化表。',
-              trailing: ShadSwitch(
-                value: stateViewModel.localeEnabled.value,
-                enabled: hasLocaleTables && !_savingLocale,
-                onChanged: _setLocaleEnabled,
+              title: '同时导出 DBC 与 MPQ',
+              description:
+                  '将选中的 DBC 表一次导出为 .dbc 文件到服务端目录，并打包 MPQ 补丁'
+                  '（默认 patch-zhCN-5.MPQ）到客户端目录。MPQ 直接复用本次导出的'
+                  ' DBC 文件，全程只读取一次数据库。',
+              trailing: ShadButton(
+                size: ShadButtonSize.sm,
+                onPressed: busy ? null : _showCombinedExportDialog,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [Icon(LucideIcons.zap, size: 15), Text('一键导出')],
+                ),
               ),
             ),
           ],
         );
       },
     );
-  }
-
-  Future<void> _setLocaleEnabled(bool enabled) async {
-    setState(() => _savingLocale = true);
-    try {
-      await GetIt.instance.get<ConfigUtil>().update({
-        'locale_enabled': enabled,
-      });
-      stateViewModel.setLocaleSettings(
-        hasLocaleTables: stateViewModel.hasLocaleTables.value,
-        localeEnabled: enabled,
-      );
-    } catch (error) {
-      if (!mounted) return;
-      ShadSonner.of(context).show(
-        ShadToast(
-          description: Text('保存本地化设置失败：${FoxyExceptions.message(error)}'),
-        ),
-      );
-    } finally {
-      if (mounted) setState(() => _savingLocale = false);
-    }
   }
 
   Widget _buildDbcSection() {
@@ -267,35 +241,50 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildCombinedExportSection() {
+  Widget _buildIconSection() {
     return SignalBuilder(
       builder: (_) {
-        // The combined export drives the shared DbcSyncUtil, so it must not run
-        // while an import/export/MPQ-export is in flight. Same non-short-circuit
-        // pattern as the other sections: keep every isRunning read in the
-        // dependency set.
-        final combinedBusy = combinedViewModel.isRunning;
-        final importBusy = importViewModel.isRunning;
-        final exportBusy = exportViewModel.isRunning;
-        final mpqBusy = mpqViewModel.isRunning;
-        final busy = combinedBusy || importBusy || exportBusy || mpqBusy;
+        final busy = iconViewModel.isRunning;
         return _SettingSection(
-          title: '一键导出',
+          title: '游戏图标',
           children: [
             _SettingItem(
-              title: '同时导出 DBC 与 MPQ',
+              title: '提取游戏图标',
               description:
-                  '将选中的 DBC 表一次导出为 .dbc 文件到服务端目录，并打包 MPQ 补丁'
-                  '（默认 patch-zhCN-5.MPQ）到客户端目录。MPQ 直接复用本次导出的'
-                  ' DBC 文件，全程只读取一次数据库。',
+                  '从配置的客户端目录的 Data\\<语言> MPQ 归档中提取全部图标'
+                  '（约 6300 个，BLP 原始格式）。未提取的图标在列表页显示占位符。',
               trailing: ShadButton(
                 size: ShadButtonSize.sm,
-                onPressed: busy ? null : _showCombinedExportDialog,
+                onPressed: busy ? null : _showIconExtractDialog,
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
-                  children: [Icon(LucideIcons.zap, size: 15), Text('一键导出')],
+                  children: [Icon(LucideIcons.download, size: 15), Text('提取')],
                 ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildLocaleSection() {
+    return SignalBuilder(
+      builder: (_) {
+        final hasLocaleTables = stateViewModel.hasLocaleTables.value;
+        return _SettingSection(
+          title: '本地化设置',
+          children: [
+            _SettingItem(
+              title: '使用独立本地化表',
+              description: hasLocaleTables
+                  ? '开启后优先显示本地化表内容，关闭后使用主表内容。修改后重新查询生效。'
+                  : '当前数据库未检测到本地化表。',
+              trailing: ShadSwitch(
+                value: stateViewModel.localeEnabled.value,
+                enabled: hasLocaleTables && !_savingLocale,
+                onChanged: _setLocaleEnabled,
               ),
             ),
           ],
@@ -330,34 +319,6 @@ class _SettingPageState extends State<SettingPage> {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
                   children: [Icon(LucideIcons.archive, size: 15), Text('导出')],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildIconSection() {
-    return SignalBuilder(
-      builder: (_) {
-        final busy = iconViewModel.isRunning;
-        return _SettingSection(
-          title: '游戏图标',
-          children: [
-            _SettingItem(
-              title: '提取游戏图标',
-              description:
-                  '从配置的客户端目录的 Data\\<语言> MPQ 归档中提取全部图标'
-                  '（约 6300 个，BLP 原始格式）。未提取的图标在列表页显示占位符。',
-              trailing: ShadButton(
-                size: ShadButtonSize.sm,
-                onPressed: busy ? null : _showIconExtractDialog,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.download, size: 15), Text('提取')],
                 ),
               ),
             ),
@@ -415,19 +376,44 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  @override
-  void dispose() {
-    exportViewModel.dispose();
-    mpqViewModel.dispose();
-    combinedViewModel.dispose();
-    super.dispose();
+  Future<void> _openProjectPage() async {
+    final ok = await launchUrl(
+      Uri.parse('https://github.com/CalsRanna/foxy'),
+      mode: LaunchMode.externalApplication,
+    );
+    if (!ok) {
+      DialogUtil.instance.error('无法打开项目主页');
+    }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    setupViewModel.prepare();
-    updateViewModel.prepare();
+  Future<void> _setLocaleEnabled(bool enabled) async {
+    setState(() => _savingLocale = true);
+    try {
+      await GetIt.instance.get<ConfigUtil>().update({
+        'locale_enabled': enabled,
+      });
+      stateViewModel.setLocaleSettings(
+        hasLocaleTables: stateViewModel.hasLocaleTables.value,
+        localeEnabled: enabled,
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(context).show(
+        ShadToast(
+          description: Text('保存本地化设置失败：${FoxyExceptions.message(error)}'),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _savingLocale = false);
+    }
+  }
+
+  void _showCombinedExportDialog() {
+    DialogUtil.show(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => CombinedExportDialog(vm: combinedViewModel),
+    );
   }
 
   void _showExportDialog() {
@@ -446,27 +432,19 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  void _showMpqExportDialog() {
-    DialogUtil.show(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => MpqExportDialog(vm: mpqViewModel),
-    );
-  }
-
-  void _showCombinedExportDialog() {
-    DialogUtil.show(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => CombinedExportDialog(vm: combinedViewModel),
-    );
-  }
-
   void _showImportDialog() {
     DialogUtil.show(
       context: context,
       barrierDismissible: false,
       builder: (context) => DbcImportDialog(vm: importViewModel),
+    );
+  }
+
+  void _showMpqExportDialog() {
+    DialogUtil.show(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => MpqExportDialog(vm: mpqViewModel),
     );
   }
 
@@ -480,14 +458,36 @@ class _SettingPageState extends State<SettingPage> {
       builder: (context) => UpdateDialog(vm: updateViewModel),
     );
   }
+}
 
-  Future<void> _openProjectPage() async {
-    final ok = await launchUrl(
-      Uri.parse('https://github.com/CalsRanna/foxy'),
-      mode: LaunchMode.externalApplication,
+/// Settings group: top divider + title + bottom divider + item list.
+class _SettingSection extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const _SettingSection({required this.title, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    final divider = Divider(
+      height: 1,
+      color: theme.colorScheme.border.withValues(alpha: 0.6),
     );
-    if (!ok) {
-      DialogUtil.instance.error('无法打开项目主页');
-    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        divider,
+        const SizedBox(height: 16),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 16),
+        divider,
+        const SizedBox(height: 16),
+        ...children,
+      ],
+    );
   }
 }

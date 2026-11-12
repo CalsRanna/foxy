@@ -2,9 +2,9 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 
 import 'integration_mysql.dart';

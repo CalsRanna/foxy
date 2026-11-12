@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/directory/directory_setting_row.dart';
-import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
-import 'package:foxy/view_model/workflow/workflow_status.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
-import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
+import 'package:foxy/widget/directory/directory_setting_row.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -47,18 +47,19 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   final _step1FormKey = GlobalKey<DirectoryPathFormState>();
 
   final _step2FormKey = GlobalKey<DirectoryPathFormState>();
-  IconExtractWorkflowViewModel get _iconVm => widget.iconVm;
-
-  /// Whether the import subtask is done: tables ready in the DB (snapshot)
-  /// or a successful import this session.
-  bool get _importCompleted =>
-      _importDoneAtCheck || _importVm.status.value == WorkflowStatus.succeeded;
 
   /// Whether the icon step counts as done: extracted, or deliberately
   /// skipped (icons are optional and can be extracted later from settings).
   bool get _iconStepDone =>
       _iconVm.status.value == WorkflowStatus.succeeded ||
       _setupVm.iconsSkipped.value;
+
+  IconExtractWorkflowViewModel get _iconVm => widget.iconVm;
+
+  /// Whether the import subtask is done: tables ready in the DB (snapshot)
+  /// or a successful import this session.
+  bool get _importCompleted =>
+      _importDoneAtCheck || _importVm.status.value == WorkflowStatus.succeeded;
   DbcImportWorkflowViewModel get _importVm => widget.importVm;
   SetupStatusViewModel get _setupVm => widget.setupVm;
 
@@ -113,6 +114,12 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     super.initState();
     _check();
   }
+
+  /// Returns to the directory steps from a step-3 failure, so a directory
+  /// that made a task fail can be corrected: the wizard is the only UI at
+  /// this point and cannot be dismissed, so without this the wrong
+  /// directory would lock the app out permanently.
+  void _backToDirectories() => _step.value = 1;
 
   List<Widget> _buildActions() {
     final step = _step.value;
@@ -458,11 +465,13 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     }
   }
 
-  /// Returns to the directory steps from a step-3 failure, so a directory
-  /// that made a task fail can be corrected: the wizard is the only UI at
-  /// this point and cannot be dismissed, so without this the wrong
-  /// directory would lock the app out permanently.
-  void _backToDirectories() => _step.value = 1;
+  void _exitApp() => exit(0);
+
+  bool _isStepDone(int index) => switch (index) {
+    0 => _setupVm.isClientDirConfigured || _setupVm.iconsSkipped.value,
+    1 => _setupVm.isServerDirConfigured,
+    _ => _importCompleted && _iconStepDone,
+  };
 
   /// Records that icons are skipped, best effort: continuing must not hinge
   /// on the config write.
@@ -473,32 +482,6 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       // Best effort: continuing matters more than the marker.
     }
   }
-
-  /// Skips the client directory (and with it icon extraction) from step 1,
-  /// continuing to the server directory.
-  Future<void> _skipClientSetup() async {
-    await _markIconsSkipped();
-    if (!mounted) return;
-    _step.value = 1;
-  }
-
-  /// Enters the app without icons. Extraction is optional (list pages show
-  /// placeholders and the settings page can extract later), so a client
-  /// whose archives cannot be read must not lock the user out; the marker
-  /// keeps the wizard from reopening on the next startup.
-  Future<void> _skipIconExtract() async {
-    await _markIconsSkipped();
-    if (!mounted) return;
-    Navigator.of(context).pop();
-  }
-
-  void _exitApp() => exit(0);
-
-  bool _isStepDone(int index) => switch (index) {
-    0 => _setupVm.isClientDirConfigured || _setupVm.iconsSkipped.value,
-    1 => _setupVm.isServerDirConfigured,
-    _ => _importCompleted && _iconStepDone,
-  };
 
   /// Re-runs icon extraction, re-reading the configured client directory
   /// first: the path was captured when extraction originally started, so a
@@ -534,6 +517,24 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     final saved = await formKey.currentState?.save() ?? false;
     if (!saved || !mounted) return;
     _step.value = stepIndex + 1;
+  }
+
+  /// Skips the client directory (and with it icon extraction) from step 1,
+  /// continuing to the server directory.
+  Future<void> _skipClientSetup() async {
+    await _markIconsSkipped();
+    if (!mounted) return;
+    _step.value = 1;
+  }
+
+  /// Enters the app without icons. Extraction is optional (list pages show
+  /// placeholders and the settings page can extract later), so a client
+  /// whose archives cannot be read must not lock the user out; the marker
+  /// keeps the wizard from reopening on the next startup.
+  Future<void> _skipIconExtract() async {
+    await _markIconsSkipped();
+    if (!mounted) return;
+    Navigator.of(context).pop();
   }
 
   Future<void> _startIconExtract() async {

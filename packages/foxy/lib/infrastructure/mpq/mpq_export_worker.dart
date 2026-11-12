@@ -3,11 +3,192 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import 'package:foxy_game_file/foxy_game_file.dart';
+
+/// Isolate entry point for MPQ-patch export: connects to MySQL, writes the
+/// selected tables into a staging directory and packs them into the target
+/// MPQ. Message protocol matches the import/export workers.
+Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
+  final (
+    :sendPort,
+    :tableNames,
+    :mpqFilePath,
+    :host,
+    :port,
+    :database,
+    :username,
+    :password,
+    :useSsl,
+  ) = args;
+  final cancelPort = ReceivePort();
+  var cancelled = false;
+  final cancelSubscription = cancelPort.listen((message) {
+    if (message == 'cancel') cancelled = true;
+  });
+  sendPort.send(('control', cancelPort.sendPort));
+
+  Laconic? laconic;
+  var workerStage = 'preparing';
+
+  try {
+    workerStage = 'scanning';
+    MpqExportWorker._sendStatus(sendPort, workerStage, '正在准备导出 MPQ...');
+
+    final definitions = <DbcDefinition>[
+      for (final table in tableNames)
+        DbcDefinitions.byTable[table] ??
+            (throw ValidationException('unknown DBC table: $table')),
+    ];
+    if (definitions.isEmpty) {
+      MpqExportWorker._sendResult(sendPort, 0, 0, const [], false);
+      return;
+    }
+
+    laconic = Laconic(
+      MysqlDriver(
+        MysqlConfig(
+          host: host,
+          port: port,
+          database: database,
+          username: username,
+          password: password,
+          useSsl: useSsl,
+          allowPublicKeyRetrieval: !useSsl,
+        ),
+      ),
+    );
+
+    final summary = await MpqExportWorker.buildPatch(
+      definitions: definitions,
+      loadRows: (table) => DbcExportWorker.loadRows(laconic!, table),
+      mpqFilePath: mpqFilePath,
+      isCancelled: () => cancelled,
+      onStatus: (stage, message) =>
+          MpqExportWorker._sendStatus(sendPort, stage, message),
+      onProgress: (fileName, completedFiles, totalFiles, processed, total) {
+        MpqExportWorker._sendCount(
+          sendPort,
+          fileName,
+          completedFiles,
+          totalFiles,
+          processed,
+          total,
+        );
+      },
+    );
+
+    // Warn about tables whose row-order data is missing (never re-imported
+    // after the row-order migration), so the UI can prompt a re-import.
+    final missingRowOrder = <String>[];
+    for (final definition in definitions) {
+      final hasMissing = await DbcExportWorker.hasMissingRowOrder(
+        laconic,
+        definition.tableName,
+      );
+      if (hasMissing) missingRowOrder.add(definition.fileName);
+    }
+    if (missingRowOrder.isNotEmpty) {
+      sendPort.send(('warning', missingRowOrder));
+    }
+
+    MpqExportWorker._sendResult(
+      sendPort,
+      summary.completed,
+      summary.skipped,
+      summary.errors,
+      cancelled,
+    );
+  } catch (error) {
+    MpqExportWorker._sendResult(sendPort, 0, 0, [
+      MpqExportWorker._workerError(
+        stage: workerStage,
+        message: 'Worker 错误: $error',
+      ),
+    ], false);
+  } finally {
+    await laconic?.close();
+    await cancelSubscription.cancel();
+    cancelPort.close();
+  }
+}
+
+/// Isolate entry point for packing an already-exported DBC directory into an
+/// MPQ patch — the combined DBC+MPQ export flow, where the `.dbc` files come
+/// from the shared temp dir instead of a second database read. No MySQL
+/// connection is made. Message protocol matches the other workers.
+Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
+  final (:sendPort, :directory, :mpqFilePath) = args;
+  final cancelPort = ReceivePort();
+  var cancelled = false;
+  final cancelSubscription = cancelPort.listen((message) {
+    if (message == 'cancel') cancelled = true;
+  });
+  sendPort.send(('control', cancelPort.sendPort));
+
+  var workerStage = 'packing';
+
+  try {
+    final packed = await MpqFilePacker.packDbcFiles(
+      directory: directory,
+      mpqFilePath: mpqFilePath,
+      isCancelled: () => cancelled,
+      onStatus: (stage, message) =>
+          MpqExportWorker._sendStatus(sendPort, stage, message),
+      onProgress: (fileName, completedFiles, totalFiles, processed, total) {
+        MpqExportWorker._sendCount(
+          sendPort,
+          fileName,
+          completedFiles,
+          totalFiles,
+          processed,
+          total,
+        );
+      },
+    );
+
+    MpqExportWorker._sendResult(sendPort, packed, 0, const [], cancelled);
+  } catch (error) {
+    MpqExportWorker._sendResult(sendPort, 0, 0, [
+      MpqExportWorker._workerError(
+        stage: workerStage,
+        message: 'Worker 错误: $error',
+      ),
+    ], false);
+  } finally {
+    await cancelSubscription.cancel();
+    cancelPort.close();
+  }
+}
+
+typedef MpqExportWorkerArgs = ({
+  SendPort sendPort,
+  List<String> tableNames,
+  String mpqFilePath,
+  String host,
+  int port,
+  String database,
+  String username,
+  String password,
+  bool useSsl,
+});
+
+/// Isolate entry signature, injectable for tests (a fake entry replaces the
+/// real worker without touching MySQL).
+typedef MpqExportWorkerEntry = Future<void> Function(MpqExportWorkerArgs args);
+
+typedef MpqPackWorkerArgs = ({
+  SendPort sendPort,
+  String directory,
+  String mpqFilePath,
+});
+
+/// Isolate entry signature, injectable for tests (a fake entry replaces the
+/// real pack worker).
+typedef MpqPackWorkerEntry = Future<void> Function(MpqPackWorkerArgs args);
 
 /// MpqExportWorker helper functions.
 abstract final class MpqExportWorker {
@@ -125,184 +306,3 @@ abstract final class MpqExportWorker {
     };
   }
 }
-
-/// Isolate entry point for MPQ-patch export: connects to MySQL, writes the
-/// selected tables into a staging directory and packs them into the target
-/// MPQ. Message protocol matches the import/export workers.
-Future<void> runMpqExportWorker(MpqExportWorkerArgs args) async {
-  final (
-    :sendPort,
-    :tableNames,
-    :mpqFilePath,
-    :host,
-    :port,
-    :database,
-    :username,
-    :password,
-    :useSsl,
-  ) = args;
-  final cancelPort = ReceivePort();
-  var cancelled = false;
-  final cancelSubscription = cancelPort.listen((message) {
-    if (message == 'cancel') cancelled = true;
-  });
-  sendPort.send(('control', cancelPort.sendPort));
-
-  Laconic? laconic;
-  var workerStage = 'preparing';
-
-  try {
-    workerStage = 'scanning';
-    MpqExportWorker._sendStatus(sendPort, workerStage, '正在准备导出 MPQ...');
-
-    final definitions = <DbcDefinition>[
-      for (final table in tableNames)
-        DbcDefinitions.byTable[table] ??
-            (throw ValidationException('unknown DBC table: $table')),
-    ];
-    if (definitions.isEmpty) {
-      MpqExportWorker._sendResult(sendPort, 0, 0, const [], false);
-      return;
-    }
-
-    laconic = Laconic(
-      MysqlDriver(
-        MysqlConfig(
-          host: host,
-          port: port,
-          database: database,
-          username: username,
-          password: password,
-          useSsl: useSsl,
-          allowPublicKeyRetrieval: !useSsl,
-        ),
-      ),
-    );
-
-    final summary = await MpqExportWorker.buildPatch(
-      definitions: definitions,
-      loadRows: (table) => DbcExportWorker.loadRows(laconic!, table),
-      mpqFilePath: mpqFilePath,
-      isCancelled: () => cancelled,
-      onStatus: (stage, message) =>
-          MpqExportWorker._sendStatus(sendPort, stage, message),
-      onProgress: (fileName, completedFiles, totalFiles, processed, total) {
-        MpqExportWorker._sendCount(
-          sendPort,
-          fileName,
-          completedFiles,
-          totalFiles,
-          processed,
-          total,
-        );
-      },
-    );
-
-    // Warn about tables whose row-order data is missing (never re-imported
-    // after the row-order migration), so the UI can prompt a re-import.
-    final missingRowOrder = <String>[];
-    for (final definition in definitions) {
-      final hasMissing = await DbcExportWorker.hasMissingRowOrder(
-        laconic,
-        definition.tableName,
-      );
-      if (hasMissing) missingRowOrder.add(definition.fileName);
-    }
-    if (missingRowOrder.isNotEmpty) {
-      sendPort.send(('warning', missingRowOrder));
-    }
-
-    MpqExportWorker._sendResult(
-      sendPort,
-      summary.completed,
-      summary.skipped,
-      summary.errors,
-      cancelled,
-    );
-  } catch (error) {
-    MpqExportWorker._sendResult(sendPort, 0, 0, [
-      MpqExportWorker._workerError(
-        stage: workerStage,
-        message: 'Worker 错误: $error',
-      ),
-    ], false);
-  } finally {
-    await laconic?.close();
-    await cancelSubscription.cancel();
-    cancelPort.close();
-  }
-}
-
-typedef MpqExportWorkerArgs = ({
-  SendPort sendPort,
-  List<String> tableNames,
-  String mpqFilePath,
-  String host,
-  int port,
-  String database,
-  String username,
-  String password,
-  bool useSsl,
-});
-
-/// Isolate entry signature, injectable for tests (a fake entry replaces the
-/// real worker without touching MySQL).
-typedef MpqExportWorkerEntry = Future<void> Function(MpqExportWorkerArgs args);
-
-/// Isolate entry point for packing an already-exported DBC directory into an
-/// MPQ patch — the combined DBC+MPQ export flow, where the `.dbc` files come
-/// from the shared temp dir instead of a second database read. No MySQL
-/// connection is made. Message protocol matches the other workers.
-Future<void> runMpqPackWorker(MpqPackWorkerArgs args) async {
-  final (:sendPort, :directory, :mpqFilePath) = args;
-  final cancelPort = ReceivePort();
-  var cancelled = false;
-  final cancelSubscription = cancelPort.listen((message) {
-    if (message == 'cancel') cancelled = true;
-  });
-  sendPort.send(('control', cancelPort.sendPort));
-
-  var workerStage = 'packing';
-
-  try {
-    final packed = await MpqFilePacker.packDbcFiles(
-      directory: directory,
-      mpqFilePath: mpqFilePath,
-      isCancelled: () => cancelled,
-      onStatus: (stage, message) =>
-          MpqExportWorker._sendStatus(sendPort, stage, message),
-      onProgress: (fileName, completedFiles, totalFiles, processed, total) {
-        MpqExportWorker._sendCount(
-          sendPort,
-          fileName,
-          completedFiles,
-          totalFiles,
-          processed,
-          total,
-        );
-      },
-    );
-
-    MpqExportWorker._sendResult(sendPort, packed, 0, const [], cancelled);
-  } catch (error) {
-    MpqExportWorker._sendResult(sendPort, 0, 0, [
-      MpqExportWorker._workerError(
-        stage: workerStage,
-        message: 'Worker 错误: $error',
-      ),
-    ], false);
-  } finally {
-    await cancelSubscription.cancel();
-    cancelPort.close();
-  }
-}
-
-typedef MpqPackWorkerArgs = ({
-  SendPort sendPort,
-  String directory,
-  String mpqFilePath,
-});
-
-/// Isolate entry signature, injectable for tests (a fake entry replaces the
-/// real pack worker).
-typedef MpqPackWorkerEntry = Future<void> Function(MpqPackWorkerArgs args);

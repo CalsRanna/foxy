@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

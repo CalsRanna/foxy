@@ -1,24 +1,7 @@
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:get_it/get_it.dart';
-
-/// Result of a startup DBC-missing check.
-class DbcReminderCheckResult {
-  /// All registered DBC tables that are currently missing (sorted).
-  final List<String> missingTables;
-
-  /// Tables that were not part of the last notified set — the ones that
-  /// should trigger a reminder.
-  final List<String> newlyMissing;
-
-  const DbcReminderCheckResult({
-    required this.missingTables,
-    required this.newlyMissing,
-  });
-
-  bool get shouldRemind => newlyMissing.isNotEmpty;
-}
 
 /// Startup check that reminds the user when newly registered DBC tables
 /// were never imported.
@@ -65,4 +48,21 @@ class CheckDbcReminderUseCase {
     }
     return DbcReminderCheckResult(missingTables: missing, newlyMissing: newly);
   }
+}
+
+/// Result of a startup DBC-missing check.
+class DbcReminderCheckResult {
+  /// All registered DBC tables that are currently missing (sorted).
+  final List<String> missingTables;
+
+  /// Tables that were not part of the last notified set — the ones that
+  /// should trigger a reminder.
+  final List<String> newlyMissing;
+
+  const DbcReminderCheckResult({
+    required this.missingTables,
+    required this.newlyMissing,
+  });
+
+  bool get shouldRemind => newlyMissing.isNotEmpty;
 }

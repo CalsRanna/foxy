@@ -8,8 +8,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/widget/update/update_dialog.dart';
 import 'package:foxy/view_model/update_view_model.dart';
+import 'package:foxy/widget/update/update_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {

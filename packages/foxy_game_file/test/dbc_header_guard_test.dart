@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:test/test.dart';
 import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
 
 /// Verifies the DBC header payload cap: warcrafty's loader allocates
 /// `recordCount × recordSize + stringBlockSize` with no upper bound, so a

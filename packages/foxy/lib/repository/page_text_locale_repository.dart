@@ -1,8 +1,8 @@
 import 'package:foxy/entity/page_text_locale_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'page_text_locale_repository.g.dart';

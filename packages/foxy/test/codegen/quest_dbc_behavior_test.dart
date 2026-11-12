@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/view_model/quest_info_detail_view_model.dart';
@@ -131,13 +131,6 @@ void main() {
   }
 }
 
-Map<String, dynamic> _localizedRow(String prefix) => {
-  'ID': 1,
-  for (final locale in DbcLocale.values)
-    '${prefix}_${locale.code}': 'original ${locale.code}',
-  '${prefix}_Flags': 37,
-};
-
 final _editedLocales = [
   for (final locale in DbcLocale.values)
     DbcLocaleFieldValue(locale: locale, value: 'edited ${locale.code}'),
@@ -150,17 +143,12 @@ Map<String, dynamic> _editedRow(String prefix) => {
   '${prefix}_Flags': 123,
 };
 
-class _InfoRepository extends QuestInfoRepository {
-  @override
-  final Laconic laconic;
-  _InfoRepository(this.laconic);
-}
-
-class _SortRepository extends QuestSortRepository {
-  @override
-  final Laconic laconic;
-  _SortRepository(this.laconic);
-}
+Map<String, dynamic> _localizedRow(String prefix) => {
+  'ID': 1,
+  for (final locale in DbcLocale.values)
+    '${prefix}_${locale.code}': 'original ${locale.code}',
+  '${prefix}_Flags': 37,
+};
 
 class _Driver implements DatabaseDriver {
   final Map<String, dynamic> source;
@@ -169,10 +157,28 @@ class _Driver implements DatabaseDriver {
   int insertAttempts = 0;
   final inserts = <List<Object?>>[];
   final updates = <List<Object?>>[];
+  @override
+  final SqlGrammar grammar = MysqlGrammar();
+
   _Driver(this.source);
 
   @override
-  final SqlGrammar grammar = MysqlGrammar();
+  Future<int> affectingStatement(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
+    updates.add(List.of(params));
+    return 1;
+  }
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<int> insertAndGetId(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async => throw UnimplementedError();
 
   @override
   Future<List<LaconicResult>> select(
@@ -183,7 +189,6 @@ class _Driver implements DatabaseDriver {
       sql.toLowerCase().contains('max(') ? {'max_id': maxId} : source,
     ),
   ];
-
   @override
   Future<void> statement(String sql, [List<Object?> params = const []]) async {
     insertAttempts++;
@@ -199,21 +204,17 @@ class _Driver implements DatabaseDriver {
   }
 
   @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    updates.add(List.of(params));
-    return 1;
-  }
-
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => throw UnimplementedError();
-  @override
   Future<T> transaction<T>(Future<T> Function() action) => action();
+}
+
+class _InfoRepository extends QuestInfoRepository {
+  @override
+  final Laconic laconic;
+  _InfoRepository(this.laconic);
+}
+
+class _SortRepository extends QuestSortRepository {
+  @override
+  final Laconic laconic;
+  _SortRepository(this.laconic);
 }

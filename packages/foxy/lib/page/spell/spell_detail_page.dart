@@ -17,17 +17,17 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class SpellDetailPage extends StatefulWidget {
-  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
-    if (entry != null && entry > 0) return const {};
-    return {for (var index = 1; index < tabCount; index++) index};
-  }
-
   final int? spellKey;
 
   const SpellDetailPage({super.key, this.spellKey});
 
   @override
   State<SpellDetailPage> createState() => _SpellDetailPageState();
+
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
 }
 
 class _SpellDetailPageState extends State<SpellDetailPage> {

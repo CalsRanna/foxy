@@ -5,11 +5,11 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/theme/item_quality_color.dart';
 import 'package:foxy/view_model/currency_type_list_view_model.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
-import 'package:foxy/theme/item_quality_color.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -175,6 +175,23 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
+  Future<void> _copy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：${FoxyExceptions.message(error)}');
+    }
+  }
+
   Future<void> _destroy(int key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
@@ -190,23 +207,6 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     } catch (error) {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：${FoxyExceptions.message(error)}');
-    }
-  }
-
-  Future<void> _copy(int key) async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '确认复制',
-      description: '确定要复制这条记录吗？',
-      confirmText: '复制',
-    );
-    if (!confirmed) return;
-    try {
-      await viewModel.copy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('复制成功');
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('复制失败：${FoxyExceptions.message(error)}');
     }
   }
 

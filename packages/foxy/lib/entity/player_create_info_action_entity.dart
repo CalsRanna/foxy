@@ -1,5 +1,5 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'player_create_info_action_entity.g.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
+import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

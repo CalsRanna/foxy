@@ -37,13 +37,13 @@ class MinTableColumnWidth extends AnalysisRule {
 }
 
 class _ColumnWidthVisitor extends SimpleAstVisitor<void> {
+  static const _minWidth = 120;
+
   final MinTableColumnWidth rule;
 
   final RuleContext context;
 
   _ColumnWidthVisitor(this.rule, this.context);
-
-  static const _minWidth = 120;
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {

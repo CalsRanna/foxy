@@ -4,9 +4,9 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy_game_file/foxy_game_file.dart';
-import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
@@ -275,6 +275,30 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
     cancelPort.close();
   }
 }
+
+typedef DbcImportWorkerArgs = ({
+  SendPort sendPort,
+  String directory,
+  String host,
+  int port,
+  String database,
+  String username,
+  String password,
+  bool useSsl,
+  String jobId,
+});
+
+typedef _FieldDef = ({String name, String sqlType});
+
+typedef _FileDef = ({
+  String name,
+  String path,
+  String tableName,
+  DbcSchema schema,
+  List<_FieldDef> fields,
+});
+
+typedef _WorkerError = Map<String, String?>;
 
 /// DbcImportWorker helper functions.
 abstract final class DbcImportWorker {
@@ -566,30 +590,6 @@ abstract final class DbcImportWorker {
     };
   }
 }
-
-typedef DbcImportWorkerArgs = ({
-  SendPort sendPort,
-  String directory,
-  String host,
-  int port,
-  String database,
-  String username,
-  String password,
-  bool useSsl,
-  String jobId,
-});
-
-typedef _FieldDef = ({String name, String sqlType});
-
-typedef _FileDef = ({
-  String name,
-  String path,
-  String tableName,
-  DbcSchema schema,
-  List<_FieldDef> fields,
-});
-
-typedef _WorkerError = Map<String, String?>;
 
 final class _ImportCancelled implements Exception {
   const _ImportCancelled();

@@ -1,8 +1,8 @@
 import 'package:foxy/entity/zone_intro_music_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/database/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'zone_intro_music_repository.g.dart';

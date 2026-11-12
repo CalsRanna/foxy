@@ -10,84 +10,6 @@ import 'package:http/testing.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-/// Builds a MockClient response for [body] (UTF-8 encoded; the manifest
-/// carries Chinese notes).
-http.Client _clientReturning(String body, {int status = 200}) {
-  return MockClient(
-    (request) async => http.Response.bytes(utf8.encode(body), status),
-  );
-}
-
-/// Builds a release-entry Map (fields matching the generator's output).
-Map<String, Object?> _releaseMap({
-  String version = '1.1.0',
-  String buildNumber = '630',
-  bool? isPrerelease,
-  int sizeBytes = 42,
-  String notes = '更新说明',
-}) {
-  return {
-    'version': version,
-    'buildNumber': buildNumber,
-    'isPrerelease': ?isPrerelease,
-    'zipUrl': 'https://example.com/foxy-$version.zip',
-    'sizeBytes': sizeBytes,
-    'sha256': 'a' * 64,
-    'notes': notes,
-  };
-}
-
-/// Builds `latest.yaml` manifest text (releases array, newest first).
-String _manifestYaml({
-  String version = '1.1.0',
-  String buildNumber = '630',
-  bool? isPrerelease,
-  String appId = UpdateService.expectedAppId,
-  List<Map<String, Object?>>? extraReleases,
-  List<Map<String, Object?>>? releases,
-}) {
-  final all =
-      releases ??
-      [
-        _releaseMap(
-          version: version,
-          buildNumber: buildNumber,
-          isPrerelease: isPrerelease,
-        ),
-        ...?extraReleases,
-      ];
-  final buffer = StringBuffer()
-    ..writeln('schemaVersion: 1')
-    ..writeln('appId: $appId')
-    ..writeln('releases:');
-  for (final release in all) {
-    buffer
-      ..writeln('  - version: "${release['version']}"')
-      ..writeln('    buildNumber: "${release['buildNumber']}"')
-      ..writeln('    isPrerelease: ${release['isPrerelease'] ?? false}')
-      ..writeln('    zipUrl: ${release['zipUrl']}')
-      ..writeln('    sizeBytes: ${release['sizeBytes']}')
-      ..writeln('    sha256: ${release['sha256']}')
-      ..writeln('    notes: |-')
-      ..writeln('      ${release['notes']}');
-  }
-  return buffer.toString();
-}
-
-/// Builds zip bytes containing the given files (packed with archive).
-List<int> _zipBytes(Map<String, String> files) {
-  final archive = Archive();
-  for (final entry in files.entries) {
-    archive.add(ArchiveFile.bytes(entry.key, utf8.encode(entry.value)));
-  }
-  return ZipEncoder().encode(archive);
-}
-
-String _sha256Hex(List<int> bytes) => sha256.convert(bytes).toString();
-
-UpdateManifestInfo _manifest(Map<dynamic, dynamic> map) =>
-    UpdateManifestInfo.fromMap(map);
-
 void main() {
   group('UpdateManifestInfo.fromMap', () {
     test('解析完整字段', () {
@@ -683,4 +605,82 @@ void main() {
       );
     });
   });
+}
+
+/// Builds a MockClient response for [body] (UTF-8 encoded; the manifest
+/// carries Chinese notes).
+http.Client _clientReturning(String body, {int status = 200}) {
+  return MockClient(
+    (request) async => http.Response.bytes(utf8.encode(body), status),
+  );
+}
+
+UpdateManifestInfo _manifest(Map<dynamic, dynamic> map) =>
+    UpdateManifestInfo.fromMap(map);
+
+/// Builds `latest.yaml` manifest text (releases array, newest first).
+String _manifestYaml({
+  String version = '1.1.0',
+  String buildNumber = '630',
+  bool? isPrerelease,
+  String appId = UpdateService.expectedAppId,
+  List<Map<String, Object?>>? extraReleases,
+  List<Map<String, Object?>>? releases,
+}) {
+  final all =
+      releases ??
+      [
+        _releaseMap(
+          version: version,
+          buildNumber: buildNumber,
+          isPrerelease: isPrerelease,
+        ),
+        ...?extraReleases,
+      ];
+  final buffer = StringBuffer()
+    ..writeln('schemaVersion: 1')
+    ..writeln('appId: $appId')
+    ..writeln('releases:');
+  for (final release in all) {
+    buffer
+      ..writeln('  - version: "${release['version']}"')
+      ..writeln('    buildNumber: "${release['buildNumber']}"')
+      ..writeln('    isPrerelease: ${release['isPrerelease'] ?? false}')
+      ..writeln('    zipUrl: ${release['zipUrl']}')
+      ..writeln('    sizeBytes: ${release['sizeBytes']}')
+      ..writeln('    sha256: ${release['sha256']}')
+      ..writeln('    notes: |-')
+      ..writeln('      ${release['notes']}');
+  }
+  return buffer.toString();
+}
+
+/// Builds a release-entry Map (fields matching the generator's output).
+Map<String, Object?> _releaseMap({
+  String version = '1.1.0',
+  String buildNumber = '630',
+  bool? isPrerelease,
+  int sizeBytes = 42,
+  String notes = '更新说明',
+}) {
+  return {
+    'version': version,
+    'buildNumber': buildNumber,
+    'isPrerelease': ?isPrerelease,
+    'zipUrl': 'https://example.com/foxy-$version.zip',
+    'sizeBytes': sizeBytes,
+    'sha256': 'a' * 64,
+    'notes': notes,
+  };
+}
+
+String _sha256Hex(List<int> bytes) => sha256.convert(bytes).toString();
+
+/// Builds zip bytes containing the given files (packed with archive).
+List<int> _zipBytes(Map<String, String> files) {
+  final archive = Archive();
+  for (final entry in files.entries) {
+    archive.add(ArchiveFile.bytes(entry.key, utf8.encode(entry.value)));
+  }
+  return ZipEncoder().encode(archive);
 }

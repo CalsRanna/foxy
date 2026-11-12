@@ -1,5 +1,5 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'condition_entity.g.dart';
 
@@ -93,14 +93,6 @@ extension BriefConditionEntityLabel on BriefConditionEntity {
     return ConditionType.conditionTypeLabels[id] ?? id.toString();
   }
 
-  /// Source-type labels: non-negative values map to enums, negative values
-  /// mean a reference.
-  String get sourceTypeLabel {
-    final id = sourceTypeOrReferenceId;
-    if (id < 0) return '引用 $id';
-    return ConditionSourceTypes.conditionSourceTypeLabels[id] ?? id.toString();
-  }
-
   /// 参数1 标签：按条件类型解析字段规格后映射为可读文本。
   ///
   /// - 条件类型为负数（引用）时无规格可用，回退为原始数字；
@@ -123,5 +115,13 @@ extension BriefConditionEntityLabel on BriefConditionEntity {
       IntegerNumberFieldSpec() => conditionValue1.toString(),
       IntegerReferenceFieldSpec() => conditionValue1.toString(),
     };
+  }
+
+  /// Source-type labels: non-negative values map to enums, negative values
+  /// mean a reference.
+  String get sourceTypeLabel {
+    final id = sourceTypeOrReferenceId;
+    if (id < 0) return '引用 $id';
+    return ConditionSourceTypes.conditionSourceTypeLabels[id] ?? id.toString();
   }
 }

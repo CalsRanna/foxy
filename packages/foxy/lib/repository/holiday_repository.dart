@@ -1,6 +1,6 @@
 import 'package:foxy/entity/holiday_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'holiday_repository.g.dart';

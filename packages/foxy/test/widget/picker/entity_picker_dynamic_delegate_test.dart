@@ -3,13 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/event/event_bus.dart';
-import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
-import 'package:foxy/widget/picker/foxy_entity_picker.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/picker/foxy_entity_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -71,6 +71,9 @@ void main() {
 
 class _FakeQuestTemplateRepository extends QuestTemplateRepository {
   @override
+  Future<int> countQuestTemplates({QuestTemplateFilter? filter}) async => 2;
+
+  @override
   Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
     int page = 1,
     QuestTemplateFilter? filter,
@@ -80,9 +83,6 @@ class _FakeQuestTemplateRepository extends QuestTemplateRepository {
       const BriefQuestTemplateEntity(id: 200, logTitle: '任务乙'),
     ];
   }
-
-  @override
-  Future<int> countQuestTemplates({QuestTemplateFilter? filter}) async => 2;
 }
 
 class _RecordingActivityLogRepository extends ActivityLogRepository {

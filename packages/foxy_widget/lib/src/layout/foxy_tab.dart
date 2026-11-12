@@ -16,6 +16,25 @@ class FoxyTab extends StatefulWidget {
   State<FoxyTab> createState() => _FoxyTabState();
 }
 
+class _FoxyTabIndicator extends StatelessWidget {
+  final double width;
+  const _FoxyTabIndicator({required this.width});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final primary = colorScheme.primary;
+    var border = Border(bottom: BorderSide(color: primary, width: 2));
+    var boxDecoration = BoxDecoration(border: border);
+    return AnimatedContainer(
+      decoration: boxDecoration,
+      duration: Duration(milliseconds: 300),
+      width: width,
+    );
+  }
+}
+
 class _FoxyTabItem extends StatelessWidget {
   final bool active;
   final bool disabled;
@@ -111,6 +130,24 @@ class _FoxyTabState extends State<FoxyTab> {
     );
   }
 
+  @override
+  void didUpdateWidget(covariant FoxyTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // All current call sites use a const tab list with dynamic
+    // disabledIndexes, so this only matters for a hypothetical dynamic tab
+    // list — without a rebuild the keys/width arrays would go stale and
+    // index out of range.
+    if (widget.tabs.length == oldWidget.tabs.length) return;
+    _resetTabState();
+    _scheduleMeasureTabWidths();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   Future<void> handleTap(int targetIndex) async {
     if (_isAnimating || targetIndex == index) return;
 
@@ -144,12 +181,6 @@ class _FoxyTabState extends State<FoxyTab> {
   }
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     _resetTabState();
@@ -164,16 +195,22 @@ class _FoxyTabState extends State<FoxyTab> {
     _scheduleMeasureTabWidths();
   }
 
-  @override
-  void didUpdateWidget(covariant FoxyTab oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // All current call sites use a const tab list with dynamic
-    // disabledIndexes, so this only matters for a hypothetical dynamic tab
-    // list — without a rebuild the keys/width arrays would go stale and
-    // index out of range.
-    if (widget.tabs.length == oldWidget.tabs.length) return;
-    _resetTabState();
-    _scheduleMeasureTabWidths();
+  _FoxyTabItem _buildItem(int i) {
+    final disabled = widget.disabledIndexes.contains(i);
+    return _FoxyTabItem(
+      key: keys[i],
+      active: i == index,
+      disabled: disabled,
+      onTap: disabled ? null : () => handleTap(i),
+      child: widget.tabs[i],
+    );
+  }
+
+  double _getOffset() {
+    return switch (index) {
+      0 => 0,
+      _ => width.sublist(0, index).reduce((a, b) => a + b),
+    };
   }
 
   void _resetTabState() {
@@ -202,42 +239,5 @@ class _FoxyTabState extends State<FoxyTab> {
       }
       setState(() {});
     });
-  }
-
-  _FoxyTabItem _buildItem(int i) {
-    final disabled = widget.disabledIndexes.contains(i);
-    return _FoxyTabItem(
-      key: keys[i],
-      active: i == index,
-      disabled: disabled,
-      onTap: disabled ? null : () => handleTap(i),
-      child: widget.tabs[i],
-    );
-  }
-
-  double _getOffset() {
-    return switch (index) {
-      0 => 0,
-      _ => width.sublist(0, index).reduce((a, b) => a + b),
-    };
-  }
-}
-
-class _FoxyTabIndicator extends StatelessWidget {
-  final double width;
-  const _FoxyTabIndicator({required this.width});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final primary = colorScheme.primary;
-    var border = Border(bottom: BorderSide(color: primary, width: 2));
-    var boxDecoration = BoxDecoration(border: border);
-    return AnimatedContainer(
-      decoration: boxDecoration,
-      duration: Duration(milliseconds: 300),
-      width: width,
-    );
   }
 }

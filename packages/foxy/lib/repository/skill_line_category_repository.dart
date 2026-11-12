@@ -1,10 +1,10 @@
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/entity/skill_line_category_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/database/parse_util.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'skill_line_category_repository.g.dart';
@@ -19,19 +19,6 @@ class SkillLineCategoryRepository
         _SkillLineCategoryRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
-
-  @override
-  Future<List<DbcLocaleFieldValue>> getSkillLineCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  @override
-  Future<void> saveSkillLineCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> countSkillLineCategories({SkillLineCategoryFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
@@ -57,6 +44,19 @@ class SkillLineCategoryRepository
         .map((row) => SkillLineCategoryEntity.fromJson(row.toMap()))
         .toList();
   }
+
+  @override
+  Future<List<DbcLocaleFieldValue>> getSkillLineCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  @override
+  Future<void> saveSkillLineCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,

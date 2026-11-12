@@ -1,5 +1,5 @@
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:foxy_generator/src/dart_literal.dart';
 import 'package:test/test.dart';
 

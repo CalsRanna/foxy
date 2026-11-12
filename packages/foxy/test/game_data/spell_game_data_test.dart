@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
 import 'package:foxy/repository/spell_bonus_data_repository.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';

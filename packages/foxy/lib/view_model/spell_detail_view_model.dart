@@ -1,28 +1,19 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/event/event_bus.dart';
-import 'package:foxy/event/entity_written_event.dart';
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
+import 'package:foxy/event/entity_written_event.dart';
+import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class SpellDetailViewModel with FieldControllerMixin {
-  void _logActivity(ActivityActionType action, SpellEntity t) {
-    final log = ActivityLogEntity(
-      module: 'spell',
-      actionType: action,
-      entityName: t.nameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
-  }
-
   final _repository = GetIt.instance.get<SpellRepository>();
 
   final entity = signal<SpellEntity?>(null);
+
   final persistedKey = signal<int?>(null);
   final loading = signal(false);
   final submitting = signal(false);
@@ -39,6 +30,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   /// Primary key; prefilled with MAX+1 by [createSpell] on create, still
   /// editable afterwards.
   late final idController = registerController(IntFieldController());
+
   // === Basic text ===
   late final nameLangZhCNController = registerController(
     StringFieldController(),
@@ -493,7 +485,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final shapeshiftExclude1Controller = registerController(
     FlagFieldController(),
   );
-
   bool _effectSignalsWired = false;
 
   void applyAuraDescriptionLocales(List<DbcLocaleFieldValue> values) {
@@ -1089,6 +1080,16 @@ class SpellDetailViewModel with FieldControllerMixin {
       shapeshiftExclude0: shapeshiftExclude0Controller.collect(),
       shapeshiftExclude1: shapeshiftExclude1Controller.collect(),
     );
+  }
+
+  void _logActivity(ActivityActionType action, SpellEntity t) {
+    final log = ActivityLogEntity(
+      module: 'spell',
+      actionType: action,
+      entityName: t.nameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
   }
 
   /// Listens to EnumFieldController changes and syncs them to a signal.

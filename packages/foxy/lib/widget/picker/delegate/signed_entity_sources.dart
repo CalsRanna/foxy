@@ -12,7 +12,13 @@ import 'package:get_it/get_it.dart';
 class SignedEntitySources {
   static final instance = SignedEntitySources._();
 
-  SignedEntitySources._();
+  static SignedEntitySource get areaTable => instance._areaTable;
+
+  static SignedEntitySource get creature => instance._creature;
+
+  static SignedEntitySource get gameObject => instance._gameObject;
+
+  static SignedEntitySource get questSort => instance._questSort;
 
   late final _creature = SignedEntitySource(
     title: '生物模板',
@@ -32,8 +38,6 @@ class SignedEntitySources {
           filter: CreatureTemplateFilter(entry: id, name: name),
         ),
   );
-
-  static SignedEntitySource get creature => instance._creature;
 
   late final _gameObject = SignedEntitySource(
     title: '游戏对象模板',
@@ -55,8 +59,6 @@ class SignedEntitySources {
         ),
   );
 
-  static SignedEntitySource get gameObject => instance._gameObject;
-
   late final _questSort = SignedEntitySource(
     title: '任务排序',
     errorLabel: '搜索任务排序失败',
@@ -75,8 +77,6 @@ class SignedEntitySources {
           filter: QuestSortFilter(id: id, name: name),
         ),
   );
-
-  static SignedEntitySource get questSort => instance._questSort;
 
   late final _areaTable = SignedEntitySource(
     title: '区域',
@@ -97,5 +97,5 @@ class SignedEntitySources {
         ),
   );
 
-  static SignedEntitySource get areaTable => instance._areaTable;
+  SignedEntitySources._();
 }

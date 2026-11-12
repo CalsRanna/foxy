@@ -3,11 +3,10 @@
 import 'dart:async';
 
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_generator/src/repository_filter_emitter.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
 import 'package:foxy_generator/src/repository_filter_reader.dart';
+import 'package:source_gen/source_gen.dart';
 
 const _filterChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/repository_annotations.dart#FoxyFilter',

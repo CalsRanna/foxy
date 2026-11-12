@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 

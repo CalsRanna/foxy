@@ -1,5 +1,5 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'player_create_info_skill_entity.g.dart';
 
@@ -42,15 +42,15 @@ class PlayerCreateInfoSkillEntity with _PlayerCreateInfoSkillEntityMixin {
 
 extension BriefPlayerCreateInfoSkillEntityLabel
     on BriefPlayerCreateInfoSkillEntity {
-  /// 种族掩码标签（人类/兽人/…），未命中回退为原始掩码。
-  String get raceMaskLabel => FlagItem.maskLabel(
-    raceMask,
-    PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
-  );
-
   /// 职业掩码标签（战士/圣骑士/…），未命中回退为原始掩码。
   String get classMaskLabel => FlagItem.maskLabel(
     classMask,
     PlayerCreateInfoConstants.playerCreateClassMaskFlags,
+  );
+
+  /// 种族掩码标签（人类/兽人/…），未命中回退为原始掩码。
+  String get raceMaskLabel => FlagItem.maskLabel(
+    raceMask,
+    PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
   );
 }

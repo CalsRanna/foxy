@@ -1,5 +1,15 @@
 import 'package:foxy_game_definition/src/flag_item.dart';
 
+/// Strict enum picker ([FoxyEnumPicker]).
+final class IntegerEnumFieldSpec<R> extends IntegerFieldSpec<R> {
+  final Map<int, String> options;
+
+  const IntegerEnumFieldSpec(super.label, {required this.options});
+
+  @override
+  IntegerFieldEditor get editor => IntegerFieldEditor.enumValue;
+}
+
 /// The kind of editor an integer physical column should currently use.
 ///
 /// The four states are mutually exclusive, decided uniquely by the concrete
@@ -48,14 +58,4 @@ final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
 
   @override
   IntegerFieldEditor get editor => IntegerFieldEditor.reference;
-}
-
-/// Strict enum picker ([FoxyEnumPicker]).
-final class IntegerEnumFieldSpec<R> extends IntegerFieldSpec<R> {
-  final Map<int, String> options;
-
-  const IntegerEnumFieldSpec(super.label, {required this.options});
-
-  @override
-  IntegerFieldEditor get editor => IntegerFieldEditor.enumValue;
 }

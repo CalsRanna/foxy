@@ -157,25 +157,25 @@ Widget _wrap(Widget child) {
 
 class _FakeCreatureRepository extends CreatureTemplateRepository {
   @override
+  Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async =>
+      1;
+
+  @override
   Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
     int page = 1,
     CreatureTemplateFilter? filter,
   }) async => const [BriefCreatureTemplateEntity(entry: 2034, name: '某某生物')];
-
-  @override
-  Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async =>
-      1;
 }
 
 class _FakeGameObjectRepository extends GameObjectTemplateRepository {
+  @override
+  Future<int> countGameObjectTemplates({
+    GameObjectTemplateFilter? filter,
+  }) async => 1;
+
   @override
   Future<List<BriefGameObjectTemplateEntity>> getBriefGameObjectTemplates({
     int page = 1,
     GameObjectTemplateFilter? filter,
   }) async => const [BriefGameObjectTemplateEntity(entry: 555, name: '某某门')];
-
-  @override
-  Future<int> countGameObjectTemplates({
-    GameObjectTemplateFilter? filter,
-  }) async => 1;
 }

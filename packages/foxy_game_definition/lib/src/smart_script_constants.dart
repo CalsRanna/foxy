@@ -3,6 +3,53 @@ import 'package:foxy_game_definition/src/flag_item.dart';
 import 'package:foxy_game_definition/src/game_object_constants.dart';
 import 'package:foxy_game_definition/src/integer_field_spec.dart';
 
+class SmartParameterGroupConfig {
+  final IntegerFieldSpec<SmartParameterReference> param1;
+  final IntegerFieldSpec<SmartParameterReference> param2;
+  final IntegerFieldSpec<SmartParameterReference> param3;
+  final IntegerFieldSpec<SmartParameterReference> param4;
+  final IntegerFieldSpec<SmartParameterReference> param5;
+  final IntegerFieldSpec<SmartParameterReference> param6;
+
+  const SmartParameterGroupConfig(
+    this.param1,
+    this.param2,
+    this.param3,
+    this.param4,
+    this.param5,
+    this.param6,
+  );
+
+  IntegerFieldSpec<SmartParameterReference> field(int index) => switch (index) {
+    1 => param1,
+    2 => param2,
+    3 => param3,
+    4 => param4,
+    5 => param5,
+    6 => param6,
+    _ => throw RangeError.range(index, 1, 6, 'index'),
+  };
+}
+
+enum SmartParameterReference {
+  area,
+  cinematicSequence,
+  creature,
+  creatureDisplay,
+  emote,
+  factionTemplate,
+  gameObject,
+  gossipMenu,
+  item,
+  map,
+  npcText,
+  quest,
+  spell,
+  taxiPath,
+  textEmote,
+  waypointPath,
+}
+
 /// SmartAI parameter configuration: parameter specs per action/event
 /// target type, event-type filter per source type.
 abstract final class SmartScriptConstants {
@@ -1946,51 +1993,4 @@ abstract final class SmartScriptConstants {
     IntegerFieldSpec<SmartParameterReference> p5 = _unused,
     IntegerFieldSpec<SmartParameterReference> p6 = _unused,
   ]) => SmartParameterGroupConfig(p1, p2, p3, p4, p5, p6);
-}
-
-class SmartParameterGroupConfig {
-  final IntegerFieldSpec<SmartParameterReference> param1;
-  final IntegerFieldSpec<SmartParameterReference> param2;
-  final IntegerFieldSpec<SmartParameterReference> param3;
-  final IntegerFieldSpec<SmartParameterReference> param4;
-  final IntegerFieldSpec<SmartParameterReference> param5;
-  final IntegerFieldSpec<SmartParameterReference> param6;
-
-  const SmartParameterGroupConfig(
-    this.param1,
-    this.param2,
-    this.param3,
-    this.param4,
-    this.param5,
-    this.param6,
-  );
-
-  IntegerFieldSpec<SmartParameterReference> field(int index) => switch (index) {
-    1 => param1,
-    2 => param2,
-    3 => param3,
-    4 => param4,
-    5 => param5,
-    6 => param6,
-    _ => throw RangeError.range(index, 1, 6, 'index'),
-  };
-}
-
-enum SmartParameterReference {
-  area,
-  cinematicSequence,
-  creature,
-  creatureDisplay,
-  emote,
-  factionTemplate,
-  gameObject,
-  gossipMenu,
-  item,
-  map,
-  npcText,
-  quest,
-  spell,
-  taxiPath,
-  textEmote,
-  waypointPath,
 }

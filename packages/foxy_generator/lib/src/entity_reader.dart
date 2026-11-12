@@ -4,14 +4,13 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_annotation/entity_annotations.dart';
 import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_model.dart';
 import 'package:foxy_generator/src/entity_validator.dart';
 import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/source_shape.dart';
+import 'package:source_gen/source_gen.dart';
 
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyBriefEntity',

@@ -6,48 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:foxy_widget/src/layout/foxy_loading_indicator.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// One column of [FoxyDataTable]: a fixed-pixel column or a flex column
-/// that shares the remaining width by ratio.
-///
-/// Every column carries its own label, width and cell builder, so column
-/// order, header text and row rendering stay in one place.
-class FoxyTableColumn<T> {
-  /// Header label (rendered via [ShadTableCell.header] unless [headerCell]
-  /// overrides it).
-  final String label;
-
-  /// Fixed pixel width; null for a flex column ([flex] shares the leftover).
-  final double? width;
-
-  /// Ratio of the remaining width for flex columns. Ratios are normalized
-  /// against the sum of all flex ratios, so `flex: 3` and `flex: 7` split
-  /// the leftover 3:7 without manual math.
-  final double flex;
-
-  /// Cell builder for every data row.
-  final Widget Function(BuildContext context, T row) cell;
-
-  /// Optional header override (rendered instead of the default label text).
-  final ShadTableCell Function(BuildContext context)? headerCell;
-
-  // The field is `double?` while the fixed constructor takes a required
-  // non-null `double`, so `this.width` cannot be an initializing formal.
-  const FoxyTableColumn.fixed({
-    required this.label,
-    required double width,
-    required this.cell,
-    this.headerCell,
-  }) : width = width, // ignore: prefer_initializing_formals
-       flex = 0;
-
-  const FoxyTableColumn.flex({
-    required this.label,
-    this.flex = 1,
-    required this.cell,
-    this.headerCell,
-  }) : width = null;
-}
-
 /// A typed column-declaration table built directly on shadcn's [ShadTable].
 ///
 /// Each column is one [FoxyTableColumn] carrying its own label, width
@@ -122,6 +80,48 @@ class FoxyDataTable<T> extends StatefulWidget {
 
   @override
   State<FoxyDataTable<T>> createState() => _FoxyDataTableState<T>();
+}
+
+/// One column of [FoxyDataTable]: a fixed-pixel column or a flex column
+/// that shares the remaining width by ratio.
+///
+/// Every column carries its own label, width and cell builder, so column
+/// order, header text and row rendering stay in one place.
+class FoxyTableColumn<T> {
+  /// Header label (rendered via [ShadTableCell.header] unless [headerCell]
+  /// overrides it).
+  final String label;
+
+  /// Fixed pixel width; null for a flex column ([flex] shares the leftover).
+  final double? width;
+
+  /// Ratio of the remaining width for flex columns. Ratios are normalized
+  /// against the sum of all flex ratios, so `flex: 3` and `flex: 7` split
+  /// the leftover 3:7 without manual math.
+  final double flex;
+
+  /// Cell builder for every data row.
+  final Widget Function(BuildContext context, T row) cell;
+
+  /// Optional header override (rendered instead of the default label text).
+  final ShadTableCell Function(BuildContext context)? headerCell;
+
+  // The field is `double?` while the fixed constructor takes a required
+  // non-null `double`, so `this.width` cannot be an initializing formal.
+  const FoxyTableColumn.fixed({
+    required this.label,
+    required double width,
+    required this.cell,
+    this.headerCell,
+  }) : width = width, // ignore: prefer_initializing_formals
+       flex = 0;
+
+  const FoxyTableColumn.flex({
+    required this.label,
+    this.flex = 1,
+    required this.cell,
+    this.headerCell,
+  }) : width = null;
 }
 
 class _FoxyDataTableState<T> extends State<FoxyDataTable<T>> {

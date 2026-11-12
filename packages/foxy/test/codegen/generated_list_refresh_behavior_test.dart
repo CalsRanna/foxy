@@ -131,20 +131,19 @@ void main() {
   });
 }
 
-class _PendingQuery<T> {
-  final count = Completer<int>();
-  final items = Completer<List<T>>();
-  final listStarted = Completer<void>();
+class _LinkedListRepository extends CreatureQuestItemRepository {
+  final old = _PendingQuery<BriefCreatureQuestItemEntity>();
+  final latest = _PendingQuery<BriefCreatureQuestItemEntity>();
 
-  void complete(int total, List<T> data) {
-    count.complete(total);
-    items.complete(data);
-  }
+  @override
+  Future<int> countCreatureQuestItems(int creatureEntry) =>
+      (creatureEntry == 10 ? old : latest).count.future;
 
-  Future<List<T>> fetchItems() {
-    listStarted.complete();
-    return items.future;
-  }
+  @override
+  Future<List<BriefCreatureQuestItemEntity>> getBriefCreatureQuestItems(
+    int creatureEntry, {
+    int page = 1,
+  }) => (creatureEntry == 10 ? old : latest).fetchItems();
 }
 
 class _ListRepository extends EmoteTextRepository {
@@ -162,17 +161,18 @@ class _ListRepository extends EmoteTextRepository {
   }) => (filter!.name == 'old' ? old : latest).fetchItems();
 }
 
-class _LinkedListRepository extends CreatureQuestItemRepository {
-  final old = _PendingQuery<BriefCreatureQuestItemEntity>();
-  final latest = _PendingQuery<BriefCreatureQuestItemEntity>();
+class _PendingQuery<T> {
+  final count = Completer<int>();
+  final items = Completer<List<T>>();
+  final listStarted = Completer<void>();
 
-  @override
-  Future<int> countCreatureQuestItems(int creatureEntry) =>
-      (creatureEntry == 10 ? old : latest).count.future;
+  void complete(int total, List<T> data) {
+    count.complete(total);
+    items.complete(data);
+  }
 
-  @override
-  Future<List<BriefCreatureQuestItemEntity>> getBriefCreatureQuestItems(
-    int creatureEntry, {
-    int page = 1,
-  }) => (creatureEntry == 10 ? old : latest).fetchItems();
+  Future<List<T>> fetchItems() {
+    listStarted.complete();
+    return items.future;
+  }
 }

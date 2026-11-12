@@ -1,5 +1,5 @@
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// Load/partial-update implementation for DBC wide-table locale fields.

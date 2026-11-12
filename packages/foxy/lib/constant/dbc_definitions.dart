@@ -1,5 +1,19 @@
 import 'package:warcrafty/warcrafty.dart';
 
+/// A single DBC definition Foxy supports syncing.
+///
+/// The binary structure of a DBC still follows the warcrafty definition in
+/// [schema]; Foxy only adds the corresponding database table name here.
+class DbcDefinition {
+  final String tableName;
+  final DbcSchema schema;
+
+  const DbcDefinition({required this.tableName, required this.schema});
+
+  String get fileName => '${schema.name}.dbc';
+  String get qualifiedTableName => 'foxy.$tableName';
+}
+
 abstract final class DbcDefinitions {
   static final List<String> requiredTableNames = List.unmodifiable(
     all.map((definition) => definition.tableName),
@@ -229,18 +243,4 @@ abstract final class DbcDefinitions {
     }
     return prefixes;
   }
-}
-
-/// A single DBC definition Foxy supports syncing.
-///
-/// The binary structure of a DBC still follows the warcrafty definition in
-/// [schema]; Foxy only adds the corresponding database table name here.
-class DbcDefinition {
-  final String tableName;
-  final DbcSchema schema;
-
-  const DbcDefinition({required this.tableName, required this.schema});
-
-  String get fileName => '${schema.name}.dbc';
-  String get qualifiedTableName => 'foxy.$tableName';
 }

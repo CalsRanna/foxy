@@ -1,8 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_generator/src/entity_generator.dart';
 import 'package:foxy_generator/src/form_generator.dart';
 import 'package:foxy_generator/src/linked_detail_generator.dart';
@@ -10,6 +8,7 @@ import 'package:foxy_generator/src/linked_list_generator.dart';
 import 'package:foxy_generator/src/list_generator.dart';
 import 'package:foxy_generator/src/repository_filter_generator.dart';
 import 'package:foxy_generator/src/repository_generator.dart';
+import 'package:source_gen/source_gen.dart';
 
 Builder foxyEntityBuilder(BuilderOptions options) {
   return SharedPartBuilder(

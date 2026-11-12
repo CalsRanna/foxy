@@ -38,6 +38,49 @@ class MigrationRunner {
     }
   }
 
+  /// Unifies the foxy database and all its tables to utf8mb4 (idempotent,
+  /// run on every startup).
+  ///
+  /// Safety: the 1366 error guarantees non-utf8mb4 columns cannot contain
+  /// non-ASCII data (Chinese cannot be written at all), so
+  /// `CONVERT TO CHARACTER SET utf8mb4` cannot produce double mojibake;
+  /// Chinese in utf8 (3-byte) columns converts losslessly.
+  ///
+  /// Steady-state optimization: if the database is already utf8mb4, skip
+  /// ALTER DATABASE (no DDL); table scanning pushes the filter into SQL,
+  /// so zero round-trips when no non-mb4 tables remain.
+  Future<void> _ensureUtf8mb4() async {
+    final schemaRows = await laconic
+        .table('information_schema.schemata')
+        .select(['default_collation_name'])
+        .where('schema_name', 'foxy')
+        .get();
+    // Result map keys use the casing the server returns (uppercase for
+    // information_schema), unrelated to the lowercase identifiers in the
+    // query.
+    final dbCollation = schemaRows.isEmpty
+        ? null
+        : schemaRows.first.toMap()['DEFAULT_COLLATION_NAME'] as String?;
+    if (dbCollation == null || !dbCollation.startsWith('utf8mb4')) {
+      await laconic.statement(
+        'alter database foxy character set utf8mb4 collate utf8mb4_unicode_ci',
+      );
+    }
+    final rows = await laconic
+        .table('information_schema.tables')
+        .select(['table_name'])
+        .where('table_schema', 'foxy')
+        .whereRaw('table_collation not like ?', ['utf8mb4%'])
+        .get();
+    for (final row in rows) {
+      final tableName = row.toMap()['TABLE_NAME'] as String;
+      await laconic.statement(
+        'alter table foxy.`$tableName` '
+        'convert to character set utf8mb4 collate utf8mb4_unicode_ci',
+      );
+    }
+  }
+
   Future<void> _run() async {
     // Bootstrap: ensure the foxy database and migrations table exist.
     // The charset must be explicitly pinned to utf8mb4: old servers
@@ -86,49 +129,6 @@ class MigrationRunner {
       await laconic.table('foxy.migrations').insert([
         {'name': migration.name},
       ]);
-    }
-  }
-
-  /// Unifies the foxy database and all its tables to utf8mb4 (idempotent,
-  /// run on every startup).
-  ///
-  /// Safety: the 1366 error guarantees non-utf8mb4 columns cannot contain
-  /// non-ASCII data (Chinese cannot be written at all), so
-  /// `CONVERT TO CHARACTER SET utf8mb4` cannot produce double mojibake;
-  /// Chinese in utf8 (3-byte) columns converts losslessly.
-  ///
-  /// Steady-state optimization: if the database is already utf8mb4, skip
-  /// ALTER DATABASE (no DDL); table scanning pushes the filter into SQL,
-  /// so zero round-trips when no non-mb4 tables remain.
-  Future<void> _ensureUtf8mb4() async {
-    final schemaRows = await laconic
-        .table('information_schema.schemata')
-        .select(['default_collation_name'])
-        .where('schema_name', 'foxy')
-        .get();
-    // Result map keys use the casing the server returns (uppercase for
-    // information_schema), unrelated to the lowercase identifiers in the
-    // query.
-    final dbCollation = schemaRows.isEmpty
-        ? null
-        : schemaRows.first.toMap()['DEFAULT_COLLATION_NAME'] as String?;
-    if (dbCollation == null || !dbCollation.startsWith('utf8mb4')) {
-      await laconic.statement(
-        'alter database foxy character set utf8mb4 collate utf8mb4_unicode_ci',
-      );
-    }
-    final rows = await laconic
-        .table('information_schema.tables')
-        .select(['table_name'])
-        .where('table_schema', 'foxy')
-        .whereRaw('table_collation not like ?', ['utf8mb4%'])
-        .get();
-    for (final row in rows) {
-      final tableName = row.toMap()['TABLE_NAME'] as String;
-      await laconic.statement(
-        'alter table foxy.`$tableName` '
-        'convert to character set utf8mb4 collate utf8mb4_unicode_ci',
-      );
     }
   }
 }

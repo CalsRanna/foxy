@@ -1,10 +1,10 @@
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
-import 'package:foxy/view_model/workflow/dbc_sync_summary.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/use_case/combined/combined_export_use_case.dart';
-import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_export_item.dart';
+import 'package:foxy/view_model/workflow/dbc_sync_summary.dart';
+import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as p;
@@ -126,6 +126,18 @@ class CombinedExportWorkflowViewModel {
     ];
   }
 
+  void setDbcOutputDirectory(String value) {
+    final trimmed = value.trim();
+    dbcOutputDirectory.value = trimmed.isEmpty ? null : trimmed;
+  }
+
+  void setFileName(String value) {
+    final trimmed = value.trim();
+    fileName.value = trimmed.isEmpty
+        ? MpqExportWorkflowViewModel.defaultPatchFileName
+        : trimmed;
+  }
+
   void setItemSelected(String tableName, bool selected) {
     final nextItems = [...items.value];
     final index = nextItems.indexWhere((item) => item.tableName == tableName);
@@ -134,21 +146,9 @@ class CombinedExportWorkflowViewModel {
     items.value = nextItems;
   }
 
-  void setDbcOutputDirectory(String value) {
-    final trimmed = value.trim();
-    dbcOutputDirectory.value = trimmed.isEmpty ? null : trimmed;
-  }
-
   void setMpqOutputDirectory(String value) {
     final trimmed = value.trim();
     mpqOutputDirectory.value = trimmed.isEmpty ? null : trimmed;
-  }
-
-  void setFileName(String value) {
-    final trimmed = value.trim();
-    fileName.value = trimmed.isEmpty
-        ? MpqExportWorkflowViewModel.defaultPatchFileName
-        : trimmed;
   }
 
   Future<void> start() async {

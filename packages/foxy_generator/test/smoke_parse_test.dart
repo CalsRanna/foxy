@@ -8,12 +8,6 @@ import 'package:test/test.dart';
 
 import 'generator_test_support.dart';
 
-/// Matcher that captures a generated part and asserts it parses as valid
-/// Dart. The existing generator tests assert with string `contains` and
-/// do not catch syntax errors such as reserved-word parameter names. This
-/// smoke layer checks syntax only; type and runtime checks live in the app.
-final _parseable = _ParseableDart();
-
 void main() {
   test('Repository 生成产物可解析为合法 Dart', () async {
     await testBuilder(
@@ -84,6 +78,61 @@ void main() {
   });
 }
 
+const _relationEntitySource = r'''
+import 'package:foxy_annotation/entity_annotations.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'codegen_relation')
+class CodegenRelationEntity {
+  @FoxyBriefField()
+  @FoxyFullField('OwnerID', key: true)
+  final int ownerId;
+
+  @FoxyBriefField()
+  @FoxyFullField('Locale', key: true)
+  final String locale;
+
+  @FoxyBriefField()
+  @FoxyFullField('Value')
+  final String value;
+
+  const CodegenRelationEntity({
+    this.ownerId = 0,
+    this.locale = '',
+    this.value = '',
+  });
+}
+''';
+
+const _relationRepositorySource = r'''
+import 'package:foxy/entity/codegen_relation_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+
+part 'codegen_relation_repository.g.dart';
+
+// Composite key with a String component: no query layer (no list VM, no
+// linkKey), so only CRUD is generated — no create with
+// `nextMaxPlusOne` on a String key.
+@FoxyRepository(entity: CodegenRelationEntity)
+class CodegenRelationRepository with _CodegenRelationRepositoryMixin {}
+''';
+
+const _sampleDetailViewModelSource = r'''
+import 'package:foxy/entity/codegen_sample_entity.dart';
+import 'package:foxy/repository/codegen_sample_repository.dart';
+import 'package:foxy_annotation/form_annotations.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
+
+part 'codegen_sample_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(
+  entity: CodegenSampleEntity,
+  repository: CodegenSampleRepository,
+)
+class CodegenSampleDetailViewModel
+    with FieldControllerMixin, _CodegenSampleDetailViewModelMixin {}
+''';
+
 /// Part/mixin-free entity sources: build_test's resolver cannot follow
 /// `part 'x.g.dart'` (the generated file is not an input), which would make
 /// the annotations unresolvable. The generators read the same metadata from
@@ -117,57 +166,6 @@ class CodegenSampleEntity {
 }
 ''';
 
-const _relationEntitySource = r'''
-import 'package:foxy_annotation/entity_annotations.dart';
-
-@FoxyBriefEntity()
-@FoxyFullEntity(table: 'codegen_relation')
-class CodegenRelationEntity {
-  @FoxyBriefField()
-  @FoxyFullField('OwnerID', key: true)
-  final int ownerId;
-
-  @FoxyBriefField()
-  @FoxyFullField('Locale', key: true)
-  final String locale;
-
-  @FoxyBriefField()
-  @FoxyFullField('Value')
-  final String value;
-
-  const CodegenRelationEntity({
-    this.ownerId = 0,
-    this.locale = '',
-    this.value = '',
-  });
-}
-''';
-
-const _sampleRepositorySource = r'''
-import 'package:foxy/entity/codegen_sample_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
-
-part 'codegen_sample_repository.g.dart';
-
-@FoxyRepository(entity: CodegenSampleEntity)
-@FoxyFilter.text('id')
-@FoxyFilter.text('name')
-class CodegenSampleRepository with _CodegenSampleRepositoryMixin {}
-''';
-
-const _relationRepositorySource = r'''
-import 'package:foxy/entity/codegen_relation_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
-
-part 'codegen_relation_repository.g.dart';
-
-// Composite key with a String component: no query layer (no list VM, no
-// linkKey), so only CRUD is generated — no create with
-// `nextMaxPlusOne` on a String key.
-@FoxyRepository(entity: CodegenRelationEntity)
-class CodegenRelationRepository with _CodegenRelationRepositoryMixin {}
-''';
-
 const _sampleListViewModelSource = r'''
 import 'package:foxy/entity/codegen_sample_entity.dart';
 import 'package:foxy/repository/codegen_sample_repository.dart';
@@ -185,23 +183,29 @@ class CodegenSampleListViewModel
     with FieldControllerMixin, QueryVersionMixin, _CodegenSampleListViewModelMixin {}
 ''';
 
-const _sampleDetailViewModelSource = r'''
+const _sampleRepositorySource = r'''
 import 'package:foxy/entity/codegen_sample_entity.dart';
-import 'package:foxy/repository/codegen_sample_repository.dart';
-import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/view_model/form/field_controller.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 
-part 'codegen_sample_detail_view_model.g.dart';
+part 'codegen_sample_repository.g.dart';
 
-@FoxyDetailViewModel(
-  entity: CodegenSampleEntity,
-  repository: CodegenSampleRepository,
-)
-class CodegenSampleDetailViewModel
-    with FieldControllerMixin, _CodegenSampleDetailViewModelMixin {}
+@FoxyRepository(entity: CodegenSampleEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class CodegenSampleRepository with _CodegenSampleRepositoryMixin {}
 ''';
 
+/// Matcher that captures a generated part and asserts it parses as valid
+/// Dart. The existing generator tests assert with string `contains` and
+/// do not catch syntax errors such as reserved-word parameter names. This
+/// smoke layer checks syntax only; type and runtime checks live in the app.
+final _parseable = _ParseableDart();
+
 final class _ParseableDart extends Matcher {
+  @override
+  Description describe(Description description) =>
+      description.add('parseable Dart source');
+
   @override
   bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     // testBuilder hands matchers the raw output bytes, not a String.
@@ -215,8 +219,4 @@ final class _ParseableDart extends Matcher {
     }
     return true;
   }
-
-  @override
-  Description describe(Description description) =>
-      description.add('parseable Dart source');
 }

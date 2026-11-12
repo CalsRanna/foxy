@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy_widget/foxy_widget.dart';
-import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Form field that queries the database by value to pick a record:

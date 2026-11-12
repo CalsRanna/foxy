@@ -7,9 +7,9 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
 import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -21,6 +21,32 @@ class UpdateDialog extends StatefulWidget {
 
   @override
   State<UpdateDialog> createState() => _UpdateDialogState();
+}
+
+/// Update-notes display block: scrollable within a fixed-height area.
+class _ReleaseNotes extends StatelessWidget {
+  final String notes;
+
+  const _ReleaseNotes({required this.notes});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    return Container(
+      height: 160,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.border),
+      ),
+      child: SingleChildScrollView(
+        child: SelectableText(
+          notes.isEmpty ? '（本次更新没有说明）' : notes,
+          style: const TextStyle(fontSize: 13, height: 1.5),
+        ),
+      ),
+    );
+  }
 }
 
 class _UpdateDialogState extends State<UpdateDialog> {
@@ -259,6 +285,24 @@ class _UpdateDialogState extends State<UpdateDialog> {
     _loadCurrentVersion();
   }
 
+  Future<void> _confirmRestart() async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '重启完成更新',
+      description: '更新会关闭并重启 Foxy，请先保存正在编辑的内容。',
+      confirmText: '立即重启',
+    );
+    if (!confirmed || !mounted) return;
+    await _vm.restartToApply();
+  }
+
+  Future<void> _download() async {
+    try {
+      await _vm.downloadAndPrepare();
+    } catch (_) {
+      // Failures are reported through the errorMessage signal.
+    }
+  }
+
   Future<void> _loadCurrentVersion() async {
     final version = _vm.currentVersion.value;
     if (version != null) {
@@ -275,55 +319,11 @@ class _UpdateDialogState extends State<UpdateDialog> {
     }
   }
 
-  Future<void> _download() async {
-    try {
-      await _vm.downloadAndPrepare();
-    } catch (_) {
-      // Failures are reported through the errorMessage signal.
-    }
-  }
-
   Future<void> _retry() async {
     try {
       await _vm.checkManually();
     } catch (_) {
       // Failures are reported through the errorMessage signal.
     }
-  }
-
-  Future<void> _confirmRestart() async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '重启完成更新',
-      description: '更新会关闭并重启 Foxy，请先保存正在编辑的内容。',
-      confirmText: '立即重启',
-    );
-    if (!confirmed || !mounted) return;
-    await _vm.restartToApply();
-  }
-}
-
-/// Update-notes display block: scrollable within a fixed-height area.
-class _ReleaseNotes extends StatelessWidget {
-  final String notes;
-
-  const _ReleaseNotes({required this.notes});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    return Container(
-      height: 160,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: theme.colorScheme.border),
-      ),
-      child: SingleChildScrollView(
-        child: SelectableText(
-          notes.isEmpty ? '（本次更新没有说明）' : notes,
-          style: const TextStyle(fontSize: 13, height: 1.5),
-        ),
-      ),
-    );
   }
 }

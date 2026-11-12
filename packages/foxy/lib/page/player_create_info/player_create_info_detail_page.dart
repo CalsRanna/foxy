@@ -16,11 +16,6 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class PlayerCreateInfoDetailPage extends StatefulWidget {
-  static Set<int> disabledTabIndexes(PlayerCreateInfoKey? key, int tabCount) {
-    if (key != null) return const {};
-    return {for (var index = 1; index < tabCount; index++) index};
-  }
-
   final PlayerCreateInfoKey? playerCreateInfoKey;
 
   const PlayerCreateInfoDetailPage({super.key, this.playerCreateInfoKey});
@@ -28,6 +23,11 @@ class PlayerCreateInfoDetailPage extends StatefulWidget {
   @override
   State<PlayerCreateInfoDetailPage> createState() =>
       _PlayerCreateInfoDetailPageState();
+
+  static Set<int> disabledTabIndexes(PlayerCreateInfoKey? key, int tabCount) {
+    if (key != null) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
 }
 
 class _PlayerCreateInfoDetailPageState

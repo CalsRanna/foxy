@@ -3,31 +3,6 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 
-/// In-memory ConfigUtil fake (the real one persists YAML to disk).
-class _FakeConfigUtil implements ConfigUtil {
-  final Map<String, dynamic> data;
-
-  _FakeConfigUtil([Map<String, dynamic>? initial])
-    : data = Map<String, dynamic>.from(initial ?? const {});
-
-  @override
-  String get configPath => 'fake';
-
-  @override
-  Future<Map<String, dynamic>> load() async => data;
-
-  @override
-  Future<void> update(Map<String, dynamic> values) async {
-    data.addAll(values);
-  }
-}
-
-DbcTableCheckResult _missing(String tableName) =>
-    DbcTableCheckResult(tableName: tableName, state: DbcTableState.missing);
-
-DbcTableCheckResult _ready(String tableName) =>
-    DbcTableCheckResult(tableName: tableName, state: DbcTableState.ready);
-
 void main() {
   test('无缺失表时不提醒也不写配置', () async {
     final config = _FakeConfigUtil();
@@ -106,4 +81,29 @@ void main() {
       'dbc_skill_tiers',
     ]);
   });
+}
+
+DbcTableCheckResult _missing(String tableName) =>
+    DbcTableCheckResult(tableName: tableName, state: DbcTableState.missing);
+
+DbcTableCheckResult _ready(String tableName) =>
+    DbcTableCheckResult(tableName: tableName, state: DbcTableState.ready);
+
+/// In-memory ConfigUtil fake (the real one persists YAML to disk).
+class _FakeConfigUtil implements ConfigUtil {
+  final Map<String, dynamic> data;
+
+  _FakeConfigUtil([Map<String, dynamic>? initial])
+    : data = Map<String, dynamic>.from(initial ?? const {});
+
+  @override
+  String get configPath => 'fake';
+
+  @override
+  Future<Map<String, dynamic>> load() async => data;
+
+  @override
+  Future<void> update(Map<String, dynamic> values) async {
+    data.addAll(values);
+  }
 }

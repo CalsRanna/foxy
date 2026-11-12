@@ -8,15 +8,6 @@ import 'package:foxy_widget/src/game_asset/foxy_game_asset_icon.dart';
 /// [nameColor] is optional (e.g. item quality color) and defaults to the
 /// theme's text color.
 class FoxyIconText extends StatelessWidget {
-  const FoxyIconText({
-    super.key,
-    required this.iconPath,
-    required this.name,
-    this.nameColor,
-    this.iconSize = 40,
-    this.iconRadius = 6,
-  });
-
   /// Raw DBC icon path (backslashes, case-insensitive).
   final String iconPath;
 
@@ -31,6 +22,15 @@ class FoxyIconText extends StatelessWidget {
 
   /// Icon corner radius.
   final double iconRadius;
+
+  const FoxyIconText({
+    super.key,
+    required this.iconPath,
+    required this.name,
+    this.nameColor,
+    this.iconSize = 40,
+    this.iconRadius = 6,
+  });
 
   @override
   Widget build(BuildContext context) {

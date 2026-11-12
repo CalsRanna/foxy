@@ -49,6 +49,8 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:yaml/yaml.dart';
 
+Future<void> main(List<String> args) => MakeUpdateManifest.run(args);
+
 abstract final class MakeUpdateManifest {
   static const _repo = 'CalsRanna/foxy';
   static const _appId = 'com.calsranna.foxy';
@@ -140,45 +142,6 @@ abstract final class MakeUpdateManifest {
     );
   }
 
-  /// Reads the existing manifest's releases, dropping entries matching the
-  /// current (version, buildNumber).
-  ///
-  /// On parse failure (corrupt/mismatched file) returns an empty list —
-  /// better a manifest with only the current entry than an interrupted
-  /// release.
-  static List<Map<String, Object?>> _readExistingReleases(
-    String existingPath,
-    String version,
-    String buildNumber,
-  ) {
-    try {
-      final decoded = loadYaml(File(existingPath).readAsStringSync());
-      if (decoded is! Map) return const [];
-      final releases = decoded['releases'];
-      if (releases is! List) return const [];
-      final result = <Map<String, Object?>>[];
-      for (final item in releases) {
-        if (item is! Map) continue;
-        if (item['version'] == version && item['buildNumber'] == buildNumber) {
-          continue; // re-releasing the same version: replace the old entry
-        }
-        result.add(_stringifyKeys(item));
-      }
-      return result;
-    } catch (error) {
-      stderr.writeln('解析现有清单失败,仅保留当前条目: $error');
-      return const [];
-    }
-  }
-
-  /// Normalizes YamlMap keys to String (loadYaml may return dynamic keys).
-  static Map<String, Object?> _stringifyKeys(Map item) {
-    return {
-      for (final entry in item.entries)
-        if (entry.key is String) entry.key: entry.value,
-    };
-  }
-
   /// Outputs the YAML manifest (structure in the file-header comment).
   static String _dumpYaml(List<Map<String, Object?>> releases) {
     final buffer = StringBuffer();
@@ -204,40 +167,15 @@ abstract final class MakeUpdateManifest {
     return buffer.toString();
   }
 
-  /// Strips the tag's prerelease suffix: `v1.1.0-beta` → `v1.1.0`.
-  ///
-  /// A prerelease suffix is `-` followed by alphanumerics/dots/hyphens
-  /// (e.g. `-beta`, `-rc.1`). Tags without a suffix are returned as-is.
-  static String _stripPrereleaseSuffix(String tag) {
-    final dash = tag.indexOf('-');
-    if (dash < 0) return tag;
-    final suffix = tag.substring(dash + 1);
-    if (suffix.isEmpty || !RegExp(r'^[A-Za-z0-9.\-]+$').hasMatch(suffix)) {
-      return tag;
+  /// Finds the line in [lines] exactly matching [heading] and returns the
+  /// index of the following line.
+  static int? _findSectionStart(List<String> lines, String heading) {
+    for (var index = 0; index < lines.length; index += 1) {
+      if (lines[index].trim() == heading) {
+        return index + 1;
+      }
     }
-    return tag.substring(0, dash);
-  }
-
-  static String _readPubspecVersion() {
-    final pubspec = _loadPubspec();
-    final version = pubspec['version'];
-    if (version is! String) {
-      stderr.writeln('pubspec.yaml 缺少 version 字段');
-      exit(1);
-    }
-    final plus = version.indexOf('+');
-    return plus < 0 ? version : version.substring(0, plus);
-  }
-
-  static String _readPubspecBuildNumber() {
-    final pubspec = _loadPubspec();
-    final version = pubspec['version'];
-    if (version is! String) {
-      stderr.writeln('pubspec.yaml 缺少 version 字段');
-      exit(1);
-    }
-    final plus = version.indexOf('+');
-    return plus < 0 ? '0' : version.substring(plus + 1);
+    return null;
   }
 
   static YamlMap _loadPubspec() {
@@ -252,6 +190,16 @@ abstract final class MakeUpdateManifest {
       exit(1);
     }
     return loaded;
+  }
+
+  static Map<String, String> _parseArgs(List<String> args) {
+    final options = <String, String>{};
+    for (var index = 0; index < args.length; index += 2) {
+      if (index + 1 < args.length && args[index].startsWith('--')) {
+        options[args[index]] = args[index + 1];
+      }
+    }
+    return options;
   }
 
   /// Reads the `## <tag>` section of CHANGELOG.md (up to the next `##`
@@ -290,26 +238,78 @@ abstract final class MakeUpdateManifest {
     return notes;
   }
 
-  /// Finds the line in [lines] exactly matching [heading] and returns the
-  /// index of the following line.
-  static int? _findSectionStart(List<String> lines, String heading) {
-    for (var index = 0; index < lines.length; index += 1) {
-      if (lines[index].trim() == heading) {
-        return index + 1;
+  /// Reads the existing manifest's releases, dropping entries matching the
+  /// current (version, buildNumber).
+  ///
+  /// On parse failure (corrupt/mismatched file) returns an empty list —
+  /// better a manifest with only the current entry than an interrupted
+  /// release.
+  static List<Map<String, Object?>> _readExistingReleases(
+    String existingPath,
+    String version,
+    String buildNumber,
+  ) {
+    try {
+      final decoded = loadYaml(File(existingPath).readAsStringSync());
+      if (decoded is! Map) return const [];
+      final releases = decoded['releases'];
+      if (releases is! List) return const [];
+      final result = <Map<String, Object?>>[];
+      for (final item in releases) {
+        if (item is! Map) continue;
+        if (item['version'] == version && item['buildNumber'] == buildNumber) {
+          continue; // re-releasing the same version: replace the old entry
+        }
+        result.add(_stringifyKeys(item));
       }
+      return result;
+    } catch (error) {
+      stderr.writeln('解析现有清单失败,仅保留当前条目: $error');
+      return const [];
     }
-    return null;
   }
 
-  static Map<String, String> _parseArgs(List<String> args) {
-    final options = <String, String>{};
-    for (var index = 0; index < args.length; index += 2) {
-      if (index + 1 < args.length && args[index].startsWith('--')) {
-        options[args[index]] = args[index + 1];
-      }
+  static String _readPubspecBuildNumber() {
+    final pubspec = _loadPubspec();
+    final version = pubspec['version'];
+    if (version is! String) {
+      stderr.writeln('pubspec.yaml 缺少 version 字段');
+      exit(1);
     }
-    return options;
+    final plus = version.indexOf('+');
+    return plus < 0 ? '0' : version.substring(plus + 1);
+  }
+
+  static String _readPubspecVersion() {
+    final pubspec = _loadPubspec();
+    final version = pubspec['version'];
+    if (version is! String) {
+      stderr.writeln('pubspec.yaml 缺少 version 字段');
+      exit(1);
+    }
+    final plus = version.indexOf('+');
+    return plus < 0 ? version : version.substring(0, plus);
+  }
+
+  /// Normalizes YamlMap keys to String (loadYaml may return dynamic keys).
+  static Map<String, Object?> _stringifyKeys(Map item) {
+    return {
+      for (final entry in item.entries)
+        if (entry.key is String) entry.key: entry.value,
+    };
+  }
+
+  /// Strips the tag's prerelease suffix: `v1.1.0-beta` → `v1.1.0`.
+  ///
+  /// A prerelease suffix is `-` followed by alphanumerics/dots/hyphens
+  /// (e.g. `-beta`, `-rc.1`). Tags without a suffix are returned as-is.
+  static String _stripPrereleaseSuffix(String tag) {
+    final dash = tag.indexOf('-');
+    if (dash < 0) return tag;
+    final suffix = tag.substring(dash + 1);
+    if (suffix.isEmpty || !RegExp(r'^[A-Za-z0-9.\-]+$').hasMatch(suffix)) {
+      return tag;
+    }
+    return tag.substring(0, dash);
   }
 }
-
-Future<void> main(List<String> args) => MakeUpdateManifest.run(args);

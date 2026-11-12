@@ -71,11 +71,6 @@ final class ListGenerationModel {
     required this.logNameFields,
   });
 
-  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
-  /// module name.
-  String get moduleName =>
-      table.startsWith('foxy.') ? table.substring(5) : table;
-
   /// `CreatureTemplateEntity` → `creatureTemplate` (matches the
   /// Repository's entity parameter naming; used as the entity name in logs
   /// and tooltips).
@@ -89,4 +84,9 @@ final class ListGenerationModel {
   /// Parameter type of the empty implementation hooks: `int key` when the
   /// key is an int, otherwise `XxxKey key`.
   String get keyParameter => keyType == 'int' ? 'int key' : '$keyType key';
+
+  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
+  /// module name.
+  String get moduleName =>
+      table.startsWith('foxy.') ? table.substring(5) : table;
 }

@@ -3,23 +3,22 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/list_model.dart';
 import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/source_shape.dart';
+import 'package:source_gen/source_gen.dart';
 
+const _filterChecker = TypeChecker.fromUrl(
+  'package:foxy_annotation/repository_annotations.dart#FoxyFilter',
+);
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
 );
 const _repositoryChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/repository_annotations.dart#FoxyRepository',
-);
-const _filterChecker = TypeChecker.fromUrl(
-  'package:foxy_annotation/repository_annotations.dart#FoxyFilter',
 );
 
 /// Parses `@FoxyListViewModel`.
@@ -159,6 +158,13 @@ final class ListReader {
     );
   }
 
+  Never _fail(String message, Element element, String correction) {
+    throw InvalidGenerationSourceError(
+      '$message\nFix: $correction',
+      element: element,
+    );
+  }
+
   Future<(ClassElement, String)> _readEntity(
     ConstantReader annotation,
     String className,
@@ -203,6 +209,89 @@ final class ListReader {
       "$className's @FoxyListViewModel",
     );
     return (resolved.entityElement, resolved.table);
+  }
+
+  /// Infers the Key type from the entity's `@FoxyFullField(key: true)`: a
+  /// single key is the field type, a composite key is `XxxKey` (a generated
+  /// class; only its name is inferable).
+  String _readEntityKeyType(InterfaceElement entityElement, Element element) {
+    final keyFieldTypes = <String>[];
+    for (final field in entityElement.fields.where(
+      (field) => !field.isStatic && field.isOriginDeclaration,
+    )) {
+      final annotations = _fullFieldChecker.annotationsOf(field).toList();
+      if (annotations.length != 1) continue;
+      if (!(ConstantReader(annotations.single).peek('key')?.boolValue ??
+          false)) {
+        continue;
+      }
+      keyFieldTypes.add(field.type.getDisplayString());
+    }
+    if (keyFieldTypes.isEmpty) {
+      _fail(
+        '${entityElement.name} has no physical key usable for list '
+            'operations.',
+        element,
+        'Set key: true on at least one @FoxyFullField.',
+      );
+    }
+    if (keyFieldTypes.length == 1) return keyFieldTypes.single;
+    final baseName = entityElement.name!.substring(
+      0,
+      entityElement.name!.length - 'Entity'.length,
+    );
+    return '${baseName}Key';
+  }
+
+  List<ListFilterFieldModel> _readFilterFields(
+    InterfaceElement repositoryElement,
+    String filterClassName,
+    Element element,
+  ) {
+    final fields = <ListFilterFieldModel>[];
+    final names = <String>{};
+    for (final object in _filterChecker.annotationsOf(repositoryElement)) {
+      final reader = ConstantReader(object);
+      final name = reader.read('name').stringValue;
+      if (!names.add(name)) {
+        _fail(
+          '$filterClassName declares duplicate field $name.',
+          element,
+          'Ensure every @FoxyFilter field name is unique.',
+        );
+      }
+      if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
+        _fail(
+          "The field name $name of $filterClassName is not a valid "
+              'lowerCamelCase identifier.',
+          element,
+          'Use lowerCamelCase; a trailing underscore is allowed for Dart '
+              'reserved words.',
+        );
+      }
+      final typeIndex = reader
+          .read('type')
+          .objectValue
+          .getField('index')
+          ?.toIntValue();
+      final type =
+          typeIndex != null &&
+              typeIndex >= 0 &&
+              typeIndex < FoxyFilterType.values.length
+          ? FoxyFilterType.values[typeIndex]
+          : null;
+      if (type != FoxyFilterType.text) {
+        _fail(
+          'The filter type of $filterClassName.$name is '
+              "${type?.name ?? 'unknown'}.",
+          element,
+          'List ViewModel currently supports only @FoxyFilter.text text '
+              'filter fields; remove this filter or switch it to text.',
+        );
+      }
+      fields.add(ListFilterFieldModel(name: name));
+    }
+    return fields;
   }
 
   Future<ClassElement> _readRepository(
@@ -274,95 +363,5 @@ final class ListReader {
       );
     }
     return repositoryElement;
-  }
-
-  List<ListFilterFieldModel> _readFilterFields(
-    InterfaceElement repositoryElement,
-    String filterClassName,
-    Element element,
-  ) {
-    final fields = <ListFilterFieldModel>[];
-    final names = <String>{};
-    for (final object in _filterChecker.annotationsOf(repositoryElement)) {
-      final reader = ConstantReader(object);
-      final name = reader.read('name').stringValue;
-      if (!names.add(name)) {
-        _fail(
-          '$filterClassName declares duplicate field $name.',
-          element,
-          'Ensure every @FoxyFilter field name is unique.',
-        );
-      }
-      if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
-        _fail(
-          "The field name $name of $filterClassName is not a valid "
-              'lowerCamelCase identifier.',
-          element,
-          'Use lowerCamelCase; a trailing underscore is allowed for Dart '
-              'reserved words.',
-        );
-      }
-      final typeIndex = reader
-          .read('type')
-          .objectValue
-          .getField('index')
-          ?.toIntValue();
-      final type =
-          typeIndex != null &&
-              typeIndex >= 0 &&
-              typeIndex < FoxyFilterType.values.length
-          ? FoxyFilterType.values[typeIndex]
-          : null;
-      if (type != FoxyFilterType.text) {
-        _fail(
-          'The filter type of $filterClassName.$name is '
-              "${type?.name ?? 'unknown'}.",
-          element,
-          'List ViewModel currently supports only @FoxyFilter.text text '
-              'filter fields; remove this filter or switch it to text.',
-        );
-      }
-      fields.add(ListFilterFieldModel(name: name));
-    }
-    return fields;
-  }
-
-  /// Infers the Key type from the entity's `@FoxyFullField(key: true)`: a
-  /// single key is the field type, a composite key is `XxxKey` (a generated
-  /// class; only its name is inferable).
-  String _readEntityKeyType(InterfaceElement entityElement, Element element) {
-    final keyFieldTypes = <String>[];
-    for (final field in entityElement.fields.where(
-      (field) => !field.isStatic && field.isOriginDeclaration,
-    )) {
-      final annotations = _fullFieldChecker.annotationsOf(field).toList();
-      if (annotations.length != 1) continue;
-      if (!(ConstantReader(annotations.single).peek('key')?.boolValue ??
-          false)) {
-        continue;
-      }
-      keyFieldTypes.add(field.type.getDisplayString());
-    }
-    if (keyFieldTypes.isEmpty) {
-      _fail(
-        '${entityElement.name} has no physical key usable for list '
-            'operations.',
-        element,
-        'Set key: true on at least one @FoxyFullField.',
-      );
-    }
-    if (keyFieldTypes.length == 1) return keyFieldTypes.single;
-    final baseName = entityElement.name!.substring(
-      0,
-      entityElement.name!.length - 'Entity'.length,
-    );
-    return '${baseName}Key';
-  }
-
-  Never _fail(String message, Element element, String correction) {
-    throw InvalidGenerationSourceError(
-      '$message\nFix: $correction',
-      element: element,
-    );
   }
 }

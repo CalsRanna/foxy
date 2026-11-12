@@ -4,10 +4,10 @@ import 'dart:isolate';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
+import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
@@ -76,35 +76,6 @@ void main() {
   });
 }
 
-/// Scripted success worker for both export entries: registers the control
-/// port, emits one count, then a success result, and exits.
-final class _SuccessExportWorker {
-  static Future<void> run(DbcExportWorkerArgs args) async {
-    final cancelPort = ReceivePort();
-    final sub = cancelPort.listen((_) {});
-    args.sendPort.send(('control', cancelPort.sendPort));
-    args.sendPort.send(('status', 'scanning', 'ok', null));
-    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
-    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
-    await sub.cancel();
-    cancelPort.close();
-  }
-}
-
-/// MPQ worker entry must accept [MpqExportWorkerArgs]; same scripted body.
-final class _SuccessMpqWorker {
-  static Future<void> run(MpqExportWorkerArgs args) async {
-    final cancelPort = ReceivePort();
-    final sub = cancelPort.listen((_) {});
-    args.sendPort.send(('control', cancelPort.sendPort));
-    args.sendPort.send(('status', 'scanning', 'ok', null));
-    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
-    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
-    await sub.cancel();
-    cancelPort.close();
-  }
-}
-
 /// Registry stub: no GetIt resolution, no DB access.
 final class _FakeRegistry implements DbcExportRegistry {
   @override
@@ -135,5 +106,34 @@ final class _MemoryConfigUtil extends ConfigUtil {
   @override
   Future<void> update(Map<String, dynamic> values) async {
     data.addAll(values);
+  }
+}
+
+/// Scripted success worker for both export entries: registers the control
+/// port, emits one count, then a success result, and exits.
+final class _SuccessExportWorker {
+  static Future<void> run(DbcExportWorkerArgs args) async {
+    final cancelPort = ReceivePort();
+    final sub = cancelPort.listen((_) {});
+    args.sendPort.send(('control', cancelPort.sendPort));
+    args.sendPort.send(('status', 'scanning', 'ok', null));
+    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
+    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
+    await sub.cancel();
+    cancelPort.close();
+  }
+}
+
+/// MPQ worker entry must accept [MpqExportWorkerArgs]; same scripted body.
+final class _SuccessMpqWorker {
+  static Future<void> run(MpqExportWorkerArgs args) async {
+    final cancelPort = ReceivePort();
+    final sub = cancelPort.listen((_) {});
+    args.sendPort.send(('control', cancelPort.sendPort));
+    args.sendPort.send(('status', 'scanning', 'ok', null));
+    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
+    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
+    await sub.cancel();
+    cancelPort.close();
   }
 }

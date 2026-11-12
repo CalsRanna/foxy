@@ -61,52 +61,6 @@ class FoxyDetailViewModel {
   });
 }
 
-/// Annotates a child-table Linked List ViewModel (the row-editing list of a
-/// detail-page tab).
-///
-/// Generates the controller boilerplate plus the full editor skeleton:
-/// link-key subset signal, pagination, race token,
-/// copy/create/destroy/edit/persist/setLinkKey/_refresh. The Repository
-/// must declare `@FoxyRepository(..., linkKey: [...])` (validated at build
-/// time). The entity and repository are derived from the class name
-/// (`XxxLinkedListViewModel` → `XxxEntity` / `XxxRepository`); explicit
-/// overrides are validated against the derivation.
-@Target({TargetKind.classType})
-class FoxyLinkedListViewModel {
-  /// Exception override: the Full Entity type the form maps to. When
-  /// omitted, derived from the class name.
-  final Type? entity;
-
-  /// Exception override: Repository type providing
-  /// getBrief/count/create/copy/store/update. When omitted, derived from
-  /// the class name.
-  final Type? repository;
-
-  /// Exception: enum-field names with a fallback (Map with explicit
-  /// fallback, or Set deriving it from the entity constructor default).
-  final Object enums;
-
-  /// Exception: controller name → `FlagFieldController`.
-  final Set<String> flags;
-
-  /// Exception: controller name → `IntFieldControllerGroup` (dynamic field
-  /// editing).
-  final Set<String> groups;
-
-  /// Fields excluded from the form (no controller is generated, and they do
-  /// not appear in collect/apply).
-  final Set<String> exclude;
-
-  const FoxyLinkedListViewModel({
-    this.entity,
-    this.repository,
-    this.enums = const {},
-    this.flags = const {},
-    this.groups = const {},
-    this.exclude = const {},
-  });
-}
-
 /// Annotates a single-row Linked Detail ViewModel (the one-to-one linked
 /// form of a detail-page tab).
 ///
@@ -144,6 +98,52 @@ class FoxyLinkedDetailViewModel {
   final Set<String> exclude;
 
   const FoxyLinkedDetailViewModel({
+    this.entity,
+    this.repository,
+    this.enums = const {},
+    this.flags = const {},
+    this.groups = const {},
+    this.exclude = const {},
+  });
+}
+
+/// Annotates a child-table Linked List ViewModel (the row-editing list of a
+/// detail-page tab).
+///
+/// Generates the controller boilerplate plus the full editor skeleton:
+/// link-key subset signal, pagination, race token,
+/// copy/create/destroy/edit/persist/setLinkKey/_refresh. The Repository
+/// must declare `@FoxyRepository(..., linkKey: [...])` (validated at build
+/// time). The entity and repository are derived from the class name
+/// (`XxxLinkedListViewModel` → `XxxEntity` / `XxxRepository`); explicit
+/// overrides are validated against the derivation.
+@Target({TargetKind.classType})
+class FoxyLinkedListViewModel {
+  /// Exception override: the Full Entity type the form maps to. When
+  /// omitted, derived from the class name.
+  final Type? entity;
+
+  /// Exception override: Repository type providing
+  /// getBrief/count/create/copy/store/update. When omitted, derived from
+  /// the class name.
+  final Type? repository;
+
+  /// Exception: enum-field names with a fallback (Map with explicit
+  /// fallback, or Set deriving it from the entity constructor default).
+  final Object enums;
+
+  /// Exception: controller name → `FlagFieldController`.
+  final Set<String> flags;
+
+  /// Exception: controller name → `IntFieldControllerGroup` (dynamic field
+  /// editing).
+  final Set<String> groups;
+
+  /// Fields excluded from the form (no controller is generated, and they do
+  /// not appear in collect/apply).
+  final Set<String> exclude;
+
+  const FoxyLinkedListViewModel({
     this.entity,
     this.repository,
     this.enums = const {},

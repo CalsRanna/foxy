@@ -2,6 +2,8 @@ import 'package:foxy_game_file/src/dbc_file_exception.dart';
 import 'package:foxy_game_file/src/dbc_header_guard.dart';
 import 'package:warcrafty/warcrafty.dart';
 
+typedef DbcFileRecord = ({int index, Map<String, Object?> values});
+
 class DbcFileReader {
   final DbcSchema schema;
   final DbcLoader _loader;
@@ -61,5 +63,3 @@ class DbcFileReader {
     return value;
   }
 }
-
-typedef DbcFileRecord = ({int index, Map<String, Object?> values});

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
-import 'package:foxy/widget/picker/foxy_enum_picker.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/dialog/foxy_form_dialog.dart';
+import 'package:foxy/widget/picker/foxy_enum_picker.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-
-const _options = {1: '苹果', 21: '香蕉', 3: '菠萝'};
 
 void main() {
   testWidgets('未初始化显示占位文字，不将 fallback 写入选择', (tester) async {
@@ -425,28 +423,32 @@ void main() {
   });
 }
 
+const _options = {1: '苹果', 21: '香蕉', 3: '菠萝'};
+
 Finder get _search => find.descendant(
   of: find.byType(ShadDialog).last,
   matching: find.byType(EditableText),
 );
 
-List<int> _selectedRadioValues(WidgetTester tester) => tester
-    .elementList(find.byType(ShadRadio<int>))
-    .where((element) {
-      final group = element
-          .findAncestorStateOfType<ShadRadioGroupState<int>>()!;
-      return group.effectiveController.value ==
-          (element.widget as ShadRadio<int>).value;
-    })
-    .map((element) => (element.widget as ShadRadio<int>).value)
-    .toList();
+ShadButton _confirmButton(WidgetTester tester) =>
+    tester.widget<ShadButton>(find.widgetWithText(ShadButton, '确定'));
+
+Future<void> _dispose<T>(
+  WidgetTester tester,
+  EnumFieldController<T> controller,
+) async {
+  await tester.pumpWidget(const SizedBox());
+  controller.dispose();
+}
 
 ShadInput _input(WidgetTester tester) => tester.widget<ShadInput>(
   find.byWidgetPredicate((widget) => widget is ShadInput && widget.readOnly),
 );
 
-ShadButton _confirmButton(WidgetTester tester) =>
-    tester.widget<ShadButton>(find.widgetWithText(ShadButton, '确定'));
+Future<void> _open(WidgetTester tester) async {
+  await tester.tap(find.byIcon(LucideIcons.list));
+  await tester.pumpAndSettle();
+}
 
 Future<void> _pumpPicker<T>(
   WidgetTester tester,
@@ -474,15 +476,13 @@ Future<void> _pumpPicker<T>(
   await tester.pumpAndSettle();
 }
 
-Future<void> _open(WidgetTester tester) async {
-  await tester.tap(find.byIcon(LucideIcons.list));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _dispose<T>(
-  WidgetTester tester,
-  EnumFieldController<T> controller,
-) async {
-  await tester.pumpWidget(const SizedBox());
-  controller.dispose();
-}
+List<int> _selectedRadioValues(WidgetTester tester) => tester
+    .elementList(find.byType(ShadRadio<int>))
+    .where((element) {
+      final group = element
+          .findAncestorStateOfType<ShadRadioGroupState<int>>()!;
+      return group.effectiveController.value ==
+          (element.widget as ShadRadio<int>).value;
+    })
+    .map((element) => (element.widget as ShadRadio<int>).value)
+    .toList();

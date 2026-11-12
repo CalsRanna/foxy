@@ -37,6 +37,15 @@ class ConfigUtil {
     }
   }
 
+  Future<void> update(Map<String, dynamic> values) {
+    final snapshot = Map<String, dynamic>.from(values);
+    final operation = _pendingUpdate
+        .catchError((Object _) {})
+        .then((_) => _performUpdate(snapshot));
+    _pendingUpdate = operation;
+    return operation;
+  }
+
   /// Self-heal on corrupted config: back up the broken file and return an
   /// empty config, so loading and saving keep working instead of the app
   /// being permanently unrecoverable.
@@ -49,15 +58,6 @@ class ConfigUtil {
       // this time.
     }
     return {};
-  }
-
-  Future<void> update(Map<String, dynamic> values) {
-    final snapshot = Map<String, dynamic>.from(values);
-    final operation = _pendingUpdate
-        .catchError((Object _) {})
-        .then((_) => _performUpdate(snapshot));
-    _pendingUpdate = operation;
-    return operation;
   }
 
   Future<void> _performUpdate(Map<String, dynamic> values) async {

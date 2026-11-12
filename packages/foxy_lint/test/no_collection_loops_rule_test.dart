@@ -4,6 +4,13 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:foxy_lint/rules/no_collection_loops.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(NoCollectionLoopsRuleTest);
+    defineReflectiveTests(NoCollectionLoopsScopeTest);
+  });
+}
+
 /// Tests the real NoCollectionLoops rule through the official
 /// analyzer_testing harness. Scope comes from the probed file name
 /// (`sample_entity.dart`); the rule targets `List.generate` and `for-in`
@@ -11,23 +18,32 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 @reflectiveTest
 class NoCollectionLoopsRuleTest extends AnalysisRuleTest {
   @override
+  String get testFileName => 'sample_entity.dart';
+
+  @override
   void setUp() {
     rule = NoCollectionLoops();
     super.setUp();
   }
 
-  @override
-  String get testFileName => 'sample_entity.dart';
-
-  void test_listGenerate_reports() async {
-    await assertDiagnostics(
-      r'''
+  void test_collectionMethods_doNotReport() async {
+    await assertNoDiagnostics(r'''
 class SampleEntity {
-  final x = List.generate(3, (i) => i);
+  List<int> bump(List<int> xs) => xs.map((e) => e + 1).toList();
 }
-''',
-      [lint(33, 26)],
-    );
+''');
+  }
+
+  void test_cStyleFor_doesNotReport() async {
+    await assertNoDiagnostics(r'''
+class SampleEntity {
+  int count() {
+    var t = 0;
+    for (var i = 0; i < 3; i++) { t++; }
+    return t;
+  }
+}
+''');
   }
 
   void test_forIn_reports() async {
@@ -45,24 +61,15 @@ class SampleEntity {
     );
   }
 
-  void test_cStyleFor_doesNotReport() async {
-    await assertNoDiagnostics(r'''
+  void test_listGenerate_reports() async {
+    await assertDiagnostics(
+      r'''
 class SampleEntity {
-  int count() {
-    var t = 0;
-    for (var i = 0; i < 3; i++) { t++; }
-    return t;
-  }
+  final x = List.generate(3, (i) => i);
 }
-''');
-  }
-
-  void test_collectionMethods_doNotReport() async {
-    await assertNoDiagnostics(r'''
-class SampleEntity {
-  List<int> bump(List<int> xs) => xs.map((e) => e + 1).toList();
-}
-''');
+''',
+      [lint(33, 26)],
+    );
   }
 }
 
@@ -70,13 +77,13 @@ class SampleEntity {
 @reflectiveTest
 class NoCollectionLoopsScopeTest extends AnalysisRuleTest {
   @override
+  String get testFileName => 'sample_util.dart';
+
+  @override
   void setUp() {
     rule = NoCollectionLoops();
     super.setUp();
   }
-
-  @override
-  String get testFileName => 'sample_util.dart';
 
   void test_collectionLoops_outsideScopedFile_doNotReport() async {
     await assertNoDiagnostics(r'''
@@ -91,11 +98,4 @@ class SampleEntity {
 }
 ''');
   }
-}
-
-void main() {
-  defineReflectiveSuite(() {
-    defineReflectiveTests(NoCollectionLoopsRuleTest);
-    defineReflectiveTests(NoCollectionLoopsScopeTest);
-  });
 }

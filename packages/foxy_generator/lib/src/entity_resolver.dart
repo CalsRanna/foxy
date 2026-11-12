@@ -2,10 +2,9 @@
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/naming.dart';
+import 'package:source_gen/source_gen.dart';
 
 const _fullEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullEntity',
@@ -14,6 +13,41 @@ const _fullEntityChecker = TypeChecker.fromUrl(
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
 );
+
+/// Candidate name fields of a Full Entity in priority order, used as the
+/// default activity-log entity name (see the list emitters). Matches
+/// `String`/`String?` fields by naming convention: `name`, the first
+/// `*NameLangZhCN` locale variant (`nameLangZhCN` / `areaNameLangZhCN` /
+/// `sortNameLangZhCN`), `titleLangZhCN`, `title`, `logTitle`, then
+/// `comment`. Empty when the entity has no name-ish column; the caller
+/// falls back to the record key.
+List<String> logNameFieldsOf(ClassElement entityElement) {
+  final stringFields = <String>{};
+  for (final field in entityElement.fields) {
+    if (field.isStatic || !field.isOriginDeclaration) continue;
+    if (_fullFieldChecker.annotationsOf(field).length != 1) continue;
+    final name = field.name;
+    if (name == null) continue;
+    final type = field.type.getDisplayString();
+    if (type != 'String' && type != 'String?') continue;
+    stringFields.add(name);
+  }
+  final candidates = <String>[];
+  void addIfPresent(String name) {
+    if (stringFields.contains(name)) candidates.add(name);
+  }
+
+  addIfPresent('name');
+  final localeNames = stringFields.where(
+    (n) => n.toLowerCase().endsWith('namelangzhcn'),
+  );
+  if (localeNames.isNotEmpty) candidates.add(localeNames.first);
+  addIfPresent('titleLangZhCN');
+  addIfPresent('title');
+  addIfPresent('logTitle');
+  addIfPresent('comment');
+  return candidates;
+}
 
 /// Resolves a class by its convention-derived file path
 /// (`lib/<directory>/<snake_case(class)>.dart`).
@@ -64,59 +98,6 @@ Future<ClassElement> resolveClass(
   return candidates.single;
 }
 
-Never _fail(String message, Element element, String correction) {
-  throw InvalidGenerationSourceError(
-    '$message\nFix: $correction',
-    element: element,
-  );
-}
-
-/// Candidate name fields of a Full Entity in priority order, used as the
-/// default activity-log entity name (see the list emitters). Matches
-/// `String`/`String?` fields by naming convention: `name`, the first
-/// `*NameLangZhCN` locale variant (`nameLangZhCN` / `areaNameLangZhCN` /
-/// `sortNameLangZhCN`), `titleLangZhCN`, `title`, `logTitle`, then
-/// `comment`. Empty when the entity has no name-ish column; the caller
-/// falls back to the record key.
-List<String> logNameFieldsOf(ClassElement entityElement) {
-  final stringFields = <String>{};
-  for (final field in entityElement.fields) {
-    if (field.isStatic || !field.isOriginDeclaration) continue;
-    if (_fullFieldChecker.annotationsOf(field).length != 1) continue;
-    final name = field.name;
-    if (name == null) continue;
-    final type = field.type.getDisplayString();
-    if (type != 'String' && type != 'String?') continue;
-    stringFields.add(name);
-  }
-  final candidates = <String>[];
-  void addIfPresent(String name) {
-    if (stringFields.contains(name)) candidates.add(name);
-  }
-
-  addIfPresent('name');
-  final localeNames = stringFields.where(
-    (n) => n.toLowerCase().endsWith('namelangzhcn'),
-  );
-  if (localeNames.isNotEmpty) candidates.add(localeNames.first);
-  addIfPresent('titleLangZhCN');
-  addIfPresent('title');
-  addIfPresent('logTitle');
-  addIfPresent('comment');
-  return candidates;
-}
-
-/// Resolved Full Entity: its class element plus the physical table name
-/// (explicit `@FoxyFullEntity(table:)` or the convention-derived name).
-final class ResolvedEntityInfo {
-  final ClassElement entityElement;
-
-  /// Physical table name; never empty (validated at resolve time).
-  final String table;
-
-  const ResolvedEntityInfo({required this.entityElement, required this.table});
-}
-
 /// Resolves the Full Entity class by convention-derived file path and reads
 /// its physical table name, falling back to the convention derivation when
 /// the annotation omits `table:`.
@@ -159,4 +140,22 @@ Future<ResolvedEntityInfo> resolveFullEntity(
     );
   }
   return ResolvedEntityInfo(entityElement: entityElement, table: table);
+}
+
+Never _fail(String message, Element element, String correction) {
+  throw InvalidGenerationSourceError(
+    '$message\nFix: $correction',
+    element: element,
+  );
+}
+
+/// Resolved Full Entity: its class element plus the physical table name
+/// (explicit `@FoxyFullEntity(table:)` or the convention-derived name).
+final class ResolvedEntityInfo {
+  final ClassElement entityElement;
+
+  /// Physical table name; never empty (validated at resolve time).
+  final String table;
+
+  const ResolvedEntityInfo({required this.entityElement, required this.table});
 }

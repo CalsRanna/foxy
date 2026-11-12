@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/plugin.dart';
 import 'package:analysis_server_plugin/registry.dart';
-
 import 'package:foxy_lint/rules/annotation_file_mismatch.dart';
 import 'package:foxy_lint/rules/avoid_top_level_declarations.dart';
 import 'package:foxy_lint/rules/class_file_name_match.dart';

@@ -2,11 +2,10 @@
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy_generator/src/repository_emitter.dart';
 import 'package:foxy_generator/src/repository_reader.dart';
+import 'package:source_gen/source_gen.dart';
 
 final class FoxyRepositoryGenerator
     extends GeneratorForAnnotation<FoxyRepository> {

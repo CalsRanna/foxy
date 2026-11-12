@@ -1,43 +1,11 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'scaling_stat_distribution_entity.g.dart';
 
 @FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_scaling_stat_distribution')
 class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
-  /// 有效属性槽位列表，entity 与 brief entity 共用。
-  ///
-  /// - `-1` 空槽不显示；
-  /// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示。
-  static List<(int, int)> statEntries(List<int> statIds, List<int> bonuses) {
-    final entries = <(int, int)>[];
-    for (var i = 0; i < statIds.length; i++) {
-      final statId = statIds[i];
-      if (statId < 0) continue; // 空槽
-      if (statId == 0 && bonuses[i] == 0) continue; // 无效的 0+0 占位
-      entries.add((statId, bonuses[i]));
-    }
-    return entries;
-  }
-
-  /// 汇总一组属性槽位为展示文本，如 `敏捷(300), 生命值(300)`。
-  ///
-  /// 常量表外的未知属性回退为数字，保证信息不丢失。
-  static String formatStats(List<int> statIds, List<int> bonuses) {
-    final result = StringBuffer();
-    // Runtime-value aggregation over the row's stat slots, not a field
-    // expansion.
-    // ignore: foxy_lint/no_collection_loops
-    for (final (statId, bonus) in statEntries(statIds, bonuses)) {
-      final name = ScalingStatDistributionConstants
-          .scalingStatDistributionStatOptions[statId];
-      if (result.isNotEmpty) result.write(', ');
-      result.write('${name ?? '$statId'}($bonus)');
-    }
-    return result.isEmpty ? '-' : result.toString();
-  }
-
   @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
@@ -185,6 +153,38 @@ class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
       bonus9,
     ],
   );
+
+  /// 汇总一组属性槽位为展示文本，如 `敏捷(300), 生命值(300)`。
+  ///
+  /// 常量表外的未知属性回退为数字，保证信息不丢失。
+  static String formatStats(List<int> statIds, List<int> bonuses) {
+    final result = StringBuffer();
+    // Runtime-value aggregation over the row's stat slots, not a field
+    // expansion.
+    // ignore: foxy_lint/no_collection_loops
+    for (final (statId, bonus) in statEntries(statIds, bonuses)) {
+      final name = ScalingStatDistributionConstants
+          .scalingStatDistributionStatOptions[statId];
+      if (result.isNotEmpty) result.write(', ');
+      result.write('${name ?? '$statId'}($bonus)');
+    }
+    return result.isEmpty ? '-' : result.toString();
+  }
+
+  /// 有效属性槽位列表，entity 与 brief entity 共用。
+  ///
+  /// - `-1` 空槽不显示；
+  /// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示。
+  static List<(int, int)> statEntries(List<int> statIds, List<int> bonuses) {
+    final entries = <(int, int)>[];
+    for (var i = 0; i < statIds.length; i++) {
+      final statId = statIds[i];
+      if (statId < 0) continue; // 空槽
+      if (statId == 0 && bonuses[i] == 0) continue; // 无效的 0+0 占位
+      entries.add((statId, bonuses[i]));
+    }
+    return entries;
+  }
 }
 
 extension BriefScalingStatDistributionEntityDisplay

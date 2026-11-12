@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/infrastructure/server/server_dir_resolver.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -124,15 +124,6 @@ class SetupStatusViewModel {
     return true;
   }
 
-  /// Marks the icon-extraction step as skipped so first setup counts as
-  /// complete: icons are optional (list pages fall back to placeholders and
-  /// the settings page can extract them later), and a client whose archives
-  /// cannot be read must not keep the wizard reopening forever.
-  Future<void> skipIconExtraction() async {
-    await _configUtil.update({'icons_skipped': true});
-    iconsSkipped.value = true;
-  }
-
   /// Validates and persists the server root directory, auto-detecting the
   /// DBC file directory inside it and persisting both `server_dir` and
   /// `dbc_dir`; returns false on failure and writes [serverDirError].
@@ -149,6 +140,15 @@ class SetupStatusViewModel {
     dbcPath.value = dbc;
     dbcPathExists.value = true;
     return true;
+  }
+
+  /// Marks the icon-extraction step as skipped so first setup counts as
+  /// complete: icons are optional (list pages fall back to placeholders and
+  /// the settings page can extract them later), and a client whose archives
+  /// cannot be read must not keep the wizard reopening forever.
+  Future<void> skipIconExtraction() async {
+    await _configUtil.update({'icons_skipped': true});
+    iconsSkipped.value = true;
   }
 
   /// Shared directory validation: non-empty and existing, writing the

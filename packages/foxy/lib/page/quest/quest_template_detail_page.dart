@@ -17,11 +17,6 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class QuestTemplateDetailPage extends StatefulWidget {
-  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
-    if (entry != null && entry > 0) return const {};
-    return {for (var index = 1; index < tabCount; index++) index};
-  }
-
   final int? questTemplateKey;
 
   const QuestTemplateDetailPage({super.key, this.questTemplateKey});
@@ -29,6 +24,11 @@ class QuestTemplateDetailPage extends StatefulWidget {
   @override
   State<QuestTemplateDetailPage> createState() =>
       _QuestTemplateDetailPageState();
+
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
 }
 
 class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {

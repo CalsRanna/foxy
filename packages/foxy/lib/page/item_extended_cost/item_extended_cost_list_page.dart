@@ -5,11 +5,11 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/view_model/item_extended_cost_list_view_model.dart';
-import 'package:foxy_widget/foxy_widget.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/theme/item_quality_color.dart';
+import 'package:foxy/view_model/item_extended_cost_list_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -76,6 +76,31 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
     return ShadCard(
       padding: const EdgeInsets.all(16),
       child: Row(spacing: 16, children: credentialChildren),
+    );
+  }
+
+  /// Item-name column: icon + quality-colored name, or plain text when the
+  /// slot has no item (no empty icon placeholder).
+  FoxyTableColumn<BriefItemExtendedCostEntity> _buildItemColumn(
+    String label,
+    int index,
+  ) {
+    return FoxyTableColumn.flex(
+      label: label,
+      cell: (_, item) {
+        final itemId = index == 0 ? item.itemID0 : item.itemID1;
+        if (itemId == 0) {
+          return Text(item.displayItemName(index));
+        }
+        final qualityColor =
+            ItemQualityColor.colors[item.displayItemQuality(index)] ??
+            Colors.black;
+        return FoxyIconText(
+          iconPath: item.displayItemIcon(index),
+          name: item.displayItemName(index),
+          nameColor: qualityColor,
+        );
+      },
     );
   }
 
@@ -167,31 +192,6 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
     ];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
-  }
-
-  /// Item-name column: icon + quality-colored name, or plain text when the
-  /// slot has no item (no empty icon placeholder).
-  FoxyTableColumn<BriefItemExtendedCostEntity> _buildItemColumn(
-    String label,
-    int index,
-  ) {
-    return FoxyTableColumn.flex(
-      label: label,
-      cell: (_, item) {
-        final itemId = index == 0 ? item.itemID0 : item.itemID1;
-        if (itemId == 0) {
-          return Text(item.displayItemName(index));
-        }
-        final qualityColor =
-            ItemQualityColor.colors[item.displayItemQuality(index)] ??
-            Colors.black;
-        return FoxyIconText(
-          iconPath: item.displayItemIcon(index),
-          name: item.displayItemName(index),
-          nameColor: qualityColor,
-        );
-      },
-    );
   }
 
   Future<void> _copy(int key) async {

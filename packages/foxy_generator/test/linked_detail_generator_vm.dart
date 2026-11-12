@@ -145,21 +145,6 @@ void main() {
   });
 }
 
-const formAnnotationAsset = 'foxy_annotation|lib/form_annotations.dart';
-const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
-const entityAsset = 'foxy|lib/entity/addon_entity.dart';
-const repositoryAnnotationAsset =
-    'foxy_annotation|lib/repository_annotations.dart';
-const repositoryAsset = 'foxy|lib/repository/addon_repository.dart';
-const viewModelAsset =
-    'foxy|lib/view_model/addon_linked_detail_view_model.dart';
-
-const compositeEntityAsset = 'foxy|lib/entity/composite_entity.dart';
-const compositeRepositoryAsset =
-    'foxy|lib/repository/composite_repository.dart';
-const compositeViewModelAsset =
-    'foxy|lib/view_model/composite_linked_detail_view_model.dart';
-
 const addonEntitySource = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
@@ -174,7 +159,6 @@ class AddonEntity {
   const AddonEntity({this.entry = 0, this.comment = ''});
 }
 ''';
-
 const addonRepositorySource = r'''
 import 'package:foxy/entity/addon_entity.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -184,6 +168,55 @@ part 'addon_repository.g.dart';
 @FoxyRepository(entity: AddonEntity, linkKey: ['entry'])
 class AddonRepository with _AddonRepositoryMixin {}
 ''';
+const compositeEntityAsset = 'foxy|lib/entity/composite_entity.dart';
+const compositeEntitySource = r'''
+import 'package:foxy_annotation/entity_annotations.dart';
+
+@FoxyFullEntity(table: 'foxy.composite')
+class CompositeEntity {
+  @FoxyFullField('Race', key: true)
+  final int race;
+
+  @FoxyFullField('Class', key: true)
+  final int class_;
+
+  const CompositeEntity({this.race = 0, this.class_ = 0});
+}
+''';
+const compositeRepositoryAsset =
+    'foxy|lib/repository/composite_repository.dart';
+const compositeRepositorySource = r'''
+import 'package:foxy/entity/composite_entity.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
+
+part 'composite_repository.g.dart';
+
+@FoxyRepository(entity: CompositeEntity)
+class CompositeRepository with _CompositeRepositoryMixin {}
+''';
+
+const compositeViewModelAsset =
+    'foxy|lib/view_model/composite_linked_detail_view_model.dart';
+const compositeViewModelSource = r'''
+import 'package:foxy/entity/composite_entity.dart';
+import 'package:foxy_annotation/form_annotations.dart';
+import 'package:foxy/repository/composite_repository.dart';
+import 'package:foxy/view_model/form/field_controller.dart';
+
+part 'composite_linked_detail_view_model.g.dart';
+
+@FoxyLinkedDetailViewModel(
+  entity: CompositeEntity,
+  repository: CompositeRepository,
+)
+class CompositeLinkedDetailViewModel
+    with FieldControllerMixin, _CompositeLinkedDetailViewModelMixin {}
+''';
+const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
+
+const entityAsset = 'foxy|lib/entity/addon_entity.dart';
+
+const formAnnotationAsset = 'foxy_annotation|lib/form_annotations.dart';
 
 const linkedDetailViewModelSource = r'''
 import 'package:foxy/entity/addon_entity.dart';
@@ -201,52 +234,19 @@ class AddonLinkedDetailViewModel
     with FieldControllerMixin, _AddonLinkedDetailViewModelMixin {}
 ''';
 
-const compositeEntitySource = r'''
-import 'package:foxy_annotation/entity_annotations.dart';
+const repositoryAnnotationAsset =
+    'foxy_annotation|lib/repository_annotations.dart';
 
-@FoxyFullEntity(table: 'foxy.composite')
-class CompositeEntity {
-  @FoxyFullField('Race', key: true)
-  final int race;
+const repositoryAsset = 'foxy|lib/repository/addon_repository.dart';
 
-  @FoxyFullField('Class', key: true)
-  final int class_;
+const viewModelAsset =
+    'foxy|lib/view_model/addon_linked_detail_view_model.dart';
 
-  const CompositeEntity({this.race = 0, this.class_ = 0});
-}
-''';
-
-const compositeRepositorySource = r'''
-import 'package:foxy/entity/composite_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
-
-part 'composite_repository.g.dart';
-
-@FoxyRepository(entity: CompositeEntity)
-class CompositeRepository with _CompositeRepositoryMixin {}
-''';
-
-const compositeViewModelSource = r'''
-import 'package:foxy/entity/composite_entity.dart';
-import 'package:foxy_annotation/form_annotations.dart';
-import 'package:foxy/repository/composite_repository.dart';
-import 'package:foxy/view_model/form/field_controller.dart';
-
-part 'composite_linked_detail_view_model.g.dart';
-
-@FoxyLinkedDetailViewModel(
-  entity: CompositeEntity,
-  repository: CompositeRepository,
-)
-class CompositeLinkedDetailViewModel
-    with FieldControllerMixin, _CompositeLinkedDetailViewModelMixin {}
-''';
+final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 /// Reads the real annotation source directly instead of keeping a
 /// hand-copied duplicate in tests.
 final formAnnotationSource = foxyAnnotationSource('form_annotations.dart');
-
-final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 final repositoryAnnotationSource = foxyAnnotationSource(
   'repository_annotations.dart',

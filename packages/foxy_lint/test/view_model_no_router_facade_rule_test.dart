@@ -6,6 +6,13 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:foxy_lint/rules/view_model_no_router_facade.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(ViewModelNoRouterFacadeRuleTest);
+    defineReflectiveTests(ViewModelNoRouterFacadeScopeTest);
+  });
+}
+
 /// The blocked URI does not resolve in the harness's test package, so the
 /// positive case also expects the `uri_does_not_exist` compile error.
 DiagnosticCode _uriDoesNotExist() => diagnosticCodeValues.firstWhere(
@@ -20,13 +27,13 @@ DiagnosticCode _uriDoesNotExist() => diagnosticCodeValues.firstWhere(
 @reflectiveTest
 class ViewModelNoRouterFacadeRuleTest extends AnalysisRuleTest {
   @override
+  String get testFileName => 'sample_list_view_model.dart';
+
+  @override
   void setUp() {
     rule = ViewModelNoRouterFacade();
     super.setUp();
   }
-
-  @override
-  String get testFileName => 'sample_list_view_model.dart';
 
   void test_routerFacadeImport_reports() async {
     await assertDiagnostics(
@@ -51,13 +58,13 @@ Future<void> f() async {}
 @reflectiveTest
 class ViewModelNoRouterFacadeScopeTest extends AnalysisRuleTest {
   @override
+  String get testFileName => 'sample_view.dart';
+
+  @override
   void setUp() {
     rule = ViewModelNoRouterFacade();
     super.setUp();
   }
-
-  @override
-  String get testFileName => 'sample_view.dart';
 
   void test_routerFacadeImport_outsideViewModelFile_doesNotReport() async {
     await assertDiagnostics(
@@ -67,11 +74,4 @@ import 'package:foxy/router/router_facade.dart';
       [error(_uriDoesNotExist(), 7, 40)],
     );
   }
-}
-
-void main() {
-  defineReflectiveSuite(() {
-    defineReflectiveTests(ViewModelNoRouterFacadeRuleTest);
-    defineReflectiveTests(ViewModelNoRouterFacadeScopeTest);
-  });
 }

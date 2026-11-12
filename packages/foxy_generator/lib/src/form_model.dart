@@ -86,15 +86,15 @@ final class FormGenerationModel {
     this.emitLogActivity = true,
   });
 
-  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
-  /// module name.
-  String get moduleName =>
-      table.startsWith('foxy.') ? table.substring(5) : table;
+  String get baseName =>
+      entityClassName.substring(0, entityClassName.length - 'Entity'.length);
 
   /// `TalentEntity` → `talent` (matches the Repository's entity parameter
   /// naming; reserved words get a trailing underscore).
   String get entityCamelName => entityParameterName(entityClassName);
 
-  String get baseName =>
-      entityClassName.substring(0, entityClassName.length - 'Entity'.length);
+  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
+  /// module name.
+  String get moduleName =>
+      table.startsWith('foxy.') ? table.substring(5) : table;
 }

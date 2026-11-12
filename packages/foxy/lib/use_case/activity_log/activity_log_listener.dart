@@ -21,14 +21,14 @@ final class ActivityLogListener {
 
   ActivityLogListener(this._bus, this._serviceFactory);
 
+  void dispose() {
+    _sub?.cancel();
+    _sub = null;
+  }
+
   void start() {
     _sub ??= _bus.on<EntityWrittenEvent>().listen(
       (event) => _serviceFactory().recordBestEffort(event.log),
     );
-  }
-
-  void dispose() {
-    _sub?.cancel();
-    _sub = null;
   }
 }

@@ -48,11 +48,11 @@ final class LinkedDetailGenerationModel {
     required this.logNameFields,
   });
 
+  String get baseName =>
+      entityClassName.substring(0, entityClassName.length - 'Entity'.length);
+
   /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
   /// module name.
   String get moduleName =>
       table.startsWith('foxy.') ? table.substring(5) : table;
-
-  String get baseName =>
-      entityClassName.substring(0, entityClassName.length - 'Entity'.length);
 }

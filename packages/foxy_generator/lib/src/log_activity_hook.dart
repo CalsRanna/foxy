@@ -35,31 +35,6 @@ class LogActivityHookEmitter {
     required this.logNameFields,
   });
 
-  /// Doc comment of the hook. The name-resolving variant documents the DB
-  /// lookup and the override extension point.
-  String get documentation {
-    if (logNameFields.isEmpty) {
-      return '  /// Fires the activity-log event after a write; persistence is handled by\n'
-          '  /// the single ActivityLogListener aspect.';
-    }
-    return '  /// Fires the activity-log event after a write; persistence is handled by\n'
-        '  /// the single ActivityLogListener aspect. The default resolves the\n'
-        "  /// record's name from the database via the generated query layer\n"
-        '  /// (pass [record] to skip the lookup, e.g. after a delete); override\n'
-        '  /// in the hand-written class when the business log content differs.';
-  }
-
-  /// Signature of the hook: the name-resolving variant is async and takes
-  /// the optional pre-fetched record (used by destroy, where the row is
-  /// gone after the delete).
-  String get signature {
-    if (logNameFields.isEmpty) {
-      return '  void _logActivity(ActivityActionType action, $keyParameter) {';
-    }
-    return '  Future<void> _logActivity(ActivityActionType action, '
-        '$keyParameter, [$entityClassName? record]) async {';
-  }
-
   /// Body of the hook: the name-resolving variant looks the record up by
   /// key (or uses the pre-fetched [record]) and picks the first non-empty
   /// candidate name field (empty strings fall through to the key); the
@@ -90,5 +65,30 @@ class LogActivityHookEmitter {
         'await _repository.$getMethodName(key);\n'
         '$chain\n'
         '$fire';
+  }
+
+  /// Doc comment of the hook. The name-resolving variant documents the DB
+  /// lookup and the override extension point.
+  String get documentation {
+    if (logNameFields.isEmpty) {
+      return '  /// Fires the activity-log event after a write; persistence is handled by\n'
+          '  /// the single ActivityLogListener aspect.';
+    }
+    return '  /// Fires the activity-log event after a write; persistence is handled by\n'
+        '  /// the single ActivityLogListener aspect. The default resolves the\n'
+        "  /// record's name from the database via the generated query layer\n"
+        '  /// (pass [record] to skip the lookup, e.g. after a delete); override\n'
+        '  /// in the hand-written class when the business log content differs.';
+  }
+
+  /// Signature of the hook: the name-resolving variant is async and takes
+  /// the optional pre-fetched record (used by destroy, where the row is
+  /// gone after the delete).
+  String get signature {
+    if (logNameFields.isEmpty) {
+      return '  void _logActivity(ActivityActionType action, $keyParameter) {';
+    }
+    return '  Future<void> _logActivity(ActivityActionType action, '
+        '$keyParameter, [$entityClassName? record]) async {';
   }
 }

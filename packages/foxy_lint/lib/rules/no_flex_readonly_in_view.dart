@@ -4,7 +4,6 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-
 import 'package:foxy_lint/src/file_scopes.dart';
 
 /// View files must not use the `flex:` parameter; use Expanded for even
@@ -36,22 +35,6 @@ class NoFlexInView extends AnalysisRule {
   }
 }
 
-class _FlexVisitor extends SimpleAstVisitor<void> {
-  final NoFlexInView rule;
-
-  final RuleContext context;
-
-  _FlexVisitor(this.rule, this.context);
-
-  @override
-  void visitNamedArgument(NamedArgument node) {
-    if (!isViewFile(context.definingUnit.file.path)) return;
-    if (node.name.lexeme == 'flex') {
-      rule.reportAtNode(node);
-    }
-  }
-}
-
 /// View files must not use `readOnly: true`; all fields must be editable.
 class NoReadOnlyInView extends AnalysisRule {
   static const LintCode code = LintCode(
@@ -76,6 +59,22 @@ class NoReadOnlyInView extends AnalysisRule {
     RuleContext context,
   ) {
     registry.addNamedArgument(this, _ReadOnlyVisitor(this, context));
+  }
+}
+
+class _FlexVisitor extends SimpleAstVisitor<void> {
+  final NoFlexInView rule;
+
+  final RuleContext context;
+
+  _FlexVisitor(this.rule, this.context);
+
+  @override
+  void visitNamedArgument(NamedArgument node) {
+    if (!isViewFile(context.definingUnit.file.path)) return;
+    if (node.name.lexeme == 'flex') {
+      rule.reportAtNode(node);
+    }
   }
 }
 

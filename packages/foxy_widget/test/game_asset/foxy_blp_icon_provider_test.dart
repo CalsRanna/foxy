@@ -118,6 +118,14 @@ Future<ImageInfo?> resolveViaStream(FoxyBlpIconProvider provider) async {
   return _listen(stream);
 }
 
+/// FoxyBlpIconProvider 用 decodeImageFromPixels 自行解码,不触发该回调。
+Future<ui.Codec> _dummyDecode(
+  ui.ImmutableBuffer buffer, {
+  ui.TargetImageSizeCallback? getTargetSize,
+}) {
+  throw StateError('decode callback should not be used by FoxyBlpIconProvider');
+}
+
 Future<ImageInfo?> _listen(ImageStream stream) {
   final completer = Completer<ImageInfo?>();
   late ImageStreamListener listener;
@@ -133,12 +141,4 @@ Future<ImageInfo?> _listen(ImageStream stream) {
   );
   stream.addListener(listener);
   return completer.future;
-}
-
-/// FoxyBlpIconProvider 用 decodeImageFromPixels 自行解码,不触发该回调。
-Future<ui.Codec> _dummyDecode(
-  ui.ImmutableBuffer buffer, {
-  ui.TargetImageSizeCallback? getTargetSize,
-}) {
-  throw StateError('decode callback should not be used by FoxyBlpIconProvider');
 }

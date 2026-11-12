@@ -10,57 +10,10 @@ library;
 
 import 'dart:io';
 
-/// Base class of Foxy business exceptions.
-///
-/// [message] is an English diagnostic for log tracing only; user-facing
-/// Chinese copy always goes through [FoxyExceptions.message]. implements (not
-/// extends) Exception so the `Exception: ` prefix never pollutes the UI.
-sealed class FoxyException implements Exception {
-  const FoxyException(this.message);
-
-  final String message;
-
-  @override
-  String toString() => '$runtimeType: $message';
-}
-
-/// Record not found: query missed, or modified/deleted concurrently by
-/// another operation.
-final class RecordNotFoundException extends FoxyException {
-  const RecordNotFoundException(super.message);
-}
-
-/// Duplicate primary key: a MySQL duplicate entry, or a hand-written
-/// uniqueness check.
-final class DuplicateKeyException extends FoxyException {
-  const DuplicateKeyException(super.message);
-}
-
-/// Primary key was not explicitly assigned on create.
-final class InvalidPrimaryKeyException extends FoxyException {
-  const InvalidPrimaryKeyException(super.message);
-}
-
 /// The same operation is already in progress (mutually exclusive
 /// operations such as commit/save/import/export).
 final class BusyException extends FoxyException {
   const BusyException(super.message);
-}
-
-/// Linked record not loaded yet (a linked editor was invoked before its
-/// link key was ready).
-final class LinkNotLoadedException extends FoxyException {
-  const LinkNotLoadedException(super.message);
-}
-
-/// DBC/auto-increment IDs exhausted or beyond the referenceable range.
-final class IdExhaustedException extends FoxyException {
-  const IdExhaustedException(super.message);
-}
-
-/// Rejected by input or business-rule validation.
-final class ValidationException extends FoxyException {
-  const ValidationException(super.message);
 }
 
 /// This table does not support automatic copy (one-to-one relations, no
@@ -74,33 +27,24 @@ final class DatabaseNotConnectedException extends FoxyException {
   const DatabaseNotConnectedException(super.message);
 }
 
-/// Update flow failed: any failure in the check, download, verify or
-/// extract stage.
-final class UpdateException extends FoxyException {
-  const UpdateException(this.code, super.message);
-
-  /// Failure category, used for copy mapping and diagnostics.
-  final UpdateErrorKind code;
+/// Duplicate primary key: a MySQL duplicate entry, or a hand-written
+/// uniqueness check.
+final class DuplicateKeyException extends FoxyException {
+  const DuplicateKeyException(super.message);
 }
 
-/// Update failure categories.
-enum UpdateErrorKind {
-  /// Network request failed (timeout, connection failure, non-200
-  /// response).
-  network,
+/// Base class of Foxy business exceptions.
+///
+/// [message] is an English diagnostic for log tracing only; user-facing
+/// Chinese copy always goes through [FoxyExceptions.message]. implements (not
+/// extends) Exception so the `Exception: ` prefix never pollutes the UI.
+sealed class FoxyException implements Exception {
+  final String message;
 
-  /// Manifest content invalid (missing fields, malformed format,
-  /// unparseable version).
-  invalidManifest,
+  const FoxyException(this.message);
 
-  /// Downloaded file failed verification (SHA-256 or size mismatch).
-  verification,
-
-  /// Extraction or disk write failed.
-  fileSystem,
-
-  /// Update cancelled by the user.
-  canceled,
+  @override
+  String toString() => '$runtimeType: $message';
 }
 
 /// Exception → user-facing Chinese copy. The single entry point for UI
@@ -136,4 +80,60 @@ abstract final class FoxyExceptions {
     FileSystemException() => '文件系统错误，请检查路径后重试',
     _ => '$error',
   };
+}
+
+/// DBC/auto-increment IDs exhausted or beyond the referenceable range.
+final class IdExhaustedException extends FoxyException {
+  const IdExhaustedException(super.message);
+}
+
+/// Primary key was not explicitly assigned on create.
+final class InvalidPrimaryKeyException extends FoxyException {
+  const InvalidPrimaryKeyException(super.message);
+}
+
+/// Linked record not loaded yet (a linked editor was invoked before its
+/// link key was ready).
+final class LinkNotLoadedException extends FoxyException {
+  const LinkNotLoadedException(super.message);
+}
+
+/// Record not found: query missed, or modified/deleted concurrently by
+/// another operation.
+final class RecordNotFoundException extends FoxyException {
+  const RecordNotFoundException(super.message);
+}
+
+/// Update failure categories.
+enum UpdateErrorKind {
+  /// Network request failed (timeout, connection failure, non-200
+  /// response).
+  network,
+
+  /// Manifest content invalid (missing fields, malformed format,
+  /// unparseable version).
+  invalidManifest,
+
+  /// Downloaded file failed verification (SHA-256 or size mismatch).
+  verification,
+
+  /// Extraction or disk write failed.
+  fileSystem,
+
+  /// Update cancelled by the user.
+  canceled,
+}
+
+/// Update flow failed: any failure in the check, download, verify or
+/// extract stage.
+final class UpdateException extends FoxyException {
+  /// Failure category, used for copy mapping and diagnostics.
+  final UpdateErrorKind code;
+
+  const UpdateException(this.code, super.message);
+}
+
+/// Rejected by input or business-rule validation.
+final class ValidationException extends FoxyException {
+  const ValidationException(super.message);
 }

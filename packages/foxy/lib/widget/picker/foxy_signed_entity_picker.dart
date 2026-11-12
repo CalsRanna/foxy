@@ -180,14 +180,6 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
     _search();
   }
 
-  /// Encoded value on confirm: positive sources backfill a positive ID,
-  /// negative sources a negative ID.
-  void _confirm() {
-    if (!_hasSelection) return;
-    final id = _selectedId!;
-    Navigator.of(context).pop(_isPositive ? id : -id);
-  }
-
   Widget _buildFilter() {
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -271,6 +263,14 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
         ],
       ),
     );
+  }
+
+  /// Encoded value on confirm: positive sources backfill a positive ID,
+  /// negative sources a negative ID.
+  void _confirm() {
+    if (!_hasSelection) return;
+    final id = _selectedId!;
+    Navigator.of(context).pop(_isPositive ? id : -id);
   }
 
   void _doSearch() {

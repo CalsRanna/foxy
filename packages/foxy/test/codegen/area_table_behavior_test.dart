@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/view_model/area_table_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
@@ -172,12 +172,6 @@ final _source = AreaTableEntity.fromJson({
     'AreaName_lang_${locale.code}': 'original ${locale.code}',
 });
 
-class _Repository extends AreaTableRepository {
-  @override
-  final Laconic laconic;
-  _Repository(this.laconic);
-}
-
 class _Driver implements DatabaseDriver {
   final rows = {
     1: _source.toJson(),
@@ -189,6 +183,33 @@ class _Driver implements DatabaseDriver {
 
   @override
   final SqlGrammar grammar = MysqlGrammar();
+
+  @override
+  Future<int> affectingStatement(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
+    final oldId = params.last as int;
+    if (!rows.containsKey(oldId)) return 0;
+    final row = Map<String, dynamic>.fromIterables(
+      _source.toJson().keys,
+      params.take(params.length - 1),
+    );
+    final id = row['ID'] as int;
+    updatedKeys.add((oldId, id));
+    rows.remove(oldId);
+    rows[id] = row;
+    return 1;
+  }
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<int> insertAndGetId(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async => throw UnimplementedError();
 
   @override
   Future<List<LaconicResult>> select(
@@ -248,30 +269,11 @@ class _Driver implements DatabaseDriver {
   }
 
   @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    final oldId = params.last as int;
-    if (!rows.containsKey(oldId)) return 0;
-    final row = Map<String, dynamic>.fromIterables(
-      _source.toJson().keys,
-      params.take(params.length - 1),
-    );
-    final id = row['ID'] as int;
-    updatedKeys.add((oldId, id));
-    rows.remove(oldId);
-    rows[id] = row;
-    return 1;
-  }
-
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => throw UnimplementedError();
-  @override
   Future<T> transaction<T>(Future<T> Function() action) => action();
+}
+
+class _Repository extends AreaTableRepository {
+  @override
+  final Laconic laconic;
+  _Repository(this.laconic);
 }

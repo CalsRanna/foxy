@@ -1,41 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/spell_detail_view_model.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
-import 'package:foxy/widget/picker/foxy_entity_picker.dart';
-import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/picker/foxy_flag_picker.dart';
-import 'package:foxy_widget/foxy_widget.dart';
-import 'package:foxy/widget/picker/locale/foxy_locale_picker.dart';
-import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
-import 'package:foxy/widget/form/foxy_number_input.dart';
-import 'package:foxy/widget/picker/foxy_enum_picker.dart';
+import 'package:foxy/view_model/spell_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_number_input.dart';
+import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
+import 'package:foxy/widget/picker/foxy_entity_picker.dart';
+import 'package:foxy/widget/picker/foxy_enum_picker.dart';
+import 'package:foxy/widget/picker/foxy_flag_picker.dart';
+import 'package:foxy/widget/picker/locale/foxy_locale_picker.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-
-class _MiscValueEnumPicker extends _MiscValueOptions {
-  final Map<int, String> items;
-  const _MiscValueEnumPicker(this.items);
-}
-
-class _MiscValueFlagPicker extends _MiscValueOptions {
-  final List<FlagItem> flags;
-  const _MiscValueFlagPicker(this.flags);
-}
-
-class _MiscValueEntityPicker extends _MiscValueOptions {
-  final FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> delegate;
-  const _MiscValueEntityPicker(this.delegate);
-}
-
-/// Tri-state input modes for MiscValue.
-sealed class _MiscValueOptions {
-  const _MiscValueOptions();
-}
 
 class SpellView extends StatelessWidget {
   final SpellDetailViewModel viewModel;
@@ -1860,6 +1840,21 @@ class SpellView extends StatelessWidget {
   }
 }
 
+class _MiscValueEntityPicker extends _MiscValueOptions {
+  final FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> delegate;
+  const _MiscValueEntityPicker(this.delegate);
+}
+
+class _MiscValueEnumPicker extends _MiscValueOptions {
+  final Map<int, String> items;
+  const _MiscValueEnumPicker(this.items);
+}
+
+class _MiscValueFlagPicker extends _MiscValueOptions {
+  final List<FlagItem> flags;
+  const _MiscValueFlagPicker(this.flags);
+}
+
 /// Dynamically switches between number input / EnumPicker / FlagPicker by
 /// context.
 ///
@@ -1885,9 +1880,9 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   EnumFieldController<int>? _enumController;
   FlagFieldController? _flagController;
 
-  bool get _isFlagMode => widget.options is _MiscValueFlagPicker;
-
   bool get _isEnumMode => widget.options is _MiscValueEnumPicker;
+
+  bool get _isFlagMode => widget.options is _MiscValueFlagPicker;
 
   @override
   Widget build(BuildContext context) {
@@ -1965,15 +1960,20 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     }
   }
 
-  void _onFlagChanged() {
-    final flag = _flagController;
-    if (flag == null) return;
-    widget.controller.init(flag.collect());
-  }
-
   void _onEnumChanged() {
     final enumController = _enumController;
     if (enumController == null) return;
     widget.controller.init(enumController.collect());
   }
+
+  void _onFlagChanged() {
+    final flag = _flagController;
+    if (flag == null) return;
+    widget.controller.init(flag.collect());
+  }
+}
+
+/// Tri-state input modes for MiscValue.
+sealed class _MiscValueOptions {
+  const _MiscValueOptions();
 }

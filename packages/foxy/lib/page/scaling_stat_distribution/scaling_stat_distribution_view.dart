@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/scaling_stat_distribution_detail_view_model.dart';
-import 'package:foxy_widget/foxy_widget.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/foxy_enum_picker.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';

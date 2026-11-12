@@ -1,5 +1,5 @@
-import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
@@ -10,7 +10,9 @@ import 'package:laconic/laconic.dart';
 export 'package:foxy/exception/foxy_exceptions.dart';
 
 mixin RepositoryMixin {
+  static final _identifierSegment = RegExp(r'^`?[A-Za-z_][A-Za-z0-9_]*`?$');
   final kPageSize = 50;
+
   Laconic get laconic => Database.instance.laconic;
 
   /// Whether to JOIN the `*_locale` tables to show localized names.
@@ -124,6 +126,4 @@ mixin RepositoryMixin {
     }
     return identifier;
   }
-
-  static final _identifierSegment = RegExp(r'^`?[A-Za-z_][A-Za-z0-9_]*`?$');
 }

@@ -9,59 +9,6 @@ import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 
-/// Stub service: controls the check result and prepare actions.
-class _StubUpdateService extends UpdateService {
-  _StubUpdateService({this.onCheck, this.prepareShouldFail = false});
-
-  /// Check callback; null means it was not called (for throttle
-  /// assertions).
-  Future<UpdateCheckResult> Function()? onCheck;
-  int checkCalls = 0;
-  final bool prepareShouldFail;
-
-  @override
-  Future<UpdateCheckResult> checkForUpdates({
-    String? installedVersion,
-    String? installedBuildNumber,
-  }) {
-    checkCalls += 1;
-    final callback = onCheck;
-    if (callback == null) {
-      throw StateError('unexpected checkForUpdates call');
-    }
-    return callback();
-  }
-
-  @override
-  Future<Directory> prepareUpdate(
-    UpdateManifestInfo update, {
-    required Directory appDir,
-    void Function(double fraction)? onProgress,
-    UpdateCancelToken? cancelToken,
-  }) async {
-    // Simulate download latency: cancellable in between.
-    await Future<void>.delayed(const Duration(milliseconds: 20));
-    if (cancelToken?.isCanceled ?? false) {
-      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by user');
-    }
-    if (prepareShouldFail) {
-      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by test');
-    }
-    final dir = Directory(p.join(appDir.path, UpdateSwapper.tempDirName))
-      ..createSync(recursive: true);
-    return dir;
-  }
-}
-
-UpdateManifestInfo _update() => UpdateManifestInfo(
-  version: '1.1.0',
-  buildNumber: '630',
-  zipUrl: Uri.parse('https://example.com/foxy-1.1.0.zip'),
-  sizeBytes: 42,
-  sha256: 'a',
-  notes: '说明',
-);
-
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
@@ -301,4 +248,57 @@ void main() {
       );
     });
   });
+}
+
+UpdateManifestInfo _update() => UpdateManifestInfo(
+  version: '1.1.0',
+  buildNumber: '630',
+  zipUrl: Uri.parse('https://example.com/foxy-1.1.0.zip'),
+  sizeBytes: 42,
+  sha256: 'a',
+  notes: '说明',
+);
+
+/// Stub service: controls the check result and prepare actions.
+class _StubUpdateService extends UpdateService {
+  /// Check callback; null means it was not called (for throttle
+  /// assertions).
+  Future<UpdateCheckResult> Function()? onCheck;
+
+  int checkCalls = 0;
+  final bool prepareShouldFail;
+  _StubUpdateService({this.onCheck, this.prepareShouldFail = false});
+
+  @override
+  Future<UpdateCheckResult> checkForUpdates({
+    String? installedVersion,
+    String? installedBuildNumber,
+  }) {
+    checkCalls += 1;
+    final callback = onCheck;
+    if (callback == null) {
+      throw StateError('unexpected checkForUpdates call');
+    }
+    return callback();
+  }
+
+  @override
+  Future<Directory> prepareUpdate(
+    UpdateManifestInfo update, {
+    required Directory appDir,
+    void Function(double fraction)? onProgress,
+    UpdateCancelToken? cancelToken,
+  }) async {
+    // Simulate download latency: cancellable in between.
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    if (cancelToken?.isCanceled ?? false) {
+      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by user');
+    }
+    if (prepareShouldFail) {
+      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by test');
+    }
+    final dir = Directory(p.join(appDir.path, UpdateSwapper.tempDirName))
+      ..createSync(recursive: true);
+    return dir;
+  }
 }

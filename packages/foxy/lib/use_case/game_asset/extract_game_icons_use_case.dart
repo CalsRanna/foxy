@@ -6,6 +6,12 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy_game_file/foxy_game_file.dart';
 
+/// Isolate entry point for [ExtractGameIconsUseCase]; defaults to the real
+/// [runGameIconExtractWorker]. Injectable for deterministic tests.
+typedef GameIconExtractWorkerEntry = Future<void> Function(
+  GameIconExtractWorkerArgs args,
+);
+
 final class ExtractGameIconsInput {
   final String clientDir;
   final void Function(GameIconExtractProgress progress)? onProgress;
@@ -207,9 +213,3 @@ final class ExtractGameIconsUseCase {
     return result;
   }
 }
-
-/// Isolate entry point for [ExtractGameIconsUseCase]; defaults to the real
-/// [runGameIconExtractWorker]. Injectable for deterministic tests.
-typedef GameIconExtractWorkerEntry = Future<void> Function(
-  GameIconExtractWorkerArgs args,
-);

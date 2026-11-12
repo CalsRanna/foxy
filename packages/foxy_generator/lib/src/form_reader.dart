@@ -4,13 +4,12 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/form_model.dart';
 import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/source_shape.dart';
+import 'package:source_gen/source_gen.dart';
 
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyFullField',
@@ -290,6 +289,52 @@ final class FormReader {
     );
   }
 
+  /// Derives the enum fallback from the entity constructor's constant
+  /// default for the same field (`this.type = 0` → `0`).
+  Object _deriveEnumFallback(
+    String name,
+    FormalParameterElement parameter,
+    String entityClassName,
+    Element element,
+  ) {
+    if (!parameter.hasDefaultValue) {
+      _fail(
+        '$entityClassName.$name is marked as enums but its constructor '
+            'parameter has no default value.',
+        element,
+        'Add a constant default value to this.$name, or declare the '
+            'fallback explicitly in Map form: enums: {\'$name\': ...}.',
+      );
+    }
+    final value = parameter.computeConstantValue();
+    if (value == null || !value.hasKnownValue || value.isNull) {
+      _fail(
+        "$entityClassName.$name's constructor default is not an evaluable "
+            'constant.',
+        element,
+        'Declare the fallback explicitly in Map form instead: '
+            'enums: {\'$name\': ...}.',
+      );
+    }
+    final intValue = value.toIntValue();
+    if (intValue != null) return intValue;
+    final stringValue = value.toStringValue();
+    if (stringValue != null) return stringValue;
+    _fail(
+      "$entityClassName.$name's constructor default type is not int/String.",
+      element,
+      'Declare the fallback explicitly in Map form instead: '
+          'enums: {\'$name\': ...}.',
+    );
+  }
+
+  Never _fail(String message, Element element, String correction) {
+    throw InvalidGenerationSourceError(
+      '$message\nFix: $correction',
+      element: element,
+    );
+  }
+
   /// Infers the Key from the entity's `@FoxyFullField(key: true)`: a single
   /// key returns (field type, field name), a composite key returns
   /// (`XxxKey`, null).
@@ -327,10 +372,47 @@ final class FormReader {
     return ('${baseName}Key', null);
   }
 
-  Never _fail(String message, Element element, String correction) {
+  /// Reads the `enums` exception set, which accepts two shapes:
+  /// a Map `{'name': fallback}` (explicit fallback) or a Set `{'name'}`
+  /// (fallback derived from the entity constructor default).
+  (Map<String, Object>, Set<String>) _readEnums(
+    ConstantReader annotation,
+    Element element,
+  ) {
+    final reader = annotation.read('enums');
+    if (reader.isNull) return (const {}, const {});
+    if (reader.isMap) {
+      final map = reader.mapValue;
+      return (
+        {
+          for (final entry in map.entries)
+            entry.key!.toStringValue()!: _readEnumValue(entry.value!),
+        },
+        const {},
+      );
+    }
+    if (reader.isSet) {
+      return (
+        const {},
+        {for (final value in reader.setValue) value.toStringValue()!},
+      );
+    }
+    _fail(
+      'enums must be a Map (explicit fallback) or a Set (derived '
+          'fallback).',
+      element,
+      "Write enums as Map({'fieldName': fallback}) or "
+          "Set({'fieldName'}).",
+    );
+  }
+
+  Object _readEnumValue(DartObject value) {
+    final intValue = value.toIntValue();
+    if (intValue != null) return intValue;
+    final stringValue = value.toStringValue();
+    if (stringValue != null) return stringValue;
     throw InvalidGenerationSourceError(
-      '$message\nFix: $correction',
-      element: element,
+      'enums only supports int or String fallback',
     );
   }
 
@@ -451,89 +533,6 @@ final class FormReader {
       dartName: name,
       dartType: type,
       kind: FormFieldKind.plain,
-    );
-  }
-
-  /// Reads the `enums` exception set, which accepts two shapes:
-  /// a Map `{'name': fallback}` (explicit fallback) or a Set `{'name'}`
-  /// (fallback derived from the entity constructor default).
-  (Map<String, Object>, Set<String>) _readEnums(
-    ConstantReader annotation,
-    Element element,
-  ) {
-    final reader = annotation.read('enums');
-    if (reader.isNull) return (const {}, const {});
-    if (reader.isMap) {
-      final map = reader.mapValue;
-      return (
-        {
-          for (final entry in map.entries)
-            entry.key!.toStringValue()!: _readEnumValue(entry.value!),
-        },
-        const {},
-      );
-    }
-    if (reader.isSet) {
-      return (
-        const {},
-        {for (final value in reader.setValue) value.toStringValue()!},
-      );
-    }
-    _fail(
-      'enums must be a Map (explicit fallback) or a Set (derived '
-          'fallback).',
-      element,
-      "Write enums as Map({'fieldName': fallback}) or "
-          "Set({'fieldName'}).",
-    );
-  }
-
-  /// Derives the enum fallback from the entity constructor's constant
-  /// default for the same field (`this.type = 0` → `0`).
-  Object _deriveEnumFallback(
-    String name,
-    FormalParameterElement parameter,
-    String entityClassName,
-    Element element,
-  ) {
-    if (!parameter.hasDefaultValue) {
-      _fail(
-        '$entityClassName.$name is marked as enums but its constructor '
-            'parameter has no default value.',
-        element,
-        'Add a constant default value to this.$name, or declare the '
-            'fallback explicitly in Map form: enums: {\'$name\': ...}.',
-      );
-    }
-    final value = parameter.computeConstantValue();
-    if (value == null || !value.hasKnownValue || value.isNull) {
-      _fail(
-        "$entityClassName.$name's constructor default is not an evaluable "
-            'constant.',
-        element,
-        'Declare the fallback explicitly in Map form instead: '
-            'enums: {\'$name\': ...}.',
-      );
-    }
-    final intValue = value.toIntValue();
-    if (intValue != null) return intValue;
-    final stringValue = value.toStringValue();
-    if (stringValue != null) return stringValue;
-    _fail(
-      "$entityClassName.$name's constructor default type is not int/String.",
-      element,
-      'Declare the fallback explicitly in Map form instead: '
-          'enums: {\'$name\': ...}.',
-    );
-  }
-
-  Object _readEnumValue(DartObject value) {
-    final intValue = value.toIntValue();
-    if (intValue != null) return intValue;
-    final stringValue = value.toStringValue();
-    if (stringValue != null) return stringValue;
-    throw InvalidGenerationSourceError(
-      'enums only supports int or String fallback',
     );
   }
 

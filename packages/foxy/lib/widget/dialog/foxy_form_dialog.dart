@@ -31,6 +31,19 @@ class FoxyFormDialog extends StatelessWidget {
     required this.child,
   });
 
+  @override
+  Widget build(BuildContext context) {
+    return ShadDialog(
+      title: Text(title),
+      description: description != null ? Text(description!) : null,
+      titlePinned: true,
+      descriptionPinned: true,
+      constraints: DialogUtil.constraints(context),
+      actions: actions,
+      child: child,
+    );
+  }
+
   /// Footer for the standard "cancel + save" sub-table dialog.
   ///
   /// Reports failures through [DialogUtil.error] and closes with a success
@@ -72,18 +85,5 @@ class FoxyFormDialog extends StatelessWidget {
         ),
       ),
     ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ShadDialog(
-      title: Text(title),
-      description: description != null ? Text(description!) : null,
-      titlePinned: true,
-      descriptionPinned: true,
-      constraints: DialogUtil.constraints(context),
-      actions: actions,
-      child: child,
-    );
   }
 }

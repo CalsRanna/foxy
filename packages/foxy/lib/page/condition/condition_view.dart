@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
-import 'package:foxy/widget/picker/foxy_entity_picker.dart';
-import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/picker/foxy_flag_picker.dart';
-import 'package:foxy_widget/foxy_widget.dart';
-import 'package:foxy/widget/form/foxy_number_input.dart';
-import 'package:foxy/widget/picker/foxy_enum_picker.dart';
-import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_number_input.dart';
+import 'package:foxy/widget/form/foxy_string_input.dart';
+import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/picker/foxy_entity_picker.dart';
+import 'package:foxy/widget/picker/foxy_enum_picker.dart';
+import 'package:foxy/widget/picker/foxy_flag_picker.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -217,21 +217,6 @@ class ConditionView extends StatelessWidget {
     );
   }
 
-  /// Reference-field picker built from [delegate]: the concrete row type
-  /// follows from the delegate, so each reference branch instantiates the
-  /// picker at the call site with no type erasure.
-  Widget _referencePicker<T>(
-    String column,
-    IntFieldControllerGroup controllers,
-    FoxyEntityPickerDelegate<T> delegate,
-  ) {
-    return FoxyEntityPicker<T>(
-      controller: controllers.numberController,
-      delegate: delegate,
-      placeholder: column,
-    );
-  }
-
   void _goBack() {
     GetIt.instance.get<RouterFacade>().goBack();
   }
@@ -256,6 +241,21 @@ class ConditionView extends StatelessWidget {
       if (!context.mounted) return;
       DialogUtil.instance.error('保存失败：${FoxyExceptions.message(error)}');
     }
+  }
+
+  /// Reference-field picker built from [delegate]: the concrete row type
+  /// follows from the delegate, so each reference branch instantiates the
+  /// picker at the call site with no type erasure.
+  Widget _referencePicker<T>(
+    String column,
+    IntFieldControllerGroup controllers,
+    FoxyEntityPickerDelegate<T> delegate,
+  ) {
+    return FoxyEntityPicker<T>(
+      controller: controllers.numberController,
+      delegate: delegate,
+      placeholder: column,
+    );
   }
 
   Widget _row(Widget first, Widget second, Widget third, Widget fourth) {

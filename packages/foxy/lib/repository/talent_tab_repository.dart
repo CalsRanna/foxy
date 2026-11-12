@@ -1,10 +1,10 @@
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/database/parse_util.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'talent_tab_repository.g.dart';
@@ -62,6 +62,26 @@ class TalentTabRepository
         .toList();
   }
 
+  Future<List<TalentTabEntity>> getTalentTabs() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => TalentTabEntity.fromJson(row.toMap())).toList();
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, TalentTabFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%${ParseUtil.escapeLike(filter.name)}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
+  }
+
   /// Re-applies the generated filter against the aliased icon join; the
   /// generated `_applyFilter` targets the bare table name, and the joined
   /// icon table would make its `ID` column ambiguous.
@@ -76,26 +96,6 @@ class TalentTabRepository
     if (filter.name.isNotEmpty) {
       builder = builder.where(
         'tt.Name_lang_zhCN',
-        '%${ParseUtil.escapeLike(filter.name)}%',
-        comparator: 'like',
-      );
-    }
-    return builder;
-  }
-
-  Future<List<TalentTabEntity>> getTalentTabs() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => TalentTabEntity.fromJson(row.toMap())).toList();
-  }
-
-  QueryBuilder _applyFilter(QueryBuilder builder, TalentTabFilter? filter) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
-    }
-    if (filter.name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
         '%${ParseUtil.escapeLike(filter.name)}%',
         comparator: 'like',
       );

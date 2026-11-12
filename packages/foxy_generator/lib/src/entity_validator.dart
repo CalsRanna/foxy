@@ -1,9 +1,8 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:analyzer/dart/element/element.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_generator/src/entity_model.dart';
+import 'package:source_gen/source_gen.dart';
 
 final class EntityValidator {
   const EntityValidator();

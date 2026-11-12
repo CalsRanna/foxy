@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
 
@@ -66,12 +66,12 @@ void main() {
 /// Counts `countRows` calls and tracks the peak in-flight count, so a
 /// regression to sequential counting (peak 1) is caught.
 final class _CountingRegistry implements DbcExportRegistry {
-  _CountingRegistry({this.failingTables = const {}});
-
   final Set<String> failingTables;
+
   int calls = 0;
   int _active = 0;
   int maxActive = 0;
+  _CountingRegistry({this.failingTables = const {}});
 
   @override
   bool contains(String tableName) => true;
@@ -97,9 +97,9 @@ final class _CountingRegistry implements DbcExportRegistry {
 
 /// In-memory ConfigUtil (no real IO).
 final class _MemoryConfigUtil extends ConfigUtil {
-  _MemoryConfigUtil(this.data);
-
   final Map<String, dynamic> data;
+
+  _MemoryConfigUtil(this.data);
 
   @override
   String get configPath => 'memory:config.yaml';

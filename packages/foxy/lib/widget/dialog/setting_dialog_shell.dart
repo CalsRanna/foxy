@@ -8,6 +8,31 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 class SettingDialogShell extends StatelessWidget {
   // ─── Common shell ──────────────────────────────────────────────────────────
 
+  final Widget title;
+
+  final Widget child;
+
+  final List<Widget> actions;
+
+  const SettingDialogShell({
+    super.key,
+    required this.title,
+    required this.child,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      titlePinned: true,
+      constraints: DialogUtil.constraints(context),
+      title: title,
+      actions: actions,
+      child: child,
+    );
+  }
+
   /// Result banner (success/error/warning, with color and icon).
   static Widget banner(
     BuildContext context, {
@@ -164,29 +189,6 @@ class SettingDialogShell extends StatelessWidget {
         Icon(icon, size: 20, color: iconColor),
         Text(text),
       ],
-    );
-  }
-
-  final Widget title;
-  final Widget child;
-  final List<Widget> actions;
-
-  const SettingDialogShell({
-    super.key,
-    required this.title,
-    required this.child,
-    this.actions = const [],
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShadDialog(
-      closeIcon: const SizedBox.shrink(),
-      titlePinned: true,
-      constraints: DialogUtil.constraints(context),
-      title: title,
-      actions: actions,
-      child: child,
     );
   }
 }

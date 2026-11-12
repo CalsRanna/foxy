@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
-import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 
 void main() {
   group('DbcLocale', () {

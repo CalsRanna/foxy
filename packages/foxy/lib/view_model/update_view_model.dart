@@ -19,16 +19,12 @@ import 'package:path/path.dart' as p;
 import 'package:signals/signals.dart';
 
 class UpdateViewModel {
-  UpdateViewModel({UpdateService? service, SharedPreferencesUtil? preferences})
-    : _service = service ?? UpdateService(),
-      _preferences = preferences ?? SharedPreferencesUtil.instance;
-
   /// Silent-check throttle: at most one check per 24h at startup.
   static const silentCheckInterval = Duration(hours: 24);
 
   final UpdateService _service;
-  final SharedPreferencesUtil _preferences;
 
+  final SharedPreferencesUtil _preferences;
   UpdateCancelToken _cancelToken = UpdateCancelToken();
 
   /// Currently installed version (format `1.0.0+628`, loaded from
@@ -58,17 +54,16 @@ class UpdateViewModel {
   /// restart).
   Directory? _payloadRoot;
 
-  /// Loads the current version info (for the settings page and update
-  /// dialog; loaded once).
-  Future<void> prepare() async {
-    if (currentVersion.value != null) return;
-    try {
-      final info = await PackageInfo.fromPlatform();
-      currentVersion.value = '${info.version}+${info.buildNumber}';
-    } catch (error) {
-      LoggerUtil.instance.w('读取版本信息失败: $error');
-    }
-  }
+  UpdateViewModel({UpdateService? service, SharedPreferencesUtil? preferences})
+    : _service = service ?? UpdateService(),
+      _preferences = preferences ?? SharedPreferencesUtil.instance;
+
+  /// Cancels an in-progress download.
+  void cancelDownload() => _cancelToken.cancel();
+
+  /// Manual check from the settings page: every outcome feeds back into
+  /// the signals.
+  Future<bool> checkManually() => _check(manual: true);
 
   /// Runs the silent startup check: 24h throttle, failures only logged.
   /// Returns whether a new version was found.
@@ -78,40 +73,6 @@ class UpdateViewModel {
       return false;
     }
     return _check(manual: false);
-  }
-
-  /// Manual check from the settings page: every outcome feeds back into
-  /// the signals.
-  Future<bool> checkManually() => _check(manual: true);
-
-  Future<bool> _check({required bool manual}) async {
-    if (checking.value) return false;
-    checking.value = true;
-    upToDate.value = false;
-    readyToRestart.value = false;
-    errorMessage.value = null;
-    try {
-      final result = await _service.checkForUpdates();
-      await _preferences.setLastUpdateCheckAt(DateTime.now());
-      switch (result) {
-        case UpdateAvailable(:final update):
-          availableUpdate.value = update;
-          return true;
-        case UpToDate():
-          availableUpdate.value = null;
-          upToDate.value = true;
-          return false;
-      }
-    } catch (error) {
-      availableUpdate.value = null;
-      errorMessage.value = FoxyExceptions.message(error);
-      if (!manual) {
-        LoggerUtil.instance.w('自动检查更新失败: $error');
-      }
-      return false;
-    } finally {
-      checking.value = false;
-    }
   }
 
   /// Downloads and extracts the new version, writing progress to
@@ -140,8 +101,17 @@ class UpdateViewModel {
     }
   }
 
-  /// Cancels an in-progress download.
-  void cancelDownload() => _cancelToken.cancel();
+  /// Loads the current version info (for the settings page and update
+  /// dialog; loaded once).
+  Future<void> prepare() async {
+    if (currentVersion.value != null) return;
+    try {
+      final info = await PackageInfo.fromPlatform();
+      currentVersion.value = '${info.version}+${info.buildNumber}';
+    } catch (error) {
+      LoggerUtil.instance.w('读取版本信息失败: $error');
+    }
+  }
 
   /// Launches the update helper and exits the app; the helper completes
   /// the file swap and restarts.
@@ -171,6 +141,36 @@ class UpdateViewModel {
     } catch (error) {
       errorMessage.value = '启动更新程序失败，请重试';
       LoggerUtil.instance.e('启动更新辅助程序失败: $error');
+    }
+  }
+
+  Future<bool> _check({required bool manual}) async {
+    if (checking.value) return false;
+    checking.value = true;
+    upToDate.value = false;
+    readyToRestart.value = false;
+    errorMessage.value = null;
+    try {
+      final result = await _service.checkForUpdates();
+      await _preferences.setLastUpdateCheckAt(DateTime.now());
+      switch (result) {
+        case UpdateAvailable(:final update):
+          availableUpdate.value = update;
+          return true;
+        case UpToDate():
+          availableUpdate.value = null;
+          upToDate.value = true;
+          return false;
+      }
+    } catch (error) {
+      availableUpdate.value = null;
+      errorMessage.value = FoxyExceptions.message(error);
+      if (!manual) {
+        LoggerUtil.instance.w('自动检查更新失败: $error');
+      }
+      return false;
+    } finally {
+      checking.value = false;
     }
   }
 }

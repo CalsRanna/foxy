@@ -3,8 +3,8 @@ import 'dart:isolate';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:path/path.dart' as p;
 
 /// Regression test for the cancel-then-retry race: the fallback timer in

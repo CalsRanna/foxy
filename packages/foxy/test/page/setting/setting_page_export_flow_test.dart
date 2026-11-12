@@ -4,25 +4,25 @@ import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/repository/dbc_export_registry.dart';
-import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
 import 'package:foxy/page/setting/setting_page.dart';
+import 'package:foxy/repository/dbc_export_registry.dart';
+import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:foxy/use_case/combined/combined_export_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/view_model/workflow/combined_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
-import 'package:foxy/view_model/setup_status_view_model.dart';
-import 'package:foxy/view_model/foxy_state_view_model.dart';
-import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -406,35 +406,6 @@ void main() {
   });
 }
 
-/// Scripted success worker for the DBC-export entry: registers the control
-/// port, emits one count, then a success result, and exits.
-final class _SuccessWorker {
-  static Future<void> run(DbcExportWorkerArgs args) async {
-    final cancelPort = ReceivePort();
-    final sub = cancelPort.listen((_) {});
-    args.sendPort.send(('control', cancelPort.sendPort));
-    args.sendPort.send(('status', 'scanning', 'ok', null));
-    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
-    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
-    await sub.cancel();
-    cancelPort.close();
-  }
-}
-
-/// MPQ worker entry: same scripted body with the MPQ args record shape.
-final class _SuccessMpqWorker {
-  static Future<void> run(MpqExportWorkerArgs args) async {
-    final cancelPort = ReceivePort();
-    final sub = cancelPort.listen((_) {});
-    args.sendPort.send(('control', cancelPort.sendPort));
-    args.sendPort.send(('status', 'scanning', 'ok', null));
-    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
-    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
-    await sub.cancel();
-    cancelPort.close();
-  }
-}
-
 /// Registry stub: no GetIt resolution, no DB access.
 final class _FakeRegistry implements DbcExportRegistry {
   @override
@@ -467,5 +438,34 @@ final class _MemoryConfigUtil extends ConfigUtil {
   Future<void> update(Map<String, dynamic> values) async {
     if (failUpdate) throw const FileSystemException('permission denied');
     data.addAll(values);
+  }
+}
+
+/// MPQ worker entry: same scripted body with the MPQ args record shape.
+final class _SuccessMpqWorker {
+  static Future<void> run(MpqExportWorkerArgs args) async {
+    final cancelPort = ReceivePort();
+    final sub = cancelPort.listen((_) {});
+    args.sendPort.send(('control', cancelPort.sendPort));
+    args.sendPort.send(('status', 'scanning', 'ok', null));
+    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
+    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
+    await sub.cancel();
+    cancelPort.close();
+  }
+}
+
+/// Scripted success worker for the DBC-export entry: registers the control
+/// port, emits one count, then a success result, and exits.
+final class _SuccessWorker {
+  static Future<void> run(DbcExportWorkerArgs args) async {
+    final cancelPort = ReceivePort();
+    final sub = cancelPort.listen((_) {});
+    args.sendPort.send(('control', cancelPort.sendPort));
+    args.sendPort.send(('status', 'scanning', 'ok', null));
+    args.sendPort.send(('count', 'SpellDuration.dbc', 1, 1, 3, 3));
+    args.sendPort.send(('result', 1, 0, <Map<String, String?>>[], false));
+    await sub.cancel();
+    cancelPort.close();
   }
 }

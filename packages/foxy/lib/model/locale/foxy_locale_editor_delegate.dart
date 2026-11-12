@@ -1,34 +1,6 @@
 import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/model/locale/database_locale_changes.dart';
 
-/// Edit contract for regular database `*_locale` sub-tables: dynamic
-/// language rows, addable/deletable.
-final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
-  /// Field names of the locale table (entity columns); the first is
-  /// conventionally 'locale'.
-  final List<String> fields;
-
-  /// Display labels for the dialog's column headers; length matches
-  /// [fields].
-  final List<String> fieldLabels;
-
-  /// Loads the locale data of the given entry.
-  final Future<List<DatabaseLocaleRow>> Function(int entry) onLoad;
-
-  /// Saves the locale changes of the given entry.
-  final Future<void> Function(int entry, DatabaseLocaleChanges changes) onSave;
-
-  const DatabaseLocaleEditorDelegate({
-    required this.fields,
-    required this.fieldLabels,
-    required this.onLoad,
-    required this.onSave,
-  }) : assert(
-         fields.length == fieldLabels.length,
-         'fields and fieldLabels must have the same length',
-       );
-}
-
 /// Locale editor for sub-tables keyed by a composite primary key (more than
 /// one column besides `locale`).
 ///
@@ -51,6 +23,34 @@ final class CompositeKeyLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
   final Future<void> Function(Object key, DatabaseLocaleChanges changes) onSave;
 
   const CompositeKeyLocaleEditorDelegate({
+    required this.fields,
+    required this.fieldLabels,
+    required this.onLoad,
+    required this.onSave,
+  }) : assert(
+         fields.length == fieldLabels.length,
+         'fields and fieldLabels must have the same length',
+       );
+}
+
+/// Edit contract for regular database `*_locale` sub-tables: dynamic
+/// language rows, addable/deletable.
+final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
+  /// Field names of the locale table (entity columns); the first is
+  /// conventionally 'locale'.
+  final List<String> fields;
+
+  /// Display labels for the dialog's column headers; length matches
+  /// [fields].
+  final List<String> fieldLabels;
+
+  /// Loads the locale data of the given entry.
+  final Future<List<DatabaseLocaleRow>> Function(int entry) onLoad;
+
+  /// Saves the locale changes of the given entry.
+  final Future<void> Function(int entry, DatabaseLocaleChanges changes) onSave;
+
+  const DatabaseLocaleEditorDelegate({
     required this.fields,
     required this.fieldLabels,
     required this.onLoad,

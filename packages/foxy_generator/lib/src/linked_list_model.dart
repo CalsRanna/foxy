@@ -1,5 +1,5 @@
-import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/form_model.dart';
+import 'package:foxy_generator/src/naming.dart';
 
 final class LinkedListGenerationModel {
   /// Hand-written Linked List ViewModel class name, e.g.
@@ -57,11 +57,6 @@ final class LinkedListGenerationModel {
     required this.logNameFields,
   });
 
-  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
-  /// module name.
-  String get moduleName =>
-      table.startsWith('foxy.') ? table.substring(5) : table;
-
   String get baseName =>
       entityClassName.substring(0, entityClassName.length - 'Entity'.length);
 
@@ -70,4 +65,9 @@ final class LinkedListGenerationModel {
   /// `CreatureQuestItemEntity` → `creatureQuestItem` (reserved words get a
   /// trailing underscore)。
   String get entityCamelName => entityParameterName(entityClassName);
+
+  /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log
+  /// module name.
+  String get moduleName =>
+      table.startsWith('foxy.') ? table.substring(5) : table;
 }

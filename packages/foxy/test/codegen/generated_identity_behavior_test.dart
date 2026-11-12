@@ -87,12 +87,6 @@ void main() {
   });
 }
 
-class _Repository extends EmoteTextRepository {
-  @override
-  final Laconic laconic;
-  _Repository(this.laconic);
-}
-
 class _CollisionDriver implements DatabaseDriver {
   final bool collide;
   final Completer<void>? retryGate;
@@ -104,13 +98,34 @@ class _CollisionDriver implements DatabaseDriver {
     1: const EmoteTextEntity(id: 1, name: 'source').toJson(),
     99: const EmoteTextEntity(id: 99).toJson(),
   };
-  _CollisionDriver({required this.collide, this.retryGate});
-
   @override
   final SqlGrammar grammar = MysqlGrammar();
 
+  _CollisionDriver({required this.collide, this.retryGate});
+
+  @override
+  Future<int> affectingStatement(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
+    final newId = params.first as int;
+    final oldId = params.last as int;
+    updatedKeys.add((oldId, newId));
+    if (newId != oldId && rows.containsKey(newId)) throw duplicate();
+    return 1;
+  }
+
+  @override
+  Future<void> close() async {}
+
   LaconicException duplicate() =>
       LaconicException('duplicate primary key', driver: 'mysql', code: '1062');
+
+  @override
+  Future<int> insertAndGetId(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async => throw UnimplementedError();
 
   @override
   Future<List<LaconicResult>> select(
@@ -145,24 +160,11 @@ class _CollisionDriver implements DatabaseDriver {
   }
 
   @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    final newId = params.first as int;
-    final oldId = params.last as int;
-    updatedKeys.add((oldId, newId));
-    if (newId != oldId && rows.containsKey(newId)) throw duplicate();
-    return 1;
-  }
-
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => throw UnimplementedError();
-  @override
   Future<T> transaction<T>(Future<T> Function() action) => action();
+}
+
+class _Repository extends EmoteTextRepository {
+  @override
+  final Laconic laconic;
+  _Repository(this.laconic);
 }

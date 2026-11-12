@@ -1,8 +1,7 @@
-import 'package:source_gen/source_gen.dart';
-
-import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/dart_literal.dart';
 import 'package:foxy_generator/src/form_model.dart';
+import 'package:foxy_generator/src/naming.dart';
+import 'package:source_gen/source_gen.dart';
 
 final class FormEmitter {
   const FormEmitter();
@@ -66,22 +65,73 @@ final class FormEmitter {
     return buffer.toString();
   }
 
-  void _emitSkeletonFields(StringBuffer buffer, FormGenerationModel model) {
+  /// Aligned with hand-written style: the `EnumFieldController` family
+  /// uses the multi-line form, everything else single-line.
+  String _controllerDeclaration(FormFieldModel field) {
+    final controller = controllerName(field);
+    final expression = switch ((field.kind, field.dartType)) {
+      (FormFieldKind.enumValue, _) => _enumExpression(field),
+      (FormFieldKind.flag, _) => 'FlagFieldController()',
+      (FormFieldKind.group, _) => 'IntFieldControllerGroup()',
+      (FormFieldKind.nullable, _) => 'NullableStringFieldController()',
+      (FormFieldKind.plain, 'int') => 'IntFieldController()',
+      (FormFieldKind.plain, 'double') => 'DoubleFieldController()',
+      (FormFieldKind.plain, 'String') => 'StringFieldController()',
+      (FormFieldKind.plain, 'bool') => 'EnumFieldController<int>(fallback: 0)',
+      _ => throw InvalidGenerationSourceError(
+        'Unsupported field ${field.dartName}: ${field.dartType}',
+      ),
+    };
+    if (expression.startsWith('EnumFieldController')) {
+      return '  late final ${controller}Controller = registerController(\n'
+          '    $expression,\n'
+          '  );';
+    }
+    return '  late final ${controller}Controller = '
+        'registerController($expression);';
+  }
+
+  void _emitAfterApply(StringBuffer buffer, FormGenerationModel model) {
+    final parameter = _entityParameterName(model.entityClassName);
+    buffer.writeln(
+      '  void _afterApplyCandidate(${model.entityClassName} $parameter) {}',
+    );
+  }
+
+  void _emitApply(StringBuffer buffer, FormGenerationModel model) {
+    final parameter = _entityParameterName(model.entityClassName);
+    buffer.writeln(
+      '  void _applyCandidate(${model.entityClassName} $parameter) {',
+    );
+    for (final field in model.fields) {
+      final controller = controllerName(field);
+      final init = field.kind == FormFieldKind.plain && field.dartType == 'bool'
+          ? '${controller}Controller.init($parameter.${field.dartName} ? 1 : 0)'
+          : '${controller}Controller.init($parameter.${field.dartName})';
+      buffer.writeln('    $init;');
+    }
+    // Semantic hook after loading the entity (e.g. cascade-refresh of edit
+    // specs); overridden on the hand-written side.
     buffer
-      ..writeln(
-        '  final _repository = GetIt.instance.get<${model.repositoryClassName}>();',
-      )
-      ..writeln()
-      ..writeln('  final entity = signal<${model.entityClassName}?>(null);')
-      ..writeln()
-      ..writeln('  final persistedKey = signal<${model.keyType}?>(null);')
-      ..writeln()
-      ..writeln('  final loading = signal(false);')
-      ..writeln()
-      ..writeln('  final submitting = signal(false);')
-      ..writeln()
-      ..writeln('  final errorMessage = signal<String?>(null);')
-      ..writeln();
+      ..writeln('    _afterApplyCandidate($parameter);')
+      ..writeln('  }');
+  }
+
+  void _emitCollect(StringBuffer buffer, FormGenerationModel model) {
+    buffer
+      ..writeln('  ${model.entityClassName} _collectCandidate() {')
+      ..writeln('    return ${model.entityClassName}(');
+    for (final field in model.fields) {
+      final controller = controllerName(field);
+      final collect =
+          field.kind == FormFieldKind.plain && field.dartType == 'bool'
+          ? '${controller}Controller.collect() == 1'
+          : '${controller}Controller.collect()';
+      buffer.writeln('      ${field.dartName}: $collect,');
+    }
+    buffer
+      ..writeln('    );')
+      ..writeln('  }');
   }
 
   void _emitDispose(StringBuffer buffer, FormGenerationModel model) {
@@ -129,6 +179,37 @@ final class FormEmitter {
       ..writeln('    } finally {')
       ..writeln('      loading.value = false;')
       ..writeln('    }')
+      ..writeln('  }');
+  }
+
+  void _emitLogActivity(StringBuffer buffer, FormGenerationModel model) {
+    final nameField = model.fields
+        .where((f) => f.dartName == 'name')
+        .firstOrNull;
+    final entityNameExpr = nameField == null
+        ? model.singleKeyFieldName != null
+              ? '\'${model.baseName} \${${model.entityCamelName}.${model.singleKeyFieldName}}\''
+              : '\'${model.baseName}\''
+        : nameField.dartType == 'String?'
+        ? '${model.entityCamelName}.name ?? \'\''
+        : '${model.entityCamelName}.name';
+    buffer
+      ..writeln(
+        '  /// Fires the activity-log event after a write; persistence is handled by\n'
+        '  /// the single ActivityLogListener aspect.',
+      )
+      ..writeln(
+        '  void _logActivity(ActivityActionType action, '
+        '${model.entityClassName} ${model.entityCamelName}) {',
+      )
+      ..writeln(
+        '    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(',
+      )
+      ..writeln('      module: \'${model.moduleName}\',')
+      ..writeln('      actionType: action,')
+      ..writeln('      entityName: $entityNameExpr,')
+      ..writeln('      createdAt: DateTime.now(),')
+      ..writeln('    )));')
       ..writeln('  }');
   }
 
@@ -206,104 +287,22 @@ final class FormEmitter {
       ..writeln('  }');
   }
 
-  void _emitLogActivity(StringBuffer buffer, FormGenerationModel model) {
-    final nameField = model.fields
-        .where((f) => f.dartName == 'name')
-        .firstOrNull;
-    final entityNameExpr = nameField == null
-        ? model.singleKeyFieldName != null
-              ? '\'${model.baseName} \${${model.entityCamelName}.${model.singleKeyFieldName}}\''
-              : '\'${model.baseName}\''
-        : nameField.dartType == 'String?'
-        ? '${model.entityCamelName}.name ?? \'\''
-        : '${model.entityCamelName}.name';
+  void _emitSkeletonFields(StringBuffer buffer, FormGenerationModel model) {
     buffer
       ..writeln(
-        '  /// Fires the activity-log event after a write; persistence is handled by\n'
-        '  /// the single ActivityLogListener aspect.',
+        '  final _repository = GetIt.instance.get<${model.repositoryClassName}>();',
       )
-      ..writeln(
-        '  void _logActivity(ActivityActionType action, '
-        '${model.entityClassName} ${model.entityCamelName}) {',
-      )
-      ..writeln(
-        '    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(',
-      )
-      ..writeln('      module: \'${model.moduleName}\',')
-      ..writeln('      actionType: action,')
-      ..writeln('      entityName: $entityNameExpr,')
-      ..writeln('      createdAt: DateTime.now(),')
-      ..writeln('    )));')
-      ..writeln('  }');
-  }
-
-  /// Aligned with hand-written style: the `EnumFieldController` family
-  /// uses the multi-line form, everything else single-line.
-  String _controllerDeclaration(FormFieldModel field) {
-    final controller = controllerName(field);
-    final expression = switch ((field.kind, field.dartType)) {
-      (FormFieldKind.enumValue, _) => _enumExpression(field),
-      (FormFieldKind.flag, _) => 'FlagFieldController()',
-      (FormFieldKind.group, _) => 'IntFieldControllerGroup()',
-      (FormFieldKind.nullable, _) => 'NullableStringFieldController()',
-      (FormFieldKind.plain, 'int') => 'IntFieldController()',
-      (FormFieldKind.plain, 'double') => 'DoubleFieldController()',
-      (FormFieldKind.plain, 'String') => 'StringFieldController()',
-      (FormFieldKind.plain, 'bool') => 'EnumFieldController<int>(fallback: 0)',
-      _ => throw InvalidGenerationSourceError(
-        'Unsupported field ${field.dartName}: ${field.dartType}',
-      ),
-    };
-    if (expression.startsWith('EnumFieldController')) {
-      return '  late final ${controller}Controller = registerController(\n'
-          '    $expression,\n'
-          '  );';
-    }
-    return '  late final ${controller}Controller = '
-        'registerController($expression);';
-  }
-
-  void _emitAfterApply(StringBuffer buffer, FormGenerationModel model) {
-    final parameter = _entityParameterName(model.entityClassName);
-    buffer.writeln(
-      '  void _afterApplyCandidate(${model.entityClassName} $parameter) {}',
-    );
-  }
-
-  void _emitApply(StringBuffer buffer, FormGenerationModel model) {
-    final parameter = _entityParameterName(model.entityClassName);
-    buffer.writeln(
-      '  void _applyCandidate(${model.entityClassName} $parameter) {',
-    );
-    for (final field in model.fields) {
-      final controller = controllerName(field);
-      final init = field.kind == FormFieldKind.plain && field.dartType == 'bool'
-          ? '${controller}Controller.init($parameter.${field.dartName} ? 1 : 0)'
-          : '${controller}Controller.init($parameter.${field.dartName})';
-      buffer.writeln('    $init;');
-    }
-    // Semantic hook after loading the entity (e.g. cascade-refresh of edit
-    // specs); overridden on the hand-written side.
-    buffer
-      ..writeln('    _afterApplyCandidate($parameter);')
-      ..writeln('  }');
-  }
-
-  void _emitCollect(StringBuffer buffer, FormGenerationModel model) {
-    buffer
-      ..writeln('  ${model.entityClassName} _collectCandidate() {')
-      ..writeln('    return ${model.entityClassName}(');
-    for (final field in model.fields) {
-      final controller = controllerName(field);
-      final collect =
-          field.kind == FormFieldKind.plain && field.dartType == 'bool'
-          ? '${controller}Controller.collect() == 1'
-          : '${controller}Controller.collect()';
-      buffer.writeln('      ${field.dartName}: $collect,');
-    }
-    buffer
-      ..writeln('    );')
-      ..writeln('  }');
+      ..writeln()
+      ..writeln('  final entity = signal<${model.entityClassName}?>(null);')
+      ..writeln()
+      ..writeln('  final persistedKey = signal<${model.keyType}?>(null);')
+      ..writeln()
+      ..writeln('  final loading = signal(false);')
+      ..writeln()
+      ..writeln('  final submitting = signal(false);')
+      ..writeln()
+      ..writeln('  final errorMessage = signal<String?>(null);')
+      ..writeln();
   }
 
   /// `TalentEntity` → `talent` (matches the Repository's entity parameter

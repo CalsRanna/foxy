@@ -5,9 +5,9 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_import_worker.dart';
-import 'package:foxy/model/dbc/dbc_sync_progress.dart';
-import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:signals/signals.dart';
 
@@ -23,15 +23,8 @@ class DbcSyncUtil {
   /// (the combined DBC+MPQ export); injectable for tests.
   final MpqPackWorkerEntry mpqPackWorkerEntry;
 
-  DbcSyncUtil({
-    DbcExportWorkerEntry? exportWorkerEntry,
-    MpqExportWorkerEntry? mpqWorkerEntry,
-    MpqPackWorkerEntry? mpqPackWorkerEntry,
-  }) : exportWorkerEntry = exportWorkerEntry ?? runDbcExportWorker,
-       mpqWorkerEntry = mpqWorkerEntry ?? runMpqExportWorker,
-       mpqPackWorkerEntry = mpqPackWorkerEntry ?? runMpqPackWorker;
-
   _ImportJobHandle? _activeImportJob;
+
   String? _activeJobId;
   _ExportJobHandle? _activeExportJob;
 
@@ -40,7 +33,15 @@ class DbcSyncUtil {
   /// busy-state computations that short-circuit on `||` would otherwise lose
   /// the dependency and never rebuild when the task ends.
   final running = signal(false);
+
   DbcSyncOperation? _operation;
+  DbcSyncUtil({
+    DbcExportWorkerEntry? exportWorkerEntry,
+    MpqExportWorkerEntry? mpqWorkerEntry,
+    MpqPackWorkerEntry? mpqPackWorkerEntry,
+  }) : exportWorkerEntry = exportWorkerEntry ?? runDbcExportWorker,
+       mpqWorkerEntry = mpqWorkerEntry ?? runMpqExportWorker,
+       mpqPackWorkerEntry = mpqPackWorkerEntry ?? runMpqPackWorker;
 
   bool get isRunning => running.value;
   DbcSyncOperation? get operation => _operation;
@@ -943,6 +944,17 @@ class DbcSyncUtil {
   }
 }
 
+/// Handle for a single export-style task (DBC export / MPQ patch export),
+/// mirroring [_ImportJobHandle] minus the staging-table job id.
+class _ExportJobHandle {
+  final Completer<void> done = Completer<void>();
+  Isolate? isolate;
+  SendPort? controlPort;
+  Future<void> Function(DbcSyncResult result)? finish;
+  bool cancelRequested = false;
+  bool forceCancelTerminal = false;
+}
+
 /// Handle for a single import task: cancel holds the same reference, so it
 /// can still kill the isolate after spawn completes.
 class _ImportJobHandle {
@@ -955,15 +967,4 @@ class _ImportJobHandle {
   bool forceCancelTerminal = false;
 
   _ImportJobHandle(this.jobId);
-}
-
-/// Handle for a single export-style task (DBC export / MPQ patch export),
-/// mirroring [_ImportJobHandle] minus the staging-table job id.
-class _ExportJobHandle {
-  final Completer<void> done = Completer<void>();
-  Isolate? isolate;
-  SendPort? controlPort;
-  Future<void> Function(DbcSyncResult result)? finish;
-  bool cancelRequested = false;
-  bool forceCancelTerminal = false;
 }

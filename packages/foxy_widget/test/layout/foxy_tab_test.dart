@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 
+void main() {
+  testWidgets('tabs 列表变长后点击新 tab 不越界', (tester) async {
+    await tester.pumpWidget(const _FoxyDynamicTabsHarness());
+    await tester.pump();
+
+    await tester.tap(find.text('加 tab'));
+    await tester.pump();
+
+    // The rebuilt tab state must index the new tab without going out of
+    // range, and the fade animation must complete cleanly.
+    await tester.tap(find.text('C'));
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(tester.takeException(), isNull);
+  });
+}
+
 /// Harness that grows the tab list at runtime, exercising FoxyTab's
 /// didUpdateWidget tab-state rebuild.
 class _FoxyDynamicTabsHarness extends StatefulWidget {
@@ -44,21 +61,4 @@ class _FoxyDynamicTabsHarnessState extends State<_FoxyDynamicTabsHarness> {
       ),
     );
   }
-}
-
-void main() {
-  testWidgets('tabs 列表变长后点击新 tab 不越界', (tester) async {
-    await tester.pumpWidget(const _FoxyDynamicTabsHarness());
-    await tester.pump();
-
-    await tester.tap(find.text('加 tab'));
-    await tester.pump();
-
-    // The rebuilt tab state must index the new tab without going out of
-    // range, and the fade animation must complete cleanly.
-    await tester.tap(find.text('C'));
-    await tester.pump(const Duration(milliseconds: 400));
-
-    expect(tester.takeException(), isNull);
-  });
 }

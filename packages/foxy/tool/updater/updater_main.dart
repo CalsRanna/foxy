@@ -26,6 +26,8 @@ import 'dart:io';
 import 'package:foxy/infrastructure/update/update_swapper.dart';
 import 'package:path/path.dart' as p;
 
+Future<void> main(List<String> args) => UpdaterMain.run(args);
+
 abstract final class UpdaterMain {
   /// Log path: `%TEMP%\foxy_updater.log`.
   static final String updaterLogPath = p.join(
@@ -101,68 +103,6 @@ abstract final class UpdaterMain {
     log.i('Updater finished');
   }
 
-  /// Parses `--key value` style arguments.
-  static Map<String, String> _parseArgs(List<String> args) {
-    final options = <String, String>{};
-    for (var index = 0; index < args.length; index += 2) {
-      if (index + 1 < args.length && args[index].startsWith('--')) {
-        options[args[index]] = args[index + 1];
-      }
-    }
-    return options;
-  }
-
-  /// Whether [path] is located under [dirPath].
-  static bool _isInDir(String path, String dirPath) {
-    final normalized = p.normalize(path).toLowerCase();
-    final dir = p.normalize(dirPath).toLowerCase();
-    return p.dirname(normalized) == dir;
-  }
-
-  /// Polls tasklist waiting for the process to exit; returns whether it
-  /// exited before the timeout.
-  static Future<bool> _waitForProcessExit(
-    int targetPid,
-    Duration timeout,
-  ) async {
-    final deadline = DateTime.now().add(timeout);
-    final pidPattern = RegExp('(^|\\s)$targetPid(\\s|\$)');
-    while (DateTime.now().isBefore(deadline)) {
-      try {
-        final result = await Process.run('tasklist', [
-          '/FI',
-          'PID eq $targetPid',
-          '/NH',
-        ]);
-        final alive =
-            result.exitCode == 0 &&
-            pidPattern.hasMatch(result.stdout.toString());
-        if (!alive) return true;
-      } catch (error) {
-        // On tasklist failure, wait conservatively rather than swapping
-        // early.
-      }
-      await Future<void>.delayed(const Duration(milliseconds: 500));
-    }
-    return false;
-  }
-
-  /// Restarts the main program with the app directory as its working
-  /// directory.
-  static Future<void> _relaunchApp(
-    _Logger log,
-    String appDir,
-    String appExe,
-  ) async {
-    final exePath = p.join(appDir, appExe);
-    log.i('Relaunching $exePath');
-    try {
-      await Process.start(exePath, const [], workingDirectory: appDir);
-    } catch (error) {
-      log.e('Failed to relaunch $exePath: $error');
-    }
-  }
-
   /// Cleans up historical `foxy_updater_*.exe` copies under `%TEMP%`
   /// (keeping itself).
   static Future<void> _cleanupStaleCopies(_Logger log) async {
@@ -203,19 +143,79 @@ abstract final class UpdaterMain {
       }
     }
   }
-}
 
-Future<void> main(List<String> args) => UpdaterMain.run(args);
+  /// Whether [path] is located under [dirPath].
+  static bool _isInDir(String path, String dirPath) {
+    final normalized = p.normalize(path).toLowerCase();
+    final dir = p.normalize(dirPath).toLowerCase();
+    return p.dirname(normalized) == dir;
+  }
+
+  /// Parses `--key value` style arguments.
+  static Map<String, String> _parseArgs(List<String> args) {
+    final options = <String, String>{};
+    for (var index = 0; index < args.length; index += 2) {
+      if (index + 1 < args.length && args[index].startsWith('--')) {
+        options[args[index]] = args[index + 1];
+      }
+    }
+    return options;
+  }
+
+  /// Restarts the main program with the app directory as its working
+  /// directory.
+  static Future<void> _relaunchApp(
+    _Logger log,
+    String appDir,
+    String appExe,
+  ) async {
+    final exePath = p.join(appDir, appExe);
+    log.i('Relaunching $exePath');
+    try {
+      await Process.start(exePath, const [], workingDirectory: appDir);
+    } catch (error) {
+      log.e('Failed to relaunch $exePath: $error');
+    }
+  }
+
+  /// Polls tasklist waiting for the process to exit; returns whether it
+  /// exited before the timeout.
+  static Future<bool> _waitForProcessExit(
+    int targetPid,
+    Duration timeout,
+  ) async {
+    final deadline = DateTime.now().add(timeout);
+    final pidPattern = RegExp('(^|\\s)$targetPid(\\s|\$)');
+    while (DateTime.now().isBefore(deadline)) {
+      try {
+        final result = await Process.run('tasklist', [
+          '/FI',
+          'PID eq $targetPid',
+          '/NH',
+        ]);
+        final alive =
+            result.exitCode == 0 &&
+            pidPattern.hasMatch(result.stdout.toString());
+        if (!alive) return true;
+      } catch (error) {
+        // On tasklist failure, wait conservatively rather than swapping
+        // early.
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+    }
+    return false;
+  }
+}
 
 /// Appends to the log.
 class _Logger {
-  _Logger(this.path);
-
   final String path;
 
-  void i(String message) => _write('INFO', message);
+  _Logger(this.path);
 
   void e(String message) => _write('ERROR', message);
+
+  void i(String message) => _write('INFO', message);
 
   void _write(String level, String message) {
     try {

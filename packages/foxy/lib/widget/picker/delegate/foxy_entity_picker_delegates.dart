@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
@@ -145,15 +144,200 @@ import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/repository/zone_intro_music_repository.dart';
 import 'package:foxy/repository/zone_music_repository.dart';
-import 'package:foxy/widget/picker/foxy_entity_picker.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/theme/item_quality_color.dart';
+import 'package:foxy/widget/picker/foxy_entity_picker.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 
 class FoxyEntityPickerDelegates {
   static final instance = FoxyEntityPickerDelegates._();
 
-  FoxyEntityPickerDelegates._();
+  static FoxyEntityPickerDelegate<BriefAchievementEntity> get achievement =>
+      instance._achievement;
+
+  static FoxyEntityPickerDelegate<BriefAchievementCategoryEntity>
+  get achievementCategory => instance._achievementCategory;
+  static FoxyEntityPickerDelegate<BriefAreaTableEntity> get areaTable =>
+      instance._areaTable;
+
+  static FoxyEntityPickerDelegate<BriefBroadcastTextEntity> get broadcastText =>
+      instance._broadcastText;
+  static FoxyEntityPickerDelegate<BriefCharTitleEntity> get charTitle =>
+      instance._charTitle;
+
+  static FoxyEntityPickerDelegate<BriefCinematicSequenceEntity>
+  get cinematicSequence => instance._cinematicSequence;
+  static FoxyEntityPickerDelegate<BriefCreatureDisplayInfoEntity>
+  get creatureDisplayInfo => instance._creatureDisplayInfo;
+
+  static FoxyEntityPickerDelegate<BriefCreatureImmunityEntity>
+  get creatureImmunity => instance._creatureImmunity;
+  static FoxyEntityPickerDelegate<BriefCreatureLootTemplateEntity>
+  get creatureLoot => instance._creatureLoot;
+
+  static FoxyEntityPickerDelegate<BriefCreatureMovementInfoEntity>
+  get creatureMovementInfo => instance._creatureMovementInfo;
+  static FoxyEntityPickerDelegate<BriefCreatureSpellDataEntity>
+  get creatureSpellData => instance._creatureSpellData;
+
+  static FoxyEntityPickerDelegate<BriefCreatureTemplateEntity>
+  get creatureTemplate => instance._creatureTemplate;
+  static FoxyEntityPickerDelegate<BriefCurrencyCategoryEntity>
+  get currencyCategory => instance._currencyCategory;
+
+  static FoxyEntityPickerDelegate<BriefDbcEmoteEntity> get dbcEmote =>
+      instance._dbcEmote;
+  static FoxyEntityPickerDelegate<BriefDbcFactionEntity> get dbcFaction =>
+      instance._dbcFaction;
+
+  static FoxyEntityPickerDelegate<BriefDbcFactionTemplateEntity>
+  get dbcFactionTemplate => instance._dbcFactionTemplate;
+  static FoxyEntityPickerDelegate<BriefDestructibleModelDataEntity>
+  get destructibleModelData => instance._destructibleModelData;
+
+  static FoxyEntityPickerDelegate<BriefDisenchantLootTemplateEntity>
+  get disenchantLoot => instance._disenchantLoot;
+  static FoxyEntityPickerDelegate<BriefEmoteTextEntity> get emote =>
+      instance._emote;
+
+  static FoxyEntityPickerDelegate<BriefEmoteTextDataEntity> get emoteTextData =>
+      instance._emoteTextData;
+  static FoxyEntityPickerDelegate<BriefGameObjectArtKitEntity>
+  get gameObjectArtKit => instance._gameObjectArtKit;
+
+  static FoxyEntityPickerDelegate<BriefGameObjectDisplayInfoEntity>
+  get gameObjectDisplayInfo => instance._gameObjectDisplayInfo;
+  static FoxyEntityPickerDelegate<BriefGameObjectLootTemplateEntity>
+  get gameObjectLoot => instance._gameObjectLoot;
+
+  static FoxyEntityPickerDelegate<BriefGameObjectTemplateEntity>
+  get gameObjectTemplate => instance._gameObjectTemplate;
+  static FoxyEntityPickerDelegate<BriefGemPropertyEntity> get gemProperty =>
+      instance._gemProperty;
+
+  static FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> get glyphProperty =>
+      instance._glyphProperty;
+  static FoxyEntityPickerDelegate<BriefGossipMenuEntity> get gossipMenu =>
+      instance._gossipMenu;
+
+  static FoxyEntityPickerDelegate<BriefDbcItemEntity>
+  get handEquippableDbcItem => instance._handEquippableDbcItem;
+  static FoxyEntityPickerDelegate<BriefHolidayEntity> get holiday =>
+      instance._holiday;
+
+  static FoxyEntityPickerDelegate<BriefItemDisplayInfoEntity>
+  get itemDisplayInfo => instance._itemDisplayInfo;
+  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
+  get itemEnchantmentTemplate => instance._itemEnchantmentTemplate;
+
+  static FoxyEntityPickerDelegate<BriefItemExtendedCostEntity>
+  get itemExtendedCost => instance._itemExtendedCost;
+  static FoxyEntityPickerDelegate<BriefItemLimitCategoryEntity>
+  get itemLimitCategory => instance._itemLimitCategory;
+
+  static FoxyEntityPickerDelegate<BriefItemPurchaseGroupEntity>
+  get itemPurchaseGroup => instance._itemPurchaseGroup;
+  static FoxyEntityPickerDelegate<BriefItemRandomPropertiesEntity>
+  get itemRandomProperties => instance._itemRandomProperties;
+
+  static FoxyEntityPickerDelegate<BriefItemRandomSuffixEntity>
+  get itemRandomSuffix => instance._itemRandomSuffix;
+  static FoxyEntityPickerDelegate<BriefItemSetEntity> get itemSet =>
+      instance._itemSet;
+
+  static FoxyEntityPickerDelegate<BriefItemTemplateEntity> get itemTemplate =>
+      instance._itemTemplate;
+  static FoxyEntityPickerDelegate<BriefItemVisualsEntity> get itemVisuals =>
+      instance._itemVisuals;
+
+  static FoxyEntityPickerDelegate<BriefLightEntity> get light =>
+      instance._light;
+  static FoxyEntityPickerDelegate<BriefLiquidTypeEntity> get liquidType =>
+      instance._liquidType;
+
+  static FoxyEntityPickerDelegate<BriefLockEntity> get lock => instance._lock;
+  static FoxyEntityPickerDelegate<BriefMailTemplateEntity> get mailTemplate =>
+      instance._mailTemplate;
+
+  static FoxyEntityPickerDelegate<BriefMapInfoEntity> get map => instance._map;
+  static FoxyEntityPickerDelegate<BriefNpcTextEntity> get npcText =>
+      instance._npcText;
+
+  static FoxyEntityPickerDelegate<BriefPageTextEntity> get pageText =>
+      instance._pageText;
+  static FoxyEntityPickerDelegate<BriefPickpocketingLootTemplateEntity>
+  get pickpocketLoot => instance._pickpocketLoot;
+
+  static FoxyEntityPickerDelegate<BriefMapInfoEntity> get playerCreateMap =>
+      instance._playerCreateMap;
+  static FoxyEntityPickerDelegate<BriefPointOfInterestEntity>
+  get pointOfInterest => instance._pointOfInterest;
+
+  static FoxyEntityPickerDelegate<BriefQuestInfoEntity> get questInfo =>
+      instance._questInfo;
+  static FoxyEntityPickerDelegate<BriefQuestTemplateEntity> get questTemplate =>
+      instance._questTemplate;
+
+  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
+  get randomPropertyGroup => instance._randomPropertyGroup;
+  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
+  get randomSuffixGroup => instance._randomSuffixGroup;
+
+  static FoxyEntityPickerDelegate<BriefReferenceLootTemplateEntity>
+  get referenceLoot => instance._referenceLoot;
+  static FoxyEntityPickerDelegate<BriefScalingStatDistributionEntity>
+  get scalingStatDistribution => instance._scalingStatDistribution;
+
+  static FoxyEntityPickerDelegate<BriefSkillLineEntity> get skillLine =>
+      instance._skillLine;
+  static FoxyEntityPickerDelegate<BriefSkillLineCategoryEntity>
+  get skillLineCategory => instance._skillLineCategory;
+
+  static FoxyEntityPickerDelegate<BriefSkinningLootTemplateEntity>
+  get skinningLoot => instance._skinningLoot;
+  static FoxyEntityPickerDelegate<BriefSoundAmbienceEntity> get soundAmbience =>
+      instance._soundAmbience;
+
+  static FoxyEntityPickerDelegate<BriefSoundProviderPreferencesEntity>
+  get soundProviderPreferences => instance._soundProviderPreferences;
+  static FoxyEntityPickerDelegate<BriefSpellEntity> get spell =>
+      instance._spell;
+
+  static FoxyEntityPickerDelegate<BriefSpellDurationEntity> get spellDuration =>
+      instance._spellDuration;
+  static FoxyEntityPickerDelegate<BriefSpellFocusObjectEntity>
+  get spellFocusObject => instance._spellFocusObject;
+
+  static FoxyEntityPickerDelegate<BriefSpellIconEntity> get spellIcon =>
+      instance._spellIcon;
+  static FoxyEntityPickerDelegate<BriefSpellItemEnchantmentEntity>
+  get spellItemEnchantment => instance._spellItemEnchantment;
+
+  static FoxyEntityPickerDelegate<BriefSpellItemEnchantmentConditionEntity>
+  get spellItemEnchantmentCondition => instance._spellItemEnchantmentCondition;
+  static FoxyEntityPickerDelegate<BriefSpellRangeEntity> get spellRange =>
+      instance._spellRange;
+
+  static FoxyEntityPickerDelegate<BriefTalentEntity> get talent =>
+      instance._talent;
+  static FoxyEntityPickerDelegate<BriefTalentTabEntity> get talentTab =>
+      instance._talentTab;
+
+  static FoxyEntityPickerDelegate<BriefTaxiPathEntity> get taxiPath =>
+      instance._taxiPath;
+  static FoxyEntityPickerDelegate<BriefTotemCategoryEntity> get totemCategory =>
+      instance._totemCategory;
+
+  static FoxyEntityPickerDelegate<BriefVehicleEntity> get vehicle =>
+      instance._vehicle;
+  static FoxyEntityPickerDelegate<BriefWaypointDataEntity> get waypointData =>
+      instance._waypointData;
+
+  static FoxyEntityPickerDelegate<BriefZoneIntroMusicEntity>
+  get zoneIntroMusic => instance._zoneIntroMusic;
+  static FoxyEntityPickerDelegate<BriefZoneMusicEntity> get zoneMusic =>
+      instance._zoneMusic;
 
   late final _currencyCategory =
       FoxyEntityPickerDelegate<BriefCurrencyCategoryEntity>(
@@ -192,9 +376,6 @@ class FoxyEntityPickerDelegates {
               filter: CurrencyCategoryFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCurrencyCategoryEntity>
-  get currencyCategory => instance._currencyCategory;
-
   late final _achievement = FoxyEntityPickerDelegate<BriefAchievementEntity>(
     title: '成就',
     errorLabel: '搜索 Achievement.dbc 成就失败',
@@ -231,8 +412,6 @@ class FoxyEntityPickerDelegates {
           filter: AchievementFilter(id: values[0], title: values[1]),
         ),
   );
-  static FoxyEntityPickerDelegate<BriefAchievementEntity> get achievement =>
-      instance._achievement;
 
   late final _handEquippableDbcItem =
       FoxyEntityPickerDelegate<BriefDbcItemEntity>(
@@ -270,9 +449,6 @@ class FoxyEntityPickerDelegates {
           filter: DbcItemFilter(id: v[0], handEquippableOnly: true),
         ),
       );
-  static FoxyEntityPickerDelegate<BriefDbcItemEntity>
-  get handEquippableDbcItem => instance._handEquippableDbcItem;
-
   late final _achievementCategory =
       FoxyEntityPickerDelegate<BriefAchievementCategoryEntity>(
         title: '成就分类',
@@ -311,8 +487,6 @@ class FoxyEntityPickerDelegates {
               filter: AchievementCategoryFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefAchievementCategoryEntity>
-  get achievementCategory => instance._achievementCategory;
 
   late final _referenceLootRepository = GetIt.instance
       .get<ReferenceLootTemplateRepository>();
@@ -352,9 +526,6 @@ class FoxyEntityPickerDelegates {
           filter: ReferenceLootTemplateFilter(entry: v[0]),
         ),
       );
-  static FoxyEntityPickerDelegate<BriefReferenceLootTemplateEntity>
-  get referenceLoot => instance._referenceLoot;
-
   late final _dbcEmote = FoxyEntityPickerDelegate<BriefDbcEmoteEntity>(
     title: '生物表情',
     errorLabel: '搜索生物表情失败',
@@ -388,8 +559,6 @@ class FoxyEntityPickerDelegates {
       filter: DbcEmoteFilter(id: v[0], command: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefDbcEmoteEntity> get dbcEmote =>
-      instance._dbcEmote;
 
   late final _emoteTextData =
       FoxyEntityPickerDelegate<BriefEmoteTextDataEntity>(
@@ -422,9 +591,6 @@ class FoxyEntityPickerDelegates {
               filter: EmoteTextDataFilter(id: v[0], text: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefEmoteTextDataEntity> get emoteTextData =>
-      instance._emoteTextData;
-
   late final _skillLine = FoxyEntityPickerDelegate<BriefSkillLineEntity>(
     title: '专业技能',
     errorLabel: '搜索专业技能失败',
@@ -459,8 +625,6 @@ class FoxyEntityPickerDelegates {
       filter: SkillLineFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefSkillLineEntity> get skillLine =>
-      instance._skillLine;
 
   late final _skillLineCategory =
       FoxyEntityPickerDelegate<BriefSkillLineCategoryEntity>(
@@ -494,9 +658,6 @@ class FoxyEntityPickerDelegates {
               filter: SkillLineCategoryFilter(id: v[0], name: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefSkillLineCategoryEntity>
-  get skillLineCategory => instance._skillLineCategory;
-
   late final _creatureDisplayInfo =
       FoxyEntityPickerDelegate<BriefCreatureDisplayInfoEntity>(
         title: '生物显示信息',
@@ -534,8 +695,6 @@ class FoxyEntityPickerDelegates {
               filter: CreatureDisplayInfoFilter(id: v[0], modelName: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCreatureDisplayInfoEntity>
-  get creatureDisplayInfo => instance._creatureDisplayInfo;
 
   late final _waypointData = FoxyEntityPickerDelegate<BriefWaypointDataEntity>(
     title: '路径',
@@ -562,9 +721,6 @@ class FoxyEntityPickerDelegates {
         .get<WaypointDataRepository>()
         .countWaypointDatas(filter: WaypointDataFilter(id: v[0])),
   );
-  static FoxyEntityPickerDelegate<BriefWaypointDataEntity> get waypointData =>
-      instance._waypointData;
-
   late final _areaTable = FoxyEntityPickerDelegate<BriefAreaTableEntity>(
     title: '区域',
     errorLabel: '搜索区域失败',
@@ -598,8 +754,6 @@ class FoxyEntityPickerDelegates {
       filter: AreaTableFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefAreaTableEntity> get areaTable =>
-      instance._areaTable;
 
   late final _soundProviderPreferences =
       FoxyEntityPickerDelegate<BriefSoundProviderPreferencesEntity>(
@@ -647,9 +801,6 @@ class FoxyEntityPickerDelegates {
               ),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefSoundProviderPreferencesEntity>
-  get soundProviderPreferences => instance._soundProviderPreferences;
-
   late final _soundAmbience =
       FoxyEntityPickerDelegate<BriefSoundAmbienceEntity>(
         title: '环境声音',
@@ -683,8 +834,6 @@ class FoxyEntityPickerDelegates {
             .get<SoundAmbienceRepository>()
             .countSoundAmbiences(filter: SoundAmbienceFilter(id: values[0])),
       );
-  static FoxyEntityPickerDelegate<BriefSoundAmbienceEntity> get soundAmbience =>
-      instance._soundAmbience;
 
   late final _zoneMusic = FoxyEntityPickerDelegate<BriefZoneMusicEntity>(
     title: '区域音乐',
@@ -725,9 +874,6 @@ class FoxyEntityPickerDelegates {
           filter: ZoneMusicFilter(id: values[0], name: values[1]),
         ),
   );
-  static FoxyEntityPickerDelegate<BriefZoneMusicEntity> get zoneMusic =>
-      instance._zoneMusic;
-
   late final _zoneIntroMusic =
       FoxyEntityPickerDelegate<BriefZoneIntroMusicEntity>(
         title: '区域进入音乐',
@@ -764,8 +910,6 @@ class FoxyEntityPickerDelegates {
               filter: ZoneIntroMusicFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefZoneIntroMusicEntity>
-  get zoneIntroMusic => instance._zoneIntroMusic;
 
   late final _liquidType = FoxyEntityPickerDelegate<BriefLiquidTypeEntity>(
     title: '液体类型',
@@ -806,9 +950,6 @@ class FoxyEntityPickerDelegates {
           filter: LiquidTypeFilter(id: values[0], name: values[1]),
         ),
   );
-  static FoxyEntityPickerDelegate<BriefLiquidTypeEntity> get liquidType =>
-      instance._liquidType;
-
   late final _light = FoxyEntityPickerDelegate<BriefLightEntity>(
     title: '光照',
     errorLabel: '搜索 Light.dbc 失败',
@@ -850,8 +991,6 @@ class FoxyEntityPickerDelegates {
       filter: LightFilter(id: values[0], continentId: values[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefLightEntity> get light =>
-      instance._light;
 
   late final _broadcastText =
       FoxyEntityPickerDelegate<BriefBroadcastTextEntity>(
@@ -889,9 +1028,6 @@ class FoxyEntityPickerDelegates {
               filter: BroadcastTextFilter(id: v[0], text: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefBroadcastTextEntity> get broadcastText =>
-      instance._broadcastText;
-
   late final _charTitle = FoxyEntityPickerDelegate<BriefCharTitleEntity>(
     title: '称号',
     errorLabel: '搜索称号失败',
@@ -920,8 +1056,6 @@ class FoxyEntityPickerDelegates {
       filter: CharTitleFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefCharTitleEntity> get charTitle =>
-      instance._charTitle;
 
   late final _creatureSpellData =
       FoxyEntityPickerDelegate<BriefCreatureSpellDataEntity>(
@@ -971,9 +1105,6 @@ class FoxyEntityPickerDelegates {
               filter: CreatureSpellDataFilter(id: v[0], spell: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCreatureSpellDataEntity>
-  get creatureSpellData => instance._creatureSpellData;
-
   late final _creatureImmunity =
       FoxyEntityPickerDelegate<BriefCreatureImmunityEntity>(
         title: '生物免疫配置',
@@ -1022,8 +1153,6 @@ class FoxyEntityPickerDelegates {
               filter: CreatureImmunityFilter(id: v[0], comment: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCreatureImmunityEntity>
-  get creatureImmunity => instance._creatureImmunity;
 
   late final _creatureMovementInfo =
       FoxyEntityPickerDelegate<BriefCreatureMovementInfoEntity>(
@@ -1055,9 +1184,6 @@ class FoxyEntityPickerDelegates {
               filter: CreatureMovementInfoFilter(id: v[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCreatureMovementInfoEntity>
-  get creatureMovementInfo => instance._creatureMovementInfo;
-
   late final _creatureTemplate =
       FoxyEntityPickerDelegate<BriefCreatureTemplateEntity>(
         title: '生物模板',
@@ -1096,8 +1222,6 @@ class FoxyEntityPickerDelegates {
               filter: CreatureTemplateFilter(entry: v[0], name: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCreatureTemplateEntity>
-  get creatureTemplate => instance._creatureTemplate;
 
   late final _dbcFaction = FoxyEntityPickerDelegate<BriefDbcFactionEntity>(
     title: '阵营',
@@ -1131,9 +1255,6 @@ class FoxyEntityPickerDelegates {
       filter: DbcFactionFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefDbcFactionEntity> get dbcFaction =>
-      instance._dbcFaction;
-
   late final _dbcFactionTemplate =
       FoxyEntityPickerDelegate<BriefDbcFactionTemplateEntity>(
         title: '阵营模板',
@@ -1186,8 +1307,6 @@ class FoxyEntityPickerDelegates {
               ),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefDbcFactionTemplateEntity>
-  get dbcFactionTemplate => instance._dbcFactionTemplate;
 
   late final _emote = FoxyEntityPickerDelegate<BriefEmoteTextEntity>(
     title: '表情',
@@ -1222,9 +1341,6 @@ class FoxyEntityPickerDelegates {
       filter: EmoteTextFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefEmoteTextEntity> get emote =>
-      instance._emote;
-
   late final _gossipMenu = FoxyEntityPickerDelegate<BriefGossipMenuEntity>(
     title: '对话菜单',
     errorLabel: '搜索对话菜单失败',
@@ -1258,8 +1374,6 @@ class FoxyEntityPickerDelegates {
       filter: GossipMenuFilter(menuId: v[0], text: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefGossipMenuEntity> get gossipMenu =>
-      instance._gossipMenu;
 
   late final _pointOfInterest =
       FoxyEntityPickerDelegate<BriefPointOfInterestEntity>(
@@ -1293,9 +1407,6 @@ class FoxyEntityPickerDelegates {
               filter: PointOfInterestFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefPointOfInterestEntity>
-  get pointOfInterest => instance._pointOfInterest;
-
   late final _cinematicSequence =
       FoxyEntityPickerDelegate<BriefCinematicSequenceEntity>(
         title: '过场动画序列',
@@ -1330,8 +1441,6 @@ class FoxyEntityPickerDelegates {
               filter: CinematicSequenceFilter(id: values[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCinematicSequenceEntity>
-  get cinematicSequence => instance._cinematicSequence;
 
   late final _destructibleModelData =
       FoxyEntityPickerDelegate<BriefDestructibleModelDataEntity>(
@@ -1373,9 +1482,6 @@ class FoxyEntityPickerDelegates {
               filter: DestructibleModelDataFilter(id: values[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefDestructibleModelDataEntity>
-  get destructibleModelData => instance._destructibleModelData;
-
   late final _gameObjectArtKit =
       FoxyEntityPickerDelegate<BriefGameObjectArtKitEntity>(
         title: '游戏对象 ArtKit',
@@ -1412,8 +1518,6 @@ class FoxyEntityPickerDelegates {
               filter: GameObjectArtKitFilter(id: values[0], path: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefGameObjectArtKitEntity>
-  get gameObjectArtKit => instance._gameObjectArtKit;
 
   late final _gameObjectDisplayInfo =
       FoxyEntityPickerDelegate<BriefGameObjectDisplayInfoEntity>(
@@ -1453,9 +1557,6 @@ class FoxyEntityPickerDelegates {
               ),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefGameObjectDisplayInfoEntity>
-  get gameObjectDisplayInfo => instance._gameObjectDisplayInfo;
-
   late final _spellFocusObject =
       FoxyEntityPickerDelegate<BriefSpellFocusObjectEntity>(
         title: '法术焦点对象',
@@ -1488,8 +1589,6 @@ class FoxyEntityPickerDelegates {
               filter: SpellFocusObjectFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefSpellFocusObjectEntity>
-  get spellFocusObject => instance._spellFocusObject;
 
   late final _taxiPath = FoxyEntityPickerDelegate<BriefTaxiPathEntity>(
     title: '飞行路径',
@@ -1524,9 +1623,6 @@ class FoxyEntityPickerDelegates {
       filter: TaxiPathFilter(id: values[0]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefTaxiPathEntity> get taxiPath =>
-      instance._taxiPath;
-
   late final _gameObjectTemplate =
       FoxyEntityPickerDelegate<BriefGameObjectTemplateEntity>(
         title: '游戏对象模板',
@@ -1564,8 +1660,6 @@ class FoxyEntityPickerDelegates {
               filter: GameObjectTemplateFilter(entry: v[0], name: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefGameObjectTemplateEntity>
-  get gameObjectTemplate => instance._gameObjectTemplate;
 
   late final _itemDisplayInfo =
       FoxyEntityPickerDelegate<BriefItemDisplayInfoEntity>(
@@ -1606,9 +1700,6 @@ class FoxyEntityPickerDelegates {
               filter: ItemDisplayInfoFilter(id: v[0], name: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefItemDisplayInfoEntity>
-  get itemDisplayInfo => instance._itemDisplayInfo;
-
   late final _itemEnchantmentTemplate =
       FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
         title: '附魔',
@@ -1641,22 +1732,15 @@ class FoxyEntityPickerDelegates {
               filter: ItemEnchantmentTemplateFilter(entry: v[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
-  get itemEnchantmentTemplate => instance._itemEnchantmentTemplate;
 
   late final _randomPropertyGroup = _itemEnchantmentGroupDelegate(
     title: '随机属性组',
     kind: ItemEnchantmentKind.randomProperty,
   );
-  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
-  get randomPropertyGroup => instance._randomPropertyGroup;
-
   late final _randomSuffixGroup = _itemEnchantmentGroupDelegate(
     title: '随机后缀组',
     kind: ItemEnchantmentKind.randomSuffix,
   );
-  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
-  get randomSuffixGroup => instance._randomSuffixGroup;
 
   late final _itemSet = FoxyEntityPickerDelegate<BriefItemSetEntity>(
     title: '物品套装',
@@ -1686,9 +1770,6 @@ class FoxyEntityPickerDelegates {
       filter: ItemSetFilter(id: values[0], name: values[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefItemSetEntity> get itemSet =>
-      instance._itemSet;
-
   late final _disenchantLoot =
       FoxyEntityPickerDelegate<BriefDisenchantLootTemplateEntity>(
         title: '分解掉落模板',
@@ -1723,8 +1804,6 @@ class FoxyEntityPickerDelegates {
           filter: DisenchantLootTemplateFilter(entry: values[0]),
         ),
       );
-  static FoxyEntityPickerDelegate<BriefDisenchantLootTemplateEntity>
-  get disenchantLoot => instance._disenchantLoot;
 
   late final _gemProperty = FoxyEntityPickerDelegate<BriefGemPropertyEntity>(
     title: '宝石属性',
@@ -1753,9 +1832,6 @@ class FoxyEntityPickerDelegates {
         .get<GemPropertyRepository>()
         .countGemProperties(filter: GemPropertyFilter(id: values[0])),
   );
-  static FoxyEntityPickerDelegate<BriefGemPropertyEntity> get gemProperty =>
-      instance._gemProperty;
-
   late final _glyphProperty =
       FoxyEntityPickerDelegate<BriefGlyphPropertyEntity>(
         title: '雕文属性',
@@ -1799,8 +1875,6 @@ class FoxyEntityPickerDelegates {
             .get<GlyphPropertyRepository>()
             .countGlyphProperties(filter: GlyphPropertyFilter(id: v[0])),
       );
-  static FoxyEntityPickerDelegate<BriefGlyphPropertyEntity> get glyphProperty =>
-      instance._glyphProperty;
 
   late final _itemVisuals = FoxyEntityPickerDelegate<BriefItemVisualsEntity>(
     title: '物品视觉',
@@ -1843,9 +1917,6 @@ class FoxyEntityPickerDelegates {
         .get<ItemVisualsRepository>()
         .countItemVisuals(filter: ItemVisualsFilter(id: values[0])),
   );
-  static FoxyEntityPickerDelegate<BriefItemVisualsEntity> get itemVisuals =>
-      instance._itemVisuals;
-
   late final _spellItemEnchantmentCondition =
       FoxyEntityPickerDelegate<BriefSpellItemEnchantmentConditionEntity>(
         title: '附魔条件',
@@ -1871,8 +1942,6 @@ class FoxyEntityPickerDelegates {
               filter: SpellItemEnchantmentConditionFilter(id: values[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefSpellItemEnchantmentConditionEntity>
-  get spellItemEnchantmentCondition => instance._spellItemEnchantmentCondition;
 
   late final _spellItemEnchantment =
       FoxyEntityPickerDelegate<BriefSpellItemEnchantmentEntity>(
@@ -1912,9 +1981,6 @@ class FoxyEntityPickerDelegates {
               ),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefSpellItemEnchantmentEntity>
-  get spellItemEnchantment => instance._spellItemEnchantment;
-
   late final _totemCategory =
       FoxyEntityPickerDelegate<BriefTotemCategoryEntity>(
         title: '图腾类别',
@@ -1946,8 +2012,6 @@ class FoxyEntityPickerDelegates {
               filter: TotemCategoryFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefTotemCategoryEntity> get totemCategory =>
-      instance._totemCategory;
 
   late final _itemLimitCategory =
       FoxyEntityPickerDelegate<BriefItemLimitCategoryEntity>(
@@ -1986,9 +2050,6 @@ class FoxyEntityPickerDelegates {
               filter: ItemLimitCategoryFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefItemLimitCategoryEntity>
-  get itemLimitCategory => instance._itemLimitCategory;
-
   late final _holiday = FoxyEntityPickerDelegate<BriefHolidayEntity>(
     title: '节日',
     errorLabel: '搜索节日失败',
@@ -2019,8 +2080,6 @@ class FoxyEntityPickerDelegates {
       filter: HolidayFilter(id: values[0]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefHolidayEntity> get holiday =>
-      instance._holiday;
 
   late final _itemExtendedCost =
       FoxyEntityPickerDelegate<BriefItemExtendedCostEntity>(
@@ -2060,9 +2119,6 @@ class FoxyEntityPickerDelegates {
             .get<ItemExtendedCostRepository>()
             .countItemExtendedCosts(filter: ItemExtendedCostFilter(id: v[0])),
       );
-  static FoxyEntityPickerDelegate<BriefItemExtendedCostEntity>
-  get itemExtendedCost => instance._itemExtendedCost;
-
   late final _itemPurchaseGroup =
       FoxyEntityPickerDelegate<BriefItemPurchaseGroupEntity>(
         title: '选择物品购买组',
@@ -2096,8 +2152,6 @@ class FoxyEntityPickerDelegates {
               filter: ItemPurchaseGroupFilter(id: values[0], name: values[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefItemPurchaseGroupEntity>
-  get itemPurchaseGroup => instance._itemPurchaseGroup;
 
   late final _itemRandomProperties =
       FoxyEntityPickerDelegate<BriefItemRandomPropertiesEntity>(
@@ -2132,9 +2186,6 @@ class FoxyEntityPickerDelegates {
               filter: ItemRandomPropertiesFilter(id: v[0], name: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefItemRandomPropertiesEntity>
-  get itemRandomProperties => instance._itemRandomProperties;
-
   late final _itemRandomSuffix =
       FoxyEntityPickerDelegate<BriefItemRandomSuffixEntity>(
         title: '随机后缀',
@@ -2171,8 +2222,6 @@ class FoxyEntityPickerDelegates {
               filter: ItemRandomSuffixFilter(id: v[0], name: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefItemRandomSuffixEntity>
-  get itemRandomSuffix => instance._itemRandomSuffix;
 
   late final _itemTemplate = FoxyEntityPickerDelegate<BriefItemTemplateEntity>(
     title: '物品',
@@ -2217,9 +2266,6 @@ class FoxyEntityPickerDelegates {
           filter: ItemTemplateFilter(entry: v[0], name: v[1]),
         ),
   );
-  static FoxyEntityPickerDelegate<BriefItemTemplateEntity> get itemTemplate =>
-      instance._itemTemplate;
-
   late final _lock = FoxyEntityPickerDelegate<BriefLockEntity>(
     title: '锁',
     errorLabel: '搜索锁失败',
@@ -2254,7 +2300,6 @@ class FoxyEntityPickerDelegates {
       filter: LockFilter(id: v[0]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefLockEntity> get lock => instance._lock;
 
   late final _creatureLoot =
       FoxyEntityPickerDelegate<BriefCreatureLootTemplateEntity>(
@@ -2292,9 +2337,6 @@ class FoxyEntityPickerDelegates {
               filter: CreatureLootTemplateFilter(entry: v[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefCreatureLootTemplateEntity>
-  get creatureLoot => instance._creatureLoot;
-
   late final _pickpocketLoot =
       FoxyEntityPickerDelegate<BriefPickpocketingLootTemplateEntity>(
         title: '偷窃掉落',
@@ -2332,8 +2374,6 @@ class FoxyEntityPickerDelegates {
               filter: PickpocketingLootTemplateFilter(entry: v[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefPickpocketingLootTemplateEntity>
-  get pickpocketLoot => instance._pickpocketLoot;
 
   late final _skinningLoot =
       FoxyEntityPickerDelegate<BriefSkinningLootTemplateEntity>(
@@ -2371,9 +2411,6 @@ class FoxyEntityPickerDelegates {
               filter: SkinningLootTemplateFilter(entry: v[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefSkinningLootTemplateEntity>
-  get skinningLoot => instance._skinningLoot;
-
   late final _gameObjectLoot =
       FoxyEntityPickerDelegate<BriefGameObjectLootTemplateEntity>(
         title: '游戏对象掉落模板',
@@ -2410,8 +2447,6 @@ class FoxyEntityPickerDelegates {
               filter: GameObjectLootTemplateFilter(entry: v[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefGameObjectLootTemplateEntity>
-  get gameObjectLoot => instance._gameObjectLoot;
 
   late final _mailTemplate = FoxyEntityPickerDelegate<BriefMailTemplateEntity>(
     title: '邮件模板',
@@ -2446,9 +2481,6 @@ class FoxyEntityPickerDelegates {
           filter: MailTemplateFilter(id: v[0], subject: v[1]),
         ),
   );
-  static FoxyEntityPickerDelegate<BriefMailTemplateEntity> get mailTemplate =>
-      instance._mailTemplate;
-
   late final _map = FoxyEntityPickerDelegate<BriefMapInfoEntity>(
     title: '地图',
     errorLabel: '搜索地图失败',
@@ -2487,7 +2519,6 @@ class FoxyEntityPickerDelegates {
       filter: MapInfoFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefMapInfoEntity> get map => instance._map;
 
   late final _playerCreateMap = FoxyEntityPickerDelegate<BriefMapInfoEntity>(
     title: '出生地图',
@@ -2524,9 +2555,6 @@ class FoxyEntityPickerDelegates {
       nonInstanceableOnly: true,
     ),
   );
-  static FoxyEntityPickerDelegate<BriefMapInfoEntity> get playerCreateMap =>
-      instance._playerCreateMap;
-
   late final _npcText = FoxyEntityPickerDelegate<BriefNpcTextEntity>(
     title: 'NPC 文本',
     errorLabel: '搜索NPC文本失败',
@@ -2555,8 +2583,6 @@ class FoxyEntityPickerDelegates {
       filter: NpcTextFilter(id: v[0], text: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefNpcTextEntity> get npcText =>
-      instance._npcText;
 
   late final _pageText = FoxyEntityPickerDelegate<BriefPageTextEntity>(
     title: '页面文本',
@@ -2583,9 +2609,6 @@ class FoxyEntityPickerDelegates {
       filter: PageTextFilter(id: v[0], text: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefPageTextEntity> get pageText =>
-      instance._pageText;
-
   late final _questInfo = FoxyEntityPickerDelegate<BriefQuestInfoEntity>(
     title: '任务信息',
     errorLabel: '搜索任务信息失败',
@@ -2614,8 +2637,6 @@ class FoxyEntityPickerDelegates {
       filter: QuestInfoFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefQuestInfoEntity> get questInfo =>
-      instance._questInfo;
 
   late final _questTemplate =
       FoxyEntityPickerDelegate<BriefQuestTemplateEntity>(
@@ -2648,9 +2669,6 @@ class FoxyEntityPickerDelegates {
               filter: QuestTemplateFilter(id: v[0], title: v[1]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefQuestTemplateEntity> get questTemplate =>
-      instance._questTemplate;
-
   late final _scalingStatDistribution =
       FoxyEntityPickerDelegate<BriefScalingStatDistributionEntity>(
         title: '属性缩放分布',
@@ -2680,8 +2698,6 @@ class FoxyEntityPickerDelegates {
               filter: ScalingStatDistributionFilter(id: v[0]),
             ),
       );
-  static FoxyEntityPickerDelegate<BriefScalingStatDistributionEntity>
-  get scalingStatDistribution => instance._scalingStatDistribution;
 
   late final _spellDuration =
       FoxyEntityPickerDelegate<BriefSpellDurationEntity>(
@@ -2720,9 +2736,6 @@ class FoxyEntityPickerDelegates {
             .get<SpellDurationRepository>()
             .countSpellDurations(filter: SpellDurationFilter(id: v[0])),
       );
-  static FoxyEntityPickerDelegate<BriefSpellDurationEntity> get spellDuration =>
-      instance._spellDuration;
-
   late final _spellIcon = FoxyEntityPickerDelegate<BriefSpellIconEntity>(
     title: '技能图标',
     errorLabel: '搜索图标失败',
@@ -2754,8 +2767,6 @@ class FoxyEntityPickerDelegates {
       filter: SpellIconFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefSpellIconEntity> get spellIcon =>
-      instance._spellIcon;
 
   late final _spell = FoxyEntityPickerDelegate<BriefSpellEntity>(
     title: '技能',
@@ -2801,9 +2812,6 @@ class FoxyEntityPickerDelegates {
       return repo.countSpells(filter: filter);
     },
   );
-  static FoxyEntityPickerDelegate<BriefSpellEntity> get spell =>
-      instance._spell;
-
   late final _talent = FoxyEntityPickerDelegate<BriefTalentEntity>(
     title: '天赋',
     errorLabel: '搜索 Talent.dbc 天赋失败',
@@ -2855,8 +2863,6 @@ class FoxyEntityPickerDelegates {
       filter: TalentFilter(id: values[0], spell: values[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefTalentEntity> get talent =>
-      instance._talent;
 
   late final _talentTab = FoxyEntityPickerDelegate<BriefTalentTabEntity>(
     title: '天赋页',
@@ -2903,9 +2909,6 @@ class FoxyEntityPickerDelegates {
           filter: TalentTabFilter(id: values[0], name: values[1]),
         ),
   );
-  static FoxyEntityPickerDelegate<BriefTalentTabEntity> get talentTab =>
-      instance._talentTab;
-
   late final _spellRange = FoxyEntityPickerDelegate<BriefSpellRangeEntity>(
     title: '技能射程',
     errorLabel: '搜索射程失败',
@@ -2944,8 +2947,6 @@ class FoxyEntityPickerDelegates {
       filter: SpellRangeFilter(id: v[0], name: v[1]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefSpellRangeEntity> get spellRange =>
-      instance._spellRange;
 
   late final _vehicle = FoxyEntityPickerDelegate<BriefVehicleEntity>(
     title: '载具',
@@ -2977,8 +2978,7 @@ class FoxyEntityPickerDelegates {
       filter: VehicleFilter(id: v[0]),
     ),
   );
-  static FoxyEntityPickerDelegate<BriefVehicleEntity> get vehicle =>
-      instance._vehicle;
+  FoxyEntityPickerDelegates._();
 
   static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
   _itemEnchantmentGroupDelegate({

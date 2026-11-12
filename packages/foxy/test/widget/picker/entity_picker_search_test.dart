@@ -56,6 +56,16 @@ void main() {
   });
 }
 
+void _completeSearch(
+  _RecordingDelegate rec,
+  int index, {
+  required List<int> rows,
+  required int total,
+}) {
+  rec.pendingFetches[index].complete(rows);
+  rec.pendingCounts[index].complete(total);
+}
+
 Future<void> _openPicker(WidgetTester tester, _RecordingDelegate rec) async {
   await tester.pumpWidget(
     ShadApp(
@@ -70,16 +80,6 @@ Future<void> _openPicker(WidgetTester tester, _RecordingDelegate rec) async {
   await tester.pump();
   await tester.tap(find.byIcon(LucideIcons.search));
   await tester.pumpAndSettle();
-}
-
-void _completeSearch(
-  _RecordingDelegate rec,
-  int index, {
-  required List<int> rows,
-  required int total,
-}) {
-  rec.pendingFetches[index].complete(rows);
-  rec.pendingCounts[index].complete(total);
 }
 
 /// Delegate whose list/count queries each hand back a [Completer], so a test

@@ -1,14 +1,14 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/emote_text_list_view_model.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';

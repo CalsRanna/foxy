@@ -1,8 +1,8 @@
 import 'package:foxy/entity/reference_loot_template_entity.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/database/parse_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'reference_loot_template_repository.g.dart';
@@ -64,6 +64,42 @@ class ReferenceLootTemplateRepository
     return ReferenceLootTemplateEntity(entry: entry);
   }
 
+  Future<List<BriefReferenceLootTemplateEntity>> getBriefLootTemplates(
+    int entry, {
+    int page = 1,
+  }) async {
+    var builder = laconic.table('$_table as lt');
+    final fields = <String>[
+      ..._briefFields('lt'),
+      'it.name as itemName',
+      if (localeEnabled) 'itl.Name as itemLocaleName',
+      'it.Quality as itemQuality',
+      'didi.InventoryIcon0 as itemIcon',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'item_template as it',
+      (join) => join.on('lt.Item', 'it.entry'),
+    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale as itl',
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
+      );
+    }
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info as didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = builder.where('lt.Entry', entry);
+    builder = builder.orderBy('lt.Item');
+    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefReferenceLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
   @override
   Future<List<BriefReferenceLootTemplateEntity>>
   getBriefReferenceLootTemplates({
@@ -97,42 +133,6 @@ class ReferenceLootTemplateRepository
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('lt.Entry').orderBy('lt.Item');
     builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefReferenceLootTemplateEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<BriefReferenceLootTemplateEntity>> getBriefLootTemplates(
-    int entry, {
-    int page = 1,
-  }) async {
-    var builder = laconic.table('$_table as lt');
-    final fields = <String>[
-      ..._briefFields('lt'),
-      'it.name as itemName',
-      if (localeEnabled) 'itl.Name as itemLocaleName',
-      'it.Quality as itemQuality',
-      'didi.InventoryIcon0 as itemIcon',
-    ];
-    builder = builder.select(fields);
-    builder = builder.leftJoin(
-      'item_template as it',
-      (join) => join.on('lt.Item', 'it.entry'),
-    );
-    if (localeEnabled) {
-      builder = builder.leftJoin(
-        'item_template_locale as itl',
-        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
-      );
-    }
-    builder = builder.leftJoin(
-      'foxy.dbc_item_display_info as didi',
-      (join) => join.on('it.displayid', 'didi.ID'),
-    );
-    builder = builder.where('lt.Entry', entry);
-    builder = builder.orderBy('lt.Item');
-    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     var results = await builder.get();
     return results
         .map((e) => BriefReferenceLootTemplateEntity.fromJson(e.toMap()))

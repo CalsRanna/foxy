@@ -5,19 +5,19 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
-import 'package:foxy/use_case/activity_log/activity_log_service.dart';
-import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';
+import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/view_model/condition_list_view_model.dart';
-import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/more_read_view_model.dart';
+import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
 
 void main() {
@@ -162,11 +162,6 @@ final class _ConditionRepository extends ConditionRepository {
     return 0;
   }
 
-  // The generated destroy() fetches the record for the activity-log name
-  // before deleting; the activity log is a no-op in this test.
-  @override
-  Future<ConditionEntity?> getCondition(ConditionKey key) async => null;
-
   @override
   Future<void> destroyCondition(ConditionKey key) async {
     if (!destroyStarted.isCompleted) destroyStarted.complete();
@@ -181,6 +176,11 @@ final class _ConditionRepository extends ConditionRepository {
     listFilter = filter;
     return const [];
   }
+
+  // The generated destroy() fetches the record for the activity-log name
+  // before deleting; the activity log is a no-op in this test.
+  @override
+  Future<ConditionEntity?> getCondition(ConditionKey key) async => null;
 }
 
 final class _FeatureRepository extends FeatureRepository {

@@ -3,235 +3,11 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy_game_file/foxy_game_file.dart';
-import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/dbc/dbc_row_order.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-
-/// DbcExportWorker helper functions.
-abstract final class DbcExportWorker {
-  /// Writes DBC files for [definitions] into [outputDirectory].
-  ///
-  /// Shared by the plain DBC-export worker and the MPQ-patch worker (which
-  /// writes into a staging directory first). Per-table isolation mirrors the
-  /// import worker: one failing table records an error and the others
-  /// continue. Empty tables are skipped without producing a file.
-  static Future<DbcExportSummary> writeFiles({
-    required List<DbcDefinition> definitions,
-    required DbcExportRowLoader loadRows,
-    required String outputDirectory,
-    required bool Function() isCancelled,
-    void Function(
-      String fileName,
-      int completedFiles,
-      int totalFiles,
-      int processedRows,
-      int? totalRows,
-    )?
-    onProgress,
-  }) async {
-    final directory = Directory(outputDirectory);
-    if (!await directory.exists()) {
-      throw FileSystemException(
-        'output directory does not exist',
-        outputDirectory,
-      );
-    }
-
-    var completed = 0;
-    var skipped = 0;
-    final errors = <Map<String, String?>>[];
-
-    for (var index = 0; index < definitions.length; index++) {
-      if (isCancelled()) break;
-      final definition = definitions[index];
-      var processedRows = 0;
-
-      try {
-        final rows = await loadRows(definition.tableName);
-        if (isCancelled()) break;
-        processedRows = rows.length;
-        if (rows.isEmpty) {
-          skipped++;
-        } else {
-          await DbcFileWriter().write(
-            schema: definition.schema,
-            rows: rows,
-            outputDirectory: outputDirectory,
-          );
-          completed++;
-        }
-      } catch (error) {
-        errors.add(
-          _workerError(
-            tableName: definition.tableName,
-            fileName: definition.fileName,
-            stage: 'writing',
-            message: error.toString(),
-          ),
-        );
-      }
-
-      onProgress?.call(
-        definition.fileName,
-        index + 1,
-        definitions.length,
-        processedRows,
-        processedRows,
-      );
-    }
-    return DbcExportSummary(
-      completed: completed,
-      skipped: skipped,
-      errors: errors,
-    );
-  }
-
-  /// SELECT used to load one DBC table for export, in the original DBC file
-  /// order when [hasRowOrder]: imported rows by their stored file position,
-  /// app-created rows (NULL) appended last in ID order. Order-sensitive DBCs
-  /// such as Talent.dbc rely on this — the 3.3.5 client derives the
-  /// talent-tree layout from the file row order. Legacy tables fall back to
-  /// the historical unordered scan (InnoDB primary-key order).
-  static String selectSql(String tableName, {required bool hasRowOrder}) {
-    final orderBy = hasRowOrder
-        ? ' order by (${DbcRowOrder.column} is null) asc, '
-              '${DbcRowOrder.column} asc, `ID` asc'
-        : '';
-    return 'select * from foxy.$tableName$orderBy';
-  }
-
-  /// Whether [tableName] carries the hidden row-order column (see
-  /// [DbcRowOrder.column]); tables imported before the column existed do not
-  /// have it.
-  static Future<bool> tableHasRowOrderColumn(
-    Laconic laconic,
-    String tableName,
-  ) async {
-    final rows = await laconic.select(
-      "select column_name from information_schema.columns "
-      "where table_schema = 'foxy' and table_name = '$tableName' "
-      "and column_name = '${DbcRowOrder.column}'",
-    );
-    return rows.isNotEmpty;
-  }
-
-  /// Loads one DBC table for export, preserving the original file row order
-  /// when the table stores it. Shared by the plain DBC-export worker and the
-  /// MPQ-patch worker. The hidden row-order column is stripped from the
-  /// returned rows so consumers only ever see schema fields.
-  static Future<List<Map<String, dynamic>>> loadRows(
-    Laconic laconic,
-    String tableName,
-  ) async {
-    final hasRowOrder = await DbcExportWorker.tableHasRowOrderColumn(
-      laconic,
-      tableName,
-    );
-    final rows = await laconic.select(
-      DbcExportWorker.selectSql(tableName, hasRowOrder: hasRowOrder),
-    );
-    return [
-      for (final row in rows)
-        Map<String, dynamic>.from(row.toMap())..remove(DbcRowOrder.column),
-    ];
-  }
-
-  /// Whether the rows of [tableName] still carry a NULL row-order column
-  /// (i.e. never re-imported after the row-order migration). Shared by the
-  /// export workers so the UI can warn before order-sensitive DBCs export
-  /// scrambled.
-  static Future<bool> hasMissingRowOrder(
-    Laconic laconic,
-    String tableName,
-  ) async {
-    final hasColumn = await DbcExportWorker.tableHasRowOrderColumn(
-      laconic,
-      tableName,
-    );
-    if (!hasColumn) return true;
-    final rows = await laconic.select(
-      'select count(*) as c from foxy.$tableName '
-      'where `${DbcRowOrder.column}` is null',
-    );
-    final count = rows.isNotEmpty
-        ? (rows.first.toMap()['c'] as num?)?.toInt() ?? 0
-        : 0;
-    return count > 0;
-  }
-
-  static void _sendCount(
-    SendPort sendPort,
-    String fileName,
-    int completedFiles,
-    int totalFiles,
-    int processedRows,
-    int? totalRows,
-  ) {
-    sendPort.send((
-      'count',
-      fileName,
-      completedFiles,
-      totalFiles,
-      processedRows,
-      totalRows,
-    ));
-  }
-
-  static void _sendResult(
-    SendPort sendPort,
-    int completed,
-    int skipped,
-    List<Map<String, String?>> errors,
-    bool cancelled,
-  ) {
-    sendPort.send(('result', completed, skipped, errors, cancelled));
-  }
-
-  static void _sendStatus(
-    SendPort sendPort,
-    String stage,
-    String message, [
-    String? fileName,
-  ]) {
-    sendPort.send(('status', stage, message, fileName));
-  }
-
-  static Map<String, String?> _workerError({
-    String? tableName,
-    String? fileName,
-    required String stage,
-    required String message,
-  }) {
-    return {
-      'tableName': tableName,
-      'fileName': fileName,
-      'stage': stage,
-      'message': message,
-    };
-  }
-}
-
-/// Loads the rows of one DBC table (table name → rows). Kept injectable so
-/// the export core can be unit-tested without a database.
-typedef DbcExportRowLoader = Future<List<Map<String, dynamic>>> Function(
-  String tableName,
-);
-
-/// Aggregated result of [DbcExportWorker.writeFiles]; `errors` uses the worker wire
-/// format (map list) so it can travel back through the SendPort as-is.
-final class DbcExportSummary {
-  final int completed;
-  final int skipped;
-  final List<Map<String, String?>> errors;
-
-  const DbcExportSummary({
-    required this.completed,
-    required this.skipped,
-    required this.errors,
-  });
-}
 
 /// Isolate entry point for DBC export: connects to MySQL, reads each table
 /// and writes `.dbc` files into [DbcExportWorkerArgs.outputDirectory].
@@ -342,6 +118,12 @@ Future<void> runDbcExportWorker(DbcExportWorkerArgs args) async {
   }
 }
 
+/// Loads the rows of one DBC table (table name → rows). Kept injectable so
+/// the export core can be unit-tested without a database.
+typedef DbcExportRowLoader = Future<List<Map<String, dynamic>>> Function(
+  String tableName,
+);
+
 typedef DbcExportWorkerArgs = ({
   SendPort sendPort,
   List<String> tableNames,
@@ -357,3 +139,221 @@ typedef DbcExportWorkerArgs = ({
 /// Isolate entry signature, injectable for tests (a fake entry replaces the
 /// real worker without touching MySQL).
 typedef DbcExportWorkerEntry = Future<void> Function(DbcExportWorkerArgs args);
+
+/// Aggregated result of [DbcExportWorker.writeFiles]; `errors` uses the worker wire
+/// format (map list) so it can travel back through the SendPort as-is.
+final class DbcExportSummary {
+  final int completed;
+  final int skipped;
+  final List<Map<String, String?>> errors;
+
+  const DbcExportSummary({
+    required this.completed,
+    required this.skipped,
+    required this.errors,
+  });
+}
+
+/// DbcExportWorker helper functions.
+abstract final class DbcExportWorker {
+  /// Whether the rows of [tableName] still carry a NULL row-order column
+  /// (i.e. never re-imported after the row-order migration). Shared by the
+  /// export workers so the UI can warn before order-sensitive DBCs export
+  /// scrambled.
+  static Future<bool> hasMissingRowOrder(
+    Laconic laconic,
+    String tableName,
+  ) async {
+    final hasColumn = await DbcExportWorker.tableHasRowOrderColumn(
+      laconic,
+      tableName,
+    );
+    if (!hasColumn) return true;
+    final rows = await laconic.select(
+      'select count(*) as c from foxy.$tableName '
+      'where `${DbcRowOrder.column}` is null',
+    );
+    final count = rows.isNotEmpty
+        ? (rows.first.toMap()['c'] as num?)?.toInt() ?? 0
+        : 0;
+    return count > 0;
+  }
+
+  /// Loads one DBC table for export, preserving the original file row order
+  /// when the table stores it. Shared by the plain DBC-export worker and the
+  /// MPQ-patch worker. The hidden row-order column is stripped from the
+  /// returned rows so consumers only ever see schema fields.
+  static Future<List<Map<String, dynamic>>> loadRows(
+    Laconic laconic,
+    String tableName,
+  ) async {
+    final hasRowOrder = await DbcExportWorker.tableHasRowOrderColumn(
+      laconic,
+      tableName,
+    );
+    final rows = await laconic.select(
+      DbcExportWorker.selectSql(tableName, hasRowOrder: hasRowOrder),
+    );
+    return [
+      for (final row in rows)
+        Map<String, dynamic>.from(row.toMap())..remove(DbcRowOrder.column),
+    ];
+  }
+
+  /// SELECT used to load one DBC table for export, in the original DBC file
+  /// order when [hasRowOrder]: imported rows by their stored file position,
+  /// app-created rows (NULL) appended last in ID order. Order-sensitive DBCs
+  /// such as Talent.dbc rely on this — the 3.3.5 client derives the
+  /// talent-tree layout from the file row order. Legacy tables fall back to
+  /// the historical unordered scan (InnoDB primary-key order).
+  static String selectSql(String tableName, {required bool hasRowOrder}) {
+    final orderBy = hasRowOrder
+        ? ' order by (${DbcRowOrder.column} is null) asc, '
+              '${DbcRowOrder.column} asc, `ID` asc'
+        : '';
+    return 'select * from foxy.$tableName$orderBy';
+  }
+
+  /// Whether [tableName] carries the hidden row-order column (see
+  /// [DbcRowOrder.column]); tables imported before the column existed do not
+  /// have it.
+  static Future<bool> tableHasRowOrderColumn(
+    Laconic laconic,
+    String tableName,
+  ) async {
+    final rows = await laconic.select(
+      "select column_name from information_schema.columns "
+      "where table_schema = 'foxy' and table_name = '$tableName' "
+      "and column_name = '${DbcRowOrder.column}'",
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Writes DBC files for [definitions] into [outputDirectory].
+  ///
+  /// Shared by the plain DBC-export worker and the MPQ-patch worker (which
+  /// writes into a staging directory first). Per-table isolation mirrors the
+  /// import worker: one failing table records an error and the others
+  /// continue. Empty tables are skipped without producing a file.
+  static Future<DbcExportSummary> writeFiles({
+    required List<DbcDefinition> definitions,
+    required DbcExportRowLoader loadRows,
+    required String outputDirectory,
+    required bool Function() isCancelled,
+    void Function(
+      String fileName,
+      int completedFiles,
+      int totalFiles,
+      int processedRows,
+      int? totalRows,
+    )?
+    onProgress,
+  }) async {
+    final directory = Directory(outputDirectory);
+    if (!await directory.exists()) {
+      throw FileSystemException(
+        'output directory does not exist',
+        outputDirectory,
+      );
+    }
+
+    var completed = 0;
+    var skipped = 0;
+    final errors = <Map<String, String?>>[];
+
+    for (var index = 0; index < definitions.length; index++) {
+      if (isCancelled()) break;
+      final definition = definitions[index];
+      var processedRows = 0;
+
+      try {
+        final rows = await loadRows(definition.tableName);
+        if (isCancelled()) break;
+        processedRows = rows.length;
+        if (rows.isEmpty) {
+          skipped++;
+        } else {
+          await DbcFileWriter().write(
+            schema: definition.schema,
+            rows: rows,
+            outputDirectory: outputDirectory,
+          );
+          completed++;
+        }
+      } catch (error) {
+        errors.add(
+          _workerError(
+            tableName: definition.tableName,
+            fileName: definition.fileName,
+            stage: 'writing',
+            message: error.toString(),
+          ),
+        );
+      }
+
+      onProgress?.call(
+        definition.fileName,
+        index + 1,
+        definitions.length,
+        processedRows,
+        processedRows,
+      );
+    }
+    return DbcExportSummary(
+      completed: completed,
+      skipped: skipped,
+      errors: errors,
+    );
+  }
+
+  static void _sendCount(
+    SendPort sendPort,
+    String fileName,
+    int completedFiles,
+    int totalFiles,
+    int processedRows,
+    int? totalRows,
+  ) {
+    sendPort.send((
+      'count',
+      fileName,
+      completedFiles,
+      totalFiles,
+      processedRows,
+      totalRows,
+    ));
+  }
+
+  static void _sendResult(
+    SendPort sendPort,
+    int completed,
+    int skipped,
+    List<Map<String, String?>> errors,
+    bool cancelled,
+  ) {
+    sendPort.send(('result', completed, skipped, errors, cancelled));
+  }
+
+  static void _sendStatus(
+    SendPort sendPort,
+    String stage,
+    String message, [
+    String? fileName,
+  ]) {
+    sendPort.send(('status', stage, message, fileName));
+  }
+
+  static Map<String, String?> _workerError({
+    String? tableName,
+    String? fileName,
+    required String stage,
+    required String message,
+  }) {
+    return {
+      'tableName': tableName,
+      'fileName': fileName,
+      'stage': stage,
+      'message': message,
+    };
+  }
+}

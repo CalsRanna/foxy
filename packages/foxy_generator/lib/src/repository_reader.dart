@@ -4,15 +4,14 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_generator/src/convention.dart';
 import 'package:foxy_generator/src/entity_resolver.dart';
 import 'package:foxy_generator/src/naming.dart';
-import 'package:foxy_generator/src/source_shape.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
 import 'package:foxy_generator/src/repository_filter_reader.dart';
 import 'package:foxy_generator/src/repository_model.dart';
+import 'package:foxy_generator/src/source_shape.dart';
+import 'package:source_gen/source_gen.dart';
 
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/entity_annotations.dart#FoxyBriefEntity',
@@ -468,21 +467,10 @@ final class RepositoryReader {
     );
   }
 
-  /// Requires the hand-written class to declare [methodName] itself;
-  /// otherwise the generated query layer would be the only implementation
-  /// and could not express [reason] (joined-table columns).
-  void _requireHandWrittenQuery(
-    ClassDeclaration cls,
-    Element element,
-    String methodName,
-    String reason,
-  ) {
-    if (sourceShape.declaresMember(cls, methodName)) return;
-    _fail(
-      '$methodName must be hand-written in the Repository class: $reason.',
-      element,
-      'Declare $methodName (with its JOINs) in the Repository class; the '
-          'generated query layer cannot express $reason.',
+  Never _fail(String message, Element element, String correction) {
+    throw InvalidGenerationSourceError(
+      '$message\nFix: $correction',
+      element: element,
     );
   }
 
@@ -554,10 +542,21 @@ final class RepositoryReader {
     return fields;
   }
 
-  Never _fail(String message, Element element, String correction) {
-    throw InvalidGenerationSourceError(
-      '$message\nFix: $correction',
-      element: element,
+  /// Requires the hand-written class to declare [methodName] itself;
+  /// otherwise the generated query layer would be the only implementation
+  /// and could not express [reason] (joined-table columns).
+  void _requireHandWrittenQuery(
+    ClassDeclaration cls,
+    Element element,
+    String methodName,
+    String reason,
+  ) {
+    if (sourceShape.declaresMember(cls, methodName)) return;
+    _fail(
+      '$methodName must be hand-written in the Repository class: $reason.',
+      element,
+      'Declare $methodName (with its JOINs) in the Repository class; the '
+          'generated query layer cannot express $reason.',
     );
   }
 }

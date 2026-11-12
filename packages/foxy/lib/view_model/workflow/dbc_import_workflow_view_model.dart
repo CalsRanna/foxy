@@ -1,36 +1,18 @@
-import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/view_model/workflow/dbc_sync_summary.dart';
-import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
-import 'package:foxy/view_model/workflow/workflow_status.dart';
+import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
+import 'package:foxy/view_model/workflow/dbc_sync_summary.dart';
+import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class DbcImportWorkflowViewModel {
-  static String formatBlockingMessage(List<DbcTableCheckResult> blocking) {
-    final hasIncompatible = blocking.any(
-      (result) => result.state == DbcTableState.incompatible,
-    );
-    final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
-    final details = blocking
-        .take(5)
-        .map((result) {
-          final message = result.message;
-          if (message == null || message.isEmpty) {
-            return '${result.tableName} (${result.state.name})';
-          }
-          return '${result.tableName}: $message';
-        })
-        .join('\n');
-    final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
-    return '$title\n$details$suffix';
-  }
-
   final ImportDbcUseCase _useCase;
-  final ConfigUtil _configUtil;
 
+  final ConfigUtil _configUtil;
   final status = signal(WorkflowStatus.idle);
+
   final progress = signal<double?>(null);
   final progressLabel = signal('');
   final progressDetail = signal('');
@@ -38,7 +20,6 @@ class DbcImportWorkflowViewModel {
   final path = signal<String?>(null);
   final result = signal<DbcSyncResult?>(null);
   final tableCheckResults = signal<List<DbcTableCheckResult>>([]);
-
   var _attemptToken = 0;
 
   DbcImportWorkflowViewModel({
@@ -217,5 +198,24 @@ class DbcImportWorkflowViewModel {
       case DbcSyncResult():
         break;
     }
+  }
+
+  static String formatBlockingMessage(List<DbcTableCheckResult> blocking) {
+    final hasIncompatible = blocking.any(
+      (result) => result.state == DbcTableState.incompatible,
+    );
+    final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
+    final details = blocking
+        .take(5)
+        .map((result) {
+          final message = result.message;
+          if (message == null || message.isEmpty) {
+            return '${result.tableName} (${result.state.name})';
+          }
+          return '${result.tableName}: $message';
+        })
+        .join('\n');
+    final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
+    return '$title\n$details$suffix';
   }
 }

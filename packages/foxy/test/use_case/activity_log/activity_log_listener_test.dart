@@ -1,19 +1,10 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/use_case/activity_log/activity_log_listener.dart';
 import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/event/event_bus.dart';
-import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/use_case/activity_log/activity_log_listener.dart';
+import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:test/test.dart';
-
-class _RecordingActivityLogRepository extends ActivityLogRepository {
-  final logs = <ActivityLogEntity>[];
-
-  @override
-  Future<void> storeActivityLog(ActivityLogEntity log) async {
-    logs.add(log);
-  }
-}
 
 void main() {
   test('监听 EntityWrittenEvent 并 best-effort 落库', () async {
@@ -72,4 +63,13 @@ void main() {
     expect(repository.logs, isEmpty);
     bus.destroy();
   });
+}
+
+class _RecordingActivityLogRepository extends ActivityLogRepository {
+  final logs = <ActivityLogEntity>[];
+
+  @override
+  Future<void> storeActivityLog(ActivityLogEntity log) async {
+    logs.add(log);
+  }
 }

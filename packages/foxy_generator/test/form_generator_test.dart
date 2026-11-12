@@ -98,24 +98,6 @@ void main() {
   });
 }
 
-const _output =
-    'foxy|lib/view_model/sample_detail_view_model.foxy_view_model.g.part';
-
-Map<String, String> _assets(String viewModel) => {
-  'foxy_annotation|lib/entity_annotations.dart': foxyAnnotationSource(
-    'entity_annotations.dart',
-  ),
-  'foxy_annotation|lib/form_annotations.dart': foxyAnnotationSource(
-    'form_annotations.dart',
-  ),
-  'foxy_annotation|lib/repository_annotations.dart': foxyAnnotationSource(
-    'repository_annotations.dart',
-  ),
-  'foxy|lib/entity/sample_entity.dart': _entitySource,
-  'foxy|lib/repository/sample_repository.dart': _repositorySource,
-  'foxy|lib/view_model/sample_detail_view_model.dart': viewModel,
-};
-
 const _entitySource = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
@@ -134,6 +116,9 @@ class SampleEntity {
 }
 ''';
 
+const _output =
+    'foxy|lib/view_model/sample_detail_view_model.foxy_view_model.g.part';
+
 const _repositorySource = r'''
 import 'package:foxy_annotation/repository_annotations.dart';
 
@@ -151,3 +136,18 @@ part 'sample_detail_view_model.g.dart';
 class SampleDetailViewModel
     with FieldControllerMixin, _SampleDetailViewModelMixin {}
 ''';
+
+Map<String, String> _assets(String viewModel) => {
+  'foxy_annotation|lib/entity_annotations.dart': foxyAnnotationSource(
+    'entity_annotations.dart',
+  ),
+  'foxy_annotation|lib/form_annotations.dart': foxyAnnotationSource(
+    'form_annotations.dart',
+  ),
+  'foxy_annotation|lib/repository_annotations.dart': foxyAnnotationSource(
+    'repository_annotations.dart',
+  ),
+  'foxy|lib/entity/sample_entity.dart': _entitySource,
+  'foxy|lib/repository/sample_repository.dart': _repositorySource,
+  'foxy|lib/view_model/sample_detail_view_model.dart': viewModel,
+};

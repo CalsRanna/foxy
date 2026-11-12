@@ -78,6 +78,8 @@ class CodegenSampleEntity with _CodegenSampleEntityMixin {
 }
 ''';
 
+final annotationSource = foxyAnnotationSource('entity_annotations.dart');
+
 /// Reads the real annotation source directly instead of keeping a
 /// hand-copied duplicate in tests.
 ///
@@ -92,8 +94,6 @@ String foxyAnnotationSource(String file) =>
 /// 读取主 app 包的真实源码(如 repository mixin 实现)。
 String foxyAppSource(String file) =>
     File('../foxy/lib/$file').readAsStringSync();
-
-final annotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 bool logContains(List<String> logs, String message) =>
     logs.any((log) => log.contains(message));

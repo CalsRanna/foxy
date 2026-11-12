@@ -111,6 +111,21 @@ class DbcLocaleFieldDefinition {
     required this.label,
   });
 
+  /// Physical column names of the 16 language columns (without Flags).
+  List<String> get columnNames => [
+    for (final locale in DbcLocale.values) columnFor(locale),
+  ];
+
+  /// Flags column name (this editor neither reads nor writes it; reference
+  /// only).
+  String get flagsColumn => '${columnPrefix}_Flags';
+
+  String columnFor(DbcLocale locale) => '${columnPrefix}_${locale.code}';
+
+  @override
+  String toString() =>
+      'DbcLocaleFieldDefinition($tableName.$columnPrefix, $label)';
+
   /// Ensures one of the 16 language columns exists as a string column.
   static void _requireStringColumn(
     DbcSchema schema,
@@ -130,21 +145,6 @@ class DbcLocaleFieldDefinition {
       );
     }
   }
-
-  /// Physical column names of the 16 language columns (without Flags).
-  List<String> get columnNames => [
-    for (final locale in DbcLocale.values) columnFor(locale),
-  ];
-
-  /// Flags column name (this editor neither reads nor writes it; reference
-  /// only).
-  String get flagsColumn => '${columnPrefix}_Flags';
-
-  String columnFor(DbcLocale locale) => '${columnPrefix}_${locale.code}';
-
-  @override
-  String toString() =>
-      'DbcLocaleFieldDefinition($tableName.$columnPrefix, $label)';
 }
 
 /// Value of a single field in one language.

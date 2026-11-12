@@ -6,81 +6,14 @@ import 'package:warcrafty/warcrafty.dart';
 
 enum DbcExportPhase { writing, validating, committing }
 
+final class DbcFileCopyError {
+  final String fileName;
+  final String message;
+
+  const DbcFileCopyError({required this.fileName, required this.message});
+}
+
 class DbcFileWriter {
-  /// Probes whether files can be created in [path] (e.g. macOS sandbox or
-  /// permission failures surface here as an explicit Chinese error instead
-  /// of a cryptic "Cannot open file" from inside the worker).
-  static Future<void> ensureWritableDirectory(String path) async {
-    final probe = File(
-      p.join(path, '.foxy_write_test_${DateTime.now().microsecondsSinceEpoch}'),
-    );
-    try {
-      await probe.writeAsString('');
-    } catch (error) {
-      // FileSystemException has a dedicated foxyErrorMessage mapping;
-      // English message (Chinese copy comes from the mapping by type).
-      throw FileSystemException(
-        'output directory is not writable: $path ($error)',
-        path,
-      );
-    } finally {
-      try {
-        await probe.delete();
-      } catch (_) {
-        // A failed cleanup of the probe file does not affect the result.
-      }
-    }
-  }
-
-  /// Copies every `.dbc` file from [sourceDirectory] into [targetDirectory].
-  ///
-  /// Each file is copied to a `.tmp` sibling first and atomically renamed
-  /// over the target (mirroring [write]'s commit), so a crash never leaves a
-  /// truncated DBC in place. Used after exporting into a temp directory (the
-  /// DBC export and the combined DBC+MPQ export both land files in the
-  /// target this way). Copying continues across individual failures, which
-  /// are returned as committing-stage [DbcFileCopyError]s.
-  static Future<List<DbcFileCopyError>> copyDbcFiles({
-    required String sourceDirectory,
-    required String targetDirectory,
-    bool Function()? isCancelled,
-  }) async {
-    final files = <File>[
-      await for (final entity in Directory(
-        sourceDirectory,
-      ).list(followLinks: false))
-        if (entity is File && entity.path.toLowerCase().endsWith('.dbc'))
-          entity,
-    ]..sort((left, right) => left.path.compareTo(right.path));
-
-    final errors = <DbcFileCopyError>[];
-    for (final file in files) {
-      if (isCancelled?.call() ?? false) break;
-      final targetPath = p.join(targetDirectory, p.basename(file.path));
-      final suffix = DateTime.now().microsecondsSinceEpoch;
-      final temporaryFile = File('$targetPath.foxy.$suffix.tmp');
-      final backupFile = File('$targetPath.foxy.$suffix.bak');
-      try {
-        await file.copy(temporaryFile.path);
-        await _replaceFile(
-          temporaryFile: temporaryFile,
-          targetFile: File(targetPath),
-          backupFile: backupFile,
-        );
-      } catch (error) {
-        errors.add(
-          DbcFileCopyError(
-            fileName: p.basename(file.path),
-            message: error.toString(),
-          ),
-        );
-      } finally {
-        if (await temporaryFile.exists()) await temporaryFile.delete();
-      }
-    }
-    return errors;
-  }
-
   /// For unit tests validating the type-normalization rules (uint8 / bool /
   /// strings, etc.).
   @visibleForTesting
@@ -219,33 +152,6 @@ class DbcFileWriter {
     };
   }
 
-  static Future<void> _replaceFile({
-    required File temporaryFile,
-    required File targetFile,
-    required File backupFile,
-  }) async {
-    final hadTarget = await targetFile.exists();
-    if (hadTarget) await targetFile.rename(backupFile.path);
-
-    try {
-      await temporaryFile.rename(targetFile.path);
-    } catch (_) {
-      if (hadTarget && await backupFile.exists()) {
-        await backupFile.rename(targetFile.path);
-      }
-      rethrow;
-    }
-
-    if (await backupFile.exists()) {
-      try {
-        await backupFile.delete();
-      } catch (_) {
-        // The target file has been safely replaced; a leftover backup does
-        // not affect the export result.
-      }
-    }
-  }
-
   List<dynamic> _rowToRecord(
     Map<String, dynamic> row,
     DbcSchema schema,
@@ -294,11 +200,105 @@ class DbcFileWriter {
       );
     }
   }
-}
 
-final class DbcFileCopyError {
-  final String fileName;
-  final String message;
+  /// Copies every `.dbc` file from [sourceDirectory] into [targetDirectory].
+  ///
+  /// Each file is copied to a `.tmp` sibling first and atomically renamed
+  /// over the target (mirroring [write]'s commit), so a crash never leaves a
+  /// truncated DBC in place. Used after exporting into a temp directory (the
+  /// DBC export and the combined DBC+MPQ export both land files in the
+  /// target this way). Copying continues across individual failures, which
+  /// are returned as committing-stage [DbcFileCopyError]s.
+  static Future<List<DbcFileCopyError>> copyDbcFiles({
+    required String sourceDirectory,
+    required String targetDirectory,
+    bool Function()? isCancelled,
+  }) async {
+    final files = <File>[
+      await for (final entity in Directory(
+        sourceDirectory,
+      ).list(followLinks: false))
+        if (entity is File && entity.path.toLowerCase().endsWith('.dbc'))
+          entity,
+    ]..sort((left, right) => left.path.compareTo(right.path));
 
-  const DbcFileCopyError({required this.fileName, required this.message});
+    final errors = <DbcFileCopyError>[];
+    for (final file in files) {
+      if (isCancelled?.call() ?? false) break;
+      final targetPath = p.join(targetDirectory, p.basename(file.path));
+      final suffix = DateTime.now().microsecondsSinceEpoch;
+      final temporaryFile = File('$targetPath.foxy.$suffix.tmp');
+      final backupFile = File('$targetPath.foxy.$suffix.bak');
+      try {
+        await file.copy(temporaryFile.path);
+        await _replaceFile(
+          temporaryFile: temporaryFile,
+          targetFile: File(targetPath),
+          backupFile: backupFile,
+        );
+      } catch (error) {
+        errors.add(
+          DbcFileCopyError(
+            fileName: p.basename(file.path),
+            message: error.toString(),
+          ),
+        );
+      } finally {
+        if (await temporaryFile.exists()) await temporaryFile.delete();
+      }
+    }
+    return errors;
+  }
+
+  /// Probes whether files can be created in [path] (e.g. macOS sandbox or
+  /// permission failures surface here as an explicit Chinese error instead
+  /// of a cryptic "Cannot open file" from inside the worker).
+  static Future<void> ensureWritableDirectory(String path) async {
+    final probe = File(
+      p.join(path, '.foxy_write_test_${DateTime.now().microsecondsSinceEpoch}'),
+    );
+    try {
+      await probe.writeAsString('');
+    } catch (error) {
+      // FileSystemException has a dedicated foxyErrorMessage mapping;
+      // English message (Chinese copy comes from the mapping by type).
+      throw FileSystemException(
+        'output directory is not writable: $path ($error)',
+        path,
+      );
+    } finally {
+      try {
+        await probe.delete();
+      } catch (_) {
+        // A failed cleanup of the probe file does not affect the result.
+      }
+    }
+  }
+
+  static Future<void> _replaceFile({
+    required File temporaryFile,
+    required File targetFile,
+    required File backupFile,
+  }) async {
+    final hadTarget = await targetFile.exists();
+    if (hadTarget) await targetFile.rename(backupFile.path);
+
+    try {
+      await temporaryFile.rename(targetFile.path);
+    } catch (_) {
+      if (hadTarget && await backupFile.exists()) {
+        await backupFile.rename(targetFile.path);
+      }
+      rethrow;
+    }
+
+    if (await backupFile.exists()) {
+      try {
+        await backupFile.delete();
+      } catch (_) {
+        // The target file has been safely replaced; a leftover backup does
+        // not affect the export result.
+      }
+    }
+  }
 }

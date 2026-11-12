@@ -1,5 +1,5 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'gossip_menu_option_entity.g.dart';
 

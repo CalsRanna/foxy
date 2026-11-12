@@ -80,10 +80,10 @@ class SkillLineAbilityEntity with _SkillLineAbilityEntityMixin {
 }
 
 extension BriefSkillLineAbilityEntityDisplay on BriefSkillLineAbilityEntity {
-  String get displaySpellName =>
-      spellNameZhCN.isNotEmpty ? spellNameZhCN : spellNameEnUS;
-
   String get displaySpellDescription => spellDescriptionZhCN.isNotEmpty
       ? spellDescriptionZhCN
       : spellDescriptionEnUS;
+
+  String get displaySpellName =>
+      spellNameZhCN.isNotEmpty ? spellNameZhCN : spellNameEnUS;
 }

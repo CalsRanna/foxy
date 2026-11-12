@@ -1,10 +1,10 @@
 import 'package:foxy/entity/achievement_entity.dart';
-import 'package:foxy/model/dbc/dbc_locale.dart';
-import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/database/parse_util.dart';
+import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:laconic/laconic.dart';
 
 part 'achievement_repository.g.dart';
@@ -19,22 +19,6 @@ class AchievementRepository
         _AchievementRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
-
-  @override
-  QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
-    }
-    if (filter.title.isNotEmpty) {
-      builder = builder.where(
-        'Title_lang_zhCN',
-        '%${ParseUtil.escapeLike(filter.title)}%',
-        comparator: 'like',
-      );
-    }
-    return builder;
-  }
 
   /// Brief rows carry the achievement icon resolved through SpellIcon.dbc
   /// (Achievement.dbc `IconID` is a SpellIcon reference, matching the
@@ -69,24 +53,6 @@ class AchievementRepository
         .toList();
   }
 
-  QueryBuilder _applyBriefFilter(
-    QueryBuilder builder,
-    AchievementFilter? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('da.ID', int.tryParse(filter.id) ?? 0);
-    }
-    if (filter.title.isNotEmpty) {
-      builder = builder.where(
-        'da.Title_lang_zhCN',
-        '%${ParseUtil.escapeLike(filter.title)}%',
-        comparator: 'like',
-      );
-    }
-    return builder;
-  }
-
   @override
   Future<int> nextMaxPlusOne(
     String table,
@@ -106,5 +72,39 @@ class AchievementRepository
       );
     }
     return id;
+  }
+
+  QueryBuilder _applyBriefFilter(
+    QueryBuilder builder,
+    AchievementFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('da.ID', int.tryParse(filter.id) ?? 0);
+    }
+    if (filter.title.isNotEmpty) {
+      builder = builder.where(
+        'da.Title_lang_zhCN',
+        '%${ParseUtil.escapeLike(filter.title)}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
+  }
+
+  @override
+  QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', int.tryParse(filter.id) ?? 0);
+    }
+    if (filter.title.isNotEmpty) {
+      builder = builder.where(
+        'Title_lang_zhCN',
+        '%${ParseUtil.escapeLike(filter.title)}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
   }
 }

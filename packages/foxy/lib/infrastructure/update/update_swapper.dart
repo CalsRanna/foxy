@@ -29,21 +29,13 @@ import 'package:path/path.dart' as p;
 /// Records per-file operation failures; the overall swap is not aborted,
 /// keeping the app usable.
 class UpdateSwapFailure {
-  const UpdateSwapFailure(this.path, this.message);
-
   final String path;
+
   final String message;
+  const UpdateSwapFailure(this.path, this.message);
 
   @override
   String toString() => '$path: $message';
-}
-
-class UpdateSwapResult {
-  const UpdateSwapResult({this.failures = const []});
-
-  final List<UpdateSwapFailure> failures;
-
-  bool get hasFailures => failures.isNotEmpty;
 }
 
 /// Mirrors the new-version payload into the app directory, preserving user
@@ -69,36 +61,6 @@ class UpdateSwapper {
     'data/icon',
     'data/cover',
   ];
-
-  /// Whether [relPath] hits the preserve list (itself or a subtree).
-  static bool isPreserved(String relPath) {
-    final normalized = _normalize(relPath);
-    return preservedRelPaths.any(
-      (preserved) =>
-          normalized == preserved || normalized.startsWith('$preserved/'),
-    );
-  }
-
-  /// Cleans up a leftover `.update_tmp/` directory from an interrupted
-  /// update (does not block startup).
-  ///
-  /// Update flow: download and extract into `.update_tmp/` → after restart
-  /// `foxy_updater.exe` swaps and deletes it; if the app is force-killed
-  /// before the swap, this cleanup covers the leftovers and the next update
-  /// check rediscovers the new version.
-  static void cleanupStaleTemp() {
-    final dir = Directory(p.join(Directory.current.path, tempDirName));
-    if (!dir.existsSync()) return;
-    Future<void>.delayed(Duration.zero, () async {
-      try {
-        if (await dir.exists()) {
-          await dir.delete(recursive: true);
-        }
-      } catch (error) {
-        LoggerUtil.instance.w('清理更新临时目录失败: $error');
-      }
-    });
-  }
 
   /// Mirrors the content of [payloadRoot] onto [appDir]:
   ///
@@ -169,18 +131,34 @@ class UpdateSwapper {
     return UpdateSwapResult(failures: failures);
   }
 
-  /// Walks all files under [root]; [onFile] receives each file and its
-  /// forward-slash path relative to root.
-  static Future<void> _walk(
-    Directory root, {
-    required void Function(File file, String relPath) onFile,
-  }) async {
-    final entities = await root.list(recursive: true).toList();
-    for (final entity in entities) {
-      if (entity is File) {
-        onFile(entity, _relative(entity.path, root.path));
+  /// Cleans up a leftover `.update_tmp/` directory from an interrupted
+  /// update (does not block startup).
+  ///
+  /// Update flow: download and extract into `.update_tmp/` → after restart
+  /// `foxy_updater.exe` swaps and deletes it; if the app is force-killed
+  /// before the swap, this cleanup covers the leftovers and the next update
+  /// check rediscovers the new version.
+  static void cleanupStaleTemp() {
+    final dir = Directory(p.join(Directory.current.path, tempDirName));
+    if (!dir.existsSync()) return;
+    Future<void>.delayed(Duration.zero, () async {
+      try {
+        if (await dir.exists()) {
+          await dir.delete(recursive: true);
+        }
+      } catch (error) {
+        LoggerUtil.instance.w('清理更新临时目录失败: $error');
       }
-    }
+    });
+  }
+
+  /// Whether [relPath] hits the preserve list (itself or a subtree).
+  static bool isPreserved(String relPath) {
+    final normalized = _normalize(relPath);
+    return preservedRelPaths.any(
+      (preserved) =>
+          normalized == preserved || normalized.startsWith('$preserved/'),
+    );
   }
 
   /// Copies a file, retrying on failure (e.g. locked) up to [maxRetries]
@@ -217,6 +195,20 @@ class UpdateSwapper {
     }
   }
 
+  static String _join(String a, String b) =>
+      '$a/${b.replaceAll(RegExp(r'[/\\]+'), '/')}';
+
+  static String _normalize(String relPath) {
+    var normalized = relPath.replaceAll('\\', '/');
+    while (normalized.startsWith('/')) {
+      normalized = normalized.substring(1);
+    }
+    while (normalized.endsWith('/')) {
+      normalized = normalized.substring(0, normalized.length - 1);
+    }
+    return normalized;
+  }
+
   /// Deletes empty directories not covered by the payload (not preserved,
   /// not the update temp directory).
   static Future<void> _pruneEmptyDirs(
@@ -244,9 +236,6 @@ class UpdateSwapper {
     }
   }
 
-  static String _join(String a, String b) =>
-      '$a/${b.replaceAll(RegExp(r'[/\\]+'), '/')}';
-
   /// Relative path, normalized to forward slashes with leading/trailing
   /// separators stripped.
   static String _relative(String path, String root) {
@@ -258,14 +247,25 @@ class UpdateSwapper {
     return rel;
   }
 
-  static String _normalize(String relPath) {
-    var normalized = relPath.replaceAll('\\', '/');
-    while (normalized.startsWith('/')) {
-      normalized = normalized.substring(1);
+  /// Walks all files under [root]; [onFile] receives each file and its
+  /// forward-slash path relative to root.
+  static Future<void> _walk(
+    Directory root, {
+    required void Function(File file, String relPath) onFile,
+  }) async {
+    final entities = await root.list(recursive: true).toList();
+    for (final entity in entities) {
+      if (entity is File) {
+        onFile(entity, _relative(entity.path, root.path));
+      }
     }
-    while (normalized.endsWith('/')) {
-      normalized = normalized.substring(0, normalized.length - 1);
-    }
-    return normalized;
   }
+}
+
+class UpdateSwapResult {
+  final List<UpdateSwapFailure> failures;
+
+  const UpdateSwapResult({this.failures = const []});
+
+  bool get hasFailures => failures.isNotEmpty;
 }

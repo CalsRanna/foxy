@@ -69,23 +69,7 @@ void main() {
   });
 }
 
-class _TestRepository extends SmartScriptRepository {
-  @override
-  final Laconic laconic;
-
-  _TestRepository(this.laconic);
-}
-
 final class _DuplicateRetryDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-
-  /// Whether the retry insert also hits a duplicate key.
-  final bool retryAlsoFails;
-  var _insertCount = 0;
-
-  _DuplicateRetryDriver({this.retryAlsoFails = false});
-
   static final _duplicateError = LaconicException(
     'MysqlServerException [1062]: Duplicate entry '
     "'10-1-2-3' for key 'PRIMARY'",
@@ -93,19 +77,30 @@ final class _DuplicateRetryDriver implements DatabaseDriver {
     code: '1062',
   );
 
-  /// laconic routes inserts without auto-increment columns through
-  /// [statement]; both entry points inject the duplicate key.
-  void _maybeDuplicate(String sql) {
-    if (sql.toLowerCase().contains('insert')) {
-      _insertCount++;
-      if (_insertCount == 1 || retryAlsoFails) {
-        throw _duplicateError;
-      }
-    }
-  }
+  @override
+  final SqlGrammar grammar = MysqlGrammar();
+
+  /// Whether the retry insert also hits a duplicate key.
+  final bool retryAlsoFails;
+
+  var _insertCount = 0;
+
+  _DuplicateRetryDriver({this.retryAlsoFails = false});
 
   @override
   Future<int> affectingStatement(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
+    _maybeDuplicate(sql);
+    return 1;
+  }
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  Future<int> insertAndGetId(
     String sql, [
     List<Object?> params = const [],
   ]) async {
@@ -125,22 +120,28 @@ final class _DuplicateRetryDriver implements DatabaseDriver {
   }
 
   @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    _maybeDuplicate(sql);
-    return 1;
-  }
-
-  @override
   Future<void> statement(String sql, [List<Object?> params = const []]) async {
     _maybeDuplicate(sql);
   }
 
   @override
   Future<T> transaction<T>(Future<T> Function() action) => action();
+
+  /// laconic routes inserts without auto-increment columns through
+  /// [statement]; both entry points inject the duplicate key.
+  void _maybeDuplicate(String sql) {
+    if (sql.toLowerCase().contains('insert')) {
+      _insertCount++;
+      if (_insertCount == 1 || retryAlsoFails) {
+        throw _duplicateError;
+      }
+    }
+  }
+}
+
+class _TestRepository extends SmartScriptRepository {
+  @override
+  final Laconic laconic;
+
+  _TestRepository(this.laconic);
 }

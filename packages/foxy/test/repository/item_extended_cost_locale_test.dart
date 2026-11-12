@@ -58,29 +58,13 @@ void main() {
   }
 }
 
-class _Repository extends ItemExtendedCostRepository {
-  @override
-  final Laconic laconic;
-
-  _Repository(this.laconic);
-}
-
 final class _ReadDriver implements DatabaseDriver {
   final Map<String, Object?> row;
-
-  _ReadDriver(this.row);
 
   @override
   final SqlGrammar grammar = MysqlGrammar();
 
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => [LaconicResult.fromMap(row)];
-
-  @override
-  Future<void> close() async {}
+  _ReadDriver(this.row);
 
   @override
   Future<int> affectingStatement(
@@ -89,8 +73,17 @@ final class _ReadDriver implements DatabaseDriver {
   ]) => throw UnimplementedError();
 
   @override
+  Future<void> close() async {}
+
+  @override
   Future<int> insertAndGetId(String sql, [List<Object?> params = const []]) =>
       throw UnimplementedError();
+
+  @override
+  Future<List<LaconicResult>> select(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async => [LaconicResult.fromMap(row)];
 
   @override
   Future<void> statement(String sql, [List<Object?> params = const []]) =>
@@ -99,4 +92,11 @@ final class _ReadDriver implements DatabaseDriver {
   @override
   Future<T> transaction<T>(Future<T> Function() action) =>
       throw UnimplementedError();
+}
+
+class _Repository extends ItemExtendedCostRepository {
+  @override
+  final Laconic laconic;
+
+  _Repository(this.laconic);
 }

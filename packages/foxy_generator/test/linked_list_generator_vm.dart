@@ -68,14 +68,6 @@ void main() {
   });
 }
 
-const formAnnotationAsset = 'foxy_annotation|lib/form_annotations.dart';
-const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
-const entityAsset = 'foxy|lib/entity/child_item_entity.dart';
-const repositoryAnnotationAsset =
-    'foxy_annotation|lib/repository_annotations.dart';
-const repositoryAsset = 'foxy|lib/repository/child_item_repository.dart';
-const viewModelAsset = 'foxy|lib/view_model/child_item_editor_view_model.dart';
-
 const childEntitySource = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
@@ -93,7 +85,6 @@ class ChildItemEntity {
   const ChildItemEntity({this.parentId = 0, this.childId = 0});
 }
 ''';
-
 const childRepositorySource = r'''
 import 'package:foxy/entity/child_item_entity.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -103,7 +94,6 @@ part 'child_item_repository.g.dart';
 @FoxyRepository(entity: ChildItemEntity, linkKey: ['parentId'])
 class ChildItemRepository with _ChildItemRepositoryMixin {}
 ''';
-
 const editorViewModelSource = r'''
 import 'package:foxy/entity/child_item_entity.dart';
 import 'package:foxy_annotation/form_annotations.dart';
@@ -119,12 +109,22 @@ part 'child_item_editor_view_model.g.dart';
 class ChildItemEditorViewModel
     with FieldControllerMixin, _ChildItemEditorViewModelMixin {}
 ''';
+const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';
+const entityAsset = 'foxy|lib/entity/child_item_entity.dart';
+const formAnnotationAsset = 'foxy_annotation|lib/form_annotations.dart';
+
+const repositoryAnnotationAsset =
+    'foxy_annotation|lib/repository_annotations.dart';
+
+const repositoryAsset = 'foxy|lib/repository/child_item_repository.dart';
+
+const viewModelAsset = 'foxy|lib/view_model/child_item_editor_view_model.dart';
+
+final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 /// Reads the real annotation source directly instead of keeping a
 /// hand-copied duplicate in tests.
 final formAnnotationSource = foxyAnnotationSource('form_annotations.dart');
-
-final entityAnnotationSource = foxyAnnotationSource('entity_annotations.dart');
 
 final repositoryAnnotationSource = foxyAnnotationSource(
   'repository_annotations.dart',

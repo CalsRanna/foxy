@@ -101,6 +101,16 @@ class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
 }
 
 extension BriefItemExtendedCostEntityDisplay on BriefItemExtendedCostEntity {
+  /// Count for the item at [index] (0 or 1); `-` when there is no item.
+  String displayItemCount(int index) {
+    final itemId = index == 0 ? itemID0 : itemID1;
+    if (itemId == 0) return '-';
+    return (index == 0 ? itemCount0 : itemCount1).toString();
+  }
+
+  /// Icon path for the item at [index] (0 or 1).
+  String displayItemIcon(int index) => index == 0 ? itemIcon0 : itemIcon1;
+
   /// Display name for the item at [index] (0 or 1): zhCN when available,
   /// enUS otherwise; falls back to `#ID` when the item is not resolvable,
   /// and `-` when there is no item.
@@ -112,16 +122,6 @@ extension BriefItemExtendedCostEntityDisplay on BriefItemExtendedCostEntity {
     final resolved = locale.isNotEmpty ? locale : name;
     return resolved.isNotEmpty ? resolved : '#$itemId';
   }
-
-  /// Count for the item at [index] (0 or 1); `-` when there is no item.
-  String displayItemCount(int index) {
-    final itemId = index == 0 ? itemID0 : itemID1;
-    if (itemId == 0) return '-';
-    return (index == 0 ? itemCount0 : itemCount1).toString();
-  }
-
-  /// Icon path for the item at [index] (0 or 1).
-  String displayItemIcon(int index) => index == 0 ? itemIcon0 : itemIcon1;
 
   /// Quality for the item at [index] (0 or 1).
   int displayItemQuality(int index) => index == 0 ? itemQuality0 : itemQuality1;

@@ -115,6 +115,12 @@ class ConditionValueConfig {
   ];
   static const conditionBooleanOptions = <int, String>{0: '否', 1: '是'};
 
+  final IntegerFieldSpec<ConditionValueReference> value1;
+
+  final IntegerFieldSpec<ConditionValueReference> value2;
+
+  final IntegerFieldSpec<ConditionValueReference> value3;
+  const ConditionValueConfig(this.value1, this.value2, this.value3);
   static ConditionValueConfig forType(int type, {int value1 = 0}) {
     if (type < 0) return const ConditionValueConfig(_unused, _unused, _unused);
     if (type == 31) {
@@ -480,12 +486,6 @@ class ConditionValueConfig {
     IntegerFieldSpec<ConditionValueReference> value2 = _unused,
     IntegerFieldSpec<ConditionValueReference> value3 = _unused,
   ]) => ConditionValueConfig(value1, value2, value3);
-
-  final IntegerFieldSpec<ConditionValueReference> value1;
-  final IntegerFieldSpec<ConditionValueReference> value2;
-  final IntegerFieldSpec<ConditionValueReference> value3;
-
-  const ConditionValueConfig(this.value1, this.value2, this.value3);
 }
 
 enum ConditionValueReference {

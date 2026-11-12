@@ -1,5 +1,5 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'player_create_info_entity.g.dart';
 
@@ -54,11 +54,11 @@ class PlayerCreateInfoEntity with _PlayerCreateInfoEntityMixin {
 }
 
 extension BriefPlayerCreateInfoEntityLabel on BriefPlayerCreateInfoEntity {
-  /// 种族标签（人类/兽人/…），未知值回退为原始数字。
-  String get raceLabel =>
-      PlayerCreateInfoConstants.playerRaceOptions[race] ?? race.toString();
-
   /// 职业标签（战士/圣骑士/…），未知值回退为原始数字。
   String get classLabel =>
       PlayerCreateInfoConstants.playerClassOptions[class_] ?? class_.toString();
+
+  /// 种族标签（人类/兽人/…），未知值回退为原始数字。
+  String get raceLabel =>
+      PlayerCreateInfoConstants.playerRaceOptions[race] ?? race.toString();
 }

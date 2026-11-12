@@ -95,6 +95,32 @@ void main() {
   });
 }
 
+/// Fake MPQ export use case: records executed paths and returns a success
+/// result; loadTables is scripted. The superclass fields are never touched.
+final class _FakeMpqExportUseCase extends MpqExportUseCase {
+  List<DbcExportTable> tables = [];
+
+  final executedPaths = <String>[];
+  _FakeMpqExportUseCase() : super.protected();
+
+  @override
+  bool get isRunning => false;
+
+  @override
+  Future<DbcSyncResult> execute(MpqExportInput input) async {
+    executedPaths.add(input.mpqFilePath);
+    return const DbcSyncResult(
+      operation: DbcSyncOperation.export,
+      completed: 1,
+      skipped: 0,
+      errors: [],
+    );
+  }
+
+  @override
+  Future<List<DbcExportTable>> loadTables() async => tables;
+}
+
 /// In-memory ConfigUtil (no real IO), mirroring the wizard-test fake.
 final class _MemoryConfigUtil extends ConfigUtil {
   final Map<String, dynamic> data;
@@ -110,31 +136,5 @@ final class _MemoryConfigUtil extends ConfigUtil {
   @override
   Future<void> update(Map<String, dynamic> values) async {
     data.addAll(values);
-  }
-}
-
-/// Fake MPQ export use case: records executed paths and returns a success
-/// result; loadTables is scripted. The superclass fields are never touched.
-final class _FakeMpqExportUseCase extends MpqExportUseCase {
-  _FakeMpqExportUseCase() : super.protected();
-
-  List<DbcExportTable> tables = [];
-  final executedPaths = <String>[];
-
-  @override
-  bool get isRunning => false;
-
-  @override
-  Future<List<DbcExportTable>> loadTables() async => tables;
-
-  @override
-  Future<DbcSyncResult> execute(MpqExportInput input) async {
-    executedPaths.add(input.mpqFilePath);
-    return const DbcSyncResult(
-      operation: DbcSyncOperation.export,
-      completed: 1,
-      skipped: 0,
-      errors: [],
-    );
   }
 }

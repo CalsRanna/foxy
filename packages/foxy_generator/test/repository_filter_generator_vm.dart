@@ -80,8 +80,6 @@ void main() {
 
 const annotationAsset = 'foxy_annotation|lib/repository_annotations.dart';
 
-final annotationSource = foxyAnnotationSource('repository_annotations.dart');
-
 const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
 
 const repositorySource = r'''
@@ -95,3 +93,5 @@ part 'sample_repository.g.dart';
 @FoxyFilter.boolean('enabled')
 class SampleRepository {}
 ''';
+
+final annotationSource = foxyAnnotationSource('repository_annotations.dart');

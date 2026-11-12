@@ -11,13 +11,13 @@ import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/view_model/workflow/combined_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
-import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
-import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/window/window_button.dart';
 import 'package:get_it/get_it.dart';
@@ -32,6 +32,8 @@ class ScaffoldPage extends StatefulWidget {
   @override
   State<ScaffoldPage> createState() => _ScaffoldPageState();
 }
+
+class _CombinedExportIntent extends Intent {}
 
 class _ExitAppAction extends CallbackAction<_ExitAppIntent> {
   _ExitAppAction() : super(onInvoke: handleInvoke);
@@ -53,8 +55,6 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
 }
 
 class _NavigateSettingIntent extends Intent {}
-
-class _CombinedExportIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
   final featureState = GetIt.instance.get<FeatureStateViewModel>();
@@ -196,6 +196,21 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     );
   }
 
+  /// Startup reminder for DBC tables that were never imported (e.g. after
+  /// an upgrade adds new definitions). Best-effort: any failure is silently
+  /// ignored so it never disturbs startup.
+  Future<void> _checkDbcReminder() async {
+    try {
+      final reminder = await GetIt.instance
+          .get<CheckDbcReminderUseCase>()
+          .execute();
+      if (!mounted || !reminder.shouldRemind) return;
+      _showDbcReminderDialog(reminder);
+    } catch (_) {
+      // The reminder is best-effort; failures must not affect startup.
+    }
+  }
+
   /// Enforces the first-setup check: when incomplete (either directory
   /// unconfigured or icons not extracted), opens the non-dismissable
   /// three-step wizard; completed steps are detected and skipped inside
@@ -229,28 +244,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     await _checkDbcReminder();
   }
 
-  /// Startup reminder for DBC tables that were never imported (e.g. after
-  /// an upgrade adds new definitions). Best-effort: any failure is silently
-  /// ignored so it never disturbs startup.
-  Future<void> _checkDbcReminder() async {
-    try {
-      final reminder = await GetIt.instance
-          .get<CheckDbcReminderUseCase>()
-          .execute();
-      if (!mounted || !reminder.shouldRemind) return;
-      _showDbcReminderDialog(reminder);
-    } catch (_) {
-      // The reminder is best-effort; failures must not affect startup.
-    }
-  }
-
-  void _showDbcReminderDialog(DbcReminderCheckResult result) {
-    DialogUtil.show(
-      context: context,
-      builder: (ctx) => DbcReminderDialog(result: result),
-    );
-  }
-
   void _showCombinedExportDialog() {
     if (ModalRoute.of(context)?.isCurrent != true) return;
     final combinedVm = GetIt.instance.get<CombinedExportWorkflowViewModel>();
@@ -264,6 +257,13 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => CombinedExportDialog(vm: combinedVm),
+    );
+  }
+
+  void _showDbcReminderDialog(DbcReminderCheckResult result) {
+    DialogUtil.show(
+      context: context,
+      builder: (ctx) => DbcReminderDialog(result: result),
     );
   }
 

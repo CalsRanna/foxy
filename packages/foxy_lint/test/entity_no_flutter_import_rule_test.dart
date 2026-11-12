@@ -6,6 +6,13 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:foxy_lint/rules/entity_no_flutter_import.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(EntityNoFlutterImportRuleTest);
+    defineReflectiveTests(EntityNoFlutterImportScopeTest);
+  });
+}
+
 /// The blocked package URIs do not resolve in the harness's test package,
 /// so positive cases also expect the `uri_does_not_exist` compile error
 /// (resolved from the public [diagnosticCodeValues] list).
@@ -21,13 +28,22 @@ DiagnosticCode _uriDoesNotExist() => diagnosticCodeValues.firstWhere(
 @reflectiveTest
 class EntityNoFlutterImportRuleTest extends AnalysisRuleTest {
   @override
+  String get testFileName => 'sample_entity.dart';
+
+  @override
   void setUp() {
     rule = EntityNoFlutterImport();
     super.setUp();
   }
 
-  @override
-  String get testFileName => 'sample_entity.dart';
+  void test_dartUiImport_reports() async {
+    await assertDiagnostics(
+      r'''
+import 'dart:ui';
+''',
+      [lint(0, 17), error(_uriDoesNotExist(), 7, 9)],
+    );
+  }
 
   void test_flutterMaterialImport_reports() async {
     await assertDiagnostics(
@@ -38,13 +54,21 @@ import 'package:flutter/material.dart';
     );
   }
 
-  void test_dartUiImport_reports() async {
+  void test_gameAssetCoreImport_doesNotReport() async {
     await assertDiagnostics(
       r'''
-import 'dart:ui';
+import 'package:foxy_game_file/foxy_game_file.dart';
 ''',
-      [lint(0, 17), error(_uriDoesNotExist(), 7, 9)],
+      [error(_uriDoesNotExist(), 7, 44)],
     );
+  }
+
+  void test_nonUiImport_doesNotReport() async {
+    await assertNoDiagnostics(r'''
+import 'dart:async';
+
+Future<void> f() async {}
+''');
   }
 
   void test_signalsFlutterImport_reports() async {
@@ -65,29 +89,12 @@ import 'package:foxy/widget/layout/foxy_tab.dart';
     );
   }
 
-  void test_nonUiImport_doesNotReport() async {
-    await assertNoDiagnostics(r'''
-import 'dart:async';
-
-Future<void> f() async {}
-''');
-  }
-
   void test_widgetPackageImport_reports() async {
     await assertDiagnostics(
       r'''
 import 'package:foxy_widget/foxy_widget.dart';
 ''',
       [lint(0, 46), error(_uriDoesNotExist(), 7, 38)],
-    );
-  }
-
-  void test_gameAssetCoreImport_doesNotReport() async {
-    await assertDiagnostics(
-      r'''
-import 'package:foxy_game_file/foxy_game_file.dart';
-''',
-      [error(_uriDoesNotExist(), 7, 44)],
     );
   }
 }
@@ -97,13 +104,13 @@ import 'package:foxy_game_file/foxy_game_file.dart';
 @reflectiveTest
 class EntityNoFlutterImportScopeTest extends AnalysisRuleTest {
   @override
+  String get testFileName => 'sample_util.dart';
+
+  @override
   void setUp() {
     rule = EntityNoFlutterImport();
     super.setUp();
   }
-
-  @override
-  String get testFileName => 'sample_util.dart';
 
   void test_flutterImport_outsideEntityFile_doesNotReport() async {
     await assertDiagnostics(
@@ -113,11 +120,4 @@ import 'package:flutter/material.dart';
       [error(_uriDoesNotExist(), 7, 31)],
     );
   }
-}
-
-void main() {
-  defineReflectiveSuite(() {
-    defineReflectiveTests(EntityNoFlutterImportRuleTest);
-    defineReflectiveTests(EntityNoFlutterImportScopeTest);
-  });
 }

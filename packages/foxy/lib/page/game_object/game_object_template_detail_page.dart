@@ -13,11 +13,6 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class GameObjectTemplateDetailPage extends StatefulWidget {
-  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
-    if (entry != null && entry > 0) return const {};
-    return {for (var index = 1; index < tabCount; index++) index};
-  }
-
   final int? gameObjectTemplateKey;
 
   const GameObjectTemplateDetailPage({super.key, this.gameObjectTemplateKey});
@@ -25,6 +20,11 @@ class GameObjectTemplateDetailPage extends StatefulWidget {
   @override
   State<GameObjectTemplateDetailPage> createState() =>
       _GameObjectTemplateDetailPageState();
+
+  static Set<int> disabledTabIndexes(int? entry, int tabCount) {
+    if (entry != null && entry > 0) return const {};
+    return {for (var index = 1; index < tabCount; index++) index};
+  }
 }
 
 class _GameObjectTemplateDetailPageState

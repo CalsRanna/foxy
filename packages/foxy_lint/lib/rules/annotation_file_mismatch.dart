@@ -6,6 +6,21 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:path/path.dart' as p;
 
+/// Annotation name → (expected file-name suffix, glob shown in the message).
+///
+/// Mirrors the `generate_for` globs in `packages/foxy/build.yaml`: the
+/// generators scan `lib/entity/**_entity.dart`, `lib/repository/**
+/// _repository.dart` and `lib/view_model/**_view_model.dart`.
+const _expectedFileName = <String, (String, String)>{
+  'FoxyBriefEntity': ('_entity.dart', '**_entity.dart'),
+  'FoxyFullEntity': ('_entity.dart', '**_entity.dart'),
+  'FoxyRepository': ('_repository.dart', '**_repository.dart'),
+  'FoxyListViewModel': ('_view_model.dart', '**_view_model.dart'),
+  'FoxyDetailViewModel': ('_view_model.dart', '**_view_model.dart'),
+  'FoxyLinkedListViewModel': ('_view_model.dart', '**_view_model.dart'),
+  'FoxyLinkedDetailViewModel': ('_view_model.dart', '**_view_model.dart'),
+};
+
 /// A class carrying a `@Foxy*` codegen annotation must live in a file whose
 /// name matches the layer's `generate_for` glob
 /// (`**_entity.dart` / `**_repository.dart` / `**_view_model.dart`).
@@ -44,21 +59,6 @@ class AnnotationFileMismatch extends AnalysisRule {
     registry.addClassDeclaration(this, _Visitor(this, context));
   }
 }
-
-/// Annotation name → (expected file-name suffix, glob shown in the message).
-///
-/// Mirrors the `generate_for` globs in `packages/foxy/build.yaml`: the
-/// generators scan `lib/entity/**_entity.dart`, `lib/repository/**
-/// _repository.dart` and `lib/view_model/**_view_model.dart`.
-const _expectedFileName = <String, (String, String)>{
-  'FoxyBriefEntity': ('_entity.dart', '**_entity.dart'),
-  'FoxyFullEntity': ('_entity.dart', '**_entity.dart'),
-  'FoxyRepository': ('_repository.dart', '**_repository.dart'),
-  'FoxyListViewModel': ('_view_model.dart', '**_view_model.dart'),
-  'FoxyDetailViewModel': ('_view_model.dart', '**_view_model.dart'),
-  'FoxyLinkedListViewModel': ('_view_model.dart', '**_view_model.dart'),
-  'FoxyLinkedDetailViewModel': ('_view_model.dart', '**_view_model.dart'),
-};
 
 class _Visitor extends SimpleAstVisitor<void> {
   final AnnotationFileMismatch rule;

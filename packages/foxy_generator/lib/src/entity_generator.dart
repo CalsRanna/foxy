@@ -2,11 +2,10 @@
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_annotation/entity_annotations.dart';
 import 'package:foxy_generator/src/entity_emitter.dart';
 import 'package:foxy_generator/src/entity_reader.dart';
+import 'package:source_gen/source_gen.dart';
 
 final class FoxyEntityGenerator extends GeneratorForAnnotation<FoxyFullEntity> {
   final EntityReader reader;

@@ -1,5 +1,5 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'spell_area_entity.g.dart';
 
@@ -67,15 +67,15 @@ class SpellAreaEntity with _SpellAreaEntityMixin {
 }
 
 extension BriefSpellAreaEntityLabel on BriefSpellAreaEntity {
-  /// 开始任务状态掩码标签（未接取/已完成/…），未命中回退为原始掩码。
-  String get questStartStatusLabel => FlagItem.maskLabel(
-    questStartStatus,
-    SpellFlags.spellAreaQuestStatusOptions,
-  );
-
   /// 结束任务状态掩码标签（未接取/已完成/…），未命中回退为原始掩码。
   String get questEndStatusLabel => FlagItem.maskLabel(
     questEndStatus,
+    SpellFlags.spellAreaQuestStatusOptions,
+  );
+
+  /// 开始任务状态掩码标签（未接取/已完成/…），未命中回退为原始掩码。
+  String get questStartStatusLabel => FlagItem.maskLabel(
+    questStartStatus,
     SpellFlags.spellAreaQuestStatusOptions,
   );
 }

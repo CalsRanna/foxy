@@ -3,12 +3,88 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
-
 import 'package:foxy_annotation/repository_annotations.dart';
 import 'package:foxy_generator/src/naming.dart';
 import 'package:foxy_generator/src/repository_filter_model.dart';
 import 'package:foxy_generator/src/source_shape.dart';
+import 'package:source_gen/source_gen.dart';
+
+/// Parses the field model from a single `@FoxyFilter` annotation, shared by
+/// the Filter and Repository generators so both read the same field
+/// definition.
+///
+/// Returns an empty string when `column` is not declared; callers decide
+/// whether to infer or error out.
+RepositoryFilterFieldModel readFilterField(
+  DartObject object,
+  String filterClassName,
+  Element element,
+) {
+  final reader = ConstantReader(object);
+  final name = reader.read('name').stringValue;
+  if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
+    _fail(
+      'The field name $name of $filterClassName is not a valid '
+          'lowerCamelCase identifier.',
+      element,
+      'Use lowerCamelCase; Dart reserved words may append a single '
+          'underscore.',
+    );
+  }
+
+  final typeIndex = reader
+      .read('type')
+      .objectValue
+      .getField('index')
+      ?.toIntValue();
+  if (typeIndex == null ||
+      typeIndex < 0 ||
+      typeIndex >= FoxyFilterType.values.length) {
+    _fail(
+      'The type of $filterClassName.$name is unrecognized.',
+      element,
+      'Use the text/integer/decimal/boolean named constructors of '
+          'FoxyFilter.',
+    );
+  }
+  final type = FoxyFilterType.values[typeIndex];
+  final defaultValue = _convertDefault(
+    reader.read('defaultValue').objectValue,
+    type,
+  );
+  if (defaultValue == null) {
+    _fail(
+      'The default value of $filterClassName.$name is incompatible with '
+          'type ${type.name}.',
+      element,
+      'Pass a correct default value via the corresponding FoxyFilter named '
+          'constructor.',
+    );
+  }
+
+  return RepositoryFilterFieldModel(
+    column: reader.peek('column')?.stringValue ?? '',
+    defaultValue: defaultValue,
+    name: name,
+    type: type,
+  );
+}
+
+Object? _convertDefault(DartObject object, FoxyFilterType type) =>
+    switch (type) {
+      FoxyFilterType.boolean => object.toBoolValue(),
+      FoxyFilterType.decimal =>
+        object.toDoubleValue() ?? object.toIntValue()?.toDouble(),
+      FoxyFilterType.integer => object.toIntValue(),
+      FoxyFilterType.text => object.toStringValue(),
+    };
+
+Never _fail(String message, Element element, String correction) {
+  throw InvalidGenerationSourceError(
+    '$message\nFix: $correction',
+    element: element,
+  );
+}
 
 final class RepositoryFilterReader {
   final SourceShape sourceShape;
@@ -84,80 +160,3 @@ final class RepositoryFilterReader {
     );
   }
 }
-
-/// Parses the field model from a single `@FoxyFilter` annotation, shared by
-/// the Filter and Repository generators so both read the same field
-/// definition.
-///
-/// Returns an empty string when `column` is not declared; callers decide
-/// whether to infer or error out.
-RepositoryFilterFieldModel readFilterField(
-  DartObject object,
-  String filterClassName,
-  Element element,
-) {
-  final reader = ConstantReader(object);
-  final name = reader.read('name').stringValue;
-  if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
-    _fail(
-      'The field name $name of $filterClassName is not a valid '
-          'lowerCamelCase identifier.',
-      element,
-      'Use lowerCamelCase; Dart reserved words may append a single '
-          'underscore.',
-    );
-  }
-
-  final typeIndex = reader
-      .read('type')
-      .objectValue
-      .getField('index')
-      ?.toIntValue();
-  if (typeIndex == null ||
-      typeIndex < 0 ||
-      typeIndex >= FoxyFilterType.values.length) {
-    _fail(
-      'The type of $filterClassName.$name is unrecognized.',
-      element,
-      'Use the text/integer/decimal/boolean named constructors of '
-          'FoxyFilter.',
-    );
-  }
-  final type = FoxyFilterType.values[typeIndex];
-  final defaultValue = _convertDefault(
-    reader.read('defaultValue').objectValue,
-    type,
-  );
-  if (defaultValue == null) {
-    _fail(
-      'The default value of $filterClassName.$name is incompatible with '
-          'type ${type.name}.',
-      element,
-      'Pass a correct default value via the corresponding FoxyFilter named '
-          'constructor.',
-    );
-  }
-
-  return RepositoryFilterFieldModel(
-    column: reader.peek('column')?.stringValue ?? '',
-    defaultValue: defaultValue,
-    name: name,
-    type: type,
-  );
-}
-
-Never _fail(String message, Element element, String correction) {
-  throw InvalidGenerationSourceError(
-    '$message\nFix: $correction',
-    element: element,
-  );
-}
-
-Object? _convertDefault(DartObject object, FoxyFilterType type) =>
-    switch (type) {
-      FoxyFilterType.boolean => object.toBoolValue(),
-      FoxyFilterType.decimal =>
-        object.toDoubleValue() ?? object.toIntValue()?.toDouble(),
-      FoxyFilterType.integer => object.toIntValue(),
-      FoxyFilterType.text => object.toStringValue(),
-    };

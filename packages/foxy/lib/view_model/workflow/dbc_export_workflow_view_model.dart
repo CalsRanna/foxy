@@ -1,9 +1,9 @@
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
-import 'package:foxy/view_model/workflow/dbc_sync_summary.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/view_model/workflow/dbc_export_item.dart';
+import 'package:foxy/view_model/workflow/dbc_sync_summary.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';

@@ -41,6 +41,21 @@ class ServerDirResolver {
     return _search(serverRoot, 0);
   }
 
+  /// Whether [directory] directly contains at least one `.dbc` file (no
+  /// recursion into subdirectories).
+  static Future<bool> _containsDbc(Directory directory) async {
+    try {
+      await for (final entity in directory.list(followLinks: false)) {
+        if (entity is File && entity.path.toLowerCase().endsWith('.dbc')) {
+          return true;
+        }
+      }
+    } on FileSystemException {
+      return false;
+    }
+    return false;
+  }
+
   static Future<String?> _search(String root, int depth) async {
     if (depth > maxDepth) return null;
     final directory = Directory(root);
@@ -57,20 +72,5 @@ class ServerDirResolver {
       // Unreadable/raced directories do not block the search.
     }
     return null;
-  }
-
-  /// Whether [directory] directly contains at least one `.dbc` file (no
-  /// recursion into subdirectories).
-  static Future<bool> _containsDbc(Directory directory) async {
-    try {
-      await for (final entity in directory.list(followLinks: false)) {
-        if (entity is File && entity.path.toLowerCase().endsWith('.dbc')) {
-          return true;
-        }
-      }
-    } on FileSystemException {
-      return false;
-    }
-    return false;
   }
 }

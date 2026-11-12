@@ -1,11 +1,11 @@
-import 'package:foxy_game_definition/foxy_game_definition.dart';
-import 'package:foxy/event/event_bus.dart';
-import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
+import 'package:foxy/event/entity_written_event.dart';
+import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -15,26 +15,10 @@ import 'package:signals/signals.dart';
 class ConditionDetailViewModel with FieldControllerMixin {
   static const modeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
 
-  void _logActivity(ActivityActionType action, ConditionEntity c) {
-    try {
-      final log = ActivityLogEntity(
-        module: 'conditions',
-        actionType: action,
-        entityName:
-            'Condition ${c.sourceTypeOrReferenceId}/${c.sourceGroup}/'
-            '${c.sourceEntry}/${c.sourceId}/${c.elseGroup}'
-            '${c.comment.isEmpty ? '' : ' - ${c.comment}'}',
-        createdAt: DateTime.now(),
-      );
-      GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
-    } catch (e) {
-      LoggerUtil.instance.e('记录条件活动失败: $e');
-    }
-  }
-
   final _repository = GetIt.instance.get<ConditionRepository>();
 
   final entity = signal<ConditionEntity?>(null);
+
   final persistedKey = signal<ConditionKey?>(null);
   final loading = signal(false);
   final submitting = signal(false);
@@ -43,17 +27,18 @@ class ConditionDetailViewModel with FieldControllerMixin {
   /// Currently selected condition type; drives the label/cascade rebuild of
   /// the param1/2/3 controls
   final selectedConditionType = signal(0);
+
   final selectedSourceType = signal(0);
   final selectedSourceGroup = signal(0);
   final selectedConditionValue1 = signal(0);
   final selectedErrorType = signal(0);
   final selectedSourceMode = signal(0);
   final selectedConditionMode = signal(0);
-
   // Source: two semantic controller groups — mode + type/reference ID
   late final sourceModeController = registerController(
     EnumFieldController<int>(fallback: 0),
   );
+
   late final sourceTypeController = registerController(
     EnumFieldController<int>(fallback: 0),
   );
@@ -66,11 +51,11 @@ class ConditionDetailViewModel with FieldControllerMixin {
   late final sourceEntryController = registerController(IntFieldController());
   late final sourceIdController = registerController(IntFieldControllerGroup());
   late final elseGroupController = registerController(IntFieldController());
-
   // Condition: two semantic controller groups — mode + type/reference ID
   late final conditionModeController = registerController(
     EnumFieldController<int>(fallback: 0),
   );
+
   late final conditionTypeController = registerController(
     EnumFieldController<int>(fallback: 0),
   );
@@ -101,7 +86,6 @@ class ConditionDetailViewModel with FieldControllerMixin {
   );
   late final scriptNameController = registerController(StringFieldController());
   late final commentController = registerController(StringFieldController());
-
   void dispose() {
     sourceModeController.removeListener(_onSourceModeChange);
     sourceTypeController.removeListener(_onSourceTypeChange);
@@ -264,6 +248,23 @@ class ConditionDetailViewModel with FieldControllerMixin {
       scriptName: scriptNameController.collect(),
       comment: commentController.collect(),
     );
+  }
+
+  void _logActivity(ActivityActionType action, ConditionEntity c) {
+    try {
+      final log = ActivityLogEntity(
+        module: 'conditions',
+        actionType: action,
+        entityName:
+            'Condition ${c.sourceTypeOrReferenceId}/${c.sourceGroup}/'
+            '${c.sourceEntry}/${c.sourceId}/${c.elseGroup}'
+            '${c.comment.isEmpty ? '' : ' - ${c.comment}'}',
+        createdAt: DateTime.now(),
+      );
+      GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+    } catch (e) {
+      LoggerUtil.instance.e('记录条件活动失败: $e');
+    }
   }
 
   void _onConditionModeChange() {

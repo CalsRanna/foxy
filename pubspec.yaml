@@ -5,6 +5,9 @@ publish_to: none
 environment:
   sdk: ^3.13.0
 
+dev_dependencies:
+  sort_members: ^0.1.0
+
 workspace:
   - packages/foxy
   - packages/foxy_annotation

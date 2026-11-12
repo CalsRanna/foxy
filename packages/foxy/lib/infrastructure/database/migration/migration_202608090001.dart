@@ -7,9 +7,6 @@ import 'package:laconic/laconic.dart';
 /// 游戏对象 and 条件; this migration normalizes every feature to the same
 /// default set.
 class Migration202608090001 implements Migration {
-  @override
-  String get name => 'migration_202608090001';
-
   static const _defaultRouterMenus = [
     'creatureTemplate',
     'gossipMenu',
@@ -18,6 +15,9 @@ class Migration202608090001 implements Migration {
     'smartScript',
     'spell',
   ];
+
+  @override
+  String get name => 'migration_202608090001';
 
   @override
   Future<void> migrate(Laconic laconic) async {

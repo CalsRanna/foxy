@@ -7,21 +7,6 @@ library;
 
 import 'package:foxy_generator/src/naming.dart';
 
-/// Derived physical table name for a Full Entity class name:
-/// `CreatureLootTemplateEntity` → `creature_loot_template`.
-///
-/// Returns the empty string when the base is empty (a class named exactly
-/// `Entity`), which callers must reject.
-String tableNameOf(String entityClassName) {
-  final base = stripEntitySuffix(entityClassName);
-  return base.isEmpty ? '' : toSnakeCase(base);
-}
-
-/// Derived Full Entity class name for a Repository class name:
-/// `CreatureLootTemplateRepository` → `CreatureLootTemplateEntity`.
-String entityClassNameOfRepository(String repositoryClassName) =>
-    '${stripSuffix(repositoryClassName, 'Repository')}Entity';
-
 /// ViewModel suffixes, longest first. `XxxLinkedDetailViewModel` must be
 /// stripped before `XxxDetailViewModel` (its name *ends with* the shorter
 /// suffix too).
@@ -50,6 +35,11 @@ String? baseNameOfViewModel(String viewModelClassName) {
   return null;
 }
 
+/// Derived Full Entity class name for a Repository class name:
+/// `CreatureLootTemplateRepository` → `CreatureLootTemplateEntity`.
+String entityClassNameOfRepository(String repositoryClassName) =>
+    '${stripSuffix(repositoryClassName, 'Repository')}Entity';
+
 /// Derived Full Entity class name for a ViewModel class name:
 /// `CreatureTemplateListViewModel` → `CreatureTemplateEntity`.
 ///
@@ -76,4 +66,14 @@ String stripSuffix(String name, String suffix) {
     return name.substring(0, name.length - suffix.length);
   }
   return name;
+}
+
+/// Derived physical table name for a Full Entity class name:
+/// `CreatureLootTemplateEntity` → `creature_loot_template`.
+///
+/// Returns the empty string when the base is empty (a class named exactly
+/// `Entity`), which callers must reject.
+String tableNameOf(String entityClassName) {
+  final base = stripEntitySuffix(entityClassName);
+  return base.isEmpty ? '' : toSnakeCase(base);
 }

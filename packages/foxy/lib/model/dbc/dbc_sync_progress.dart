@@ -62,22 +62,6 @@ class DbcSyncResult extends DbcSyncProgress {
   bool get success => !cancelled && errors.isEmpty;
 }
 
-/// Non-fatal DBC sync note (e.g. exported tables missing row-order data).
-///
-/// Unlike [DbcSyncError], a warning does not make [DbcSyncResult.success]
-/// false — the export itself completed, but the user may want to re-import
-/// the DBC to restore original row order.
-class DbcSyncWarning {
-  final String? tableName;
-  final String? fileName;
-  final String message;
-
-  const DbcSyncWarning({this.tableName, this.fileName, required this.message});
-
-  @override
-  String toString() => message;
-}
-
 enum DbcSyncStage {
   preparing,
   scanning,
@@ -99,6 +83,22 @@ class DbcSyncStatus extends DbcSyncProgress {
     required this.message,
     this.fileName,
   });
+}
+
+/// Non-fatal DBC sync note (e.g. exported tables missing row-order data).
+///
+/// Unlike [DbcSyncError], a warning does not make [DbcSyncResult.success]
+/// false — the export itself completed, but the user may want to re-import
+/// the DBC to restore original row order.
+class DbcSyncWarning {
+  final String? tableName;
+  final String? fileName;
+  final String message;
+
+  const DbcSyncWarning({this.tableName, this.fileName, required this.message});
+
+  @override
+  String toString() => message;
 }
 
 class DbcTableCheckResult {
