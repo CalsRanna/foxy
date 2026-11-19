@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'npc_trainer_entity.g.dart';
 
@@ -18,6 +19,7 @@ class NpcTrainerEntity with _NpcTrainerEntityMixin {
   final int trainerId;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SpellId', key: true)
   final int spellId;
 
@@ -26,18 +28,26 @@ class NpcTrainerEntity with _NpcTrainerEntityMixin {
   final int moneyCost;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '需要技能',
+    table: 'foxy.dbc_skill_line',
+    column: 'ID',
+  )
   @FoxyFullField('ReqSkillLine')
   final int reqSkillLine;
 
   @FoxyFullField('ReqSkillRank')
   final int reqSkillRank;
 
+  @FoxyFieldMeaning.reference('需要法术1', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('ReqAbility1')
   final int reqAbility1;
 
+  @FoxyFieldMeaning.reference('需要法术2', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('ReqAbility2')
   final int reqAbility2;
 
+  @FoxyFieldMeaning.reference('需要法术3', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('ReqAbility3')
   final int reqAbility3;
 

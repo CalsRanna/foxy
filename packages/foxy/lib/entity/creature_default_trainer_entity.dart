@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'creature_default_trainer_entity.g.dart';
 
@@ -10,6 +11,11 @@ class CreatureDefaultTrainerEntity with _CreatureDefaultTrainerEntityMixin {
   @FoxyFullField('CreatureId', key: true)
   final int creatureId;
 
+  @FoxyFieldMeaning.reference(
+    '训练师',
+    table: 'trainer_spell',
+    column: 'TrainerId',
+  )
   @FoxyFullField('TrainerId')
   final int trainerId;
 

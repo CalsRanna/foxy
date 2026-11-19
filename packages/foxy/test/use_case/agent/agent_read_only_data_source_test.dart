@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
+import 'package:foxy_agent/foxy_agent.dart';
 
 void main() {
   test('builds the catalog for world and foxy tables', () {
-    final catalog = buildAgentTableCatalog([
+    final catalog = AgentReadOnlyDataSource.buildCatalog([
       _row('acore_world', 'creature_template', 'entry', 'int', 'PRI', '编号'),
       _row('acore_world', 'creature_template', 'name', 'varchar', '', '名称'),
       _row(
@@ -36,7 +37,7 @@ void main() {
   });
 
   test('maps common MySQL types to logical types', () {
-    final catalog = buildAgentTableCatalog([
+    final catalog = AgentReadOnlyDataSource.buildCatalog([
       _row('acore_world', 't', 'a', 'bigint', '', ''),
       _row('acore_world', 't', 'b', 'decimal', '', ''),
       _row('acore_world', 't', 'c', 'tinyint', '', ''),
@@ -52,8 +53,24 @@ void main() {
     expect(table.findColumn('e')!.type, 'bool');
   });
 
+  test('attaches field semantics from the generated registry', () {
+    final catalog = AgentReadOnlyDataSource.buildCatalog(
+      [_row('acore_world', 'creature_template', 'type', 'int', '', '')],
+      semantics: const {
+        'creature_template': {
+          'type': ColumnSemantics.enumValues(label: '生物类型', values: {1: '野兽'}),
+        },
+      },
+    );
+
+    final column = catalog.find('creature_template')!.findColumn('type')!;
+    expect(column.semantics, isNotNull);
+    expect(column.semantics!.label, '生物类型');
+    expect(column.semantics!.values[1], '野兽');
+  });
+
   test('skips rows with missing identifiers', () {
-    final catalog = buildAgentTableCatalog([
+    final catalog = AgentReadOnlyDataSource.buildCatalog([
       _row('acore_world', '', 'x', 'int', '', ''),
       _row('', 't', 'x', 'int', '', ''),
       _row('acore_world', 't', '', 'int', '', ''),

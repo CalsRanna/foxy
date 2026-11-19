@@ -78,7 +78,7 @@ class AgentSessionStore {
       id: id,
       title: firstUser == null
           ? _defaultTitle
-          : agentSessionTitle(firstUser.text),
+          : AgentChatSession.titleFrom(firstUser.text),
     );
     session.messages.addAll(messages);
     session.session.addItems(items);
@@ -148,7 +148,7 @@ class AgentSessionStore {
         }
         final text = entry['text'];
         if (text is String && text.trim().isNotEmpty) {
-          return agentSessionTitle(text);
+          return AgentChatSession.titleFrom(text);
         }
       }
     } catch (error) {

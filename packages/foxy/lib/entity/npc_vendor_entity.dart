@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'npc_vendor_entity.g.dart';
 
@@ -21,6 +22,7 @@ class NpcVendorEntity with _NpcVendorEntityMixin {
   final int slot;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('物品', table: 'item_template', column: 'entry')
   @FoxyFullField('item', key: true)
   final int item;
 
@@ -33,6 +35,11 @@ class NpcVendorEntity with _NpcVendorEntityMixin {
   final int incrtime;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '兑换费用',
+    table: 'foxy.dbc_item_extended_cost',
+    column: 'ID',
+  )
   @FoxyFullField('ExtendedCost', key: true)
   final int extendedCost;
 

@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'dbc_faction_template_entity.g.dart';
 
@@ -14,6 +15,7 @@ class DbcFactionTemplateEntity with _DbcFactionTemplateEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('阵营', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Faction')
   final int faction;
 
@@ -33,27 +35,35 @@ class DbcFactionTemplateEntity with _DbcFactionTemplateEntityMixin {
   @FoxyFullField('EnemyGroup')
   final int enemyGroup;
 
+  @FoxyFieldMeaning.reference('敌对阵营0', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Enemies0')
   final int enemies0;
 
+  @FoxyFieldMeaning.reference('敌对阵营1', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Enemies1')
   final int enemies1;
 
+  @FoxyFieldMeaning.reference('敌对阵营2', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Enemies2')
   final int enemies2;
 
+  @FoxyFieldMeaning.reference('敌对阵营3', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Enemies3')
   final int enemies3;
 
+  @FoxyFieldMeaning.reference('友好阵营0', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Friend0')
   final int friend0;
 
+  @FoxyFieldMeaning.reference('友好阵营1', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Friend1')
   final int friend1;
 
+  @FoxyFieldMeaning.reference('友好阵营2', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Friend2')
   final int friend2;
 
+  @FoxyFieldMeaning.reference('友好阵营3', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('Friend3')
   final int friend3;
 

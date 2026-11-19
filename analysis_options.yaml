@@ -5,9 +5,14 @@
 # the analysis options file that *declares* it, so the member packages can keep
 # pulling this file in via `include:` and still find the plugin
 # (https://github.com/dart-lang/sdk/issues/61477). Keep it portable — a
-# machine-specific absolute path resolves to nothing anywhere else, and the
-# failure is easy to miss: `flutter analyze` (the analyze gate in ci.yml) never
-# runs plugins, so only `dart analyze` would report the broken resolution.
+# machine-specific absolute path resolves to nothing anywhere else.
+#
+# Both `dart analyze` and `flutter analyze` run analyzer plugins (the CLI
+# starts an analysis server). At every analysis-server start the plugin
+# manager re-resolves the plugin with `dart pub upgrade` under
+# ~/.dartServer/.plugin_manager/<hash>/, so the plugin needs pub access to
+# load; if resolution fails, analyze prints the plugin setup error and
+# continues without the plugin (no foxy_lint diagnostics).
 analyzer:
   exclude:
     - build/**

@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'creature_template_spell_entity.g.dart';
 
@@ -11,6 +12,7 @@ part 'creature_template_spell_entity.g.dart';
 @FoxyFullEntity()
 class CreatureTemplateSpellEntity with _CreatureTemplateSpellEntityMixin {
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('生物', table: 'creature_template', column: 'entry')
   @FoxyFullField('CreatureID', key: true)
   final int creatureID;
 
@@ -19,6 +21,7 @@ class CreatureTemplateSpellEntity with _CreatureTemplateSpellEntityMixin {
   final int index;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('Spell')
   final int spell;
 

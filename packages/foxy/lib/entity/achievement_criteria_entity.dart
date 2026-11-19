@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'achievement_criteria_entity.g.dart';
 
@@ -10,6 +11,7 @@ class AchievementCriteriaEntity with _AchievementCriteriaEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('成就', table: 'foxy.dbc_achievement', column: 'ID')
   @FoxyFullField('Achievement_ID')
   final int achievementId;
 

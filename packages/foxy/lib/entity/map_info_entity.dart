@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'map_info_entity.g.dart';
 
@@ -75,6 +77,7 @@ class MapInfoEntity with _MapInfoEntityMixin {
   @FoxyFullField('MapName_lang_Flags')
   final int mapNameLangFlags;
 
+  @FoxyFieldMeaning.reference('区域', table: 'foxy.dbc_area_table', column: 'ID')
   @FoxyFullField('AreaTableID')
   final int areaTableId;
 
@@ -186,6 +189,7 @@ class MapInfoEntity with _MapInfoEntityMixin {
   @FoxyFullField('MinimapIconScale')
   final double minimapIconScale;
 
+  @FoxyFieldMeaning.reference('尸体地图', table: 'foxy.dbc_map', column: 'ID')
   @FoxyFullField('CorpseMapID')
   final int corpseMapId;
 
@@ -198,6 +202,7 @@ class MapInfoEntity with _MapInfoEntityMixin {
   @FoxyFullField('TimeOfDayOverride')
   final int timeOfDayOverride;
 
+  @FoxyFieldMeaning.enumValues('资料片', values: CreatureEnums.expansionOptions)
   @FoxyFullField('ExpansionID')
   final int expansionId;
 

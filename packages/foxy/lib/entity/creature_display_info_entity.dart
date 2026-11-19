@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'creature_display_info_entity.g.dart';
 
@@ -13,6 +14,11 @@ class CreatureDisplayInfoEntity with _CreatureDisplayInfoEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '模型',
+    table: 'foxy.dbc_creature_model_data',
+    column: 'ID',
+  )
   @FoxyFullField('ModelID')
   final int modelId;
 

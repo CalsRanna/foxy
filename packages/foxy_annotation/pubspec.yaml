@@ -8,4 +8,9 @@ environment:
 resolution: workspace
 
 dependencies:
+  foxy_game_definition:
+    path: ../foxy_game_definition
   meta: ^1.17.0
+
+dev_dependencies:
+  lints: ^6.0.0

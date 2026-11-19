@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'dbc_faction_entity.g.dart';
 
@@ -14,27 +16,59 @@ class DbcFactionEntity with _DbcFactionEntityMixin {
   @FoxyFullField('ReputationIndex')
   final int reputationIndex;
 
+  @FoxyFieldMeaning.flags(
+    '声望种族掩码0',
+    flags: PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
+  )
   @FoxyFullField('ReputationRaceMask0')
   final int reputationRaceMask0;
 
+  @FoxyFieldMeaning.flags(
+    '声望种族掩码1',
+    flags: PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
+  )
   @FoxyFullField('ReputationRaceMask1')
   final int reputationRaceMask1;
 
+  @FoxyFieldMeaning.flags(
+    '声望种族掩码2',
+    flags: PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
+  )
   @FoxyFullField('ReputationRaceMask2')
   final int reputationRaceMask2;
 
+  @FoxyFieldMeaning.flags(
+    '声望种族掩码3',
+    flags: PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
+  )
   @FoxyFullField('ReputationRaceMask3')
   final int reputationRaceMask3;
 
+  @FoxyFieldMeaning.flags(
+    '声望职业掩码0',
+    flags: PlayerCreateInfoConstants.playerCreateClassMaskFlags,
+  )
   @FoxyFullField('ReputationClassMask0')
   final int reputationClassMask0;
 
+  @FoxyFieldMeaning.flags(
+    '声望职业掩码1',
+    flags: PlayerCreateInfoConstants.playerCreateClassMaskFlags,
+  )
   @FoxyFullField('ReputationClassMask1')
   final int reputationClassMask1;
 
+  @FoxyFieldMeaning.flags(
+    '声望职业掩码2',
+    flags: PlayerCreateInfoConstants.playerCreateClassMaskFlags,
+  )
   @FoxyFullField('ReputationClassMask2')
   final int reputationClassMask2;
 
+  @FoxyFieldMeaning.flags(
+    '声望职业掩码3',
+    flags: PlayerCreateInfoConstants.playerCreateClassMaskFlags,
+  )
   @FoxyFullField('ReputationClassMask3')
   final int reputationClassMask3;
 
@@ -62,6 +96,7 @@ class DbcFactionEntity with _DbcFactionEntityMixin {
   @FoxyFullField('ReputationFlags3')
   final int reputationFlags3;
 
+  @FoxyFieldMeaning.reference('父阵营', table: 'foxy.dbc_faction', column: 'ID')
   @FoxyFullField('ParentFactionID')
   final int parentFactionId;
 

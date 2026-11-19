@@ -10,6 +10,9 @@ targets:
       foxy:foxy_view_model:
         generate_for:
           - lib/view_model/**_view_model.dart
+      foxy:foxy_semantics:
+        generate_for:
+          - lib/constant/agent_field_semantics.dart
 
 builders:
   foxy_entity:
@@ -35,6 +38,15 @@ builders:
     builder_factories: ["foxyViewModelBuilder"]
     build_extensions:
       ".dart": [".foxy_view_model.g.part"]
+    auto_apply: root_package
+    build_to: cache
+    applies_builders: ["source_gen:combining_builder"]
+
+  foxy_semantics:
+    import: "package:foxy_generator/builder.dart"
+    builder_factories: ["foxySemanticsBuilder"]
+    build_extensions:
+      ".dart": [".foxy_semantics.g.part"]
     auto_apply: root_package
     build_to: cache
     applies_builders: ["source_gen:combining_builder"]

@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'item_template_entity.g.dart';
 
@@ -20,6 +22,7 @@ class ItemTemplateEntity with _ItemTemplateEntityMixin {
   final String description;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues('品质', values: ItemEnums.itemQualityOptions)
   @FoxyFullField('Quality')
   final int quality;
 
@@ -33,6 +36,7 @@ class ItemTemplateEntity with _ItemTemplateEntityMixin {
   @FoxyFullField('SoundOverrideSubclass')
   final int soundOverrideSubclass;
 
+  @FoxyFieldMeaning.enumValues('材质', values: ItemEnums.itemMaterialOptions)
   @FoxyFullField('Material')
   final int material;
 
@@ -43,9 +47,11 @@ class ItemTemplateEntity with _ItemTemplateEntityMixin {
   @FoxyFullField('InventoryType')
   final int inventoryType;
 
+  @FoxyFieldMeaning.enumValues('收起方式', values: ItemEnums.itemSheathOptions)
   @FoxyFullField('sheath')
   final int sheath;
 
+  @FoxyFieldMeaning.enumValues('绑定类型', values: ItemEnums.itemBondingOptions)
   @FoxyFullField('bonding')
   final int bonding;
 
@@ -124,6 +130,10 @@ class ItemTemplateEntity with _ItemTemplateEntityMixin {
   @FoxyFullField('ArmorDamageModifier')
   final double armorDamageModifier;
 
+  @FoxyFieldMeaning.enumValues(
+    '伤害类型1',
+    values: CreatureEnums.damageSchoolOptions,
+  )
   @FoxyFullField('dmg_type1')
   final int dmgType1;
 
@@ -133,6 +143,10 @@ class ItemTemplateEntity with _ItemTemplateEntityMixin {
   @FoxyFullField('dmg_max1')
   final double dmgMax1;
 
+  @FoxyFieldMeaning.enumValues(
+    '伤害类型2',
+    values: CreatureEnums.damageSchoolOptions,
+  )
   @FoxyFullField('dmg_type2')
   final int dmgType2;
 
@@ -157,6 +171,7 @@ class ItemTemplateEntity with _ItemTemplateEntityMixin {
   @FoxyFullField('ScalingStatValue')
   final int scalingStatValue;
 
+  @FoxyFieldMeaning.enumValues('属性类型', values: ItemEnums.itemStatTypeOptions)
   @FoxyFullField('stat_type1')
   final int statType1;
 
@@ -396,18 +411,21 @@ class ItemTemplateEntity with _ItemTemplateEntityMixin {
   @FoxyFullField('socketBonus')
   final int socketBonus;
 
+  @FoxyFieldMeaning.flags('插槽颜色1', flags: ItemFlags.itemSocketColorFlagOptions)
   @FoxyFullField('socketColor_1')
   final int socketColor1;
 
   @FoxyFullField('socketContent_1')
   final int socketContent1;
 
+  @FoxyFieldMeaning.flags('插槽颜色2', flags: ItemFlags.itemSocketColorFlagOptions)
   @FoxyFullField('socketColor_2')
   final int socketColor2;
 
   @FoxyFullField('socketContent_2')
   final int socketContent2;
 
+  @FoxyFieldMeaning.flags('插槽颜色3', flags: ItemFlags.itemSocketColorFlagOptions)
   @FoxyFullField('socketColor_3')
   final int socketColor3;
 

@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'skill_line_entity.g.dart';
 
@@ -15,9 +16,19 @@ class SkillLineEntity with _SkillLineEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '技能分类',
+    table: 'foxy.dbc_skill_line_category',
+    column: 'ID',
+  )
   @FoxyFullField('CategoryID')
   final int categoryId;
 
+  @FoxyFieldMeaning.reference(
+    '技能花费',
+    table: 'foxy.dbc_skill_costs_data',
+    column: 'ID',
+  )
   @FoxyFullField('SkillCostsID')
   final int skillCostsId;
 
@@ -123,6 +134,11 @@ class SkillLineEntity with _SkillLineEntityMixin {
   @FoxyFullField('Description_lang_Flags')
   final int descriptionLangFlags;
 
+  @FoxyFieldMeaning.reference(
+    '技能图标',
+    table: 'foxy.dbc_spell_icon',
+    column: 'ID',
+  )
   @FoxyFullField('SpellIconID')
   final int spellIconId;
 

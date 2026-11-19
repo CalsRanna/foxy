@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'item_loot_template_entity.g.dart';
 
@@ -20,6 +22,11 @@ class ItemLootTemplateEntity with _ItemLootTemplateEntityMixin {
   final int item;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '引用掉落模板',
+    table: 'reference_loot_template',
+    column: 'Entry',
+  )
   @FoxyFullField('Reference')
   final int reference;
 
@@ -31,6 +38,7 @@ class ItemLootTemplateEntity with _ItemLootTemplateEntityMixin {
   @FoxyFullField('QuestRequired')
   final bool questRequired;
 
+  @FoxyFieldMeaning.flags('掉落模式', flags: CreatureFlags.lootModeFlagOptions)
   @FoxyFullField('LootMode')
   final int lootMode;
 

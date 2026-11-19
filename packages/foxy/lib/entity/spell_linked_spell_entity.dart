@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'spell_linked_spell_entity.g.dart';
@@ -19,6 +20,10 @@ class SpellLinkedSpellEntity with _SpellLinkedSpellEntityMixin {
   final int spellEffect;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues(
+    '关联类型',
+    values: SpellEnums.spellLinkedTypeOptions,
+  )
   @FoxyFullField('type', key: true)
   final int type;
 

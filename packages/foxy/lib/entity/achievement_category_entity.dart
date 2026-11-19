@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'achievement_category_entity.g.dart';
 
@@ -10,6 +11,11 @@ class AchievementCategoryEntity with _AchievementCategoryEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '父分类',
+    table: 'foxy.dbc_achievement_category',
+    column: 'ID',
+  )
   @FoxyFullField('Parent')
   final int parent;
 

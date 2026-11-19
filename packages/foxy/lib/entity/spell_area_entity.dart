@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'spell_area_entity.g.dart';
@@ -31,21 +32,32 @@ class SpellAreaEntity with _SpellAreaEntityMixin {
   final int auraSpell;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.flags('种族掩码', flags: ItemFlags.allowableRaceOptions)
   @FoxyFullField('racemask', key: true)
   final int racemask;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues('性别', values: SpellEnums.spellAreaGenderOptions)
   @FoxyFullField('gender', key: true)
   final int gender;
 
+  @FoxyFieldMeaning.enumValues('自动施放', values: CreatureEnums.booleanOptions)
   @FoxyFullField('autocast')
   final int autocast;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.flags(
+    '任务开始状态',
+    flags: SpellFlags.spellAreaQuestStatusOptions,
+  )
   @FoxyFullField('quest_start_status')
   final int questStartStatus;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.flags(
+    '任务结束状态',
+    flags: SpellFlags.spellAreaQuestStatusOptions,
+  )
   @FoxyFullField('quest_end_status')
   final int questEndStatus;
 

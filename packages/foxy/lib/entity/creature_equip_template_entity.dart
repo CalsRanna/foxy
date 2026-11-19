@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'creature_equip_template_entity.g.dart';
 
@@ -21,6 +22,7 @@ part 'creature_equip_template_entity.g.dart';
 @FoxyFullEntity()
 class CreatureEquipTemplateEntity with _CreatureEquipTemplateEntityMixin {
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('生物', table: 'creature_template', column: 'entry')
   @FoxyFullField('CreatureID', key: true)
   final int creatureID;
 
@@ -29,14 +31,17 @@ class CreatureEquipTemplateEntity with _CreatureEquipTemplateEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('物品1', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID1')
   final int itemID1;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('物品2', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID2')
   final int itemID2;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('物品3', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID3')
   final int itemID3;
 

@@ -47,8 +47,10 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 
 `packages/foxy_lint` 是项目专属 analyzer 插件。
 
-- 插件**只在 IDE 分析服务器里运行**：`flutter analyze` / `dart analyze` CLI 不执行插件，因此 CI 的 analyze 关卡不覆盖这些规则。规则由自身测试（`packages/foxy_lint/test/`，官方 `analyzer_testing` 框架）端到端保证。
-- 启用与否在**工作区根** `analysis_options.yaml` 的 `plugins.foxy_lint.diagnostics` 中声明（绝对路径，因 dart-lang/sdk#61477）。
+- 插件由**分析服务器**加载：从 Dart 3.10 / Flutter 3.38 起，`flutter analyze` / `dart analyze` CLI 也会执行插件（CLI 内部会启动分析服务器），因此 CI 的 analyze 关卡同样覆盖这些规则。
+- 每次分析服务器启动时，插件管理器都会在 `~/.dartServer/.plugin_manager/<hash>/` 的合成包里执行 `dart pub upgrade` 解析插件依赖，这需要能访问 pub；解析失败时 CLI 会打印 `An error occurred while executing an analyzer plugin ...` 并跳过插件继续分析，结果里就看不到这些规则。
+- 规则同时由自身测试（`packages/foxy_lint/test/`，官方 `analyzer_testing` 框架）端到端保证。
+- 启用与否在**工作区根** `analysis_options.yaml` 的 `plugins.foxy_lint.diagnostics` 中声明（路径相对该文件解析，成员包通过 `include:` 继承，见 dart-lang/sdk#61477）。
 
 已启用的规则：
 
@@ -64,7 +66,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 | `no_chinese_throw` | 异常消息必须英文 |
 | `min_table_column_width` | 表格列宽至少 120 |
 
-已注册但未启用：`annotation_file_mismatch`、`class_file_name_match`（等价检查由生成器 reader 在构建期完成）、`avoid_top_level_declarations`、`no_k_prefixed_static_member`。
+规则一律以 warning 规则注册（`registerWarningRule`），**默认开启**；`diagnostics:` 主要用于开启 lint 规则，也可用 `<rule>: false` 关闭 warning 规则。未写入 `diagnostics` 的 4 条因此也是开启状态：`annotation_file_mismatch`、`class_file_name_match`（等价检查由生成器 reader 在构建期完成）、`avoid_top_level_declarations`、`no_k_prefixed_static_member`；要关闭需显式写 `false`。
 
 ## 5. 错误处理
 

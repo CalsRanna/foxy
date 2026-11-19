@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'quest_request_items_entity.g.dart';
 
@@ -10,14 +11,17 @@ part 'quest_request_items_entity.g.dart';
 @FoxyFullEntity()
 class QuestRequestItemsEntity with _QuestRequestItemsEntityMixin {
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('任务', table: 'quest_template', column: 'ID')
   @FoxyFullField('ID', key: true)
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('完成表情', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('EmoteOnComplete')
   final int emoteOnComplete;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('未完成表情', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('EmoteOnIncomplete')
   final int emoteOnIncomplete;
 

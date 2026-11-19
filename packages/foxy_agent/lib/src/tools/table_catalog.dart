@@ -1,3 +1,5 @@
+import 'package:foxy_agent/src/tools/column_semantics.dart';
+
 /// Metadata for one column of a queryable table.
 final class ColumnInfo {
   const ColumnInfo({
@@ -5,6 +7,7 @@ final class ColumnInfo {
     this.label = '',
     this.type = 'text',
     this.primaryKey = false,
+    this.semantics,
   });
 
   /// Physical column name, as used in tool filters.
@@ -19,11 +22,16 @@ final class ColumnInfo {
   /// Whether the column is part of the primary key.
   final bool primaryKey;
 
+  /// Machine-readable meaning (enum values, bit flags, reference target);
+  /// `describe_table` shows a summary and `describe_field_values` the detail.
+  final ColumnSemantics? semantics;
+
   Map<String, Object?> toJson() => {
     'name': name,
     if (label.isNotEmpty) 'label': label,
     'type': type,
     if (primaryKey) 'primaryKey': true,
+    if (semantics != null) 'semantics': semantics!.summaryJson(),
   };
 }
 

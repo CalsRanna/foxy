@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'game_object_quest_starter_entity.g.dart';
 
@@ -8,10 +9,16 @@ part 'game_object_quest_starter_entity.g.dart';
 @FoxyFullEntity(table: 'gameobject_queststarter')
 class GameObjectQuestStarterEntity with _GameObjectQuestStarterEntityMixin {
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '游戏对象',
+    table: 'gameobject_template',
+    column: 'entry',
+  )
   @FoxyFullField('id', key: true)
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('任务', table: 'quest_template', column: 'ID')
   @FoxyFullField('quest', key: true)
   final int quest;
 

@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'lock_entity.g.dart';
 
@@ -60,27 +61,35 @@ class LockEntity with _LockEntityMixin {
   final int index7;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('技能0', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill0')
   final int skill0;
 
+  @FoxyFieldMeaning.reference('技能1', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill1')
   final int skill1;
 
+  @FoxyFieldMeaning.reference('技能2', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill2')
   final int skill2;
 
+  @FoxyFieldMeaning.reference('技能3', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill3')
   final int skill3;
 
+  @FoxyFieldMeaning.reference('技能4', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill4')
   final int skill4;
 
+  @FoxyFieldMeaning.reference('技能5', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill5')
   final int skill5;
 
+  @FoxyFieldMeaning.reference('技能6', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill6')
   final int skill6;
 
+  @FoxyFieldMeaning.reference('技能7', table: 'foxy.dbc_skill_line', column: 'ID')
   @FoxyFullField('Skill7')
   final int skill7;
 

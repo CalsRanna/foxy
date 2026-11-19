@@ -43,7 +43,7 @@ void main() {
     expect(table['name'], 'creature_template');
     expect(table['label'], '生物模板');
     final columns = _asList(table['columns']);
-    expect(columns, hasLength(3));
+    expect(columns, hasLength(5));
     final entry = _asMap(columns.first);
     expect(entry['name'], 'entry');
     expect(entry['primaryKey'], true);
@@ -220,6 +220,64 @@ void main() {
     expect(listForEquals, contains('must be a scalar'));
   });
 
+  test('describe_table exposes column semantics summaries', () async {
+    const tool = DescribeTableTool(_catalog);
+
+    final result = _asMap(await tool.call({'table': 'creature_template'}));
+
+    final columns = _asList(_asMap(result['table'])['columns']);
+    final type = _asMap(
+      columns.firstWhere((column) => _asMap(column)['name'] == 'type'),
+    );
+    final semantics = _asMap(type['semantics']);
+    expect(semantics['kind'], 'enum');
+    expect(semantics['label'], '生物类型');
+    expect(semantics.containsKey('values'), isFalse);
+
+    final plain = _asMap(
+      columns.firstWhere((column) => _asMap(column)['name'] == 'name'),
+    );
+    expect(plain.containsKey('semantics'), isFalse);
+  });
+
+  test('describe_field_values returns the full enum mapping', () async {
+    const tool = DescribeFieldValuesTool(_catalog);
+
+    final result = _asMap(
+      await tool.call({'table': 'creature_template', 'column': 'type'}),
+    );
+
+    final semantics = _asMap(result['semantics']);
+    expect(semantics['kind'], 'enum');
+    expect(semantics['label'], '生物类型');
+    expect(_asMap(semantics['values'])['4'], '元素生物');
+  });
+
+  test('describe_field_values returns flag definitions', () async {
+    const tool = DescribeFieldValuesTool(_catalog);
+
+    final result = _asMap(
+      await tool.call({'table': 'creature_template', 'column': 'unit_flags'}),
+    );
+
+    final semantics = _asMap(result['semantics']);
+    expect(semantics['kind'], 'flags');
+    final flags = _asList(semantics['flags']);
+    expect(flags, hasLength(2));
+    expect(_asMap(flags.last)['value'], 64);
+  });
+
+  test('describe_field_values reports columns without semantics', () async {
+    const tool = DescribeFieldValuesTool(_catalog);
+
+    final result = await tool.call({
+      'table': 'creature_template',
+      'column': 'name',
+    });
+
+    expect(result, contains('No semantic definition'));
+  });
+
   test('get_row queries by primary key with equality filters', () async {
     final source = _FakeDataSource([
       {'entry': 1234, 'name': 'Hogger'},
@@ -292,6 +350,7 @@ void main() {
     expect(tools.map((tool) => tool.name), [
       'list_tables',
       'describe_table',
+      'describe_field_values',
       'query_rows',
       'get_row',
     ]);
@@ -310,6 +369,27 @@ const _catalog = TableCatalog([
       ColumnInfo(name: 'entry', label: '编号', type: 'int', primaryKey: true),
       ColumnInfo(name: 'name', label: '名称'),
       ColumnInfo(name: 'minlevel', label: '最低等级', type: 'int'),
+      ColumnInfo(
+        name: 'type',
+        label: '生物类型',
+        type: 'int',
+        semantics: ColumnSemantics.enumValues(
+          label: '生物类型',
+          values: {1: '野兽', 4: '元素生物'},
+        ),
+      ),
+      ColumnInfo(
+        name: 'unit_flags',
+        label: '单位标志',
+        type: 'int',
+        semantics: ColumnSemantics.flags(
+          label: '单位标志',
+          flags: [
+            ColumnFlag(value: 1, label: '不可攻击'),
+            ColumnFlag(value: 64, label: '不可选择'),
+          ],
+        ),
+      ),
     ],
   ),
   TableInfo(

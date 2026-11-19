@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'creature_template_entity.g.dart';
 
@@ -31,12 +33,17 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('difficulty_entry_3')
   final int difficultyEntry3;
 
+  @FoxyFieldMeaning.enumValues(
+    '伤害学派',
+    values: CreatureEnums.damageSchoolOptions,
+  )
   @FoxyFullField('dmgschool')
   final int damageSchool;
 
   @FoxyFullField('detection_range')
   final double detectionRange;
 
+  @FoxyFieldMeaning.flags('动态标志', flags: CreatureFlags.dynamicFlagOptions)
   @FoxyFullField('dynamicflags')
   final int dynamicFlags;
 
@@ -53,9 +60,14 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('faction')
   final int faction;
 
+  @FoxyFieldMeaning.enumValues(
+    '生物科',
+    values: CreatureEnums.creatureFamilyOptions,
+  )
   @FoxyFullField('family')
   final int family;
 
+  @FoxyFieldMeaning.flags('额外标志', flags: CreatureFlags.flagsExtraOptions)
   @FoxyFullField('flags_extra')
   final int flagsExtra;
 
@@ -71,12 +83,27 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('IconName')
   final String iconName;
 
+  @FoxyFieldMeaning.reference(
+    '击杀计数生物',
+    table: 'creature_template',
+    column: 'entry',
+  )
   @FoxyFullField('KillCredit1')
   final int killCredit1;
 
+  @FoxyFieldMeaning.reference(
+    '击杀计数生物',
+    table: 'creature_template',
+    column: 'entry',
+  )
   @FoxyFullField('KillCredit2')
   final int killCredit2;
 
+  @FoxyFieldMeaning.reference(
+    '生物掉落模板',
+    table: 'creature_loot_template',
+    column: 'entry',
+  )
   @FoxyFullField('lootid')
   final int lootId;
 
@@ -107,12 +134,18 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('name')
   final String name;
 
+  @FoxyFieldMeaning.flags('NPC 标志', flags: CreatureFlags.npcFlagOptions)
   @FoxyFullField('npcflag')
   final int npcFlag;
 
   @FoxyFullField('PetSpellDataId')
   final int petSpellDataId;
 
+  @FoxyFieldMeaning.reference(
+    '偷窃掉落模板',
+    table: 'pickpocketing_loot_template',
+    column: 'entry',
+  )
   @FoxyFullField('pickpocketloot')
   final int pickpocketLoot;
 
@@ -125,6 +158,7 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('RangeVariance')
   final double rangeVariance;
 
+  @FoxyFieldMeaning.enumValues('生物等级', values: CreatureEnums.rankOptions)
   @FoxyFullField('rank')
   final int rank;
 
@@ -134,6 +168,11 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('ScriptName')
   final String scriptName;
 
+  @FoxyFieldMeaning.reference(
+    '剥皮掉落模板',
+    table: 'skinning_loot_template',
+    column: 'entry',
+  )
   @FoxyFullField('skinloot')
   final int skinLoot;
 
@@ -153,15 +192,22 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('subname')
   final String subName;
 
+  @FoxyFieldMeaning.enumValues(
+    '生物类型',
+    values: CreatureEnums.creatureTypeOptions,
+  )
   @FoxyFullField('type')
   final int type;
 
+  @FoxyFieldMeaning.flags('类型标志', flags: CreatureFlags.creatureTypeFlagOptions)
   @FoxyFullField('type_flags')
   final int typeFlags;
 
+  @FoxyFieldMeaning.enumValues('单位职业', values: CreatureEnums.unitClassOptions)
   @FoxyFullField('unit_class')
   final int unitClass;
 
+  @FoxyFieldMeaning.flags('单位标志', flags: CreatureFlags.unitFlagOptions)
   @FoxyFullField('unit_flags')
   final int unitFlags;
 

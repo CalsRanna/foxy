@@ -26,12 +26,13 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 
 ## 内置只读工具
 
-`createReadOnlyTools(catalog: ..., dataSource: ...)` 返回四个内置工具，应用只需提供元数据与数据访问实现：
+`createReadOnlyTools(catalog: ..., dataSource: ...)` 返回五个内置工具，应用只需提供元数据与数据访问实现：
 
 | 工具 | 作用 |
 | --- | --- |
 | `list_tables` | 列出可查询的表（可按名称/中文标签过滤） |
-| `describe_table` | 返回一张表的列、类型、中文含义与主键 |
+| `describe_table` | 返回一张表的列、类型、中文含义与主键；带语义的列附带 `semantics` 摘要 |
+| `describe_field_values` | 按需返回某列 enum/flags/reference 的完整含义（值→标签、位定义、引用目标） |
 | `query_rows` | 按列过滤读取行，最多 50 行（默认 20），超出时标记 `truncated`；操作符含 `equals`/`notEquals`/`contains`/`in`/大小比较，`in` 的 `value` 传数组 |
 | `get_row` | 按主键读取单行 |
 
@@ -41,7 +42,7 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 
 应用侧需要实现：
 
-- `TableCatalog` / `TableInfo` / `ColumnInfo`：表与列元数据（可由 `@FoxyEntity` 注解生成）；`foxy` 库自身也通过同一目录暴露（如 `foxy.activity_log`、`foxy.dbc_*`）。
+- `TableCatalog` / `TableInfo` / `ColumnInfo`：表与列元数据（可由 `@FoxyEntity` 注解生成）；`foxy` 库自身也通过同一目录暴露（如 `foxy.activity_log`、`foxy.dbc_*`）。`ColumnInfo.semantics`（`ColumnSemantics`：enum 值表 / 位标志 / 引用目标）可选，由应用侧注入。
 - `ReadOnlyDataSource.queryRows`：只读查询执行器；收到的表名是目录中的限定名，实现必须据此路由到对应库、拒绝目录之外的表/列、强制行数上限、绝不写入，并返回可 JSON 编码的值。
 
 工具内部会先校验表名、列名、过滤操作符与主键，错误以可读文本返回给模型，不抛异常。

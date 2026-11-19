@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'currency_type_entity.g.dart';
 
@@ -14,10 +15,16 @@ class CurrencyTypeEntity with _CurrencyTypeEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('货币物品', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID')
   final int itemId;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '货币分类',
+    table: 'foxy.dbc_currency_category',
+    column: 'ID',
+  )
   @FoxyFullField('CategoryID')
   final int categoryId;
 

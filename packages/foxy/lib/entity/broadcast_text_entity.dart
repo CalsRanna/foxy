@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'broadcast_text_entity.g.dart';
 
@@ -10,6 +12,10 @@ class BroadcastTextEntity with _BroadcastTextEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues(
+    '语言',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('LanguageID')
   final int languageId;
 

@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'item_random_properties_entity.g.dart';
 
@@ -13,18 +14,43 @@ class ItemRandomPropertiesEntity with _ItemRandomPropertiesEntityMixin {
   @FoxyFullField('Name')
   final String name;
 
+  @FoxyFieldMeaning.reference(
+    '附魔0',
+    table: 'foxy.dbc_spell_item_enchantment',
+    column: 'ID',
+  )
   @FoxyFullField('Enchantment0')
   final int enchantment0;
 
+  @FoxyFieldMeaning.reference(
+    '附魔1',
+    table: 'foxy.dbc_spell_item_enchantment',
+    column: 'ID',
+  )
   @FoxyFullField('Enchantment1')
   final int enchantment1;
 
+  @FoxyFieldMeaning.reference(
+    '附魔2',
+    table: 'foxy.dbc_spell_item_enchantment',
+    column: 'ID',
+  )
   @FoxyFullField('Enchantment2')
   final int enchantment2;
 
+  @FoxyFieldMeaning.reference(
+    '附魔3',
+    table: 'foxy.dbc_spell_item_enchantment',
+    column: 'ID',
+  )
   @FoxyFullField('Enchantment3')
   final int enchantment3;
 
+  @FoxyFieldMeaning.reference(
+    '附魔4',
+    table: 'foxy.dbc_spell_item_enchantment',
+    column: 'ID',
+  )
   @FoxyFullField('Enchantment4')
   final int enchantment4;
 

@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'npc_text_entity.g.dart';
 
@@ -17,30 +19,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text0_1')
   final String text01;
 
+  @FoxyFieldMeaning.reference('广播文本0', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID0')
   final int broadcastTextId0;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言0',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang0')
   final int lang0;
 
   @FoxyFullField('Probability0')
   final double probability0;
 
+  @FoxyFieldMeaning.reference('表情0-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em0_0')
   final int em00;
 
+  @FoxyFieldMeaning.reference('表情0-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em0_1')
   final int em01;
 
+  @FoxyFieldMeaning.reference('表情0-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em0_2')
   final int em02;
 
+  @FoxyFieldMeaning.reference('表情0-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em0_3')
   final int em03;
 
+  @FoxyFieldMeaning.reference('表情0-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em0_4')
   final int em04;
 
+  @FoxyFieldMeaning.reference('表情0-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em0_5')
   final int em05;
 
@@ -50,30 +63,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text1_1')
   final String text11;
 
+  @FoxyFieldMeaning.reference('广播文本1', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID1')
   final int broadcastTextId1;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言1',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang1')
   final int lang1;
 
   @FoxyFullField('Probability1')
   final double probability1;
 
+  @FoxyFieldMeaning.reference('表情1-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em1_0')
   final int em10;
 
+  @FoxyFieldMeaning.reference('表情1-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em1_1')
   final int em11;
 
+  @FoxyFieldMeaning.reference('表情1-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em1_2')
   final int em12;
 
+  @FoxyFieldMeaning.reference('表情1-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em1_3')
   final int em13;
 
+  @FoxyFieldMeaning.reference('表情1-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em1_4')
   final int em14;
 
+  @FoxyFieldMeaning.reference('表情1-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em1_5')
   final int em15;
 
@@ -83,30 +107,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text2_1')
   final String text21;
 
+  @FoxyFieldMeaning.reference('广播文本2', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID2')
   final int broadcastTextId2;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言2',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang2')
   final int lang2;
 
   @FoxyFullField('Probability2')
   final double probability2;
 
+  @FoxyFieldMeaning.reference('表情2-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em2_0')
   final int em20;
 
+  @FoxyFieldMeaning.reference('表情2-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em2_1')
   final int em21;
 
+  @FoxyFieldMeaning.reference('表情2-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em2_2')
   final int em22;
 
+  @FoxyFieldMeaning.reference('表情2-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em2_3')
   final int em23;
 
+  @FoxyFieldMeaning.reference('表情2-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em2_4')
   final int em24;
 
+  @FoxyFieldMeaning.reference('表情2-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em2_5')
   final int em25;
 
@@ -116,30 +151,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text3_1')
   final String text31;
 
+  @FoxyFieldMeaning.reference('广播文本3', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID3')
   final int broadcastTextId3;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言3',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang3')
   final int lang3;
 
   @FoxyFullField('Probability3')
   final double probability3;
 
+  @FoxyFieldMeaning.reference('表情3-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em3_0')
   final int em30;
 
+  @FoxyFieldMeaning.reference('表情3-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em3_1')
   final int em31;
 
+  @FoxyFieldMeaning.reference('表情3-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em3_2')
   final int em32;
 
+  @FoxyFieldMeaning.reference('表情3-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em3_3')
   final int em33;
 
+  @FoxyFieldMeaning.reference('表情3-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em3_4')
   final int em34;
 
+  @FoxyFieldMeaning.reference('表情3-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em3_5')
   final int em35;
 
@@ -149,30 +195,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text4_1')
   final String text41;
 
+  @FoxyFieldMeaning.reference('广播文本4', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID4')
   final int broadcastTextId4;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言4',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang4')
   final int lang4;
 
   @FoxyFullField('Probability4')
   final double probability4;
 
+  @FoxyFieldMeaning.reference('表情4-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em4_0')
   final int em40;
 
+  @FoxyFieldMeaning.reference('表情4-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em4_1')
   final int em41;
 
+  @FoxyFieldMeaning.reference('表情4-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em4_2')
   final int em42;
 
+  @FoxyFieldMeaning.reference('表情4-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em4_3')
   final int em43;
 
+  @FoxyFieldMeaning.reference('表情4-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em4_4')
   final int em44;
 
+  @FoxyFieldMeaning.reference('表情4-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em4_5')
   final int em45;
 
@@ -182,30 +239,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text5_1')
   final String text51;
 
+  @FoxyFieldMeaning.reference('广播文本5', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID5')
   final int broadcastTextId5;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言5',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang5')
   final int lang5;
 
   @FoxyFullField('Probability5')
   final double probability5;
 
+  @FoxyFieldMeaning.reference('表情5-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em5_0')
   final int em50;
 
+  @FoxyFieldMeaning.reference('表情5-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em5_1')
   final int em51;
 
+  @FoxyFieldMeaning.reference('表情5-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em5_2')
   final int em52;
 
+  @FoxyFieldMeaning.reference('表情5-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em5_3')
   final int em53;
 
+  @FoxyFieldMeaning.reference('表情5-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em5_4')
   final int em54;
 
+  @FoxyFieldMeaning.reference('表情5-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em5_5')
   final int em55;
 
@@ -215,30 +283,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text6_1')
   final String text61;
 
+  @FoxyFieldMeaning.reference('广播文本6', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID6')
   final int broadcastTextId6;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言6',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang6')
   final int lang6;
 
   @FoxyFullField('Probability6')
   final double probability6;
 
+  @FoxyFieldMeaning.reference('表情6-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em6_0')
   final int em60;
 
+  @FoxyFieldMeaning.reference('表情6-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em6_1')
   final int em61;
 
+  @FoxyFieldMeaning.reference('表情6-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em6_2')
   final int em62;
 
+  @FoxyFieldMeaning.reference('表情6-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em6_3')
   final int em63;
 
+  @FoxyFieldMeaning.reference('表情6-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em6_4')
   final int em64;
 
+  @FoxyFieldMeaning.reference('表情6-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em6_5')
   final int em65;
 
@@ -248,30 +327,41 @@ class NpcTextEntity with _NpcTextEntityMixin {
   @FoxyFullField('text7_1')
   final String text71;
 
+  @FoxyFieldMeaning.reference('广播文本7', table: 'broadcast_text', column: 'ID')
   @FoxyFullField('BroadcastTextID7')
   final int broadcastTextId7;
 
+  @FoxyFieldMeaning.enumValues(
+    '语言7',
+    values: GossipMenuOptionConstants.npcTextLanguages,
+  )
   @FoxyFullField('lang7')
   final int lang7;
 
   @FoxyFullField('Probability7')
   final double probability7;
 
+  @FoxyFieldMeaning.reference('表情7-0', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em7_0')
   final int em70;
 
+  @FoxyFieldMeaning.reference('表情7-1', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em7_1')
   final int em71;
 
+  @FoxyFieldMeaning.reference('表情7-2', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em7_2')
   final int em72;
 
+  @FoxyFieldMeaning.reference('表情7-3', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em7_3')
   final int em73;
 
+  @FoxyFieldMeaning.reference('表情7-4', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em7_4')
   final int em74;
 
+  @FoxyFieldMeaning.reference('表情7-5', table: 'foxy.dbc_emotes', column: 'ID')
   @FoxyFullField('em7_5')
   final int em75;
 

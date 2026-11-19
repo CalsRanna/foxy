@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'creature_model_info_entity.g.dart';
 
@@ -6,6 +8,11 @@ part 'creature_model_info_entity.g.dart';
 @FoxyFullEntity()
 class CreatureModelInfoEntity with _CreatureModelInfoEntityMixin {
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '模型显示',
+    table: 'foxy.dbc_creature_display_info',
+    column: 'ID',
+  )
   @FoxyFullField('DisplayID', key: true)
   final int displayId;
 
@@ -18,10 +25,16 @@ class CreatureModelInfoEntity with _CreatureModelInfoEntityMixin {
   final double combatReach;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues('性别', values: SpellEnums.spellAreaGenderOptions)
   @FoxyFullField('Gender')
   final int gender;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '其他性别显示',
+    table: 'foxy.dbc_creature_display_info',
+    column: 'ID',
+  )
   @FoxyFullField('DisplayID_Other_Gender')
   final int displayIdOtherGender;
 

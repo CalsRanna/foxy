@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'smart_script_entity.g.dart';
 
@@ -10,6 +12,10 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   final int entryOrGuid;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues(
+    '脚本来源类型',
+    values: SmartScriptConstants.sourceTypes,
+  )
   @FoxyFullField('source_type', key: true)
   final int sourceType;
 
@@ -25,12 +31,17 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   @FoxyFullField('event_type')
   final int eventType;
 
+  @FoxyFieldMeaning.flags(
+    '事件阶段掩码',
+    flags: SmartScriptConstants.eventPhaseFlagItems,
+  )
   @FoxyFullField('event_phase_mask')
   final int eventPhaseMask;
 
   @FoxyFullField('event_chance')
   final int eventChance;
 
+  @FoxyFieldMeaning.flags('事件标志', flags: SmartScriptConstants.eventFlagItems)
   @FoxyFullField('event_flags')
   final int eventFlags;
 
@@ -53,6 +64,7 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   final int eventParam6;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues('动作类型', values: SmartScriptConstants.actionTypes)
   @FoxyFullField('action_type')
   final int actionType;
 
@@ -75,6 +87,7 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   final int actionParam6;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues('目标类型', values: SmartScriptConstants.targetTypes)
   @FoxyFullField('target_type')
   final int targetType;
 

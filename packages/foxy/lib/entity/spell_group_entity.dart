@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'spell_group_entity.g.dart';
 
@@ -12,6 +13,7 @@ class SpellGroupEntity with _SpellGroupEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('spell_id', key: true)
   final int spellId;
 

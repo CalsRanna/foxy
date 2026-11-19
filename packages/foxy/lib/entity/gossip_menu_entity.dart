@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'gossip_menu_entity.g.dart';
 
@@ -16,6 +17,7 @@ class GossipMenuEntity with _GossipMenuEntityMixin {
   final int menuId;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('NPC 文本', table: 'npc_text', column: 'ID')
   @FoxyFullField('TextID', key: true)
   final int textId;
 

@@ -15,6 +15,7 @@ List<AgentTool> createReadOnlyTools({
 }) => [
   ListTablesTool(catalog),
   DescribeTableTool(catalog),
+  DescribeFieldValuesTool(catalog),
   QueryRowsTool(catalog, dataSource),
   GetRowTool(catalog, dataSource),
 ];
@@ -137,6 +138,69 @@ final class DescribeTableTool extends AgentTool {
       return resolved.error!;
     }
     return {'table': table.toJson()};
+  }
+}
+
+/// Explains the full meaning of one column's values.
+final class DescribeFieldValuesTool extends AgentTool {
+  const DescribeFieldValuesTool(this.catalog);
+
+  final TableCatalog catalog;
+
+  @override
+  String get name => 'describe_field_values';
+
+  @override
+  String get description =>
+      'Explain what a column\'s values mean: enum value labels, bit flags, or '
+      'the referenced table/column. Columns with a semantics summary in '
+      'describe_table should be explained through this tool before drawing '
+      'conclusions; never guess the meaning of an undefined value.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'table': {
+        'type': 'string',
+        'description': 'Table name from list_tables.',
+      },
+      'column': {
+        'type': 'string',
+        'description': 'Column name from describe_table.',
+      },
+    },
+    'required': ['table', 'column'],
+    'additionalProperties': false,
+  };
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final resolved = _resolveTable(catalog, arguments['table']);
+    final table = resolved.table;
+    if (table == null) {
+      return resolved.error!;
+    }
+    final columnName = arguments['column'];
+    if (columnName is! String || columnName.isEmpty) {
+      return 'Missing "column" argument. Use describe_table to see the '
+          'available columns.';
+    }
+    final column = table.findColumn(columnName);
+    if (column == null) {
+      return 'Unknown column "$columnName" on table '
+          '"${table.qualifiedName}".';
+    }
+    final semantics = column.semantics;
+    if (semantics == null) {
+      return 'No semantic definition is available for "$columnName" on table '
+          '"${table.qualifiedName}". Do not guess its meaning.';
+    }
+    return {
+      'table': table.qualifiedName,
+      'column': columnName,
+      'semantics': semantics.toJson(),
+    };
   }
 }
 

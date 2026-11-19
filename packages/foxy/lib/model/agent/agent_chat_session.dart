@@ -40,6 +40,14 @@ class AgentChatSession {
   final session = AgentSession();
 
   final messages = <AgentChatMessage>[];
+
+  /// Session title derived from the first user message.
+  static String titleFrom(String text, {int maxLength = 24}) {
+    final line = text.split('\n').first.trim();
+    return line.length <= maxLength
+        ? line
+        : '${line.substring(0, maxLength)}...';
+  }
 }
 
 /// Lightweight session entry shown in the session list.
@@ -55,10 +63,4 @@ class AgentChatSessionMeta {
   final String title;
 
   final DateTime updatedAt;
-}
-
-/// Session title derived from the first user message.
-String agentSessionTitle(String text, {int maxLength = 24}) {
-  final line = text.split('\n').first.trim();
-  return line.length <= maxLength ? line : '${line.substring(0, maxLength)}...';
 }

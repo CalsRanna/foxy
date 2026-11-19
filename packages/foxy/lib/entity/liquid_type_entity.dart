@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'liquid_type_entity.g.dart';
 
@@ -25,6 +26,7 @@ class LiquidTypeEntity with _LiquidTypeEntityMixin {
   final int soundId;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SpellID')
   final int spellId;
 

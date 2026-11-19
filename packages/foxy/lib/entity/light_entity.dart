@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'light_entity.g.dart';
 
@@ -10,6 +11,7 @@ class LightEntity with _LightEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('地图', table: 'foxy.dbc_map', column: 'ID')
   @FoxyFullField('ContinentID')
   final int continentId;
 

@@ -172,7 +172,7 @@ class AgentViewModel with FieldControllerMixin {
     if (config == null || session == null || text.isEmpty) return;
     draftController.init('');
     if (session.messages.isEmpty) {
-      session.title = agentSessionTitle(text);
+      session.title = AgentChatSession.titleFrom(text);
     }
     session.messages.add(
       AgentChatMessage(role: AgentChatRole.user, text: text),

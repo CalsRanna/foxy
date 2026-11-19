@@ -1,6 +1,7 @@
 /// System instructions for an agent that uses the built-in read-only tools
-/// (`list_tables`, `describe_table`, `query_rows`, `get_row`) over the
-/// AzerothCore world database and the app's own `foxy` database.
+/// (`list_tables`, `describe_table`, `describe_field_values`, `query_rows`,
+/// `get_row`) over the AzerothCore world database and the app's own `foxy`
+/// database.
 ///
 /// The wording is fixed and cache-friendly: keep it first in the request and
 /// let host apps append domain-specific context after it instead of editing
@@ -20,6 +21,7 @@ const String readOnlyAssistantInstructions = '''
 - 你只能通过提供的工具读取数据：不能执行 SQL，也不能修改任何数据。
 - 先调用 list_tables 找到候选表（可用关键词过滤），不要猜测表名。
 - 过滤前先调用 describe_table 确认列名、类型和主键；使用的列名必须与返回结果完全一致。
+- 数值列若带有 semantics 摘要（enum / flags / reference），解释或翻译取值前先调用 describe_field_values 获取完整含义；reference 表示引用另一张表的主键，可据此关联查询。不要猜测未定义的值。
 - 用 query_rows 按条件读取行，用 get_row 按主键读取单行。
 
 ## 查询规范

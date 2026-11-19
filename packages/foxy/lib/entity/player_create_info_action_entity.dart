@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'player_create_info_action_entity.g.dart';
@@ -7,10 +8,18 @@ part 'player_create_info_action_entity.g.dart';
 @FoxyFullEntity(table: 'playercreateinfo_action')
 class PlayerCreateInfoActionEntity with _PlayerCreateInfoActionEntityMixin {
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues(
+    '种族',
+    values: PlayerCreateInfoConstants.playerRaceOptions,
+  )
   @FoxyFullField('race', key: true)
   final int race;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues(
+    '职业',
+    values: PlayerCreateInfoConstants.playerClassOptions,
+  )
   @FoxyFullField('class', key: true)
   final int class_;
 

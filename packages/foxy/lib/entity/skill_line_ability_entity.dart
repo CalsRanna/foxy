@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'skill_line_ability_entity.g.dart';
 
@@ -23,15 +25,31 @@ class SkillLineAbilityEntity with _SkillLineAbilityEntityMixin {
   @FoxyFullField('Spell')
   final int spell;
 
+  @FoxyFieldMeaning.flags(
+    '种族掩码',
+    flags: PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
+  )
   @FoxyFullField('RaceMask')
   final int raceMask;
 
+  @FoxyFieldMeaning.flags(
+    '职业掩码',
+    flags: PlayerCreateInfoConstants.playerCreateClassMaskFlags,
+  )
   @FoxyFullField('ClassMask')
   final int classMask;
 
+  @FoxyFieldMeaning.flags(
+    '排除种族',
+    flags: PlayerCreateInfoConstants.playerCreateRaceMaskFlags,
+  )
   @FoxyFullField('ExcludeRace')
   final int excludeRace;
 
+  @FoxyFieldMeaning.flags(
+    '排除职业',
+    flags: PlayerCreateInfoConstants.playerCreateClassMaskFlags,
+  )
   @FoxyFullField('ExcludeClass')
   final int excludeClass;
 
@@ -43,6 +61,10 @@ class SkillLineAbilityEntity with _SkillLineAbilityEntityMixin {
   final int supercededBySpell;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.enumValues(
+    '学习方式',
+    values: SkillLineConstants.skillAcquireMethodOptions,
+  )
   @FoxyFullField('AcquireMethod')
   final int acquireMethod;
 

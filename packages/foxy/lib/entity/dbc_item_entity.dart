@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'dbc_item_entity.g.dart';
 
@@ -20,6 +22,7 @@ class DbcItemEntity with _DbcItemEntityMixin {
   @FoxyFullField('Sound_override_subclassID')
   final int soundOverrideSubclassId;
 
+  @FoxyFieldMeaning.enumValues('材质', values: ItemEnums.itemMaterialOptions)
   @FoxyFullField('Material')
   final int material;
 
@@ -31,6 +34,7 @@ class DbcItemEntity with _DbcItemEntityMixin {
   @FoxyFullField('InventoryType')
   final int inventoryType;
 
+  @FoxyFieldMeaning.enumValues('收起方式', values: ItemEnums.itemSheathOptions)
   @FoxyFullField('SheatheType')
   final int sheatheType;
 

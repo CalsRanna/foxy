@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'item_set_entity.g.dart';
 
@@ -61,78 +62,102 @@ class ItemSetEntity with _ItemSetEntityMixin {
   @FoxyFullField('Name_lang_Flags')
   final int nameLangFlags;
 
+  @FoxyFieldMeaning.reference('物品0', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID0')
   final int itemId0;
 
+  @FoxyFieldMeaning.reference('物品1', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID1')
   final int itemId1;
 
+  @FoxyFieldMeaning.reference('物品2', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID2')
   final int itemId2;
 
+  @FoxyFieldMeaning.reference('物品3', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID3')
   final int itemId3;
 
+  @FoxyFieldMeaning.reference('物品4', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID4')
   final int itemId4;
 
+  @FoxyFieldMeaning.reference('物品5', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID5')
   final int itemId5;
 
+  @FoxyFieldMeaning.reference('物品6', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID6')
   final int itemId6;
 
+  @FoxyFieldMeaning.reference('物品7', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID7')
   final int itemId7;
 
+  @FoxyFieldMeaning.reference('物品8', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID8')
   final int itemId8;
 
+  @FoxyFieldMeaning.reference('物品9', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID9')
   final int itemId9;
 
+  @FoxyFieldMeaning.reference('物品10', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID10')
   final int itemId10;
 
+  @FoxyFieldMeaning.reference('物品11', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID11')
   final int itemId11;
 
+  @FoxyFieldMeaning.reference('物品12', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID12')
   final int itemId12;
 
+  @FoxyFieldMeaning.reference('物品13', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID13')
   final int itemId13;
 
+  @FoxyFieldMeaning.reference('物品14', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID14')
   final int itemId14;
 
+  @FoxyFieldMeaning.reference('物品15', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID15')
   final int itemId15;
 
   @FoxyFullField('ItemID16')
   final int itemId16;
 
+  @FoxyFieldMeaning.reference('套装法术0', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID0')
   final int setSpellId0;
 
+  @FoxyFieldMeaning.reference('套装法术1', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID1')
   final int setSpellId1;
 
+  @FoxyFieldMeaning.reference('套装法术2', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID2')
   final int setSpellId2;
 
+  @FoxyFieldMeaning.reference('套装法术3', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID3')
   final int setSpellId3;
 
+  @FoxyFieldMeaning.reference('套装法术4', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID4')
   final int setSpellId4;
 
+  @FoxyFieldMeaning.reference('套装法术5', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID5')
   final int setSpellId5;
 
+  @FoxyFieldMeaning.reference('套装法术6', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID6')
   final int setSpellId6;
 
+  @FoxyFieldMeaning.reference('套装法术7', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('SetSpellID7')
   final int setSpellId7;
 
@@ -161,6 +186,11 @@ class ItemSetEntity with _ItemSetEntityMixin {
   final int setThreshold7;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '需要技能',
+    table: 'foxy.dbc_skill_line',
+    column: 'ID',
+  )
   @FoxyFullField('RequiredSkill')
   final int requiredSkill;
 

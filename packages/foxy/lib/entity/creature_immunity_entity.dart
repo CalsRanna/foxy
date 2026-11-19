@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'creature_immunity_entity.g.dart';
 
@@ -10,6 +12,7 @@ class CreatureImmunityEntity with _CreatureImmunityEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.flags('法术学派掩码', flags: SpellFlags.spellSchoolMaskOptions)
   @FoxyFullField('SchoolMask')
   final int schoolMask;
 
@@ -17,6 +20,10 @@ class CreatureImmunityEntity with _CreatureImmunityEntityMixin {
   final int dispelTypeMask;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.flags(
+    '机制免疫掩码',
+    flags: CreatureFlags.mechanicImmuneMaskOptions,
+  )
   @FoxyFullField('MechanicsMask')
   final int mechanicsMask;
 

@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'page_text_entity.g.dart';
 
@@ -15,6 +16,7 @@ class PageTextEntity with _PageTextEntityMixin {
   final String text;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('下一页', table: 'page_text', column: 'ID')
   @FoxyFullField('NextPageID')
   final int nextPageId;
 

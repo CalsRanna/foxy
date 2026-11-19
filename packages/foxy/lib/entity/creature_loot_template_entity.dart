@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'creature_loot_template_entity.g.dart';
 
@@ -31,6 +33,7 @@ class CreatureLootTemplateEntity with _CreatureLootTemplateEntityMixin {
   @FoxyFullField('QuestRequired')
   final bool questRequired;
 
+  @FoxyFieldMeaning.flags('掉落模式', flags: CreatureFlags.lootModeFlagOptions)
   @FoxyFullField('LootMode')
   final int lootMode;
 

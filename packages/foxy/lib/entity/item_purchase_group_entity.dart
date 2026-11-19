@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'item_purchase_group_entity.g.dart';
 
@@ -9,27 +10,35 @@ class ItemPurchaseGroupEntity with _ItemPurchaseGroupEntityMixin {
   @FoxyFullField('ID', key: true)
   final int id;
 
+  @FoxyFieldMeaning.reference('物品0', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID0')
   final int itemID0;
 
+  @FoxyFieldMeaning.reference('物品1', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID1')
   final int itemID1;
 
+  @FoxyFieldMeaning.reference('物品2', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID2')
   final int itemID2;
 
+  @FoxyFieldMeaning.reference('物品3', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID3')
   final int itemID3;
 
+  @FoxyFieldMeaning.reference('物品4', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID4')
   final int itemID4;
 
+  @FoxyFieldMeaning.reference('物品5', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID5')
   final int itemID5;
 
+  @FoxyFieldMeaning.reference('物品6', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID6')
   final int itemID6;
 
+  @FoxyFieldMeaning.reference('物品7', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemID7')
   final int itemID7;
 

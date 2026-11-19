@@ -8,6 +8,7 @@ import 'package:foxy_generator/src/linked_list_generator.dart';
 import 'package:foxy_generator/src/list_generator.dart';
 import 'package:foxy_generator/src/repository_filter_generator.dart';
 import 'package:foxy_generator/src/repository_generator.dart';
+import 'package:foxy_generator/src/semantics_generator.dart';
 import 'package:source_gen/source_gen.dart';
 
 Builder foxyEntityBuilder(BuilderOptions options) {
@@ -40,6 +41,16 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
       const FoxyViewModelGenerator(),
     ],
     'foxy_view_model',
+    writeDescriptions: false,
+  );
+}
+
+/// Aggregates `@FoxyFieldMeaning` annotations across entity files into the
+/// runtime semantics table used by the agent catalog.
+Builder foxySemanticsBuilder(BuilderOptions options) {
+  return SharedPartBuilder(
+    [const FoxySemanticsGenerator()],
+    'foxy_semantics',
     writeDescriptions: false,
   );
 }

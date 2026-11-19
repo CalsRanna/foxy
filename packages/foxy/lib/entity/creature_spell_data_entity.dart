@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'creature_spell_data_entity.g.dart';
 
@@ -20,18 +21,22 @@ class CreatureSpellDataEntity with _CreatureSpellDataEntityMixin {
   final int id;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术0', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('Spells0')
   final int spells0;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术1', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('Spells1')
   final int spells1;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术2', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('Spells2')
   final int spells2;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('法术3', table: 'foxy.dbc_spell', column: 'ID')
   @FoxyFullField('Spells3')
   final int spells3;
 

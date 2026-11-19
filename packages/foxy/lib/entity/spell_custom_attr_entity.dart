@@ -1,4 +1,6 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
+import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'spell_custom_attr_entity.g.dart';
 
@@ -12,6 +14,10 @@ class SpellCustomAttrEntity with _SpellCustomAttrEntityMixin {
   final int spellId;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.flags(
+    '自定义属性',
+    flags: SpellFlags.spellCustomAttributeOptions,
+  )
   @FoxyFullField('attributes')
   final int attributes;
 

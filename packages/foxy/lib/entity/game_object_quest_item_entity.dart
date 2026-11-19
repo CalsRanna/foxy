@@ -1,4 +1,5 @@
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 
 part 'game_object_quest_item_entity.g.dart';
 
@@ -10,6 +11,11 @@ part 'game_object_quest_item_entity.g.dart';
 @FoxyFullEntity(table: 'gameobject_questitem')
 class GameObjectQuestItemEntity with _GameObjectQuestItemEntityMixin {
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference(
+    '游戏对象',
+    table: 'gameobject_template',
+    column: 'entry',
+  )
   @FoxyFullField('GameObjectEntry', key: true)
   final int gameObjectEntry;
 
@@ -18,6 +24,7 @@ class GameObjectQuestItemEntity with _GameObjectQuestItemEntityMixin {
   final int idx;
 
   @FoxyBriefField()
+  @FoxyFieldMeaning.reference('物品', table: 'item_template', column: 'entry')
   @FoxyFullField('ItemId')
   final int itemId;
 
