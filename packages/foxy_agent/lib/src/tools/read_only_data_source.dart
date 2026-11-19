@@ -10,7 +10,8 @@ final class RowFilter {
 
   final FilterOperator operator;
 
-  /// Scalar value to compare against.
+  /// Scalar value to compare against; for [FilterOperator.inList] a non-empty
+  /// list of scalars.
   final Object? value;
 }
 
@@ -19,6 +20,7 @@ enum FilterOperator {
   equals('equals'),
   notEquals('notEquals'),
   contains('contains'),
+  inList('in'),
   greaterThan('greaterThan'),
   greaterOrEqual('greaterOrEqual'),
   lessThan('lessThan'),

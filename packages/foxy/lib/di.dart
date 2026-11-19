@@ -142,6 +142,8 @@ import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/use_case/activity_log/activity_log_listener.dart';
 import 'package:foxy/use_case/activity_log/activity_log_service.dart';
+import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
+import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
 import 'package:foxy/use_case/bootstrap/bootstrap_application_use_case.dart';
 import 'package:foxy/use_case/combined/combined_export_use_case.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
@@ -157,6 +159,7 @@ import 'package:foxy/use_case/gossip_menu/save_npc_text_use_case.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
 import 'package:foxy/view_model/achievement_detail_view_model.dart';
 import 'package:foxy/view_model/achievement_list_view_model.dart';
+import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy/view_model/area_table_detail_view_model.dart';
 import 'package:foxy/view_model/area_table_list_view_model.dart';
 import 'package:foxy/view_model/condition_detail_view_model.dart';
@@ -309,6 +312,7 @@ class DI {
   }
 
   static void _registerInteractionViewModels() {
+    _instance.registerFactory(() => AgentViewModel());
     _instance.registerFactory(() => BootstrapWorkflowViewModel());
     _instance.registerFactory(() => DbcExportWorkflowViewModel());
     _instance.registerFactory(() => MpqExportWorkflowViewModel());
@@ -589,6 +593,12 @@ class DI {
   // Keep explicit concrete registrations here. Generic UseCase adapters and
   // service locators inside UseCases are intentionally not used.
   static void _registerUseCases() {
+    _instance.registerLazySingleton(
+      () => AgentProviderConfigUseCase(_instance.get<ConfigUtil>()),
+    );
+    _instance.registerLazySingleton(
+      () => AgentReadOnlyDataSource(_instance.get<ConfigUtil>()),
+    );
     _instance.registerFactory(
       () => ResolveNpcTrainerParentUseCase(
         repository: _instance.get<CreatureDefaultTrainerRepository>(),

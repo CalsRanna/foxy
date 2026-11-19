@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// Top-level menu enum
 enum RouterMenu {
   dashboard(label: '工作台', icon: LucideIcons.layoutDashboard),
+  agent(label: 'AI 助手', icon: LucideIcons.bot),
   creatureTemplate(label: '生物列表', icon: LucideIcons.pawPrint),
   itemTemplate(label: '物品列表', icon: LucideIcons.swords),
   questTemplate(label: '任务列表', icon: LucideIcons.badgeQuestionMark),
@@ -46,6 +47,7 @@ enum RouterMenu {
   PageRouteInfo get route {
     return switch (this) {
       RouterMenu.dashboard => const DashboardRoute(),
+      RouterMenu.agent => const AgentRoute(),
       RouterMenu.creatureTemplate => const CreatureTemplateListRoute(),
       RouterMenu.itemTemplate => const ItemTemplateListRoute(),
       RouterMenu.questTemplate => const QuestTemplateListRoute(),

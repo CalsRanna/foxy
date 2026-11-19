@@ -20,7 +20,6 @@ final class FoxyAgent {
     required this.provider,
     required this.instructions,
     required List<AgentTool> tools,
-    this.maxToolRounds = 8,
     this.extraRequestBody = const {},
     http.Client? httpClient,
   }) : _tools = {for (final tool in tools) tool.name: tool},
@@ -36,9 +35,6 @@ final class FoxyAgent {
   /// System instructions defining the agent's role and constraints.
   final String instructions;
 
-  /// Maximum number of tool-execution rounds before the run fails.
-  final int maxToolRounds;
-
   /// Extra fields merged into every request body (e.g. `temperature`,
   /// `include`), for provider-specific options.
   final Map<String, Object?> extraRequestBody;
@@ -51,7 +47,7 @@ final class FoxyAgent {
   Stream<AgentEvent> run(AgentSession session, String userMessage) async* {
     session.addUserMessage(userMessage);
     try {
-      for (var round = 0; ; round++) {
+      for (;;) {
         final streamedItems = <JsonMap>[];
         JsonMap? response;
         await for (final event in _client.streamResponse(
@@ -111,19 +107,6 @@ final class FoxyAgent {
         if (calls.isEmpty) {
           yield const AgentCompletedEvent();
           return;
-        }
-        if (round >= maxToolRounds) {
-          session.addItems([
-            for (final call in calls)
-              {
-                'type': 'function_call_output',
-                'call_id': _stringField(call, 'call_id'),
-                'output': 'Tool call skipped: tool round limit exceeded.',
-              },
-          ]);
-          throw AgentException(
-            'Tool call rounds exceeded the limit of $maxToolRounds.',
-          );
         }
         final pending = <Future<AgentToolResultEvent>>[];
         for (final call in calls) {

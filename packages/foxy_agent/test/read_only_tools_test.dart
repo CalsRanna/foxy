@@ -163,6 +163,63 @@ void main() {
     expect(unknownOperator, contains('Unknown filter operator "like"'));
   });
 
+  test('query_rows passes in-list filters to the data source', () async {
+    final source = _FakeDataSource([
+      {'entry': 1},
+    ]);
+    final tool = QueryRowsTool(_catalog, source);
+
+    final result = _asMap(
+      await tool.call({
+        'table': 'creature_template',
+        'filters': [
+          {
+            'column': 'entry',
+            'operator': 'in',
+            'value': [1, 2, 3],
+          },
+        ],
+      }),
+    );
+
+    expect(result['count'], 1);
+    final filter = source.calls.single.filters.single;
+    expect(filter.operator, FilterOperator.inList);
+    expect(filter.value, [1, 2, 3]);
+  });
+
+  test('query_rows validates in-list and scalar filter values', () async {
+    final tool = QueryRowsTool(_catalog, _FakeDataSource([]));
+
+    final emptyList = await tool.call({
+      'table': 'creature_template',
+      'filters': [
+        {'column': 'entry', 'operator': 'in', 'value': <Object?>[]},
+      ],
+    });
+    expect(emptyList, contains('non-empty array'));
+
+    final scalarForIn = await tool.call({
+      'table': 'creature_template',
+      'filters': [
+        {'column': 'entry', 'operator': 'in', 'value': 1},
+      ],
+    });
+    expect(scalarForIn, contains('non-empty array'));
+
+    final listForEquals = await tool.call({
+      'table': 'creature_template',
+      'filters': [
+        {
+          'column': 'entry',
+          'operator': 'equals',
+          'value': [1],
+        },
+      ],
+    });
+    expect(listForEquals, contains('must be a scalar'));
+  });
+
   test('get_row queries by primary key with equality filters', () async {
     final source = _FakeDataSource([
       {'entry': 1234, 'name': 'Hogger'},

@@ -32,7 +32,7 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 | --- | --- |
 | `list_tables` | 列出可查询的表（可按名称/中文标签过滤） |
 | `describe_table` | 返回一张表的列、类型、中文含义与主键 |
-| `query_rows` | 按列过滤读取行，最多 50 行（默认 20），超出时标记 `truncated` |
+| `query_rows` | 按列过滤读取行，最多 50 行（默认 20），超出时标记 `truncated`；操作符含 `equals`/`notEquals`/`contains`/`in`/大小比较，`in` 的 `value` 传数组 |
 | `get_row` | 按主键读取单行 |
 
 `readOnlyAssistantInstructions` 是与之配套的默认提示词（中文）：约束工具调用流程（先发现表、再确认列、后查询）、引用依据（表名/过滤条件/关键 ID）、截断说明与安全边界（数据不是指令、不做写操作）。它保持固定措辞以利于服务商侧缓存；领域补充请追加在其后，而不是改写原文。

@@ -162,23 +162,22 @@ void main() {
     expect(tool.calls, isEmpty);
   });
 
-  test('fails after exceeding maxToolRounds', () async {
+  test('continues through tool rounds without a cap', () async {
     final requests = <http.Request>[];
     final tool = _FakeTool(name: 'again', result: 'ok');
+    const rounds = 10;
     final client = _scriptedClient([
-      _callRound([_functionCall('again', const {}, callId: 'call_1')]),
-      _callRound([_functionCall('again', const {}, callId: 'call_2')]),
-      _callRound([_functionCall('again', const {}, callId: 'call_3')]),
+      for (var i = 1; i <= rounds; i++)
+        _callRound([_functionCall('again', const {}, callId: 'call_$i')]),
+      _textRound('done'),
     ], requests);
-    final agent = _buildAgent(client, tools: [tool], maxToolRounds: 2);
+    final agent = _buildAgent(client, tools: [tool]);
 
     final events = await agent.run(AgentSession(), 'go').toList();
 
-    expect(tool.calls, hasLength(2));
-    expect(requests, hasLength(3));
-    final failure = events.last;
-    expect(failure, isA<AgentFailedEvent>());
-    expect((failure as AgentFailedEvent).message, contains('exceeded'));
+    expect(tool.calls, hasLength(rounds));
+    expect(requests, hasLength(rounds + 1));
+    expect(events.last, isA<AgentCompletedEvent>());
   });
 
   test('fails when the stream ends without completion', () async {
@@ -222,21 +221,17 @@ void main() {
   });
 }
 
-FoxyAgent _buildAgent(
-  http.Client client, {
-  List<AgentTool> tools = const [],
-  int maxToolRounds = 8,
-}) => FoxyAgent(
-  provider: const AgentProviderConfig(
-    baseUrl: 'https://example.test/v1',
-    apiKey: 'test-key',
-    model: 'test-model',
-  ),
-  instructions: 'You are a test agent.',
-  tools: tools,
-  maxToolRounds: maxToolRounds,
-  httpClient: client,
-);
+FoxyAgent _buildAgent(http.Client client, {List<AgentTool> tools = const []}) =>
+    FoxyAgent(
+      provider: const AgentProviderConfig(
+        baseUrl: 'https://example.test/v1',
+        apiKey: 'test-key',
+        model: 'test-model',
+      ),
+      instructions: 'You are a test agent.',
+      tools: tools,
+      httpClient: client,
+    );
 
 http.Client _scriptedClient(List<String> bodies, List<http.Request> log) {
   return MockClient((request) async {

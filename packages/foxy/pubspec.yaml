@@ -18,6 +18,8 @@ dependencies:
   collection: ^1.19.1
   crypto: ^3.0.7
   file_selector: ^1.1.0
+  foxy_agent:
+    path: ../foxy_agent
   foxy_annotation:
     path: ../foxy_annotation
   foxy_game_definition:
@@ -27,6 +29,7 @@ dependencies:
   foxy_widget:
     path: ../foxy_widget
   get_it: ^9.0.5
+  gpt_markdown: ^1.4.1
   http: ^1.6.0
   laconic: ^5.0.1
   laconic_mysql: ^4.0.1

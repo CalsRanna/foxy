@@ -162,7 +162,9 @@ final class QueryRowsTool extends AgentTool {
       'Read rows from a table. Filters combine with AND. Returns at most '
       '$maxLimit rows (default $defaultLimit); narrow with filters when the '
       'table is large. Read-only. Use describe_table to learn column names '
-      'before filtering.';
+      'before filtering. To match any of several values in one call, use the '
+      '"in" operator with an array value instead of querying values one by '
+      'one.';
 
   @override
   Map<String, Object?> get inputSchema => const {
@@ -185,6 +187,7 @@ final class QueryRowsTool extends AgentTool {
                 'equals',
                 'notEquals',
                 'contains',
+                'in',
                 'greaterThan',
                 'greaterOrEqual',
                 'lessThan',
@@ -192,8 +195,17 @@ final class QueryRowsTool extends AgentTool {
               ],
             },
             'value': {
-              'type': ['string', 'number', 'integer', 'boolean', 'null'],
-              'description': 'Value to compare against.',
+              'type': [
+                'string',
+                'number',
+                'integer',
+                'boolean',
+                'null',
+                'array',
+              ],
+              'description':
+                  'Scalar value to compare against, or a non-empty array '
+                  'when the operator is "in".',
             },
           },
           'required': ['column', 'operator', 'value'],
@@ -240,14 +252,21 @@ final class QueryRowsTool extends AgentTool {
             : null;
         if (operator == null) {
           return 'Unknown filter operator "$operatorName" on table '
-              '"${table.qualifiedName}".';
+              '"${table.qualifiedName}". Supported: '
+              '${FilterOperator.values.map((item) => item.wireName).join(', ')}.';
+        }
+        final value = rawFilter['value'];
+        if (operator == FilterOperator.inList) {
+          if (value is! List<Object?> || value.isEmpty) {
+            return 'The "in" operator requires a non-empty array as "value" '
+                'on table "${table.qualifiedName}".';
+          }
+        } else if (value is List<Object?> || value is Map<String, Object?>) {
+          return 'The "value" for operator "${operator.wireName}" must be a '
+              'scalar on table "${table.qualifiedName}".';
         }
         filters.add(
-          RowFilter(
-            column: column,
-            operator: operator,
-            value: rawFilter['value'],
-          ),
+          RowFilter(column: column, operator: operator, value: value),
         );
       }
     }

@@ -17,6 +17,7 @@ class FoxyRouter extends RootStackRouter {
     final children = [
       /// Scaffold
       AutoRoute(page: DashboardRoute.page),
+      AutoRoute(page: AgentRoute.page),
       AutoRoute(page: CreatureTemplateListRoute.page),
       AutoRoute(page: ItemTemplateListRoute.page),
       AutoRoute(page: GameObjectTemplateListRoute.page),
