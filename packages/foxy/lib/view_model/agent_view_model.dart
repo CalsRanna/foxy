@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:foxy/infrastructure/agent/agent_session_store.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/use_case/agent/agent_chat_use_case.dart';
@@ -22,18 +23,23 @@ typedef AgentChatFactory = AgentChatUseCase Function({
 
 /// State for the AI agent page: session list, active conversation, streaming
 /// run state and provider settings.
+///
+/// Sessions persist as JSONL files (see [AgentSessionStore]); the list holds
+/// lightweight metadata and content loads lazily when a session is selected.
 class AgentViewModel with FieldControllerMixin {
   AgentViewModel({
     AgentProviderConfigUseCase? configUseCase,
     AgentReadOnlyDataSource? dataSource,
     AgentChatFactory? chatFactory,
+    AgentSessionStore? sessionStore,
   }) : _configUseCase =
            configUseCase ?? GetIt.instance.get<AgentProviderConfigUseCase>(),
        _dataSource =
            dataSource ?? GetIt.instance.get<AgentReadOnlyDataSource>(),
-       _chatFactory = chatFactory ?? _createChat;
+       _chatFactory = chatFactory ?? _createChat,
+       _sessionStore = sessionStore ?? GetIt.instance.get<AgentSessionStore>();
 
-  static const _maxTitleLength = 24;
+  static const _defaultTitle = '新会话';
 
   final AgentProviderConfigUseCase _configUseCase;
 
@@ -41,7 +47,9 @@ class AgentViewModel with FieldControllerMixin {
 
   final AgentChatFactory _chatFactory;
 
-  final sessions = signal<List<AgentChatSession>>([]);
+  final AgentSessionStore _sessionStore;
+
+  final sessions = signal<List<AgentChatSessionMeta>>([]);
 
   final activeSessionId = signal<String?>(null);
 
@@ -53,18 +61,28 @@ class AgentViewModel with FieldControllerMixin {
 
   late final draftController = registerController(StringFieldController());
 
+  final Map<String, AgentChatSession> _loaded = {};
+
   StreamSubscription<AgentEvent>? _subscription;
 
   AgentChatUseCase? _chat;
 
   _AgentRun? _run;
 
+  var _selectionToken = 0;
+
   var _initialized = false;
 
   AgentChatSession? get activeSession {
     final id = activeSessionId.value;
     if (id == null) return null;
-    return sessions.value.where((session) => session.id == id).firstOrNull;
+    return _loaded[id];
+  }
+
+  String? get activeTitle {
+    final id = activeSessionId.value;
+    if (id == null) return null;
+    return sessions.value.where((meta) => meta.id == id).firstOrNull?.title;
   }
 
   Future<void> initSignals() async {
@@ -75,38 +93,70 @@ class AgentViewModel with FieldControllerMixin {
     } catch (error) {
       LoggerUtil.instance.e('load agent provider config failed: $error');
     }
+    try {
+      sessions.value = await _sessionStore.list();
+    } catch (error) {
+      LoggerUtil.instance.e('list agent sessions failed: $error');
+    }
     if (sessions.value.isEmpty) {
-      createSession();
+      await createSession();
+    } else {
+      await selectSession(sessions.value.first.id);
     }
   }
 
-  void createSession() {
-    final session = AgentChatSession(
-      id: '${DateTime.now().microsecondsSinceEpoch}',
-      title: '新会话',
-    );
-    sessions.value = [session, ...sessions.value];
-    activeSessionId.value = session.id;
-    messages.value = const [];
-  }
-
-  void selectSession(String id) {
-    final session = sessions.value.where((item) => item.id == id).firstOrNull;
-    if (session == null) return;
+  Future<void> createSession() async {
+    final id = '${DateTime.now().microsecondsSinceEpoch}';
+    final session = AgentChatSession(id: id, title: _defaultTitle);
+    _loaded[id] = session;
+    sessions.value = [
+      AgentChatSessionMeta(
+        id: id,
+        title: session.title,
+        updatedAt: DateTime.now(),
+      ),
+      ...sessions.value,
+    ];
     activeSessionId.value = id;
-    messages.value = List.of(session.messages);
+    _selectionToken++;
+    messages.value = const [];
+    await _sessionStore.createSession(id);
   }
 
-  void deleteSession(String id) {
-    if (running.value && id == activeSessionId.value) return;
-    final remaining = sessions.value.where((item) => item.id != id).toList();
-    sessions.value = remaining;
-    if (id != activeSessionId.value) return;
-    if (remaining.isEmpty) {
-      createSession();
+  Future<void> selectSession(String id) async {
+    final cached = _loaded[id];
+    if (cached != null) {
+      activeSessionId.value = id;
+      messages.value = List.of(cached.messages);
       return;
     }
-    selectSession(remaining.first.id);
+    final token = ++_selectionToken;
+    AgentChatSession? loaded;
+    try {
+      loaded = await _sessionStore.load(id);
+    } catch (error) {
+      LoggerUtil.instance.e('load agent session failed: $error');
+      return;
+    }
+    if (token != _selectionToken || loaded == null) return;
+    _loaded[id] = loaded;
+    activeSessionId.value = id;
+    messages.value = List.of(loaded.messages);
+  }
+
+  Future<void> deleteSession(String id) async {
+    if (running.value && id == activeSessionId.value) return;
+    _loaded.remove(id);
+    sessions.value = sessions.value.where((meta) => meta.id != id).toList();
+    await _sessionStore.deleteSession(id);
+    if (id != activeSessionId.value) return;
+    _selectionToken++;
+    final remaining = sessions.value;
+    if (remaining.isEmpty) {
+      await createSession();
+      return;
+    }
+    await selectSession(remaining.first.id);
   }
 
   Future<void> saveProvider(AgentProviderConfig config) async {
@@ -122,15 +172,19 @@ class AgentViewModel with FieldControllerMixin {
     if (config == null || session == null || text.isEmpty) return;
     draftController.init('');
     if (session.messages.isEmpty) {
-      session.title = _titleFor(text);
+      session.title = agentSessionTitle(text);
     }
     session.messages.add(
       AgentChatMessage(role: AgentChatRole.user, text: text),
     );
     final run = _AgentRun(session);
     run.assistant = _appendAssistant(run);
+    run.persistedItemCount = session.session.items.length;
     _run = run;
     _touch(session);
+    unawaited(
+      _sessionStore.appendMessage(session.id, AgentChatRole.user, text),
+    );
     running.value = true;
     try {
       final catalog = await _dataSource.getCatalog();
@@ -168,6 +222,7 @@ class AgentViewModel with FieldControllerMixin {
   }
 
   void dispose() {
+    _selectionToken++;
     _subscription?.cancel();
     _subscription = null;
     _chat?.close();
@@ -197,18 +252,25 @@ class AgentViewModel with FieldControllerMixin {
       case AgentToolCallEvent(:final name, :final arguments):
         // Close the current text segment so the next deltas render after the
         // tool lines instead of merging into the bubble above them.
-        _clearEmptyAssistant(run);
+        _persistAssistantSegment(run);
+        final line = '调用 $name${_compactArguments(arguments)}';
         run.session.messages.add(
-          AgentChatMessage(
-            role: AgentChatRole.tool,
-            text: '调用 $name${_compactArguments(arguments)}',
-          ),
+          AgentChatMessage(role: AgentChatRole.tool, text: line),
         );
+        unawaited(
+          _sessionStore.appendMessage(run.session.id, AgentChatRole.tool, line),
+        );
+        _persistNewItems(run);
         _publish(run.session);
       case AgentToolResultEvent(isError: true, :final output):
+        final line = '工具失败：$output';
         run.session.messages.add(
-          AgentChatMessage(role: AgentChatRole.tool, text: '工具失败：$output'),
+          AgentChatMessage(role: AgentChatRole.tool, text: line),
         );
+        unawaited(
+          _sessionStore.appendMessage(run.session.id, AgentChatRole.tool, line),
+        );
+        _persistNewItems(run);
         _publish(run.session);
       case AgentToolResultEvent():
         break;
@@ -227,10 +289,28 @@ class AgentViewModel with FieldControllerMixin {
     _chat?.close();
     _chat = null;
     _run = null;
+    _persistNewItems(run);
+    final assistant = run.assistant;
     _clearEmptyAssistant(run);
     if (!run.hasText) {
+      const fallback = '（无回复）';
       run.session.messages.add(
-        AgentChatMessage(role: AgentChatRole.assistant, text: '（无回复）'),
+        AgentChatMessage(role: AgentChatRole.assistant, text: fallback),
+      );
+      unawaited(
+        _sessionStore.appendMessage(
+          run.session.id,
+          AgentChatRole.assistant,
+          fallback,
+        ),
+      );
+    } else if (assistant != null && assistant.text.isNotEmpty) {
+      unawaited(
+        _sessionStore.appendMessage(
+          run.session.id,
+          AgentChatRole.assistant,
+          assistant.text,
+        ),
       );
     }
     _publish(run.session);
@@ -251,6 +331,36 @@ class AgentViewModel with FieldControllerMixin {
     run.session.messages.remove(assistant);
   }
 
+  /// Persists the current assistant text segment (if any) and starts a new
+  /// one on the next text event.
+  void _persistAssistantSegment(_AgentRun run) {
+    final assistant = run.assistant;
+    if (assistant != null && assistant.text.isNotEmpty) {
+      unawaited(
+        _sessionStore.appendMessage(
+          run.session.id,
+          AgentChatRole.assistant,
+          assistant.text,
+        ),
+      );
+    }
+    _clearEmptyAssistant(run);
+  }
+
+  /// Appends protocol items the agent loop added since the last flush, so a
+  /// restart keeps the conversation state in sync with the transcript.
+  void _persistNewItems(_AgentRun run) {
+    final items = run.session.session.items;
+    if (items.length <= run.persistedItemCount) return;
+    final fresh = items.sublist(run.persistedItemCount);
+    run.persistedItemCount = items.length;
+    unawaited(
+      Future.wait(
+        fresh.map((item) => _sessionStore.appendItem(run.session.id, item)),
+      ),
+    );
+  }
+
   void _appendError(_AgentRun run, String message) {
     final assistant = run.assistant ??= _appendAssistant(run);
     final prefix = assistant.text.isEmpty ? '' : '${assistant.text}\n\n';
@@ -260,21 +370,19 @@ class AgentViewModel with FieldControllerMixin {
   }
 
   void _touch(AgentChatSession session) {
+    final meta = AgentChatSessionMeta(
+      id: session.id,
+      title: session.title,
+      updatedAt: DateTime.now(),
+    );
     final rest = sessions.value.where((item) => item.id != session.id);
-    sessions.value = [session, ...rest];
+    sessions.value = [meta, ...rest];
     _publish(session);
   }
 
   void _publish(AgentChatSession session) {
     if (session.id != activeSessionId.value) return;
     messages.value = List.of(session.messages);
-  }
-
-  String _titleFor(String text) {
-    final line = text.split('\n').first.trim();
-    return line.length <= _maxTitleLength
-        ? line
-        : '${line.substring(0, _maxTitleLength)}...';
   }
 
   String _compactArguments(Map<String, Object?> arguments) {
@@ -285,7 +393,8 @@ class AgentViewModel with FieldControllerMixin {
 }
 
 /// Per-run transcript state: which assistant bubble is currently receiving
-/// text, and whether any text was rendered at all.
+/// text, whether any text was rendered, and how many protocol items were
+/// already flushed to disk.
 final class _AgentRun {
   _AgentRun(this.session);
 
@@ -297,4 +406,7 @@ final class _AgentRun {
 
   /// Whether any assistant text (answer or error) was rendered.
   var hasText = false;
+
+  /// Number of `AgentSession.items` already persisted for this run.
+  var persistedItemCount = 0;
 }

@@ -200,7 +200,7 @@ class _AgentPageState extends State<AgentPage> {
           const Spacer(),
           ShadButton.ghost(
             size: ShadButtonSize.sm,
-            onPressed: viewModel.createSession,
+            onPressed: () => unawaited(viewModel.createSession()),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               spacing: 6,
@@ -232,7 +232,7 @@ class _AgentPageState extends State<AgentPage> {
     return Column(children: [header, list]);
   }
 
-  Widget _buildSessionTile(AgentChatSession session, bool active) {
+  Widget _buildSessionTile(AgentChatSessionMeta meta, bool active) {
     final colorScheme = Theme.of(context).colorScheme;
     final background = active ? colorScheme.primary : Colors.transparent;
     final foreground = active ? colorScheme.onPrimary : colorScheme.onSurface;
@@ -243,7 +243,7 @@ class _AgentPageState extends State<AgentPage> {
         borderRadius: BorderRadius.circular(6),
         child: InkWell(
           borderRadius: BorderRadius.circular(6),
-          onTap: () => viewModel.selectSession(session.id),
+          onTap: () => unawaited(viewModel.selectSession(meta.id)),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: Row(
@@ -251,14 +251,14 @@ class _AgentPageState extends State<AgentPage> {
               children: [
                 Expanded(
                   child: Text(
-                    session.title,
+                    meta.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 13, color: foreground),
                   ),
                 ),
                 InkWell(
-                  onTap: () => unawaited(_confirmDelete(session)),
+                  onTap: () => unawaited(_confirmDelete(meta)),
                   child: Icon(
                     LucideIcons.trash2,
                     size: 14,
@@ -292,7 +292,6 @@ class _AgentPageState extends State<AgentPage> {
     final theme = ShadTheme.of(context);
     return SignalBuilder(
       builder: (_) {
-        final session = viewModel.activeSession;
         final provider = viewModel.provider.value;
         return Row(
           spacing: 8,
@@ -300,7 +299,7 @@ class _AgentPageState extends State<AgentPage> {
             const Icon(LucideIcons.bot, size: 18),
             Expanded(
               child: Text(
-                session?.title ?? 'AI 助手',
+                viewModel.activeTitle ?? 'AI 助手',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -328,15 +327,20 @@ class _AgentPageState extends State<AgentPage> {
     );
   }
 
-  Future<void> _confirmDelete(AgentChatSession session) async {
+  Future<void> _confirmDelete(AgentChatSessionMeta meta) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '删除会话',
-      description: '确定删除「${session.title}」吗？',
+      description: '确定删除「${meta.title}」吗？',
       confirmText: '删除',
       destructive: true,
     );
     if (!confirmed) return;
-    viewModel.deleteSession(session.id);
+    try {
+      await viewModel.deleteSession(meta.id);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除会话失败：${FoxyExceptions.message(error)}');
+    }
   }
 
   Future<void> _openProviderDialog() async {

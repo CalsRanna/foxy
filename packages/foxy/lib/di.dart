@@ -1,4 +1,5 @@
 import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/agent/agent_session_store.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
@@ -293,6 +294,7 @@ class DI {
     _instance.registerSingleton(EventBus());
     _instance.registerSingleton(LocaleQuerySettings());
     _instance.registerLazySingleton(() => ConfigUtil());
+    _instance.registerLazySingleton(() => AgentSessionStore());
     _instance.registerLazySingleton(() => const DatabaseTransaction());
     _instance.registerLazySingleton(() => DbcSyncUtil());
     _instance.registerLazySingleton(() => DbcExportRegistry());

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/infrastructure/agent/agent_session_store.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/use_case/agent/agent_chat_use_case.dart';
@@ -10,9 +12,21 @@ import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 
 void main() {
+  late Directory tempDir;
+  late AgentSessionStore store;
+
+  setUp(() async {
+    tempDir = await Directory.systemTemp.createTemp('foxy_agent_vm_test');
+    store = AgentSessionStore(root: Directory('${tempDir.path}/session'));
+  });
+
+  tearDown(() async {
+    await tempDir.delete(recursive: true);
+  });
+
   test('interleaves assistant text and tool calls in model order', () async {
     final chat = _FakeChat();
-    final viewModel = _buildViewModel(chat);
+    final viewModel = _buildViewModel(chat, store);
     addTearDown(viewModel.dispose);
     await viewModel.initSignals();
 
@@ -54,7 +68,7 @@ void main() {
 
   test('shows a placeholder reply when the run has only tool calls', () async {
     final chat = _FakeChat();
-    final viewModel = _buildViewModel(chat);
+    final viewModel = _buildViewModel(chat, store);
     addTearDown(viewModel.dispose);
     await viewModel.initSignals();
 
@@ -89,17 +103,36 @@ void main() {
     expect(messages.last.text, '（无回复）');
     expect(viewModel.running.value, isFalse);
   });
+
+  test('restores persisted sessions on init', () async {
+    await store.createSession('s1');
+    await store.appendMessage('s1', AgentChatRole.user, '恢复的会话');
+    await store.appendItem('s1', {'role': 'user', 'content': '恢复的会话'});
+
+    final chat = _FakeChat();
+    final viewModel = _buildViewModel(chat, store);
+    addTearDown(viewModel.dispose);
+
+    await viewModel.initSignals();
+
+    expect(viewModel.sessions.value.single.id, 's1');
+    expect(viewModel.activeTitle, '恢复的会话');
+    expect(viewModel.messages.value.single.text, '恢复的会话');
+    expect(viewModel.activeSession?.session.items, hasLength(1));
+  });
 }
 
-AgentViewModel _buildViewModel(_FakeChat chat) => AgentViewModel(
-  configUseCase: _FakeConfigUseCase(),
-  dataSource: _FakeDataSource(),
-  chatFactory: ({
-    required AgentProviderConfig provider,
-    required TableCatalog catalog,
-    required ReadOnlyDataSource dataSource,
-  }) => chat,
-);
+AgentViewModel _buildViewModel(_FakeChat chat, AgentSessionStore store) =>
+    AgentViewModel(
+      configUseCase: _FakeConfigUseCase(),
+      dataSource: _FakeDataSource(),
+      chatFactory: ({
+        required AgentProviderConfig provider,
+        required TableCatalog catalog,
+        required ReadOnlyDataSource dataSource,
+      }) => chat,
+      sessionStore: store,
+    );
 
 final class _FakeConfigUseCase extends AgentProviderConfigUseCase {
   _FakeConfigUseCase() : super(ConfigUtil());
