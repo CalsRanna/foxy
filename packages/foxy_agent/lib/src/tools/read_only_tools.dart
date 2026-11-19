@@ -1,0 +1,361 @@
+import 'package:foxy_agent/src/agent_tool.dart';
+import 'package:foxy_agent/src/tools/read_only_data_source.dart';
+import 'package:foxy_agent/src/tools/table_catalog.dart';
+
+/// The built-in read-only toolset: `list_tables`, `describe_table`,
+/// `query_rows` and `get_row`.
+///
+/// The host app supplies the metadata ([catalog]) and the data access
+/// ([dataSource]); tool implementations stay in this package. The catalog may
+/// span several databases (see [TableInfo.database]); the data source receives
+/// the qualified `database.table` name.
+List<AgentTool> createReadOnlyTools({
+  required TableCatalog catalog,
+  required ReadOnlyDataSource dataSource,
+}) => [
+  ListTablesTool(catalog),
+  DescribeTableTool(catalog),
+  QueryRowsTool(catalog, dataSource),
+  GetRowTool(catalog, dataSource),
+];
+
+/// Resolves the `table` argument of a tool call to a catalog entry.
+({TableInfo? table, String? error}) _resolveTable(
+  TableCatalog catalog,
+  Object? rawName,
+) {
+  if (rawName is! String || rawName.isEmpty) {
+    return (
+      table: null,
+      error:
+          'Missing "table" argument. Call list_tables to see the '
+          'available tables.',
+    );
+  }
+  final table = catalog.find(rawName);
+  if (table != null) {
+    return (table: table, error: null);
+  }
+  if (catalog.tables.any((candidate) => candidate.name == rawName)) {
+    return (
+      table: null,
+      error:
+          'Ambiguous table name "$rawName"; use the qualified name '
+          '(database.table) returned by list_tables.',
+    );
+  }
+  return (
+    table: null,
+    error:
+        'Unknown table "$rawName". Call list_tables to see the available '
+        'tables.',
+  );
+}
+
+/// Lists the tables the agent may read.
+final class ListTablesTool extends AgentTool {
+  const ListTablesTool(this.catalog);
+
+  final TableCatalog catalog;
+
+  @override
+  String get name => 'list_tables';
+
+  @override
+  String get description =>
+      'List the database tables this agent can read. Call this first to '
+      'discover table names and their meanings. Optionally filter by a search '
+      'term matched against table names, database names and labels.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'query': {
+        'type': 'string',
+        'description':
+            'Optional case-insensitive substring matched against table '
+            'names, database names or labels.',
+      },
+    },
+    'additionalProperties': false,
+  };
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final query = arguments['query'];
+    final needle = query is String ? query.trim().toLowerCase() : '';
+    final tables = [
+      for (final table in catalog.tables)
+        if (needle.isEmpty ||
+            table.name.toLowerCase().contains(needle) ||
+            table.database.toLowerCase().contains(needle) ||
+            table.label.toLowerCase().contains(needle))
+          {
+            'name': table.qualifiedName,
+            if (table.database.isNotEmpty) 'database': table.database,
+            if (table.label.isNotEmpty) 'label': table.label,
+          },
+    ];
+    return {'tables': tables, 'count': tables.length};
+  }
+}
+
+/// Describes one table: columns, types, labels and primary key.
+final class DescribeTableTool extends AgentTool {
+  const DescribeTableTool(this.catalog);
+
+  final TableCatalog catalog;
+
+  @override
+  String get name => 'describe_table';
+
+  @override
+  String get description =>
+      'Describe one table: its columns, their types and meanings, and the '
+      'primary key. Use the returned column names in query_rows filters and '
+      'get_row keys.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'table': {
+        'type': 'string',
+        'description': 'Table name from list_tables.',
+      },
+    },
+    'required': ['table'],
+    'additionalProperties': false,
+  };
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final resolved = _resolveTable(catalog, arguments['table']);
+    final table = resolved.table;
+    if (table == null) {
+      return resolved.error!;
+    }
+    return {'table': table.toJson()};
+  }
+}
+
+/// Reads rows from a table with optional column filters.
+final class QueryRowsTool extends AgentTool {
+  const QueryRowsTool(this.catalog, this.dataSource);
+
+  /// Hard cap on rows returned in one call.
+  static const int maxLimit = 50;
+
+  /// Default row limit when the model does not provide one.
+  static const int defaultLimit = 20;
+
+  final TableCatalog catalog;
+
+  final ReadOnlyDataSource dataSource;
+
+  @override
+  String get name => 'query_rows';
+
+  @override
+  String get description =>
+      'Read rows from a table. Filters combine with AND. Returns at most '
+      '$maxLimit rows (default $defaultLimit); narrow with filters when the '
+      'table is large. Read-only. Use describe_table to learn column names '
+      'before filtering.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'table': {
+        'type': 'string',
+        'description': 'Table name from list_tables.',
+      },
+      'filters': {
+        'type': 'array',
+        'description': 'All filters must match (logical AND).',
+        'items': {
+          'type': 'object',
+          'properties': {
+            'column': {'type': 'string', 'description': 'Column name.'},
+            'operator': {
+              'type': 'string',
+              'enum': [
+                'equals',
+                'notEquals',
+                'contains',
+                'greaterThan',
+                'greaterOrEqual',
+                'lessThan',
+                'lessOrEqual',
+              ],
+            },
+            'value': {
+              'type': ['string', 'number', 'integer', 'boolean', 'null'],
+              'description': 'Value to compare against.',
+            },
+          },
+          'required': ['column', 'operator', 'value'],
+          'additionalProperties': false,
+        },
+      },
+      'limit': {
+        'type': 'integer',
+        'minimum': 1,
+        'maximum': maxLimit,
+        'description': 'Maximum rows to return. Defaults to $defaultLimit.',
+      },
+    },
+    'required': ['table'],
+    'additionalProperties': false,
+  };
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final resolved = _resolveTable(catalog, arguments['table']);
+    final table = resolved.table;
+    if (table == null) {
+      return resolved.error!;
+    }
+    final filters = <RowFilter>[];
+    final rawFilters = arguments['filters'];
+    if (rawFilters != null) {
+      if (rawFilters is! List<Object?>) {
+        return '"filters" must be an array of filter objects.';
+      }
+      for (final rawFilter in rawFilters) {
+        if (rawFilter is! Map<String, Object?>) {
+          return 'Each filter must be an object with "column", "operator" '
+              'and "value".';
+        }
+        final column = rawFilter['column'];
+        if (column is! String || table.findColumn(column) == null) {
+          return 'Unknown column "${column ?? ''}" on table '
+              '"${table.qualifiedName}".';
+        }
+        final operatorName = rawFilter['operator'];
+        final operator = operatorName is String
+            ? FilterOperator.tryParse(operatorName)
+            : null;
+        if (operator == null) {
+          return 'Unknown filter operator "$operatorName" on table '
+              '"${table.qualifiedName}".';
+        }
+        filters.add(
+          RowFilter(
+            column: column,
+            operator: operator,
+            value: rawFilter['value'],
+          ),
+        );
+      }
+    }
+    var limit = defaultLimit;
+    final rawLimit = arguments['limit'];
+    if (rawLimit is num) {
+      final value = rawLimit.toInt();
+      if (value < 1) {
+        limit = 1;
+      } else if (value > maxLimit) {
+        limit = maxLimit;
+      } else {
+        limit = value;
+      }
+    }
+    // Ask for one extra row to detect truncation.
+    final rows = await dataSource.queryRows(
+      table: table.qualifiedName,
+      filters: filters,
+      limit: limit + 1,
+    );
+    final truncated = rows.length > limit;
+    final visible = truncated ? rows.take(limit).toList() : rows;
+    return {
+      'count': visible.length,
+      'rows': visible,
+      if (truncated) 'truncated': true,
+    };
+  }
+}
+
+/// Reads a single row by primary key.
+final class GetRowTool extends AgentTool {
+  const GetRowTool(this.catalog, this.dataSource);
+
+  final TableCatalog catalog;
+
+  final ReadOnlyDataSource dataSource;
+
+  @override
+  String get name => 'get_row';
+
+  @override
+  String get description =>
+      'Read one row by primary key. Use describe_table to learn the '
+      'primary-key columns. Read-only.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'table': {
+        'type': 'string',
+        'description': 'Table name from list_tables.',
+      },
+      'key': {
+        'type': 'object',
+        'description': 'Primary-key column to value map, e.g. {"entry": 1234}.',
+        'additionalProperties': true,
+      },
+    },
+    'required': ['table', 'key'],
+    'additionalProperties': false,
+  };
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final resolved = _resolveTable(catalog, arguments['table']);
+    final table = resolved.table;
+    if (table == null) {
+      return resolved.error!;
+    }
+    final key = arguments['key'];
+    if (key is! Map<String, Object?> || key.isEmpty) {
+      return 'Missing "key" argument: an object mapping primary-key columns '
+          'to values.';
+    }
+    final primaryKey = table.primaryKey.toList();
+    if (primaryKey.isNotEmpty) {
+      final expected = {for (final column in primaryKey) column.name};
+      final missing = expected.difference(key.keys.toSet());
+      if (missing.isNotEmpty) {
+        return 'Missing primary-key column(s) ${missing.join(', ')} on '
+            'table "${table.qualifiedName}".';
+      }
+    }
+    final filters = <RowFilter>[];
+    for (final entry in key.entries) {
+      if (table.findColumn(entry.key) == null) {
+        return 'Unknown column "${entry.key}" on table '
+            '"${table.qualifiedName}".';
+      }
+      filters.add(
+        RowFilter(
+          column: entry.key,
+          operator: FilterOperator.equals,
+          value: entry.value,
+        ),
+      );
+    }
+    final rows = await dataSource.queryRows(
+      table: table.qualifiedName,
+      filters: filters,
+      limit: 1,
+    );
+    if (rows.isEmpty) {
+      return {'found': false};
+    }
+    return {'found': true, 'row': rows.first};
+  }
+}
