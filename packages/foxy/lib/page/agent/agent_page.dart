@@ -176,6 +176,45 @@ class _AgentPageState extends State<AgentPage> {
     }
   }
 
+  Widget _buildMessageGroup(List<AgentChatMessage> group) {
+    if (group.length == 1) return _buildMessage(group.single);
+
+    // Calls and failures share the same role in saved sessions.
+    final callCount = group
+        .where((message) => message.text.startsWith('调用 '))
+        .length;
+    final children = group.map(_buildMessage).toList();
+    if (callCount < 2) return Column(children: children);
+
+    final failureCount = group
+        .where((message) => message.text.startsWith('工具失败：'))
+        .length;
+    final failureSummary = failureCount == 0 ? '' : '，$failureCount 次失败';
+    final theme = ShadTheme.of(context);
+    return ExpansionTile(
+      key: PageStorageKey(group.first),
+      dense: true,
+      minTileHeight: 32,
+      tilePadding: EdgeInsets.zero,
+      childrenPadding: const EdgeInsets.only(left: 16),
+      title: Row(
+        spacing: 6,
+        children: [
+          Icon(
+            LucideIcons.wrench,
+            size: 13,
+            color: theme.colorScheme.mutedForeground,
+          ),
+          Text(
+            '工具调用（$callCount 次$failureSummary）',
+            style: theme.textTheme.muted.copyWith(fontSize: 12),
+          ),
+        ],
+      ),
+      children: children,
+    );
+  }
+
   Widget _buildMessageList() {
     final theme = ShadTheme.of(context);
     return SignalBuilder(
@@ -187,10 +226,20 @@ class _AgentPageState extends State<AgentPage> {
               : '输入问题，让 AI 查询 world 库和 foxy 库';
           return Center(child: Text(hint, style: theme.textTheme.muted));
         }
+        final groups = <List<AgentChatMessage>>[];
+        for (final message in messages) {
+          if (message.role == AgentChatRole.tool &&
+              groups.isNotEmpty &&
+              groups.last.first.role == AgentChatRole.tool) {
+            groups.last.add(message);
+          } else {
+            groups.add([message]);
+          }
+        }
         return ListView.builder(
           controller: scrollController,
-          itemCount: messages.length,
-          itemBuilder: (context, index) => _buildMessage(messages[index]),
+          itemCount: groups.length,
+          itemBuilder: (context, index) => _buildMessageGroup(groups[index]),
         );
       },
     );
