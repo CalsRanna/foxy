@@ -296,7 +296,7 @@ class _AgentPageState extends State<AgentPage> {
         return Row(
           spacing: 8,
           children: [
-            const Icon(LucideIcons.bot, size: 18),
+            const Icon(LucideIcons.astroid, size: 18),
             Expanded(
               child: Text(
                 viewModel.activeTitle ?? 'AI 助手',

@@ -67,9 +67,9 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
         .toList();
     return [
       RouterMenu.dashboard,
-      RouterMenu.agent,
       ...pinned,
       RouterMenu.more,
+      RouterMenu.agent,
       RouterMenu.setting,
     ];
   }
