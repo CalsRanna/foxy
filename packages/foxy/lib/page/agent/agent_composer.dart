@@ -52,7 +52,7 @@ class _AgentComposerState extends State<AgentComposer> {
         textInputAction: TextInputAction.newline,
         style: TextStyle(fontSize: 13, color: colors.foreground),
         decoration: InputDecoration.collapsed(
-          hintText: '输入问题，让 AI 查询 world 库和 foxy 库',
+          hintText: '输入你的问题',
           hintStyle: theme.textTheme.muted.copyWith(fontSize: 13),
         ),
       ),

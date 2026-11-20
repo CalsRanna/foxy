@@ -115,6 +115,51 @@ class _AgentPageState extends State<AgentPage> {
     );
   }
 
+  Widget _buildEmptyState(bool configured) {
+    final theme = ShadTheme.of(context);
+    final colors = theme.colorScheme;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 16,
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: colors.muted,
+                border: Border.all(color: colors.border),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Icon(LucideIcons.astroid, size: 26, color: colors.primary),
+            ),
+            Semantics(
+              header: true,
+              child: Text(
+                configured ? '冒险者，你想了解些什么？' : '配置 AI 模型',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.h3.copyWith(
+                  color: colors.foreground,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (!configured)
+              Text(
+                '在「设置 → 编辑偏好」配置模型服务商后即可开始对话。',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.muted,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildMessage(AgentChatMessage message) {
     final theme = ShadTheme.of(context);
     final colors = theme.colorScheme;
@@ -239,15 +284,11 @@ class _AgentPageState extends State<AgentPage> {
   }
 
   Widget _buildMessageList() {
-    final theme = ShadTheme.of(context);
     return SignalBuilder(
       builder: (_) {
         final messages = viewModel.messages.value;
         if (messages.isEmpty) {
-          final hint = viewModel.provider.value == null
-              ? '尚未配置模型服务商，请前往「设置 → 编辑偏好」'
-              : '输入问题，让 AI 查询 world 库和 foxy 库';
-          return Center(child: Text(hint, style: theme.textTheme.muted));
+          return _buildEmptyState(viewModel.provider.value != null);
         }
         final groups = <List<AgentChatMessage>>[];
         for (final message in messages) {

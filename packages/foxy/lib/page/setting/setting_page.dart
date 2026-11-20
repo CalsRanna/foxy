@@ -359,7 +359,7 @@ class _SettingPageState extends State<SettingPage> {
           },
         ),
         _SettingItem(
-          title: 'AI 助手模型',
+          title: 'AI 模型',
           description: '设置模型服务商的 Base URL、模型名称和 API Key。',
           trailing: ShadButton.outline(
             size: ShadButtonSize.sm,
