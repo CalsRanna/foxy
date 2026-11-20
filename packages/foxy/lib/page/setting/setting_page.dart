@@ -2,11 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/page/setting/agent_provider_dialog.dart';
 import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_import_dialog.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/mpq_export_dialog.dart';
+import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/view_model/update_view_model.dart';
@@ -18,6 +20,7 @@ import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/directory/directory_setting_row.dart';
 import 'package:foxy/widget/update/update_dialog.dart';
+import 'package:foxy_agent/foxy_agent.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -73,7 +76,9 @@ class _SettingItem extends StatelessWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final stateViewModel = GetIt.instance.get<FoxyStateViewModel>();
+  bool _editingAgentProvider = false;
   bool _savingLocale = false;
+  final agentProviderConfig = GetIt.instance.get<AgentProviderConfigUseCase>();
   final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
@@ -116,6 +121,8 @@ class _SettingPageState extends State<SettingPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
+                _buildAgentSection(),
+                const SizedBox(height: 24),
                 _buildCombinedExportSection(),
                 const SizedBox(height: 24),
                 _buildDbcSection(),
@@ -146,6 +153,23 @@ class _SettingPageState extends State<SettingPage> {
     super.initState();
     setupViewModel.prepare();
     updateViewModel.prepare();
+  }
+
+  Widget _buildAgentSection() {
+    return _SettingSection(
+      title: 'AI 助手',
+      children: [
+        _SettingItem(
+          title: '模型服务商',
+          description: '管理 AI 助手使用的 Base URL、模型名称和 API Key。',
+          trailing: ShadButton.outline(
+            size: ShadButtonSize.sm,
+            onPressed: _editingAgentProvider ? null : _showAgentProviderDialog,
+            child: const Text('配置'),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildCombinedExportSection() {
@@ -405,6 +429,27 @@ class _SettingPageState extends State<SettingPage> {
       );
     } finally {
       if (mounted) setState(() => _savingLocale = false);
+    }
+  }
+
+  Future<void> _showAgentProviderDialog() async {
+    setState(() => _editingAgentProvider = true);
+    try {
+      final initial = await agentProviderConfig.load();
+      if (!mounted) return;
+      final config = await DialogUtil.show<AgentProviderConfig>(
+        context: context,
+        builder: (context) => AgentProviderDialog(initial: initial),
+      );
+      if (config == null || !mounted) return;
+      await agentProviderConfig.save(config);
+      if (!mounted) return;
+      DialogUtil.instance.success('模型服务商配置已保存');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('模型服务商配置失败：${FoxyExceptions.message(error)}');
+    } finally {
+      if (mounted) setState(() => _editingAgentProvider = false);
     }
   }
 

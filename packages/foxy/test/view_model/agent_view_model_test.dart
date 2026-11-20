@@ -120,19 +120,41 @@ void main() {
     expect(viewModel.messages.value.single.text, '恢复的会话');
     expect(viewModel.activeSession?.session.items, hasLength(1));
   });
+
+  test('updates the active model when settings save a new provider', () async {
+    final configUseCase = AgentProviderConfigUseCase(_MemoryConfigUtil());
+    final viewModel = _buildViewModel(_FakeChat(), store, configUseCase);
+    addTearDown(viewModel.dispose);
+    await viewModel.initSignals();
+    expect(viewModel.provider.value?.model, 'test-model');
+
+    const updated = AgentProviderConfig(
+      baseUrl: 'https://example.test/v1',
+      apiKey: 'test-key',
+      model: 'updated-model',
+    );
+    await configUseCase.save(updated);
+
+    expect(viewModel.provider.value, same(updated));
+    expect(viewModel.sessions.value, hasLength(1));
+  });
 }
 
-AgentViewModel _buildViewModel(_FakeChat chat, AgentSessionStore store) =>
-    AgentViewModel(
-      configUseCase: _FakeConfigUseCase(),
-      dataSource: _FakeDataSource(),
-      chatFactory: ({
-        required AgentProviderConfig provider,
-        required TableCatalog catalog,
-        required ReadOnlyDataSource dataSource,
-      }) => chat,
-      sessionStore: store,
-    );
+AgentViewModel _buildViewModel(
+  _FakeChat chat,
+  AgentSessionStore store, [
+  AgentProviderConfigUseCase? configUseCase,
+]) => AgentViewModel(
+  configUseCase:
+      configUseCase ?? AgentProviderConfigUseCase(_MemoryConfigUtil()),
+  dataSource: _FakeDataSource(),
+  chatFactory: ({
+    required AgentProviderConfig provider,
+    required TableCatalog catalog,
+    required ReadOnlyDataSource dataSource,
+  }) => chat,
+  sessionStore: store,
+);
 
 final class _FakeChat extends AgentChatUseCase {
   final controller = StreamController<AgentEvent>();
@@ -156,20 +178,6 @@ final class _FakeChat extends AgentChatUseCase {
       controller.stream;
 }
 
-final class _FakeConfigUseCase extends AgentProviderConfigUseCase {
-  _FakeConfigUseCase() : super(ConfigUtil());
-
-  @override
-  Future<AgentProviderConfig?> load() async => const AgentProviderConfig(
-    baseUrl: 'https://example.test/v1',
-    apiKey: 'test-key',
-    model: 'test-model',
-  );
-
-  @override
-  Future<void> save(AgentProviderConfig provider) async {}
-}
-
 final class _FakeDataSource extends AgentReadOnlyDataSource {
   _FakeDataSource() : super(ConfigUtil());
 
@@ -183,4 +191,19 @@ final class _FakeDataSource extends AgentReadOnlyDataSource {
     required List<RowFilter> filters,
     required int limit,
   }) async => const [];
+}
+
+final class _MemoryConfigUtil extends ConfigUtil {
+  final _data = <String, dynamic>{
+    'agent_base_url': 'https://example.test/v1',
+    'agent_api_key': 'test-key',
+    'agent_model': 'test-model',
+  };
+
+  @override
+  Future<Map<String, dynamic>> load() async => Map.of(_data);
+
+  @override
+  Future<void> update(Map<String, dynamic> values) async =>
+      _data.addAll(values);
 }

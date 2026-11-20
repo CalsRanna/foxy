@@ -7,9 +7,12 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/mpq/mpq_export_worker.dart';
+import 'package:foxy/page/setting/agent_provider_dialog.dart';
 import 'package:foxy/page/setting/setting_page.dart';
 import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/repository/locale_query_settings.dart';
+import 'package:foxy/router/router.dart';
+import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/combined/combined_export_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
@@ -61,6 +64,7 @@ void main() {
 
     GetIt.instance.reset();
     GetIt.instance.registerSingleton<ConfigUtil>(cfg);
+    GetIt.instance.registerSingleton(AgentProviderConfigUseCase(cfg));
     localeSettings = LocaleQuerySettings();
     GetIt.instance.registerSingleton(localeSettings);
     stateVm = FoxyStateViewModel();
@@ -161,6 +165,48 @@ void main() {
 
   ShadButton buttonOf(WidgetTester tester, Finder finder) =>
       tester.widget<ShadButton>(finder);
+
+  testWidgets('在设置中打开并保存已有的模型服务商配置', (tester) async {
+    cfg.data.addAll({
+      'agent_base_url': 'https://example.test/v1',
+      'agent_model': 'old-model',
+      'agent_api_key': 'test-key',
+    });
+    await tester.pumpWidget(
+      ShadApp(
+        navigatorKey: FoxyRouter.router.navigatorKey,
+        home: const Scaffold(body: SettingPage()),
+      ),
+    );
+    final configure = find.widgetWithText(ShadButton, '配置');
+    await tester.ensureVisible(configure);
+    await tester.tap(configure);
+    await tester.pumpAndSettle();
+
+    final dialog = find.byType(AgentProviderDialog);
+    final inputs = find.descendant(
+      of: dialog,
+      matching: find.byType(ShadInput),
+    );
+    expect(
+      tester.widget<ShadInput>(inputs.at(0)).controller?.text,
+      'https://example.test/v1',
+    );
+    expect(
+      tester.widget<ShadInput>(inputs.at(1)).controller?.text,
+      'old-model',
+    );
+    expect(tester.widget<ShadInput>(inputs.at(2)).obscureText, isTrue);
+
+    await tester.enterText(inputs.at(1), 'new-model');
+    await tester.tap(find.widgetWithText(ShadButton, '保存'));
+    await tester.pumpAndSettle();
+
+    expect(dialog, findsNothing);
+    expect(cfg.data['agent_model'], 'new-model');
+    expect(cfg.data['agent_api_key'], 'test-key');
+    expect(find.text('模型服务商配置已保存'), findsOneWidget);
+  });
 
   testWidgets('本地化开关保存配置并同步后续查询设置', (tester) async {
     await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));

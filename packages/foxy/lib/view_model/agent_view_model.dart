@@ -43,8 +43,6 @@ class AgentViewModel with FieldControllerMixin {
 
   final messages = signal<List<AgentChatMessage>>([]);
 
-  final provider = signal<AgentProviderConfig?>(null);
-
   final running = signal(false);
 
   late final draftController = registerController(StringFieldController());
@@ -84,6 +82,8 @@ class AgentViewModel with FieldControllerMixin {
     if (id == null) return null;
     return sessions.value.where((meta) => meta.id == id).firstOrNull?.title;
   }
+
+  ReadonlySignal<AgentProviderConfig?> get provider => _configUseCase.provider;
 
   Future<void> createSession() async {
     final id = '${DateTime.now().microsecondsSinceEpoch}';
@@ -133,7 +133,7 @@ class AgentViewModel with FieldControllerMixin {
     if (_initialized) return;
     _initialized = true;
     try {
-      provider.value = await _configUseCase.load();
+      await _configUseCase.load();
     } catch (error) {
       LoggerUtil.instance.e('load agent provider config failed: $error');
     }
@@ -147,11 +147,6 @@ class AgentViewModel with FieldControllerMixin {
     } else {
       await selectSession(sessions.value.first.id);
     }
-  }
-
-  Future<void> saveProvider(AgentProviderConfig config) async {
-    await _configUseCase.save(config);
-    provider.value = config;
   }
 
   Future<void> selectSession(String id) async {

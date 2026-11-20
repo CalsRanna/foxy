@@ -4,10 +4,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
-import 'package:foxy/page/agent/agent_provider_dialog.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy_agent/foxy_agent.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -65,6 +65,7 @@ class _AgentPageState extends State<AgentPage> {
     return SignalBuilder(
       builder: (_) {
         final running = viewModel.running.value;
+        final configured = viewModel.provider.value != null;
         return Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           spacing: 8,
@@ -85,9 +86,16 @@ class _AgentPageState extends State<AgentPage> {
                   children: [Icon(LucideIcons.square, size: 15), Text('停止')],
                 ),
               )
+            else if (!configured)
+              ShadButton.outline(
+                onPressed: () => GetIt.instance
+                    .get<RouterFacade>()
+                    .navigateToMenu(RouterMenu.setting),
+                child: const Text('前往设置'),
+              )
             else
               ShadButton(
-                onPressed: _send,
+                onPressed: () => unawaited(viewModel.send()),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
@@ -175,7 +183,7 @@ class _AgentPageState extends State<AgentPage> {
         final messages = viewModel.messages.value;
         if (messages.isEmpty) {
           final hint = viewModel.provider.value == null
-              ? '尚未配置模型服务商，点击右上角「模型设置」开始使用'
+              ? '尚未配置模型服务商，请前往「设置 → AI 助手」'
               : '输入问题，让 AI 查询 world 库和 foxy 库';
           return Center(child: Text(hint, style: theme.textTheme.muted));
         }
@@ -312,15 +320,6 @@ class _AgentPageState extends State<AgentPage> {
               provider?.model ?? '未配置模型',
               style: theme.textTheme.muted.copyWith(fontSize: 12),
             ),
-            ShadButton.outline(
-              size: ShadButtonSize.sm,
-              onPressed: () => unawaited(_openProviderDialog()),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.settings2, size: 15), Text('模型设置')],
-              ),
-            ),
           ],
         );
       },
@@ -343,33 +342,10 @@ class _AgentPageState extends State<AgentPage> {
     }
   }
 
-  Future<void> _openProviderDialog() async {
-    final config = await DialogUtil.show<AgentProviderConfig>(
-      context: context,
-      builder: (context) =>
-          AgentProviderDialog(initial: viewModel.provider.value),
-    );
-    if (config == null || !mounted) return;
-    try {
-      await viewModel.saveProvider(config);
-      DialogUtil.instance.success('模型服务商配置已保存');
-    } catch (error) {
-      DialogUtil.instance.error('保存模型配置失败：${FoxyExceptions.message(error)}');
-    }
-  }
-
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!scrollController.hasClients) return;
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
     });
-  }
-
-  void _send() {
-    if (viewModel.provider.value == null) {
-      unawaited(_openProviderDialog());
-      return;
-    }
-    unawaited(viewModel.send());
   }
 }

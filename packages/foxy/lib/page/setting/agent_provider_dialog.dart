@@ -4,7 +4,7 @@ import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// Provider settings form for the AI agent page.
+/// Provider settings form for the AI agent.
 ///
 /// Pops with the submitted [AgentProviderConfig], or `null` when cancelled;
 /// persistence and error display stay with the page.
