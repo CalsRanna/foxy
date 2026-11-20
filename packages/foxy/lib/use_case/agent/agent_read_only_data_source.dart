@@ -46,8 +46,7 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
 
   TableCatalog? _catalog;
 
-  AgentReadOnlyDataSource(this._configUtil, {Laconic? laconic})
-    : _laconic = laconic;
+  AgentReadOnlyDataSource(this._configUtil, {this._laconic});
 
   Laconic get _database => _laconic ?? Database.instance.laconic;
 

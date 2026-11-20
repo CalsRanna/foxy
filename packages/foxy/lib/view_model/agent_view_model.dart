@@ -8,7 +8,7 @@ import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/use_case/agent/agent_chat_use_case.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
-import 'package:foxy/use_case/agent/generate_agent_session_title.dart';
+import 'package:foxy/use_case/agent/agent_session_title_generator.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 import 'package:get_it/get_it.dart';
@@ -74,14 +74,13 @@ class AgentViewModel with FieldControllerMixin {
     AgentProviderConfigUseCase? configUseCase,
     AgentReadOnlyDataSource? dataSource,
     AgentChatFactory? chatFactory,
-    AgentTitleGenerator titleGenerator = generateAgentSessionTitle,
+    this._titleGenerator = AgentSessionTitleGenerator.generate,
     AgentSessionStore? sessionStore,
   }) : _configUseCase =
            configUseCase ?? GetIt.instance.get<AgentProviderConfigUseCase>(),
        _dataSource =
            dataSource ?? GetIt.instance.get<AgentReadOnlyDataSource>(),
        _chatFactory = chatFactory ?? _createChat,
-       _titleGenerator = titleGenerator,
        _sessionStore = sessionStore ?? GetIt.instance.get<AgentSessionStore>();
 
   AgentChatSession? get activeSession {

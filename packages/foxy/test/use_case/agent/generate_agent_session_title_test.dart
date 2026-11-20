@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/use_case/agent/generate_agent_session_title.dart';
+import 'package:foxy/use_case/agent/agent_session_title_generator.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -30,7 +30,7 @@ data: {"type":"response.completed","response":{"status":"completed"}}
       );
     });
 
-    final title = await generateAgentSessionTitle(
+    final title = await AgentSessionTitleGenerator.generate(
       _provider,
       '查一下亚麻布的掉落来源',
       httpClient: client,
@@ -43,7 +43,11 @@ data: {"type":"response.completed","response":{"status":"completed"}}
     final client = MockClient((_) async => http.Response('Unavailable', 503));
 
     expect(
-      await generateAgentSessionTitle(_provider, '查询', httpClient: client),
+      await AgentSessionTitleGenerator.generate(
+        _provider,
+        '查询',
+        httpClient: client,
+      ),
       isNull,
     );
   });
