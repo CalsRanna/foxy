@@ -184,9 +184,6 @@ class DirectorySettingRow extends StatelessWidget {
         final path = target.pathOf(vm);
         final configured = target.configuredOf(vm);
         final missing = path != null && !configured;
-        final mpqDir = configured && target == DirectoryConfigTarget.clientDir
-            ? vm.mpqDir.value
-            : null;
         return Row(
           spacing: 16,
           children: [
@@ -207,29 +204,16 @@ class DirectorySettingRow extends StatelessWidget {
                       style: detailStyle,
                     )
                   else
-                    Tooltip(
-                      message: path,
-                      child: Text(
-                        path,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: detailStyle,
-                      ),
+                    Text(
+                      path,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: detailStyle,
                     ),
                   if (missing)
                     Text(
                       '目录不存在，请重新设置。',
                       style: detailStyle.copyWith(color: colors.destructive),
-                    ),
-                  if (mpqDir != null)
-                    Tooltip(
-                      message: mpqDir,
-                      child: Text(
-                        'MPQ 归档目录：$mpqDir',
-                        style: detailStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                     ),
                 ],
               ),

@@ -146,19 +146,16 @@ class _AgentCodeBlockState extends State<_AgentCodeBlock> {
                     style: theme.textTheme.muted.copyWith(fontSize: 11),
                   ),
                 ),
-                ShadTooltip(
-                  builder: (_) => Text(copyLabel),
-                  child: ShadButton.ghost(
-                    width: 28,
-                    height: 28,
-                    padding: EdgeInsets.zero,
-                    foregroundColor: colors.mutedForeground,
-                    onPressed: _copyCode,
-                    child: Icon(
-                      copied ? LucideIcons.check : LucideIcons.copy,
-                      size: 14,
-                      semanticLabel: copyLabel,
-                    ),
+                ShadButton.ghost(
+                  width: 28,
+                  height: 28,
+                  padding: EdgeInsets.zero,
+                  foregroundColor: colors.mutedForeground,
+                  onPressed: _copyCode,
+                  child: Icon(
+                    copied ? LucideIcons.check : LucideIcons.copy,
+                    size: 14,
+                    semanticLabel: copyLabel,
                   ),
                 ),
               ],

@@ -168,6 +168,7 @@ void main() {
 
     expect(find.text('目录设置'), findsOneWidget);
     expect(find.text(tempDir.path), findsOneWidget);
+    expect(find.byTooltip(tempDir.path), findsNothing);
     expect(find.textContaining('DBC 目录：'), findsNothing);
     expect(find.text('提取游戏图标'), findsOneWidget);
     expect(find.text('一键导出'), findsNothing);

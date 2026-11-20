@@ -83,10 +83,10 @@ class _AgentComposerState extends State<AgentComposer> {
             ),
             if (widget.configured || widget.running)
               IconButton.filled(
-                tooltip: widget.running ? '停止' : '发送（Enter）',
                 icon: Icon(
                   widget.running ? LucideIcons.square : LucideIcons.arrowUp,
                   size: 16,
+                  semanticLabel: widget.running ? '停止' : '发送（Enter）',
                   color: widget.running || _canSend
                       ? Theme.of(context).colorScheme.onPrimary
                       : null,

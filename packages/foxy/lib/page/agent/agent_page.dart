@@ -286,9 +286,12 @@ class _AgentPageState extends State<AgentPage> {
                 builder: (context, following, _) => following
                     ? const SizedBox.shrink()
                     : IconButton.filledTonal(
-                        tooltip: '回到底部',
                         onPressed: _followBottom,
-                        icon: const Icon(LucideIcons.arrowDown, size: 16),
+                        icon: const Icon(
+                          LucideIcons.arrowDown,
+                          size: 16,
+                          semanticLabel: '回到底部',
+                        ),
                       ),
               ),
             ),
@@ -411,8 +414,9 @@ class _AgentPageState extends State<AgentPage> {
                 ),
               ),
               if (_hoveredSessionId == meta.id)
-                Tooltip(
-                  message: '删除会话',
+                Semantics(
+                  button: true,
+                  label: '删除会话',
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => unawaited(_confirmDelete(meta)),

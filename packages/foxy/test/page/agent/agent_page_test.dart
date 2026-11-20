@@ -79,7 +79,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     expect(sent, ['第一行\n']);
-    expect(find.byTooltip('停止'), findsOneWidget);
+    expect(find.bySemanticsLabel('停止'), findsOneWidget);
     expect(tester.widget<TextField>(input).readOnly, isTrue);
     expect(iconColor(LucideIcons.square), activeColor);
 
@@ -221,7 +221,7 @@ void main() {
     await tester.drag(list, const Offset(0, 180));
     await tester.pumpAndSettle();
     final readingOffset = position.pixels;
-    final jump = find.byTooltip('回到底部');
+    final jump = find.bySemanticsLabel('回到底部');
     expect(jump, findsOneWidget);
 
     viewModel.messages.value = [

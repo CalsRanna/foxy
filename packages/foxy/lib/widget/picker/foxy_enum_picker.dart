@@ -106,13 +106,10 @@ class _EnumPickerDialogState<T> extends State<_EnumPickerDialog<T>> {
                       ),
                       FoxyTableColumn.flex(
                         label: '名称',
-                        cell: (_, row) => Tooltip(
-                          message: row.value,
-                          child: Text(
-                            row.value,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        cell: (_, row) => Text(
+                          row.value,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

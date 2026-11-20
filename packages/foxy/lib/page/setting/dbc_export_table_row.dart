@@ -64,7 +64,7 @@ class DbcExportTableRow extends StatelessWidget {
         ),
       ],
     );
-    final row = Material(
+    return Material(
       color: Colors.transparent,
       child: item.canSelect
           ? ShadButton.ghost(
@@ -76,13 +76,6 @@ class DbcExportTableRow extends StatelessWidget {
               child: content,
             )
           : Padding(padding: padding, child: content),
-    );
-
-    if (!failed) return row;
-    return Tooltip(
-      message: item.countError ?? '行数统计失败',
-      waitDuration: const Duration(milliseconds: 250),
-      child: row,
     );
   }
 }
