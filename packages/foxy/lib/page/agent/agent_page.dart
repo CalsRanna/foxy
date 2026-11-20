@@ -156,6 +156,7 @@ class _AgentPageState extends State<AgentPage> {
       case AgentChatRole.reasoning:
         return ExpansionTile(
           key: PageStorageKey(message),
+          shape: const Border(),
           dense: true,
           minTileHeight: 32,
           tilePadding: EdgeInsets.zero,
@@ -213,6 +214,7 @@ class _AgentPageState extends State<AgentPage> {
     final theme = ShadTheme.of(context);
     return ExpansionTile(
       key: PageStorageKey(group.first),
+      shape: const Border(),
       dense: true,
       minTileHeight: 32,
       tilePadding: EdgeInsets.zero,
