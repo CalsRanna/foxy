@@ -54,7 +54,7 @@ enum RouterMenu {
       RouterMenu.gameObjectTemplate => const GameObjectTemplateListRoute(),
       RouterMenu.gossipMenu => const GossipMenuListRoute(),
       RouterMenu.smartScript => const SmartScriptListRoute(),
-      RouterMenu.setting => const SettingRoute(),
+      RouterMenu.setting => SettingRoute(),
       // These menus have no route implemented yet
       RouterMenu.spell => const SpellListRoute(),
       RouterMenu.more => const MoreRoute(),

@@ -7,7 +7,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/page/agent/agent_composer.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy_widget/foxy_widget.dart';
@@ -108,9 +108,9 @@ class _AgentPageState extends State<AgentPage> {
           unawaited(viewModel.send());
         },
         onStop: viewModel.stop,
-        onConfigure: () => GetIt.instance.get<RouterFacade>().navigateToMenu(
-          RouterMenu.setting,
-        ),
+        onConfigure: () => GetIt.instance
+            .get<RouterFacade>()
+            .navigateToSettings(SettingSection.preferences),
       ),
     );
   }
@@ -257,7 +257,7 @@ class _AgentPageState extends State<AgentPage> {
         final messages = viewModel.messages.value;
         if (messages.isEmpty) {
           final hint = viewModel.provider.value == null
-              ? '尚未配置模型服务商，请前往「设置 → AI 助手」'
+              ? '尚未配置模型服务商，请前往「设置 → 编辑偏好」'
               : '输入问题，让 AI 查询 world 库和 foxy 库';
           return Center(child: Text(hint, style: theme.textTheme.muted));
         }

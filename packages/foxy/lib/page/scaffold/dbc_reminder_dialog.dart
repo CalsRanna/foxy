@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 import 'package:foxy/widget/dialog/setting_dialog_shell.dart';
 import 'package:get_it/get_it.dart';
@@ -35,8 +35,8 @@ class DbcReminderDialog extends StatelessWidget {
         ShadButton(
           onPressed: () {
             Navigator.of(context).maybePop();
-            GetIt.instance.get<RouterFacade>().navigateToMenu(
-              RouterMenu.setting,
+            GetIt.instance.get<RouterFacade>().navigateToSettings(
+              SettingSection.data,
             );
           },
           child: const Row(
@@ -63,10 +63,7 @@ class DbcReminderDialog extends StatelessWidget {
             shown + suffix,
             style: const TextStyle(fontSize: 13, height: 1.4),
           ),
-          SettingDialogShell.mutedHint(
-            context,
-            '请前往「设置 → DBC 数据管理」导入最新的 DBC 文件。',
-          ),
+          SettingDialogShell.mutedHint(context, '请前往「设置 → 数据工具」导入最新的 DBC 文件。'),
         ],
       ),
     );

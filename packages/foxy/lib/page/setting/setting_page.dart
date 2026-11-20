@@ -8,6 +8,7 @@ import 'package:foxy/page/setting/dbc_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_import_dialog.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/mpq_export_dialog.dart';
+import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
@@ -21,7 +22,6 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/directory/directory_setting_row.dart';
 import 'package:foxy/widget/update/update_dialog.dart';
 import 'package:foxy_agent/foxy_agent.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -29,53 +29,25 @@ import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class SettingPage extends StatefulWidget {
-  const SettingPage({super.key});
+  final SettingSection initialSection;
+
+  const SettingPage({
+    super.key,
+    this.initialSection = SettingSection.environment,
+  });
 
   @override
   State<SettingPage> createState() => _SettingPageState();
 }
 
-/// Single-row settings item: title + description + right-side action,
-/// borderless.
-class _SettingItem extends StatelessWidget {
-  final String title;
-  final String description;
-  final Widget trailing;
-
-  const _SettingItem({
-    required this.title,
-    required this.description,
-    required this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: theme.textTheme.muted.copyWith(fontSize: 13),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 16),
-        trailing,
-      ],
-    );
-  }
-}
-
 class _SettingPageState extends State<SettingPage> {
+  static const _titleStyle = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+  );
+
   final stateViewModel = GetIt.instance.get<FoxyStateViewModel>();
+  late SettingSection _section = widget.initialSection;
   bool _editingAgentProvider = false;
   bool _savingLocale = false;
   final agentProviderConfig = GetIt.instance.get<AgentProviderConfigUseCase>();
@@ -90,54 +62,63 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
+    final colors = ShadTheme.of(context).colorScheme;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 16),
-          child: FoxyHeader('设置'),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: DialogUtil.width),
+        SizedBox(
+          width: 208,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 30, 16, 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 4,
               children: [
-                _buildLocaleSection(),
-                const SizedBox(height: 24),
-                _SettingSection(
-                  title: '目录设置',
-                  children: [
-                    DirectorySettingRow(
-                      vm: setupViewModel,
-                      target: DirectoryConfigTarget.clientDir,
-                    ),
-                    const SizedBox(height: 16),
-                    DirectorySettingRow(
-                      vm: setupViewModel,
-                      target: DirectoryConfigTarget.serverDir,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
+                  child: Semantics(
+                    header: true,
+                    child: const Text('设置', style: _titleStyle),
+                  ),
                 ),
-                const SizedBox(height: 24),
-                _buildAgentSection(),
-                const SizedBox(height: 24),
-                _buildCombinedExportSection(),
-                const SizedBox(height: 24),
-                _buildDbcSection(),
-                const SizedBox(height: 24),
-                _buildMpqSection(),
-                const SizedBox(height: 24),
-                _buildIconSection(),
-                const SizedBox(height: 24),
-                _buildUpdateSection(),
+                ...SettingSection.values.map(_buildSectionButton),
+              ],
+            ),
+          ),
+        ),
+        VerticalDivider(width: 1, thickness: 1, color: colors.border),
+        Expanded(
+          child: SingleChildScrollView(
+            key: ValueKey(_section),
+            padding: const EdgeInsets.fromLTRB(48, 30, 48, 36),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 28,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(_sectionLabel(_section), style: _titleStyle),
+                ),
+                switch (_section) {
+                  SettingSection.environment => _buildEnvironmentSection(),
+                  SettingSection.data => _buildDataSection(),
+                  SettingSection.preferences => _buildPreferencesSection(),
+                  SettingSection.about => _buildUpdateSection(),
+                },
               ],
             ),
           ),
         ),
       ],
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant SettingPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSection != oldWidget.initialSection) {
+      _section = widget.initialSection;
+    }
   }
 
   @override
@@ -155,13 +136,183 @@ class _SettingPageState extends State<SettingPage> {
     updateViewModel.prepare();
   }
 
-  Widget _buildAgentSection() {
-    return _SettingSection(
-      title: 'AI 助手',
+  Widget _buildSectionButton(SettingSection section) {
+    final colors = ShadTheme.of(context).colorScheme;
+    final selected = section == _section;
+    final icon = switch (section) {
+      SettingSection.environment => LucideIcons.folders,
+      SettingSection.data => LucideIcons.database,
+      SettingSection.preferences => LucideIcons.slidersHorizontal,
+      SettingSection.about => LucideIcons.info,
+    };
+    return Semantics(
+      selected: selected,
+      child: ShadButton.ghost(
+        width: double.infinity,
+        expands: true,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        backgroundColor: selected ? colors.muted : null,
+        foregroundColor: selected ? colors.foreground : colors.mutedForeground,
+        onPressed: () => setState(() => _section = section),
+        child: Row(
+          spacing: 10,
+          children: [
+            Icon(icon, size: 17),
+            Expanded(
+              child: Text(
+                _sectionLabel(section),
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEnvironmentSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 24,
       children: [
+        _SettingGroup(
+          title: '目录设置',
+          children: [
+            DirectorySettingRow(
+              vm: setupViewModel,
+              target: DirectoryConfigTarget.clientDir,
+            ),
+            DirectorySettingRow(
+              vm: setupViewModel,
+              target: DirectoryConfigTarget.serverDir,
+            ),
+          ],
+        ),
+        _buildIconSection(),
+      ],
+    );
+  }
+
+  Widget _buildDataSection() {
+    return SignalBuilder(
+      builder: (_) {
+        // Read every workflow before combining the values so SignalBuilder
+        // continues tracking all four workflows while one is busy.
+        final importBusy = importViewModel.isRunning;
+        final exportBusy = exportViewModel.isRunning;
+        final mpqBusy = mpqViewModel.isRunning;
+        final combinedBusy = combinedViewModel.isRunning;
+        final busy = importBusy || exportBusy || mpqBusy || combinedBusy;
+        final theme = ShadTheme.of(context);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 28,
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.muted.withValues(alpha: 0.55),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: theme.colorScheme.border),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
+                child: _SettingItem(
+                  title: '一键导出 DBC 与 MPQ',
+                  description: '读取一次数据库，生成服务端 DBC 文件和客户端 MPQ 补丁。',
+                  trailing: ShadButton(
+                    onPressed: busy ? null : _showCombinedExportDialog,
+                    child: const Text('一键导出'),
+                  ),
+                ),
+              ),
+            ),
+            _SettingGroup(
+              title: '单独导入或导出',
+              children: [
+                _SettingItem(
+                  title: '导入 DBC 文件',
+                  description: '从服务端目录读取 DBC 文件，覆盖 Foxy 数据库中的对应表。',
+                  trailing: ShadButton.outline(
+                    size: ShadButtonSize.sm,
+                    onPressed: busy ? null : _showImportDialog,
+                    child: const Text('导入 DBC'),
+                  ),
+                ),
+                _SettingItem(
+                  title: '导出 DBC 文件',
+                  description: '将选中的数据库表导出到服务端 DBC 目录。',
+                  trailing: ShadButton.outline(
+                    size: ShadButtonSize.sm,
+                    onPressed: busy ? null : _showExportDialog,
+                    child: const Text('导出 DBC'),
+                  ),
+                ),
+                _SettingItem(
+                  title: '导出 MPQ 补丁',
+                  description: '将选中的 DBC 表打包到客户端 MPQ 归档目录。',
+                  trailing: ShadButton.outline(
+                    size: ShadButtonSize.sm,
+                    onPressed: busy ? null : _showMpqExportDialog,
+                    child: const Text('导出 MPQ'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildIconSection() {
+    return SignalBuilder(
+      builder: (_) => _SettingGroup(
+        title: '游戏图标',
+        children: [
+          _SettingItem(
+            title: '提取游戏图标',
+            description: '从客户端 MPQ 归档提取图标，用于游戏数据列表。',
+            trailing: ShadButton.outline(
+              size: ShadButtonSize.sm,
+              onPressed: iconViewModel.isRunning
+                  ? null
+                  : _showIconExtractDialog,
+              child: const Text('提取'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPreferencesSection() {
+    return _SettingGroup(
+      children: [
+        SignalBuilder(
+          builder: (_) {
+            final hasLocaleTables = stateViewModel.hasLocaleTables.value;
+            return _SettingItem(
+              title: '使用独立本地化表',
+              description: hasLocaleTables
+                  ? '优先显示本地化表中的文本，下次查询生效。'
+                  : '当前数据库未检测到本地化表。',
+              trailing: ShadSwitch(
+                value: stateViewModel.localeEnabled.value,
+                enabled: hasLocaleTables && !_savingLocale,
+                onChanged: _setLocaleEnabled,
+              ),
+            );
+          },
+        ),
         _SettingItem(
-          title: '模型服务商',
-          description: '管理 AI 助手使用的 Base URL、模型名称和 API Key。',
+          title: 'AI 助手模型',
+          description: '设置模型服务商的 Base URL、模型名称和 API Key。',
           trailing: ShadButton.outline(
             size: ShadButtonSize.sm,
             onPressed: _editingAgentProvider ? null : _showAgentProviderDialog,
@@ -172,233 +323,42 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildCombinedExportSection() {
-    return SignalBuilder(
-      builder: (_) {
-        // The combined export drives the shared DbcSyncUtil, so it must not run
-        // while an import/export/MPQ-export is in flight. Same non-short-circuit
-        // pattern as the other sections: keep every isRunning read in the
-        // dependency set.
-        final combinedBusy = combinedViewModel.isRunning;
-        final importBusy = importViewModel.isRunning;
-        final exportBusy = exportViewModel.isRunning;
-        final mpqBusy = mpqViewModel.isRunning;
-        final busy = combinedBusy || importBusy || exportBusy || mpqBusy;
-        return _SettingSection(
-          title: '一键导出',
-          children: [
-            _SettingItem(
-              title: '同时导出 DBC 与 MPQ',
-              description:
-                  '将选中的 DBC 表一次导出为 .dbc 文件到服务端目录，并打包 MPQ 补丁'
-                  '（默认 patch-zhCN-5.MPQ）到客户端目录。MPQ 直接复用本次导出的'
-                  ' DBC 文件，全程只读取一次数据库。',
-              trailing: ShadButton(
-                size: ShadButtonSize.sm,
-                onPressed: busy ? null : _showCombinedExportDialog,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.zap, size: 15), Text('一键导出')],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildDbcSection() {
-    return SignalBuilder(
-      builder: (_) {
-        // DBC tasks share the single DbcSyncUtil: nothing may run while an
-        // import/export/MPQ-export is in flight.
-        //
-        // Each isRunning is read into its own local first: a `||` chain would
-        // short-circuit once any task is busy, so the signals read later in
-        // the chain would be dropped from this SignalBuilder's dependency tracking
-        // and the buttons would never re-enable when that task finishes.
-        final importBusy = importViewModel.isRunning;
-        final exportBusy = exportViewModel.isRunning;
-        final mpqBusy = mpqViewModel.isRunning;
-        final combinedBusy = combinedViewModel.isRunning;
-        final busy = importBusy || exportBusy || mpqBusy || combinedBusy;
-        return _SettingSection(
-          title: 'DBC 数据管理',
-          children: [
-            _SettingItem(
-              title: '导入 DBC 文件',
-              description:
-                  '从服务端目录自动检测的 DBC 目录导入数据，以 DBC 为准写入 foxy 库并覆盖对应表。'
-                  '若需保留库内数据请先自行备份。',
-              trailing: ShadButton(
-                size: ShadButtonSize.sm,
-                onPressed: busy ? null : _showImportDialog,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.fileInput, size: 15), Text('导入')],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _SettingItem(
-              title: '导出 DBC 文件',
-              description: '将数据库中的 DBC 表导出为 .dbc 文件，可搜索并勾选需要导出的表。',
-              trailing: ShadButton(
-                size: ShadButtonSize.sm,
-                onPressed: busy ? null : _showExportDialog,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Icon(LucideIcons.fileOutput, size: 15),
-                    Text('导出'),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildIconSection() {
-    return SignalBuilder(
-      builder: (_) {
-        final busy = iconViewModel.isRunning;
-        return _SettingSection(
-          title: '游戏图标',
-          children: [
-            _SettingItem(
-              title: '提取游戏图标',
-              description:
-                  '从配置的客户端目录的 Data\\<语言> MPQ 归档中提取全部图标'
-                  '（约 6300 个，BLP 原始格式）。未提取的图标在列表页显示占位符。',
-              trailing: ShadButton(
-                size: ShadButtonSize.sm,
-                onPressed: busy ? null : _showIconExtractDialog,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.download, size: 15), Text('提取')],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildLocaleSection() {
-    return SignalBuilder(
-      builder: (_) {
-        final hasLocaleTables = stateViewModel.hasLocaleTables.value;
-        return _SettingSection(
-          title: '本地化设置',
-          children: [
-            _SettingItem(
-              title: '使用独立本地化表',
-              description: hasLocaleTables
-                  ? '开启后优先显示本地化表内容，关闭后使用主表内容。修改后重新查询生效。'
-                  : '当前数据库未检测到本地化表。',
-              trailing: ShadSwitch(
-                value: stateViewModel.localeEnabled.value,
-                enabled: hasLocaleTables && !_savingLocale,
-                onChanged: _setLocaleEnabled,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildMpqSection() {
-    return SignalBuilder(
-      builder: (_) {
-        // DBC tasks share the single DbcSyncUtil: the MPQ export must not run
-        // while an import/export is in flight. Same non-short-circuit pattern
-        // as the DBC section: keep every isRunning read in the dependency set.
-        final mpqBusy = mpqViewModel.isRunning;
-        final importBusy = importViewModel.isRunning;
-        final exportBusy = exportViewModel.isRunning;
-        final busy = mpqBusy || importBusy || exportBusy;
-        return _SettingSection(
-          title: 'MPQ 管理',
-          children: [
-            _SettingItem(
-              title: '导出 MPQ 补丁',
-              description:
-                  '将选中的 DBC 表打包为 MPQ 补丁（默认 patch-zhCN-5.MPQ），'
-                  '输出到客户端 MPQ 目录（如 Data\\zhCN）。'
-                  '客户端启动时自动加载补丁，覆盖原始 DBC 文件。',
-              trailing: ShadButton(
-                size: ShadButtonSize.sm,
-                onPressed: busy ? null : _showMpqExportDialog,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.archive, size: 15), Text('导出')],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Widget _buildUpdateSection() {
-    return SignalBuilder(
-      builder: (_) {
-        final version = updateViewModel.currentVersion.value;
-        return _SettingSection(
-          title: '关于与更新',
-          children: [
-            _SettingItem(
-              title: '检查更新',
-              description: version == null
-                  ? '检查 Foxy 是否有新版本'
-                  : '当前版本 $version，检查 Foxy 是否有新版本',
-              trailing: ShadButton(
-                size: ShadButtonSize.sm,
-                onPressed: _showUpdateDialog,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Icon(LucideIcons.refreshCw, size: 15),
-                    Text('检查更新'),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _SettingItem(
-              title: '项目主页',
-              description: '访问 GitHub 仓库，查看更新记录、文档与反馈问题',
+    return _SettingGroup(
+      children: [
+        SignalBuilder(
+          builder: (_) {
+            final version = updateViewModel.currentVersion.value;
+            return _SettingItem(
+              title: 'Foxy',
+              description: version == null ? '应用更新' : '当前版本 $version',
               trailing: ShadButton.outline(
                 size: ShadButtonSize.sm,
-                onPressed: _openProjectPage,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Icon(LucideIcons.externalLink, size: 15),
-                    Text('打开'),
-                  ],
-                ),
+                onPressed: _showUpdateDialog,
+                child: const Text('检查更新'),
               ),
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ),
+        _SettingItem(
+          title: '项目主页',
+          description: '在 GitHub 查看文档、更新记录和问题反馈。',
+          trailing: ShadButton.outline(
+            size: ShadButtonSize.sm,
+            onPressed: _openProjectPage,
+            child: const Text('打开'),
+          ),
+        ),
+      ],
     );
   }
+
+  String _sectionLabel(SettingSection section) => switch (section) {
+    SettingSection.environment => '游戏环境',
+    SettingSection.data => '数据工具',
+    SettingSection.preferences => '编辑偏好',
+    SettingSection.about => '关于 Foxy',
+  };
 
   Future<void> _openProjectPage() async {
     final ok = await launchUrl(
@@ -505,33 +465,86 @@ class _SettingPageState extends State<SettingPage> {
   }
 }
 
-/// Settings group: top divider + title + bottom divider + item list.
-class _SettingSection extends StatelessWidget {
-  final String title;
+class _SettingGroup extends StatelessWidget {
+  final String? title;
   final List<Widget> children;
 
-  const _SettingSection({required this.title, required this.children});
+  const _SettingGroup({this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final divider = Divider(
       height: 1,
-      color: theme.colorScheme.border.withValues(alpha: 0.6),
+      thickness: 1,
+      color: theme.colorScheme.border,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (title case final title?)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Semantics(
+              header: true,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
         divider,
-        const SizedBox(height: 16),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ...children.expand(
+          (child) => [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: child,
+            ),
+            divider,
+          ],
         ),
-        const SizedBox(height: 16),
-        divider,
-        const SizedBox(height: 16),
-        ...children,
+      ],
+    );
+  }
+}
+
+class _SettingItem extends StatelessWidget {
+  final String title;
+  final String description;
+  final Widget trailing;
+
+  const _SettingItem({
+    required this.title,
+    required this.description,
+    required this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    return Row(
+      spacing: 16,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 4,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(
+                description,
+                style: theme.textTheme.muted.copyWith(
+                  color: theme.colorScheme.mutedForeground,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+        trailing,
       ],
     );
   }

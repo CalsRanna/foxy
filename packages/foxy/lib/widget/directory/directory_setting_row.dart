@@ -38,9 +38,6 @@ enum DirectoryConfigTarget {
     required this.description,
   });
 
-  /// Label for the auto-detected subdirectory shown under the row's path.
-  String get resolvedLabel => this == clientDir ? 'MPQ 归档目录' : 'DBC 目录';
-
   void clearError(SetupStatusViewModel vm) {
     if (this == clientDir) {
       vm.clientDirError.value = null;
@@ -57,11 +54,6 @@ enum DirectoryConfigTarget {
 
   String? pathOf(SetupStatusViewModel vm) =>
       this == clientDir ? vm.clientDir.value : vm.serverDir.value;
-
-  /// Auto-detected subdirectory (MPQ archives for the client, DBC files
-  /// for the server), null when not yet detected.
-  String? resolvedPathOf(SetupStatusViewModel vm) =>
-      this == clientDir ? vm.mpqDir.value : vm.dbcPath.value;
 
   Future<bool> save(SetupStatusViewModel vm, String path) =>
       this == clientDir ? vm.saveClientDir(path) : vm.saveServerDir(path);
@@ -182,77 +174,75 @@ class DirectorySettingRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
+    final colors = theme.colorScheme;
+    final detailStyle = theme.textTheme.muted.copyWith(
+      color: colors.mutedForeground,
+      fontSize: 13,
+    );
     return SignalBuilder(
       builder: (_) {
         final path = target.pathOf(vm);
         final configured = target.configuredOf(vm);
         final missing = path != null && !configured;
-        final resolved = configured ? target.resolvedPathOf(vm) : null;
+        final mpqDir = configured && target == DirectoryConfigTarget.clientDir
+            ? vm.mpqDir.value
+            : null;
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 16,
           children: [
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 5,
                 children: [
                   Text(
                     target.title,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    target.description,
-                    style: theme.textTheme.muted.copyWith(fontSize: 13),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    path ?? '尚未配置',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: missing
-                          ? theme.colorScheme.destructive
-                          : configured
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.mutedForeground,
-                      fontWeight: configured ? FontWeight.w500 : null,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (missing) ...[
-                    const SizedBox(height: 4),
+                  if (path == null)
                     Text(
-                      '目录不存在，请重新设置。',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: theme.colorScheme.destructive,
+                      target == DirectoryConfigTarget.clientDir
+                          ? '尚未配置 · 用于提取图标和导出 MPQ 补丁'
+                          : '尚未配置 · 用于导入和导出 DBC 文件',
+                      style: detailStyle,
+                    )
+                  else
+                    Tooltip(
+                      message: path,
+                      child: Text(
+                        path,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: detailStyle,
                       ),
                     ),
-                  ],
-                  if (resolved != null) ...[
-                    const SizedBox(height: 4),
+                  if (missing)
                     Text(
-                      '已找到${target.resolvedLabel}: $resolved',
-                      style: theme.textTheme.muted.copyWith(fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
+                      '目录不存在，请重新设置。',
+                      style: detailStyle.copyWith(color: colors.destructive),
                     ),
-                  ],
+                  if (mpqDir != null)
+                    Tooltip(
+                      message: mpqDir,
+                      child: Text(
+                        'MPQ 归档目录：$mpqDir',
+                        style: detailStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
             ShadButton.outline(
               size: ShadButtonSize.sm,
               onPressed: () => DialogUtil.show(
                 context: context,
                 barrierDismissible: false,
-                builder: (dialogContext) =>
+                builder: (_) =>
                     DirectoryPathConfigDialog(vm: vm, target: target),
               ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.pencil, size: 15), Text('修改')],
-              ),
+              child: Text(path == null ? '配置目录' : '修改目录'),
             ),
           ],
         );

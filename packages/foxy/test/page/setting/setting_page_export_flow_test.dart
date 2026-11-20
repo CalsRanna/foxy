@@ -12,6 +12,7 @@ import 'package:foxy/page/setting/setting_page.dart';
 import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:foxy/router/router.dart';
+import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/combined/combined_export_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
@@ -135,36 +136,75 @@ void main() {
     } catch (_) {}
   });
 
-  Finder dbcImportButton() => find
-      .ancestor(
-        of: find.byIcon(LucideIcons.fileInput),
-        matching: find.byType(ShadButton),
-      )
-      .first;
+  Finder dbcImportButton() => find.widgetWithText(ShadButton, '导入 DBC');
 
-  Finder dbcExportButton() => find
-      .ancestor(
-        of: find.byIcon(LucideIcons.fileOutput),
-        matching: find.byType(ShadButton),
-      )
-      .first;
+  Finder dbcExportButton() => find.widgetWithText(ShadButton, '导出 DBC');
 
-  Finder mpqExportButton() => find
-      .ancestor(
-        of: find.byIcon(LucideIcons.archive),
-        matching: find.byType(ShadButton),
-      )
-      .first;
+  Finder mpqExportButton() => find.widgetWithText(ShadButton, '导出 MPQ');
 
-  Finder combinedExportButton() => find
-      .ancestor(
-        of: find.byIcon(LucideIcons.zap),
-        matching: find.byType(ShadButton),
-      )
-      .first;
+  Finder combinedExportButton() => find.widgetWithText(ShadButton, '一键导出');
 
   ShadButton buttonOf(WidgetTester tester, Finder finder) =>
       tester.widget<ShadButton>(finder);
+
+  const preferencesPage = ShadApp(
+    home: Scaffold(
+      body: SettingPage(initialSection: SettingSection.preferences),
+    ),
+  );
+  const dataPage = ShadApp(
+    home: Scaffold(body: SettingPage(initialSection: SettingSection.data)),
+  );
+
+  testWidgets('设置分类与操作区域适应桌面窗口宽度', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1215, 726));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    final setup = GetIt.instance.get<SetupStatusViewModel>();
+    setup.serverDir.value = tempDir.path;
+    setup.serverDirExists.value = true;
+    setup.dbcPath.value = tempDir.path;
+    await tester.pump();
+
+    expect(find.text('目录设置'), findsOneWidget);
+    expect(find.text(tempDir.path), findsOneWidget);
+    expect(find.textContaining('DBC 目录：'), findsNothing);
+    expect(find.text('提取游戏图标'), findsOneWidget);
+    expect(find.text('一键导出'), findsNothing);
+    final environmentLabels = find.text('游戏环境');
+    final sidebarTitle = find.text('设置');
+    expect(
+      tester.widget<Text>(environmentLabels.last).style,
+      tester.widget<Text>(sidebarTitle).style,
+    );
+    expect(
+      tester.getTopLeft(environmentLabels.last).dy,
+      tester.getTopLeft(sidebarTitle).dy,
+    );
+    expect(
+      tester.getTopLeft(environmentLabels.last).dy,
+      lessThan(tester.getTopLeft(environmentLabels.first).dy),
+    );
+
+    await tester.tap(find.widgetWithText(ShadButton, '数据工具'));
+    await tester.pumpAndSettle();
+    expect(find.text('目录设置'), findsNothing);
+    expect(combinedExportButton().hitTestable(), findsOneWidget);
+
+    final exportButton = dbcExportButton();
+    final minimumWidthRight = tester.getTopRight(exportButton).dx;
+    await tester.binding.setSurfaceSize(const Size(1535, 726));
+    await tester.pumpAndSettle();
+    expect(tester.getTopRight(exportButton).dx - minimumWidthRight, 320);
+
+    await tester.tap(find.widgetWithText(ShadButton, '关于 Foxy'));
+    await tester.pumpAndSettle();
+    expect(
+      find.widgetWithText(ShadButton, '检查更新').hitTestable(),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('在设置中打开并保存已有的模型服务商配置', (tester) async {
     cfg.data.addAll({
@@ -178,6 +218,8 @@ void main() {
         home: const Scaffold(body: SettingPage()),
       ),
     );
+    await tester.tap(find.widgetWithText(ShadButton, '编辑偏好'));
+    await tester.pumpAndSettle();
     final configure = find.widgetWithText(ShadButton, '配置');
     await tester.ensureVisible(configure);
     await tester.tap(configure);
@@ -220,7 +262,7 @@ void main() {
   });
 
   testWidgets('本地化开关保存配置并同步后续查询设置', (tester) async {
-    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    await tester.pumpWidget(preferencesPage);
     final toggle = find.byType(ShadSwitch);
     expect(tester.widget<ShadSwitch>(toggle).value, isTrue);
 
@@ -234,7 +276,7 @@ void main() {
     expect(cfg.data['dbc_dir'], tempDir.path);
 
     await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    await tester.pumpWidget(preferencesPage);
     expect(tester.widget<ShadSwitch>(toggle).value, isFalse);
 
     await tester.tap(toggle);
@@ -246,7 +288,7 @@ void main() {
 
   testWidgets('未检测到本地化表时不可开启', (tester) async {
     stateVm.setLocaleSettings(hasLocaleTables: false, localeEnabled: false);
-    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    await tester.pumpWidget(preferencesPage);
 
     final toggle = tester.widget<ShadSwitch>(find.byType(ShadSwitch));
     expect(toggle.value, isFalse);
@@ -257,7 +299,7 @@ void main() {
 
   testWidgets('保存本地化设置失败时保留原开关和查询状态', (tester) async {
     cfg.failUpdate = true;
-    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    await tester.pumpWidget(preferencesPage);
     await tester.tap(find.byType(ShadSwitch));
     await tester.pumpAndSettle();
 
@@ -337,7 +379,7 @@ void main() {
   });
 
   testWidgets('进度中不可关闭对话框，任务结束后可关闭', (tester) async {
-    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    await tester.pumpWidget(dataPage);
     await tester.pump();
     await tester.pump();
 
@@ -352,10 +394,10 @@ void main() {
     await tester.tap(dbcImportButton());
     await tester.pump();
     await tester.pump();
-    expect(find.text('导入 DBC'), findsOneWidget);
+    expect(find.byType(ShadDialog), findsOneWidget);
     await nav.maybePop();
     await tester.pumpAndSettle();
-    expect(find.text('导入 DBC'), findsNothing);
+    expect(find.byType(ShadDialog), findsNothing);
 
     // 重新打开，进入进度状态。
     await tester.tap(dbcImportButton());
@@ -381,11 +423,11 @@ void main() {
     await nav.maybePop();
     await tester.pumpAndSettle();
     expect(find.text('导入完成'), findsNothing);
-    expect(find.text('导入 DBC'), findsNothing);
+    expect(find.byType(ShadDialog), findsNothing);
   });
 
   testWidgets('MPQ 导出完成后 DBC 导入/导出按钮恢复可用', (tester) async {
-    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    await tester.pumpWidget(dataPage);
     await tester.pump();
     await tester.pump();
 
@@ -441,7 +483,13 @@ void main() {
     await tester.tap(dbcExportButton());
     await tester.pump();
     await tester.pump();
-    expect(find.text('导出 DBC'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(ShadDialog),
+        matching: find.text('导出 DBC'),
+      ),
+      findsOneWidget,
+    );
 
     // 关闭后点击「一键导出」应能打开组合导出对话框（区块在页面最上，
     // 先滚动回顶部）。

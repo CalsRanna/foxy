@@ -16,7 +16,7 @@ import 'package:foxy/entity/condition_entity.dart' as _i63;
 import 'package:foxy/entity/gossip_menu_entity.dart' as _i64;
 import 'package:foxy/entity/player_create_info_entity.dart' as _i65;
 import 'package:foxy/entity/reference_loot_template_entity.dart' as _i66;
-import 'package:foxy/entity/smart_script_entity.dart' as _i67;
+import 'package:foxy/entity/smart_script_entity.dart' as _i68;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/agent/agent_page.dart' as _i3;
@@ -96,6 +96,7 @@ import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_list_pag
     as _i57;
 import 'package:foxy/page/talent/talent_detail_page.dart' as _i59;
 import 'package:foxy/page/talent/talent_list_page.dart' as _i60;
+import 'package:foxy/router/setting_section.dart' as _i67;
 
 /// generated route for
 /// [_i1.AchievementDetailPage]
@@ -1754,18 +1755,57 @@ class ScalingStatValueListRoute extends _i61.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i50.SettingPage]
-class SettingRoute extends _i61.PageRouteInfo<void> {
-  const SettingRoute({List<_i61.PageRouteInfo>? children})
-    : super(SettingRoute.name, initialChildren: children);
+class SettingRoute extends _i61.PageRouteInfo<SettingRouteArgs> {
+  SettingRoute({
+    _i62.Key? key,
+    _i67.SettingSection initialSection = _i67.SettingSection.environment,
+    List<_i61.PageRouteInfo>? children,
+  }) : super(
+         SettingRoute.name,
+         args: SettingRouteArgs(key: key, initialSection: initialSection),
+         initialChildren: children,
+       );
 
   static const String name = 'SettingRoute';
 
   static _i61.PageInfo page = _i61.PageInfo(
     name,
     builder: (data) {
-      return const _i50.SettingPage();
+      final args = data.argsAs<SettingRouteArgs>(
+        orElse: () => const SettingRouteArgs(),
+      );
+      return _i50.SettingPage(
+        key: args.key,
+        initialSection: args.initialSection,
+      );
     },
   );
+}
+
+class SettingRouteArgs {
+  const SettingRouteArgs({
+    this.key,
+    this.initialSection = _i67.SettingSection.environment,
+  });
+
+  final _i62.Key? key;
+
+  final _i67.SettingSection initialSection;
+
+  @override
+  String toString() {
+    return 'SettingRouteArgs{key: $key, initialSection: $initialSection}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SettingRouteArgs) return false;
+    return key == other.key && initialSection == other.initialSection;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ initialSection.hashCode;
 }
 
 /// generated route for
@@ -1843,7 +1883,7 @@ class SmartScriptDetailRoute
     extends _i61.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i62.Key? key,
-    _i67.SmartScriptKey? scriptKey,
+    _i68.SmartScriptKey? scriptKey,
     List<_i61.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1872,7 +1912,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i62.Key? key;
 
-  final _i67.SmartScriptKey? scriptKey;
+  final _i68.SmartScriptKey? scriptKey;
 
   @override
   String toString() {

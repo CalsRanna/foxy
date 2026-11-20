@@ -3,6 +3,7 @@ import 'package:foxy/router/router.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/router/router_node.dart';
+import 'package:foxy/router/setting_section.dart';
 import 'package:signals/signals.dart';
 
 /// Routing facade: a simple, uniform interface over the complex routing
@@ -110,18 +111,22 @@ class RouterFacade {
 
   /// Navigates to a top-level menu page (sidebar click)
   void navigateToMenu(RouterMenu menu, {RouterMenu? parentMenu}) {
-    final node = parentMenu != null
-        ? RouterNode(
-            menu: menu,
-            label: menu.label,
-            route: menu.route,
-            parentMenu: parentMenu,
-          )
-        : menu.toNode();
+    _navigateToMenuNode(menu.toNode().copyWith(parentMenu: parentMenu));
+  }
 
+  void navigateToSettings(SettingSection section) {
+    _navigateToMenuNode(
+      RouterMenu.setting.toNode().copyWith(
+        route: SettingRoute(initialSection: section),
+      ),
+    );
+  }
+
+  void _navigateToMenuNode(RouterNode node) {
+    final parentMenu = node.parentMenu;
     // Build the path: dashboard + [parent menu] + current menu
     final List<RouterNode> nodes;
-    if (menu == RouterMenu.dashboard) {
+    if (node.menu == RouterMenu.dashboard) {
       nodes = [node];
     } else if (parentMenu != null) {
       nodes = [RouterMenu.dashboard.toNode(), parentMenu.toNode(), node];
