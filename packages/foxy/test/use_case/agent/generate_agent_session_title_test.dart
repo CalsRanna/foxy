@@ -6,12 +6,6 @@ import 'package:foxy_agent/foxy_agent.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
-const _provider = AgentProviderConfig(
-  baseUrl: 'https://example.test/v1',
-  apiKey: 'test-key',
-  model: 'test-model',
-);
-
 void main() {
   test('generates a title from only the first user message', () async {
     final client = MockClient((request) async {
@@ -54,3 +48,9 @@ data: {"type":"response.completed","response":{"status":"completed"}}
     );
   });
 }
+
+const _provider = AgentProviderConfig(
+  baseUrl: 'https://example.test/v1',
+  apiKey: 'test-key',
+  model: 'test-model',
+);

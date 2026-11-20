@@ -40,6 +40,91 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
+class _SettingGroup extends StatelessWidget {
+  final String? title;
+  final List<Widget> children;
+
+  const _SettingGroup({this.title, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    final divider = Divider(
+      height: 1,
+      thickness: 1,
+      color: theme.colorScheme.border,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (title case final title?)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Semantics(
+              header: true,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        divider,
+        ...children.expand(
+          (child) => [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: child,
+            ),
+            divider,
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SettingItem extends StatelessWidget {
+  final String title;
+  final String description;
+  final Widget trailing;
+
+  const _SettingItem({
+    required this.title,
+    required this.description,
+    required this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    return Row(
+      spacing: 16,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 4,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(
+                description,
+                style: theme.textTheme.muted.copyWith(
+                  color: theme.colorScheme.mutedForeground,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+        trailing,
+      ],
+    );
+  }
+}
+
 class _SettingPageState extends State<SettingPage> {
   static const _titleStyle = TextStyle(
     fontSize: 22,
@@ -136,66 +221,6 @@ class _SettingPageState extends State<SettingPage> {
     updateViewModel.prepare();
   }
 
-  Widget _buildSectionButton(SettingSection section) {
-    final colors = ShadTheme.of(context).colorScheme;
-    final selected = section == _section;
-    final icon = switch (section) {
-      SettingSection.environment => LucideIcons.folders,
-      SettingSection.data => LucideIcons.database,
-      SettingSection.preferences => LucideIcons.slidersHorizontal,
-      SettingSection.about => LucideIcons.info,
-    };
-    return Semantics(
-      selected: selected,
-      child: ShadButton.ghost(
-        width: double.infinity,
-        expands: true,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        backgroundColor: selected ? colors.muted : null,
-        foregroundColor: selected ? colors.foreground : colors.mutedForeground,
-        onPressed: () => setState(() => _section = section),
-        child: Row(
-          spacing: 10,
-          children: [
-            Icon(icon, size: 17),
-            Expanded(
-              child: Text(
-                _sectionLabel(section),
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEnvironmentSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 24,
-      children: [
-        _SettingGroup(
-          title: '目录设置',
-          children: [
-            DirectorySettingRow(
-              vm: setupViewModel,
-              target: DirectoryConfigTarget.clientDir,
-            ),
-            DirectorySettingRow(
-              vm: setupViewModel,
-              target: DirectoryConfigTarget.serverDir,
-            ),
-          ],
-        ),
-        _buildIconSection(),
-      ],
-    );
-  }
-
   Widget _buildDataSection() {
     return SignalBuilder(
       builder: (_) {
@@ -270,6 +295,29 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Widget _buildEnvironmentSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 24,
+      children: [
+        _SettingGroup(
+          title: '目录设置',
+          children: [
+            DirectorySettingRow(
+              vm: setupViewModel,
+              target: DirectoryConfigTarget.clientDir,
+            ),
+            DirectorySettingRow(
+              vm: setupViewModel,
+              target: DirectoryConfigTarget.serverDir,
+            ),
+          ],
+        ),
+        _buildIconSection(),
+      ],
+    );
+  }
+
   Widget _buildIconSection() {
     return SignalBuilder(
       builder: (_) => _SettingGroup(
@@ -323,6 +371,43 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Widget _buildSectionButton(SettingSection section) {
+    final colors = ShadTheme.of(context).colorScheme;
+    final selected = section == _section;
+    final icon = switch (section) {
+      SettingSection.environment => LucideIcons.folders,
+      SettingSection.data => LucideIcons.database,
+      SettingSection.preferences => LucideIcons.slidersHorizontal,
+      SettingSection.about => LucideIcons.info,
+    };
+    return Semantics(
+      selected: selected,
+      child: ShadButton.ghost(
+        width: double.infinity,
+        expands: true,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        backgroundColor: selected ? colors.muted : null,
+        foregroundColor: selected ? colors.foreground : colors.mutedForeground,
+        onPressed: () => setState(() => _section = section),
+        child: Row(
+          spacing: 10,
+          children: [
+            Icon(icon, size: 17),
+            Expanded(
+              child: Text(
+                _sectionLabel(section),
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildUpdateSection() {
     return _SettingGroup(
       children: [
@@ -353,13 +438,6 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  String _sectionLabel(SettingSection section) => switch (section) {
-    SettingSection.environment => '游戏环境',
-    SettingSection.data => '数据工具',
-    SettingSection.preferences => '编辑偏好',
-    SettingSection.about => '关于 Foxy',
-  };
-
   Future<void> _openProjectPage() async {
     final ok = await launchUrl(
       Uri.parse('https://github.com/CalsRanna/foxy'),
@@ -369,6 +447,13 @@ class _SettingPageState extends State<SettingPage> {
       DialogUtil.instance.error('无法打开项目主页');
     }
   }
+
+  String _sectionLabel(SettingSection section) => switch (section) {
+    SettingSection.environment => '游戏环境',
+    SettingSection.data => '数据工具',
+    SettingSection.preferences => '编辑偏好',
+    SettingSection.about => '关于 Foxy',
+  };
 
   Future<void> _setLocaleEnabled(bool enabled) async {
     setState(() => _savingLocale = true);
@@ -461,91 +546,6 @@ class _SettingPageState extends State<SettingPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => UpdateDialog(vm: updateViewModel),
-    );
-  }
-}
-
-class _SettingGroup extends StatelessWidget {
-  final String? title;
-  final List<Widget> children;
-
-  const _SettingGroup({this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    final divider = Divider(
-      height: 1,
-      thickness: 1,
-      color: theme.colorScheme.border,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (title case final title?)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Semantics(
-              header: true,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        divider,
-        ...children.expand(
-          (child) => [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: child,
-            ),
-            divider,
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _SettingItem extends StatelessWidget {
-  final String title;
-  final String description;
-  final Widget trailing;
-
-  const _SettingItem({
-    required this.title,
-    required this.description,
-    required this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    return Row(
-      spacing: 16,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 4,
-            children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-              Text(
-                description,
-                style: theme.textTheme.muted.copyWith(
-                  color: theme.colorScheme.mutedForeground,
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
-        ),
-        trailing,
-      ],
     );
   }
 }

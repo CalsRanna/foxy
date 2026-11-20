@@ -51,14 +51,6 @@ class AgentSessionStore {
     }),
   );
 
-  Future<void> saveTitle(String id, String title) => _enqueue(() async {
-    if (!await _fileOf(id).exists()) return;
-    final file = _titleFileOf(id);
-    final temporaryFile = File('${file.path}.tmp');
-    await temporaryFile.writeAsString(title, flush: true);
-    await temporaryFile.rename(file.path);
-  });
-
   /// Deletes the session and its title. Unlike appends this rethrows so the
   /// UI can surface it.
   Future<void> deleteSession(String id) => _enqueue(() async {
@@ -127,6 +119,14 @@ class AgentSessionStore {
     return session;
   }
 
+  Future<void> saveTitle(String id, String title) => _enqueue(() async {
+    if (!await _fileOf(id).exists()) return;
+    final file = _titleFileOf(id);
+    final temporaryFile = File('${file.path}.tmp');
+    await temporaryFile.writeAsString(title, flush: true);
+    await temporaryFile.rename(file.path);
+  });
+
   Future<void> _appendLine(String id, Map<String, Object?> line) async {
     if (!await _root.exists()) {
       await _root.create(recursive: true);
@@ -151,20 +151,6 @@ class AgentSessionStore {
 
   File _fileOf(String id) => File(p.join(_root.path, '$id$_fileExtension'));
 
-  File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));
-
-  Future<String?> _readSavedTitle(String id) async {
-    try {
-      final file = _titleFileOf(id);
-      if (!await file.exists()) return null;
-      final title = (await file.readAsString()).trim();
-      return title.isEmpty ? null : title;
-    } catch (error) {
-      LoggerUtil.instance.w('read saved agent session title failed: $error');
-      return null;
-    }
-  }
-
   Future<AgentChatSessionMeta?> _readMeta(File file) async {
     try {
       final stat = await file.stat();
@@ -176,6 +162,18 @@ class AgentSessionStore {
       );
     } catch (error) {
       LoggerUtil.instance.w('read agent session meta failed: $error');
+      return null;
+    }
+  }
+
+  Future<String?> _readSavedTitle(String id) async {
+    try {
+      final file = _titleFileOf(id);
+      if (!await file.exists()) return null;
+      final title = (await file.readAsString()).trim();
+      return title.isEmpty ? null : title;
+    } catch (error) {
+      LoggerUtil.instance.w('read saved agent session title failed: $error');
       return null;
     }
   }
@@ -221,6 +219,8 @@ class AgentSessionStore {
     if (hasUserItem) return;
     items.add({'role': 'user', 'content': lastUser.text});
   }
+
+  File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));
 
   static Map<String, Object?>? _decodeLine(String line) {
     final trimmed = line.trim();

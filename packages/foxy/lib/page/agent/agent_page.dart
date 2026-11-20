@@ -384,11 +384,6 @@ class _AgentPageState extends State<AgentPage> {
     return Column(children: [header, list]);
   }
 
-  void _startNewSession() {
-    viewModel.startNewSession();
-    _composerFocus.requestFocus();
-  }
-
   Widget _buildSessionTile(AgentChatSessionMeta meta, bool active) {
     final colorScheme = Theme.of(context).colorScheme;
     final foreground = active ? colorScheme.onPrimary : colorScheme.onSurface;
@@ -585,6 +580,11 @@ class _AgentPageState extends State<AgentPage> {
       _scrollToBottom();
     });
   }
+
+  void _startNewSession() {
+    viewModel.startNewSession();
+    _composerFocus.requestFocus();
+  }
 }
 
 class _AgentStepAccordion extends StatefulWidget {
@@ -603,20 +603,6 @@ class _AgentStepAccordion extends StatefulWidget {
 
 class _AgentStepAccordionState extends State<_AgentStepAccordion> {
   late final ShadAccordionController<bool> _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final expanded = PageStorage.maybeOf(context)?.readState(context) == true;
-    _controller = ShadAccordionController<bool>(expanded ? true : null)
-      ..addListener(_saveExpanded);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -640,6 +626,20 @@ class _AgentStepAccordionState extends State<_AgentStepAccordion> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final expanded = PageStorage.maybeOf(context)?.readState(context) == true;
+    _controller = ShadAccordionController<bool>(expanded ? true : null)
+      ..addListener(_saveExpanded);
   }
 
   void _saveExpanded() {

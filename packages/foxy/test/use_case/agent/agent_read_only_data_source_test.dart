@@ -184,6 +184,22 @@ void main() {
   });
 }
 
+Map<String, Object?> _row(
+  String schema,
+  String table,
+  String column,
+  String dataType,
+  String columnKey,
+  String comment,
+) => {
+  'TABLE_SCHEMA': schema,
+  'TABLE_NAME': table,
+  'COLUMN_NAME': column,
+  'DATA_TYPE': dataType,
+  'COLUMN_KEY': columnKey,
+  'COLUMN_COMMENT': comment,
+};
+
 class _AgentConfig extends ConfigUtil {
   final Map<String, Object?> values;
 
@@ -212,19 +228,3 @@ class _ReadOnlyDriver extends Fake implements DatabaseDriver {
         : [];
   }
 }
-
-Map<String, Object?> _row(
-  String schema,
-  String table,
-  String column,
-  String dataType,
-  String columnKey,
-  String comment,
-) => {
-  'TABLE_SCHEMA': schema,
-  'TABLE_NAME': table,
-  'COLUMN_NAME': column,
-  'DATA_TYPE': dataType,
-  'COLUMN_KEY': columnKey,
-  'COLUMN_COMMENT': comment,
-};

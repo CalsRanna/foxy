@@ -98,18 +98,6 @@ class AgentViewModel with FieldControllerMixin {
 
   ReadonlySignal<AgentProviderConfig?> get provider => _configUseCase.provider;
 
-  void startNewSession() => _activateSession(null);
-
-  AgentChatSession _createSession() {
-    final id = '${DateTime.now().microsecondsSinceEpoch}';
-    final session = AgentChatSession(id: id, title: _defaultTitle);
-    _loaded[id] = session;
-    _activateSession(session);
-    _drafts.remove(null);
-    unawaited(_sessionStore.createSession(id));
-    return session;
-  }
-
   Future<void> deleteSession(String id) async {
     if (_run?.session.id == id) return;
     _loaded.remove(id);
@@ -185,18 +173,6 @@ class AgentViewModel with FieldControllerMixin {
     _activateSession(loaded);
   }
 
-  void _activateSession(AgentChatSession? session) {
-    _selectionToken++;
-    final previousId = activeSessionId.value;
-    final nextId = session?.id;
-    if (previousId != nextId) {
-      _drafts[previousId] = draftController.collect();
-      draftController.init(_drafts[nextId] ?? '');
-    }
-    activeSessionId.value = nextId;
-    messages.value = session == null ? const [] : List.of(session.messages);
-  }
-
   Future<void> send() async {
     if (!ready.value || running.value) return;
     final config = provider.value;
@@ -248,31 +224,7 @@ class AgentViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> _nameSession(
-    AgentChatSession session,
-    AgentProviderConfig provider,
-    String message,
-  ) async {
-    try {
-      final title = await _titleGenerator(provider, message);
-      if (title == null || !identical(_loaded[session.id], session)) return;
-      session.title = title;
-      sessions.value = [
-        for (final meta in sessions.value)
-          if (meta.id == session.id)
-            AgentChatSessionMeta(
-              id: meta.id,
-              title: title,
-              updatedAt: meta.updatedAt,
-            )
-          else
-            meta,
-      ];
-      await _sessionStore.saveTitle(session.id, title);
-    } catch (error) {
-      LoggerUtil.instance.w('generate agent session title failed: $error');
-    }
-  }
+  void startNewSession() => _activateSession(null);
 
   void stop() {
     final run = _run;
@@ -280,6 +232,18 @@ class AgentViewModel with FieldControllerMixin {
     _subscription?.cancel();
     _subscription = null;
     _finishRun(run);
+  }
+
+  void _activateSession(AgentChatSession? session) {
+    _selectionToken++;
+    final previousId = activeSessionId.value;
+    final nextId = session?.id;
+    if (previousId != nextId) {
+      _drafts[previousId] = draftController.collect();
+      draftController.init(_drafts[nextId] ?? '');
+    }
+    activeSessionId.value = nextId;
+    messages.value = session == null ? const [] : List.of(session.messages);
   }
 
   AgentChatMessage _appendAssistant(_AgentRun run) {
@@ -326,6 +290,16 @@ class AgentViewModel with FieldControllerMixin {
     if (arguments.isEmpty) return '';
     final text = jsonEncode(arguments);
     return ' ${text.length <= 80 ? text : '${text.substring(0, 80)}...'}';
+  }
+
+  AgentChatSession _createSession() {
+    final id = '${DateTime.now().microsecondsSinceEpoch}';
+    final session = AgentChatSession(id: id, title: _defaultTitle);
+    _loaded[id] = session;
+    _activateSession(session);
+    _drafts.remove(null);
+    unawaited(_sessionStore.createSession(id));
+    return session;
   }
 
   void _finishRun(_AgentRun run) {
@@ -425,6 +399,32 @@ class AgentViewModel with FieldControllerMixin {
       case AgentFailedEvent(:final message):
         _appendError(run, message);
         _finishRun(run);
+    }
+  }
+
+  Future<void> _nameSession(
+    AgentChatSession session,
+    AgentProviderConfig provider,
+    String message,
+  ) async {
+    try {
+      final title = await _titleGenerator(provider, message);
+      if (title == null || !identical(_loaded[session.id], session)) return;
+      session.title = title;
+      sessions.value = [
+        for (final meta in sessions.value)
+          if (meta.id == session.id)
+            AgentChatSessionMeta(
+              id: meta.id,
+              title: title,
+              updatedAt: meta.updatedAt,
+            )
+          else
+            meta,
+      ];
+      await _sessionStore.saveTitle(session.id, title);
+    } catch (error) {
+      LoggerUtil.instance.w('generate agent session title failed: $error');
     }
   }
 

@@ -124,12 +124,6 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
     return rows.map((row) => row.toMap()).toList();
   }
 
-  static String? _databaseName(Object? value) =>
-      value is String && value.isNotEmpty ? value : null;
-
-  static String _quoteIdentifier(String value) =>
-      '`${value.replaceAll('`', '``')}`';
-
   /// Builds the agent catalog from `information_schema.columns` rows.
   ///
   /// World tables stay unqualified. Other tables retain their schema name.
@@ -218,6 +212,9 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
     };
   }
 
+  static String? _databaseName(Object? value) =>
+      value is String && value.isNotEmpty ? value : null;
+
   static String _logicalType(String dataType) {
     final type = dataType.toLowerCase();
     if (type.contains('int')) return 'int';
@@ -247,6 +244,9 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
       ),
     );
   }
+
+  static String _quoteIdentifier(String value) =>
+      '`${value.replaceAll('`', '``')}`';
 
   static String _rowString(Map<String, Object?> row, String key) {
     final value = row.entries

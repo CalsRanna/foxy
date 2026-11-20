@@ -468,9 +468,9 @@ class _TestAgentViewModel extends AgentViewModel {
   Future<void> initSignals() async {}
 
   @override
-  Future<void> selectSession(String id) async => activeSessionId.value = id;
-
-  @override
   bool isReasoningInProgress(AgentChatMessage message) =>
       identical(activeReasoning, message);
+
+  @override
+  Future<void> selectSession(String id) async => activeSessionId.value = id;
 }
