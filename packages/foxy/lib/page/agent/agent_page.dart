@@ -6,13 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/page/agent/agent_composer.dart';
+import 'package:foxy/page/agent/agent_markdown.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -116,8 +116,8 @@ class _AgentPageState extends State<AgentPage> {
   }
 
   Widget _buildMessage(AgentChatMessage message) {
-    final colorScheme = Theme.of(context).colorScheme;
     final theme = ShadTheme.of(context);
+    final colors = theme.colorScheme;
     switch (message.role) {
       case AgentChatRole.user:
         return Align(
@@ -126,15 +126,15 @@ class _AgentPageState extends State<AgentPage> {
             margin: const EdgeInsets.symmetric(vertical: 4),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: colorScheme.primary,
-              borderRadius: BorderRadius.circular(8),
+              color: colors.primary,
+              borderRadius: theme.radius,
             ),
             child: SelectableText(
               message.text,
-              style: TextStyle(
+              style: theme.textTheme.p.copyWith(
                 fontSize: 13,
                 height: 1.4,
-                color: colorScheme.onPrimary,
+                color: colors.primaryForeground,
               ),
             ),
           ),
@@ -147,22 +147,10 @@ class _AgentPageState extends State<AgentPage> {
         return Container(
           width: double.infinity,
           margin: const EdgeInsets.symmetric(vertical: 4),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: SelectionArea(
-            child: GptMarkdown(
-              text,
-              style: const TextStyle(fontSize: 13, height: 1.5),
-            ),
-          ),
+          child: AgentMarkdown(text),
         );
       case AgentChatRole.reasoning:
-        return SelectionArea(
-          child: GptMarkdown(message.text, style: theme.textTheme.muted),
-        );
+        return AgentMarkdown(message.text, muted: true);
       case AgentChatRole.tool:
         if (viewModel.isToolInProgress(message)) {
           return _buildStepStatus(

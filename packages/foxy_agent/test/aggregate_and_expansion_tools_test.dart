@@ -127,7 +127,7 @@ void main() {
           {
             'table': 'foxy.items',
             'filters': [
-              {'column': 'id', 'operator': 'in', 'value': []},
+              {'column': 'id', 'operator': 'in', 'value': <int>[]},
             ],
           },
           {
@@ -350,7 +350,7 @@ void main() {
             },
           ],
           [
-            {'column': 'item', 'columns': []},
+            {'column': 'item', 'columns': <String>[]},
           ],
           [
             {

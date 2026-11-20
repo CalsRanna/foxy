@@ -128,11 +128,13 @@ final class AggregateRowsTool extends AgentTool {
       final function = AggregateFunction.values.where(
         (function) => function.name == raw['function'],
       );
-      if (function.isEmpty)
+      if (function.isEmpty) {
         return 'Unknown aggregate function "${raw['function']}".';
+      }
       final column = raw['column'];
-      if (column != null && column is! String)
+      if (column != null && column is! String) {
         return 'Metric "column" must be a string.';
+      }
       metrics.add(
         AggregateMetric(function: function.first, column: column as String?),
       );
@@ -140,8 +142,9 @@ final class AggregateRowsTool extends AgentTool {
     final error = validateAggregation(table, groups, metrics);
     if (error != null) return error;
     final rawLimit = arguments['limit'];
-    if (rawLimit != null && rawLimit is! int)
+    if (rawLimit != null && rawLimit is! int) {
       return '"limit" must be an integer.';
+    }
     final limit = ((rawLimit as int?) ?? maxLimit).clamp(1, maxLimit);
     final rows = await dataSource.aggregateRows(
       table: table.qualifiedName,
@@ -173,8 +176,9 @@ String? validateAggregation(
     return 'Provide between 1 and 8 metrics.';
   }
   for (final column in groupBy) {
-    if (table.findColumn(column) == null)
+    if (table.findColumn(column) == null) {
       return 'Unknown group column "$column".';
+    }
   }
   final names = groupBy.map((name) => name.toLowerCase()).toSet();
   for (final metric in metrics) {
