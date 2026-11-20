@@ -154,16 +154,17 @@ Map<String, String> _assets(String entitySource) => {
 /// Provides the real `foxy_game_definition` sources so `FlagItem` resolves in
 /// the hermetic test build (build_test defaults to the root package only).
 Map<String, String> _gameDefinitionAssets() {
-  final root = Directory('../foxy_game_definition');
-  final files = root
+  final lib = Directory('../foxy_game_definition/lib');
+  final files = lib
       .listSync(recursive: true)
       .whereType<File>()
-      .where(
-        (file) => file.path.endsWith('.dart') && file.path.contains('/lib/'),
-      );
-  return {
-    for (final file in files)
-      'foxy_game_definition|${file.path.substring(file.path.indexOf('lib/'))}':
-          file.readAsStringSync(),
-  };
+      .where((file) => file.path.endsWith('.dart'));
+  final assets = <String, String>{};
+  for (final file in files) {
+    final relativePath = file.path
+        .substring(lib.path.length + 1)
+        .replaceAll(Platform.pathSeparator, '/');
+    assets['foxy_game_definition|lib/$relativePath'] = file.readAsStringSync();
+  }
+  return assets;
 }
