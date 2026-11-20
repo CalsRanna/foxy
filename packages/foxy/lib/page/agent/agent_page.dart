@@ -231,12 +231,13 @@ class _AgentPageState extends State<AgentPage> {
         '推理过程',
       if (callCount > 0) '工具调用（$callCount 次$failureSummary）',
     ].join(' · ');
-    return _buildStepTile(
+    return _AgentStepAccordion(
       key: PageStorageKey((group.first, true)),
       title: _buildStepStatus(
         label,
         thinking: thinking,
         runningTool: runningTool,
+        accordionTitle: true,
         icon: callCount > 0 ? LucideIcons.wrench : LucideIcons.brain,
       ),
       children: [
@@ -311,11 +312,12 @@ class _AgentPageState extends State<AgentPage> {
 
   Widget _buildReasoningStep(AgentChatMessage message, {required bool nested}) {
     final thinking = viewModel.isReasoningInProgress(message);
-    return _buildStepTile(
+    return _AgentStepAccordion(
       key: PageStorageKey((message, false)),
       title: _buildStepStatus(
         thinking ? '思考中' : '推理过程',
         thinking: thinking && !nested,
+        accordionTitle: true,
       ),
       children: [
         if (message.text.isNotEmpty)
@@ -453,14 +455,24 @@ class _AgentPageState extends State<AgentPage> {
     String label, {
     required bool thinking,
     bool runningTool = false,
+    bool accordionTitle = false,
     IconData icon = LucideIcons.brain,
   }) {
     final theme = ShadTheme.of(context);
+    final colors = accordionTitle
+        ? switch (theme.brightness) {
+            Brightness.light => const ShadNeutralColorScheme.light(),
+            Brightness.dark => const ShadNeutralColorScheme.dark(),
+          }
+        : theme.colorScheme;
     final text = Text(
       label,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: theme.textTheme.muted.copyWith(fontSize: 12),
+      style: theme.textTheme.muted.copyWith(
+        fontSize: 12,
+        color: colors.mutedForeground,
+      ),
     );
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -471,27 +483,11 @@ class _AgentPageState extends State<AgentPage> {
         else
           Icon(icon, size: 13, color: theme.colorScheme.mutedForeground),
         Flexible(
-          child: thinking || runningTool ? _StepShimmer(child: text) : text,
+          child: thinking || runningTool
+              ? _StepShimmer(colors: colors, child: text)
+              : text,
         ),
       ],
-    );
-  }
-
-  Widget _buildStepTile({
-    required Key key,
-    required Widget title,
-    required List<Widget> children,
-  }) {
-    return ExpansionTile(
-      key: key,
-      shape: const Border(),
-      dense: true,
-      minTileHeight: 32,
-      tilePadding: EdgeInsets.zero,
-      childrenPadding: const EdgeInsets.only(left: 16),
-      expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-      title: title,
-      children: children,
     );
   }
 
@@ -512,9 +508,14 @@ class _AgentPageState extends State<AgentPage> {
       return _buildMessage(message);
     }
 
-    return _buildStepTile(
+    return _AgentStepAccordion(
       key: PageStorageKey(message),
-      title: _buildStepStatus(label, thinking: false, icon: LucideIcons.wrench),
+      title: _buildStepStatus(
+        label,
+        thinking: false,
+        accordionTitle: true,
+        icon: LucideIcons.wrench,
+      ),
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -586,10 +587,72 @@ class _AgentPageState extends State<AgentPage> {
   }
 }
 
+class _AgentStepAccordion extends StatefulWidget {
+  final Widget title;
+  final List<Widget> children;
+
+  const _AgentStepAccordion({
+    required super.key,
+    required this.title,
+    required this.children,
+  });
+
+  @override
+  State<_AgentStepAccordion> createState() => _AgentStepAccordionState();
+}
+
+class _AgentStepAccordionState extends State<_AgentStepAccordion> {
+  late final ShadAccordionController<bool> _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    final expanded = PageStorage.maybeOf(context)?.readState(context) == true;
+    _controller = ShadAccordionController<bool>(expanded ? true : null)
+      ..addListener(_saveExpanded);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ShadAccordion<bool>(
+      controller: _controller,
+      children: [
+        ShadAccordionItem<bool>(
+          value: true,
+          title: widget.title,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          underlineTitleOnHover: false,
+          separator: const SizedBox.shrink(),
+          icon: const SizedBox.shrink(),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: widget.children,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _saveExpanded() {
+    PageStorage.maybeOf(context)
+        ?.writeState(context, _controller.value.isNotEmpty);
+  }
+}
+
 class _StepShimmer extends StatefulWidget {
+  final ShadColorScheme colors;
   final Widget child;
 
-  const _StepShimmer({required this.child});
+  const _StepShimmer({required this.colors, required this.child});
 
   @override
   State<_StepShimmer> createState() => _StepShimmerState();
@@ -605,7 +668,7 @@ class _StepShimmerState extends State<_StepShimmer>
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.disableAnimationsOf(context)) return widget.child;
-    final colors = ShadTheme.of(context).colorScheme;
+    final colors = widget.colors;
     return AnimatedBuilder(
       animation: _animation,
       child: widget.child,

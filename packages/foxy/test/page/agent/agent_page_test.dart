@@ -261,6 +261,9 @@ void main() {
     final indicator = find.byType(CircularProgressIndicator);
     final details = find.text('检查表结构', findRichText: true);
     expect(thinking, findsOneWidget);
+    final titleColor = const ShadNeutralColorScheme.light().mutedForeground;
+    expect(tester.widget<Text>(thinking).style?.color, titleColor);
+    expect(find.byIcon(LucideIcons.chevronDown), findsNothing);
     expect(indicator, findsOneWidget);
     expect(
       find.ancestor(of: thinking, matching: find.byType(ShaderMask)),
@@ -291,6 +294,7 @@ void main() {
     expect(indicator, findsNothing);
     final completed = find.text('推理过程');
     expect(completed, findsOneWidget);
+    expect(tester.widget<Text>(completed).style?.color, titleColor);
     expect(
       find.ancestor(of: completed, matching: find.byType(ShaderMask)),
       findsNothing,
@@ -335,7 +339,7 @@ void main() {
 
     await tester.tap(group);
     await tester.pumpAndSettle();
-    expect(find.byType(ExpansionTile), findsNWidgets(3));
+    expect(find.byType(ShadAccordionItem<bool>), findsNWidgets(3));
     expect(firstDetail, findsNothing);
     expect(callDetail, findsNothing);
 
