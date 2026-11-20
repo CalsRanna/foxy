@@ -479,41 +479,10 @@ class _AgentPageState extends State<AgentPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12,
         children: [
-          // _buildWorkspaceHeader(),
           Expanded(child: _buildMessageList()),
           _buildComposer(),
         ],
       ),
-    );
-  }
-
-  Widget _buildWorkspaceHeader() {
-    final theme = ShadTheme.of(context);
-    return SignalBuilder(
-      builder: (_) {
-        final provider = viewModel.provider.value;
-        return Row(
-          spacing: 8,
-          children: [
-            const Icon(LucideIcons.astroid, size: 18),
-            Expanded(
-              child: Text(
-                viewModel.activeTitle ?? 'AI 助手',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Text(
-              provider?.model ?? '未配置模型',
-              style: theme.textTheme.muted.copyWith(fontSize: 12),
-            ),
-          ],
-        );
-      },
     );
   }
 

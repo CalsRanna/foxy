@@ -14,7 +14,12 @@ class AgentChatUseCase {
     required ReadOnlyDataSource dataSource,
   }) : _agent = FoxyAgent(
          provider: provider,
-         instructions: readOnlyAssistantInstructions,
+         instructions: '''$readOnlyAssistantInstructions
+
+## 其他可用数据
+- characters 库：角色、背包、公会等游戏进度数据。
+- auth 库：账号、权限、封禁、服务器列表等数据。
+- 用 list_tables 查找这两个库中的表，使用工具返回的库名前缀。''',
          tools: createReadOnlyTools(catalog: catalog, dataSource: dataSource),
        );
 

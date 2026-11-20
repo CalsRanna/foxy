@@ -87,6 +87,9 @@ class _AgentComposerState extends State<AgentComposer> {
                 icon: Icon(
                   widget.running ? LucideIcons.square : LucideIcons.arrowUp,
                   size: 16,
+                  color: widget.running || _canSend
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : null,
                 ),
                 onPressed: widget.running
                     ? widget.onStop

@@ -50,8 +50,20 @@ void main() {
 
     final input = find.byType(TextField);
     final button = find.byType(IconButton);
+    final activeColor = Theme.of(tester.element(button)).colorScheme.onPrimary;
+    Color? iconColor(IconData icon) {
+      final glyph = find.descendant(
+        of: find.byIcon(icon),
+        matching: find.byType(RichText),
+      );
+      return tester.widget<RichText>(glyph).text.style!.color;
+    }
+
     expect(tester.widget<IconButton>(button).onPressed, isNull);
+    expect(iconColor(LucideIcons.arrowUp)?.a, closeTo(0.38, 0.01));
     await tester.enterText(input, '第一行');
+    await tester.pumpAndSettle();
+    expect(iconColor(LucideIcons.arrowUp), activeColor);
     await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
@@ -63,6 +75,7 @@ void main() {
     expect(sent, ['第一行\n']);
     expect(find.byTooltip('停止'), findsOneWidget);
     expect(tester.widget<TextField>(input).readOnly, isTrue);
+    expect(iconColor(LucideIcons.square), activeColor);
 
     await tester.tap(button);
     await tester.pumpAndSettle();

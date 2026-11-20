@@ -181,6 +181,8 @@ icons_extracted: true
 
 缺少 `config.yaml` 时应用会进入引导向导,向导完成即自动生成该文件。
 
+Agent 复用同一 MySQL 连接读取角色库和认证库，默认库名为 `acore_characters` 和 `acore_auth`。如果部署使用其他库名，可在 `config.yaml` 设置 `characters_database` 和 `auth_database`，然后重启 Foxy。查询依赖连接账号的 `SELECT` 权限。认证库的 `account` 表只开放非凭据字段，`secret_digest` 表不进入 Agent 目录。
+
 ## 测试
 
 应用测试按被测职责和跨模块行为分类,生成器与 lint 测试保留在各自包内:
