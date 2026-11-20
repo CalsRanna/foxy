@@ -13,8 +13,6 @@ import 'package:laconic/laconic.dart';
 /// columns against that catalog before a parameterized `select` is built, so
 /// only allowlisted tables/columns ever reach SQL. Only reads are issued.
 class AgentReadOnlyDataSource implements ReadOnlyDataSource {
-  AgentReadOnlyDataSource(this._configUtil);
-
   static const _foxySchema = 'foxy';
 
   static const _maxRows = 51;
@@ -22,6 +20,8 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
   final ConfigUtil _configUtil;
 
   TableCatalog? _catalog;
+
+  AgentReadOnlyDataSource(this._configUtil);
 
   /// Loads (and caches) the table catalog from `information_schema`.
   Future<TableCatalog> getCatalog({bool refresh = false}) async {
@@ -210,15 +210,15 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
 }
 
 final class _CatalogColumn {
-  const _CatalogColumn({
-    required this.schema,
-    required this.table,
-    required this.column,
-  });
-
   final String schema;
 
   final String table;
 
   final ColumnInfo column;
+
+  const _CatalogColumn({
+    required this.schema,
+    required this.table,
+    required this.column,
+  });
 }

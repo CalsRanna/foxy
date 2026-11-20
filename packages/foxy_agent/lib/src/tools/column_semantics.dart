@@ -1,31 +1,31 @@
-/// What kind of meaning a [ColumnSemantics] carries.
-enum ColumnSemanticKind { enumValues, flags, reference }
-
 /// One labelled bit inside a flags column.
 final class ColumnFlag {
-  const ColumnFlag({required this.value, required this.label});
-
   /// Bit value (a power of two for single-bit flags).
   final int value;
 
   /// Human-readable meaning.
   final String label;
 
+  const ColumnFlag({required this.value, required this.label});
+
   Map<String, Object?> toJson() => {'value': value, 'label': label};
 }
 
 /// Target of a reference (id) column.
 final class ColumnReference {
-  const ColumnReference({required this.table, required this.column});
-
   /// Referenced table, as listed by `list_tables` (may be qualified).
   final String table;
 
   /// Referenced column, usually the primary key.
   final String column;
 
+  const ColumnReference({required this.table, required this.column});
+
   Map<String, Object?> toJson() => {'table': table, 'column': column};
 }
+
+/// What kind of meaning a [ColumnSemantics] carries.
+enum ColumnSemanticKind { enumValues, flags, reference }
 
 /// Machine-readable meaning of a physical column.
 ///
@@ -34,13 +34,19 @@ final class ColumnReference {
 /// full [toJson] on demand so large value tables never bloat every schema
 /// response.
 final class ColumnSemantics {
-  const ColumnSemantics._(
-    this.label,
-    this._kind,
-    this._values,
-    this.flags,
-    this.reference,
-  );
+  /// Human-readable label, e.g. `生物类型`.
+  final String label;
+
+  final ColumnSemanticKind _kind;
+
+  /// Enum value → label (only for [ColumnSemanticKind.enumValues]).
+  final Map<int, String> _values;
+
+  /// Bit definitions (only for [ColumnSemanticKind.flags]).
+  final List<ColumnFlag> flags;
+
+  /// Reference target (only for [ColumnSemanticKind.reference]).
+  final ColumnReference? reference;
 
   const ColumnSemantics.enumValues({
     required String label,
@@ -63,23 +69,23 @@ final class ColumnSemantics {
          reference,
        );
 
-  /// Human-readable label, e.g. `生物类型`.
-  final String label;
-
-  final ColumnSemanticKind _kind;
-
-  /// Enum value → label (only for [ColumnSemanticKind.enumValues]).
-  final Map<int, String> _values;
-
-  /// Bit definitions (only for [ColumnSemanticKind.flags]).
-  final List<ColumnFlag> flags;
-
-  /// Reference target (only for [ColumnSemanticKind.reference]).
-  final ColumnReference? reference;
+  const ColumnSemantics._(
+    this.label,
+    this._kind,
+    this._values,
+    this.flags,
+    this.reference,
+  );
 
   ColumnSemanticKind get kind => _kind;
 
   Map<int, String> get values => _values;
+
+  String get _kindName => switch (_kind) {
+    ColumnSemanticKind.enumValues => 'enum',
+    ColumnSemanticKind.flags => 'flags',
+    ColumnSemanticKind.reference => 'reference',
+  };
 
   /// Compact form shown by `describe_table`.
   Map<String, Object?> summaryJson() => {
@@ -103,11 +109,5 @@ final class ColumnSemantics {
       },
       ColumnSemanticKind.reference => {'reference': reference!.toJson()},
     },
-  };
-
-  String get _kindName => switch (_kind) {
-    ColumnSemanticKind.enumValues => 'enum',
-    ColumnSemanticKind.flags => 'flags',
-    ColumnSemanticKind.reference => 'reference',
   };
 }

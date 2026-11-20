@@ -7,13 +7,13 @@ import 'package:foxy_agent/foxy_agent.dart';
 /// The API key is stored in plaintext next to the database credentials for
 /// now; OS keychain storage is a future hardening step.
 class AgentProviderConfigUseCase {
-  AgentProviderConfigUseCase(this._configUtil);
-
   static const _baseUrlKey = 'agent_base_url';
+
   static const _apiKeyKey = 'agent_api_key';
   static const _modelKey = 'agent_model';
-
   final ConfigUtil _configUtil;
+
+  AgentProviderConfigUseCase(this._configUtil);
 
   /// Loads the saved provider, or `null` when base URL or model is missing.
   Future<AgentProviderConfig?> load() async {

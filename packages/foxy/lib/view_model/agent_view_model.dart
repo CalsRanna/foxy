@@ -27,18 +27,6 @@ typedef AgentChatFactory = AgentChatUseCase Function({
 /// Sessions persist as JSONL files (see [AgentSessionStore]); the list holds
 /// lightweight metadata and content loads lazily when a session is selected.
 class AgentViewModel with FieldControllerMixin {
-  AgentViewModel({
-    AgentProviderConfigUseCase? configUseCase,
-    AgentReadOnlyDataSource? dataSource,
-    AgentChatFactory? chatFactory,
-    AgentSessionStore? sessionStore,
-  }) : _configUseCase =
-           configUseCase ?? GetIt.instance.get<AgentProviderConfigUseCase>(),
-       _dataSource =
-           dataSource ?? GetIt.instance.get<AgentReadOnlyDataSource>(),
-       _chatFactory = chatFactory ?? _createChat,
-       _sessionStore = sessionStore ?? GetIt.instance.get<AgentSessionStore>();
-
   static const _defaultTitle = '新会话';
 
   final AgentProviderConfigUseCase _configUseCase;
@@ -73,6 +61,18 @@ class AgentViewModel with FieldControllerMixin {
 
   var _initialized = false;
 
+  AgentViewModel({
+    AgentProviderConfigUseCase? configUseCase,
+    AgentReadOnlyDataSource? dataSource,
+    AgentChatFactory? chatFactory,
+    AgentSessionStore? sessionStore,
+  }) : _configUseCase =
+           configUseCase ?? GetIt.instance.get<AgentProviderConfigUseCase>(),
+       _dataSource =
+           dataSource ?? GetIt.instance.get<AgentReadOnlyDataSource>(),
+       _chatFactory = chatFactory ?? _createChat,
+       _sessionStore = sessionStore ?? GetIt.instance.get<AgentSessionStore>();
+
   AgentChatSession? get activeSession {
     final id = activeSessionId.value;
     if (id == null) return null;
@@ -83,6 +83,50 @@ class AgentViewModel with FieldControllerMixin {
     final id = activeSessionId.value;
     if (id == null) return null;
     return sessions.value.where((meta) => meta.id == id).firstOrNull?.title;
+  }
+
+  Future<void> createSession() async {
+    final id = '${DateTime.now().microsecondsSinceEpoch}';
+    final session = AgentChatSession(id: id, title: _defaultTitle);
+    _loaded[id] = session;
+    sessions.value = [
+      AgentChatSessionMeta(
+        id: id,
+        title: session.title,
+        updatedAt: DateTime.now(),
+      ),
+      ...sessions.value,
+    ];
+    activeSessionId.value = id;
+    _selectionToken++;
+    messages.value = const [];
+    await _sessionStore.createSession(id);
+  }
+
+  Future<void> deleteSession(String id) async {
+    if (running.value && id == activeSessionId.value) return;
+    _loaded.remove(id);
+    sessions.value = sessions.value.where((meta) => meta.id != id).toList();
+    await _sessionStore.deleteSession(id);
+    if (id != activeSessionId.value) return;
+    _selectionToken++;
+    final remaining = sessions.value;
+    if (remaining.isEmpty) {
+      await createSession();
+      return;
+    }
+    await selectSession(remaining.first.id);
+  }
+
+  void dispose() {
+    _selectionToken++;
+    _subscription?.cancel();
+    _subscription = null;
+    _chat?.close();
+    _chat = null;
+    _run = null;
+    running.value = false;
+    disposeControllers();
   }
 
   Future<void> initSignals() async {
@@ -105,22 +149,9 @@ class AgentViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> createSession() async {
-    final id = '${DateTime.now().microsecondsSinceEpoch}';
-    final session = AgentChatSession(id: id, title: _defaultTitle);
-    _loaded[id] = session;
-    sessions.value = [
-      AgentChatSessionMeta(
-        id: id,
-        title: session.title,
-        updatedAt: DateTime.now(),
-      ),
-      ...sessions.value,
-    ];
-    activeSessionId.value = id;
-    _selectionToken++;
-    messages.value = const [];
-    await _sessionStore.createSession(id);
+  Future<void> saveProvider(AgentProviderConfig config) async {
+    await _configUseCase.save(config);
+    provider.value = config;
   }
 
   Future<void> selectSession(String id) async {
@@ -142,26 +173,6 @@ class AgentViewModel with FieldControllerMixin {
     _loaded[id] = loaded;
     activeSessionId.value = id;
     messages.value = List.of(loaded.messages);
-  }
-
-  Future<void> deleteSession(String id) async {
-    if (running.value && id == activeSessionId.value) return;
-    _loaded.remove(id);
-    sessions.value = sessions.value.where((meta) => meta.id != id).toList();
-    await _sessionStore.deleteSession(id);
-    if (id != activeSessionId.value) return;
-    _selectionToken++;
-    final remaining = sessions.value;
-    if (remaining.isEmpty) {
-      await createSession();
-      return;
-    }
-    await selectSession(remaining.first.id);
-  }
-
-  Future<void> saveProvider(AgentProviderConfig config) async {
-    await _configUseCase.save(config);
-    provider.value = config;
   }
 
   Future<void> send() async {
@@ -221,26 +232,68 @@ class AgentViewModel with FieldControllerMixin {
     _finishRun(run);
   }
 
-  void dispose() {
-    _selectionToken++;
-    _subscription?.cancel();
+  AgentChatMessage _appendAssistant(_AgentRun run) {
+    final message = AgentChatMessage(role: AgentChatRole.assistant, text: '');
+    run.session.messages.add(message);
+    return message;
+  }
+
+  void _appendError(_AgentRun run, String message) {
+    final assistant = run.assistant ??= _appendAssistant(run);
+    final prefix = assistant.text.isEmpty ? '' : '${assistant.text}\n\n';
+    assistant.text = '$prefix错误：$message';
+    run.hasText = true;
+    _publish(run.session);
+  }
+
+  /// Drops the active assistant bubble when it never received text, so a
+  /// tool-only segment leaves no empty bubble behind.
+  void _clearEmptyAssistant(_AgentRun run) {
+    final assistant = run.assistant;
+    run.assistant = null;
+    if (assistant == null || assistant.text.isNotEmpty) return;
+    run.session.messages.remove(assistant);
+  }
+
+  String _compactArguments(Map<String, Object?> arguments) {
+    if (arguments.isEmpty) return '';
+    final text = jsonEncode(arguments);
+    return ' ${text.length <= 80 ? text : '${text.substring(0, 80)}...'}';
+  }
+
+  void _finishRun(_AgentRun run) {
+    if (!running.value) return;
+    running.value = false;
     _subscription = null;
     _chat?.close();
     _chat = null;
     _run = null;
-    running.value = false;
-    disposeControllers();
+    _persistNewItems(run);
+    final assistant = run.assistant;
+    _clearEmptyAssistant(run);
+    if (!run.hasText) {
+      const fallback = '（无回复）';
+      run.session.messages.add(
+        AgentChatMessage(role: AgentChatRole.assistant, text: fallback),
+      );
+      unawaited(
+        _sessionStore.appendMessage(
+          run.session.id,
+          AgentChatRole.assistant,
+          fallback,
+        ),
+      );
+    } else if (assistant != null && assistant.text.isNotEmpty) {
+      unawaited(
+        _sessionStore.appendMessage(
+          run.session.id,
+          AgentChatRole.assistant,
+          assistant.text,
+        ),
+      );
+    }
+    _publish(run.session);
   }
-
-  static AgentChatUseCase _createChat({
-    required AgentProviderConfig provider,
-    required TableCatalog catalog,
-    required ReadOnlyDataSource dataSource,
-  }) => AgentChatUseCase(
-    provider: provider,
-    catalog: catalog,
-    dataSource: dataSource,
-  );
 
   void _handleEvent(AgentEvent event, _AgentRun run) {
     switch (event) {
@@ -282,55 +335,6 @@ class AgentViewModel with FieldControllerMixin {
     }
   }
 
-  void _finishRun(_AgentRun run) {
-    if (!running.value) return;
-    running.value = false;
-    _subscription = null;
-    _chat?.close();
-    _chat = null;
-    _run = null;
-    _persistNewItems(run);
-    final assistant = run.assistant;
-    _clearEmptyAssistant(run);
-    if (!run.hasText) {
-      const fallback = '（无回复）';
-      run.session.messages.add(
-        AgentChatMessage(role: AgentChatRole.assistant, text: fallback),
-      );
-      unawaited(
-        _sessionStore.appendMessage(
-          run.session.id,
-          AgentChatRole.assistant,
-          fallback,
-        ),
-      );
-    } else if (assistant != null && assistant.text.isNotEmpty) {
-      unawaited(
-        _sessionStore.appendMessage(
-          run.session.id,
-          AgentChatRole.assistant,
-          assistant.text,
-        ),
-      );
-    }
-    _publish(run.session);
-  }
-
-  AgentChatMessage _appendAssistant(_AgentRun run) {
-    final message = AgentChatMessage(role: AgentChatRole.assistant, text: '');
-    run.session.messages.add(message);
-    return message;
-  }
-
-  /// Drops the active assistant bubble when it never received text, so a
-  /// tool-only segment leaves no empty bubble behind.
-  void _clearEmptyAssistant(_AgentRun run) {
-    final assistant = run.assistant;
-    run.assistant = null;
-    if (assistant == null || assistant.text.isNotEmpty) return;
-    run.session.messages.remove(assistant);
-  }
-
   /// Persists the current assistant text segment (if any) and starts a new
   /// one on the next text event.
   void _persistAssistantSegment(_AgentRun run) {
@@ -361,12 +365,9 @@ class AgentViewModel with FieldControllerMixin {
     );
   }
 
-  void _appendError(_AgentRun run, String message) {
-    final assistant = run.assistant ??= _appendAssistant(run);
-    final prefix = assistant.text.isEmpty ? '' : '${assistant.text}\n\n';
-    assistant.text = '$prefix错误：$message';
-    run.hasText = true;
-    _publish(run.session);
+  void _publish(AgentChatSession session) {
+    if (session.id != activeSessionId.value) return;
+    messages.value = List.of(session.messages);
   }
 
   void _touch(AgentChatSession session) {
@@ -380,24 +381,21 @@ class AgentViewModel with FieldControllerMixin {
     _publish(session);
   }
 
-  void _publish(AgentChatSession session) {
-    if (session.id != activeSessionId.value) return;
-    messages.value = List.of(session.messages);
-  }
-
-  String _compactArguments(Map<String, Object?> arguments) {
-    if (arguments.isEmpty) return '';
-    final text = jsonEncode(arguments);
-    return ' ${text.length <= 80 ? text : '${text.substring(0, 80)}...'}';
-  }
+  static AgentChatUseCase _createChat({
+    required AgentProviderConfig provider,
+    required TableCatalog catalog,
+    required ReadOnlyDataSource dataSource,
+  }) => AgentChatUseCase(
+    provider: provider,
+    catalog: catalog,
+    dataSource: dataSource,
+  );
 }
 
 /// Per-run transcript state: which assistant bubble is currently receiving
 /// text, whether any text was rendered, and how many protocol items were
 /// already flushed to disk.
 final class _AgentRun {
-  _AgentRun(this.session);
-
   final AgentChatSession session;
 
   /// The assistant bubble receiving streamed text; cleared after a tool call
@@ -409,4 +407,6 @@ final class _AgentRun {
 
   /// Number of `AgentSession.items` already persisted for this run.
   var persistedItemCount = 0;
+
+  _AgentRun(this.session);
 }

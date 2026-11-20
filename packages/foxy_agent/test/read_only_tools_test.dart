@@ -357,10 +357,6 @@ void main() {
   });
 }
 
-Map<String, Object?> _asMap(Object? value) => value! as Map<String, Object?>;
-
-List<Object?> _asList(Object? value) => value! as List<Object?>;
-
 const _catalog = TableCatalog([
   TableInfo(
     name: 'creature_template',
@@ -414,12 +410,16 @@ const _catalog = TableCatalog([
   ),
 ]);
 
-final class _FakeDataSource implements ReadOnlyDataSource {
-  _FakeDataSource(this.rows);
+List<Object?> _asList(Object? value) => value! as List<Object?>;
 
+Map<String, Object?> _asMap(Object? value) => value! as Map<String, Object?>;
+
+final class _FakeDataSource implements ReadOnlyDataSource {
   final List<Map<String, Object?>> rows;
 
   final List<({String table, List<RowFilter> filters, int limit})> calls = [];
+
+  _FakeDataSource(this.rows);
 
   @override
   Future<List<Map<String, Object?>>> queryRows({

@@ -9,9 +9,9 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// Pops with the submitted [AgentProviderConfig], or `null` when cancelled;
 /// persistence and error display stay with the page.
 class AgentProviderDialog extends StatefulWidget {
-  const AgentProviderDialog({super.key, this.initial});
-
   final AgentProviderConfig? initial;
+
+  const AgentProviderDialog({super.key, this.initial});
 
   @override
   State<AgentProviderDialog> createState() => _AgentProviderDialogState();

@@ -233,6 +233,30 @@ FoxyAgent _buildAgent(http.Client client, {List<AgentTool> tools = const []}) =>
       httpClient: client,
     );
 
+String _callRound(
+  List<Map<String, Object?>> calls, {
+  String text = '',
+}) => _sse([
+  if (text.isNotEmpty) {'type': 'response.output_text.delta', 'delta': text},
+  for (final call in calls) {'type': 'response.output_item.done', 'item': call},
+  {
+    'type': 'response.completed',
+    'response': {'id': 'resp_call', 'status': 'completed', 'output': calls},
+  },
+]);
+
+Map<String, Object?> _functionCall(
+  String name,
+  Map<String, Object?> arguments, {
+  String callId = 'call_1',
+}) => {
+  'type': 'function_call',
+  'id': 'fc_$callId',
+  'call_id': callId,
+  'name': name,
+  'arguments': jsonEncode(arguments),
+};
+
 http.Client _scriptedClient(List<String> bodies, List<http.Request> log) {
   return MockClient((request) async {
     log.add(request);
@@ -251,30 +275,6 @@ http.Client _scriptedClient(List<String> bodies, List<http.Request> log) {
 String _sse(List<Map<String, Object?>> events) => events
     .map((event) => 'event: ${event['type']}\ndata: ${jsonEncode(event)}\n\n')
     .join();
-
-Map<String, Object?> _functionCall(
-  String name,
-  Map<String, Object?> arguments, {
-  String callId = 'call_1',
-}) => {
-  'type': 'function_call',
-  'id': 'fc_$callId',
-  'call_id': callId,
-  'name': name,
-  'arguments': jsonEncode(arguments),
-};
-
-String _callRound(
-  List<Map<String, Object?>> calls, {
-  String text = '',
-}) => _sse([
-  if (text.isNotEmpty) {'type': 'response.output_text.delta', 'delta': text},
-  for (final call in calls) {'type': 'response.output_item.done', 'item': call},
-  {
-    'type': 'response.completed',
-    'response': {'id': 'resp_call', 'status': 'completed', 'output': calls},
-  },
-]);
 
 String _textRound(String text) => _sse([
   {'type': 'response.output_text.delta', 'delta': text},
@@ -298,8 +298,6 @@ String _textRound(String text) => _sse([
 ]);
 
 final class _FakeTool extends AgentTool {
-  _FakeTool({required this.name, this.result, this.error});
-
   @override
   final String name;
 
@@ -308,6 +306,8 @@ final class _FakeTool extends AgentTool {
   final Object? error;
 
   final List<Map<String, Object?>> calls = [];
+
+  _FakeTool({required this.name, this.result, this.error});
 
   @override
   String get description => 'Test tool.';

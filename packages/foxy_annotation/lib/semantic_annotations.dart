@@ -9,13 +9,20 @@ import 'package:meta/meta_meta.dart';
 /// `foxy_game_definition`.
 @Target({TargetKind.field})
 final class FoxyFieldMeaning {
-  const FoxyFieldMeaning._(
-    this.label,
-    this.values,
-    this.flags,
-    this.referenceTable,
-    this.referenceColumn,
-  );
+  /// Human-readable label, e.g. `生物类型`.
+  final String label;
+
+  /// Enum value → label, set by [FoxyFieldMeaning.enumValues].
+  final Map<int, String>? values;
+
+  /// Bit flags, set by [FoxyFieldMeaning.flags].
+  final List<FlagItem>? flags;
+
+  /// Referenced table, set by [FoxyFieldMeaning.reference].
+  final String? referenceTable;
+
+  /// Referenced column, set by [FoxyFieldMeaning.reference].
+  final String? referenceColumn;
 
   const FoxyFieldMeaning.enumValues(
     String label, {
@@ -31,18 +38,11 @@ final class FoxyFieldMeaning {
     required String column,
   }) : this._(label, null, null, table, column);
 
-  /// Human-readable label, e.g. `生物类型`.
-  final String label;
-
-  /// Enum value → label, set by [FoxyFieldMeaning.enumValues].
-  final Map<int, String>? values;
-
-  /// Bit flags, set by [FoxyFieldMeaning.flags].
-  final List<FlagItem>? flags;
-
-  /// Referenced table, set by [FoxyFieldMeaning.reference].
-  final String? referenceTable;
-
-  /// Referenced column, set by [FoxyFieldMeaning.reference].
-  final String? referenceColumn;
+  const FoxyFieldMeaning._(
+    this.label,
+    this.values,
+    this.flags,
+    this.referenceTable,
+    this.referenceColumn,
+  );
 }

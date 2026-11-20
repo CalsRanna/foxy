@@ -5,14 +5,14 @@
 abstract base class AgentTool {
   const AgentTool();
 
-  /// Unique tool name, sent to the model verbatim.
-  String get name;
-
   /// Functional description telling the model when and how to use the tool.
   String get description;
 
   /// JSON Schema (object type) describing the tool input.
   Map<String, Object?> get inputSchema;
+
+  /// Unique tool name, sent to the model verbatim.
+  String get name;
 
   /// Executes the tool. The returned value must be JSON-encodable; a plain
   /// [String] is sent to the model as-is, anything else is JSON-encoded.

@@ -8,12 +8,15 @@ import 'package:http/http.dart' as http;
 
 /// Low-level Responses protocol client: one streamed request, events as JSON.
 final class ResponsesClient {
-  ResponsesClient({required this.config, http.Client? httpClient})
-    : _http = httpClient ?? http.Client();
-
   final AgentProviderConfig config;
 
   final http.Client _http;
+
+  ResponsesClient({required this.config, http.Client? httpClient})
+    : _http = httpClient ?? http.Client();
+
+  /// Releases the underlying HTTP client.
+  void close() => _http.close();
 
   /// Sends [body] and yields each SSE event's JSON payload in order.
   Stream<JsonMap> streamResponse(JsonMap body) async* {
@@ -42,7 +45,4 @@ final class ResponsesClient {
       }
     }
   }
-
-  /// Releases the underlying HTTP client.
-  void close() => _http.close();
 }

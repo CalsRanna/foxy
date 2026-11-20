@@ -134,6 +134,28 @@ AgentViewModel _buildViewModel(_FakeChat chat, AgentSessionStore store) =>
       sessionStore: store,
     );
 
+final class _FakeChat extends AgentChatUseCase {
+  final controller = StreamController<AgentEvent>();
+
+  _FakeChat()
+    : super(
+        provider: const AgentProviderConfig(
+          baseUrl: 'https://example.test/v1',
+          apiKey: 'test-key',
+          model: 'test-model',
+        ),
+        catalog: const TableCatalog([]),
+        dataSource: _FakeDataSource(),
+      );
+
+  @override
+  void close() {}
+
+  @override
+  Stream<AgentEvent> run(AgentSession session, String message) =>
+      controller.stream;
+}
+
 final class _FakeConfigUseCase extends AgentProviderConfigUseCase {
   _FakeConfigUseCase() : super(ConfigUtil());
 
@@ -161,26 +183,4 @@ final class _FakeDataSource extends AgentReadOnlyDataSource {
     required List<RowFilter> filters,
     required int limit,
   }) async => const [];
-}
-
-final class _FakeChat extends AgentChatUseCase {
-  _FakeChat()
-    : super(
-        provider: const AgentProviderConfig(
-          baseUrl: 'https://example.test/v1',
-          apiKey: 'test-key',
-          model: 'test-model',
-        ),
-        catalog: const TableCatalog([]),
-        dataSource: _FakeDataSource(),
-      );
-
-  final controller = StreamController<AgentEvent>();
-
-  @override
-  Stream<AgentEvent> run(AgentSession session, String message) =>
-      controller.stream;
-
-  @override
-  void close() {}
 }

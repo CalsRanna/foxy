@@ -16,19 +16,6 @@ import 'package:http/http.dart' as http;
 /// and repeats until the model answers without tool calls. Errors are reported
 /// as [AgentFailedEvent] before the stream closes.
 final class FoxyAgent {
-  FoxyAgent({
-    required this.provider,
-    required this.instructions,
-    required List<AgentTool> tools,
-    this.extraRequestBody = const {},
-    http.Client? httpClient,
-  }) : _tools = {for (final tool in tools) tool.name: tool},
-       _client = ResponsesClient(config: provider, httpClient: httpClient) {
-    if (_tools.length != tools.length) {
-      throw ArgumentError('Tool names must be unique.');
-    }
-  }
-
   /// Provider connection settings.
   final AgentProviderConfig provider;
 
@@ -42,6 +29,22 @@ final class FoxyAgent {
   final Map<String, AgentTool> _tools;
 
   final ResponsesClient _client;
+
+  FoxyAgent({
+    required this.provider,
+    required this.instructions,
+    required List<AgentTool> tools,
+    this.extraRequestBody = const {},
+    http.Client? httpClient,
+  }) : _tools = {for (final tool in tools) tool.name: tool},
+       _client = ResponsesClient(config: provider, httpClient: httpClient) {
+    if (_tools.length != tools.length) {
+      throw ArgumentError('Tool names must be unique.');
+    }
+  }
+
+  /// Releases the underlying HTTP client.
+  void close() => _client.close();
 
   /// Runs one user turn and emits events as they happen.
   Stream<AgentEvent> run(AgentSession session, String userMessage) async* {
@@ -146,39 +149,6 @@ final class FoxyAgent {
     }
   }
 
-  /// Releases the underlying HTTP client.
-  void close() => _client.close();
-
-  JsonMap _requestBody(AgentSession session) => {
-    'model': provider.model,
-    'instructions': instructions,
-    'input': session.items,
-    if (_tools.isNotEmpty)
-      'tools': [for (final tool in _tools.values) _toolDefinition(tool)],
-    'stream': true,
-    // The client owns the conversation; never let the provider retain it.
-    'store': false,
-    ...extraRequestBody,
-  };
-
-  JsonMap _toolDefinition(AgentTool tool) => {
-    'type': 'function',
-    'name': tool.name,
-    'description': tool.description,
-    'parameters': tool.inputSchema,
-  };
-
-  List<JsonMap> _outputItems(JsonMap response, List<JsonMap> streamed) {
-    final output = response['output'];
-    if (output is List<Object?>) {
-      final items = output.whereType<JsonMap>().toList();
-      if (items.isNotEmpty) {
-        return items;
-      }
-    }
-    return streamed;
-  }
-
   Future<AgentToolResultEvent> _executeTool({
     required String callId,
     required String name,
@@ -220,26 +190,6 @@ final class FoxyAgent {
     }
   }
 
-  JsonMap? _parseArguments(Object? raw) {
-    if (raw is JsonMap) {
-      return raw;
-    }
-    if (raw is! String) {
-      return null;
-    }
-    try {
-      final decoded = jsonDecode(raw);
-      return decoded is JsonMap ? decoded : null;
-    } on FormatException {
-      return null;
-    }
-  }
-
-  String _stringField(JsonMap item, String key) {
-    final value = item[key];
-    return value is String ? value : '';
-  }
-
   String _failureMessage(JsonMap event, String fallback) {
     final response = event['response'];
     if (response is JsonMap) {
@@ -260,4 +210,54 @@ final class FoxyAgent {
     }
     return fallback;
   }
+
+  List<JsonMap> _outputItems(JsonMap response, List<JsonMap> streamed) {
+    final output = response['output'];
+    if (output is List<Object?>) {
+      final items = output.whereType<JsonMap>().toList();
+      if (items.isNotEmpty) {
+        return items;
+      }
+    }
+    return streamed;
+  }
+
+  JsonMap? _parseArguments(Object? raw) {
+    if (raw is JsonMap) {
+      return raw;
+    }
+    if (raw is! String) {
+      return null;
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      return decoded is JsonMap ? decoded : null;
+    } on FormatException {
+      return null;
+    }
+  }
+
+  JsonMap _requestBody(AgentSession session) => {
+    'model': provider.model,
+    'instructions': instructions,
+    'input': session.items,
+    if (_tools.isNotEmpty)
+      'tools': [for (final tool in _tools.values) _toolDefinition(tool)],
+    'stream': true,
+    // The client owns the conversation; never let the provider retain it.
+    'store': false,
+    ...extraRequestBody,
+  };
+
+  String _stringField(JsonMap item, String key) {
+    final value = item[key];
+    return value is String ? value : '';
+  }
+
+  JsonMap _toolDefinition(AgentTool tool) => {
+    'type': 'function',
+    'name': tool.name,
+    'description': tool.description,
+    'parameters': tool.inputSchema,
+  };
 }

@@ -1,20 +1,3 @@
-/// A comparison applied to a single column.
-final class RowFilter {
-  const RowFilter({
-    required this.column,
-    required this.operator,
-    required this.value,
-  });
-
-  final String column;
-
-  final FilterOperator operator;
-
-  /// Scalar value to compare against; for [FilterOperator.inList] a non-empty
-  /// list of scalars.
-  final Object? value;
-}
-
 /// Comparison operators supported by row filters.
 enum FilterOperator {
   equals('equals'),
@@ -26,10 +9,10 @@ enum FilterOperator {
   lessThan('lessThan'),
   lessOrEqual('lessOrEqual');
 
-  const FilterOperator(this.wireName);
-
   /// Name used in tool input and error messages.
   final String wireName;
+
+  const FilterOperator(this.wireName);
 
   /// Parses a wire name; returns `null` when it is unknown.
   static FilterOperator? tryParse(String name) {
@@ -54,5 +37,22 @@ abstract interface class ReadOnlyDataSource {
     required String table,
     required List<RowFilter> filters,
     required int limit,
+  });
+}
+
+/// A comparison applied to a single column.
+final class RowFilter {
+  final String column;
+
+  final FilterOperator operator;
+
+  /// Scalar value to compare against; for [FilterOperator.inList] a non-empty
+  /// list of scalars.
+  final Object? value;
+
+  const RowFilter({
+    required this.column,
+    required this.operator,
+    required this.value,
   });
 }

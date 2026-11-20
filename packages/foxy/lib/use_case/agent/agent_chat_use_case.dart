@@ -6,6 +6,8 @@ import 'package:foxy_agent/foxy_agent.dart';
 /// The caller owns the returned event stream and must [close] the use case
 /// when the run ends or the page is disposed.
 class AgentChatUseCase {
+  final FoxyAgent _agent;
+
   AgentChatUseCase({
     required AgentProviderConfig provider,
     required TableCatalog catalog,
@@ -16,10 +18,8 @@ class AgentChatUseCase {
          tools: createReadOnlyTools(catalog: catalog, dataSource: dataSource),
        );
 
-  final FoxyAgent _agent;
+  void close() => _agent.close();
 
   Stream<AgentEvent> run(AgentSession session, String message) =>
       _agent.run(session, message);
-
-  void close() => _agent.close();
 }

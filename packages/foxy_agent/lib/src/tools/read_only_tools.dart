@@ -53,102 +53,11 @@ List<AgentTool> createReadOnlyTools({
   );
 }
 
-/// Lists the tables the agent may read.
-final class ListTablesTool extends AgentTool {
-  const ListTablesTool(this.catalog);
-
-  final TableCatalog catalog;
-
-  @override
-  String get name => 'list_tables';
-
-  @override
-  String get description =>
-      'List the database tables this agent can read. Call this first to '
-      'discover table names and their meanings. Optionally filter by a search '
-      'term matched against table names, database names and labels.';
-
-  @override
-  Map<String, Object?> get inputSchema => const {
-    'type': 'object',
-    'properties': {
-      'query': {
-        'type': 'string',
-        'description':
-            'Optional case-insensitive substring matched against table '
-            'names, database names or labels.',
-      },
-    },
-    'additionalProperties': false,
-  };
-
-  @override
-  Future<Object?> call(Map<String, Object?> arguments) async {
-    final query = arguments['query'];
-    final needle = query is String ? query.trim().toLowerCase() : '';
-    final tables = [
-      for (final table in catalog.tables)
-        if (needle.isEmpty ||
-            table.name.toLowerCase().contains(needle) ||
-            table.database.toLowerCase().contains(needle) ||
-            table.label.toLowerCase().contains(needle))
-          {
-            'name': table.qualifiedName,
-            if (table.database.isNotEmpty) 'database': table.database,
-            if (table.label.isNotEmpty) 'label': table.label,
-          },
-    ];
-    return {'tables': tables, 'count': tables.length};
-  }
-}
-
-/// Describes one table: columns, types, labels and primary key.
-final class DescribeTableTool extends AgentTool {
-  const DescribeTableTool(this.catalog);
-
-  final TableCatalog catalog;
-
-  @override
-  String get name => 'describe_table';
-
-  @override
-  String get description =>
-      'Describe one table: its columns, their types and meanings, and the '
-      'primary key. Use the returned column names in query_rows filters and '
-      'get_row keys.';
-
-  @override
-  Map<String, Object?> get inputSchema => const {
-    'type': 'object',
-    'properties': {
-      'table': {
-        'type': 'string',
-        'description': 'Table name from list_tables.',
-      },
-    },
-    'required': ['table'],
-    'additionalProperties': false,
-  };
-
-  @override
-  Future<Object?> call(Map<String, Object?> arguments) async {
-    final resolved = _resolveTable(catalog, arguments['table']);
-    final table = resolved.table;
-    if (table == null) {
-      return resolved.error!;
-    }
-    return {'table': table.toJson()};
-  }
-}
-
 /// Explains the full meaning of one column's values.
 final class DescribeFieldValuesTool extends AgentTool {
-  const DescribeFieldValuesTool(this.catalog);
-
   final TableCatalog catalog;
 
-  @override
-  String get name => 'describe_field_values';
+  const DescribeFieldValuesTool(this.catalog);
 
   @override
   String get description =>
@@ -173,6 +82,9 @@ final class DescribeFieldValuesTool extends AgentTool {
     'required': ['table', 'column'],
     'additionalProperties': false,
   };
+
+  @override
+  String get name => 'describe_field_values';
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
@@ -204,10 +116,177 @@ final class DescribeFieldValuesTool extends AgentTool {
   }
 }
 
+/// Describes one table: columns, types, labels and primary key.
+final class DescribeTableTool extends AgentTool {
+  final TableCatalog catalog;
+
+  const DescribeTableTool(this.catalog);
+
+  @override
+  String get description =>
+      'Describe one table: its columns, their types and meanings, and the '
+      'primary key. Use the returned column names in query_rows filters and '
+      'get_row keys.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'table': {
+        'type': 'string',
+        'description': 'Table name from list_tables.',
+      },
+    },
+    'required': ['table'],
+    'additionalProperties': false,
+  };
+
+  @override
+  String get name => 'describe_table';
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final resolved = _resolveTable(catalog, arguments['table']);
+    final table = resolved.table;
+    if (table == null) {
+      return resolved.error!;
+    }
+    return {'table': table.toJson()};
+  }
+}
+
+/// Reads a single row by primary key.
+final class GetRowTool extends AgentTool {
+  final TableCatalog catalog;
+
+  final ReadOnlyDataSource dataSource;
+
+  const GetRowTool(this.catalog, this.dataSource);
+
+  @override
+  String get description =>
+      'Read one row by primary key. Use describe_table to learn the '
+      'primary-key columns. Read-only.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'table': {
+        'type': 'string',
+        'description': 'Table name from list_tables.',
+      },
+      'key': {
+        'type': 'object',
+        'description': 'Primary-key column to value map, e.g. {"entry": 1234}.',
+        'additionalProperties': true,
+      },
+    },
+    'required': ['table', 'key'],
+    'additionalProperties': false,
+  };
+
+  @override
+  String get name => 'get_row';
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final resolved = _resolveTable(catalog, arguments['table']);
+    final table = resolved.table;
+    if (table == null) {
+      return resolved.error!;
+    }
+    final key = arguments['key'];
+    if (key is! Map<String, Object?> || key.isEmpty) {
+      return 'Missing "key" argument: an object mapping primary-key columns '
+          'to values.';
+    }
+    final primaryKey = table.primaryKey.toList();
+    if (primaryKey.isNotEmpty) {
+      final expected = {for (final column in primaryKey) column.name};
+      final missing = expected.difference(key.keys.toSet());
+      if (missing.isNotEmpty) {
+        return 'Missing primary-key column(s) ${missing.join(', ')} on '
+            'table "${table.qualifiedName}".';
+      }
+    }
+    final filters = <RowFilter>[];
+    for (final entry in key.entries) {
+      if (table.findColumn(entry.key) == null) {
+        return 'Unknown column "${entry.key}" on table '
+            '"${table.qualifiedName}".';
+      }
+      filters.add(
+        RowFilter(
+          column: entry.key,
+          operator: FilterOperator.equals,
+          value: entry.value,
+        ),
+      );
+    }
+    final rows = await dataSource.queryRows(
+      table: table.qualifiedName,
+      filters: filters,
+      limit: 1,
+    );
+    if (rows.isEmpty) {
+      return {'found': false};
+    }
+    return {'found': true, 'row': rows.first};
+  }
+}
+
+/// Lists the tables the agent may read.
+final class ListTablesTool extends AgentTool {
+  final TableCatalog catalog;
+
+  const ListTablesTool(this.catalog);
+
+  @override
+  String get description =>
+      'List the database tables this agent can read. Call this first to '
+      'discover table names and their meanings. Optionally filter by a search '
+      'term matched against table names, database names and labels.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'query': {
+        'type': 'string',
+        'description':
+            'Optional case-insensitive substring matched against table '
+            'names, database names or labels.',
+      },
+    },
+    'additionalProperties': false,
+  };
+
+  @override
+  String get name => 'list_tables';
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final query = arguments['query'];
+    final needle = query is String ? query.trim().toLowerCase() : '';
+    final tables = [
+      for (final table in catalog.tables)
+        if (needle.isEmpty ||
+            table.name.toLowerCase().contains(needle) ||
+            table.database.toLowerCase().contains(needle) ||
+            table.label.toLowerCase().contains(needle))
+          {
+            'name': table.qualifiedName,
+            if (table.database.isNotEmpty) 'database': table.database,
+            if (table.label.isNotEmpty) 'label': table.label,
+          },
+    ];
+    return {'tables': tables, 'count': tables.length};
+  }
+}
+
 /// Reads rows from a table with optional column filters.
 final class QueryRowsTool extends AgentTool {
-  const QueryRowsTool(this.catalog, this.dataSource);
-
   /// Hard cap on rows returned in one call.
   static const int maxLimit = 50;
 
@@ -218,8 +297,7 @@ final class QueryRowsTool extends AgentTool {
 
   final ReadOnlyDataSource dataSource;
 
-  @override
-  String get name => 'query_rows';
+  const QueryRowsTool(this.catalog, this.dataSource);
 
   @override
   String get description =>
@@ -286,6 +364,9 @@ final class QueryRowsTool extends AgentTool {
     'required': ['table'],
     'additionalProperties': false,
   };
+
+  @override
+  String get name => 'query_rows';
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
@@ -359,86 +440,5 @@ final class QueryRowsTool extends AgentTool {
       'rows': visible,
       if (truncated) 'truncated': true,
     };
-  }
-}
-
-/// Reads a single row by primary key.
-final class GetRowTool extends AgentTool {
-  const GetRowTool(this.catalog, this.dataSource);
-
-  final TableCatalog catalog;
-
-  final ReadOnlyDataSource dataSource;
-
-  @override
-  String get name => 'get_row';
-
-  @override
-  String get description =>
-      'Read one row by primary key. Use describe_table to learn the '
-      'primary-key columns. Read-only.';
-
-  @override
-  Map<String, Object?> get inputSchema => const {
-    'type': 'object',
-    'properties': {
-      'table': {
-        'type': 'string',
-        'description': 'Table name from list_tables.',
-      },
-      'key': {
-        'type': 'object',
-        'description': 'Primary-key column to value map, e.g. {"entry": 1234}.',
-        'additionalProperties': true,
-      },
-    },
-    'required': ['table', 'key'],
-    'additionalProperties': false,
-  };
-
-  @override
-  Future<Object?> call(Map<String, Object?> arguments) async {
-    final resolved = _resolveTable(catalog, arguments['table']);
-    final table = resolved.table;
-    if (table == null) {
-      return resolved.error!;
-    }
-    final key = arguments['key'];
-    if (key is! Map<String, Object?> || key.isEmpty) {
-      return 'Missing "key" argument: an object mapping primary-key columns '
-          'to values.';
-    }
-    final primaryKey = table.primaryKey.toList();
-    if (primaryKey.isNotEmpty) {
-      final expected = {for (final column in primaryKey) column.name};
-      final missing = expected.difference(key.keys.toSet());
-      if (missing.isNotEmpty) {
-        return 'Missing primary-key column(s) ${missing.join(', ')} on '
-            'table "${table.qualifiedName}".';
-      }
-    }
-    final filters = <RowFilter>[];
-    for (final entry in key.entries) {
-      if (table.findColumn(entry.key) == null) {
-        return 'Unknown column "${entry.key}" on table '
-            '"${table.qualifiedName}".';
-      }
-      filters.add(
-        RowFilter(
-          column: entry.key,
-          operator: FilterOperator.equals,
-          value: entry.value,
-        ),
-      );
-    }
-    final rows = await dataSource.queryRows(
-      table: table.qualifiedName,
-      filters: filters,
-      limit: 1,
-    );
-    if (rows.isEmpty) {
-      return {'found': false};
-    }
-    return {'found': true, 'row': rows.first};
   }
 }

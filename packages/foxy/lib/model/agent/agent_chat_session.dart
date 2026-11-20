@@ -1,10 +1,12 @@
 import 'package:foxy_agent/foxy_agent.dart';
 
-/// Who produced a chat message.
-enum AgentChatRole { user, assistant, tool }
-
 /// One message rendered in the agent workspace.
 class AgentChatMessage {
+  final AgentChatRole role;
+
+  /// Mutable so streamed deltas can be appended without rebuilding objects.
+  String text;
+
   AgentChatMessage({required this.role, required this.text});
 
   factory AgentChatMessage.fromJson(Map<String, Object?> json) {
@@ -19,18 +21,14 @@ class AgentChatMessage {
     );
   }
 
-  final AgentChatRole role;
-
-  /// Mutable so streamed deltas can be appended without rebuilding objects.
-  String text;
-
   Map<String, Object?> toJson() => {'role': role.name, 'text': text};
 }
 
+/// Who produced a chat message.
+enum AgentChatRole { user, assistant, tool }
+
 /// One conversation in the agent session list.
 class AgentChatSession {
-  AgentChatSession({required this.id, required this.title});
-
   final String id;
 
   /// Display title; set from the first user message.
@@ -40,6 +38,8 @@ class AgentChatSession {
   final session = AgentSession();
 
   final messages = <AgentChatMessage>[];
+
+  AgentChatSession({required this.id, required this.title});
 
   /// Session title derived from the first user message.
   static String titleFrom(String text, {int maxLength = 24}) {
@@ -52,15 +52,15 @@ class AgentChatSession {
 
 /// Lightweight session entry shown in the session list.
 class AgentChatSessionMeta {
-  const AgentChatSessionMeta({
-    required this.id,
-    required this.title,
-    required this.updatedAt,
-  });
-
   final String id;
 
   final String title;
 
   final DateTime updatedAt;
+
+  const AgentChatSessionMeta({
+    required this.id,
+    required this.title,
+    required this.updatedAt,
+  });
 }

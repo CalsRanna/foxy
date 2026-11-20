@@ -20,15 +20,47 @@ import 'package:path/path.dart' as p;
 /// line (hard kill during a write) is ignored on load, and a user message
 /// whose protocol item never made it to disk is repaired on load.
 class AgentSessionStore {
-  AgentSessionStore({Directory? root})
-    : _root = root ?? Directory(p.join(Directory.current.path, 'session'));
-
   static const _fileExtension = '.jsonl';
-  static const _defaultTitle = '新会话';
 
+  static const _defaultTitle = '新会话';
   final Directory _root;
 
   Future<void> _pending = Future.value();
+
+  AgentSessionStore({Directory? root})
+    : _root = root ?? Directory(p.join(Directory.current.path, 'session'));
+
+  Future<void> appendItem(String id, Map<String, Object?> item) =>
+      _enqueue(() => _appendLine(id, {'type': 'item', 'item': item}));
+
+  Future<void> appendMessage(String id, AgentChatRole role, String text) =>
+      _enqueue(
+        () => _appendLine(id, {
+          'type': 'message',
+          'role': role.name,
+          'text': text,
+        }),
+      );
+
+  Future<void> createSession(String id) => _enqueue(
+    () => _appendLine(id, {
+      'type': 'session',
+      'id': id,
+      'createdAt': DateTime.now().toIso8601String(),
+    }),
+  );
+
+  /// Deletes one session file. Unlike appends this rethrows on failure so the
+  /// UI can surface it.
+  Future<void> deleteSession(String id) async {
+    try {
+      final file = _fileOf(id);
+      if (await file.exists()) await file.delete();
+    } catch (error) {
+      LoggerUtil.instance.e('delete agent session failed: $error');
+      rethrow;
+    }
+  }
 
   /// Lists session metadata, newest first. Reads only the file head needed to
   /// derive the title; full content loads on demand via [load].
@@ -85,36 +117,26 @@ class AgentSessionStore {
     return session;
   }
 
-  Future<void> createSession(String id) => _enqueue(
-    () => _appendLine(id, {
-      'type': 'session',
-      'id': id,
-      'createdAt': DateTime.now().toIso8601String(),
-    }),
-  );
-
-  Future<void> appendMessage(String id, AgentChatRole role, String text) =>
-      _enqueue(
-        () => _appendLine(id, {
-          'type': 'message',
-          'role': role.name,
-          'text': text,
-        }),
-      );
-
-  Future<void> appendItem(String id, Map<String, Object?> item) =>
-      _enqueue(() => _appendLine(id, {'type': 'item', 'item': item}));
-
-  /// Deletes one session file. Unlike appends this rethrows on failure so the
-  /// UI can surface it.
-  Future<void> deleteSession(String id) async {
-    try {
-      final file = _fileOf(id);
-      if (await file.exists()) await file.delete();
-    } catch (error) {
-      LoggerUtil.instance.e('delete agent session failed: $error');
-      rethrow;
+  Future<void> _appendLine(String id, Map<String, Object?> line) async {
+    if (!await _root.exists()) {
+      await _root.create(recursive: true);
     }
+    await _fileOf(id).writeAsString(
+      '${jsonEncode(line)}\n',
+      mode: FileMode.append,
+      flush: true,
+    );
+  }
+
+  Future<void> _enqueue(Future<void> Function() task) {
+    final next = _pending
+        .catchError((Object _) {})
+        .then((_) => task())
+        .catchError((Object error) {
+          LoggerUtil.instance.e('agent session persistence failed: $error');
+        });
+    _pending = next;
+    return next;
   }
 
   File _fileOf(String id) => File(p.join(_root.path, '$id$_fileExtension'));
@@ -173,28 +195,6 @@ class AgentSessionStore {
     );
     if (hasUserItem) return;
     items.add({'role': 'user', 'content': lastUser.text});
-  }
-
-  Future<void> _enqueue(Future<void> Function() task) {
-    final next = _pending
-        .catchError((Object _) {})
-        .then((_) => task())
-        .catchError((Object error) {
-          LoggerUtil.instance.e('agent session persistence failed: $error');
-        });
-    _pending = next;
-    return next;
-  }
-
-  Future<void> _appendLine(String id, Map<String, Object?> line) async {
-    if (!await _root.exists()) {
-      await _root.create(recursive: true);
-    }
-    await _fileOf(id).writeAsString(
-      '${jsonEncode(line)}\n',
-      mode: FileMode.append,
-      flush: true,
-    );
   }
 
   static Map<String, Object?>? _decodeLine(String line) {

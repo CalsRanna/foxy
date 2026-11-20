@@ -25,6 +25,10 @@ const _meaningChecker = TypeChecker.fromUrl(
   'package:foxy_annotation/semantic_annotations.dart#FoxyFieldMeaning',
 );
 
+/// The builder's synthetic input; view inference runs only for it so test
+/// builds (which run the builder on several inputs) stay single-output.
+const _semanticsInputPath = 'lib/constant/agent_field_semantics.dart';
+
 const _vmCheckers = [
   TypeChecker.fromUrl(
     'package:foxy_annotation/form_annotations.dart#FoxyDetailViewModel',
@@ -40,9 +44,68 @@ const _vmCheckers = [
   ),
 ];
 
-/// The builder's synthetic input; view inference runs only for it so test
-/// builds (which run the builder on several inputs) stay single-output.
-const _semanticsInputPath = 'lib/constant/agent_field_semantics.dart';
+DartObject? _constObject(Expression? expression) {
+  final Element? element;
+  if (expression is SimpleIdentifier) {
+    element = expression.element;
+  } else if (expression is PrefixedIdentifier) {
+    element = expression.identifier.element;
+  } else if (expression is PropertyAccess) {
+    element = expression.propertyName.element;
+  } else {
+    element = null;
+  }
+  if (element is PropertyAccessorElement) {
+    return element.variable.computeConstantValue();
+  }
+  if (element is VariableElement) {
+    return element.computeConstantValue();
+  }
+  return null;
+}
+
+String? _controllerFieldName(Expression expression) {
+  final name = switch (expression) {
+    PrefixedIdentifier(:final identifier) => identifier.name,
+    PropertyAccess(:final propertyName) => propertyName.name,
+    _ => null,
+  };
+  const suffix = 'Controller';
+  if (name == null || !name.endsWith(suffix)) return null;
+  return name.substring(0, name.length - suffix.length);
+}
+
+List<_FlagMeaning>? _flagMeanings(DartObject? object) {
+  final list = object?.toListValue();
+  if (list == null || list.isEmpty) return null;
+  final result = <_FlagMeaning>[];
+  for (final item in list) {
+    final value = item.getField('value')?.toIntValue();
+    final label = item.getField('label')?.toStringValue();
+    if (value == null || label == null) return null;
+    result.add(_FlagMeaning(value: value, label: label));
+  }
+  return result;
+}
+
+Map<int, String>? _intStringMap(DartObject? object) {
+  final map = object?.toMapValue();
+  if (map == null || map.isEmpty) return null;
+  final result = <int, String>{};
+  for (final entry in map.entries) {
+    final key = entry.key?.toIntValue();
+    final value = entry.value?.toStringValue();
+    if (key == null || value == null) return null;
+    result[key] = value;
+  }
+  return result;
+}
+
+DartType? _receiverType(Expression expression) {
+  if (expression is PrefixedIdentifier) return expression.prefix.staticType;
+  if (expression is PropertyAccess) return expression.realTarget.staticType;
+  return null;
+}
 
 /// Aggregates `@FoxyFieldMeaning` declarations across all entity files into a
 /// single runtime map consumed by non-UI consumers (the agent catalog).
@@ -71,6 +134,60 @@ final class FoxySemanticsGenerator implements Generator {
     await _collectViews(buildStep, tables, stats);
     if (tables.isEmpty) return null;
     return _emit(tables);
+  }
+
+  Future<bool> _applyPicker(
+    BuildStep buildStep,
+    Map<String, Map<String, _ColumnMeaning>> tables,
+    _ViewPicker picker,
+    _InferenceStats stats,
+  ) async {
+    final vm = picker.vm;
+    if (vm == null) {
+      stats.noVm++;
+      return false;
+    }
+    final entity = await _entityOfViewModel(buildStep, vm);
+    if (entity == null) {
+      stats.noEntity++;
+      return false;
+    }
+    final table =
+        ConstantReader(_fullEntityChecker.firstAnnotationOfExact(entity))
+            .peek('table')
+            ?.stringValue ??
+        tableNameOf(entity.name ?? '');
+    if (table.isEmpty) {
+      stats.noEntity++;
+      return false;
+    }
+    final field = entity.fields
+        .where((field) => !field.isStatic && field.isOriginDeclaration)
+        .where(
+          (field) =>
+              field.name == picker.fieldName ||
+              field.name == '${picker.fieldName}_',
+        )
+        .firstOrNull;
+    if (field == null) {
+      stats.noField++;
+      return false;
+    }
+    final column = ConstantReader(
+      _fullFieldChecker.firstAnnotationOfExact(field),
+    ).peek('name')?.stringValue;
+    if (column == null || column.isEmpty) {
+      stats.noColumn++;
+      return false;
+    }
+    final tableMeanings = tables.putIfAbsent(table, () => {});
+    if (tableMeanings.containsKey(column)) return false;
+    final label = picker.label.isEmpty ? column : picker.label;
+    final meaning = picker.enumValues != null
+        ? _ColumnMeaning.enumValues(label, picker.enumValues!)
+        : _ColumnMeaning.flags(label, picker.flags!);
+    tableMeanings[column] = meaning;
+    return true;
   }
 
   void _collectClass(
@@ -117,6 +234,101 @@ final class FoxySemanticsGenerator implements Generator {
         );
       }
       tableMeanings[column] = _readMeaning(meaning, field);
+    }
+  }
+
+  /// Infers semantics from `FoxyEnumPicker` / `FoxyFlagPicker` usages in
+  /// view files: the UI already wires each controller to a const definition,
+  /// so annotations only need to cover fields the views do not render.
+  /// Annotation-provided meanings always win; anything that does not resolve
+  /// cleanly is skipped.
+  Future<void> _collectViews(
+    BuildStep buildStep,
+    Map<String, Map<String, _ColumnMeaning>> tables,
+    _InferenceStats stats,
+  ) async {
+    await for (final asset in buildStep.findAssets(
+      Glob('lib/page/**_view.dart'),
+    )) {
+      stats.views++;
+      final LibraryElement library;
+      final AstNode? node;
+      try {
+        library = await buildStep.resolver.libraryFor(asset);
+        node = await buildStep.resolver.astNodeFor(
+          library.firstFragment,
+          resolve: true,
+        );
+      } catch (_) {
+        stats.resolveFailures++;
+        continue;
+      }
+      if (node == null) {
+        stats.resolveFailures++;
+        continue;
+      }
+      final pickers = <_ViewPicker>[];
+      node.accept(_ViewPickerVisitor(pickers.add));
+      stats.pickers += pickers.length;
+      for (final picker in pickers) {
+        if (await _applyPicker(buildStep, tables, picker, stats)) {
+          stats.applied++;
+        }
+      }
+    }
+  }
+
+  String _emit(Map<String, Map<String, _ColumnMeaning>> tables) {
+    final buffer = StringBuffer()
+      ..writeln('abstract final class AgentFieldSemantics {')
+      ..writeln(
+        '  static const values = '
+        '<String, Map<String, ColumnSemantics>>{',
+      );
+    final tableNames = tables.keys.toList()..sort();
+    for (final table in tableNames) {
+      buffer.writeln('    ${dartStringLiteral(table)}: {');
+      final columns = tables[table]!;
+      final columnNames = columns.keys.toList()..sort();
+      for (final column in columnNames) {
+        buffer.writeln(
+          '      ${dartStringLiteral(column)}: ${columns[column]!.toDart()},',
+        );
+      }
+      buffer.writeln('    },');
+    }
+    buffer
+      ..writeln('  };')
+      ..writeln('}');
+    return buffer.toString();
+  }
+
+  Future<ClassElement?> _entityOfViewModel(
+    BuildStep buildStep,
+    ClassElement vm,
+  ) async {
+    for (final checker in _vmCheckers) {
+      final annotation = checker.firstAnnotationOfExact(vm);
+      if (annotation == null) continue;
+      final type = ConstantReader(annotation).peek('entity')?.typeValue;
+      final element = type is InterfaceType ? type.element : null;
+      if (element is ClassElement) return element;
+      break;
+    }
+    final name = vm.name;
+    if (name == null) return null;
+    final className = entityClassNameOfViewModel(name);
+    if (className == null || className.isEmpty) return null;
+    try {
+      return await resolveClass(
+        buildStep,
+        vm,
+        className,
+        'entity',
+        'Agent field semantics',
+      );
+    } on InvalidGenerationSourceError {
+      return null;
     }
   }
 
@@ -186,155 +398,62 @@ final class FoxySemanticsGenerator implements Generator {
       element: field,
     );
   }
+}
 
-  /// Infers semantics from `FoxyEnumPicker` / `FoxyFlagPicker` usages in
-  /// view files: the UI already wires each controller to a const definition,
-  /// so annotations only need to cover fields the views do not render.
-  /// Annotation-provided meanings always win; anything that does not resolve
-  /// cleanly is skipped.
-  Future<void> _collectViews(
-    BuildStep buildStep,
-    Map<String, Map<String, _ColumnMeaning>> tables,
-    _InferenceStats stats,
-  ) async {
-    await for (final asset in buildStep.findAssets(
-      Glob('lib/page/**_view.dart'),
-    )) {
-      stats.views++;
-      final LibraryElement library;
-      final AstNode? node;
-      try {
-        library = await buildStep.resolver.libraryFor(asset);
-        node = await buildStep.resolver.astNodeFor(
-          library.firstFragment,
-          resolve: true,
-        );
-      } catch (_) {
-        stats.resolveFailures++;
-        continue;
-      }
-      if (node == null) {
-        stats.resolveFailures++;
-        continue;
-      }
-      final pickers = <_ViewPicker>[];
-      node.accept(_ViewPickerVisitor(pickers.add));
-      stats.pickers += pickers.length;
-      for (final picker in pickers) {
-        if (await _applyPicker(buildStep, tables, picker, stats)) {
-          stats.applied++;
-        }
-      }
-    }
-  }
+final class _ColumnMeaning {
+  final String label;
 
-  Future<bool> _applyPicker(
-    BuildStep buildStep,
-    Map<String, Map<String, _ColumnMeaning>> tables,
-    _ViewPicker picker,
-    _InferenceStats stats,
-  ) async {
-    final vm = picker.vm;
-    if (vm == null) {
-      stats.noVm++;
-      return false;
-    }
-    final entity = await _entityOfViewModel(buildStep, vm);
-    if (entity == null) {
-      stats.noEntity++;
-      return false;
-    }
-    final table =
-        ConstantReader(_fullEntityChecker.firstAnnotationOfExact(entity))
-            .peek('table')
-            ?.stringValue ??
-        tableNameOf(entity.name ?? '');
-    if (table.isEmpty) {
-      stats.noEntity++;
-      return false;
-    }
-    final field = entity.fields
-        .where((field) => !field.isStatic && field.isOriginDeclaration)
-        .where(
-          (field) =>
-              field.name == picker.fieldName ||
-              field.name == '${picker.fieldName}_',
-        )
-        .firstOrNull;
-    if (field == null) {
-      stats.noField++;
-      return false;
-    }
-    final column = ConstantReader(
-      _fullFieldChecker.firstAnnotationOfExact(field),
-    ).peek('name')?.stringValue;
-    if (column == null || column.isEmpty) {
-      stats.noColumn++;
-      return false;
-    }
-    final tableMeanings = tables.putIfAbsent(table, () => {});
-    if (tableMeanings.containsKey(column)) return false;
-    final label = picker.label.isEmpty ? column : picker.label;
-    final meaning = picker.enumValues != null
-        ? _ColumnMeaning.enumValues(label, picker.enumValues!)
-        : _ColumnMeaning.flags(label, picker.flags!);
-    tableMeanings[column] = meaning;
-    return true;
-  }
+  final _MeaningKind kind;
 
-  Future<ClassElement?> _entityOfViewModel(
-    BuildStep buildStep,
-    ClassElement vm,
-  ) async {
-    for (final checker in _vmCheckers) {
-      final annotation = checker.firstAnnotationOfExact(vm);
-      if (annotation == null) continue;
-      final type = ConstantReader(annotation).peek('entity')?.typeValue;
-      final element = type is InterfaceType ? type.element : null;
-      if (element is ClassElement) return element;
-      break;
-    }
-    final name = vm.name;
-    if (name == null) return null;
-    final className = entityClassNameOfViewModel(name);
-    if (className == null || className.isEmpty) return null;
-    try {
-      return await resolveClass(
-        buildStep,
-        vm,
-        className,
-        'entity',
-        'Agent field semantics',
-      );
-    } on InvalidGenerationSourceError {
-      return null;
-    }
-  }
+  final Map<int, String> values;
 
-  String _emit(Map<String, Map<String, _ColumnMeaning>> tables) {
-    final buffer = StringBuffer()
-      ..writeln('abstract final class AgentFieldSemantics {')
-      ..writeln(
-        '  static const values = '
-        '<String, Map<String, ColumnSemantics>>{',
-      );
-    final tableNames = tables.keys.toList()..sort();
-    for (final table in tableNames) {
-      buffer.writeln('    ${dartStringLiteral(table)}: {');
-      final columns = tables[table]!;
-      final columnNames = columns.keys.toList()..sort();
-      for (final column in columnNames) {
-        buffer.writeln(
-          '      ${dartStringLiteral(column)}: ${columns[column]!.toDart()},',
-        );
-      }
-      buffer.writeln('    },');
-    }
-    buffer
-      ..writeln('  };')
-      ..writeln('}');
-    return buffer.toString();
-  }
+  final List<_FlagMeaning> flags;
+
+  final String? referenceTable;
+
+  final String? referenceColumn;
+
+  const _ColumnMeaning.enumValues(String label, Map<int, String> values)
+    : this._(label, _MeaningKind.enumValues, values, const [], null, null);
+
+  const _ColumnMeaning.flags(String label, List<_FlagMeaning> flags)
+    : this._(label, _MeaningKind.flags, const {}, flags, null, null);
+
+  const _ColumnMeaning.reference(
+    String label, {
+    required String table,
+    required String column,
+  }) : this._(label, _MeaningKind.reference, const {}, const [], table, column);
+
+  const _ColumnMeaning._(
+    this.label,
+    this.kind,
+    this.values,
+    this.flags,
+    this.referenceTable,
+    this.referenceColumn,
+  );
+
+  String toDart() => switch (kind) {
+    _MeaningKind.enumValues =>
+      'ColumnSemantics.enumValues(label: ${dartStringLiteral(label)}, '
+          'values: {${values.entries.map((entry) => '${entry.key}: ${dartStringLiteral(entry.value)}').join(', ')}})',
+    _MeaningKind.flags =>
+      'ColumnSemantics.flags(label: ${dartStringLiteral(label)}, flags: '
+          '[${flags.map((flag) => 'ColumnFlag(value: ${flag.value}, label: ${dartStringLiteral(flag.label)})').join(', ')}])',
+    _MeaningKind.reference =>
+      'ColumnSemantics.reference(label: ${dartStringLiteral(label)}, '
+          'reference: ColumnReference(table: ${dartStringLiteral(referenceTable!)}, '
+          'column: ${dartStringLiteral(referenceColumn!)}))',
+  };
+}
+
+final class _FlagMeaning {
+  final int value;
+
+  final String label;
+
+  const _FlagMeaning({required this.value, required this.label});
 }
 
 final class _InferenceStats {
@@ -355,15 +474,9 @@ final class _InferenceStats {
   var resolveFailures = 0;
 }
 
-final class _ViewPicker {
-  const _ViewPicker({
-    required this.fieldName,
-    required this.vm,
-    required this.label,
-    this.enumValues,
-    this.flags,
-  });
+enum _MeaningKind { enumValues, flags, reference }
 
+final class _ViewPicker {
   final String fieldName;
 
   final ClassElement? vm;
@@ -373,12 +486,20 @@ final class _ViewPicker {
   final Map<int, String>? enumValues;
 
   final List<_FlagMeaning>? flags;
+
+  const _ViewPicker({
+    required this.fieldName,
+    required this.vm,
+    required this.label,
+    this.enumValues,
+    this.flags,
+  });
 }
 
 final class _ViewPickerVisitor extends RecursiveAstVisitor<void> {
-  _ViewPickerVisitor(this.onPicker);
-
   final void Function(_ViewPicker picker) onPicker;
+
+  _ViewPickerVisitor(this.onPicker);
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
@@ -423,125 +544,4 @@ final class _ViewPickerVisitor extends RecursiveAstVisitor<void> {
       );
     }
   }
-}
-
-String? _controllerFieldName(Expression expression) {
-  final name = switch (expression) {
-    PrefixedIdentifier(:final identifier) => identifier.name,
-    PropertyAccess(:final propertyName) => propertyName.name,
-    _ => null,
-  };
-  const suffix = 'Controller';
-  if (name == null || !name.endsWith(suffix)) return null;
-  return name.substring(0, name.length - suffix.length);
-}
-
-DartType? _receiverType(Expression expression) {
-  if (expression is PrefixedIdentifier) return expression.prefix.staticType;
-  if (expression is PropertyAccess) return expression.realTarget.staticType;
-  return null;
-}
-
-DartObject? _constObject(Expression? expression) {
-  final Element? element;
-  if (expression is SimpleIdentifier) {
-    element = expression.element;
-  } else if (expression is PrefixedIdentifier) {
-    element = expression.identifier.element;
-  } else if (expression is PropertyAccess) {
-    element = expression.propertyName.element;
-  } else {
-    element = null;
-  }
-  if (element is PropertyAccessorElement) {
-    return element.variable.computeConstantValue();
-  }
-  if (element is VariableElement) {
-    return element.computeConstantValue();
-  }
-  return null;
-}
-
-Map<int, String>? _intStringMap(DartObject? object) {
-  final map = object?.toMapValue();
-  if (map == null || map.isEmpty) return null;
-  final result = <int, String>{};
-  for (final entry in map.entries) {
-    final key = entry.key?.toIntValue();
-    final value = entry.value?.toStringValue();
-    if (key == null || value == null) return null;
-    result[key] = value;
-  }
-  return result;
-}
-
-List<_FlagMeaning>? _flagMeanings(DartObject? object) {
-  final list = object?.toListValue();
-  if (list == null || list.isEmpty) return null;
-  final result = <_FlagMeaning>[];
-  for (final item in list) {
-    final value = item.getField('value')?.toIntValue();
-    final label = item.getField('label')?.toStringValue();
-    if (value == null || label == null) return null;
-    result.add(_FlagMeaning(value: value, label: label));
-  }
-  return result;
-}
-
-enum _MeaningKind { enumValues, flags, reference }
-
-final class _FlagMeaning {
-  const _FlagMeaning({required this.value, required this.label});
-
-  final int value;
-
-  final String label;
-}
-
-final class _ColumnMeaning {
-  const _ColumnMeaning._(
-    this.label,
-    this.kind,
-    this.values,
-    this.flags,
-    this.referenceTable,
-    this.referenceColumn,
-  );
-
-  const _ColumnMeaning.enumValues(String label, Map<int, String> values)
-    : this._(label, _MeaningKind.enumValues, values, const [], null, null);
-
-  const _ColumnMeaning.flags(String label, List<_FlagMeaning> flags)
-    : this._(label, _MeaningKind.flags, const {}, flags, null, null);
-
-  const _ColumnMeaning.reference(
-    String label, {
-    required String table,
-    required String column,
-  }) : this._(label, _MeaningKind.reference, const {}, const [], table, column);
-
-  final String label;
-
-  final _MeaningKind kind;
-
-  final Map<int, String> values;
-
-  final List<_FlagMeaning> flags;
-
-  final String? referenceTable;
-
-  final String? referenceColumn;
-
-  String toDart() => switch (kind) {
-    _MeaningKind.enumValues =>
-      'ColumnSemantics.enumValues(label: ${dartStringLiteral(label)}, '
-          'values: {${values.entries.map((entry) => '${entry.key}: ${dartStringLiteral(entry.value)}').join(', ')}})',
-    _MeaningKind.flags =>
-      'ColumnSemantics.flags(label: ${dartStringLiteral(label)}, flags: '
-          '[${flags.map((flag) => 'ColumnFlag(value: ${flag.value}, label: ${dartStringLiteral(flag.label)})').join(', ')}])',
-    _MeaningKind.reference =>
-      'ColumnSemantics.reference(label: ${dartStringLiteral(label)}, '
-          'reference: ColumnReference(table: ${dartStringLiteral(referenceTable!)}, '
-          'column: ${dartStringLiteral(referenceColumn!)}))',
-  };
 }

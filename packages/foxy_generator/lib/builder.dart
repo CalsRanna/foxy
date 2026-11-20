@@ -29,6 +29,16 @@ Builder foxyRepositoryBuilder(BuilderOptions options) {
   );
 }
 
+/// Aggregates `@FoxyFieldMeaning` annotations across entity files into the
+/// runtime semantics table used by the agent catalog.
+Builder foxySemanticsBuilder(BuilderOptions options) {
+  return SharedPartBuilder(
+    [const FoxySemanticsGenerator()],
+    'foxy_semantics',
+    writeDescriptions: false,
+  );
+}
+
 // Generators are ordered by name (FoxyLinkedDetailViewModelGenerator <
 // FoxyLinkedListViewModelGenerator < FoxyListViewModelGenerator <
 // FoxyViewModelGenerator)。
@@ -41,16 +51,6 @@ Builder foxyViewModelBuilder(BuilderOptions options) {
       const FoxyViewModelGenerator(),
     ],
     'foxy_view_model',
-    writeDescriptions: false,
-  );
-}
-
-/// Aggregates `@FoxyFieldMeaning` annotations across entity files into the
-/// runtime semantics table used by the agent catalog.
-Builder foxySemanticsBuilder(BuilderOptions options) {
-  return SharedPartBuilder(
-    [const FoxySemanticsGenerator()],
-    'foxy_semantics',
     writeDescriptions: false,
   );
 }

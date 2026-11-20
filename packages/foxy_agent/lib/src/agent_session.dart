@@ -9,15 +9,15 @@ final class AgentSession {
   /// The full item list, in protocol order.
   List<Map<String, Object?>> get items => List.unmodifiable(_items);
 
-  /// Appends a user message.
-  void addUserMessage(String text) {
-    _items.add({'role': 'user', 'content': text});
-  }
-
   /// Appends raw items returned by the provider (assistant messages,
   /// function calls, reasoning items, ...), preserved verbatim.
   void addItems(Iterable<Map<String, Object?>> items) {
     _items.addAll(items);
+  }
+
+  /// Appends a user message.
+  void addUserMessage(String text) {
+    _items.add({'role': 'user', 'content': text});
   }
 
   /// Clears the conversation.
