@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,42 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
   tearDown(() async => GetIt.instance.reset());
+
+  testWidgets('恢复历史会话期间不显示空状态', (tester) async {
+    final config = _UnconfiguredAgentConfig();
+    final store = _PendingAgentSessionStore();
+    final viewModel = AgentViewModel(
+      configUseCase: AgentProviderConfigUseCase(config),
+      dataSource: AgentReadOnlyDataSource(config),
+      sessionStore: store,
+    );
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+
+    final emptyState = find.text('配置 AI 模型');
+    final message = find.text('历史消息');
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: AgentPage())));
+    expect(emptyState, findsNothing);
+
+    await tester.pump();
+    expect(find.text('已有会话'), findsOneWidget);
+    expect(emptyState, findsNothing);
+    expect(message, findsNothing);
+
+    final session = AgentChatSession(id: 'existing', title: '已有会话');
+    session.messages.add(
+      AgentChatMessage(role: AgentChatRole.user, text: '历史消息'),
+    );
+    store.loaded.complete(session);
+    await tester.pumpAndSettle();
+
+    expect(viewModel.activeSessionId.value, 'existing');
+    expect(message, findsOneWidget);
+    expect(emptyState, findsNothing);
+
+    await tester.tap(find.text('新建会话'));
+    await tester.pumpAndSettle();
+    expect(emptyState, findsOneWidget);
+  });
 
   testWidgets('输入区支持换行、发送和停止', (tester) async {
     final draft = TextEditingController();
@@ -454,6 +491,27 @@ void main() {
   });
 }
 
+class _UnconfiguredAgentConfig extends ConfigUtil {
+  @override
+  Future<Map<String, dynamic>> load() async => {};
+}
+
+class _PendingAgentSessionStore extends AgentSessionStore {
+  final loaded = Completer<AgentChatSession?>();
+
+  @override
+  Future<List<AgentChatSessionMeta>> list() async => [
+    AgentChatSessionMeta(
+      id: 'existing',
+      title: '已有会话',
+      updatedAt: DateTime.now(),
+    ),
+  ];
+
+  @override
+  Future<AgentChatSession?> load(String id) => loaded.future;
+}
+
 class _TestAgentViewModel extends AgentViewModel {
   AgentChatMessage? activeReasoning;
 
@@ -462,7 +520,9 @@ class _TestAgentViewModel extends AgentViewModel {
         configUseCase: AgentProviderConfigUseCase(configUtil),
         dataSource: AgentReadOnlyDataSource(configUtil),
         sessionStore: AgentSessionStore(),
-      );
+      ) {
+    ready.value = true;
+  }
 
   @override
   Future<void> initSignals() async {}

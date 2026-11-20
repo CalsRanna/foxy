@@ -286,6 +286,8 @@ class _AgentPageState extends State<AgentPage> {
   Widget _buildMessageList() {
     return SignalBuilder(
       builder: (_) {
+        if (!viewModel.ready.value) return const SizedBox.shrink();
+
         final messages = viewModel.messages.value;
         if (messages.isEmpty) {
           return _buildEmptyState(viewModel.provider.value != null);
