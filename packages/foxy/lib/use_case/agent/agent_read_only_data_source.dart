@@ -94,33 +94,92 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
     required List<RowFilter> filters,
     required int limit,
   }) async {
-    final catalog = await getCatalog();
-    final info = catalog.find(table);
-    if (info == null) {
-      throw ValidationException('unknown agent table: $table');
-    }
-    final tableName = _quoteIdentifier(info.name);
-    final qualifiedName = info.database.isEmpty
-        ? tableName
-        : '${_quoteIdentifier(info.database)}.$tableName';
+    final info = await _tableInfo(table);
     final columns = info.columns
         .map((column) => _quoteIdentifier(column.name))
         .toList();
-    final query = filters.fold<QueryBuilder>(
-      _database.table(qualifiedName).select(columns),
-      (builder, filter) {
-        if (info.findColumn(filter.column) == null) {
-          throw ValidationException(
-            'unknown column for agent table ${info.qualifiedName}: '
-            '${filter.column}',
-          );
-        }
-        return _applyFilter(builder, filter);
-      },
-    );
+    final query = _filteredQuery(info, filters).select(columns);
     final capped = limit < 1 ? 1 : (limit > _maxRows ? _maxRows : limit);
     final rows = await query.limit(capped).get();
     return rows.map((row) => row.toMap()).toList();
+  }
+
+  @override
+  Future<int> countRows({
+    required String table,
+    required List<RowFilter> filters,
+  }) async {
+    final info = await _tableInfo(table);
+    return _filteredQuery(info, filters).count();
+  }
+
+  @override
+  Future<List<Map<String, Object?>>> aggregateRows({
+    required String table,
+    required List<RowFilter> filters,
+    required List<String> groupBy,
+    required List<AggregateMetric> metrics,
+    required int limit,
+  }) async {
+    final info = await _tableInfo(table);
+    final error = validateAggregation(info, groupBy, metrics);
+    if (error != null) throw ValidationException(error);
+    final columns = groupBy.map(_quoteIdentifier).toList();
+    for (final metric in metrics) {
+      final column = metric.column == null
+          ? '*'
+          : _quoteIdentifier(metric.column!);
+      columns.add(
+        '${metric.function.name.toUpperCase()}($column) as '
+        '${_quoteIdentifier(metric.outputName)}',
+      );
+    }
+    var query = _filteredQuery(info, filters).select(columns);
+    for (final column in groupBy) {
+      query = query
+          .groupBy(_quoteIdentifier(column))
+          .orderBy(_quoteIdentifier(column));
+    }
+    final capped = limit.clamp(1, AggregateRowsTool.maxLimit + 1);
+    final rows = await query.limit(capped).get();
+    return rows.map((row) => row.toMap()).toList();
+  }
+
+  Future<TableInfo> _tableInfo(String table) async {
+    final catalog = await getCatalog();
+    final info = catalog.find(table);
+    if (info == null) throw ValidationException('unknown agent table: $table');
+    return info;
+  }
+
+  QueryBuilder _filteredQuery(TableInfo info, List<RowFilter> filters) {
+    final table = _quoteIdentifier(info.name);
+    final qualified = info.database.isEmpty
+        ? table
+        : '${_quoteIdentifier(info.database)}.$table';
+    return filters.fold<QueryBuilder>(_database.table(qualified), (
+      builder,
+      filter,
+    ) {
+      if (info.findColumn(filter.column) == null) {
+        throw ValidationException(
+          'unknown column for agent table ${info.qualifiedName}: ${filter.column}',
+        );
+      }
+      final value = filter.value;
+      if (filter.operator == FilterOperator.inList) {
+        if (value is! List<Object?> ||
+            value.isEmpty ||
+            value.any((item) => item is List || item is Map)) {
+          throw const ValidationException(
+            'in filter requires a non-empty scalar array',
+          );
+        }
+      } else if (value is List || value is Map) {
+        throw const ValidationException('filter requires a scalar value');
+      }
+      return _applyFilter(builder, filter);
+    });
   }
 
   /// Builds the agent catalog from `information_schema.columns` rows.

@@ -351,6 +351,8 @@ void main() {
       'list_tables',
       'describe_table',
       'describe_field_values',
+      'count_rows',
+      'aggregate_rows',
       'query_rows',
       'get_row',
     ]);
@@ -420,6 +422,21 @@ final class _FakeDataSource implements ReadOnlyDataSource {
   final List<({String table, List<RowFilter> filters, int limit})> calls = [];
 
   _FakeDataSource(this.rows);
+
+  @override
+  Future<int> countRows({
+    required String table,
+    required List<RowFilter> filters,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<List<Map<String, Object?>>> aggregateRows({
+    required String table,
+    required List<RowFilter> filters,
+    required List<String> groupBy,
+    required List<AggregateMetric> metrics,
+    required int limit,
+  }) => throw UnimplementedError();
 
   @override
   Future<List<Map<String, Object?>>> queryRows({

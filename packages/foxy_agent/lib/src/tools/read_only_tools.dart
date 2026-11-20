@@ -1,9 +1,13 @@
 import 'package:foxy_agent/src/agent_tool.dart';
+import 'package:foxy_agent/src/tools/aggregate_tools.dart';
 import 'package:foxy_agent/src/tools/read_only_data_source.dart';
+import 'package:foxy_agent/src/tools/read_only_tool_input.dart';
+import 'package:foxy_agent/src/tools/row_expansion.dart';
 import 'package:foxy_agent/src/tools/table_catalog.dart';
 
 /// The built-in read-only toolset: `list_tables`, `describe_table`,
-/// `query_rows` and `get_row`.
+/// `describe_field_values`, `count_rows`, `aggregate_rows`, `query_rows`
+/// and `get_row`.
 ///
 /// The host app supplies the metadata ([catalog]) and the data access
 /// ([dataSource]); tool implementations stay in this package. The catalog may
@@ -16,42 +20,11 @@ List<AgentTool> createReadOnlyTools({
   ListTablesTool(catalog),
   DescribeTableTool(catalog),
   DescribeFieldValuesTool(catalog),
+  CountRowsTool(catalog, dataSource),
+  AggregateRowsTool(catalog, dataSource),
   QueryRowsTool(catalog, dataSource),
   GetRowTool(catalog, dataSource),
 ];
-
-/// Resolves the `table` argument of a tool call to a catalog entry.
-({TableInfo? table, String? error}) _resolveTable(
-  TableCatalog catalog,
-  Object? rawName,
-) {
-  if (rawName is! String || rawName.isEmpty) {
-    return (
-      table: null,
-      error:
-          'Missing "table" argument. Call list_tables to see the '
-          'available tables.',
-    );
-  }
-  final table = catalog.find(rawName);
-  if (table != null) {
-    return (table: table, error: null);
-  }
-  if (catalog.tables.any((candidate) => candidate.name == rawName)) {
-    return (
-      table: null,
-      error:
-          'Ambiguous table name "$rawName"; use the qualified name '
-          '(database.table) returned by list_tables.',
-    );
-  }
-  return (
-    table: null,
-    error:
-        'Unknown table "$rawName". Call list_tables to see the available '
-        'tables.',
-  );
-}
 
 /// Explains the full meaning of one column's values.
 final class DescribeFieldValuesTool extends AgentTool {
@@ -88,7 +61,7 @@ final class DescribeFieldValuesTool extends AgentTool {
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
-    final resolved = _resolveTable(catalog, arguments['table']);
+    final resolved = resolveTable(catalog, arguments['table']);
     final table = resolved.table;
     if (table == null) {
       return resolved.error!;
@@ -146,7 +119,7 @@ final class DescribeTableTool extends AgentTool {
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
-    final resolved = _resolveTable(catalog, arguments['table']);
+    final resolved = resolveTable(catalog, arguments['table']);
     final table = resolved.table;
     if (table == null) {
       return resolved.error!;
@@ -166,7 +139,8 @@ final class GetRowTool extends AgentTool {
   @override
   String get description =>
       'Read one row by primary key. Use describe_table to learn the '
-      'primary-key columns. Read-only.';
+      'primary-key columns. Use expand to include referenced names in the '
+      'same call. Read-only.';
 
   @override
   Map<String, Object?> get inputSchema => const {
@@ -181,6 +155,7 @@ final class GetRowTool extends AgentTool {
         'description': 'Primary-key column to value map, e.g. {"entry": 1234}.',
         'additionalProperties': true,
       },
+      'expand': expansionSchema,
     },
     'required': ['table', 'key'],
     'additionalProperties': false,
@@ -191,7 +166,7 @@ final class GetRowTool extends AgentTool {
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
-    final resolved = _resolveTable(catalog, arguments['table']);
+    final resolved = resolveTable(catalog, arguments['table']);
     final table = resolved.table;
     if (table == null) {
       return resolved.error!;
@@ -224,6 +199,8 @@ final class GetRowTool extends AgentTool {
         ),
       );
     }
+    final expansion = RowExpansion.parse(catalog, table, arguments['expand']);
+    if (expansion.expansions == null) return expansion.error!;
     final rows = await dataSource.queryRows(
       table: table.qualifiedName,
       filters: filters,
@@ -232,7 +209,12 @@ final class GetRowTool extends AgentTool {
     if (rows.isEmpty) {
       return {'found': false};
     }
-    return {'found': true, 'row': rows.first};
+    final expanded = await RowExpansion.apply(
+      dataSource,
+      rows,
+      expansion.expansions!,
+    );
+    return {'found': true, 'row': expanded.first};
   }
 }
 
@@ -306,7 +288,8 @@ final class QueryRowsTool extends AgentTool {
       'table is large. Read-only. Use describe_table to learn column names '
       'before filtering. To match any of several values in one call, use the '
       '"in" operator with an array value instead of querying values one by '
-      'one.';
+      'one. Use expand to include referenced names in the same call. '
+      'For exact totals or distributions use count_rows or aggregate_rows.';
 
   @override
   Map<String, Object?> get inputSchema => const {
@@ -316,44 +299,8 @@ final class QueryRowsTool extends AgentTool {
         'type': 'string',
         'description': 'Table name from list_tables.',
       },
-      'filters': {
-        'type': 'array',
-        'description': 'All filters must match (logical AND).',
-        'items': {
-          'type': 'object',
-          'properties': {
-            'column': {'type': 'string', 'description': 'Column name.'},
-            'operator': {
-              'type': 'string',
-              'enum': [
-                'equals',
-                'notEquals',
-                'contains',
-                'in',
-                'greaterThan',
-                'greaterOrEqual',
-                'lessThan',
-                'lessOrEqual',
-              ],
-            },
-            'value': {
-              'type': [
-                'string',
-                'number',
-                'integer',
-                'boolean',
-                'null',
-                'array',
-              ],
-              'description':
-                  'Scalar value to compare against, or a non-empty array '
-                  'when the operator is "in".',
-            },
-          },
-          'required': ['column', 'operator', 'value'],
-          'additionalProperties': false,
-        },
-      },
+      'filters': filterSchema,
+      'expand': expansionSchema,
       'limit': {
         'type': 'integer',
         'minimum': 1,
@@ -370,51 +317,16 @@ final class QueryRowsTool extends AgentTool {
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
-    final resolved = _resolveTable(catalog, arguments['table']);
+    final resolved = resolveTable(catalog, arguments['table']);
     final table = resolved.table;
     if (table == null) {
       return resolved.error!;
     }
-    final filters = <RowFilter>[];
-    final rawFilters = arguments['filters'];
-    if (rawFilters != null) {
-      if (rawFilters is! List<Object?>) {
-        return '"filters" must be an array of filter objects.';
-      }
-      for (final rawFilter in rawFilters) {
-        if (rawFilter is! Map<String, Object?>) {
-          return 'Each filter must be an object with "column", "operator" '
-              'and "value".';
-        }
-        final column = rawFilter['column'];
-        if (column is! String || table.findColumn(column) == null) {
-          return 'Unknown column "${column ?? ''}" on table '
-              '"${table.qualifiedName}".';
-        }
-        final operatorName = rawFilter['operator'];
-        final operator = operatorName is String
-            ? FilterOperator.tryParse(operatorName)
-            : null;
-        if (operator == null) {
-          return 'Unknown filter operator "$operatorName" on table '
-              '"${table.qualifiedName}". Supported: '
-              '${FilterOperator.values.map((item) => item.wireName).join(', ')}.';
-        }
-        final value = rawFilter['value'];
-        if (operator == FilterOperator.inList) {
-          if (value is! List<Object?> || value.isEmpty) {
-            return 'The "in" operator requires a non-empty array as "value" '
-                'on table "${table.qualifiedName}".';
-          }
-        } else if (value is List<Object?> || value is Map<String, Object?>) {
-          return 'The "value" for operator "${operator.wireName}" must be a '
-              'scalar on table "${table.qualifiedName}".';
-        }
-        filters.add(
-          RowFilter(column: column, operator: operator, value: value),
-        );
-      }
-    }
+    final parsed = parseFilters(table, arguments['filters']);
+    if (parsed.filters == null) return parsed.error!;
+    final filters = parsed.filters!;
+    final expansion = RowExpansion.parse(catalog, table, arguments['expand']);
+    if (expansion.expansions == null) return expansion.error!;
     var limit = defaultLimit;
     final rawLimit = arguments['limit'];
     if (rawLimit is num) {
@@ -435,9 +347,14 @@ final class QueryRowsTool extends AgentTool {
     );
     final truncated = rows.length > limit;
     final visible = truncated ? rows.take(limit).toList() : rows;
+    final expanded = await RowExpansion.apply(
+      dataSource,
+      visible,
+      expansion.expansions!,
+    );
     return {
       'count': visible.length,
-      'rows': visible,
+      'rows': expanded,
       if (truncated) 'truncated': true,
     };
   }

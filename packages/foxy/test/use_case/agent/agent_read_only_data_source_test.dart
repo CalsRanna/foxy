@@ -182,6 +182,210 @@ void main() {
 
     expect(catalog.tables, isEmpty);
   });
+
+  test(
+    'count_rows uses COUNT(*) with bound filters and no sample limit',
+    () async {
+      final driver = _ReadOnlyDriver(
+        [
+          _row('world', 'items', 'id', 'int', 'PRI', ''),
+          _row('world', 'items', 'name', 'varchar', '', ''),
+        ],
+        resultRows: [
+          {'aggregate': '120'},
+        ],
+      );
+      final source = AgentReadOnlyDataSource(
+        _AgentConfig({'database': 'world'}),
+        laconic: Laconic(driver),
+      );
+      final count = await source.countRows(
+        table: 'items',
+        filters: const [
+          RowFilter(
+            column: 'name',
+            operator: FilterOperator.contains,
+            value: "Sword' OR 1=1",
+          ),
+          RowFilter(
+            column: 'id',
+            operator: FilterOperator.greaterThan,
+            value: 5,
+          ),
+        ],
+      );
+      expect(count, 120);
+      expect(
+        driver.queries.last.sql,
+        'select COUNT(*) as aggregate from `items` where `name` like ? and `id` > ?',
+      );
+      expect(driver.queries.last.params, ["%Sword' OR 1=1%", 5]);
+      driver.resultRows = [
+        {'aggregate': 0},
+      ];
+      expect(await source.countRows(table: 'items', filters: []), 0);
+    },
+  );
+
+  test(
+    'aggregates in SQL before capping and ordering the returned groups',
+    () async {
+      final driver = _ReadOnlyDriver(
+        [
+          _row('world', 'items', 'id', 'int', 'PRI', ''),
+          _row('world', 'items', 'expansion', 'int', '', ''),
+          _row('world', 'items', 'price', 'decimal', '', ''),
+        ],
+        resultRows: [
+          {'expansion': 2, 'count': 120, 'sum_price': '1234.50'},
+        ],
+      );
+      final source = AgentReadOnlyDataSource(
+        _AgentConfig({'database': 'world'}),
+        laconic: Laconic(driver),
+      );
+      final rows = await source.aggregateRows(
+        table: 'items',
+        filters: const [
+          RowFilter(
+            column: 'id',
+            operator: FilterOperator.inList,
+            value: [1, 2, 3],
+          ),
+        ],
+        groupBy: ['expansion'],
+        metrics: const [
+          AggregateMetric(function: AggregateFunction.count),
+          AggregateMetric(function: AggregateFunction.sum, column: 'price'),
+        ],
+        limit: 500,
+      );
+      expect(rows, driver.resultRows);
+      expect(
+        driver.queries.last.sql,
+        'select `expansion`, COUNT(*) as `count`, SUM(`price`) as `sum_price` from `items` where `id` in (?, ?, ?) group by `expansion` order by `expansion` asc limit ?',
+      );
+      expect(driver.queries.last.params, [1, 2, 3, 51]);
+    },
+  );
+
+  test(
+    'aggregates route qualified schemas and preserve null and decimal values',
+    () async {
+      final driver = _ReadOnlyDriver(
+        [_row('foxy', 'stats', 'price', 'decimal', '', '')],
+        resultRows: [
+          {
+            'count_price': 0,
+            'avg_price': null,
+            'min_price': null,
+            'max_price': null,
+          },
+        ],
+      );
+      final source = AgentReadOnlyDataSource(
+        _AgentConfig({'database': 'world'}),
+        laconic: Laconic(driver),
+      );
+      final rows = await source.aggregateRows(
+        table: 'foxy.stats',
+        filters: [],
+        groupBy: [],
+        metrics: const [
+          AggregateMetric(function: AggregateFunction.count, column: 'price'),
+          AggregateMetric(function: AggregateFunction.avg, column: 'price'),
+          AggregateMetric(function: AggregateFunction.min, column: 'price'),
+          AggregateMetric(function: AggregateFunction.max, column: 'price'),
+        ],
+        limit: 1,
+      );
+      expect(rows, driver.resultRows);
+      expect(
+        driver.queries.last.sql,
+        'select COUNT(`price`) as `count_price`, AVG(`price`) as `avg_price`, MIN(`price`) as `min_price`, MAX(`price`) as `max_price` from `foxy`.`stats` limit ?',
+      );
+      expect(driver.queries.last.params, [1]);
+    },
+  );
+
+  test(
+    'count and aggregates reject hidden tables and columns even without tools',
+    () async {
+      final driver = _ReadOnlyDriver([
+        _row('acore_auth', 'account', 'id', 'int', 'PRI', ''),
+        _row('acore_auth', 'account', 'username', 'varchar', '', ''),
+        _row('acore_auth', 'account', 'verifier', 'binary', '', ''),
+        _row('acore_auth', 'secret_digest', 'id', 'int', 'PRI', ''),
+      ]);
+      final source = AgentReadOnlyDataSource(
+        _AgentConfig({'database': 'world'}),
+        laconic: Laconic(driver),
+      );
+      await source.getCatalog();
+      for (final table in [
+        'acore_auth.secret_digest',
+        'account; DROP TABLE account',
+      ]) {
+        await expectLater(
+          source.countRows(table: table, filters: []),
+          throwsA(isA<ValidationException>()),
+        );
+      }
+      await expectLater(
+        source.countRows(
+          table: 'acore_auth.account',
+          filters: const [
+            RowFilter(
+              column: 'verifier',
+              operator: FilterOperator.equals,
+              value: 1,
+            ),
+          ],
+        ),
+        throwsA(isA<ValidationException>()),
+      );
+      for (final groups in [
+        ['verifier'],
+        ['id', 'id'],
+      ]) {
+        await expectLater(
+          source.aggregateRows(
+            table: 'acore_auth.account',
+            filters: [],
+            groupBy: groups,
+            metrics: const [AggregateMetric(function: AggregateFunction.count)],
+            limit: 1,
+          ),
+          throwsA(isA<ValidationException>()),
+        );
+      }
+      for (final metric in const [
+        AggregateMetric(function: AggregateFunction.sum, column: 'username'),
+        AggregateMetric(function: AggregateFunction.count, column: 'verifier'),
+      ]) {
+        await expectLater(
+          source.aggregateRows(
+            table: 'acore_auth.account',
+            filters: [],
+            groupBy: [],
+            metrics: [metric],
+            limit: 1,
+          ),
+          throwsA(isA<ValidationException>()),
+        );
+      }
+      await expectLater(
+        source.countRows(
+          table: 'acore_auth.account',
+          filters: const [
+            RowFilter(column: 'id', operator: FilterOperator.inList, value: []),
+          ],
+        ),
+        throwsA(isA<ValidationException>()),
+      );
+      expect(driver.queries, hasLength(1));
+    },
+  );
 }
 
 Map<String, Object?> _row(
@@ -213,9 +417,10 @@ class _ReadOnlyDriver extends Fake implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
   final List<Map<String, Object?>> catalogRows;
+  List<Map<String, Object?>> resultRows;
   final queries = <({String sql, List<Object?> params})>[];
 
-  _ReadOnlyDriver(this.catalogRows);
+  _ReadOnlyDriver(this.catalogRows, {this.resultRows = const []});
 
   @override
   Future<List<LaconicResult>> select(
@@ -225,6 +430,6 @@ class _ReadOnlyDriver extends Fake implements DatabaseDriver {
     queries.add((sql: sql, params: params));
     return sql.contains('from information_schema.columns')
         ? catalogRows.map(LaconicResult.fromMap).toList()
-        : [];
+        : resultRows.map(LaconicResult.fromMap).toList();
   }
 }

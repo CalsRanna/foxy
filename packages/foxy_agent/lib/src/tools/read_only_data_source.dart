@@ -32,12 +32,44 @@ enum FilterOperator {
 /// - reject tables and columns outside the catalog allowlist;
 /// - return at most [limit] rows, with JSON-encodable values.
 abstract interface class ReadOnlyDataSource {
+  /// Counts all matching rows in the database, without a row limit.
+  Future<int> countRows({
+    required String table,
+    required List<RowFilter> filters,
+  });
+
+  /// Aggregates all matching rows before limiting the returned groups.
+  /// Results use group column names and [AggregateMetric.outputName] as keys.
+  Future<List<Map<String, Object?>>> aggregateRows({
+    required String table,
+    required List<RowFilter> filters,
+    required List<String> groupBy,
+    required List<AggregateMetric> metrics,
+    required int limit,
+  });
+
   /// Returns rows of [table] matching every filter (logical AND).
   Future<List<Map<String, Object?>>> queryRows({
     required String table,
     required List<RowFilter> filters,
     required int limit,
   });
+}
+
+/// SQL aggregate functions exposed by the restricted aggregation tool.
+enum AggregateFunction { count, sum, avg, min, max }
+
+/// A fixed aggregate expression; no SQL or caller-supplied alias is accepted.
+final class AggregateMetric {
+  final AggregateFunction function;
+
+  /// Omitted only for COUNT(*); COUNT(column) counts non-null values.
+  final String? column;
+
+  const AggregateMetric({required this.function, this.column});
+
+  String get outputName =>
+      column == null ? function.name : '${function.name}_$column';
 }
 
 /// A comparison applied to a single column.
