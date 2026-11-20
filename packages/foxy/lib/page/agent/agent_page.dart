@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/page/agent/agent_composer.dart';
@@ -30,10 +31,15 @@ class _AgentPageState extends State<AgentPage> {
   final viewModel = GetIt.instance.get<AgentViewModel>();
   final scrollController = ScrollController();
   late final _followingBottom = ValueNotifier(true);
+  late final _composerFocus = FocusNode();
 
   void Function()? _messageSubscription;
   String? _displayedSessionId;
   late bool _scrollScheduled = false;
+  var _newSessionHovered = false;
+  String? _hoveredSessionId;
+
+  bool get _isMac => Theme.of(context).platform == TargetPlatform.macOS;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +48,26 @@ class _AgentPageState extends State<AgentPage> {
       thickness: 1,
       width: 1,
     );
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(width: 260, child: _buildSessionList()),
-        divider,
-        Expanded(child: _buildWorkspace()),
-      ],
+    return CallbackShortcuts(
+      bindings: {
+        SingleActivator(
+          LogicalKeyboardKey.keyN,
+          meta: _isMac,
+          control: !_isMac,
+          includeRepeats: false,
+        ): _startNewSession,
+      },
+      child: FocusScope(
+        autofocus: true,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(width: 260, child: _buildSessionList()),
+            divider,
+            Expanded(child: _buildWorkspace()),
+          ],
+        ),
+      ),
     );
   }
 
@@ -56,6 +75,7 @@ class _AgentPageState extends State<AgentPage> {
   void dispose() {
     _messageSubscription?.call();
     _followingBottom.dispose();
+    _composerFocus.dispose();
     scrollController.dispose();
     viewModel.dispose();
     super.dispose();
@@ -79,9 +99,10 @@ class _AgentPageState extends State<AgentPage> {
     return SignalBuilder(
       builder: (_) => AgentComposer(
         controller: viewModel.draftController.controller,
+        focusNode: _composerFocus,
         running: viewModel.running.value,
         configured: viewModel.provider.value != null,
-        hasSession: viewModel.activeSessionId.value != null,
+        ready: viewModel.ready.value,
         onSend: () {
           _followBottom();
           unawaited(viewModel.send());
@@ -307,28 +328,30 @@ class _AgentPageState extends State<AgentPage> {
   }
 
   Widget _buildSessionList() {
+    final theme = ShadTheme.of(context);
     final header = Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 12, 8),
-      child: Row(
-        children: [
-          const Text(
-            '会话',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-          ),
-          const Spacer(),
-          ShadButton.ghost(
-            size: ShadButtonSize.sm,
-            onPressed: () => unawaited(viewModel.createSession()),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 6,
-              children: [
-                Icon(LucideIcons.messageSquarePlus, size: 15),
-                Text('新建'),
-              ],
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+      child: ShadButton.ghost(
+        width: double.infinity,
+        expands: true,
+        size: ShadButtonSize.sm,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        foregroundColor: theme.colorScheme.foreground,
+        onPressed: _startNewSession,
+        onHoverChange: (hovered) =>
+            setState(() => _newSessionHovered = hovered),
+        child: Row(
+          spacing: 8,
+          children: [
+            const Icon(LucideIcons.squarePen, size: 15),
+            const Expanded(child: Text('新建会话', textAlign: TextAlign.left)),
+            if (_newSessionHovered)
+              Text(
+                _isMac ? '⌘N' : 'Ctrl+N',
+                style: theme.textTheme.muted.copyWith(fontSize: 11),
+              ),
+          ],
+        ),
       ),
     );
     final list = Expanded(
@@ -338,9 +361,18 @@ class _AgentPageState extends State<AgentPage> {
           final activeId = viewModel.activeSessionId.value;
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            itemCount: sessions.length,
+            itemCount: sessions.isEmpty ? 0 : sessions.length + 1,
             itemBuilder: (context, index) {
-              final session = sessions[index];
+              if (index == 0) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
+                  child: Text(
+                    '会话',
+                    style: theme.textTheme.muted.copyWith(fontSize: 12),
+                  ),
+                );
+              }
+              final session = sessions[index - 1];
               return _buildSessionTile(session, session.id == activeId);
             },
           );
@@ -350,41 +382,67 @@ class _AgentPageState extends State<AgentPage> {
     return Column(children: [header, list]);
   }
 
+  void _startNewSession() {
+    viewModel.startNewSession();
+    _composerFocus.requestFocus();
+  }
+
   Widget _buildSessionTile(AgentChatSessionMeta meta, bool active) {
     final colorScheme = Theme.of(context).colorScheme;
-    final background = active ? colorScheme.primary : Colors.transparent;
     final foreground = active ? colorScheme.onPrimary : colorScheme.onSurface;
     return Padding(
+      key: ValueKey(meta.id),
       padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Material(
-        color: background,
-        borderRadius: BorderRadius.circular(6),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(6),
-          onTap: () => unawaited(viewModel.selectSession(meta.id)),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            child: Row(
-              spacing: 6,
-              children: [
-                Expanded(
-                  child: Text(
-                    meta.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 13, color: foreground),
+      child: ShadButton.ghost(
+        width: double.infinity,
+        height: 0,
+        expands: true,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        backgroundColor: active ? colorScheme.primary : null,
+        hoverBackgroundColor: active
+            ? Color.alphaBlend(
+                foreground.withValues(alpha: 0.12),
+                colorScheme.primary,
+              )
+            : null,
+        onPressed: () => unawaited(viewModel.selectSession(meta.id)),
+        onHoverChange: (hovered) {
+          if (hovered || _hoveredSessionId == meta.id) {
+            setState(() => _hoveredSessionId = hovered ? meta.id : null);
+          }
+        },
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 20),
+          child: Row(
+            spacing: 6,
+            children: [
+              Expanded(
+                child: Text(
+                  meta.title,
+                  textAlign: TextAlign.start,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 13, color: foreground),
+                ),
+              ),
+              if (_hoveredSessionId == meta.id)
+                Tooltip(
+                  message: '删除会话',
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => unawaited(_confirmDelete(meta)),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Icon(
+                        LucideIcons.trash2,
+                        size: 14,
+                        color: foreground.withValues(alpha: 0.7),
+                      ),
+                    ),
                   ),
                 ),
-                InkWell(
-                  onTap: () => unawaited(_confirmDelete(meta)),
-                  child: Icon(
-                    LucideIcons.trash2,
-                    size: 14,
-                    color: foreground.withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

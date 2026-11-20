@@ -15,6 +15,7 @@ import 'package:path/path.dart' as p;
 /// - `{"type":"message", "role": ..., "text": ...}`: UI transcript row;
 /// - `{"type":"item", "item": {...}}`: protocol `input` item, replayed on load
 ///   to continue the conversation.
+/// Generated titles use a `.title` file so listing does not scan the transcript.
 ///
 /// Appends are serialized through [_pending]; a partially written trailing
 /// line (hard kill during a write) is ignored on load, and a user message
@@ -50,21 +51,27 @@ class AgentSessionStore {
     }),
   );
 
-  /// Deletes one session file. Unlike appends this rethrows on failure so the
+  Future<void> saveTitle(String id, String title) => _enqueue(() async {
+    if (!await _fileOf(id).exists()) return;
+    final file = _titleFileOf(id);
+    final temporaryFile = File('${file.path}.tmp');
+    await temporaryFile.writeAsString(title, flush: true);
+    await temporaryFile.rename(file.path);
+  });
+
+  /// Deletes the session and its title. Unlike appends this rethrows so the
   /// UI can surface it.
-  Future<void> deleteSession(String id) async {
-    try {
-      final file = _fileOf(id);
-      if (await file.exists()) await file.delete();
-    } catch (error) {
-      LoggerUtil.instance.e('delete agent session failed: $error');
-      rethrow;
-    }
-  }
+  Future<void> deleteSession(String id) => _enqueue(() async {
+    final file = _fileOf(id);
+    if (await file.exists()) await file.delete();
+    final titleFile = _titleFileOf(id);
+    if (await titleFile.exists()) await titleFile.delete();
+  }, propagateError: true);
 
   /// Lists session metadata, newest first. Reads only the file head needed to
   /// derive the title; full content loads on demand via [load].
   Future<List<AgentChatSessionMeta>> list() async {
+    await _pending;
     if (!await _root.exists()) return const [];
     final files = (await _root.list().toList())
         .whereType<File>()
@@ -78,6 +85,7 @@ class AgentSessionStore {
 
   /// Loads one session, or `null` when the file does not exist.
   Future<AgentChatSession?> load(String id) async {
+    await _pending;
     final file = _fileOf(id);
     if (!await file.exists()) return null;
     final List<String> lines;
@@ -108,9 +116,11 @@ class AgentSessionStore {
     );
     final session = AgentChatSession(
       id: id,
-      title: firstUser == null
-          ? _defaultTitle
-          : AgentChatSession.titleFrom(firstUser.text),
+      title:
+          await _readSavedTitle(id) ??
+          (firstUser == null
+              ? _defaultTitle
+              : AgentChatSession.titleFrom(firstUser.text)),
     );
     session.messages.addAll(messages);
     session.session.addItems(items);
@@ -128,25 +138,40 @@ class AgentSessionStore {
     );
   }
 
-  Future<void> _enqueue(Future<void> Function() task) {
-    final next = _pending
-        .catchError((Object _) {})
-        .then((_) => task())
-        .catchError((Object error) {
-          LoggerUtil.instance.e('agent session persistence failed: $error');
-        });
-    _pending = next;
-    return next;
+  Future<void> _enqueue(
+    Future<void> Function() task, {
+    bool propagateError = false,
+  }) {
+    final next = _pending.then((_) => task());
+    _pending = next.catchError((Object error) {
+      LoggerUtil.instance.e('agent session persistence failed: $error');
+    });
+    return propagateError ? next : _pending;
   }
 
   File _fileOf(String id) => File(p.join(_root.path, '$id$_fileExtension'));
 
+  File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));
+
+  Future<String?> _readSavedTitle(String id) async {
+    try {
+      final file = _titleFileOf(id);
+      if (!await file.exists()) return null;
+      final title = (await file.readAsString()).trim();
+      return title.isEmpty ? null : title;
+    } catch (error) {
+      LoggerUtil.instance.w('read saved agent session title failed: $error');
+      return null;
+    }
+  }
+
   Future<AgentChatSessionMeta?> _readMeta(File file) async {
     try {
       final stat = await file.stat();
+      final id = p.basenameWithoutExtension(file.path);
       return AgentChatSessionMeta(
-        id: p.basenameWithoutExtension(file.path),
-        title: await _readTitle(file),
+        id: id,
+        title: await _readSavedTitle(id) ?? await _readTitle(file),
         updatedAt: stat.modified,
       );
     } catch (error) {

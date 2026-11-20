@@ -8,6 +8,7 @@ import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/use_case/agent/agent_chat_use_case.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
+import 'package:foxy/use_case/agent/generate_agent_session_title.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 import 'package:get_it/get_it.dart';
@@ -20,6 +21,11 @@ typedef AgentChatFactory = AgentChatUseCase Function({
   required TableCatalog catalog,
   required ReadOnlyDataSource dataSource,
 });
+
+typedef AgentTitleGenerator = Future<String?> Function(
+  AgentProviderConfig provider,
+  String message,
+);
 
 /// State for the AI agent page: session list, active conversation, streaming
 /// run state and provider settings.
@@ -35,6 +41,8 @@ class AgentViewModel with FieldControllerMixin {
 
   final AgentChatFactory _chatFactory;
 
+  final AgentTitleGenerator _titleGenerator;
+
   final AgentSessionStore _sessionStore;
 
   final sessions = signal<List<AgentChatSessionMeta>>([]);
@@ -45,9 +53,12 @@ class AgentViewModel with FieldControllerMixin {
 
   final running = signal(false);
 
+  final ready = signal(false);
+
   late final draftController = registerController(StringFieldController());
 
   final Map<String, AgentChatSession> _loaded = {};
+  final Map<String?, String> _drafts = {};
 
   StreamSubscription<AgentEvent>? _subscription;
 
@@ -63,12 +74,14 @@ class AgentViewModel with FieldControllerMixin {
     AgentProviderConfigUseCase? configUseCase,
     AgentReadOnlyDataSource? dataSource,
     AgentChatFactory? chatFactory,
+    AgentTitleGenerator titleGenerator = generateAgentSessionTitle,
     AgentSessionStore? sessionStore,
   }) : _configUseCase =
            configUseCase ?? GetIt.instance.get<AgentProviderConfigUseCase>(),
        _dataSource =
            dataSource ?? GetIt.instance.get<AgentReadOnlyDataSource>(),
        _chatFactory = chatFactory ?? _createChat,
+       _titleGenerator = titleGenerator,
        _sessionStore = sessionStore ?? GetIt.instance.get<AgentSessionStore>();
 
   AgentChatSession? get activeSession {
@@ -85,37 +98,32 @@ class AgentViewModel with FieldControllerMixin {
 
   ReadonlySignal<AgentProviderConfig?> get provider => _configUseCase.provider;
 
-  Future<void> createSession() async {
+  void startNewSession() => _activateSession(null);
+
+  AgentChatSession _createSession() {
     final id = '${DateTime.now().microsecondsSinceEpoch}';
     final session = AgentChatSession(id: id, title: _defaultTitle);
     _loaded[id] = session;
-    sessions.value = [
-      AgentChatSessionMeta(
-        id: id,
-        title: session.title,
-        updatedAt: DateTime.now(),
-      ),
-      ...sessions.value,
-    ];
-    activeSessionId.value = id;
-    _selectionToken++;
-    messages.value = const [];
-    await _sessionStore.createSession(id);
+    _activateSession(session);
+    _drafts.remove(null);
+    unawaited(_sessionStore.createSession(id));
+    return session;
   }
 
   Future<void> deleteSession(String id) async {
-    if (running.value && id == activeSessionId.value) return;
+    if (_run?.session.id == id) return;
     _loaded.remove(id);
     sessions.value = sessions.value.where((meta) => meta.id != id).toList();
     await _sessionStore.deleteSession(id);
-    if (id != activeSessionId.value) return;
-    _selectionToken++;
-    final remaining = sessions.value;
-    if (remaining.isEmpty) {
-      await createSession();
-      return;
+    if (id == activeSessionId.value) {
+      final next = sessions.value.firstOrNull;
+      if (next == null) {
+        startNewSession();
+      } else {
+        await selectSession(next.id);
+      }
     }
-    await selectSession(remaining.first.id);
+    _drafts.remove(id);
   }
 
   void dispose() {
@@ -134,6 +142,7 @@ class AgentViewModel with FieldControllerMixin {
   Future<void> initSignals() async {
     if (_initialized) return;
     _initialized = true;
+    final selectionToken = _selectionToken;
     try {
       await _configUseCase.load();
     } catch (error) {
@@ -144,11 +153,11 @@ class AgentViewModel with FieldControllerMixin {
     } catch (error) {
       LoggerUtil.instance.e('list agent sessions failed: $error');
     }
-    if (sessions.value.isEmpty) {
-      await createSession();
-    } else {
-      await selectSession(sessions.value.first.id);
+    final latest = sessions.value.firstOrNull;
+    if (latest != null && selectionToken == _selectionToken) {
+      await selectSession(latest.id);
     }
+    ready.value = true;
   }
 
   bool isReasoningInProgress(AgentChatMessage message) =>
@@ -160,8 +169,7 @@ class AgentViewModel with FieldControllerMixin {
   Future<void> selectSession(String id) async {
     final cached = _loaded[id];
     if (cached != null) {
-      activeSessionId.value = id;
-      messages.value = List.of(cached.messages);
+      _activateSession(cached);
       return;
     }
     final token = ++_selectionToken;
@@ -174,18 +182,30 @@ class AgentViewModel with FieldControllerMixin {
     }
     if (token != _selectionToken || loaded == null) return;
     _loaded[id] = loaded;
-    activeSessionId.value = id;
-    messages.value = List.of(loaded.messages);
+    _activateSession(loaded);
+  }
+
+  void _activateSession(AgentChatSession? session) {
+    _selectionToken++;
+    final previousId = activeSessionId.value;
+    final nextId = session?.id;
+    if (previousId != nextId) {
+      _drafts[previousId] = draftController.collect();
+      draftController.init(_drafts[nextId] ?? '');
+    }
+    activeSessionId.value = nextId;
+    messages.value = session == null ? const [] : List.of(session.messages);
   }
 
   Future<void> send() async {
-    if (running.value) return;
+    if (!ready.value || running.value) return;
     final config = provider.value;
-    final session = activeSession;
     final text = draftController.collect().trim();
-    if (config == null || session == null || text.isEmpty) return;
+    if (config == null || text.isEmpty) return;
+    final session = activeSession ?? _createSession();
     draftController.init('');
-    if (session.messages.isEmpty) {
+    final firstMessage = session.messages.isEmpty;
+    if (firstMessage) {
       session.title = AgentChatSession.titleFrom(text);
     }
     session.messages.add(
@@ -200,6 +220,7 @@ class AgentViewModel with FieldControllerMixin {
       _sessionStore.appendMessage(session.id, AgentChatRole.user, text),
     );
     running.value = true;
+    if (firstMessage) unawaited(_nameSession(session, config, text));
     try {
       final catalog = await _dataSource.getCatalog();
       if (!running.value) return;
@@ -224,6 +245,32 @@ class AgentViewModel with FieldControllerMixin {
     } catch (error) {
       _appendError(run, FoxyExceptions.message(error));
       _finishRun(run);
+    }
+  }
+
+  Future<void> _nameSession(
+    AgentChatSession session,
+    AgentProviderConfig provider,
+    String message,
+  ) async {
+    try {
+      final title = await _titleGenerator(provider, message);
+      if (title == null || !identical(_loaded[session.id], session)) return;
+      session.title = title;
+      sessions.value = [
+        for (final meta in sessions.value)
+          if (meta.id == session.id)
+            AgentChatSessionMeta(
+              id: meta.id,
+              title: title,
+              updatedAt: meta.updatedAt,
+            )
+          else
+            meta,
+      ];
+      await _sessionStore.saveTitle(session.id, title);
+    } catch (error) {
+      LoggerUtil.instance.w('generate agent session title failed: $error');
     }
   }
 

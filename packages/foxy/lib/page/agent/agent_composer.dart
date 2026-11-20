@@ -4,9 +4,10 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 class AgentComposer extends StatefulWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
   final bool running;
   final bool configured;
-  final bool hasSession;
+  final bool ready;
   final VoidCallback onSend;
   final VoidCallback onStop;
   final VoidCallback onConfigure;
@@ -14,9 +15,10 @@ class AgentComposer extends StatefulWidget {
   const AgentComposer({
     super.key,
     required this.controller,
+    required this.focusNode,
     required this.running,
     required this.configured,
-    required this.hasSession,
+    required this.ready,
     required this.onSend,
     required this.onStop,
     required this.onConfigure,
@@ -27,11 +29,9 @@ class AgentComposer extends StatefulWidget {
 }
 
 class _AgentComposerState extends State<AgentComposer> {
-  final _focusNode = FocusNode();
-
   bool get _canSend =>
       widget.configured &&
-      widget.hasSession &&
+      widget.ready &&
       !widget.running &&
       widget.controller.text.trim().isNotEmpty;
 
@@ -44,7 +44,7 @@ class _AgentComposerState extends State<AgentComposer> {
       onKeyEvent: (_, event) => _handleKey(event),
       child: TextField(
         controller: widget.controller,
-        focusNode: _focusNode,
+        focusNode: widget.focusNode,
         readOnly: widget.running,
         minLines: 1,
         maxLines: 6,
@@ -59,7 +59,7 @@ class _AgentComposerState extends State<AgentComposer> {
     );
 
     return ListenableBuilder(
-      listenable: Listenable.merge([_focusNode, widget.controller]),
+      listenable: Listenable.merge([widget.focusNode, widget.controller]),
       child: input,
       builder: (context, child) => AnimatedContainer(
         duration: const Duration(milliseconds: 150),
@@ -67,7 +67,7 @@ class _AgentComposerState extends State<AgentComposer> {
         decoration: BoxDecoration(
           color: colors.background,
           border: Border.all(
-            color: _focusNode.hasFocus ? colors.primary : colors.border,
+            color: widget.focusNode.hasFocus ? colors.primary : colors.border,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -110,12 +110,6 @@ class _AgentComposerState extends State<AgentComposer> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
   }
 
   KeyEventResult _handleKey(KeyEvent event) {

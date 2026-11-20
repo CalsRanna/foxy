@@ -31,7 +31,7 @@ enum AgentChatRole { user, assistant, tool, reasoning }
 class AgentChatSession {
   final String id;
 
-  /// Display title; set from the first user message.
+  /// The model-generated title or a short excerpt of the first message.
   String title;
 
   /// Protocol-level conversation state sent with every request.

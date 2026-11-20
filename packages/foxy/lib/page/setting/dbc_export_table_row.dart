@@ -33,43 +33,49 @@ class DbcExportTableRow extends StatelessWidget {
       visualDensity: VisualDensity.compact,
     );
 
-    final row = Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: item.canSelect ? () => onChanged(!item.selected) : null,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              checkbox,
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  item.dbcFileName,
-                  style: TextStyle(fontSize: 13, color: nameColor),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (failed) ...[
-                Icon(
-                  LucideIcons.circleAlert,
-                  size: 14,
-                  color: theme.colorScheme.destructive,
-                ),
-                const SizedBox(width: 6),
-              ],
-              SizedBox(
-                width: 96,
-                child: Text(
-                  item.recordCountLabel,
-                  textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 12, color: countColor),
-                ),
-              ),
-            ],
+    const padding = EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+    final content = Row(
+      children: [
+        checkbox,
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            item.dbcFileName,
+            textAlign: TextAlign.start,
+            style: TextStyle(fontSize: 13, color: nameColor),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-      ),
+        if (failed) ...[
+          Icon(
+            LucideIcons.circleAlert,
+            size: 14,
+            color: theme.colorScheme.destructive,
+          ),
+          const SizedBox(width: 6),
+        ],
+        SizedBox(
+          width: 96,
+          child: Text(
+            item.recordCountLabel,
+            textAlign: TextAlign.end,
+            style: TextStyle(fontSize: 12, color: countColor),
+          ),
+        ),
+      ],
+    );
+    final row = Material(
+      color: Colors.transparent,
+      child: item.canSelect
+          ? ShadButton.ghost(
+              width: double.infinity,
+              height: 0,
+              expands: true,
+              onPressed: () => onChanged(!item.selected),
+              padding: padding,
+              child: content,
+            )
+          : Padding(padding: padding, child: content),
     );
 
     if (!failed) return row;

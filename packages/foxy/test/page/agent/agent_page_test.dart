@@ -1,3 +1,5 @@
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +8,7 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
 import 'package:foxy/page/agent/agent_composer.dart';
 import 'package:foxy/page/agent/agent_page.dart';
+import 'package:foxy/router/router.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
@@ -17,8 +20,10 @@ void main() {
 
   testWidgets('输入区支持换行、发送和停止', (tester) async {
     final draft = TextEditingController();
+    final focusNode = FocusNode();
     final running = ValueNotifier(false);
     addTearDown(draft.dispose);
+    addTearDown(focusNode.dispose);
     addTearDown(running.dispose);
     final sent = <String>[];
 
@@ -31,9 +36,10 @@ void main() {
               valueListenable: running,
               builder: (context, streaming, _) => AgentComposer(
                 controller: draft,
+                focusNode: focusNode,
                 running: streaming,
                 configured: true,
-                hasSession: true,
+                ready: true,
                 onSend: () {
                   sent.add(draft.text);
                   draft.clear();
@@ -83,6 +89,115 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(button);
     expect(sent, ['第一行\n', '再发一条']);
+  });
+
+  testWidgets('顶部新建会话入口显示快捷键并聚焦草稿', (tester) async {
+    final viewModel = _TestAgentViewModel(ConfigUtil());
+    viewModel.activeSessionId.value = 'existing';
+    viewModel.sessions.value = [
+      AgentChatSessionMeta(
+        id: 'existing',
+        title: '已有会话',
+        updatedAt: DateTime.now(),
+      ),
+    ];
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+    await tester.pumpWidget(
+      ShadApp(
+        materialThemeBuilder: (_, theme) =>
+            theme.copyWith(platform: TargetPlatform.windows),
+        home: const Scaffold(body: AgentPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final newSession = find.text('新建会话');
+    final shortcut = find.text('Ctrl+N');
+    final composer = find.byType(TextField);
+    expect(
+      tester.getTopLeft(newSession).dy,
+      lessThan(tester.getTopLeft(find.text('已有会话')).dy),
+    );
+    expect(shortcut, findsNothing);
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    addTearDown(mouse.removePointer);
+    await mouse.moveTo(tester.getCenter(newSession));
+    await tester.pumpAndSettle();
+    expect(shortcut, findsOneWidget);
+
+    await tester.tap(newSession);
+    await tester.pumpAndSettle();
+    expect(viewModel.activeSessionId.value, isNull);
+    expect(viewModel.sessions.value.single.id, 'existing');
+    expect(tester.widget<TextField>(composer).focusNode!.hasFocus, isTrue);
+
+    await tester.enterText(composer, '尚未发送的草稿');
+    await tester.tap(newSession);
+    await tester.pumpAndSettle();
+    expect(viewModel.draftController.collect(), '尚未发送的草稿');
+
+    viewModel.activeSessionId.value = 'existing';
+    await tester.pump();
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+    await tester.pumpAndSettle();
+    expect(viewModel.activeSessionId.value, isNull);
+    expect(tester.widget<TextField>(composer).focusNode!.hasFocus, isTrue);
+  });
+
+  testWidgets('悬停时在会话标题行内显示删除图标', (tester) async {
+    final viewModel = _TestAgentViewModel(ConfigUtil());
+    viewModel.sessions.value = [
+      AgentChatSessionMeta(
+        id: 'session',
+        title: '已有会话',
+        updatedAt: DateTime.now(),
+      ),
+    ];
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+    await tester.pumpWidget(
+      ShadApp(
+        navigatorKey: FoxyRouter.router.navigatorKey,
+        home: const Scaffold(body: AgentPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final title = find.text('已有会话');
+    final trash = find.byIcon(LucideIcons.trash2);
+    expect(trash, findsNothing);
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    addTearDown(mouse.removePointer);
+    await mouse.moveTo(tester.getCenter(title));
+    await tester.pumpAndSettle();
+    expect(trash, findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.widgetWithText(ShadButton, '已有会话'),
+        matching: trash,
+      ),
+      findsOneWidget,
+    );
+
+    await mouse.moveTo(tester.getCenter(trash));
+    await tester.pump();
+    await tester.tap(trash);
+    await tester.pumpAndSettle();
+    expect(find.text('删除会话'), findsOneWidget);
+    expect(viewModel.activeSessionId.value, isNull);
+    await tester.tap(find.text('取消'));
+    await tester.pumpAndSettle();
+
+    await mouse.moveTo(Offset.zero);
+    await tester.pumpAndSettle();
+    expect(trash, findsNothing);
+    await tester.tap(title);
+    await tester.pumpAndSettle();
+    expect(viewModel.activeSessionId.value, 'session');
+    expect(find.text('删除会话'), findsNothing);
   });
 
   testWidgets('翻阅历史时暂停贴底，回到底部后继续跟随', (tester) async {
@@ -347,6 +462,9 @@ class _TestAgentViewModel extends AgentViewModel {
 
   @override
   Future<void> initSignals() async {}
+
+  @override
+  Future<void> selectSession(String id) async => activeSessionId.value = id;
 
   @override
   bool isReasoningInProgress(AgentChatMessage message) =>

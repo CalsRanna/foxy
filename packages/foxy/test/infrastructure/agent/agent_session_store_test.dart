@@ -56,6 +56,23 @@ void main() {
     expect(metas.first.title, '第二个会话');
   });
 
+  test('restores generated titles in the list and transcript', () async {
+    await store.createSession('s1');
+    await store.appendMessage('s1', AgentChatRole.user, '原始问题');
+    await store.saveTitle('s1', '生成标题');
+
+    final reopened = AgentSessionStore(
+      root: Directory('${tempDir.path}/session'),
+    );
+    expect((await reopened.list()).single.title, '生成标题');
+    expect((await reopened.load('s1'))!.title, '生成标题');
+
+    await reopened.deleteSession('s1');
+    await reopened.saveTitle('s1', '删除后返回的标题');
+    await reopened.createSession('s1');
+    expect((await reopened.list()).single.title, '新会话');
+  });
+
   test('ignores a partially written trailing line', () async {
     await store.createSession('s1');
     await store.appendMessage('s1', AgentChatRole.user, 'hello');

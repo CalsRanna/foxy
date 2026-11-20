@@ -21,6 +21,7 @@ void main() {
   });
 
   tearDown(() async {
+    await store.list();
     await tempDir.delete(recursive: true);
   });
 
@@ -81,9 +82,9 @@ void main() {
       final viewModel = _buildViewModel(chat, store);
       addTearDown(viewModel.dispose);
       await viewModel.initSignals();
-      final sessionId = viewModel.activeSessionId.value!;
       viewModel.draftController.init('query');
       await viewModel.send();
+      final sessionId = viewModel.activeSessionId.value!;
 
       chat.controller.add(const AgentReasoningStartedEvent());
       chat.controller.add(const AgentReasoningDeltaEvent('先检查'));
@@ -190,9 +191,59 @@ void main() {
     expect(viewModel.activeSession?.session.items, hasLength(1));
   });
 
+  test(
+    'saves a draft only on send and names the originating session',
+    () async {
+      final chat = _FakeChat();
+      final title = Completer<String?>();
+      final namingInputs = <(String, String)>[];
+      final viewModel = _buildViewModel(
+        chat,
+        store,
+        titleGenerator: (provider, text) {
+          namingInputs.add((provider.model, text));
+          return title.future;
+        },
+      );
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      viewModel.startNewSession();
+      expect(viewModel.activeSessionId.value, isNull);
+      expect(await store.list(), isEmpty);
+
+      viewModel.draftController.init('帮我查询掉落亚麻布的生物');
+      await viewModel.send();
+      final id = viewModel.activeSessionId.value!;
+      expect(viewModel.activeTitle, '帮我查询掉落亚麻布的生物');
+      expect(namingInputs, [('test-model', '帮我查询掉落亚麻布的生物')]);
+      expect(viewModel.running.value, isTrue);
+
+      viewModel.startNewSession();
+      viewModel.draftController.init('另一个草稿');
+      title.complete('亚麻布掉落查询');
+      chat.controller.add(const AgentTextDeltaEvent('查询完成。'));
+      await chat.controller.close();
+      await pumpEventQueue();
+
+      expect(viewModel.activeSessionId.value, isNull);
+      expect(viewModel.sessions.value.single.title, '亚麻布掉落查询');
+      expect((await store.load(id))!.title, '亚麻布掉落查询');
+      expect(viewModel.draftController.collect(), '另一个草稿');
+      await viewModel.selectSession(id);
+      expect(viewModel.activeTitle, '亚麻布掉落查询');
+      expect(viewModel.draftController.collect(), isEmpty);
+      viewModel.startNewSession();
+      expect(viewModel.draftController.collect(), '另一个草稿');
+    },
+  );
+
   test('updates the active model when settings save a new provider', () async {
     final configUseCase = AgentProviderConfigUseCase(_MemoryConfigUtil());
-    final viewModel = _buildViewModel(_FakeChat(), store, configUseCase);
+    final viewModel = _buildViewModel(
+      _FakeChat(),
+      store,
+      configUseCase: configUseCase,
+    );
     addTearDown(viewModel.dispose);
     await viewModel.initSignals();
     expect(viewModel.provider.value?.model, 'test-model');
@@ -205,15 +256,16 @@ void main() {
     await configUseCase.save(updated);
 
     expect(viewModel.provider.value, same(updated));
-    expect(viewModel.sessions.value, hasLength(1));
+    expect(viewModel.sessions.value, isEmpty);
   });
 }
 
 AgentViewModel _buildViewModel(
   _FakeChat chat,
-  AgentSessionStore store, [
+  AgentSessionStore store, {
   AgentProviderConfigUseCase? configUseCase,
-]) => AgentViewModel(
+  AgentTitleGenerator? titleGenerator,
+}) => AgentViewModel(
   configUseCase:
       configUseCase ?? AgentProviderConfigUseCase(_MemoryConfigUtil()),
   dataSource: _FakeDataSource(),
@@ -222,6 +274,7 @@ AgentViewModel _buildViewModel(
     required TableCatalog catalog,
     required ReadOnlyDataSource dataSource,
   }) => chat,
+  titleGenerator: titleGenerator ?? (_, _) async => null,
   sessionStore: store,
 );
 
