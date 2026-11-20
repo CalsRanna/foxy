@@ -124,6 +124,8 @@ class AgentViewModel with FieldControllerMixin {
     _subscription = null;
     _chat?.close();
     _chat = null;
+    final run = _run;
+    if (run != null) _persistReasoningSegment(run);
     _run = null;
     running.value = false;
     disposeControllers();
@@ -148,6 +150,9 @@ class AgentViewModel with FieldControllerMixin {
       await selectSession(sessions.value.first.id);
     }
   }
+
+  bool isReasoningInProgress(AgentChatMessage message) =>
+      identical(_run?.reasoning, message);
 
   Future<void> selectSession(String id) async {
     final cached = _loaded[id];
@@ -234,11 +239,28 @@ class AgentViewModel with FieldControllerMixin {
   }
 
   void _appendError(_AgentRun run, String message) {
+    _persistReasoningSegment(run);
     final assistant = run.assistant ??= _appendAssistant(run);
     final prefix = assistant.text.isEmpty ? '' : '${assistant.text}\n\n';
     assistant.text = '$prefix错误：$message';
     run.hasText = true;
     _publish(run.session);
+  }
+
+  AgentChatMessage _appendReasoning(
+    _AgentRun run, {
+    bool beforeAssistant = false,
+  }) {
+    final reasoning = AgentChatMessage(role: AgentChatRole.reasoning, text: '');
+    final messages = run.session.messages;
+    final assistant = run.assistant;
+    if (beforeAssistant && assistant != null) {
+      messages.insert(messages.indexOf(assistant), reasoning);
+    } else {
+      _persistAssistantSegment(run);
+      messages.add(reasoning);
+    }
+    return reasoning;
   }
 
   /// Drops the active assistant bubble when it never received text, so a
@@ -264,6 +286,7 @@ class AgentViewModel with FieldControllerMixin {
     _chat = null;
     _run = null;
     _persistNewItems(run);
+    _persistReasoningSegment(run);
     final assistant = run.assistant;
     _clearEmptyAssistant(run);
     if (!run.hasText) {
@@ -292,12 +315,32 @@ class AgentViewModel with FieldControllerMixin {
 
   void _handleEvent(AgentEvent event, _AgentRun run) {
     switch (event) {
+      case AgentReasoningStartedEvent():
+        _persistReasoningSegment(run);
+        run.reasoning = _appendReasoning(run);
+        _publish(run.session);
+      case AgentReasoningDeltaEvent(:final text):
+        final reasoning = run.reasoning ??= _appendReasoning(run);
+        reasoning.text += text;
+        _publish(run.session);
+      case AgentReasoningDoneEvent(:final text):
+        if (text.isNotEmpty) {
+          final reasoning = run.reasoning ??= _appendReasoning(
+            run,
+            beforeAssistant: true,
+          );
+          reasoning.text = text;
+        }
+        _persistReasoningSegment(run);
+        _publish(run.session);
       case AgentTextDeltaEvent(:final text):
+        _persistReasoningSegment(run);
         final assistant = run.assistant ??= _appendAssistant(run);
         assistant.text += text;
         run.hasText = true;
         _publish(run.session);
       case AgentToolCallEvent(:final name, :final arguments):
+        _persistReasoningSegment(run);
         // Close the current text segment so the next deltas render after the
         // tool lines instead of merging into the bubble above them.
         _persistAssistantSegment(run);
@@ -360,6 +403,23 @@ class AgentViewModel with FieldControllerMixin {
     );
   }
 
+  void _persistReasoningSegment(_AgentRun run) {
+    final reasoning = run.reasoning;
+    if (reasoning == null) return;
+    run.reasoning = null;
+    if (reasoning.text.isEmpty) {
+      run.session.messages.remove(reasoning);
+      return;
+    }
+    unawaited(
+      _sessionStore.appendMessage(
+        run.session.id,
+        reasoning.role,
+        reasoning.text,
+      ),
+    );
+  }
+
   void _publish(AgentChatSession session) {
     if (session.id != activeSessionId.value) return;
     messages.value = List.of(session.messages);
@@ -396,6 +456,8 @@ final class _AgentRun {
   /// The assistant bubble receiving streamed text; cleared after a tool call
   /// so the next text segment starts a new bubble after the tool lines.
   AgentChatMessage? assistant;
+
+  AgentChatMessage? reasoning;
 
   /// Whether any assistant text (answer or error) was rendered.
   var hasText = false;

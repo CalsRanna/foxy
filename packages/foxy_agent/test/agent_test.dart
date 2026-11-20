@@ -42,6 +42,7 @@ void main() {
     expect(firstBody['model'], 'test-model');
     expect(firstBody['stream'], true);
     expect(firstBody['store'], false);
+    expect(firstBody.containsKey('reasoning'), isFalse);
     expect(firstBody['instructions'], 'You are a test agent.');
     final tools = (firstBody['tools'] as List<Object?>)
         .cast<Map<String, Object?>>();
@@ -66,6 +67,114 @@ void main() {
     expect(output['call_id'], 'call_1');
     expect(jsonDecode(output['output']! as String), {'count': 2});
     expect(session.items, hasLength(4));
+  });
+
+  test('streams reasoning separately and can request a summary', () async {
+    final requests = <http.Request>[];
+    const reasoning = {
+      'id': 'rs_1',
+      'type': 'reasoning',
+      'summary': [
+        {'type': 'summary_text', 'text': 'Inspect schema.'},
+        {'type': 'summary_text', 'text': 'Read rows.'},
+      ],
+    };
+    final client = _scriptedClient([
+      _sse([
+        {'type': 'response.output_item.added', 'item': reasoning},
+        for (final (part, delta) in [
+          (0, 'Inspect '),
+          (0, 'schema.'),
+          (1, 'Read rows.'),
+        ])
+          {
+            'type': 'response.reasoning_summary_text.delta',
+            'item_id': 'rs_1',
+            'summary_index': part,
+            'delta': delta,
+          },
+        {'type': 'response.output_item.done', 'item': reasoning},
+        {'type': 'response.output_text.delta', 'delta': 'Done.'},
+        {
+          'type': 'response.completed',
+          'response': {
+            'output': [reasoning],
+          },
+        },
+      ]),
+    ], requests);
+    final agent = _buildAgent(client, requestReasoningSummary: true);
+    final session = AgentSession();
+
+    final events = await agent.run(session, 'go').toList();
+
+    expect(events, [
+      isA<AgentReasoningStartedEvent>(),
+      isA<AgentReasoningDeltaEvent>().having(
+        (event) => event.text,
+        'text',
+        'Inspect ',
+      ),
+      isA<AgentReasoningDeltaEvent>().having(
+        (event) => event.text,
+        'text',
+        'schema.',
+      ),
+      isA<AgentReasoningDeltaEvent>().having(
+        (event) => event.text,
+        'text',
+        '\n\nRead rows.',
+      ),
+      isA<AgentReasoningDoneEvent>().having(
+        (event) => event.text,
+        'text',
+        isEmpty,
+      ),
+      isA<AgentTextDeltaEvent>(),
+      isA<AgentCompletedEvent>(),
+    ]);
+    expect(session.items.last, reasoning);
+    final body = jsonDecode(requests.single.body) as Map<String, Object?>;
+    expect(body['reasoning'], {'summary': 'auto'});
+  });
+
+  test('reads reasoning text from deltas and completed items', () async {
+    final client = _scriptedClient([
+      _sse([
+        {
+          'type': 'response.reasoning_text.delta',
+          'item_id': 'rs_streamed',
+          'delta': 'Streamed reasoning.',
+        },
+        {
+          'type': 'response.completed',
+          'response': {
+            'output': [
+              {'id': 'rs_streamed', 'type': 'reasoning'},
+              {
+                'id': 'rs_completed',
+                'type': 'reasoning',
+                'content': [
+                  {'type': 'reasoning_text', 'text': 'Final reasoning.'},
+                ],
+              },
+            ],
+          },
+        },
+      ]),
+    ], <http.Request>[]);
+
+    final events = await _buildAgent(client).run(AgentSession(), 'go').toList();
+
+    expect(
+      events.whereType<AgentReasoningDeltaEvent>().single.text,
+      'Streamed reasoning.',
+    );
+    expect(
+      events.whereType<AgentReasoningDoneEvent>().map((event) => event.text),
+      ['', 'Final reasoning.'],
+    );
+    expect(events.last, isA<AgentCompletedEvent>());
   });
 
   test('executes parallel tool calls and returns every output', () async {
@@ -221,17 +330,21 @@ void main() {
   });
 }
 
-FoxyAgent _buildAgent(http.Client client, {List<AgentTool> tools = const []}) =>
-    FoxyAgent(
-      provider: const AgentProviderConfig(
-        baseUrl: 'https://example.test/v1',
-        apiKey: 'test-key',
-        model: 'test-model',
-      ),
-      instructions: 'You are a test agent.',
-      tools: tools,
-      httpClient: client,
-    );
+FoxyAgent _buildAgent(
+  http.Client client, {
+  List<AgentTool> tools = const [],
+  bool requestReasoningSummary = false,
+}) => FoxyAgent(
+  provider: AgentProviderConfig(
+    baseUrl: 'https://example.test/v1',
+    apiKey: 'test-key',
+    model: 'test-model',
+    requestReasoningSummary: requestReasoningSummary,
+  ),
+  instructions: 'You are a test agent.',
+  tools: tools,
+  httpClient: client,
+);
 
 String _callRound(
   List<Map<String, Object?>> calls, {

@@ -15,6 +15,25 @@ final class AgentFailedEvent extends AgentEvent {
   const AgentFailedEvent(this.message);
 }
 
+/// A streamed chunk of reasoning text or summary returned by the provider.
+final class AgentReasoningDeltaEvent extends AgentEvent {
+  final String text;
+
+  const AgentReasoningDeltaEvent(this.text);
+}
+
+/// A reasoning item finished, optionally with text that was not streamed.
+final class AgentReasoningDoneEvent extends AgentEvent {
+  final String text;
+
+  const AgentReasoningDoneEvent([this.text = '']);
+}
+
+/// The provider started a reasoning output item.
+final class AgentReasoningStartedEvent extends AgentEvent {
+  const AgentReasoningStartedEvent();
+}
+
 /// A streamed chunk of the model's visible output text.
 final class AgentTextDeltaEvent extends AgentEvent {
   final String text;

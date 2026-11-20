@@ -14,6 +14,9 @@ final class AgentProviderConfig {
   /// Model name, sent to the provider verbatim.
   final String model;
 
+  /// Requests a reasoning summary on providers that support this option.
+  final bool requestReasoningSummary;
+
   /// Extra request headers; entries override the defaults on conflict.
   final Map<String, String> headers;
 
@@ -21,6 +24,7 @@ final class AgentProviderConfig {
     required this.baseUrl,
     required this.apiKey,
     required this.model,
+    this.requestReasoningSummary = false,
     this.headers = const {},
   });
 

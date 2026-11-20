@@ -8,6 +8,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -133,9 +134,10 @@ class _AgentPageState extends State<AgentPage> {
           ),
         );
       case AgentChatRole.assistant:
-        final text = message.text.isEmpty
-            ? (viewModel.running.value ? '思考中...' : '（无回复）')
-            : message.text;
+        if (message.text.isEmpty && viewModel.running.value) {
+          return _buildReasoningStatus(true);
+        }
+        final text = message.text.isEmpty ? '（无回复）' : message.text;
         return Container(
           width: double.infinity,
           margin: const EdgeInsets.symmetric(vertical: 4),
@@ -150,6 +152,24 @@ class _AgentPageState extends State<AgentPage> {
               style: const TextStyle(fontSize: 13, height: 1.5),
             ),
           ),
+        );
+      case AgentChatRole.reasoning:
+        return ExpansionTile(
+          key: PageStorageKey(message),
+          dense: true,
+          minTileHeight: 32,
+          tilePadding: EdgeInsets.zero,
+          childrenPadding: const EdgeInsets.only(left: 16, bottom: 8),
+          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+          title: _buildReasoningStatus(
+            viewModel.isReasoningInProgress(message),
+          ),
+          children: [
+            if (message.text.isNotEmpty)
+              SelectionArea(
+                child: GptMarkdown(message.text, style: theme.textTheme.muted),
+              ),
+          ],
         );
       case AgentChatRole.tool:
         return Padding(
@@ -242,6 +262,28 @@ class _AgentPageState extends State<AgentPage> {
           itemBuilder: (context, index) => _buildMessageGroup(groups[index]),
         );
       },
+    );
+  }
+
+  Widget _buildReasoningStatus(bool thinking) {
+    final theme = ShadTheme.of(context);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 6,
+      children: [
+        if (thinking)
+          const FoxyLoadingIndicator(size: 13, strokeWidth: 1.5)
+        else
+          Icon(
+            LucideIcons.brain,
+            size: 13,
+            color: theme.colorScheme.mutedForeground,
+          ),
+        Text(
+          thinking ? '思考中' : '推理过程',
+          style: theme.textTheme.muted.copyWith(fontSize: 12),
+        ),
+      ],
     );
   }
 

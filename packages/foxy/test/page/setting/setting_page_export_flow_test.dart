@@ -197,6 +197,12 @@ void main() {
       'old-model',
     );
     expect(tester.widget<ShadInput>(inputs.at(2)).obscureText, isTrue);
+    final reasoningSwitch = find.descendant(
+      of: dialog,
+      matching: find.byType(ShadSwitch),
+    );
+    expect(tester.widget<ShadSwitch>(reasoningSwitch).value, isFalse);
+    await tester.tap(reasoningSwitch);
 
     await tester.enterText(inputs.at(1), 'new-model');
     await tester.tap(find.widgetWithText(ShadButton, '保存'));
@@ -205,6 +211,11 @@ void main() {
     expect(dialog, findsNothing);
     expect(cfg.data['agent_model'], 'new-model');
     expect(cfg.data['agent_api_key'], 'test-key');
+    expect(cfg.data['agent_request_reasoning_summary'], isTrue);
+    final provider = await GetIt.instance
+        .get<AgentProviderConfigUseCase>()
+        .load();
+    expect(provider?.requestReasoningSummary, isTrue);
     expect(find.text('模型服务商配置已保存'), findsOneWidget);
   });
 

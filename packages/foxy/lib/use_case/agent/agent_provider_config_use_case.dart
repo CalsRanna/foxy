@@ -12,6 +12,7 @@ class AgentProviderConfigUseCase {
 
   static const _apiKeyKey = 'agent_api_key';
   static const _modelKey = 'agent_model';
+  static const _reasoningSummaryKey = 'agent_request_reasoning_summary';
   final ConfigUtil _configUtil;
   final _provider = signal<AgentProviderConfig?>(null);
 
@@ -40,6 +41,7 @@ class AgentProviderConfigUseCase {
       baseUrl: baseUrl.trim(),
       apiKey: apiKey is String ? apiKey.trim() : '',
       model: model.trim(),
+      requestReasoningSummary: config[_reasoningSummaryKey] == true,
     );
     _provider.value = loaded;
     return loaded;
@@ -50,6 +52,7 @@ class AgentProviderConfigUseCase {
       _baseUrlKey: provider.baseUrl,
       _apiKeyKey: provider.apiKey,
       _modelKey: provider.model,
+      _reasoningSummaryKey: provider.requestReasoningSummary,
     });
     _provider.value = provider;
   }

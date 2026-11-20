@@ -27,6 +27,8 @@ class _AgentProviderDialogState extends State<AgentProviderDialog> {
   late final _apiKeyController = TextEditingController(
     text: widget.initial?.apiKey ?? '',
   );
+  late bool _requestReasoningSummary =
+      widget.initial?.requestReasoningSummary ?? false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,17 @@ class _AgentProviderDialogState extends State<AgentProviderDialog> {
             placeholder: const Text('API Key（本地服务可留空）'),
             obscureText: true,
           ),
+          Row(
+            spacing: 12,
+            children: [
+              Expanded(child: const Text('请求推理摘要（仅支持的模型）')),
+              ShadSwitch(
+                value: _requestReasoningSummary,
+                onChanged: (value) =>
+                    setState(() => _requestReasoningSummary = value),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -86,6 +99,7 @@ class _AgentProviderDialogState extends State<AgentProviderDialog> {
         baseUrl: baseUrl,
         apiKey: _apiKeyController.text.trim(),
         model: model,
+        requestReasoningSummary: _requestReasoningSummary,
       ),
     );
   }

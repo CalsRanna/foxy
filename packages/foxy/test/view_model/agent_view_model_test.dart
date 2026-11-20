@@ -66,6 +66,67 @@ void main() {
     expect(viewModel.running.value, isFalse);
   });
 
+  test(
+    'keeps streamed and completed reasoning separate from the answer',
+    () async {
+      final chat = _FakeChat();
+      final viewModel = _buildViewModel(chat, store);
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      final sessionId = viewModel.activeSessionId.value!;
+      viewModel.draftController.init('query');
+      await viewModel.send();
+
+      chat.controller.add(const AgentReasoningStartedEvent());
+      chat.controller.add(const AgentReasoningDeltaEvent('先检查'));
+      chat.controller.add(const AgentReasoningDeltaEvent('表结构。'));
+      await pumpEventQueue();
+
+      final active = viewModel.messages.value.last;
+      expect(active.role, AgentChatRole.reasoning);
+      expect(active.text, '先检查表结构。');
+      expect(viewModel.isReasoningInProgress(active), isTrue);
+
+      chat.controller.add(const AgentReasoningDoneEvent());
+      chat.controller.add(
+        const AgentToolCallEvent(
+          callId: 'call_1',
+          name: 'list_tables',
+          arguments: {},
+        ),
+      );
+      chat.controller.add(const AgentTextDeltaEvent('查询完成。'));
+      chat.controller.add(const AgentReasoningDoneEvent('已核对查询结果。'));
+      chat.controller.add(const AgentCompletedEvent());
+      await chat.controller.close();
+      await pumpEventQueue();
+
+      expect(viewModel.isReasoningInProgress(active), isFalse);
+      final messages = viewModel.messages.value;
+      expect(messages.map((message) => message.role), [
+        AgentChatRole.user,
+        AgentChatRole.reasoning,
+        AgentChatRole.tool,
+        AgentChatRole.reasoning,
+        AgentChatRole.assistant,
+      ]);
+      expect(messages.map((message) => message.text), [
+        'query',
+        '先检查表结构。',
+        '调用 list_tables',
+        '已核对查询结果。',
+        '查询完成。',
+      ]);
+
+      await store.createSession('after_reasoning');
+      final restored = await store.load(sessionId);
+      expect(
+        restored?.messages.map((message) => message.toJson()),
+        messages.map((message) => message.toJson()),
+      );
+    },
+  );
+
   test('shows a placeholder reply when the run has only tool calls', () async {
     final chat = _FakeChat();
     final viewModel = _buildViewModel(chat, store);

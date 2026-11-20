@@ -13,6 +13,54 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 void main() {
   tearDown(() async => GetIt.instance.reset());
 
+  testWidgets('推理默认收起，展开时显示流式内容，完成后停止指示器', (tester) async {
+    final reasoning = AgentChatMessage(
+      role: AgentChatRole.reasoning,
+      text: '检查表结构',
+    );
+    final viewModel = _TestAgentViewModel(ConfigUtil())
+      ..activeReasoning = reasoning;
+    viewModel.messages.value = [reasoning];
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: AgentPage())));
+    await tester.pump();
+
+    final thinking = find.text('思考中');
+    final indicator = find.byType(CircularProgressIndicator);
+    final details = find.text('检查表结构', findRichText: true);
+    expect(thinking, findsOneWidget);
+    expect(indicator, findsOneWidget);
+    expect(details, findsNothing);
+
+    await tester.tap(thinking);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(details, findsOneWidget);
+
+    reasoning.text += '，再查找记录';
+    viewModel.messages.value = [reasoning];
+    await tester.pump();
+    final updatedDetails = find.text('检查表结构，再查找记录', findRichText: true);
+    expect(updatedDetails, findsOneWidget);
+
+    await tester.tap(thinking);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(updatedDetails, findsNothing);
+    expect(indicator, findsOneWidget);
+
+    viewModel.activeReasoning = null;
+    viewModel.messages.value = [reasoning];
+    await tester.pumpAndSettle();
+    expect(indicator, findsNothing);
+    final completed = find.text('推理过程');
+    expect(completed, findsOneWidget);
+    await tester.tap(completed);
+    await tester.pumpAndSettle();
+    expect(updatedDetails, findsOneWidget);
+  });
+
   testWidgets('连续工具调用可以折叠，流式追加时保留展开状态', (tester) async {
     AgentChatMessage tool(String text) =>
         AgentChatMessage(role: AgentChatRole.tool, text: text);
@@ -68,6 +116,8 @@ void main() {
 }
 
 class _TestAgentViewModel extends AgentViewModel {
+  AgentChatMessage? activeReasoning;
+
   _TestAgentViewModel(ConfigUtil configUtil)
     : super(
         configUseCase: AgentProviderConfigUseCase(configUtil),
@@ -77,4 +127,8 @@ class _TestAgentViewModel extends AgentViewModel {
 
   @override
   Future<void> initSignals() async {}
+
+  @override
+  bool isReasoningInProgress(AgentChatMessage message) =>
+      identical(activeReasoning, message);
 }

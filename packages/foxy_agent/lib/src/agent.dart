@@ -52,11 +52,31 @@ final class FoxyAgent {
     try {
       for (;;) {
         final streamedItems = <JsonMap>[];
+        final reasoningParts = <Object?, Object?>{};
+        final completedReasoning = <Object?>{};
         JsonMap? response;
         await for (final event in _client.streamResponse(
           _requestBody(session),
         )) {
           switch (event['type']) {
+            case 'response.output_item.added':
+              final item = event['item'];
+              if (item is JsonMap && item['type'] == 'reasoning') {
+                yield const AgentReasoningStartedEvent();
+              }
+            case 'response.reasoning_summary_text.delta':
+            case 'response.reasoning_text.delta':
+              final delta = event['delta'];
+              if (delta is String && delta.isNotEmpty) {
+                final key = event['item_id'] ?? event['output_index'];
+                final part = event['summary_index'] ?? event['content_index'];
+                final previousPart = reasoningParts[key];
+                reasoningParts[key] = part;
+                final separator = previousPart != null && previousPart != part
+                    ? '\n\n'
+                    : '';
+                yield AgentReasoningDeltaEvent('$separator$delta');
+              }
             case 'response.output_text.delta':
               {
                 final delta = event['delta'];
@@ -69,6 +89,15 @@ final class FoxyAgent {
                 final item = event['item'];
                 if (item is JsonMap) {
                   streamedItems.add(item);
+                  if (item['type'] == 'reasoning') {
+                    final key = item['id'] ?? event['output_index'];
+                    if (completedReasoning.add(key)) {
+                      final text = reasoningParts.containsKey(key)
+                          ? ''
+                          : _reasoningText(item);
+                      yield AgentReasoningDoneEvent(text);
+                    }
+                  }
                 }
               }
             case 'response.completed':
@@ -103,6 +132,15 @@ final class FoxyAgent {
           throw AgentException('Response finished with status $status.');
         }
         final items = _outputItems(response, streamedItems);
+        for (final (index, item) in items.indexed) {
+          final key = item['id'] ?? index;
+          if (item['type'] == 'reasoning' && completedReasoning.add(key)) {
+            final text = reasoningParts.containsKey(key)
+                ? ''
+                : _reasoningText(item);
+            yield AgentReasoningDoneEvent(text);
+          }
+        }
         session.addItems(items);
         final calls = items
             .where((item) => item['type'] == 'function_call')
@@ -237,6 +275,21 @@ final class FoxyAgent {
     }
   }
 
+  String _reasoningText(JsonMap item) {
+    for (final field in ['summary', 'content']) {
+      final parts = item[field];
+      if (parts is! List<Object?>) continue;
+      final text = parts
+          .whereType<JsonMap>()
+          .map((part) => part['text'])
+          .whereType<String>()
+          .where((text) => text.isNotEmpty)
+          .join('\n\n');
+      if (text.isNotEmpty) return text;
+    }
+    return '';
+  }
+
   JsonMap _requestBody(AgentSession session) => {
     'model': provider.model,
     'instructions': instructions,
@@ -246,6 +299,7 @@ final class FoxyAgent {
     'stream': true,
     // The client owns the conversation; never let the provider retain it.
     'store': false,
+    if (provider.requestReasoningSummary) 'reasoning': {'summary': 'auto'},
     ...extraRequestBody,
   };
 
