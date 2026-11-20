@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
+import 'package:foxy/page/agent/agent_composer.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
@@ -23,10 +24,16 @@ class AgentPage extends StatefulWidget {
 }
 
 class _AgentPageState extends State<AgentPage> {
+  static const _toolCallPrefix = '调用 ';
+  static const _toolFailurePrefix = '工具失败：';
+
   final viewModel = GetIt.instance.get<AgentViewModel>();
   final scrollController = ScrollController();
+  late final _followingBottom = ValueNotifier(true);
 
   void Function()? _messageSubscription;
+  String? _displayedSessionId;
+  late bool _scrollScheduled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +55,7 @@ class _AgentPageState extends State<AgentPage> {
   @override
   void dispose() {
     _messageSubscription?.call();
+    _followingBottom.dispose();
     scrollController.dispose();
     viewModel.dispose();
     super.dispose();
@@ -57,55 +65,32 @@ class _AgentPageState extends State<AgentPage> {
   void initState() {
     super.initState();
     unawaited(viewModel.initSignals());
-    _messageSubscription = viewModel.messages.subscribe(
-      (_) => _scrollToBottom(),
-    );
+    _messageSubscription = viewModel.messages.subscribe((_) {
+      final sessionId = viewModel.activeSessionId.peek();
+      if (_displayedSessionId != sessionId) {
+        _displayedSessionId = sessionId;
+        _followingBottom.value = true;
+      }
+      _scrollToBottom();
+    });
   }
 
   Widget _buildComposer() {
     return SignalBuilder(
-      builder: (_) {
-        final running = viewModel.running.value;
-        final configured = viewModel.provider.value != null;
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          spacing: 8,
-          children: [
-            Expanded(
-              child: ShadTextarea(
-                controller: viewModel.draftController.controller,
-                placeholder: const Text('输入问题，让 AI 查询 world 库和 foxy 库'),
-                enabled: !running,
-              ),
-            ),
-            if (running)
-              ShadButton.outline(
-                onPressed: viewModel.stop,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.square, size: 15), Text('停止')],
-                ),
-              )
-            else if (!configured)
-              ShadButton.outline(
-                onPressed: () => GetIt.instance
-                    .get<RouterFacade>()
-                    .navigateToMenu(RouterMenu.setting),
-                child: const Text('前往设置'),
-              )
-            else
-              ShadButton(
-                onPressed: () => unawaited(viewModel.send()),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.send, size: 15), Text('发送')],
-                ),
-              ),
-          ],
-        );
-      },
+      builder: (_) => AgentComposer(
+        controller: viewModel.draftController.controller,
+        running: viewModel.running.value,
+        configured: viewModel.provider.value != null,
+        hasSession: viewModel.activeSessionId.value != null,
+        onSend: () {
+          _followBottom();
+          unawaited(viewModel.send());
+        },
+        onStop: viewModel.stop,
+        onConfigure: () => GetIt.instance.get<RouterFacade>().navigateToMenu(
+          RouterMenu.setting,
+        ),
+      ),
     );
   }
 
@@ -135,7 +120,7 @@ class _AgentPageState extends State<AgentPage> {
         );
       case AgentChatRole.assistant:
         if (message.text.isEmpty && viewModel.running.value) {
-          return _buildReasoningStatus(true);
+          return _buildStepStatus('思考中', thinking: true);
         }
         final text = message.text.isEmpty ? '（无回复）' : message.text;
         return Container(
@@ -154,25 +139,18 @@ class _AgentPageState extends State<AgentPage> {
           ),
         );
       case AgentChatRole.reasoning:
-        return ExpansionTile(
-          key: PageStorageKey(message),
-          shape: const Border(),
-          dense: true,
-          minTileHeight: 32,
-          tilePadding: EdgeInsets.zero,
-          childrenPadding: const EdgeInsets.only(left: 16, bottom: 8),
-          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-          title: _buildReasoningStatus(
-            viewModel.isReasoningInProgress(message),
-          ),
-          children: [
-            if (message.text.isNotEmpty)
-              SelectionArea(
-                child: GptMarkdown(message.text, style: theme.textTheme.muted),
-              ),
-          ],
+        return SelectionArea(
+          child: GptMarkdown(message.text, style: theme.textTheme.muted),
         );
       case AgentChatRole.tool:
+        if (viewModel.isToolInProgress(message)) {
+          return _buildStepStatus(
+            message.text,
+            thinking: false,
+            runningTool: true,
+            icon: LucideIcons.wrench,
+          );
+        }
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),
           child: Row(
@@ -198,42 +176,55 @@ class _AgentPageState extends State<AgentPage> {
   }
 
   Widget _buildMessageGroup(List<AgentChatMessage> group) {
-    if (group.length == 1) return _buildMessage(group.single);
+    if (group.length == 1) {
+      final message = group.single;
+      return message.role == AgentChatRole.reasoning
+          ? _buildReasoningStep(message, nested: false)
+          : _buildMessage(message);
+    }
 
     // Calls and failures share the same role in saved sessions.
-    final callCount = group
-        .where((message) => message.text.startsWith('调用 '))
+    final tools = group.where((message) => message.role == AgentChatRole.tool);
+    final callCount = tools
+        .where((message) => message.text.startsWith(_toolCallPrefix))
         .length;
-    final children = group.map(_buildMessage).toList();
-    if (callCount < 2) return Column(children: children);
+    final hasReasoning = group.any(
+      (message) => message.role == AgentChatRole.reasoning,
+    );
+    if (!hasReasoning && callCount < 2) {
+      return Column(children: group.map(_buildMessage).toList());
+    }
 
-    final failureCount = group
-        .where((message) => message.text.startsWith('工具失败：'))
+    final thinking = group.any(viewModel.isReasoningInProgress);
+    final runningTool = tools.any(viewModel.isToolInProgress);
+    final failureCount = tools
+        .where((message) => message.text.startsWith(_toolFailurePrefix))
         .length;
     final failureSummary = failureCount == 0 ? '' : '，$failureCount 次失败';
-    final theme = ShadTheme.of(context);
-    return ExpansionTile(
-      key: PageStorageKey(group.first),
-      shape: const Border(),
-      dense: true,
-      minTileHeight: 32,
-      tilePadding: EdgeInsets.zero,
-      childrenPadding: const EdgeInsets.only(left: 16),
-      title: Row(
-        spacing: 6,
-        children: [
-          Icon(
-            LucideIcons.wrench,
-            size: 13,
-            color: theme.colorScheme.mutedForeground,
-          ),
-          Text(
-            '工具调用（$callCount 次$failureSummary）',
-            style: theme.textTheme.muted.copyWith(fontSize: 12),
-          ),
-        ],
+    final label = [
+      if (thinking)
+        '思考中'
+      else if (runningTool)
+        '工具执行中'
+      else if (hasReasoning)
+        '推理过程',
+      if (callCount > 0) '工具调用（$callCount 次$failureSummary）',
+    ].join(' · ');
+    return _buildStepTile(
+      key: PageStorageKey((group.first, true)),
+      title: _buildStepStatus(
+        label,
+        thinking: thinking,
+        runningTool: runningTool,
+        icon: callCount > 0 ? LucideIcons.wrench : LucideIcons.brain,
       ),
-      children: children,
+      children: [
+        for (final message in group)
+          if (message.role == AgentChatRole.reasoning)
+            _buildReasoningStep(message, nested: true)
+          else
+            _buildToolStep(message),
+      ],
     );
   }
 
@@ -250,41 +241,67 @@ class _AgentPageState extends State<AgentPage> {
         }
         final groups = <List<AgentChatMessage>>[];
         for (final message in messages) {
-          if (message.role == AgentChatRole.tool &&
+          if (_isStep(message) &&
               groups.isNotEmpty &&
-              groups.last.first.role == AgentChatRole.tool) {
+              _isStep(groups.last.first)) {
             groups.last.add(message);
           } else {
             groups.add([message]);
           }
         }
-        return ListView.builder(
-          controller: scrollController,
-          itemCount: groups.length,
-          itemBuilder: (context, index) => _buildMessageGroup(groups[index]),
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: NotificationListener<ScrollUpdateNotification>(
+                onNotification: (notification) {
+                  if (notification.depth == 0) {
+                    _followingBottom.value =
+                        notification.metrics.extentAfter <= 1;
+                  }
+                  return false;
+                },
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: groups.length,
+                  itemBuilder: (context, index) =>
+                      _buildMessageGroup(groups[index]),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 8,
+              bottom: 8,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _followingBottom,
+                builder: (context, following, _) => following
+                    ? const SizedBox.shrink()
+                    : IconButton.filledTonal(
+                        tooltip: '回到底部',
+                        onPressed: _followBottom,
+                        icon: const Icon(LucideIcons.arrowDown, size: 16),
+                      ),
+              ),
+            ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildReasoningStatus(bool thinking) {
-    final theme = ShadTheme.of(context);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: 6,
+  Widget _buildReasoningStep(AgentChatMessage message, {required bool nested}) {
+    final thinking = viewModel.isReasoningInProgress(message);
+    return _buildStepTile(
+      key: PageStorageKey((message, false)),
+      title: _buildStepStatus(
+        thinking ? '思考中' : '推理过程',
+        thinking: thinking && !nested,
+      ),
       children: [
-        if (thinking)
-          const FoxyLoadingIndicator(size: 13, strokeWidth: 1.5)
-        else
-          Icon(
-            LucideIcons.brain,
-            size: 13,
-            color: theme.colorScheme.mutedForeground,
+        if (message.text.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: _buildMessage(message),
           ),
-        Text(
-          thinking ? '思考中' : '推理过程',
-          style: theme.textTheme.muted.copyWith(fontSize: 12),
-        ),
       ],
     );
   }
@@ -374,6 +391,87 @@ class _AgentPageState extends State<AgentPage> {
     );
   }
 
+  Widget _buildStepStatus(
+    String label, {
+    required bool thinking,
+    bool runningTool = false,
+    IconData icon = LucideIcons.brain,
+  }) {
+    final theme = ShadTheme.of(context);
+    final text = Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: theme.textTheme.muted.copyWith(fontSize: 12),
+    );
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 6,
+      children: [
+        if (thinking)
+          const FoxyLoadingIndicator(size: 13, strokeWidth: 1.5)
+        else
+          Icon(icon, size: 13, color: theme.colorScheme.mutedForeground),
+        Flexible(
+          child: thinking || runningTool ? _StepShimmer(child: text) : text,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepTile({
+    required Key key,
+    required Widget title,
+    required List<Widget> children,
+  }) {
+    return ExpansionTile(
+      key: key,
+      shape: const Border(),
+      dense: true,
+      minTileHeight: 32,
+      tilePadding: EdgeInsets.zero,
+      childrenPadding: const EdgeInsets.only(left: 16),
+      expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+      title: title,
+      children: children,
+    );
+  }
+
+  Widget _buildToolStep(AgentChatMessage message) {
+    final text = message.text;
+    final String label;
+    final String details;
+    if (text.startsWith(_toolCallPrefix)) {
+      final argumentsStart = text.indexOf(' ', _toolCallPrefix.length);
+      label = argumentsStart == -1 ? text : text.substring(0, argumentsStart);
+      details = argumentsStart == -1
+          ? '未记录参数'
+          : text.substring(argumentsStart + 1);
+    } else if (text.startsWith(_toolFailurePrefix)) {
+      label = '工具失败';
+      details = text.substring(_toolFailurePrefix.length);
+    } else {
+      return _buildMessage(message);
+    }
+
+    return _buildStepTile(
+      key: PageStorageKey(message),
+      title: _buildStepStatus(label, thinking: false, icon: LucideIcons.wrench),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: SelectionArea(
+            child: Text(
+              details,
+              style: ShadTheme.of(context).textTheme.muted
+                  .copyWith(fontSize: 12),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildWorkspace() {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -381,7 +479,7 @@ class _AgentPageState extends State<AgentPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12,
         children: [
-          _buildWorkspaceHeader(),
+          // _buildWorkspaceHeader(),
           Expanded(child: _buildMessageList()),
           _buildComposer(),
         ],
@@ -435,10 +533,87 @@ class _AgentPageState extends State<AgentPage> {
     }
   }
 
+  void _followBottom() {
+    _followingBottom.value = true;
+    _scrollToBottom();
+  }
+
+  bool _isStep(AgentChatMessage message) =>
+      message.role == AgentChatRole.reasoning ||
+      message.role == AgentChatRole.tool;
+
   void _scrollToBottom() {
+    if (!_followingBottom.value || _scrollScheduled) return;
+    _scrollScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!scrollController.hasClients) return;
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      _scrollScheduled = false;
+      if (!mounted || !_followingBottom.value || !scrollController.hasClients) {
+        return;
+      }
+      final position = scrollController.position;
+      if (position.extentAfter <= 1) return;
+      position.jumpTo(position.maxScrollExtent);
+      // The lazy list can refine its scroll extent after the jump.
+      _scrollToBottom();
     });
+  }
+}
+
+class _StepShimmer extends StatefulWidget {
+  final Widget child;
+
+  const _StepShimmer({required this.child});
+
+  @override
+  State<_StepShimmer> createState() => _StepShimmerState();
+}
+
+class _StepShimmerState extends State<_StepShimmer>
+    with SingleTickerProviderStateMixin {
+  late final _animation = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1500),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.disableAnimationsOf(context)) return widget.child;
+    final colors = ShadTheme.of(context).colorScheme;
+    return AnimatedBuilder(
+      animation: _animation,
+      child: widget.child,
+      builder: (context, child) {
+        final offset = _animation.value * 4 - 2;
+        return ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (bounds) => LinearGradient(
+            begin: Alignment(offset - 1, 0),
+            end: Alignment(offset + 1, 0),
+            colors: [
+              colors.mutedForeground,
+              colors.foreground,
+              colors.mutedForeground,
+            ],
+          ).createShader(bounds),
+          child: child,
+        );
+      },
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _animation.stop();
+    } else if (!_animation.isAnimating) {
+      unawaited(_animation.repeat());
+    }
+  }
+
+  @override
+  void dispose() {
+    _animation.dispose();
+    super.dispose();
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/agent/agent_session_store.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
+import 'package:foxy/page/agent/agent_composer.dart';
 import 'package:foxy/page/agent/agent_page.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
@@ -12,6 +14,107 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
   tearDown(() async => GetIt.instance.reset());
+
+  testWidgets('输入区支持换行、发送和停止', (tester) async {
+    final draft = TextEditingController();
+    final running = ValueNotifier(false);
+    addTearDown(draft.dispose);
+    addTearDown(running.dispose);
+    final sent = <String>[];
+
+    await tester.pumpWidget(
+      ShadApp(
+        home: Scaffold(
+          body: Align(
+            alignment: Alignment.bottomCenter,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: running,
+              builder: (context, streaming, _) => AgentComposer(
+                controller: draft,
+                running: streaming,
+                configured: true,
+                hasSession: true,
+                onSend: () {
+                  sent.add(draft.text);
+                  draft.clear();
+                  running.value = true;
+                },
+                onStop: () => running.value = false,
+                onConfigure: () {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final input = find.byType(TextField);
+    final button = find.byType(IconButton);
+    expect(tester.widget<IconButton>(button).onPressed, isNull);
+    await tester.enterText(input, '第一行');
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+    expect(draft.text, '第一行\n');
+    expect(sent, isEmpty);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(sent, ['第一行\n']);
+    expect(find.byTooltip('停止'), findsOneWidget);
+    expect(tester.widget<TextField>(input).readOnly, isTrue);
+
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+    await tester.enterText(input, '再发一条');
+    await tester.pumpAndSettle();
+    await tester.tap(button);
+    expect(sent, ['第一行\n', '再发一条']);
+  });
+
+  testWidgets('翻阅历史时暂停贴底，回到底部后继续跟随', (tester) async {
+    final viewModel = _TestAgentViewModel(ConfigUtil());
+    viewModel.messages.value = [
+      for (var index = 0; index < 30; index++)
+        AgentChatMessage(
+          role: AgentChatRole.user,
+          text: List.filled(index % 4 + 1, '历史消息 $index').join('\n'),
+        ),
+    ];
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: AgentPage())));
+    await tester.pumpAndSettle();
+
+    final list = find.byWidgetPredicate(
+      (widget) => widget is ListView && widget.controller != null,
+    );
+    final position = tester.widget<ListView>(list).controller!.position;
+    expect(position.extentAfter, lessThanOrEqualTo(1));
+    await tester.drag(list, const Offset(0, 180));
+    await tester.pumpAndSettle();
+    final readingOffset = position.pixels;
+    final jump = find.byTooltip('回到底部');
+    expect(jump, findsOneWidget);
+
+    viewModel.messages.value = [
+      ...viewModel.messages.value,
+      AgentChatMessage(role: AgentChatRole.assistant, text: '流式新消息'),
+    ];
+    await tester.pumpAndSettle();
+    expect(position.pixels, closeTo(readingOffset, 1));
+
+    await tester.tap(jump);
+    await tester.pumpAndSettle();
+    expect(jump, findsNothing);
+    expect(position.extentAfter, lessThanOrEqualTo(1));
+
+    viewModel.messages.value = [
+      ...viewModel.messages.value,
+      AgentChatMessage(role: AgentChatRole.assistant, text: '继续输出'),
+    ];
+    await tester.pumpAndSettle();
+    expect(position.extentAfter, lessThanOrEqualTo(1));
+  });
 
   testWidgets('推理默认收起，展开时显示流式内容，完成后停止指示器', (tester) async {
     final reasoning = AgentChatMessage(
@@ -31,6 +134,10 @@ void main() {
     final details = find.text('检查表结构', findRichText: true);
     expect(thinking, findsOneWidget);
     expect(indicator, findsOneWidget);
+    expect(
+      find.ancestor(of: thinking, matching: find.byType(ShaderMask)),
+      findsOneWidget,
+    );
     expect(details, findsNothing);
 
     await tester.tap(thinking);
@@ -56,9 +163,104 @@ void main() {
     expect(indicator, findsNothing);
     final completed = find.text('推理过程');
     expect(completed, findsOneWidget);
+    expect(
+      find.ancestor(of: completed, matching: find.byType(ShaderMask)),
+      findsNothing,
+    );
     await tester.tap(completed);
     await tester.pumpAndSettle();
     expect(updatedDetails, findsOneWidget);
+  });
+
+  testWidgets('相邻步骤在组内独立展开，正文切断分组', (tester) async {
+    final firstReasoning = AgentChatMessage(
+      role: AgentChatRole.reasoning,
+      text: '先检查表结构',
+    );
+    const arguments = '{"query":"creature"}';
+    final call = AgentChatMessage(
+      role: AgentChatRole.tool,
+      text: '调用 list_tables $arguments',
+    );
+    final nextReasoning = AgentChatMessage(
+      role: AgentChatRole.reasoning,
+      text: '再核对结果',
+    );
+    final viewModel = _TestAgentViewModel(ConfigUtil());
+    viewModel.messages.value = [firstReasoning];
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: AgentPage())));
+
+    final firstDetail = find.text(firstReasoning.text, findRichText: true);
+    await tester.tap(find.text('推理过程'));
+    await tester.pumpAndSettle();
+    expect(firstDetail, findsOneWidget);
+
+    viewModel.messages.value = [firstReasoning, call];
+    await tester.pumpAndSettle();
+    final group = find.text('推理过程 · 工具调用（1 次）');
+    final callTitle = find.text('调用 list_tables');
+    final callDetail = find.text(arguments);
+    expect(group, findsOneWidget);
+    expect(firstDetail, findsNothing);
+    expect(callTitle, findsNothing);
+
+    await tester.tap(group);
+    await tester.pumpAndSettle();
+    expect(find.byType(ExpansionTile), findsNWidgets(3));
+    expect(firstDetail, findsNothing);
+    expect(callDetail, findsNothing);
+
+    await tester.tap(find.text('推理过程'));
+    await tester.pumpAndSettle();
+    expect(firstDetail, findsOneWidget);
+    expect(callDetail, findsNothing);
+
+    await tester.tap(callTitle);
+    await tester.pumpAndSettle();
+    expect(
+      tester.getTopLeft(firstDetail).dy,
+      lessThan(tester.getTopLeft(callDetail).dy),
+    );
+    await tester.tap(callTitle);
+    await tester.pumpAndSettle();
+    expect(firstDetail, findsOneWidget);
+    expect(callDetail, findsNothing);
+
+    viewModel.activeReasoning = nextReasoning;
+    viewModel.messages.value = [firstReasoning, call, nextReasoning];
+    await tester.pump();
+    expect(find.text('思考中 · 工具调用（1 次）'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(firstDetail, findsOneWidget);
+    final nextDetail = find.text(nextReasoning.text, findRichText: true);
+    expect(nextDetail, findsNothing);
+    await tester.tap(find.text('思考中'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(
+      tester.getTopLeft(callTitle).dy,
+      lessThan(tester.getTopLeft(nextDetail).dy),
+    );
+
+    const separateCall = '调用 query_rows';
+    viewModel.activeReasoning = null;
+    viewModel.messages.value = [
+      ...viewModel.messages.value,
+      AgentChatMessage(role: AgentChatRole.assistant, text: '已确认表结构。'),
+      AgentChatMessage(role: AgentChatRole.tool, text: separateCall),
+    ];
+    await tester.pumpAndSettle();
+    await tester.tap(group);
+    await tester.pumpAndSettle();
+    expect(nextDetail, findsNothing);
+    expect(find.text(separateCall), findsOneWidget);
+
+    await tester.tap(group);
+    await tester.pumpAndSettle();
+    expect(firstDetail, findsOneWidget);
+    expect(callDetail, findsNothing);
+    expect(nextDetail, findsOneWidget);
   });
 
   testWidgets('连续工具调用可以折叠，流式追加时保留展开状态', (tester) async {
@@ -82,7 +284,8 @@ void main() {
     final group = find.text('工具调用（2 次，1 次失败）');
     final firstCall = find.text('调用 list_tables');
     final secondCall = find.text('调用 query_rows');
-    final groupFailure = find.text('工具失败：请求超时');
+    final failureTitle = find.text('工具失败');
+    final groupFailure = find.text('请求超时');
     expect(find.text('调用 inspect_schema'), findsOneWidget);
     expect(find.text('工具失败：缺少列'), findsOneWidget);
     expect(group, findsOneWidget);
@@ -93,6 +296,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(firstCall, findsOneWidget);
     expect(secondCall, findsOneWidget);
+    expect(failureTitle, findsOneWidget);
+    expect(groupFailure, findsNothing);
+    await tester.tap(failureTitle);
+    await tester.pumpAndSettle();
     expect(groupFailure, findsOneWidget);
     expect(
       tester.getTopLeft(firstCall).dy,

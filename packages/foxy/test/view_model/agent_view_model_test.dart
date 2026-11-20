@@ -41,6 +41,11 @@ void main() {
         arguments: {'table': 'creature_template'},
       ),
     );
+    await pumpEventQueue();
+    final tool = viewModel.messages.value.last;
+    expect(tool.role, AgentChatRole.tool);
+    expect(viewModel.isToolInProgress(tool), isTrue);
+
     chat.controller.add(
       const AgentToolResultEvent(
         callId: 'call_1',
@@ -49,6 +54,9 @@ void main() {
         isError: false,
       ),
     );
+    await pumpEventQueue();
+    expect(viewModel.isToolInProgress(tool), isFalse);
+
     chat.controller.add(const AgentTextDeltaEvent('找到 2 条。'));
     chat.controller.add(const AgentCompletedEvent());
     await chat.controller.close();

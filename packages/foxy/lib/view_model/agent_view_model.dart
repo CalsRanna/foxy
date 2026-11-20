@@ -154,6 +154,9 @@ class AgentViewModel with FieldControllerMixin {
   bool isReasoningInProgress(AgentChatMessage message) =>
       identical(_run?.reasoning, message);
 
+  bool isToolInProgress(AgentChatMessage message) =>
+      _run?.pendingToolCalls.values.contains(message) ?? false;
+
   Future<void> selectSession(String id) async {
     final cached = _loaded[id];
     if (cached != null) {
@@ -339,32 +342,37 @@ class AgentViewModel with FieldControllerMixin {
         assistant.text += text;
         run.hasText = true;
         _publish(run.session);
-      case AgentToolCallEvent(:final name, :final arguments):
+      case AgentToolCallEvent(:final callId, :final name, :final arguments):
         _persistReasoningSegment(run);
         // Close the current text segment so the next deltas render after the
         // tool lines instead of merging into the bubble above them.
         _persistAssistantSegment(run);
         final line = '调用 $name${_compactArguments(arguments)}';
-        run.session.messages.add(
-          AgentChatMessage(role: AgentChatRole.tool, text: line),
-        );
+        final message = AgentChatMessage(role: AgentChatRole.tool, text: line);
+        run.pendingToolCalls[callId] = message;
+        run.session.messages.add(message);
         unawaited(
           _sessionStore.appendMessage(run.session.id, AgentChatRole.tool, line),
         );
         _persistNewItems(run);
         _publish(run.session);
-      case AgentToolResultEvent(isError: true, :final output):
-        final line = '工具失败：$output';
-        run.session.messages.add(
-          AgentChatMessage(role: AgentChatRole.tool, text: line),
-        );
-        unawaited(
-          _sessionStore.appendMessage(run.session.id, AgentChatRole.tool, line),
-        );
-        _persistNewItems(run);
+      case AgentToolResultEvent(:final callId, :final isError, :final output):
+        run.pendingToolCalls.remove(callId);
+        if (isError) {
+          final line = '工具失败：$output';
+          run.session.messages.add(
+            AgentChatMessage(role: AgentChatRole.tool, text: line),
+          );
+          unawaited(
+            _sessionStore.appendMessage(
+              run.session.id,
+              AgentChatRole.tool,
+              line,
+            ),
+          );
+          _persistNewItems(run);
+        }
         _publish(run.session);
-      case AgentToolResultEvent():
-        break;
       case AgentCompletedEvent():
         _finishRun(run);
       case AgentFailedEvent(:final message):
@@ -452,6 +460,7 @@ class AgentViewModel with FieldControllerMixin {
 /// already flushed to disk.
 final class _AgentRun {
   final AgentChatSession session;
+  late final pendingToolCalls = <String, AgentChatMessage>{};
 
   /// The assistant bubble receiving streamed text; cleared after a tool call
   /// so the next text segment starts a new bubble after the tool lines.
