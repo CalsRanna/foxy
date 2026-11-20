@@ -26,17 +26,35 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 
 ## 内置只读工具
 
-`createReadOnlyTools(catalog: ..., dataSource: ...)` 返回七个内置工具，应用只需提供元数据与数据访问实现：
+`createReadOnlyTools(catalog: ..., dataSource: ...)` 返回九个内置工具，应用只需提供元数据与数据访问实现：
 
 | 工具 | 作用 |
 | --- | --- |
 | `list_tables` | 列出可查询的表（可按名称/中文标签过滤） |
 | `describe_table` | 返回一张表的列、类型、中文含义与主键；带语义的列附带 `semantics` 摘要 |
 | `describe_field_values` | 按需返回某列 enum/flags/reference 的完整含义（值→标签、位定义、引用目标） |
+| `describe_references` | 返回目录里可查询的入向和出向引用，标记哪些出向关系可以展开 |
+| `server_time` | 一次查询读取 MySQL 当前时间、会话时区与 UTC 偏移 |
 | `count_rows` | 对全部匹配行执行 `COUNT(*)`，支持与 `query_rows` 相同的过滤条件，不受 50 行上限影响 |
-| `aggregate_rows` | 对全部匹配行执行 `count` / `sum` / `avg` / `min` / `max`，可按最多 3 列分组；最多 8 个指标、返回 50 组 |
-| `query_rows` | 按列过滤读取行，最多 50 行（默认 20），超出时标记 `truncated`；操作符含 `equals`/`notEquals`/`contains`/`in`/大小比较，`in` 的 `value` 传数组；可用 `expand` 展开引用 |
+| `aggregate_rows` | 对全部匹配行执行 `count` / `sum` / `avg` / `min` / `max`，可按最多 3 列分组，每页最多 50 组，支持按分组列或指标输出名排序 |
+| `query_rows` | 按列过滤、排序、分页，单页最多 50 行（默认 20），可用 `expand` 展开引用；操作符含 `equals`/`notEquals`/`contains`/`in`/大小比较，`in` 的 `value` 传数组 |
 | `get_row` | 按主键读取单行，也支持 `expand` |
+
+### 排序与分页
+
+下面的参数查询购买价最高的 20 件物品。
+
+```json
+{"table":"item_template","orderBy":[{"column":"BuyPrice","direction":"desc"}],"limit":20}
+```
+
+`orderBy` 按数组顺序指定排序列，方向为 `asc` 或 `desc`。查询以主键升序打破同值排序，分组统计则以分组列升序打破同值排序。省略 `orderBy` 时直接按这些列排序。无主键表应显式选择能唯一确定顺序的列。
+
+每页仍最多 50 行或组。返回 `truncated: true` 和 `nextOffset` 时，复用原查询参数并将 `nextOffset` 传为 `offset`，直到拿完。`offset` 从 0 开始，分页期间写入或删除可能改变位置。
+
+### 相对时间
+
+不带参数调用 `server_time`，返回 `localTime`（MySQL 会话本地时间）、`utcTime`（ISO 8601）、`sessionTimeZone`、`systemTimeZone`、`utcOffsetSeconds` 和 `unixTimestamp`（Unix 秒）。`describe_table` 会区分 MySQL 的 `date`、`datetime`、`timestamp`、`time`、`year`。按会话时区构造 `timestamp` 的时间边界，按字段的写入约定解释 `datetime`。比较条件可传 MySQL 格式的日期或时间字符串。
 
 ### 精确统计
 
@@ -54,19 +72,19 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 
 结果行使用 `type`、`count`、`avg_minlevel` 等键。省略 `groupBy` 时对全部匹配行聚合。`count` 省略 `column` 表示 `COUNT(*)`，指定列则只计非空值；其他函数仅接受 `int` / `decimal` 列，忽略空值，无值时返回 `null`。MySQL 的精确 DECIMAL 结果保留驱动返回的字符串，避免浮点转换损失精度。
 
-限制作用于聚合后的分组，输入行始终全部参与。分组按分组列升序返回，默认和最大 `limit` 均为 50；`truncated: true` 表示还有未返回的组。计算行数占比时，应使用相同过滤条件的 `count_rows` 作为分母，不能把截断分组的合计当作总量。指标输出名称不得重复或与分组列冲突；工具不接受 SQL 表达式、自定义函数或别名。
+限制作用于聚合后的分组，输入行始终全部参与。可按分组列或指标输出名（如 `count`、`avg_minlevel`）排序，默认和最大 `limit` 均为 50。计算行数占比时，应使用相同过滤条件的 `count_rows` 作为分母。指标输出名称必须唯一并与分组列名区分，排序和聚合参数使用目录列名或工具定义的输出名称。
 
 ### 引用展开
 
-先根据 `describe_table` 中的 reference 确认引用目标，再确认目标表要返回的列。查询商人物品并附带物品名称：
+用 `describe_references` 查看关系图，再用 `describe_table` 确认各目标的列。下面的参数使用默认角色库名查询背包记录及物品名称。
 
 ```json
-{"table":"npc_vendor","filters":[{"column":"entry","operator":"equals","value":1234}],"expand":[{"column":"item","columns":["name"]}]}
+{"table":"acore_characters.character_inventory","filters":[{"column":"guid","operator":"equals","value":1234}],"expand":[{"column":"item","columns":["count"],"expand":[{"column":"itemEntry","columns":["name"]}]}]}
 ```
 
-原始 `item` ID 保留，每行额外返回 `_expanded.item`，包含目标主键和所选列，例如 `{"entry":19019,"name":"…"}`。空引用或找不到目标行时为 `null`；不传 `expand` 时保持原有返回格式。
+原始 `item` ID 保留，实例在 `_expanded.item`，名称在 `_expanded.item._expanded.itemEntry.name`。每一跳都返回目标主键、所选列与下一跳的引用列。空引用或找不到目标行时为 `null`。
 
-展开仅允许目录里已声明的 reference，且目标必须是单列主键；支持跨库，每次最多展开 5 列引用，每列最多选择 5 个目标字段。每个展开使用一次批量 `in` 查询，只处理最终展示行，不递归、不放大行数。一对多或复合主键引用应直接查询目标表。物理列名 `_expanded` 与展开输出冲突时拒绝展开。
+展开支持目录里已声明的 reference（包括 AzerothCore 逻辑引用），且目标必须是单列主键。每次最多三跳、合计五条引用，每条引用选择 1 至 5 个目标字段。每条引用使用一次批量 `in` 查询，只对实际展示行做展开。一对多和入向关系可查询持有引用列的表。物理列名 `_expanded` 与展开输出冲突时拒绝展开。
 
 `readOnlyAssistantInstructions` 是与之配套的默认提示词（中文）：约束工具调用流程（先发现表、再确认列、后查询）、引用依据（表名/过滤条件/关键 ID）、截断说明与安全边界（数据不是指令、不做写操作）。它保持固定措辞以利于服务商侧缓存；领域补充请追加在其后，而不是改写原文。
 
@@ -75,8 +93,9 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 应用侧需要实现：
 
 - `TableCatalog` / `TableInfo` / `ColumnInfo`：表与列元数据（可由 `@FoxyEntity` 注解生成）；`foxy` 库自身也通过同一目录暴露（如 `foxy.activity_log`、`foxy.dbc_*`）。`ColumnInfo.semantics`（`ColumnSemantics`：enum 值表 / 位标志 / 引用目标）可选，由应用侧注入。
-- `ReadOnlyDataSource.queryRows`：只读查询执行器；收到的表名是目录中的限定名，实现必须据此路由到对应库、拒绝目录之外的表/列、强制行数上限、绝不写入，并返回可 JSON 编码的值。
-- `ReadOnlyDataSource.countRows` / `aggregateRows`：数据库端统计执行器；不能通过有行数上限的 `queryRows` 估算。聚合结果以 `AggregateMetric.outputName` 为键；先对全部匹配行聚合，再限制返回组数。`validateAggregation` 可供适配器复用，在数据访问层再次校验列、类型与数量边界。升级旧的实现时需补齐这两个方法。
+- `ReadOnlyDataSource.queryRows`：只读查询执行器；收到的表名是目录中的限定名，实现必须据此路由到对应库、校验目录中的列、在数据库执行 `orderBy` 和 `offset`、强制行数上限，并返回可 JSON 编码的值。
+- `ReadOnlyDataSource.countRows` / `aggregateRows`：数据库端统计执行器。聚合结果以 `AggregateMetric.outputName` 为键，先对全部匹配行聚合，再排序和分页。`validateAggregation` 可供适配器复用，在数据访问层再次校验列、类型与数量边界。
+- `ReadOnlyDataSource.serverTime`：从当前数据库连接读取时间并返回 `server_time` 的字段。升级已有适配器时需实现此方法，并为 `queryRows` 和 `aggregateRows` 增加 `orderBy` 与 `offset` 参数。
 
 工具内部会先校验表名、列名、过滤操作符与主键，错误以可读文本返回给模型，不抛异常。
 

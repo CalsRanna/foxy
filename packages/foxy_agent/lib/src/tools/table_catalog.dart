@@ -8,7 +8,8 @@ final class ColumnInfo {
   /// Human-readable meaning shown to the model (e.g. a Chinese label).
   final String label;
 
-  /// Logical type: `int`, `decimal`, `text` or `bool`.
+  /// Logical type such as `int`, `decimal`, `text`, `bool`, or a MySQL
+  /// temporal type (`date`, `datetime`, `timestamp`, `time`, `year`).
   final String type;
 
   /// Whether the column is part of the primary key.
@@ -89,6 +90,11 @@ final class TableInfo {
   /// Columns flagged as the primary key.
   Iterable<ColumnInfo> get primaryKey =>
       columns.where((column) => column.primaryKey);
+
+  bool hasSingleColumnPrimaryKey(String column) {
+    final keys = primaryKey.toList();
+    return keys.length == 1 && keys.single.name == column;
+  }
 
   /// The canonical model-facing name: `database.name` when [database] is set,
   /// otherwise [name].

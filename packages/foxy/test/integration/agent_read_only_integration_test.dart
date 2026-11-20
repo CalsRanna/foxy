@@ -21,6 +21,7 @@ void main() {
         expansion int not null,
         price decimal(12, 2) null,
         linked_id int null,
+        created_at timestamp not null default current_timestamp,
         name varchar(32) not null
       )''',
     ]);
@@ -34,7 +35,7 @@ void main() {
               'id': index + 1,
               'expansion': index < 80 ? 0 : 1,
               'price': index.isEven ? '1.25' : null,
-              'linked_id': index == 0 ? 2 : null,
+              'linked_id': index < 2 ? index + 2 : null,
               'name': 'Item ${index + 1}',
             },
           ),
@@ -59,6 +60,33 @@ void main() {
           );
         }).toList(),
       ),
+    ]);
+  });
+
+  test('real MySQL ranks all rows and pages ties without duplicates', () async {
+    final tool = QueryRowsTool(catalog, source);
+    final arguments = <String, Object?>{
+      'table': 'agent_stat_fixture',
+      'orderBy': [
+        {'column': 'price', 'direction': 'desc'},
+      ],
+      'limit': 50,
+    };
+    final ids = <Object?>[];
+    var offset = 0;
+    for (final expectedNextOffset in [50, 100, null]) {
+      final page = await tool.call({
+        ...arguments,
+        'offset': offset,
+      }) as Map<String, Object?>;
+      final rows = page['rows']! as List<Map<String, Object?>>;
+      ids.addAll(rows.map((row) => row['id']));
+      expect(page['nextOffset'], expectedNextOffset);
+      offset = page['nextOffset'] as int? ?? 0;
+    }
+    expect(ids, [
+      for (var i = 1; i <= 120; i += 2) i,
+      for (var i = 2; i <= 120; i += 2) i,
     ]);
   });
 
@@ -90,7 +118,8 @@ void main() {
   );
 
   test('real MySQL groups every row before the output limit', () async {
-    final result = await AggregateRowsTool(catalog, source).call({
+    final tool = AggregateRowsTool(catalog, source);
+    final arguments = <String, Object?>{
       'table': 'agent_stat_fixture',
       'groupBy': ['expansion'],
       'metrics': [
@@ -101,10 +130,22 @@ void main() {
         {'function': 'min', 'column': 'price'},
         {'function': 'max', 'column': 'price'},
       ],
+      'orderBy': [
+        {'column': 'sum_price', 'direction': 'asc'},
+      ],
       'limit': 1,
+    };
+    final result = await tool.call(arguments) as Map<String, Object?>;
+    final first = (result['rows']! as List<Map<String, Object?>>).single;
+    expect(first['expansion'], 1);
+    expect(first['count'], 40);
+    expect(result['nextOffset'], 1);
+    final next = await tool.call({
+      ...arguments,
+      'offset': result['nextOffset'],
     }) as Map<String, Object?>;
-    final row = (result['rows']! as List<Map<String, Object?>>).single;
-    expect(result['truncated'], true);
+    final row = (next['rows']! as List<Map<String, Object?>>).single;
+    expect(next.containsKey('nextOffset'), isFalse);
     expect(row['expansion'], 0);
     expect(row['count'], 80);
     expect(row['count_price'], 40);
@@ -112,6 +153,43 @@ void main() {
     for (final name in ['avg_price', 'min_price', 'max_price']) {
       expect(num.parse('${row[name]}'), 1.25);
     }
+  });
+
+  test('real MySQL reports its session clock for timestamp filters', () async {
+    final database = Database.instance.laconic;
+    await database.transaction(() async {
+      await database.statement("set session time_zone = '+05:30'");
+      try {
+        final clock =
+            await ServerTimeTool(source).call({}) as Map<String, Object?>;
+        expect(clock['sessionTimeZone'], '+05:30');
+        expect(clock['utcOffsetSeconds'], 19800);
+        final utc = DateTime.parse(clock['utcTime']! as String);
+        final localTime = clock['localTime']! as String;
+        final wallTime = DateTime.parse('${localTime}Z');
+        expect(wallTime.difference(utc), const Duration(hours: 5, minutes: 30));
+        expect(clock['unixTimestamp'], utc.millisecondsSinceEpoch ~/ 1000);
+        expect(
+          catalog.find('agent_stat_fixture')!.findColumn('created_at')!.type,
+          'timestamp',
+        );
+        expect(
+          await CountRowsTool(catalog, source).call({
+            'table': 'agent_stat_fixture',
+            'filters': [
+              {
+                'column': 'created_at',
+                'operator': 'lessOrEqual',
+                'value': localTime,
+              },
+            ],
+          }),
+          {'table': 'agent_stat_fixture', 'count': 120},
+        );
+      } finally {
+        await database.statement('set session time_zone = default');
+      }
+    });
   });
 
   test('real MySQL preserves SQL empty-set and null semantics', () async {
@@ -146,22 +224,35 @@ void main() {
           {
             'column': 'id',
             'operator': 'in',
-            'value': [1, 2],
+            'value': [1, 3],
           },
         ],
         'expand': [
           {
             'column': 'linked_id',
             'columns': ['name'],
+            'expand': [
+              {
+                'column': 'linked_id',
+                'columns': ['name'],
+              },
+            ],
           },
         ],
       }) as Map<String, Object?>;
       final rows = result['rows']! as List<Map<String, Object?>>;
       expect(rows, hasLength(2));
       expect(rows.firstWhere((row) => row['id'] == 1)['_expanded'], {
-        'linked_id': {'id': 2, 'name': 'Item 2'},
+        'linked_id': {
+          'id': 2,
+          'name': 'Item 2',
+          'linked_id': 3,
+          '_expanded': {
+            'linked_id': {'id': 3, 'name': 'Item 3'},
+          },
+        },
       });
-      expect(rows.firstWhere((row) => row['id'] == 2)['_expanded'], {
+      expect(rows.firstWhere((row) => row['id'] == 3)['_expanded'], {
         'linked_id': null,
       });
     },

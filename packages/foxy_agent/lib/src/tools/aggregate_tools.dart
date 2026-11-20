@@ -66,8 +66,10 @@ final class AggregateRowsTool extends AgentTool {
       '(default/max 50); truncated means some groups are omitted, never that '
       'input rows were sampled. Results use function_column keys, or count '
       'for COUNT(*). COUNT(column) excludes nulls; other functions need numeric '
-      'columns and ignore nulls (null when no values). Groups sort by group '
-      'columns ascending. Use count_rows with the same filters for proportions.';
+      'columns and ignore nulls (null when no values). Use orderBy with group '
+      'columns or metric output names for rankings. Group columns break ties. '
+      'Use nextOffset as offset to continue. Use count_rows with the same '
+      'filters for proportions.';
 
   @override
   Map<String, Object?> get inputSchema => const {
@@ -102,6 +104,8 @@ final class AggregateRowsTool extends AgentTool {
         },
       },
       'limit': {'type': 'integer', 'minimum': 1, 'maximum': maxLimit},
+      'orderBy': orderBySchema,
+      'offset': offsetSchema,
     },
     'required': ['table', 'metrics'],
     'additionalProperties': false,
@@ -141,6 +145,15 @@ final class AggregateRowsTool extends AgentTool {
     }
     final error = validateAggregation(table, groups, metrics);
     if (error != null) return error;
+    final sorting = parseOrderBy(arguments['orderBy'], {
+      ...groups,
+      for (final metric in metrics) metric.outputName,
+    });
+    if (sorting.orderBy == null) return sorting.error!;
+    final offset = arguments['offset'] ?? 0;
+    if (offset is! int || offset < 0) {
+      return '"offset" must be a non-negative integer.';
+    }
     final rawLimit = arguments['limit'];
     if (rawLimit != null && rawLimit is! int) {
       return '"limit" must be an integer.';
@@ -152,12 +165,17 @@ final class AggregateRowsTool extends AgentTool {
       groupBy: groups,
       metrics: metrics,
       limit: limit + 1,
+      orderBy: sorting.orderBy!,
+      offset: offset,
     );
+    final visible = rows.take(limit).toList();
+    final truncated = rows.length > limit;
     return {
       'table': table.qualifiedName,
-      'count': rows.length > limit ? limit : rows.length,
-      'rows': rows.take(limit).toList(),
-      if (rows.length > limit) 'truncated': true,
+      'count': visible.length,
+      'rows': visible,
+      if (truncated) 'truncated': true,
+      if (truncated) 'nextOffset': offset + visible.length,
     };
   }
 }

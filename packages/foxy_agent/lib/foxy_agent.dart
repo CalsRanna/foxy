@@ -9,4 +9,5 @@ export 'package:foxy_agent/src/tools/column_semantics.dart';
 export 'package:foxy_agent/src/tools/read_only_data_source.dart';
 export 'package:foxy_agent/src/tools/read_only_instructions.dart';
 export 'package:foxy_agent/src/tools/read_only_tools.dart';
+export 'package:foxy_agent/src/tools/reference_tools.dart';
 export 'package:foxy_agent/src/tools/table_catalog.dart';

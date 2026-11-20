@@ -2,12 +2,13 @@ import 'package:foxy_agent/src/agent_tool.dart';
 import 'package:foxy_agent/src/tools/aggregate_tools.dart';
 import 'package:foxy_agent/src/tools/read_only_data_source.dart';
 import 'package:foxy_agent/src/tools/read_only_tool_input.dart';
+import 'package:foxy_agent/src/tools/reference_tools.dart';
 import 'package:foxy_agent/src/tools/row_expansion.dart';
 import 'package:foxy_agent/src/tools/table_catalog.dart';
 
 /// The built-in read-only toolset: `list_tables`, `describe_table`,
-/// `describe_field_values`, `count_rows`, `aggregate_rows`, `query_rows`
-/// and `get_row`.
+/// `describe_field_values`, `describe_references`, `server_time`, `count_rows`,
+/// `aggregate_rows`, `query_rows` and `get_row`.
 ///
 /// The host app supplies the metadata ([catalog]) and the data access
 /// ([dataSource]); tool implementations stay in this package. The catalog may
@@ -20,11 +21,40 @@ List<AgentTool> createReadOnlyTools({
   ListTablesTool(catalog),
   DescribeTableTool(catalog),
   DescribeFieldValuesTool(catalog),
+  DescribeReferencesTool(catalog),
+  ServerTimeTool(dataSource),
   CountRowsTool(catalog, dataSource),
   AggregateRowsTool(catalog, dataSource),
   QueryRowsTool(catalog, dataSource),
   GetRowTool(catalog, dataSource),
 ];
+
+/// Gets the time used by the connected database for relative-date queries.
+final class ServerTimeTool extends AgentTool {
+  final ReadOnlyDataSource dataSource;
+
+  const ServerTimeTool(this.dataSource);
+
+  @override
+  String get name => 'server_time';
+
+  @override
+  String get description =>
+      'Read the connected MySQL server clock: localTime, utcTime, '
+      'sessionTimeZone, utcOffsetSeconds and unixTimestamp (seconds). '
+      'Use before calculating relative date or time filters.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': <String, Object?>{},
+    'additionalProperties': false,
+  };
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) =>
+      dataSource.serverTime();
+}
 
 /// Explains the full meaning of one column's values.
 final class DescribeFieldValuesTool extends AgentTool {
@@ -143,7 +173,7 @@ final class GetRowTool extends AgentTool {
       'same call. Read-only.';
 
   @override
-  Map<String, Object?> get inputSchema => const {
+  Map<String, Object?> get inputSchema => {
     'type': 'object',
     'properties': {
       'table': {
@@ -284,15 +314,16 @@ final class QueryRowsTool extends AgentTool {
   @override
   String get description =>
       'Read rows from a table. Filters combine with AND. Returns at most '
-      '$maxLimit rows (default $defaultLimit); narrow with filters when the '
-      'table is large. Read-only. Use describe_table to learn column names '
-      'before filtering. To match any of several values in one call, use the '
+      '$maxLimit rows (default $defaultLimit). Use orderBy on catalog columns '
+      'for rankings and nextOffset as offset for subsequent pages. Primary-key '
+      'columns break sorting ties when available. Use describe_table to learn '
+      'column names. To match any of several values in one call, use the '
       '"in" operator with an array value instead of querying values one by '
       'one. Use expand to include referenced names in the same call. '
       'For exact totals or distributions use count_rows or aggregate_rows.';
 
   @override
-  Map<String, Object?> get inputSchema => const {
+  Map<String, Object?> get inputSchema => {
     'type': 'object',
     'properties': {
       'table': {
@@ -301,6 +332,8 @@ final class QueryRowsTool extends AgentTool {
       },
       'filters': filterSchema,
       'expand': expansionSchema,
+      'orderBy': orderBySchema,
+      'offset': offsetSchema,
       'limit': {
         'type': 'integer',
         'minimum': 1,
@@ -324,7 +357,14 @@ final class QueryRowsTool extends AgentTool {
     }
     final parsed = parseFilters(table, arguments['filters']);
     if (parsed.filters == null) return parsed.error!;
-    final filters = parsed.filters!;
+    final sorting = parseOrderBy(arguments['orderBy'], {
+      for (final column in table.columns) column.name,
+    });
+    if (sorting.orderBy == null) return sorting.error!;
+    final offset = arguments['offset'] ?? 0;
+    if (offset is! int || offset < 0) {
+      return '"offset" must be a non-negative integer.';
+    }
     final expansion = RowExpansion.parse(catalog, table, arguments['expand']);
     if (expansion.expansions == null) return expansion.error!;
     var limit = defaultLimit;
@@ -342,8 +382,10 @@ final class QueryRowsTool extends AgentTool {
     // Ask for one extra row to detect truncation.
     final rows = await dataSource.queryRows(
       table: table.qualifiedName,
-      filters: filters,
+      filters: parsed.filters!,
       limit: limit + 1,
+      orderBy: sorting.orderBy!,
+      offset: offset,
     );
     final truncated = rows.length > limit;
     final visible = truncated ? rows.take(limit).toList() : rows;
@@ -356,6 +398,7 @@ final class QueryRowsTool extends AgentTool {
       'count': visible.length,
       'rows': expanded,
       if (truncated) 'truncated': true,
+      if (truncated) 'nextOffset': offset + visible.length,
     };
   }
 }

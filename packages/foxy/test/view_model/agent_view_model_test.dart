@@ -312,6 +312,8 @@ final class _FakeDataSource extends AgentReadOnlyDataSource {
     required String table,
     required List<RowFilter> filters,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   }) async => const [];
 }
 

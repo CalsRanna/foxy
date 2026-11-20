@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:foxy/constant/agent_field_semantics.dart';
+import 'package:foxy/constant/character_agent_field_semantics.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/database/database.dart';
@@ -81,6 +82,7 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
     final catalog = buildCatalog(
       rows.map((row) => row.toMap()).toList(),
       worldDatabase: worldDatabase,
+      charactersDatabase: charactersDatabase,
       authDatabase: authDatabase,
       semantics: AgentFieldSemantics.values,
     );
@@ -89,18 +91,40 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
   }
 
   @override
+  Future<Map<String, Object?>> serverTime() async {
+    final rows = await _database.select('''
+select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
+       DATE_FORMAT(UTC_TIMESTAMP(6), '%Y-%m-%dT%H:%i:%s.%fZ') as `utcTime`,
+       @@session.time_zone as `sessionTimeZone`,
+       @@system_time_zone as `systemTimeZone`,
+       TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(6), CURRENT_TIMESTAMP(6)) as `utcOffsetSeconds`,
+       UNIX_TIMESTAMP() as `unixTimestamp`
+''');
+    return rows.single.toMap();
+  }
+
+  @override
   Future<List<Map<String, Object?>>> queryRows({
     required String table,
     required List<RowFilter> filters,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   }) async {
     final info = await _tableInfo(table);
     final columns = info.columns
         .map((column) => _quoteIdentifier(column.name))
         .toList();
     final query = _filteredQuery(info, filters).select(columns);
-    final capped = limit < 1 ? 1 : (limit > _maxRows ? _maxRows : limit);
-    final rows = await query.limit(capped).get();
+    _applyPage(
+      query,
+      orderBy: orderBy,
+      allowedColumns: {for (final column in info.columns) column.name},
+      tieBreakers: info.primaryKey.map((column) => column.name),
+      limit: limit.clamp(1, _maxRows),
+      offset: offset,
+    );
+    final rows = await query.get();
     return rows.map((row) => row.toMap()).toList();
   }
 
@@ -120,6 +144,8 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
     required List<String> groupBy,
     required List<AggregateMetric> metrics,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   }) async {
     final info = await _tableInfo(table);
     final error = validateAggregation(info, groupBy, metrics);
@@ -134,15 +160,53 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
         '${_quoteIdentifier(metric.outputName)}',
       );
     }
-    var query = _filteredQuery(info, filters).select(columns);
+    final query = _filteredQuery(info, filters).select(columns);
     for (final column in groupBy) {
-      query = query
-          .groupBy(_quoteIdentifier(column))
-          .orderBy(_quoteIdentifier(column));
+      query.groupBy(_quoteIdentifier(column));
     }
-    final capped = limit.clamp(1, AggregateRowsTool.maxLimit + 1);
-    final rows = await query.limit(capped).get();
+    _applyPage(
+      query,
+      orderBy: orderBy,
+      allowedColumns: {
+        ...groupBy,
+        for (final metric in metrics) metric.outputName,
+      },
+      tieBreakers: groupBy,
+      limit: limit.clamp(1, AggregateRowsTool.maxLimit + 1),
+      offset: offset,
+    );
+    final rows = await query.get();
     return rows.map((row) => row.toMap()).toList();
+  }
+
+  static void _applyPage(
+    QueryBuilder query, {
+    required List<RowOrder> orderBy,
+    required Set<String> allowedColumns,
+    required Iterable<String> tieBreakers,
+    required int limit,
+    required int offset,
+  }) {
+    if (offset < 0) {
+      throw const ValidationException('offset must be non-negative');
+    }
+    final sorted = <String>{};
+    for (final order in orderBy) {
+      if (!allowedColumns.contains(order.column) || !sorted.add(order.column)) {
+        throw ValidationException(
+          'unknown or duplicate sort column: ${order.column}',
+        );
+      }
+      query.orderBy(
+        _quoteIdentifier(order.column),
+        direction: order.direction.name,
+      );
+    }
+    for (final column in tieBreakers) {
+      if (!sorted.contains(column)) query.orderBy(_quoteIdentifier(column));
+    }
+    query.limit(limit);
+    if (offset != 0) query.offset(offset);
   }
 
   Future<TableInfo> _tableInfo(String table) async {
@@ -189,6 +253,7 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
   static TableCatalog buildCatalog(
     List<Map<String, Object?>> rows, {
     required String worldDatabase,
+    String charactersDatabase = _defaultCharactersDatabase,
     String authDatabase = _defaultAuthDatabase,
     Map<String, Map<String, ColumnSemantics>> semantics = const {},
   }) {
@@ -209,6 +274,9 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
       parsed,
       (column) => '${column.schema}.${column.table}',
     );
+    final characterSemantics = CharacterAgentFieldSemantics.forDatabase(
+      charactersDatabase,
+    );
     final tables = grouped.entries.map((entry) {
       final first = entry.value.first;
       final database = first.schema == worldDatabase ? '' : first.schema;
@@ -225,7 +293,8 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
             .map(
               (column) => _withSemantics(
                 column.column,
-                tableSemantics?[column.column.name],
+                tableSemantics?[column.column.name] ??
+                    characterSemantics[qualified]?[column.column.name],
               ),
             )
             .toList(),
@@ -282,8 +351,11 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
         type.contains('double')) {
       return 'decimal';
     }
-    if (type == 'bit') return 'bool';
-    return 'text';
+    return switch (type) {
+      'bit' => 'bool',
+      'date' || 'datetime' || 'timestamp' || 'time' || 'year' => type,
+      _ => 'text',
+    };
   }
 
   static _CatalogColumn? _parseColumn(Map<String, Object?> row) {

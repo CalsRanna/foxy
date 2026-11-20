@@ -30,8 +30,11 @@ enum FilterOperator {
 /// Implementations live in the host app and must:
 /// - only read and never write;
 /// - reject tables and columns outside the catalog allowlist;
-/// - return at most [limit] rows, with JSON-encodable values.
+/// - return at most the requested limit, with JSON-encodable values.
 abstract interface class ReadOnlyDataSource {
+  /// Reads the connected database's current time and session time zone.
+  Future<Map<String, Object?>> serverTime();
+
   /// Counts all matching rows in the database, without a row limit.
   Future<int> countRows({
     required String table,
@@ -46,6 +49,8 @@ abstract interface class ReadOnlyDataSource {
     required List<String> groupBy,
     required List<AggregateMetric> metrics,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   });
 
   /// Returns rows of [table] matching every filter (logical AND).
@@ -53,7 +58,19 @@ abstract interface class ReadOnlyDataSource {
     required String table,
     required List<RowFilter> filters,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   });
+}
+
+enum SortDirection { asc, desc }
+
+/// An ordering by a catalog column or an aggregate output name.
+final class RowOrder {
+  final String column;
+  final SortDirection direction;
+
+  const RowOrder({required this.column, required this.direction});
 }
 
 /// SQL aggregate functions exposed by the restricted aggregation tool.

@@ -32,7 +32,7 @@ void main() {
     expect(entry.primaryKey, isTrue);
     expect(entry.label, '编号');
     expect(entry.type, 'int');
-    expect(creature.findColumn('created_at')!.type, 'text');
+    expect(creature.findColumn('created_at')!.type, 'datetime');
 
     final log = catalog.find('foxy.activity_log');
     expect(log, isNotNull);
@@ -112,12 +112,12 @@ void main() {
       );
       expect(
         driver.queries[1].sql,
-        'select `guid` from `players`.`shared` limit ?',
+        'select `guid` from `players`.`shared` order by `guid` asc limit ?',
       );
       expect(driver.queries[1].params, [2]);
       expect(
         driver.queries[2].sql,
-        'select `id`, `username` from `login`.`account` where `id` = ? limit ?',
+        'select `id`, `username` from `login`.`account` where `id` = ? order by `id` asc limit ?',
       );
       expect(driver.queries[2].params, [7, 2]);
 
@@ -154,6 +154,84 @@ void main() {
     expect(table.findColumn('c')!.type, 'int');
     expect(table.findColumn('d')!.type, 'text');
     expect(table.findColumn('e')!.type, 'bool');
+  });
+
+  test(
+    'exposes logical inventory links using the configured character schema',
+    () async {
+      final driver = _ReadOnlyDriver([
+        _row('players', 'character_inventory', 'item', 'int', 'PRI', ''),
+        _row('players', 'item_instance', 'guid', 'int', 'PRI', ''),
+        _row('players', 'item_instance', 'itemEntry', 'mediumint', '', ''),
+        _row('world', 'item_template', 'entry', 'int', 'PRI', ''),
+        _row('world', 'item_instance', 'guid', 'int', 'PRI', ''),
+      ]);
+      final source = AgentReadOnlyDataSource(
+        _AgentConfig({'database': 'world', 'characters_database': 'players'}),
+        laconic: Laconic(driver),
+      );
+      final catalog = await source.getCatalog();
+      final result = await DescribeReferencesTool(
+        catalog,
+      ).call({'table': 'players.item_instance'}) as Map<String, Object?>;
+      expect(result['incoming'], [
+        {
+          'sourceTable': 'players.character_inventory',
+          'sourceColumn': 'item',
+          'targetTable': 'players.item_instance',
+          'targetColumn': 'guid',
+          'expandable': true,
+        },
+      ]);
+      expect(result['outgoing'], [
+        {
+          'sourceTable': 'players.item_instance',
+          'sourceColumn': 'itemEntry',
+          'targetTable': 'item_template',
+          'targetColumn': 'entry',
+          'expandable': true,
+        },
+      ]);
+      expect(driver.queries, hasLength(1));
+    },
+  );
+
+  test('query_rows safely orders and offsets in SQL with compound key tie-breakers', () async {
+    final driver = _ReadOnlyDriver([
+      _row('world', 'loot', 'Entry', 'int', 'PRI', ''),
+      _row('world', 'loot', 'Item', 'int', 'PRI', ''),
+      _row('world', 'loot', 'Chance', 'decimal', '', ''),
+    ]);
+    final source = AgentReadOnlyDataSource(
+      _AgentConfig({'database': 'world'}),
+      laconic: Laconic(driver),
+    );
+    await source.queryRows(
+      table: 'loot',
+      filters: [],
+      orderBy: const [
+        RowOrder(column: 'Chance', direction: SortDirection.desc),
+      ],
+      offset: 50,
+      limit: 51,
+    );
+    expect(
+      driver.queries.last.sql,
+      'select `Entry`, `Item`, `Chance` from `loot` order by `Chance` desc, `Entry` asc, `Item` asc limit ? offset ?',
+    );
+    expect(driver.queries.last.params, [51, 50]);
+    await expectLater(
+      source.queryRows(
+        table: 'loot',
+        filters: [],
+        orderBy: const [
+          RowOrder(column: 'RAND()', direction: SortDirection.asc),
+        ],
+        limit: 10,
+      ),
+      throwsA(isA<ValidationException>()),
+    );
+    expect(driver.queries, hasLength(2));
   });
 
   test('attaches field semantics from the generated registry', () {
@@ -266,6 +344,24 @@ void main() {
         'select `expansion`, COUNT(*) as `count`, SUM(`price`) as `sum_price` from `items` where `id` in (?, ?, ?) group by `expansion` order by `expansion` asc limit ?',
       );
       expect(driver.queries.last.params, [1, 2, 3, 51]);
+      await source.aggregateRows(
+        table: 'items',
+        filters: [],
+        groupBy: ['expansion'],
+        metrics: const [
+          AggregateMetric(function: AggregateFunction.sum, column: 'price'),
+        ],
+        orderBy: const [
+          RowOrder(column: 'sum_price', direction: SortDirection.desc),
+        ],
+        limit: 20,
+        offset: 20,
+      );
+      expect(
+        driver.queries.last.sql,
+        'select `expansion`, SUM(`price`) as `sum_price` from `items` group by `expansion` order by `sum_price` desc, `expansion` asc limit ? offset ?',
+      );
+      expect(driver.queries.last.params, [20, 20]);
     },
   );
 
@@ -331,6 +427,17 @@ void main() {
           throwsA(isA<ValidationException>()),
         );
       }
+      await expectLater(
+        source.queryRows(
+          table: 'acore_auth.account',
+          filters: [],
+          orderBy: const [
+            RowOrder(column: 'verifier', direction: SortDirection.asc),
+          ],
+          limit: 1,
+        ),
+        throwsA(isA<ValidationException>()),
+      );
       await expectLater(
         source.countRows(
           table: 'acore_auth.account',

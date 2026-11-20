@@ -36,6 +36,9 @@ void main() {
           {'function': 'sum', 'column': 'price'},
         ],
         'limit': 1,
+        'orderBy': [
+          {'column': 'sum_price', 'direction': 'desc'},
+        ],
         'filters': [
           {'column': 'price', 'operator': 'greaterOrEqual', 'value': 0},
         ],
@@ -45,6 +48,7 @@ void main() {
         'count': 1,
         'rows': [source.aggregates.first],
         'truncated': true,
+        'nextOffset': 1,
       });
       expect(source.aggregateTable, 'foxy.items');
       expect(source.groups, ['expansion']);
@@ -54,6 +58,18 @@ void main() {
       ]);
       expect(source.filters.single.operator, FilterOperator.greaterOrEqual);
       expect(source.limit, 2);
+      expect(source.orderBy.single.column, 'sum_price');
+      expect(source.orderBy.single.direction, SortDirection.desc);
+      expect(source.offset, 0);
+      await AggregateRowsTool(_catalog, source).call({
+        'table': 'foxy.items',
+        'groupBy': ['expansion'],
+        'metrics': [
+          {'function': 'count'},
+        ],
+        'offset': 1,
+      });
+      expect(source.offset, 1);
       expect(source.rowCalls, isEmpty);
     },
   );
@@ -210,6 +226,17 @@ void main() {
           'groupBy': ['count'],
         },
         {'limit': 1.5},
+        {'offset': -1},
+        {
+          'orderBy': [
+            {'column': 'price', 'direction': 'asc'},
+          ],
+        },
+        {
+          'orderBy': [
+            {'column': 'count', 'direction': 'asc, rand()'},
+          ],
+        },
       ]) {
         expect(
           await tool.call({
@@ -226,6 +253,114 @@ void main() {
       expect(source.aggregateTable, isNull);
     },
   );
+
+  test('describes incoming and outgoing catalog references', () async {
+    const tool = DescribeReferencesTool(_catalog);
+    final result = await tool.call({'table': 'items'}) as Map<String, Object?>;
+    expect(result['table'], 'foxy.items');
+    final incoming = result['incoming']! as List<Map<String, Object?>>;
+    expect(incoming.map((edge) => edge['sourceColumn']), [
+      'parent',
+      'item',
+      'other_item',
+      'many',
+    ]);
+    expect(incoming[1], {
+      'sourceTable': 'links',
+      'sourceColumn': 'item',
+      'targetTable': 'foxy.items',
+      'targetColumn': 'id',
+      'expandable': true,
+    });
+    expect(incoming.last['expandable'], isFalse);
+    expect(result['outgoing'], [incoming.first]);
+    final links = await tool.call({'table': 'links'}) as Map<String, Object?>;
+    expect(links['incoming'], isEmpty);
+    expect(links['outgoing'], incoming.skip(1).toList());
+  });
+
+  test(
+    'expands three hops in batches and preserves nested IDs and nulls',
+    () async {
+      final source = _Source()
+        ..tables['links'] = [
+          {'id': 1, 'item': 10},
+          {'id': 2, 'item': 10},
+          {'id': 3, 'item': 30},
+        ]
+        ..tables['foxy.items'] = [
+          {'id': 10, 'name': 'Sword', 'parent': 20},
+          {'id': 20, 'name': 'Shield', 'parent': 30},
+          {'id': 30, 'name': 'Bow', 'parent': 404},
+        ];
+      final tool = QueryRowsTool(_catalog, source);
+      final arguments = {
+        'table': 'links',
+        'expand': [
+          _expand('item', [
+            _expand('parent', [_expand('parent')]),
+          ]),
+        ],
+      };
+      final result = await tool.call(arguments) as Map<String, Object?>;
+      final rows = result['rows']! as List<Map<String, Object?>>;
+      expect(rows.first['_expanded'], {
+        'item': {
+          'id': 10,
+          'name': 'Sword',
+          'parent': 20,
+          '_expanded': {
+            'parent': {
+              'id': 20,
+              'name': 'Shield',
+              'parent': 30,
+              '_expanded': {
+                'parent': {'id': 30, 'name': 'Bow'},
+              },
+            },
+          },
+        },
+      });
+      expect(rows[1]['_expanded'], rows.first['_expanded']);
+      expect(rows.last['_expanded'], {
+        'item': {
+          'id': 30,
+          'name': 'Bow',
+          'parent': 404,
+          '_expanded': {'parent': null},
+        },
+      });
+      expect(source.rowCalls, hasLength(4));
+      expect(source.rowCalls.skip(1).map((call) => call.filters.single.value), [
+        [10, 30],
+        [20, 404],
+        [30],
+      ]);
+    },
+  );
+
+  test('validates all nested hops before querying', () async {
+    final source = _Source();
+    final tool = QueryRowsTool(_catalog, source);
+    final threeHops = [
+      _expand('parent', [_expand('parent')]),
+    ];
+    for (final expand in [
+      [
+        _expand('item', [_expand('parent', threeHops)]),
+      ],
+      [_expand('item', threeHops), _expand('other_item', threeHops)],
+      [
+        _expand('item', [_expand('name')]),
+      ],
+    ]) {
+      expect(
+        await tool.call({'table': 'links', 'expand': expand}),
+        isA<String>(),
+      );
+    }
+    expect(source.rowCalls, isEmpty);
+  });
 
   test(
     'query_rows batches expansion, preserves IDs and projects target columns',
@@ -394,6 +529,15 @@ void main() {
   );
 }
 
+Map<String, Object?> _expand(
+  String column, [
+  List<Map<String, Object?>> children = const [],
+]) => {
+  'column': column,
+  'columns': ['name'],
+  if (children.isNotEmpty) 'expand': children,
+};
+
 const _catalog = TableCatalog([
   TableInfo(
     name: 'items',
@@ -404,6 +548,14 @@ const _catalog = TableCatalog([
       ColumnInfo(name: 'expansion', type: 'int'),
       ColumnInfo(name: 'price', type: 'decimal'),
       ColumnInfo(name: 'count', type: 'int'),
+      ColumnInfo(
+        name: 'parent',
+        type: 'int',
+        semantics: ColumnSemantics.reference(
+          label: '上级物品',
+          reference: ColumnReference(table: 'foxy.items', column: 'id'),
+        ),
+      ),
     ],
   ),
   TableInfo(
@@ -463,7 +615,12 @@ final class _Source implements ReadOnlyDataSource {
   List<String> groups = [];
   List<AggregateMetric> metrics = [];
   int? limit;
+  List<RowOrder> orderBy = [];
+  int? offset;
   List<Map<String, Object?>> aggregates = [];
+
+  @override
+  Future<Map<String, Object?>> serverTime() => throw UnimplementedError();
 
   @override
   Future<int> countRows({
@@ -482,13 +639,17 @@ final class _Source implements ReadOnlyDataSource {
     required List<String> groupBy,
     required List<AggregateMetric> metrics,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   }) async {
     aggregateTable = table;
     this.filters = filters;
     groups = groupBy;
     this.metrics = metrics;
     this.limit = limit;
-    return aggregates;
+    this.orderBy = orderBy;
+    this.offset = offset;
+    return aggregates.skip(offset).take(limit).toList();
   }
 
   @override
@@ -496,6 +657,8 @@ final class _Source implements ReadOnlyDataSource {
     required String table,
     required List<RowFilter> filters,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   }) async {
     rowCalls.add((table: table, filters: filters, limit: limit));
     return tables[table]!
@@ -506,6 +669,7 @@ final class _Source implements ReadOnlyDataSource {
                 : row[filter.column] == filter.value,
           ),
         )
+        .skip(offset)
         .take(limit)
         .toList();
   }

@@ -142,3 +142,60 @@ const filterSchema = {
     'additionalProperties': false,
   },
 };
+
+const orderBySchema = {
+  'type': 'array',
+  'items': {
+    'type': 'object',
+    'properties': {
+      'column': {'type': 'string'},
+      'direction': {
+        'type': 'string',
+        'enum': ['asc', 'desc'],
+      },
+    },
+    'required': ['column', 'direction'],
+    'additionalProperties': false,
+  },
+};
+
+const offsetSchema = {
+  'type': 'integer',
+  'minimum': 0,
+  'description':
+      'Rows or groups to skip. Defaults to zero. Use nextOffset to continue.',
+};
+
+({List<RowOrder>? orderBy, String? error}) parseOrderBy(
+  Object? raw,
+  Set<String> allowedColumns,
+) {
+  if (raw == null) return (orderBy: const [], error: null);
+  if (raw is! List<Object?>) {
+    return (orderBy: null, error: '"orderBy" must be an array.');
+  }
+  final orderBy = <RowOrder>[];
+  final seen = <String>{};
+  for (final item in raw) {
+    if (item is! Map<String, Object?>) {
+      return (orderBy: null, error: 'Each "orderBy" entry must be an object.');
+    }
+    final column = item['column'];
+    if (column is! String || !allowedColumns.contains(column)) {
+      return (orderBy: null, error: 'Unknown sort column "$column".');
+    }
+    if (!seen.add(column)) {
+      return (orderBy: null, error: 'Duplicate sort column "$column".');
+    }
+    final direction = switch (item['direction']) {
+      'asc' => SortDirection.asc,
+      'desc' => SortDirection.desc,
+      _ => null,
+    };
+    if (direction == null) {
+      return (orderBy: null, error: 'Sort direction must be "asc" or "desc".');
+    }
+    orderBy.add(RowOrder(column: column, direction: direction));
+  }
+  return (orderBy: orderBy, error: null);
+}

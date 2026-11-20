@@ -140,8 +140,80 @@ void main() {
 
     expect(result['count'], 2);
     expect(result['truncated'], true);
+    expect(result['nextOffset'], 2);
     expect(_asList(result['rows']), hasLength(2));
   });
+
+  test(
+    'query_rows forwards ordering and can continue from nextOffset',
+    () async {
+      final source = _FakeDataSource([
+        for (var entry = 1; entry <= 120; entry++) {'entry': entry},
+      ]);
+      final tool = QueryRowsTool(_catalog, source);
+      final arguments = <String, Object?>{
+        'table': 'creature_template',
+        'limit': 50,
+        'orderBy': [
+          {'column': 'minlevel', 'direction': 'desc'},
+          {'column': 'entry', 'direction': 'asc'},
+        ],
+      };
+      final entries = <Object?>[];
+      var offset = 0;
+      for (final expectedOffset in [50, 100, null]) {
+        final page = _asMap(await tool.call({...arguments, 'offset': offset}));
+        entries.addAll(
+          _asList(page['rows']).map((row) => _asMap(row)['entry']),
+        );
+        final call = source.calls.last;
+        expect(call.offset, offset);
+        expect(call.orderBy.map((order) => (order.column, order.direction)), [
+          ('minlevel', SortDirection.desc),
+          ('entry', SortDirection.asc),
+        ]);
+        expect(page['nextOffset'], expectedOffset);
+        offset = page['nextOffset'] as int? ?? 0;
+      }
+      expect(entries, List.generate(120, (index) => index + 1));
+    },
+  );
+
+  test(
+    'query_rows rejects invalid sort keys, directions and offsets',
+    () async {
+      final source = _FakeDataSource([]);
+      final tool = QueryRowsTool(_catalog, source);
+      for (final invalid in <Map<String, Object?>>[
+        {'offset': -1},
+        {'offset': 1.5},
+        {'offset': '10'},
+        {'orderBy': 'entry desc'},
+        {
+          'orderBy': [
+            {'column': 'missing', 'direction': 'desc'},
+          ],
+        },
+        {
+          'orderBy': [
+            {'column': 'entry', 'direction': 'desc, rand()'},
+          ],
+        },
+        {
+          'orderBy': [
+            {'column': 'entry', 'direction': 'asc'},
+            {'column': 'entry', 'direction': 'desc'},
+          ],
+        },
+      ]) {
+        expect(
+          await tool.call({'table': 'creature_template', ...invalid}),
+          isA<String>(),
+        );
+      }
+      expect(source.calls, isEmpty);
+    },
+  );
 
   test('query_rows rejects unknown columns and operators', () async {
     final tool = QueryRowsTool(_catalog, _FakeDataSource([]));
@@ -351,11 +423,22 @@ void main() {
       'list_tables',
       'describe_table',
       'describe_field_values',
+      'describe_references',
+      'server_time',
       'count_rows',
       'aggregate_rows',
       'query_rows',
       'get_row',
     ]);
+  });
+
+  test('server_time returns the data source clock', () async {
+    final source = _FakeDataSource([]);
+    expect(await ServerTimeTool(source).call({}), {
+      'localTime': '2026-11-21 12:00:00',
+      'sessionTimeZone': '+08:00',
+    });
+    expect(source.calls, isEmpty);
   });
 }
 
@@ -419,9 +502,24 @@ Map<String, Object?> _asMap(Object? value) => value! as Map<String, Object?>;
 final class _FakeDataSource implements ReadOnlyDataSource {
   final List<Map<String, Object?>> rows;
 
-  final List<({String table, List<RowFilter> filters, int limit})> calls = [];
+  final calls =
+      <
+        ({
+          String table,
+          List<RowFilter> filters,
+          int limit,
+          List<RowOrder> orderBy,
+          int offset,
+        })
+      >[];
 
   _FakeDataSource(this.rows);
+
+  @override
+  Future<Map<String, Object?>> serverTime() async => {
+    'localTime': '2026-11-21 12:00:00',
+    'sessionTimeZone': '+08:00',
+  };
 
   @override
   Future<int> countRows({
@@ -436,6 +534,8 @@ final class _FakeDataSource implements ReadOnlyDataSource {
     required List<String> groupBy,
     required List<AggregateMetric> metrics,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   }) => throw UnimplementedError();
 
   @override
@@ -443,8 +543,16 @@ final class _FakeDataSource implements ReadOnlyDataSource {
     required String table,
     required List<RowFilter> filters,
     required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
   }) async {
-    calls.add((table: table, filters: filters, limit: limit));
-    return rows.take(limit).toList();
+    calls.add((
+      table: table,
+      filters: filters,
+      limit: limit,
+      orderBy: orderBy,
+      offset: offset,
+    ));
+    return rows.skip(offset).take(limit).toList();
   }
 }
