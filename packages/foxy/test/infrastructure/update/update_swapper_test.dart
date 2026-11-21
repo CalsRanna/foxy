@@ -42,6 +42,11 @@ void main() {
     File(p.join(appDir.path, 'data', 'session', 'saved.jsonl'))
       ..createSync(recursive: true)
       ..writeAsStringSync('current session');
+    File(p.join(appDir.path, 'data', 'azerothcore', '.dbc-v20.0'))
+        .createSync(recursive: true);
+    File(p.join(appDir.path, 'data', 'azerothcore', 'dbc', 'Item.dbc'))
+      ..createSync(recursive: true)
+      ..writeAsStringSync('edited dbc');
 
     // New-version payload.
     File(p.join(payloadDir.path, 'foxy.exe')).writeAsStringSync('new-exe');
@@ -123,6 +128,16 @@ void main() {
       File(p.join(appDir.path, 'data', 'session', 'saved.jsonl'))
           .readAsStringSync(),
       'current session',
+    );
+    expect(
+      File(p.join(appDir.path, 'data', 'azerothcore', '.dbc-v20.0'))
+          .existsSync(),
+      isTrue,
+    );
+    expect(
+      File(p.join(appDir.path, 'data', 'azerothcore', 'dbc', 'Item.dbc'))
+          .readAsStringSync(),
+      'edited dbc',
     );
   });
 

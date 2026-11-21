@@ -37,7 +37,7 @@ services:
     platform: linux/amd64
     user: "0:0"
     volumes:
-      - ./data/azerothcore:/data
+      - ./packages/foxy/data/azerothcore:/data
     entrypoint: ["/bin/bash", "-ec"]
     command:
       - |

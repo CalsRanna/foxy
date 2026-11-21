@@ -47,7 +47,6 @@ app.*.map.json
 
 data/
 config.yaml
-session/
 
 # 发布产物
 foxy-*.zip

@@ -16,6 +16,7 @@
 ///   (`GameIconPaths` in `package:foxy_game_file/foxy_game_file.dart`);
 /// - `data/cover/`: the user-supplied login-page cover images
 ///   (`lib/infrastructure/cover/cover_selector.dart`);
+/// - `data/azerothcore/`: the DBC files prepared by Docker Compose;
 /// - `data/session/` and legacy `session/`: persisted agent chats
 ///   (`lib/infrastructure/agent/agent_session_store.dart`).
 /// Flutter's `data/flutter_assets` and `data/icudtl.dat` share `data/` with
@@ -61,6 +62,7 @@ class UpdateSwapper {
     'config.yaml',
     'data/icon',
     'data/cover',
+    'data/azerothcore',
     'data/session',
     'session',
   ];
