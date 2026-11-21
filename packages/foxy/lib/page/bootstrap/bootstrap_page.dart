@@ -66,9 +66,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
     }
     _coverFile = CoverSelector.pick(CoverSelector.defaultDirPath);
     LoggerUtil.instance.d(
-      _coverFile == null
-          ? '封面目录无可用图片,使用内置背景: ${CoverSelector.defaultDirPath}'
-          : '封面图片: ${_coverFile!.path}',
+      _coverFile == null ? CoverSelector.defaultDirPath : _coverFile!.path,
     );
     _prepare();
   }

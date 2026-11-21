@@ -427,6 +427,14 @@ void main() {
       viewModel.draftController.init('帮我查询掉落亚麻布的生物');
       await viewModel.send();
       final id = viewModel.activeSessionId.value!;
+      expect(
+        id,
+        matches(
+          RegExp(
+            r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+          ),
+        ),
+      );
       expect(viewModel.activeTitle, '帮我查询掉落亚麻布的生物');
       expect(namingInputs, [('test-model', '帮我查询掉落亚麻布的生物')]);
       expect(viewModel.running.value, isTrue);

@@ -47,22 +47,21 @@ void main() {
     );
   });
 
-  test('round-trips messages and items', () async {
-    await store.createSession('s1');
-    await store.appendMessage('s1', AgentChatRole.user, '掉落亚麻布的 10 级以下生物');
-    await store.appendItem('s1', {
-      'role': 'user',
-      'content': '掉落亚麻布的 10 级以下生物',
-    });
-    await store.appendMessage('s1', AgentChatRole.assistant, '我先查一下。');
-    await store.appendItem('s1', {
+  test('round-trips messages and items with a legacy session ID', () async {
+    const id = '0123456789abcdef0123456789abcdef';
+    await store.createSession(id);
+    await store.appendMessage(id, AgentChatRole.user, '掉落亚麻布的 10 级以下生物');
+    await store.appendItem(id, {'role': 'user', 'content': '掉落亚麻布的 10 级以下生物'});
+    await store.appendMessage(id, AgentChatRole.assistant, '我先查一下。');
+    await store.appendItem(id, {
       'type': 'function_call',
       'call_id': 'c1',
       'name': 'query_rows',
       'arguments': '{}',
     });
 
-    final loaded = await store.load('s1');
+    expect((await store.list()).single.id, id);
+    final loaded = await store.load(id);
 
     expect(loaded, isNotNull);
     expect(loaded!.title, '掉落亚麻布的 10 级以下生物');

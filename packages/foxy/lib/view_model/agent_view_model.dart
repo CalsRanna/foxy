@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:foxy/infrastructure/agent/agent_session_store.dart';
@@ -14,6 +13,7 @@ import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:uuid/uuid.dart';
 
 /// Creates the chat runner for one send. Injectable so tests can script agent
 /// events without a provider.
@@ -35,7 +35,6 @@ typedef AgentTitleGenerator = Future<String?> Function(
 /// lightweight metadata and content loads lazily when a session is selected.
 class AgentViewModel with FieldControllerMixin {
   static const _defaultTitle = '新会话';
-  static final _sessionIdRandom = Random.secure();
 
   final AgentProviderConfigUseCase _configUseCase;
 
@@ -288,10 +287,7 @@ class AgentViewModel with FieldControllerMixin {
   }
 
   AgentChatSession _createSession() {
-    final id = List.generate(
-      16,
-      (_) => _sessionIdRandom.nextInt(256).toRadixString(16).padLeft(2, '0'),
-    ).join();
+    final id = const Uuid().v4();
     final session = AgentChatSession(id: id, title: _defaultTitle);
     _loaded[id] = session;
     _activateSession(session);
