@@ -183,6 +183,14 @@ void main() {
               isNot(matches(r'query_rows|get_row|count_rows|aggregate_rows')),
             );
             expect(body['instructions'], contains('调用 find_foxy_feature'));
+            expect(
+              body['instructions'],
+              allOf(
+                contains('所有 DBC 数据只从 foxy.dbc_* 查询'),
+                contains('所需的 DBC 表缺失或整表为空'),
+                contains('调用 find_foxy_feature 搜索「导入 DBC」'),
+              ),
+            );
             return _completedResponse([
               {
                 'type': 'function_call',
