@@ -51,92 +51,6 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
 
   Laconic get _database => _laconic ?? Database.instance.laconic;
 
-  /// Loads (and caches) the table catalog from `information_schema`.
-  Future<TableCatalog> getCatalog({bool refresh = false}) async {
-    final cached = _catalog;
-    if (!refresh && cached != null) return cached;
-    final config = await _configUtil.load();
-    final worldDatabase = _databaseName(config['database']);
-    if (worldDatabase == null) {
-      throw const DatabaseNotConnectedException(
-        'world database name is not configured',
-      );
-    }
-    final charactersDatabase =
-        _databaseName(config['characters_database']) ??
-        _defaultCharactersDatabase;
-    final authDatabase =
-        _databaseName(config['auth_database']) ?? _defaultAuthDatabase;
-    final rows = await _database
-        .table('information_schema.columns')
-        .whereIn('table_schema', [
-          worldDatabase,
-          _foxySchema,
-          charactersDatabase,
-          authDatabase,
-        ])
-        .orderBy('table_schema')
-        .orderBy('table_name')
-        .orderBy('ordinal_position')
-        .get();
-    final catalog = buildCatalog(
-      rows.map((row) => row.toMap()).toList(),
-      worldDatabase: worldDatabase,
-      charactersDatabase: charactersDatabase,
-      authDatabase: authDatabase,
-      semantics: AgentFieldSemantics.values,
-    );
-    _catalog = catalog;
-    return catalog;
-  }
-
-  @override
-  Future<Map<String, Object?>> serverTime() async {
-    final rows = await _database.select('''
-select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
-       DATE_FORMAT(UTC_TIMESTAMP(6), '%Y-%m-%dT%H:%i:%s.%fZ') as `utcTime`,
-       @@session.time_zone as `sessionTimeZone`,
-       @@system_time_zone as `systemTimeZone`,
-       TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(6), CURRENT_TIMESTAMP(6)) as `utcOffsetSeconds`,
-       UNIX_TIMESTAMP() as `unixTimestamp`
-''');
-    return rows.single.toMap();
-  }
-
-  @override
-  Future<List<Map<String, Object?>>> queryRows({
-    required String table,
-    required List<RowFilter> filters,
-    required int limit,
-    List<RowOrder> orderBy = const [],
-    int offset = 0,
-  }) async {
-    final info = await _tableInfo(table);
-    final columns = info.columns
-        .map((column) => _quoteIdentifier(column.name))
-        .toList();
-    final query = _filteredQuery(info, filters).select(columns);
-    _applyPage(
-      query,
-      orderBy: orderBy,
-      allowedColumns: {for (final column in info.columns) column.name},
-      tieBreakers: info.primaryKey.map((column) => column.name),
-      limit: limit.clamp(1, _maxRows),
-      offset: offset,
-    );
-    final rows = await query.get();
-    return rows.map((row) => row.toMap()).toList();
-  }
-
-  @override
-  Future<int> countRows({
-    required String table,
-    required List<RowFilter> filters,
-  }) async {
-    final info = await _tableInfo(table);
-    return _filteredQuery(info, filters).count();
-  }
-
   @override
   Future<List<Map<String, Object?>>> aggregateRows({
     required String table,
@@ -179,41 +93,90 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
     return rows.map((row) => row.toMap()).toList();
   }
 
-  static void _applyPage(
-    QueryBuilder query, {
-    required List<RowOrder> orderBy,
-    required Set<String> allowedColumns,
-    required Iterable<String> tieBreakers,
-    required int limit,
-    required int offset,
-  }) {
-    if (offset < 0) {
-      throw const ValidationException('offset must be non-negative');
-    }
-    final sorted = <String>{};
-    for (final order in orderBy) {
-      if (!allowedColumns.contains(order.column) || !sorted.add(order.column)) {
-        throw ValidationException(
-          'unknown or duplicate sort column: ${order.column}',
-        );
-      }
-      query.orderBy(
-        _quoteIdentifier(order.column),
-        direction: order.direction.name,
-      );
-    }
-    for (final column in tieBreakers) {
-      if (!sorted.contains(column)) query.orderBy(_quoteIdentifier(column));
-    }
-    query.limit(limit);
-    if (offset != 0) query.offset(offset);
+  @override
+  Future<int> countRows({
+    required String table,
+    required List<RowFilter> filters,
+  }) async {
+    final info = await _tableInfo(table);
+    return _filteredQuery(info, filters).count();
   }
 
-  Future<TableInfo> _tableInfo(String table) async {
-    final catalog = await getCatalog();
-    final info = catalog.find(table);
-    if (info == null) throw ValidationException('unknown agent table: $table');
-    return info;
+  /// Loads (and caches) the table catalog from `information_schema`.
+  Future<TableCatalog> getCatalog({bool refresh = false}) async {
+    final cached = _catalog;
+    if (!refresh && cached != null) return cached;
+    final config = await _configUtil.load();
+    final worldDatabase = _databaseName(config['database']);
+    if (worldDatabase == null) {
+      throw const DatabaseNotConnectedException(
+        'world database name is not configured',
+      );
+    }
+    final charactersDatabase =
+        _databaseName(config['characters_database']) ??
+        _defaultCharactersDatabase;
+    final authDatabase =
+        _databaseName(config['auth_database']) ?? _defaultAuthDatabase;
+    final rows = await _database
+        .table('information_schema.columns')
+        .whereIn('table_schema', [
+          worldDatabase,
+          _foxySchema,
+          charactersDatabase,
+          authDatabase,
+        ])
+        .orderBy('table_schema')
+        .orderBy('table_name')
+        .orderBy('ordinal_position')
+        .get();
+    final catalog = buildCatalog(
+      rows.map((row) => row.toMap()).toList(),
+      worldDatabase: worldDatabase,
+      charactersDatabase: charactersDatabase,
+      authDatabase: authDatabase,
+      semantics: AgentFieldSemantics.values,
+    );
+    _catalog = catalog;
+    return catalog;
+  }
+
+  @override
+  Future<List<Map<String, Object?>>> queryRows({
+    required String table,
+    required List<RowFilter> filters,
+    required int limit,
+    List<RowOrder> orderBy = const [],
+    int offset = 0,
+  }) async {
+    final info = await _tableInfo(table);
+    final columns = info.columns
+        .map((column) => _quoteIdentifier(column.name))
+        .toList();
+    final query = _filteredQuery(info, filters).select(columns);
+    _applyPage(
+      query,
+      orderBy: orderBy,
+      allowedColumns: {for (final column in info.columns) column.name},
+      tieBreakers: info.primaryKey.map((column) => column.name),
+      limit: limit.clamp(1, _maxRows),
+      offset: offset,
+    );
+    final rows = await query.get();
+    return rows.map((row) => row.toMap()).toList();
+  }
+
+  @override
+  Future<Map<String, Object?>> serverTime() async {
+    final rows = await _database.select('''
+select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
+       DATE_FORMAT(UTC_TIMESTAMP(6), '%Y-%m-%dT%H:%i:%s.%fZ') as `utcTime`,
+       @@session.time_zone as `sessionTimeZone`,
+       @@system_time_zone as `systemTimeZone`,
+       TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(6), CURRENT_TIMESTAMP(6)) as `utcOffsetSeconds`,
+       UNIX_TIMESTAMP() as `unixTimestamp`
+''');
+    return rows.single.toMap();
   }
 
   QueryBuilder _filteredQuery(TableInfo info, List<RowFilter> filters) {
@@ -244,6 +207,13 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
       }
       return _applyFilter(builder, filter);
     });
+  }
+
+  Future<TableInfo> _tableInfo(String table) async {
+    final catalog = await getCatalog();
+    final info = catalog.find(table);
+    if (info == null) throw ValidationException('unknown agent table: $table');
+    return info;
   }
 
   /// Builds the agent catalog from `information_schema.columns` rows.
@@ -337,6 +307,36 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
         comparator: '<=',
       ),
     };
+  }
+
+  static void _applyPage(
+    QueryBuilder query, {
+    required List<RowOrder> orderBy,
+    required Set<String> allowedColumns,
+    required Iterable<String> tieBreakers,
+    required int limit,
+    required int offset,
+  }) {
+    if (offset < 0) {
+      throw const ValidationException('offset must be non-negative');
+    }
+    final sorted = <String>{};
+    for (final order in orderBy) {
+      if (!allowedColumns.contains(order.column) || !sorted.add(order.column)) {
+        throw ValidationException(
+          'unknown or duplicate sort column: ${order.column}',
+        );
+      }
+      query.orderBy(
+        _quoteIdentifier(order.column),
+        direction: order.direction.name,
+      );
+    }
+    for (final column in tieBreakers) {
+      if (!sorted.contains(column)) query.orderBy(_quoteIdentifier(column));
+    }
+    query.limit(limit);
+    if (offset != 0) query.offset(offset);
   }
 
   static String? _databaseName(Object? value) =>

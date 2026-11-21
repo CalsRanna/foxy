@@ -491,11 +491,6 @@ void main() {
   });
 }
 
-class _UnconfiguredAgentConfig extends ConfigUtil {
-  @override
-  Future<Map<String, dynamic>> load() async => {};
-}
-
 class _PendingAgentSessionStore extends AgentSessionStore {
   final loaded = Completer<AgentChatSession?>();
 
@@ -533,4 +528,9 @@ class _TestAgentViewModel extends AgentViewModel {
 
   @override
   Future<void> selectSession(String id) async => activeSessionId.value = id;
+}
+
+class _UnconfiguredAgentConfig extends ConfigUtil {
+  @override
+  Future<Map<String, dynamic>> load() async => {};
 }

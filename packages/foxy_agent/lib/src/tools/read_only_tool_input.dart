@@ -1,38 +1,60 @@
 import 'package:foxy_agent/src/tools/read_only_data_source.dart';
 import 'package:foxy_agent/src/tools/table_catalog.dart';
 
-/// Resolves the `table` argument of a tool call to a catalog entry.
-({TableInfo? table, String? error}) resolveTable(
-  TableCatalog catalog,
-  Object? rawName,
-) {
-  if (rawName is! String || rawName.isEmpty) {
-    return (
-      table: null,
-      error:
-          'Missing "table" argument. Call list_tables to see the '
-          'available tables.',
-    );
-  }
-  final table = catalog.find(rawName);
-  if (table != null) {
-    return (table: table, error: null);
-  }
-  if (catalog.tables.any((candidate) => candidate.name == rawName)) {
-    return (
-      table: null,
-      error:
-          'Ambiguous table name "$rawName"; use the qualified name '
-          '(database.table) returned by list_tables.',
-    );
-  }
-  return (
-    table: null,
-    error:
-        'Unknown table "$rawName". Call list_tables to see the available '
-        'tables.',
-  );
-}
+const filterSchema = {
+  'type': 'array',
+  'description': 'All filters must match (logical AND).',
+  'items': {
+    'type': 'object',
+    'properties': {
+      'column': {'type': 'string', 'description': 'Column name.'},
+      'operator': {
+        'type': 'string',
+        'enum': [
+          'equals',
+          'notEquals',
+          'contains',
+          'in',
+          'greaterThan',
+          'greaterOrEqual',
+          'lessThan',
+          'lessOrEqual',
+        ],
+      },
+      'value': {
+        'type': ['string', 'number', 'integer', 'boolean', 'null', 'array'],
+        'description':
+            'Scalar value to compare against, or a non-empty array '
+            'when the operator is "in".',
+      },
+    },
+    'required': ['column', 'operator', 'value'],
+    'additionalProperties': false,
+  },
+};
+
+const offsetSchema = {
+  'type': 'integer',
+  'minimum': 0,
+  'description':
+      'Rows or groups to skip. Defaults to zero. Use nextOffset to continue.',
+};
+
+const orderBySchema = {
+  'type': 'array',
+  'items': {
+    'type': 'object',
+    'properties': {
+      'column': {'type': 'string'},
+      'direction': {
+        'type': 'string',
+        'enum': ['asc', 'desc'],
+      },
+    },
+    'required': ['column', 'direction'],
+    'additionalProperties': false,
+  },
+};
 
 ({List<RowFilter>? filters, String? error}) parseFilters(
   TableInfo table,
@@ -111,61 +133,6 @@ import 'package:foxy_agent/src/tools/table_catalog.dart';
   return (filters: filters, error: null);
 }
 
-const filterSchema = {
-  'type': 'array',
-  'description': 'All filters must match (logical AND).',
-  'items': {
-    'type': 'object',
-    'properties': {
-      'column': {'type': 'string', 'description': 'Column name.'},
-      'operator': {
-        'type': 'string',
-        'enum': [
-          'equals',
-          'notEquals',
-          'contains',
-          'in',
-          'greaterThan',
-          'greaterOrEqual',
-          'lessThan',
-          'lessOrEqual',
-        ],
-      },
-      'value': {
-        'type': ['string', 'number', 'integer', 'boolean', 'null', 'array'],
-        'description':
-            'Scalar value to compare against, or a non-empty array '
-            'when the operator is "in".',
-      },
-    },
-    'required': ['column', 'operator', 'value'],
-    'additionalProperties': false,
-  },
-};
-
-const orderBySchema = {
-  'type': 'array',
-  'items': {
-    'type': 'object',
-    'properties': {
-      'column': {'type': 'string'},
-      'direction': {
-        'type': 'string',
-        'enum': ['asc', 'desc'],
-      },
-    },
-    'required': ['column', 'direction'],
-    'additionalProperties': false,
-  },
-};
-
-const offsetSchema = {
-  'type': 'integer',
-  'minimum': 0,
-  'description':
-      'Rows or groups to skip. Defaults to zero. Use nextOffset to continue.',
-};
-
 ({List<RowOrder>? orderBy, String? error}) parseOrderBy(
   Object? raw,
   Set<String> allowedColumns,
@@ -198,4 +165,37 @@ const offsetSchema = {
     orderBy.add(RowOrder(column: column, direction: direction));
   }
   return (orderBy: orderBy, error: null);
+}
+
+/// Resolves the `table` argument of a tool call to a catalog entry.
+({TableInfo? table, String? error}) resolveTable(
+  TableCatalog catalog,
+  Object? rawName,
+) {
+  if (rawName is! String || rawName.isEmpty) {
+    return (
+      table: null,
+      error:
+          'Missing "table" argument. Call list_tables to see the '
+          'available tables.',
+    );
+  }
+  final table = catalog.find(rawName);
+  if (table != null) {
+    return (table: table, error: null);
+  }
+  if (catalog.tables.any((candidate) => candidate.name == rawName)) {
+    return (
+      table: null,
+      error:
+          'Ambiguous table name "$rawName"; use the qualified name '
+          '(database.table) returned by list_tables.',
+    );
+  }
+  return (
+    table: null,
+    error:
+        'Unknown table "$rawName". Call list_tables to see the available '
+        'tables.',
+  );
 }

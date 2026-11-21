@@ -9,9 +9,6 @@ final class DescribeReferencesTool extends AgentTool {
   const DescribeReferencesTool(this.catalog);
 
   @override
-  String get name => 'describe_references';
-
-  @override
   String get description =>
       'List incoming and outgoing catalog references for a table, including '
       'known logical relationships. Use outgoing expandable references for '
@@ -29,6 +26,9 @@ final class DescribeReferencesTool extends AgentTool {
     'required': ['table'],
     'additionalProperties': false,
   };
+
+  @override
+  String get name => 'describe_references';
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {

@@ -54,6 +54,61 @@ final class RowExpansion {
 
   int get _size => 1 + children.fold(0, (size, child) => size + child._size);
 
+  /// Batches all visible keys into one query per expansion, never per row.
+  static Future<List<Map<String, Object?>>> apply(
+    ReadOnlyDataSource source,
+    List<Map<String, Object?>> rows,
+    List<RowExpansion> expansions,
+  ) async {
+    if (expansions.isEmpty || rows.isEmpty) return rows;
+    final expanded = rows
+        .map(
+          (row) => <String, Object?>{...row, '_expanded': <String, Object?>{}},
+        )
+        .toList();
+    for (final expansion in expansions) {
+      final values = rows
+          .map((row) => row[expansion.column])
+          .where((value) => value != null)
+          .toSet()
+          .toList();
+      final targets = values.isEmpty
+          ? <Map<String, Object?>>[]
+          : await source.queryRows(
+              table: expansion.target.qualifiedName,
+              filters: [
+                RowFilter(
+                  column: expansion.key,
+                  operator: FilterOperator.inList,
+                  value: values,
+                ),
+              ],
+              limit: values.length,
+            );
+      final nested = await apply(source, targets, expansion.children);
+      final byKey = {
+        for (final target in nested) target[expansion.key]: target,
+      };
+      final columns = {
+        expansion.key,
+        ...expansion.columns,
+        for (final child in expansion.children) child.column,
+      };
+      for (var i = 0; i < rows.length; i++) {
+        final target = byKey[rows[i][expansion.column]];
+        final references = expanded[i]['_expanded']! as Map<String, Object?>;
+        references[expansion.column] = target == null
+            ? null
+            : {
+                for (final column in columns) column: target[column],
+                if (expansion.children.isNotEmpty)
+                  '_expanded': target['_expanded'],
+              };
+      }
+    }
+    return expanded;
+  }
+
   static ({List<RowExpansion>? expansions, String? error}) parse(
     TableCatalog catalog,
     TableInfo table,
@@ -142,60 +197,5 @@ final class RowExpansion {
       );
     }
     return (expansions: expansions, error: null);
-  }
-
-  /// Batches all visible keys into one query per expansion, never per row.
-  static Future<List<Map<String, Object?>>> apply(
-    ReadOnlyDataSource source,
-    List<Map<String, Object?>> rows,
-    List<RowExpansion> expansions,
-  ) async {
-    if (expansions.isEmpty || rows.isEmpty) return rows;
-    final expanded = rows
-        .map(
-          (row) => <String, Object?>{...row, '_expanded': <String, Object?>{}},
-        )
-        .toList();
-    for (final expansion in expansions) {
-      final values = rows
-          .map((row) => row[expansion.column])
-          .where((value) => value != null)
-          .toSet()
-          .toList();
-      final targets = values.isEmpty
-          ? <Map<String, Object?>>[]
-          : await source.queryRows(
-              table: expansion.target.qualifiedName,
-              filters: [
-                RowFilter(
-                  column: expansion.key,
-                  operator: FilterOperator.inList,
-                  value: values,
-                ),
-              ],
-              limit: values.length,
-            );
-      final nested = await apply(source, targets, expansion.children);
-      final byKey = {
-        for (final target in nested) target[expansion.key]: target,
-      };
-      final columns = {
-        expansion.key,
-        ...expansion.columns,
-        for (final child in expansion.children) child.column,
-      };
-      for (var i = 0; i < rows.length; i++) {
-        final target = byKey[rows[i][expansion.column]];
-        final references = expanded[i]['_expanded']! as Map<String, Object?>;
-        references[expansion.column] = target == null
-            ? null
-            : {
-                for (final column in columns) column: target[column],
-                if (expansion.children.isNotEmpty)
-                  '_expanded': target['_expanded'],
-              };
-      }
-    }
-    return expanded;
   }
 }

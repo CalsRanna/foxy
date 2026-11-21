@@ -29,33 +29,6 @@ List<AgentTool> createReadOnlyTools({
   GetRowTool(catalog, dataSource),
 ];
 
-/// Gets the time used by the connected database for relative-date queries.
-final class ServerTimeTool extends AgentTool {
-  final ReadOnlyDataSource dataSource;
-
-  const ServerTimeTool(this.dataSource);
-
-  @override
-  String get name => 'server_time';
-
-  @override
-  String get description =>
-      'Read the connected MySQL server clock: localTime, utcTime, '
-      'sessionTimeZone, utcOffsetSeconds and unixTimestamp (seconds). '
-      'Use before calculating relative date or time filters.';
-
-  @override
-  Map<String, Object?> get inputSchema => const {
-    'type': 'object',
-    'properties': <String, Object?>{},
-    'additionalProperties': false,
-  };
-
-  @override
-  Future<Object?> call(Map<String, Object?> arguments) =>
-      dataSource.serverTime();
-}
-
 /// Explains the full meaning of one column's values.
 final class DescribeFieldValuesTool extends AgentTool {
   final TableCatalog catalog;
@@ -401,4 +374,31 @@ final class QueryRowsTool extends AgentTool {
       if (truncated) 'nextOffset': offset + visible.length,
     };
   }
+}
+
+/// Gets the time used by the connected database for relative-date queries.
+final class ServerTimeTool extends AgentTool {
+  final ReadOnlyDataSource dataSource;
+
+  const ServerTimeTool(this.dataSource);
+
+  @override
+  String get description =>
+      'Read the connected MySQL server clock: localTime, utcTime, '
+      'sessionTimeZone, utcOffsetSeconds and unixTimestamp (seconds). '
+      'Use before calculating relative date or time filters.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': <String, Object?>{},
+    'additionalProperties': false,
+  };
+
+  @override
+  String get name => 'server_time';
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) =>
+      dataSource.serverTime();
 }

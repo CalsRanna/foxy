@@ -91,11 +91,6 @@ final class TableInfo {
   Iterable<ColumnInfo> get primaryKey =>
       columns.where((column) => column.primaryKey);
 
-  bool hasSingleColumnPrimaryKey(String column) {
-    final keys = primaryKey.toList();
-    return keys.length == 1 && keys.single.name == column;
-  }
-
   /// The canonical model-facing name: `database.name` when [database] is set,
   /// otherwise [name].
   String get qualifiedName => database.isEmpty ? name : '$database.$name';
@@ -108,6 +103,11 @@ final class TableInfo {
       }
     }
     return null;
+  }
+
+  bool hasSingleColumnPrimaryKey(String column) {
+    final keys = primaryKey.toList();
+    return keys.length == 1 && keys.single.name == column;
   }
 
   Map<String, Object?> toJson() => {

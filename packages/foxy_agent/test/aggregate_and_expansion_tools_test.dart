@@ -529,15 +529,6 @@ void main() {
   );
 }
 
-Map<String, Object?> _expand(
-  String column, [
-  List<Map<String, Object?>> children = const [],
-]) => {
-  'column': column,
-  'columns': ['name'],
-  if (children.isNotEmpty) 'expand': children,
-};
-
 const _catalog = TableCatalog([
   TableInfo(
     name: 'items',
@@ -598,6 +589,15 @@ const _catalog = TableCatalog([
   ),
 ]);
 
+Map<String, Object?> _expand(
+  String column, [
+  List<Map<String, Object?>> children = const [],
+]) => {
+  'column': column,
+  'columns': ['name'],
+  if (children.isNotEmpty) 'expand': children,
+};
+
 final class _Source implements ReadOnlyDataSource {
   final tables = <String, List<Map<String, Object?>>>{
     'links': [
@@ -620,19 +620,6 @@ final class _Source implements ReadOnlyDataSource {
   List<Map<String, Object?>> aggregates = [];
 
   @override
-  Future<Map<String, Object?>> serverTime() => throw UnimplementedError();
-
-  @override
-  Future<int> countRows({
-    required String table,
-    required List<RowFilter> filters,
-  }) async {
-    countTable = table;
-    this.filters = filters;
-    return 120;
-  }
-
-  @override
   Future<List<Map<String, Object?>>> aggregateRows({
     required String table,
     required List<RowFilter> filters,
@@ -650,6 +637,16 @@ final class _Source implements ReadOnlyDataSource {
     this.orderBy = orderBy;
     this.offset = offset;
     return aggregates.skip(offset).take(limit).toList();
+  }
+
+  @override
+  Future<int> countRows({
+    required String table,
+    required List<RowFilter> filters,
+  }) async {
+    countTable = table;
+    this.filters = filters;
+    return 120;
   }
 
   @override
@@ -673,4 +670,7 @@ final class _Source implements ReadOnlyDataSource {
         .take(limit)
         .toList();
   }
+
+  @override
+  Future<Map<String, Object?>> serverTime() => throw UnimplementedError();
 }

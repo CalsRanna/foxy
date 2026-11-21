@@ -1,3 +1,19 @@
+/// SQL aggregate functions exposed by the restricted aggregation tool.
+enum AggregateFunction { count, sum, avg, min, max }
+
+/// A fixed aggregate expression; no SQL or caller-supplied alias is accepted.
+final class AggregateMetric {
+  final AggregateFunction function;
+
+  /// Omitted only for COUNT(*); COUNT(column) counts non-null values.
+  final String? column;
+
+  const AggregateMetric({required this.function, this.column});
+
+  String get outputName =>
+      column == null ? function.name : '${function.name}_$column';
+}
+
 /// Comparison operators supported by row filters.
 enum FilterOperator {
   equals('equals'),
@@ -32,15 +48,6 @@ enum FilterOperator {
 /// - reject tables and columns outside the catalog allowlist;
 /// - return at most the requested limit, with JSON-encodable values.
 abstract interface class ReadOnlyDataSource {
-  /// Reads the connected database's current time and session time zone.
-  Future<Map<String, Object?>> serverTime();
-
-  /// Counts all matching rows in the database, without a row limit.
-  Future<int> countRows({
-    required String table,
-    required List<RowFilter> filters,
-  });
-
   /// Aggregates all matching rows before limiting the returned groups.
   /// Results use group column names and [AggregateMetric.outputName] as keys.
   Future<List<Map<String, Object?>>> aggregateRows({
@@ -53,6 +60,12 @@ abstract interface class ReadOnlyDataSource {
     int offset = 0,
   });
 
+  /// Counts all matching rows in the database, without a row limit.
+  Future<int> countRows({
+    required String table,
+    required List<RowFilter> filters,
+  });
+
   /// Returns rows of [table] matching every filter (logical AND).
   Future<List<Map<String, Object?>>> queryRows({
     required String table,
@@ -61,32 +74,9 @@ abstract interface class ReadOnlyDataSource {
     List<RowOrder> orderBy = const [],
     int offset = 0,
   });
-}
 
-enum SortDirection { asc, desc }
-
-/// An ordering by a catalog column or an aggregate output name.
-final class RowOrder {
-  final String column;
-  final SortDirection direction;
-
-  const RowOrder({required this.column, required this.direction});
-}
-
-/// SQL aggregate functions exposed by the restricted aggregation tool.
-enum AggregateFunction { count, sum, avg, min, max }
-
-/// A fixed aggregate expression; no SQL or caller-supplied alias is accepted.
-final class AggregateMetric {
-  final AggregateFunction function;
-
-  /// Omitted only for COUNT(*); COUNT(column) counts non-null values.
-  final String? column;
-
-  const AggregateMetric({required this.function, this.column});
-
-  String get outputName =>
-      column == null ? function.name : '${function.name}_$column';
+  /// Reads the connected database's current time and session time zone.
+  Future<Map<String, Object?>> serverTime();
 }
 
 /// A comparison applied to a single column.
@@ -105,3 +95,13 @@ final class RowFilter {
     required this.value,
   });
 }
+
+/// An ordering by a catalog column or an aggregate output name.
+final class RowOrder {
+  final String column;
+  final SortDirection direction;
+
+  const RowOrder({required this.column, required this.direction});
+}
+
+enum SortDirection { asc, desc }

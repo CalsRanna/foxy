@@ -516,18 +516,6 @@ final class _FakeDataSource implements ReadOnlyDataSource {
   _FakeDataSource(this.rows);
 
   @override
-  Future<Map<String, Object?>> serverTime() async => {
-    'localTime': '2026-11-21 12:00:00',
-    'sessionTimeZone': '+08:00',
-  };
-
-  @override
-  Future<int> countRows({
-    required String table,
-    required List<RowFilter> filters,
-  }) => throw UnimplementedError();
-
-  @override
   Future<List<Map<String, Object?>>> aggregateRows({
     required String table,
     required List<RowFilter> filters,
@@ -536,6 +524,12 @@ final class _FakeDataSource implements ReadOnlyDataSource {
     required int limit,
     List<RowOrder> orderBy = const [],
     int offset = 0,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<int> countRows({
+    required String table,
+    required List<RowFilter> filters,
   }) => throw UnimplementedError();
 
   @override
@@ -555,4 +549,10 @@ final class _FakeDataSource implements ReadOnlyDataSource {
     ));
     return rows.skip(offset).take(limit).toList();
   }
+
+  @override
+  Future<Map<String, Object?>> serverTime() async => {
+    'localTime': '2026-11-21 12:00:00',
+    'sessionTimeZone': '+08:00',
+  };
 }

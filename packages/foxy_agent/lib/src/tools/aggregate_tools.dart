@@ -3,46 +3,42 @@ import 'package:foxy_agent/src/tools/read_only_data_source.dart';
 import 'package:foxy_agent/src/tools/read_only_tool_input.dart';
 import 'package:foxy_agent/src/tools/table_catalog.dart';
 
-/// Counts all matching rows, without fetching a sample.
-final class CountRowsTool extends AgentTool {
-  final TableCatalog catalog;
-  final ReadOnlyDataSource dataSource;
-
-  const CountRowsTool(this.catalog, this.dataSource);
-
-  @override
-  String get name => 'count_rows';
-
-  @override
-  String get description =>
-      'Count every matching row in a table using database COUNT(*). '
-      'Filters combine with AND. The result is exact, with no row limit. '
-      'Use this for totals and denominators instead of counting query_rows.';
-
-  @override
-  Map<String, Object?> get inputSchema => const {
-    'type': 'object',
-    'properties': {
-      'table': {'type': 'string'},
-      'filters': filterSchema,
-    },
-    'required': ['table'],
-    'additionalProperties': false,
-  };
-
-  @override
-  Future<Object?> call(Map<String, Object?> arguments) async {
-    final resolved = resolveTable(catalog, arguments['table']);
-    final table = resolved.table;
-    if (table == null) return resolved.error!;
-    final parsed = parseFilters(table, arguments['filters']);
-    if (parsed.filters == null) return parsed.error!;
-    final count = await dataSource.countRows(
-      table: table.qualifiedName,
-      filters: parsed.filters!,
-    );
-    return {'table': table.qualifiedName, 'count': count};
+/// Shared validation for tools and host adapters before constructing SQL.
+String? validateAggregation(
+  TableInfo table,
+  List<String> groupBy,
+  List<AggregateMetric> metrics,
+) {
+  if (groupBy.length > AggregateRowsTool.maxGroupBy ||
+      groupBy.toSet().length != groupBy.length) {
+    return '"groupBy" accepts at most 3 distinct columns.';
   }
+  if (metrics.isEmpty || metrics.length > AggregateRowsTool.maxMetrics) {
+    return 'Provide between 1 and 8 metrics.';
+  }
+  for (final column in groupBy) {
+    if (table.findColumn(column) == null) {
+      return 'Unknown group column "$column".';
+    }
+  }
+  final names = groupBy.map((name) => name.toLowerCase()).toSet();
+  for (final metric in metrics) {
+    final column = metric.column == null
+        ? null
+        : table.findColumn(metric.column!);
+    if (metric.column != null && column == null) {
+      return 'Unknown metric column "${metric.column}".';
+    }
+    if (metric.function != AggregateFunction.count &&
+        (column == null ||
+            (column.type != 'int' && column.type != 'decimal'))) {
+      return '${metric.function.name} requires a numeric column.';
+    }
+    if (!names.add(metric.outputName.toLowerCase())) {
+      return 'Duplicate aggregate output name "${metric.outputName}".';
+    }
+  }
+  return null;
 }
 
 /// Restricted database aggregation with bounded output, never sampled input.
@@ -55,9 +51,6 @@ final class AggregateRowsTool extends AgentTool {
   final ReadOnlyDataSource dataSource;
 
   const AggregateRowsTool(this.catalog, this.dataSource);
-
-  @override
-  String get name => 'aggregate_rows';
 
   @override
   String get description =>
@@ -110,6 +103,9 @@ final class AggregateRowsTool extends AgentTool {
     'required': ['table', 'metrics'],
     'additionalProperties': false,
   };
+
+  @override
+  String get name => 'aggregate_rows';
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
@@ -180,40 +176,44 @@ final class AggregateRowsTool extends AgentTool {
   }
 }
 
-/// Shared validation for tools and host adapters before constructing SQL.
-String? validateAggregation(
-  TableInfo table,
-  List<String> groupBy,
-  List<AggregateMetric> metrics,
-) {
-  if (groupBy.length > AggregateRowsTool.maxGroupBy ||
-      groupBy.toSet().length != groupBy.length) {
-    return '"groupBy" accepts at most 3 distinct columns.';
+/// Counts all matching rows, without fetching a sample.
+final class CountRowsTool extends AgentTool {
+  final TableCatalog catalog;
+  final ReadOnlyDataSource dataSource;
+
+  const CountRowsTool(this.catalog, this.dataSource);
+
+  @override
+  String get description =>
+      'Count every matching row in a table using database COUNT(*). '
+      'Filters combine with AND. The result is exact, with no row limit. '
+      'Use this for totals and denominators instead of counting query_rows.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {
+    'type': 'object',
+    'properties': {
+      'table': {'type': 'string'},
+      'filters': filterSchema,
+    },
+    'required': ['table'],
+    'additionalProperties': false,
+  };
+
+  @override
+  String get name => 'count_rows';
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) async {
+    final resolved = resolveTable(catalog, arguments['table']);
+    final table = resolved.table;
+    if (table == null) return resolved.error!;
+    final parsed = parseFilters(table, arguments['filters']);
+    if (parsed.filters == null) return parsed.error!;
+    final count = await dataSource.countRows(
+      table: table.qualifiedName,
+      filters: parsed.filters!,
+    );
+    return {'table': table.qualifiedName, 'count': count};
   }
-  if (metrics.isEmpty || metrics.length > AggregateRowsTool.maxMetrics) {
-    return 'Provide between 1 and 8 metrics.';
-  }
-  for (final column in groupBy) {
-    if (table.findColumn(column) == null) {
-      return 'Unknown group column "$column".';
-    }
-  }
-  final names = groupBy.map((name) => name.toLowerCase()).toSet();
-  for (final metric in metrics) {
-    final column = metric.column == null
-        ? null
-        : table.findColumn(metric.column!);
-    if (metric.column != null && column == null) {
-      return 'Unknown metric column "${metric.column}".';
-    }
-    if (metric.function != AggregateFunction.count &&
-        (column == null ||
-            (column.type != 'int' && column.type != 'decimal'))) {
-      return '${metric.function.name} requires a numeric column.';
-    }
-    if (!names.add(metric.outputName.toLowerCase())) {
-      return 'Duplicate aggregate output name "${metric.outputName}".';
-    }
-  }
-  return null;
 }
