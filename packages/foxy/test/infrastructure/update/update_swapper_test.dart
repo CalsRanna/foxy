@@ -36,6 +36,12 @@ void main() {
     cover1.writeAsStringSync('cover1');
     final cover2 = File(p.join(appDir.path, 'data', 'cover', 'alt.png'));
     cover2.writeAsStringSync('cover2');
+    File(p.join(appDir.path, 'session', 'old.jsonl'))
+      ..createSync(recursive: true)
+      ..writeAsStringSync('legacy session');
+    File(p.join(appDir.path, 'data', 'session', 'saved.jsonl'))
+      ..createSync(recursive: true)
+      ..writeAsStringSync('current session');
 
     // New-version payload.
     File(p.join(payloadDir.path, 'foxy.exe')).writeAsStringSync('new-exe');
@@ -47,6 +53,9 @@ void main() {
     File(p.join(payloadDir.path, 'data', 'icudtl.dat'))
         .writeAsStringSync('new-icu');
     File(p.join(payloadDir.path, 'new_file.dll')).writeAsStringSync('new-dll');
+    File(p.join(payloadDir.path, 'data', 'session', 'saved.jsonl'))
+      ..createSync(recursive: true)
+      ..writeAsStringSync('payload session');
   });
 
   tearDown(() {
@@ -105,6 +114,15 @@ void main() {
     expect(
       File(p.join(appDir.path, 'data', 'cover', 'alt.png')).readAsStringSync(),
       'cover2',
+    );
+    expect(
+      File(p.join(appDir.path, 'session', 'old.jsonl')).readAsStringSync(),
+      'legacy session',
+    );
+    expect(
+      File(p.join(appDir.path, 'data', 'session', 'saved.jsonl'))
+          .readAsStringSync(),
+      'current session',
     );
   });
 

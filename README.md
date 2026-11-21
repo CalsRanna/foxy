@@ -212,6 +212,8 @@ Agent 复用同一 MySQL 连接读取角色库和认证库，默认库名为 `ac
 
 更新入口固定为 `releases/latest/download/latest.yaml`,应用启动时自动检查(24 小时内不重复),也可在设置页手动检查。
 
+助手会话保存在运行目录的 `data/session/`，新版更新器会保留它。从会话仍存放在根目录 `session/` 的旧版升级时，请先退出 Foxy 并备份该目录，再将新版 ZIP 覆盖解压到原目录。如果 `data/session/` 尚未创建，新版首次打开助手时会迁移旧目录。
+
 ## 文档
 
 - [CONVENTIONS.md](CONVENTIONS.md) — 项目硬性约定(命名、代码生成铁律、lint、错误处理、UI、数据库、测试)

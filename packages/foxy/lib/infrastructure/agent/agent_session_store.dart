@@ -9,8 +9,8 @@ import 'package:path/path.dart' as p;
 
 /// JSONL-backed persistence for agent chat sessions.
 ///
-/// One append-only file per session under `<app dir>/session/<id>.jsonl`,
-/// next to `config.yaml`. Line kinds:
+/// One append-only file per session under `<app dir>/data/session/<id>.jsonl`.
+/// Line kinds:
 /// - `{"type":"session", ...}`: session header;
 /// - `{"type":"message", "role": ..., "text": ...}`: UI transcript row;
 /// - `{"type":"item", "item": {...}}`: protocol `input` item, replayed on load
@@ -28,8 +28,7 @@ class AgentSessionStore {
 
   Future<void> _pending = Future.value();
 
-  AgentSessionStore({Directory? root})
-    : _root = root ?? Directory(p.join(Directory.current.path, 'session'));
+  AgentSessionStore({Directory? root}) : _root = root ?? _resolveDefaultRoot();
 
   Future<void> appendItem(String id, Map<String, Object?> item) =>
       _enqueue(() => _appendLine(id, {'type': 'item', 'item': item}));
@@ -218,6 +217,22 @@ class AgentSessionStore {
     );
     if (hasUserItem) return;
     items.add({'role': 'user', 'content': lastUser.text});
+  }
+
+  static Directory _resolveDefaultRoot() {
+    final appPath = Directory.current.path;
+    final root = Directory(p.join(appPath, 'data', 'session'));
+    final legacyRoot = Directory(p.join(appPath, 'session'));
+    if (root.existsSync() || !legacyRoot.existsSync()) return root;
+
+    try {
+      root.parent.createSync(recursive: true);
+      return legacyRoot.renameSync(root.path);
+    } on FileSystemException catch (error) {
+      if (root.existsSync()) return root;
+      LoggerUtil.instance.w('move agent session directory failed: $error');
+      return legacyRoot;
+    }
   }
 
   File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));

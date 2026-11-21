@@ -8,17 +8,18 @@
 /// end, calls [UpdateSwapper.applyUpdate] to mirror-replace, then restarts
 /// the app.
 ///
-/// Three kinds of user data in the run directory must survive (see
+/// User data in the run directory must survive (see
 /// [preservedRelPaths]):
 /// - `config.yaml`: database connection and directory config
 ///   (`lib/infrastructure/config/config_util.dart`);
 /// - `data/icon/`: the extracted game-icon cache
 ///   (`GameIconPaths` in `package:foxy_game_file/foxy_game_file.dart`);
 /// - `data/cover/`: the user-supplied login-page cover images
-///   (`lib/infrastructure/cover/cover_selector.dart`).
-/// Note that Flutter's own `data/flutter_assets` and `data/icudtl.dat`
-/// share `data/` with the icon cache, so only the `data/icon/` and
-/// `data/cover/` subtrees can be excluded, never the whole directory.
+///   (`lib/infrastructure/cover/cover_selector.dart`);
+/// - `data/session/` and legacy `session/`: persisted agent chats
+///   (`lib/infrastructure/agent/agent_session_store.dart`).
+/// Flutter's `data/flutter_assets` and `data/icudtl.dat` share `data/` with
+/// user data and must still be updated.
 library;
 
 import 'dart:io';
@@ -60,6 +61,8 @@ class UpdateSwapper {
     'config.yaml',
     'data/icon',
     'data/cover',
+    'data/session',
+    'session',
   ];
 
   /// Mirrors the content of [payloadRoot] onto [appDir]:

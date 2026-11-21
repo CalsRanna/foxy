@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/agent/agent_session_store.dart';
 import 'package:foxy/model/agent/agent_chat_session.dart';
+import 'package:path/path.dart' as p;
 
 void main() {
   late Directory tempDir;
@@ -15,6 +16,35 @@ void main() {
 
   tearDown(() async {
     await tempDir.delete(recursive: true);
+  });
+
+  test('moves the legacy session directory into data/session', () async {
+    await store.createSession('s1');
+    await store.appendMessage('s1', AgentChatRole.user, '原始问题');
+    await store.appendItem('s1', {'role': 'user', 'content': '原始问题'});
+    await store.appendItem('s1', {'type': 'function_call', 'call_id': 'c1'});
+    await store.saveTitle('s1', '生成标题');
+
+    final previousDir = Directory.current;
+    final AgentSessionStore migrated;
+    try {
+      Directory.current = tempDir;
+      migrated = AgentSessionStore();
+    } finally {
+      Directory.current = previousDir;
+    }
+
+    expect(Directory(p.join(tempDir.path, 'session')).existsSync(), isFalse);
+    expect((await migrated.list()).single.title, '生成标题');
+    final loaded = (await migrated.load('s1'))!;
+    expect(loaded.messages.single.text, '原始问题');
+    expect(loaded.session.items.last['call_id'], 'c1');
+
+    await migrated.createSession('s2');
+    expect(
+      File(p.join(tempDir.path, 'data', 'session', 's2.jsonl')).existsSync(),
+      isTrue,
+    );
   });
 
   test('round-trips messages and items', () async {
