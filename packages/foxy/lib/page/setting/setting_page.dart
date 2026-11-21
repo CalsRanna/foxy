@@ -8,6 +8,7 @@ import 'package:foxy/page/setting/dbc_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_import_dialog.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/mpq_export_dialog.dart';
+import 'package:foxy/router/setting_entry.dart';
 import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
@@ -182,7 +183,7 @@ class _SettingPageState extends State<SettingPage> {
               children: [
                 Semantics(
                   header: true,
-                  child: Text(_sectionLabel(_section), style: _titleStyle),
+                  child: Text(_section.label, style: _titleStyle),
                 ),
                 switch (_section) {
                   SettingSection.environment => _buildEnvironmentSection(),
@@ -248,11 +249,11 @@ class _SettingPageState extends State<SettingPage> {
                   vertical: 16,
                 ),
                 child: _SettingItem(
-                  title: '一键导出 DBC 与 MPQ',
+                  title: SettingEntry.combinedExport.title,
                   description: '读取一次数据库，生成服务端 DBC 文件和客户端 MPQ 补丁。',
                   trailing: ShadButton(
                     onPressed: busy ? null : _showCombinedExportDialog,
-                    child: const Text('一键导出'),
+                    child: Text(SettingEntry.combinedExport.actionLabel),
                   ),
                 ),
               ),
@@ -261,30 +262,30 @@ class _SettingPageState extends State<SettingPage> {
               title: '单独导入或导出',
               children: [
                 _SettingItem(
-                  title: '导入 DBC 文件',
+                  title: SettingEntry.dbcImport.title,
                   description: '从服务端目录读取 DBC 文件，覆盖 Foxy 数据库中的对应表。',
                   trailing: ShadButton.outline(
                     size: ShadButtonSize.sm,
                     onPressed: busy ? null : _showImportDialog,
-                    child: const Text('导入 DBC'),
+                    child: Text(SettingEntry.dbcImport.actionLabel),
                   ),
                 ),
                 _SettingItem(
-                  title: '导出 DBC 文件',
+                  title: SettingEntry.dbcExport.title,
                   description: '将选中的数据库表导出到服务端 DBC 目录。',
                   trailing: ShadButton.outline(
                     size: ShadButtonSize.sm,
                     onPressed: busy ? null : _showExportDialog,
-                    child: const Text('导出 DBC'),
+                    child: Text(SettingEntry.dbcExport.actionLabel),
                   ),
                 ),
                 _SettingItem(
-                  title: '导出 MPQ 补丁',
+                  title: SettingEntry.mpqExport.title,
                   description: '将选中的 DBC 表打包到客户端 MPQ 归档目录。',
                   trailing: ShadButton.outline(
                     size: ShadButtonSize.sm,
                     onPressed: busy ? null : _showMpqExportDialog,
-                    child: const Text('导出 MPQ'),
+                    child: Text(SettingEntry.mpqExport.actionLabel),
                   ),
                 ),
               ],
@@ -301,7 +302,7 @@ class _SettingPageState extends State<SettingPage> {
       spacing: 24,
       children: [
         _SettingGroup(
-          title: '目录设置',
+          title: DirectoryConfigTarget.groupLabel,
           children: [
             DirectorySettingRow(
               vm: setupViewModel,
@@ -324,14 +325,14 @@ class _SettingPageState extends State<SettingPage> {
         title: '游戏图标',
         children: [
           _SettingItem(
-            title: '提取游戏图标',
+            title: SettingEntry.iconExtract.title,
             description: '从客户端 MPQ 归档提取图标，用于游戏数据列表。',
             trailing: ShadButton.outline(
               size: ShadButtonSize.sm,
               onPressed: iconViewModel.isRunning
                   ? null
                   : _showIconExtractDialog,
-              child: const Text('提取'),
+              child: Text(SettingEntry.iconExtract.actionLabel),
             ),
           ),
         ],
@@ -346,7 +347,7 @@ class _SettingPageState extends State<SettingPage> {
           builder: (_) {
             final hasLocaleTables = stateViewModel.hasLocaleTables.value;
             return _SettingItem(
-              title: '使用独立本地化表',
+              title: SettingEntry.localeTables.title,
               description: hasLocaleTables
                   ? '优先显示本地化表中的文本，下次查询生效。'
                   : '当前数据库未检测到本地化表。',
@@ -359,12 +360,12 @@ class _SettingPageState extends State<SettingPage> {
           },
         ),
         _SettingItem(
-          title: 'AI 模型',
+          title: SettingEntry.aiModel.title,
           description: '设置模型服务商的 Base URL、模型名称和 API Key。',
           trailing: ShadButton.outline(
             size: ShadButtonSize.sm,
             onPressed: _editingAgentProvider ? null : _showAgentProviderDialog,
-            child: const Text('配置'),
+            child: Text(SettingEntry.aiModel.actionLabel),
           ),
         ),
       ],
@@ -395,7 +396,7 @@ class _SettingPageState extends State<SettingPage> {
             Icon(icon, size: 17),
             Expanded(
               child: Text(
-                _sectionLabel(section),
+                section.label,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
@@ -415,23 +416,23 @@ class _SettingPageState extends State<SettingPage> {
           builder: (_) {
             final version = updateViewModel.currentVersion.value;
             return _SettingItem(
-              title: 'Foxy',
+              title: SettingEntry.appUpdates.title,
               description: version == null ? '应用更新' : '当前版本 $version',
               trailing: ShadButton.outline(
                 size: ShadButtonSize.sm,
                 onPressed: _showUpdateDialog,
-                child: const Text('检查更新'),
+                child: Text(SettingEntry.appUpdates.actionLabel),
               ),
             );
           },
         ),
         _SettingItem(
-          title: '项目主页',
+          title: SettingEntry.projectPage.title,
           description: '在 GitHub 查看文档、更新记录和问题反馈。',
           trailing: ShadButton.outline(
             size: ShadButtonSize.sm,
             onPressed: _openProjectPage,
-            child: const Text('打开'),
+            child: Text(SettingEntry.projectPage.actionLabel),
           ),
         ),
       ],
@@ -447,13 +448,6 @@ class _SettingPageState extends State<SettingPage> {
       DialogUtil.instance.error('无法打开项目主页');
     }
   }
-
-  String _sectionLabel(SettingSection section) => switch (section) {
-    SettingSection.environment => '游戏环境',
-    SettingSection.data => '数据工具',
-    SettingSection.preferences => '编辑偏好',
-    SettingSection.about => '关于 Foxy',
-  };
 
   Future<void> _setLocaleEnabled(bool enabled) async {
     setState(() => _savingLocale = true);

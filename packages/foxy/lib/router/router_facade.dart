@@ -85,7 +85,7 @@ class RouterFacade {
     // Inherit the list page's highlight parent: null for pinned modules,
     // "More" for unpinned ones
     final detailNode = RouterNode(
-      label: _detailLabel(parentMenu),
+      label: parentMenu.detailLabel,
       route: route,
       parentMenu: parentIndex >= 0
           ? currentPath[parentIndex].parentMenu
@@ -136,14 +136,5 @@ class RouterFacade {
 
     path.value = nodes;
     _router?.navigate(node.route);
-  }
-
-  /// Generates the detail-page breadcrumb label: "XXX list" → "XXX
-  /// details"
-  static String _detailLabel(RouterMenu menu) {
-    final label = menu.label;
-    return label.endsWith('列表')
-        ? '${label.substring(0, label.length - 2)}详情'
-        : '$label详情';
   }
 }

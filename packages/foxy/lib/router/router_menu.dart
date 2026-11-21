@@ -43,6 +43,18 @@ enum RouterMenu {
 
   const RouterMenu({required this.label, required this.icon});
 
+  static List<RouterMenu> sidebarMenus(Iterable<RouterMenu> pinned) => [
+    dashboard,
+    ...pinned,
+    more,
+    agent,
+    setting,
+  ];
+
+  String get detailLabel => label.endsWith('列表')
+      ? '${label.substring(0, label.length - 2)}详情'
+      : '$label详情';
+
   /// Returns the route for this menu
   PageRouteInfo get route {
     return switch (this) {
@@ -55,7 +67,6 @@ enum RouterMenu {
       RouterMenu.gossipMenu => const GossipMenuListRoute(),
       RouterMenu.smartScript => const SmartScriptListRoute(),
       RouterMenu.setting => SettingRoute(),
-      // These menus have no route implemented yet
       RouterMenu.spell => const SpellListRoute(),
       RouterMenu.more => const MoreRoute(),
       RouterMenu.referenceLootTemplate =>

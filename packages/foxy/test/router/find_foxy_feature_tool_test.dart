@@ -1,16 +1,110 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/entity/feature_entity.dart';
+import 'package:foxy/router/find_foxy_feature_tool.dart';
+import 'package:foxy/router/router.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/setting_entry.dart';
+import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/use_case/agent/agent_chat_use_case.dart';
-import 'package:foxy/use_case/agent/find_foxy_feature_tool.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
 void main() {
-  const tool = FindFoxyFeatureTool();
+  final creature = _module(RouterMenu.creatureTemplate, '生物');
+  final tool = FindFoxyFeatureTool([creature]);
 
   group('find_foxy_feature', () {
+    test('indexes every menu using its registered route', () async {
+      final sidebar = RouterMenu.sidebarMenus(const []);
+      final catalog = FindFoxyFeatureTool(
+        RouterMenu.values
+            .where((menu) => !sidebar.contains(menu))
+            .map((menu) => _module(menu, '${menu.label}卡片'))
+            .toList(),
+      );
+      final registeredRoutes = FoxyRouter.router.routes
+          .expand((route) => route.children ?? [])
+          .map((route) => route.name);
+
+      await Future.wait(
+        RouterMenu.values.map((menu) async {
+          expect(registeredRoutes, contains(menu.route.routeName));
+          expect(await catalog.call({'query': menu.route.routeName}), {
+            'features': [
+              containsPair('path', [
+                if (!sidebar.contains(menu)) ...[
+                  RouterMenu.more.label,
+                  '${menu.label}卡片',
+                ],
+                menu.label,
+              ]),
+            ],
+          });
+        }),
+      );
+    });
+
+    test(
+      'uses the pinned sidebar entry or the actual More card name',
+      () async {
+        final gem = _module(RouterMenu.gemProperty, '宝石属性配置');
+        const query = {'query': 'foxy.dbc_gem_properties'};
+        final unpinned = FindFoxyFeatureTool([gem]);
+        final pinned = FindFoxyFeatureTool([gem.copyWith(isPinned: true)]);
+
+        expect(await unpinned.call(query), {
+          'features': [
+            containsPair('path', ['更多', '宝石属性配置', '宝石属性列表']),
+          ],
+        });
+        expect(await pinned.call(query), {
+          'features': [
+            containsPair('path', ['宝石属性列表']),
+          ],
+        });
+        expect(
+          await pinned.call({'query': '宝石属性详情'}),
+          await pinned.call(query),
+        );
+      },
+    );
+
+    test('indexes settings sections and their visible controls', () async {
+      await Future.wait(
+        SettingSection.values.map((section) async {
+          expect(await tool.call({'query': section.label}), {
+            'features': [
+              containsPair('path', ['设置', section.label]),
+            ],
+          });
+        }),
+      );
+      await Future.wait(
+        SettingEntry.values.map((entry) async {
+          expect(await tool.call({'query': entry.actionLabel}), {
+            'features': [
+              containsPair(
+                'path',
+                containsAllInOrder([
+                  '设置',
+                  entry.section.label,
+                  entry.actionLabel,
+                ]),
+              ),
+            ],
+          });
+        }),
+      );
+      expect(await tool.call({'query': '服务端目录'}), {
+        'features': [
+          containsPair('path', ['设置', '游戏环境', '目录设置', '服务端目录']),
+        ],
+      });
+    });
+
     test(
       'finds the merchant tab by keyword and qualified table name',
       () async {
@@ -63,6 +157,7 @@ void main() {
         ),
         catalog: const TableCatalog([]),
         dataSource: _UnusedDataSource(),
+        featureTool: tool,
         httpClient: MockClient((request) async {
           requests++;
           final body = jsonDecode(request.body) as Map<String, Object?>;
@@ -105,6 +200,16 @@ void main() {
     },
   );
 }
+
+FeatureEntity _module(RouterMenu menu, String name) => FeatureEntity(
+  id: menu.index,
+  name: name,
+  description: '测试模块',
+  icon: '',
+  routerMenu: menu.name,
+  createdAt: DateTime(2026),
+  updatedAt: DateTime(2026),
+);
 
 class _UnusedDataSource extends Fake implements ReadOnlyDataSource {}
 

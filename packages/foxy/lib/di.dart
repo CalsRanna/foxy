@@ -140,9 +140,11 @@ import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/repository/zone_intro_music_repository.dart';
 import 'package:foxy/repository/zone_music_repository.dart';
+import 'package:foxy/router/find_foxy_feature_tool.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/use_case/activity_log/activity_log_listener.dart';
 import 'package:foxy/use_case/activity_log/activity_log_service.dart';
+import 'package:foxy/use_case/agent/agent_chat_use_case.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
 import 'package:foxy/use_case/bootstrap/bootstrap_application_use_case.dart';
@@ -314,7 +316,20 @@ class DI {
   }
 
   static void _registerInteractionViewModels() {
-    _instance.registerFactory(() => AgentViewModel());
+    _instance.registerFactory(
+      () => AgentViewModel(
+        chatFactory:
+            ({required provider, required catalog, required dataSource}) =>
+                AgentChatUseCase(
+                  provider: provider,
+                  catalog: catalog,
+                  dataSource: dataSource,
+                  featureTool: FindFoxyFeatureTool(
+                    _instance.get<FeatureStateViewModel>().allFeatures.value,
+                  ),
+                ),
+      ),
+    );
     _instance.registerFactory(() => BootstrapWorkflowViewModel());
     _instance.registerFactory(() => DbcExportWorkflowViewModel());
     _instance.registerFactory(() => MpqExportWorkflowViewModel());

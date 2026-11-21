@@ -61,18 +61,11 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  List<RouterMenu> get _menus {
-    final pinned = featureState.pinnedFeatures.value
-        .map((f) => RouterMenu.values.byName(f.routerMenu))
-        .toList();
-    return [
-      RouterMenu.dashboard,
-      ...pinned,
-      RouterMenu.more,
-      RouterMenu.agent,
-      RouterMenu.setting,
-    ];
-  }
+  List<RouterMenu> get _menus => RouterMenu.sidebarMenus(
+    featureState.pinnedFeatures.value.map(
+      (feature) => RouterMenu.values.byName(feature.routerMenu),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {

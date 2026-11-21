@@ -28,6 +28,8 @@ enum DirectoryConfigTarget {
         '用于导入/导出 DBC 数据到 foxy 库。',
   );
 
+  static const groupLabel = '目录设置';
+
   final String title;
   final IconData icon;
   final String description;
