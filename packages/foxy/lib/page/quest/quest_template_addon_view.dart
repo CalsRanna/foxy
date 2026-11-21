@@ -21,9 +21,13 @@ class QuestTemplateAddonView extends StatefulWidget {
   State<QuestTemplateAddonView> createState() => _QuestTemplateAddonViewState();
 }
 
-class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
+class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<QuestTemplateAddonLinkedDetailViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -245,8 +249,6 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(title: '基本信息', children: basicRows),
             FoxyFormSection(title: '任务链', children: chainRows),
             FoxyFormSection(title: '接取条件', children: requirementRows),

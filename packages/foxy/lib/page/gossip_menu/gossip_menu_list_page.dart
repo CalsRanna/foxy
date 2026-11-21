@@ -21,8 +21,12 @@ class GossipMenuListPage extends StatefulWidget {
   State<GossipMenuListPage> createState() => _GossipMenuListPageState();
 }
 
-class _GossipMenuListPageState extends State<GossipMenuListPage> {
+class _GossipMenuListPageState extends State<GossipMenuListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<GossipMenuListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -155,8 +159,6 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
       child: Column(
         spacing: 16,
         children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
           Expanded(child: table),
         ],

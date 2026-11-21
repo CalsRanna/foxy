@@ -23,9 +23,13 @@ class GameObjectQuestItemView extends StatefulWidget {
       _GameObjectQuestItemViewState();
 }
 
-class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
+class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<GameObjectQuestItemLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +64,6 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
       child: Column(
         spacing: 16,
         children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           Row(
             children: [
               ShadButton(onPressed: _showCreateDialog, child: Text('新增')),

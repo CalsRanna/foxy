@@ -23,8 +23,11 @@ class NpcVendorView extends StatefulWidget {
   State<NpcVendorView> createState() => _NpcVendorViewState();
 }
 
-class _NpcVendorViewState extends State<NpcVendorView> {
+class _NpcVendorViewState extends State<NpcVendorView> with DialogErrorState {
   final viewModel = GetIt.instance.get<NpcVendorLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -233,15 +236,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
     );
     return Padding(
       padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        spacing: 16,
-        children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
-          toolbar,
-          table,
-        ],
-      ),
+      child: Column(spacing: 16, children: [toolbar, table]),
     );
   }
 

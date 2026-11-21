@@ -313,7 +313,10 @@ void main() {
     final events = await agent.run(AgentSession(), 'go').toList();
 
     expect(events.last, isA<AgentFailedEvent>());
-    expect((events.last as AgentFailedEvent).message, contains('401'));
+    expect(
+      (events.last as AgentFailedEvent).message,
+      'Provider returned HTTP 401.',
+    );
   });
 
   test('rejects duplicate tool names', () {

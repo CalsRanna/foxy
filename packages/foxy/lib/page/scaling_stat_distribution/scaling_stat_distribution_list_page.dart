@@ -25,12 +25,16 @@ class ScalingStatDistributionListPage extends StatefulWidget {
 }
 
 class _ScalingStatDistributionListPageState
-    extends State<ScalingStatDistributionListPage> {
+    extends State<ScalingStatDistributionListPage>
+    with DialogErrorState {
   static const _badgePadding = EdgeInsets.symmetric(horizontal: 8);
 
   static const _badgeSpacing = 4.0;
 
   final viewModel = GetIt.instance.get<ScalingStatDistributionListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -232,12 +236,7 @@ class _ScalingStatDistributionListPageState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

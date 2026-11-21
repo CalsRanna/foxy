@@ -48,9 +48,22 @@ void main() {
         expect(vm.items.value, latestItems);
         expect(vm.total.value, 2);
         expect(vm.errorMessage.value, isNull);
+        expect(vm.refreshError.value, isNull);
         expect(vm.loading.value, isFalse);
       });
     }
+
+    test('查询失败通知界面，写入失败由调用方报告', () async {
+      final request = search('new');
+      repository.latest.count.complete(0);
+      repository.latest.items.completeError(StateError('query failed'));
+      await request;
+      expect(vm.refreshError.value, startsWith('刷新列表失败'));
+
+      await expectLater(vm.copy(1), throwsStateError);
+      expect(vm.errorMessage.value, isNotNull);
+      expect(vm.refreshError.value, startsWith('刷新列表失败'));
+    });
 
     test('旧查询先完成不能结束新查询的 loading', () async {
       final oldRequest = search('old');
@@ -111,6 +124,7 @@ void main() {
         expect(vm.items.value, latestItems);
         expect(vm.total.value, 2);
         expect(vm.errorMessage.value, isNull);
+        expect(vm.refreshError.value, isNull);
       });
     }
 
@@ -149,6 +163,9 @@ class _LinkedListRepository extends CreatureQuestItemRepository {
 class _ListRepository extends EmoteTextRepository {
   final old = _PendingQuery<BriefEmoteTextEntity>();
   final latest = _PendingQuery<BriefEmoteTextEntity>();
+
+  @override
+  Future<int> copyEmoteText(int key) async => throw StateError('copy failed');
 
   @override
   Future<int> countEmoteTexts({EmoteTextFilter? filter}) =>

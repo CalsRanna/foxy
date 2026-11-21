@@ -21,9 +21,13 @@ class CreatureQuestStarterView extends StatefulWidget {
       _CreatureQuestStarterViewState();
 }
 
-class _CreatureQuestStarterViewState extends State<CreatureQuestStarterView> {
+class _CreatureQuestStarterViewState extends State<CreatureQuestStarterView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<CreatureQuestStarterLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -159,12 +163,7 @@ class _CreatureQuestStarterViewState extends State<CreatureQuestStarterView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

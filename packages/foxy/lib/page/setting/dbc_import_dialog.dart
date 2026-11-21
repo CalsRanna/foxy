@@ -15,13 +15,17 @@ class DbcImportDialog extends StatefulWidget {
   State<DbcImportDialog> createState() => _DbcImportDialogState();
 }
 
-class _DbcImportDialogState extends State<DbcImportDialog> {
+class _DbcImportDialogState extends State<DbcImportDialog>
+    with DialogErrorState {
   /// The ready flag uses a signal: SignalBuilder subscribes directly, avoiding a
   /// parent setState rebuilding the SignalBuilder and triggering signals_flutter's
   /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
 
   DbcImportWorkflowViewModel get _vm => widget.vm;
+
+  @override
+  ReadonlySignal<String?> get dialogError => _vm.errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,6 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
               workflowStatus == WorkflowStatus.preparing ||
               workflowStatus == WorkflowStatus.running ||
               workflowStatus == WorkflowStatus.cancelling;
-          final error = _vm.errorMessage.value;
           final success = workflowStatus == WorkflowStatus.succeeded;
           final theme = ShadTheme.of(context);
 
@@ -147,13 +150,6 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                   SettingDialogShell.mutedHint(
                     context,
                     '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
-                  ),
-                if (error != null)
-                  SettingDialogShell.banner(
-                    context,
-                    text: error,
-                    color: theme.colorScheme.destructive,
-                    icon: LucideIcons.triangleAlert,
                   ),
               ],
             ),

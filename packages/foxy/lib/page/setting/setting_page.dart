@@ -461,11 +461,7 @@ class _SettingPageState extends State<SettingPage> {
       );
     } catch (error) {
       if (!mounted) return;
-      ShadSonner.of(context).show(
-        ShadToast(
-          description: Text('保存本地化设置失败：${FoxyExceptions.message(error)}'),
-        ),
-      );
+      DialogUtil.instance.error('保存本地化设置失败：${FoxyExceptions.message(error)}');
     } finally {
       if (mounted) setState(() => _savingLocale = false);
     }

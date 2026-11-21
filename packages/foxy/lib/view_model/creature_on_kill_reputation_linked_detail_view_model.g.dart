@@ -17,6 +17,7 @@ mixin _CreatureOnKillReputationLinkedDetailViewModelMixin
   final submitting = signal(false);
 
   final errorMessage = signal<String?>(null);
+  final refreshError = signal<String?>(null);
 
   late final creatureIDController = registerController(IntFieldController());
   late final rewOnKillRepFaction1Controller = registerController(
@@ -212,6 +213,7 @@ mixin _CreatureOnKillReputationLinkedDetailViewModelMixin
     }
     loading.value = true;
     errorMessage.value = null;
+    refreshError.value = null;
     try {
       final existing = await _repository.getCreatureOnKillReputation(
         linkSnapshot,
@@ -227,6 +229,7 @@ mixin _CreatureOnKillReputationLinkedDetailViewModelMixin
     } catch (error, stackTrace) {
       if (token != _refreshToken || isDisposed) return;
       errorMessage.value = FoxyExceptions.message(error);
+      refreshError.value = errorMessage.value;
       LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
     } finally {
       if (token == _refreshToken && !isDisposed) loading.value = false;

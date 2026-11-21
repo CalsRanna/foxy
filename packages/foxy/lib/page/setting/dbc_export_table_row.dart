@@ -14,12 +14,9 @@ class DbcExportTableRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
     final material = Theme.of(context);
     final failed = item.countFailed;
-    final countColor = failed
-        ? theme.colorScheme.destructive
-        : material.colorScheme.onSurface.withValues(alpha: 0.65);
+    final countColor = material.colorScheme.onSurface.withValues(alpha: 0.65);
     final nameColor = failed
         ? material.colorScheme.onSurface.withValues(alpha: 0.55)
         : material.colorScheme.onSurface;
@@ -46,18 +43,10 @@ class DbcExportTableRow extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (failed) ...[
-          Icon(
-            LucideIcons.circleAlert,
-            size: 14,
-            color: theme.colorScheme.destructive,
-          ),
-          const SizedBox(width: 6),
-        ],
         SizedBox(
           width: 96,
           child: Text(
-            item.recordCountLabel,
+            failed ? '—' : item.recordCountLabel,
             textAlign: TextAlign.end,
             style: TextStyle(fontSize: 12, color: countColor),
           ),

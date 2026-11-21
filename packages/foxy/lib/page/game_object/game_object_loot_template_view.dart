@@ -27,10 +27,13 @@ class GameObjectLootTemplateView extends StatefulWidget {
       _GameObjectLootTemplateViewState();
 }
 
-class _GameObjectLootTemplateViewState
-    extends State<GameObjectLootTemplateView> {
+class _GameObjectLootTemplateViewState extends State<GameObjectLootTemplateView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<GameObjectLootTemplateLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +60,6 @@ class _GameObjectLootTemplateViewState
       child: Column(
         spacing: 16,
         children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           Row(
             children: [
               ShadButton(onPressed: _showCreateDialog, child: Text('新增')),

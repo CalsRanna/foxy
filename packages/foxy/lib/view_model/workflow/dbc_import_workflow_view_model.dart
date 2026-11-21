@@ -126,6 +126,7 @@ class DbcImportWorkflowViewModel {
 
   Future<void> start() async {
     if (_isActive || _useCase.isRunning) return;
+    errorMessage.value = null;
     final directory = path.value?.trim();
     if (directory == null || directory.isEmpty) {
       final error = ValidationException('select the DBC file directory first');
@@ -139,7 +140,6 @@ class DbcImportWorkflowViewModel {
     progress.value = 0;
     progressLabel.value = '准备导入...';
     progressDetail.value = '';
-    errorMessage.value = null;
     result.value = null;
     try {
       final nextResult = await _useCase.execute(

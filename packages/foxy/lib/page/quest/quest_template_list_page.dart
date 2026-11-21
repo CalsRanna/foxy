@@ -21,8 +21,12 @@ class QuestTemplateListPage extends StatefulWidget {
   State<QuestTemplateListPage> createState() => _QuestTemplateListPageState();
 }
 
-class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
+class _QuestTemplateListPageState extends State<QuestTemplateListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<QuestTemplateListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -176,8 +180,6 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
       child: Column(
         spacing: 16,
         children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
           Expanded(child: table),
         ],

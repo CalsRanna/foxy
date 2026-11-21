@@ -22,9 +22,12 @@ class QuestFactionRewardListPage extends StatefulWidget {
       _QuestFactionRewardListPageState();
 }
 
-class _QuestFactionRewardListPageState
-    extends State<QuestFactionRewardListPage> {
+class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<QuestFactionRewardListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -180,12 +183,7 @@ class _QuestFactionRewardListPageState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

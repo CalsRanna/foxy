@@ -22,8 +22,12 @@ class GemPropertyListPage extends StatefulWidget {
   State<GemPropertyListPage> createState() => _GemPropertyListPageState();
 }
 
-class _GemPropertyListPageState extends State<GemPropertyListPage> {
+class _GemPropertyListPageState extends State<GemPropertyListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<GemPropertyListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -155,12 +159,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

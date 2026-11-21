@@ -24,9 +24,13 @@ class GameObjectTemplateAddonView extends StatefulWidget {
 }
 
 class _GameObjectTemplateAddonViewState
-    extends State<GameObjectTemplateAddonView> {
+    extends State<GameObjectTemplateAddonView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<GameObjectTemplateAddonLinkedDetailViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +41,6 @@ class _GameObjectTemplateAddonViewState
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(
               title: '基础信息',
               children: [

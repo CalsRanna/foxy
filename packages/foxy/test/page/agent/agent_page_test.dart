@@ -57,6 +57,21 @@ void main() {
     expect(emptyState, findsOneWidget);
   });
 
+  testWidgets('整轮失败显示在聊天记录中', (tester) async {
+    final viewModel = _TestAgentViewModel(ConfigUtil());
+    viewModel.messages.value = [
+      AgentChatMessage(role: AgentChatRole.user, text: '查一下'),
+      AgentChatMessage(role: AgentChatRole.error, text: '本轮未完成：连接中断'),
+    ];
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: AgentPage())));
+    await tester.pumpAndSettle();
+
+    expect(find.text('本轮未完成：连接中断'), findsOneWidget);
+    expect(find.byType(ShadDialog), findsNothing);
+  });
+
   testWidgets('输入区支持换行、发送和停止', (tester) async {
     final draft = TextEditingController();
     final focusNode = FocusNode();

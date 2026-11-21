@@ -21,8 +21,12 @@ class ItemSetListPage extends StatefulWidget {
   State<ItemSetListPage> createState() => _ItemSetListPageState();
 }
 
-class _ItemSetListPageState extends State<ItemSetListPage> {
+class _ItemSetListPageState extends State<ItemSetListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<ItemSetListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -154,12 +158,7 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

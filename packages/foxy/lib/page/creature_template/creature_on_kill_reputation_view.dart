@@ -25,9 +25,13 @@ class CreatureOnKillReputationView extends StatefulWidget {
 }
 
 class _CreatureOnKillReputationViewState
-    extends State<CreatureOnKillReputationView> {
+    extends State<CreatureOnKillReputationView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<CreatureOnKillReputationLinkedDetailViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +42,6 @@ class _CreatureOnKillReputationViewState
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(
               title: '击杀声望',
               children: [

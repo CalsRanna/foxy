@@ -24,6 +24,7 @@ mixin _CreatureTemplateResistanceLinkedListViewModelMixin
   final submitting = signal(false);
 
   final errorMessage = signal<String?>(null);
+  final refreshError = signal<String?>(null);
 
   late final creatureIDController = registerController(IntFieldController());
   late final schoolController = registerController(
@@ -264,6 +265,7 @@ mixin _CreatureTemplateResistanceLinkedListViewModelMixin
     final token = ++_refreshToken;
     loading.value = true;
     errorMessage.value = null;
+    refreshError.value = null;
     try {
       final count = await _repository.countCreatureTemplateResistances(link);
       if (token != _refreshToken) return;
@@ -282,6 +284,7 @@ mixin _CreatureTemplateResistanceLinkedListViewModelMixin
     } catch (error) {
       if (token == _refreshToken) {
         errorMessage.value = FoxyExceptions.message(error);
+        refreshError.value = errorMessage.value;
         LoggerUtil.instance.e('刷新子表列表失败: $error');
       }
     } finally {

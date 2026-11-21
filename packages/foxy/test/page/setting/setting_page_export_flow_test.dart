@@ -147,8 +147,9 @@ void main() {
   ShadButton buttonOf(WidgetTester tester, Finder finder) =>
       tester.widget<ShadButton>(finder);
 
-  const preferencesPage = ShadApp(
-    home: Scaffold(
+  final preferencesPage = ShadApp(
+    navigatorKey: FoxyRouter.router.navigatorKey,
+    home: const Scaffold(
       body: SettingPage(initialSection: SettingSection.preferences),
     ),
   );
@@ -311,6 +312,10 @@ void main() {
     expect(localeSettings.localeEnabled, isTrue);
     expect(cfg.data.containsKey('locale_enabled'), isFalse);
     expect(find.textContaining('保存本地化设置失败'), findsOneWidget);
+    expect(find.text('错误'), findsOneWidget);
+    await tester.tap(find.text('确定'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('保存本地化设置失败'), findsNothing);
   });
 
   testWidgets('短路回归：共享 util 忙时重算，任务结束必须恢复按钮', (tester) async {

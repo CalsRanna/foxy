@@ -28,10 +28,13 @@ class DisenchantLootTemplateView extends StatefulWidget {
       _DisenchantLootTemplateViewState();
 }
 
-class _DisenchantLootTemplateViewState
-    extends State<DisenchantLootTemplateView> {
+class _DisenchantLootTemplateViewState extends State<DisenchantLootTemplateView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<DisenchantLootTemplateLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -293,12 +296,7 @@ class _DisenchantLootTemplateViewState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

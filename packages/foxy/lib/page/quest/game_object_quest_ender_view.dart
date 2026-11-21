@@ -19,9 +19,13 @@ class GameObjectQuestEnderView extends StatefulWidget {
       _GameObjectQuestEnderViewState();
 }
 
-class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
+class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<GameObjectQuestEnderLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -156,12 +160,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

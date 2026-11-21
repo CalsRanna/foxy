@@ -24,8 +24,11 @@ class SpellAreaView extends StatefulWidget {
   State<SpellAreaView> createState() => _SpellAreaViewState();
 }
 
-class _SpellAreaViewState extends State<SpellAreaView> {
+class _SpellAreaViewState extends State<SpellAreaView> with DialogErrorState {
   final viewModel = GetIt.instance.get<SpellAreaLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -298,12 +301,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

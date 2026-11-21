@@ -1,4 +1,3 @@
-export 'package:foxy_widget/src/feedback/foxy_inline_error.dart';
 export 'package:foxy_widget/src/form/foxy_form_item.dart';
 export 'package:foxy_widget/src/form/foxy_form_section.dart';
 export 'package:foxy_widget/src/game_asset/foxy_blp_icon_provider.dart';

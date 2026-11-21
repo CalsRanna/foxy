@@ -21,8 +21,12 @@ class QuestSortListPage extends StatefulWidget {
   State<QuestSortListPage> createState() => _QuestSortListPageState();
 }
 
-class _QuestSortListPageState extends State<QuestSortListPage> {
+class _QuestSortListPageState extends State<QuestSortListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<QuestSortListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -144,12 +148,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

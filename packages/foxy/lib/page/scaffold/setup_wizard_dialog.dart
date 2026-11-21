@@ -240,7 +240,6 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     final clientDir = _setupVm.clientDir.value;
     final running = _isActive(status);
     final failed = status == WorkflowStatus.failed;
-    final error = _iconVm.errorMessage.value;
     final cancelling = status == WorkflowStatus.cancelling;
 
     return _buildSubtaskCard(
@@ -264,15 +263,9 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           color: theme.colorScheme.primary,
           icon: LucideIcons.circleCheck,
         ),
-        (_, _, true) => SettingDialogShell.banner(
+        (_, _, true) => SettingDialogShell.mutedHint(
           context,
-          text:
-              '${error ?? '提取失败'}\n'
-              '客户端目录设置（第 1 步）有误会导致提取失败，'
-              '可用「上一步」返回修正后重试；也可以跳过图标提取先进入应用'
-              '（列表页图标显示占位符，可在设置页补提取）。',
-          color: theme.colorScheme.destructive,
-          icon: LucideIcons.triangleAlert,
+          '可用「上一步」返回修改客户端目录后重试，也可以跳过图标提取，稍后在设置页补提取。',
         ),
         _ => Column(
           mainAxisSize: MainAxisSize.min,
@@ -300,7 +293,6 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     final dbcPath = _setupVm.dbcPath.value;
     final running = _isActive(status);
     final failed = status == WorkflowStatus.failed;
-    final error = _importVm.errorMessage.value;
     final cancelling = status == WorkflowStatus.cancelling;
 
     return _buildSubtaskCard(
@@ -326,22 +318,9 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           color: theme.colorScheme.primary,
           icon: LucideIcons.circleCheck,
         ),
-        (_, _, true) => Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: 8,
-          children: [
-            SettingDialogShell.banner(
-              context,
-              text: error ?? '导入失败',
-              color: theme.colorScheme.destructive,
-              icon: LucideIcons.triangleAlert,
-            ),
-            SettingDialogShell.mutedHint(
-              context,
-              '导入以 DBC 为准，将覆盖 foxy 库中对应表的数据。可重试。',
-            ),
-          ],
+        (_, _, true) => SettingDialogShell.mutedHint(
+          context,
+          '导入以 DBC 为准，将覆盖 foxy 库中对应表的数据。可重试。',
         ),
         _ => Column(
           mainAxisSize: MainAxisSize.min,
@@ -449,6 +428,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     }
     await _importVm.checkTables();
     if (!mounted) return;
+    _reportError(_importVm.errorMessage.value);
     _importDoneAtCheck = _importVm.tablesReady;
     _step.value = !_setupVm.isClientDirConfigured
         ? 0
@@ -494,6 +474,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     } catch (_) {
       // The workflow exposes the failure through errorMessage.
     }
+    _reportError(_iconVm.errorMessage.value);
   }
 
   /// Re-runs DBC import, re-reading the auto-detected DBC directory first
@@ -506,6 +487,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     } catch (_) {
       // The workflow exposes the failure through errorMessage.
     }
+    _reportError(_importVm.errorMessage.value);
     if (!mounted) return;
     if (_importVm.status.value == WorkflowStatus.succeeded) {
       await _startIconExtract();
@@ -546,6 +528,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     } catch (_) {
       // The workflow exposes the failure through errorMessage.
     }
+    _reportError(_iconVm.errorMessage.value);
   }
 
   Future<void> _startImport() async {
@@ -557,10 +540,15 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     } catch (_) {
       // The workflow exposes the failure through errorMessage.
     }
+    _reportError(_importVm.errorMessage.value);
     if (!mounted) return;
     if (_importVm.status.value == WorkflowStatus.succeeded) {
       await _startIconExtract();
     }
+  }
+
+  void _reportError(String? message) {
+    if (mounted && message != null) DialogUtil.instance.error(message);
   }
 
   static bool _isActive(WorkflowStatus status) =>

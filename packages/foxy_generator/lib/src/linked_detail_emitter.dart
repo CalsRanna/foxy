@@ -37,6 +37,7 @@ final class LinkedDetailEmitter {
       ..writeln('  final submitting = signal(false);')
       ..writeln()
       ..writeln('  final errorMessage = signal<String?>(null);')
+      ..writeln('  final refreshError = signal<String?>(null);')
       ..writeln();
 
     // Controller boilerplate reuses FormEmitter (with the behavior skeleton
@@ -207,6 +208,7 @@ final class LinkedDetailEmitter {
       ..writeln('    }')
       ..writeln('    loading.value = true;')
       ..writeln('    errorMessage.value = null;')
+      ..writeln('    refreshError.value = null;')
       ..writeln('    try {')
       ..writeln(
         '      final existing = await _repository.get${model.baseName}('
@@ -230,6 +232,7 @@ final class LinkedDetailEmitter {
       ..writeln('    } catch (error, stackTrace) {')
       ..writeln('      if (token != _refreshToken || isDisposed) return;')
       ..writeln('      errorMessage.value = FoxyExceptions.message(error);')
+      ..writeln('      refreshError.value = errorMessage.value;')
       ..writeln(
         '      LoggerUtil.instance.e('
         "'加载单行编辑器失败', error: error, stackTrace: stackTrace);",

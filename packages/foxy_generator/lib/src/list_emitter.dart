@@ -103,6 +103,7 @@ final class ListEmitter {
       ..writeln('    final currentPage = page.value;')
       ..writeln('    loading.value = true;')
       ..writeln('    errorMessage.value = null;')
+      ..writeln('    refreshError.value = null;')
       ..writeln('    try {')
       ..writeln('      final (nextItems, nextTotal) = await (')
       ..writeln('        _repository.${model.getBriefMethodName}(')
@@ -120,6 +121,7 @@ final class ListEmitter {
       ..writeln(
         "      errorMessage.value = '刷新列表失败: \${FoxyExceptions.message(error)}';",
       )
+      ..writeln('      refreshError.value = errorMessage.value;')
       ..writeln('    } finally {')
       ..writeln('      if (token == _refreshToken) loading.value = false;')
       ..writeln('    }')
@@ -186,6 +188,7 @@ final class ListEmitter {
       ..writeln('  final submitting = signal(false);')
       ..writeln()
       ..writeln('  final errorMessage = signal<String?>(null);')
+      ..writeln('  final refreshError = signal<String?>(null);')
       ..writeln();
     for (final field in model.fields) {
       buffer.writeln(

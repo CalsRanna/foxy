@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +11,8 @@ import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy_agent/foxy_agent.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 
 void main() {
   late Directory tempDir;
@@ -74,6 +77,110 @@ void main() {
     expect(messages[3].text, '找到 2 条。');
     expect(viewModel.running.value, isFalse);
   });
+
+  test('records failures once and replays the run failure after reopening', () async {
+    final chat = _FakeChat();
+    final viewModel = _buildViewModel(chat, store);
+    addTearDown(viewModel.dispose);
+    await viewModel.initSignals();
+    viewModel.draftController.init('query');
+    await viewModel.send();
+
+    chat.controller.add(
+      const AgentToolCallEvent(
+        callId: 'call_1',
+        name: 'query_rows',
+        arguments: {},
+      ),
+    );
+    const toolFailure = AgentToolResultEvent(
+      callId: 'call_1',
+      name: 'query_rows',
+      output: '查询超时',
+      isError: true,
+    );
+    chat.controller.add(toolFailure);
+    chat.controller.add(toolFailure);
+    await pumpEventQueue();
+
+    expect(viewModel.running.value, isTrue);
+    expect(viewModel.messages.value.map((message) => message.role), [
+      AgentChatRole.user,
+      AgentChatRole.tool,
+      AgentChatRole.tool,
+    ]);
+    expect(viewModel.messages.value.last.text, '工具失败：查询超时');
+
+    chat.controller.add(const AgentTextDeltaEvent('已完成部分查询。'));
+    chat.controller.add(const AgentFailedEvent('连接中断'));
+    await pumpEventQueue();
+
+    expect(viewModel.running.value, isFalse);
+    expect(viewModel.messages.value.skip(3).map((message) => message.role), [
+      AgentChatRole.assistant,
+      AgentChatRole.error,
+    ]);
+
+    final requestInput = Completer<Object?>();
+    final resumed = _buildViewModel(
+      AgentChatUseCase(
+        provider: viewModel.provider.value!,
+        catalog: const TableCatalog([]),
+        dataSource: _FakeDataSource(),
+        httpClient: MockClient((request) async {
+          requestInput.complete(
+            jsonDecode(utf8.decode(request.bodyBytes))['input'],
+          );
+          return http.Response(
+            'data: {"type":"response.completed","response":{"output":[]}}\n\n',
+            200,
+          );
+        }),
+      ),
+      store,
+    );
+    addTearDown(resumed.dispose);
+    await resumed.initSignals();
+    expect(resumed.activeSessionId.value, viewModel.activeSessionId.value);
+    expect(
+      resumed.messages.value.map((message) => (message.role, message.text)),
+      viewModel.messages.value.map((message) => (message.role, message.text)),
+    );
+    expect(resumed.messages.value.last.text, '本轮未完成：连接中断');
+
+    resumed.draftController.init('接着查');
+    await resumed.send();
+    expect(await requestInput.future, [
+      {'role': 'user', 'content': 'query'},
+      {'role': 'assistant', 'content': 'Foxy 运行诊断：本轮未完成：连接中断'},
+      {'role': 'user', 'content': '接着查'},
+    ]);
+    await pumpEventQueue();
+  });
+
+  test(
+    'keeps the user input when setup fails before calling the provider',
+    () async {
+      final catalog = Completer<TableCatalog>();
+      final viewModel = _buildViewModel(
+        _FakeChat(),
+        store,
+        dataSource: _FakeDataSource(firstCatalog: catalog.future),
+      );
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      viewModel.draftController.init('查询');
+      final send = viewModel.send();
+      catalog.completeError(StateError('catalog failed'));
+      await send;
+
+      final restored = (await store.load(viewModel.activeSessionId.value!))!;
+      expect(restored.session.items, [
+        {'role': 'user', 'content': '查询'},
+        {'role': 'assistant', 'content': 'Foxy 运行诊断：本轮未完成：内部状态异常，请重试'},
+      ]);
+    },
+  );
 
   test(
     'keeps streamed and completed reasoning separate from the answer',
@@ -367,7 +474,7 @@ void main() {
 }
 
 AgentViewModel _buildViewModel(
-  _FakeChat chat,
+  AgentChatUseCase chat,
   AgentSessionStore store, {
   _FakeChat? nextChat,
   AgentProviderConfigUseCase? configUseCase,

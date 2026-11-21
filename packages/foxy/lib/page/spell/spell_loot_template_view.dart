@@ -26,8 +26,12 @@ class SpellLootTemplateView extends StatefulWidget {
   State<SpellLootTemplateView> createState() => _SpellLootTemplateViewState();
 }
 
-class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
+class _SpellLootTemplateViewState extends State<SpellLootTemplateView>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<SpellLootTemplateLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -300,12 +304,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

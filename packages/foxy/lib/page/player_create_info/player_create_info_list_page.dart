@@ -22,8 +22,12 @@ class PlayerCreateInfoListPage extends StatefulWidget {
       _PlayerCreateInfoListPageState();
 }
 
-class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
+class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<PlayerCreateInfoListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -180,8 +184,6 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       child: Column(
         spacing: 16,
         children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
           Expanded(child: table),
         ],

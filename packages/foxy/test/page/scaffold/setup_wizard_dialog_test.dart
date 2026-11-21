@@ -8,6 +8,7 @@ import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/page/scaffold/setup_wizard_dialog.dart';
+import 'package:foxy/router/router.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
@@ -72,6 +73,7 @@ void main() {
 
   Widget buildWizard() {
     return ShadApp(
+      navigatorKey: FoxyRouter.router.navigatorKey,
       home: Scaffold(
         body: SetupWizardDialog(
           setupVm: setupVm,
@@ -86,6 +88,14 @@ void main() {
     await tester.pumpWidget(buildWizard());
     await tester.pump();
     await tester.pump();
+  }
+
+  Future<void> dismissError(WidgetTester tester) async {
+    await tester.pumpAndSettle();
+    expect(find.text('错误'), findsOneWidget);
+    await tester.tap(find.text('确定'));
+    await tester.pumpAndSettle();
+    expect(find.text('错误'), findsNothing);
   }
 
   testWidgets('全新用户从步骤 1 开始，对话框不可关闭', (tester) async {
@@ -109,7 +119,7 @@ void main() {
   testWidgets('路径校验与步骤导航：无效路径报错，有效路径进入下一步', (tester) async {
     await pumpWizard(tester);
 
-    // Empty path: validation fails on save, an error banner shows, and the
+    // Empty path: validation fails on save, an error dialog opens, and the
     // wizard stays on the current step.
     await tester.runAsync(() async {
       await tester.tap(find.text('下一步'));
@@ -117,9 +127,10 @@ void main() {
       await tester.pump();
     });
     expect(find.textContaining('请选择客户端目录'), findsOneWidget);
+    await dismissError(tester);
     expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
 
-    // Invalid path: save fails, an error banner shows, and the wizard
+    // Invalid path: save fails, an error dialog opens, and the wizard
     // stays on the current step.
     await tester.runAsync(() async {
       await tester.enterText(
@@ -133,6 +144,7 @@ void main() {
       await tester.pump();
     });
     expect(find.textContaining('目录不存在'), findsOneWidget);
+    await dismissError(tester);
     expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
 
     // Valid path: proceed to step 2.
@@ -258,7 +270,7 @@ void main() {
       await tester.pumpWidget(buildWizard());
       await _waitFor(() => iconVm.status.value == WorkflowStatus.failed);
     });
-    await tester.pump();
+    await dismissError(tester);
 
     expect(find.text('重试'), findsOneWidget);
     expect(find.text('退出应用'), findsOneWidget);
@@ -316,6 +328,7 @@ void main() {
     await tester.runAsync(() async {
       await tester.pumpWidget(
         ShadApp(
+          navigatorKey: FoxyRouter.router.navigatorKey,
           home: Scaffold(
             body: Builder(
               builder: (context) => Center(
@@ -340,7 +353,7 @@ void main() {
       await tester.pump();
       await _waitFor(() => iconVm.status.value == WorkflowStatus.failed);
     });
-    await tester.pump();
+    await dismissError(tester);
 
     // Skipping is the last resort for a client whose archives cannot be
     // read: without it the wizard would reopen on every launch.

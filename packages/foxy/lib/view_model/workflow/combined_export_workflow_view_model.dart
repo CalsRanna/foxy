@@ -90,7 +90,10 @@ class CombinedExportWorkflowViewModel {
           DbcExportItem(
             definition: table.definition,
             recordCount: table.recordCount,
-            countError: table.countError?.toString(),
+            countError: switch (table.countError) {
+              final error? => FoxyExceptions.message(error),
+              null => null,
+            },
             selected: table.countError == null,
           ),
       ];
@@ -153,6 +156,7 @@ class CombinedExportWorkflowViewModel {
 
   Future<void> start() async {
     if (_isActive || _useCase.isRunning) return;
+    errorMessage.value = null;
     final selected = selectedExportableItems;
     final dbcDirectory = dbcOutputDirectory.value?.trim();
     final mpqDirectory = mpqOutputDirectory.value?.trim();
@@ -187,7 +191,6 @@ class CombinedExportWorkflowViewModel {
     progress.value = 0;
     progressLabel.value = '准备导出...';
     progressDetail.value = '';
-    errorMessage.value = null;
     result.value = null;
     try {
       final nextResult = await _useCase.execute(

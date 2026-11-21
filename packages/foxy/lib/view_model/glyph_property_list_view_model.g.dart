@@ -18,6 +18,7 @@ mixin _GlyphPropertyListViewModelMixin
   final submitting = signal(false);
 
   final errorMessage = signal<String?>(null);
+  final refreshError = signal<String?>(null);
 
   late final idController = registerController(StringFieldController());
 
@@ -112,6 +113,7 @@ mixin _GlyphPropertyListViewModelMixin
     final currentPage = page.value;
     loading.value = true;
     errorMessage.value = null;
+    refreshError.value = null;
     try {
       final (nextItems, nextTotal) = await (
         _repository.getBriefGlyphProperties(page: currentPage, filter: filter),
@@ -124,6 +126,7 @@ mixin _GlyphPropertyListViewModelMixin
       if (token != _refreshToken) return;
       LoggerUtil.instance.e('刷新列表失败: $error');
       errorMessage.value = '刷新列表失败: ${FoxyExceptions.message(error)}';
+      refreshError.value = errorMessage.value;
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

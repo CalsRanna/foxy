@@ -29,9 +29,13 @@ class ProspectingLootTemplateView extends StatefulWidget {
 }
 
 class _ProspectingLootTemplateViewState
-    extends State<ProspectingLootTemplateView> {
+    extends State<ProspectingLootTemplateView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<ProspectingLootTemplateLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -293,12 +297,7 @@ class _ProspectingLootTemplateViewState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

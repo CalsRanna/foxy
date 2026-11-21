@@ -17,6 +17,7 @@ mixin _GossipMenuListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
   final submitting = signal(false);
 
   final errorMessage = signal<String?>(null);
+  final refreshError = signal<String?>(null);
 
   late final menuIdController = registerController(StringFieldController());
 
@@ -117,6 +118,7 @@ mixin _GossipMenuListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     final currentPage = page.value;
     loading.value = true;
     errorMessage.value = null;
+    refreshError.value = null;
     try {
       final (nextItems, nextTotal) = await (
         _repository.getBriefGossipMenus(page: currentPage, filter: filter),
@@ -129,6 +131,7 @@ mixin _GossipMenuListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
       if (token != _refreshToken) return;
       LoggerUtil.instance.e('刷新列表失败: $error');
       errorMessage.value = '刷新列表失败: ${FoxyExceptions.message(error)}';
+      refreshError.value = errorMessage.value;
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

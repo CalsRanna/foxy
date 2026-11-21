@@ -3,7 +3,6 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// DBC single-field locale editor: fixed 16 rows of "language code +
@@ -48,7 +47,7 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     } catch (e, s) {
       LoggerUtil.instance.e('加载 DBC 本地化失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
-      _showErrorToast(context, '加载失败: ${FoxyExceptions.message(e)}');
+      DialogUtil.instance.error('加载失败: ${FoxyExceptions.message(e)}');
       return null;
     }
     if (!context.mounted) return null;
@@ -63,21 +62,11 @@ class DbcLocaleFieldEditor extends StatefulWidget {
       ),
     );
   }
-
-  static void _showErrorToast(BuildContext context, String message) {
-    try {
-      ShadSonner.of(context).show(ShadToast(description: Text(message)));
-    } catch (_) {
-      // Ignored in tests or without a Sonner host, so a secondary
-      // exception never masks the original error.
-    }
-  }
 }
 
 class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
   late final List<TextEditingController> _controllers;
   bool _saving = false;
-  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +89,6 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FoxyInlineError(message: _errorMessage),
           _buildHeader(theme),
           Flexible(child: _buildTable(theme)),
         ],
@@ -183,10 +171,8 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
   }
 
   Future<void> _save() async {
-    setState(() {
-      _saving = true;
-      _errorMessage = null;
-    });
+    if (_saving) return;
+    setState(() => _saving = true);
     try {
       final values = [
         for (var i = 0; i < DbcLocale.values.length; i++)
@@ -206,11 +192,7 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: ${FoxyExceptions.message(e)}');
-      DbcLocaleFieldEditor._showErrorToast(
-        context,
-        '保存失败: ${FoxyExceptions.message(e)}',
-      );
+      DialogUtil.instance.error('保存失败: ${FoxyExceptions.message(e)}');
     } finally {
       if (mounted) {
         setState(() => _saving = false);

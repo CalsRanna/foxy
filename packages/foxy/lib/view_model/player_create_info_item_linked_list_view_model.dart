@@ -27,6 +27,7 @@ class PlayerCreateInfoItemLinkedListViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
+  final refreshError = signal<String?>(null);
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -178,6 +179,7 @@ class PlayerCreateInfoItemLinkedListViewModel
     final token = ++_refreshToken;
     loading.value = true;
     errorMessage.value = null;
+    refreshError.value = null;
     try {
       final count = await _repository.countPlayerCreateInfoItems(
         link.race,
@@ -200,6 +202,7 @@ class PlayerCreateInfoItemLinkedListViewModel
     } catch (error) {
       if (token == _refreshToken) {
         errorMessage.value = FoxyExceptions.message(error);
+        refreshError.value = errorMessage.value;
       }
       rethrow;
     } finally {

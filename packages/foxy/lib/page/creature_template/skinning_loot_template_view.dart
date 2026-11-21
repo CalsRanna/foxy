@@ -28,9 +28,13 @@ class SkinningLootTemplateView extends StatefulWidget {
       _SkinningLootTemplateViewState();
 }
 
-class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
+class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<SkinningLootTemplateLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -295,12 +299,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

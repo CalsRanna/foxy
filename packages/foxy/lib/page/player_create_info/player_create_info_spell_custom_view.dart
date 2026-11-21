@@ -31,9 +31,13 @@ class PlayerCreateInfoSpellCustomView extends StatefulWidget {
 }
 
 class _PlayerCreateInfoSpellCustomViewState
-    extends State<PlayerCreateInfoSpellCustomView> {
+    extends State<PlayerCreateInfoSpellCustomView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<PlayerCreateInfoSpellCustomLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) => SignalBuilder(
@@ -59,8 +63,6 @@ class _PlayerCreateInfoSpellCustomViewState
               ),
             ],
           ),
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           _buildTable(),
         ],
       ),

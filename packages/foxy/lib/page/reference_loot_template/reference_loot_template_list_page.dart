@@ -24,8 +24,12 @@ class ReferenceLootTemplateListPage extends StatefulWidget {
 }
 
 class _ReferenceLootTemplateListPageState
-    extends State<ReferenceLootTemplateListPage> {
+    extends State<ReferenceLootTemplateListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<ReferenceLootTemplateListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -185,12 +189,7 @@ class _ReferenceLootTemplateListPageState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

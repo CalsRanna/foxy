@@ -112,7 +112,6 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
   /// Request sequence: under concurrent searches only the latest result is
   /// accepted, so a slow request never overwrites a fast one.
   int _searchSeq = 0;
-  String? _errorMessage;
 
   bool get _hasSelection => _items.any((item) => item.id == _selectedId);
 
@@ -151,7 +150,6 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
         mainAxisSize: MainAxisSize.min,
         spacing: 8,
         children: [
-          FoxyInlineError(message: _errorMessage),
           _buildFilter(),
           Flexible(child: _buildTable()),
         ],
@@ -307,7 +305,6 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
       setState(() {
         _items = result;
         _total = count;
-        _errorMessage = null;
         if (!_hasSelection) {
           _selectedId = null;
           _userSelected = false;
@@ -319,8 +316,10 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
       setState(() {
         _selectedId = null;
         _userSelected = false;
-        _errorMessage = '${_source.errorLabel}: ${FoxyExceptions.message(e)}';
       });
+      DialogUtil.instance.error(
+        '${_source.errorLabel}: ${FoxyExceptions.message(e)}',
+      );
     }
   }
 }

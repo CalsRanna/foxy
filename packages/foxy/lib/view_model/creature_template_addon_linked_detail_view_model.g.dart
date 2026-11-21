@@ -16,6 +16,7 @@ mixin _CreatureTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
   final submitting = signal(false);
 
   final errorMessage = signal<String?>(null);
+  final refreshError = signal<String?>(null);
 
   late final entryController = registerController(IntFieldController());
   late final pathIdController = registerController(IntFieldController());
@@ -178,6 +179,7 @@ mixin _CreatureTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
     }
     loading.value = true;
     errorMessage.value = null;
+    refreshError.value = null;
     try {
       final existing = await _repository.getCreatureTemplateAddon(linkSnapshot);
       if (token != _refreshToken || isDisposed) return;
@@ -191,6 +193,7 @@ mixin _CreatureTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
     } catch (error, stackTrace) {
       if (token != _refreshToken || isDisposed) return;
       errorMessage.value = FoxyExceptions.message(error);
+      refreshError.value = errorMessage.value;
       LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
     } finally {
       if (token == _refreshToken && !isDisposed) loading.value = false;

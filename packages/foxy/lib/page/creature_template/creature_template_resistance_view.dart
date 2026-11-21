@@ -24,9 +24,13 @@ class CreatureTemplateResistanceView extends StatefulWidget {
 }
 
 class _CreatureTemplateResistanceViewState
-    extends State<CreatureTemplateResistanceView> {
+    extends State<CreatureTemplateResistanceView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<CreatureTemplateResistanceLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -208,12 +212,7 @@ class _CreatureTemplateResistanceViewState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

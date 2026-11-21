@@ -21,8 +21,11 @@ class SpellRankView extends StatefulWidget {
   State<SpellRankView> createState() => _SpellRankViewState();
 }
 
-class _SpellRankViewState extends State<SpellRankView> {
+class _SpellRankViewState extends State<SpellRankView> with DialogErrorState {
   final viewModel = GetIt.instance.get<SpellRankLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -191,12 +194,7 @@ class _SpellRankViewState extends State<SpellRankView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

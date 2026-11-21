@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
 
 /// Foxy dialog entry point: uniform sizing, project-wide behaviors, and
 /// singleton dialog service.
@@ -16,6 +20,8 @@ class DialogUtil {
 
   /// Dialog max height = screen height × this ratio.
   static const maxHeightRatio = 0.8;
+
+  final _errors = Queue<String>();
 
   DialogUtil._();
 
@@ -87,29 +93,8 @@ class DialogUtil {
   }
 
   void error(String error) {
-    final context = FoxyRouter.router.navigatorKey.currentContext!;
-    if (!context.mounted) return;
-
-    // Do not implicitly pop the stack top: if callers stacked dialogs such
-    // as loading, they should dismiss explicitly first, so a real page is
-    // never popped by accident (historically an unconditional pop flung the
-    // list page out).
-    show(
-      context: context,
-      builder: (context) {
-        return ShadDialog.alert(
-          title: Text('错误'),
-          description: Text(error),
-          constraints: constraints(context),
-          actions: [
-            ShadButton(
-              child: Text('确定'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
+    _errors.addLast(error);
+    if (_errors.length == 1) unawaited(_showErrors());
   }
 
   void loading() {
@@ -184,5 +169,68 @@ class DialogUtil {
       variant: variant,
       opaque: opaque,
     );
+  }
+
+  Future<void> _showErrors() async {
+    while (_errors.isNotEmpty) {
+      final error = _errors.first;
+      final context = FoxyRouter.router.navigatorKey.currentContext;
+      try {
+        if (context == null || !context.mounted) continue;
+        await show<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => PopScope(
+            canPop: false,
+            child: ShadDialog.alert(
+              title: const Text('错误'),
+              description: Text(error),
+              closeIcon: const SizedBox.shrink(),
+              constraints: constraints(context),
+              actions: [
+                ShadButton(
+                  child: const Text('确定'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+        );
+      } finally {
+        _errors.removeFirst();
+      }
+    }
+  }
+}
+
+/// Reports failures from operations that handle exceptions in the view model.
+/// Each signal change is handled once, independently of widget rebuilds.
+mixin DialogErrorState<T extends StatefulWidget> on State<T> {
+  ReadonlySignal<String?> get dialogError;
+
+  bool get showInitialDialogError => false;
+
+  late final void Function() _unsubscribeError;
+
+  @override
+  void initState() {
+    super.initState();
+    var first = true;
+    _unsubscribeError = dialogError.subscribe((message) {
+      final show = !first || showInitialDialogError;
+      first = false;
+      if (!show || message == null) return;
+      final binding = WidgetsBinding.instance;
+      binding.addPostFrameCallback((_) {
+        if (mounted) DialogUtil.instance.error(message);
+      });
+      binding.ensureVisualUpdate();
+    });
+  }
+
+  @override
+  void dispose() {
+    _unsubscribeError();
+    super.dispose();
   }
 }

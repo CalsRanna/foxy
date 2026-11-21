@@ -29,9 +29,13 @@ class PickpocketingLootTemplateView extends StatefulWidget {
 }
 
 class _PickpocketingLootTemplateViewState
-    extends State<PickpocketingLootTemplateView> {
+    extends State<PickpocketingLootTemplateView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<PickpocketingLootTemplateLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -296,12 +300,7 @@ class _PickpocketingLootTemplateViewState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

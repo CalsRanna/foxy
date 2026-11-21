@@ -78,8 +78,7 @@ class DirectoryPathConfigDialog extends StatefulWidget {
       _DirectoryPathConfigDialogState();
 }
 
-/// Inline directory-path form: path input/browse plus an
-/// existence-validation error banner.
+/// Directory-path input and browse form.
 ///
 /// Reused by the directory-config dialog and wizard steps 1/2; saving goes
 /// through [SetupStatusViewModel]'s validation and persistence, with errors
@@ -96,42 +95,29 @@ class DirectoryPathForm extends StatefulWidget {
 
 class DirectoryPathFormState extends State<DirectoryPathForm> {
   final controller = StringFieldController();
+  bool _saving = false;
 
   DirectoryConfigTarget get target => widget.target;
 
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
-    return SignalBuilder(
-      builder: (_) {
-        final error = target.errorOf(widget.vm);
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: 14,
-          children: [
-            SettingDialogShell.mutedHint(context, target.description),
-            Text(
-              '目录路径',
-              style: theme.textTheme.small.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SettingDialogShell.pathField(
-              controller: controller,
-              placeholder: '选择或输入${target.title}路径',
-              onBrowse: _browse,
-            ),
-            if (error != null)
-              SettingDialogShell.banner(
-                context,
-                text: error,
-                color: theme.colorScheme.destructive,
-                icon: LucideIcons.triangleAlert,
-              ),
-          ],
-        );
-      },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 14,
+      children: [
+        SettingDialogShell.mutedHint(context, target.description),
+        Text(
+          '目录路径',
+          style: theme.textTheme.small.copyWith(fontWeight: FontWeight.w600),
+        ),
+        SettingDialogShell.pathField(
+          controller: controller,
+          placeholder: '选择或输入${target.title}路径',
+          onBrowse: _browse,
+        ),
+      ],
     );
   }
 
@@ -150,9 +136,26 @@ class DirectoryPathFormState extends State<DirectoryPathForm> {
     if (path != null) controller.init(path);
   }
 
-  /// Validates and saves the directory config; returns true on success,
-  /// errors show in the banner.
-  Future<bool> save() => target.save(widget.vm, controller.collect());
+  /// Validates and saves the directory config, returning true on success.
+  Future<bool> save() async {
+    if (_saving) return false;
+    _saving = true;
+    try {
+      final saved = await target.save(widget.vm, controller.collect());
+      if (!saved && mounted) {
+        final error = target.errorOf(widget.vm);
+        if (error != null) DialogUtil.instance.error(error);
+      }
+      return saved;
+    } catch (error) {
+      if (mounted) {
+        DialogUtil.instance.error('保存目录失败：${FoxyExceptions.message(error)}');
+      }
+      return false;
+    } finally {
+      _saving = false;
+    }
+  }
 
   Future<void> _browse() async {
     final dir = await getDirectoryPath();

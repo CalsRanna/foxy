@@ -216,6 +216,11 @@ class AgentViewModel with FieldControllerMixin {
             cancelOnError: true,
           );
     } catch (error) {
+      if (!_isCurrentRun(run)) return;
+      // Startup can fail before the chat adds the user message to its input.
+      if (session.session.items.length == run.persistedItemCount) {
+        session.session.addUserMessage(text);
+      }
       _handleEvent(AgentFailedEvent(FoxyExceptions.message(error)), run);
     }
   }
@@ -243,15 +248,6 @@ class AgentViewModel with FieldControllerMixin {
     final message = AgentChatMessage(role: AgentChatRole.assistant, text: '');
     run.session.messages.add(message);
     return message;
-  }
-
-  void _appendError(_AgentRun run, String message) {
-    _persistReasoningSegment(run);
-    final assistant = run.assistant ??= _appendAssistant(run);
-    final prefix = assistant.text.isEmpty ? '' : '${assistant.text}\n\n';
-    assistant.text = '$prefix错误：$message';
-    run.hasText = true;
-    _publish(run.session);
   }
 
   AgentChatMessage _appendReasoning(
@@ -304,13 +300,13 @@ class AgentViewModel with FieldControllerMixin {
     return session;
   }
 
-  void _finishRun(_AgentRun run) {
+  void _finishRun(_AgentRun run, {bool failed = false}) {
     if (!_isCurrentRun(run)) return;
     _persistNewItems(run);
     _closeRun(run);
     final assistant = run.assistant;
     _clearEmptyAssistant(run);
-    if (!run.hasText) {
+    if (!run.hasText && !failed) {
       const fallback = '（无回复）';
       run.session.messages.add(
         AgentChatMessage(role: AgentChatRole.assistant, text: fallback),
@@ -377,8 +373,8 @@ class AgentViewModel with FieldControllerMixin {
         _persistNewItems(run);
         _publish(run.session);
       case AgentToolResultEvent(:final callId, :final isError, :final output):
-        run.pendingToolCalls.remove(callId);
-        if (isError) {
+        final toolCall = run.pendingToolCalls.remove(callId);
+        if (isError && toolCall != null) {
           final line = '工具失败：$output';
           run.session.messages.add(
             AgentChatMessage(role: AgentChatRole.tool, text: line),
@@ -396,9 +392,37 @@ class AgentViewModel with FieldControllerMixin {
       case AgentCompletedEvent():
         _finishRun(run);
       case AgentFailedEvent(:final message):
-        _appendError(run, message);
-        _finishRun(run);
+        _recordRunFailure(run, message);
+        _finishRun(run, failed: true);
     }
+  }
+
+  void _recordRunFailure(_AgentRun run, String message) {
+    _persistReasoningSegment(run);
+    _persistAssistantSegment(run);
+    _persistNewItems(run);
+
+    final text = '本轮未完成：$message';
+    final item = <String, Object?>{
+      'role': 'assistant',
+      'content': 'Foxy 运行诊断：$text',
+    };
+    final session = run.session;
+    session.messages.add(
+      AgentChatMessage(role: AgentChatRole.error, text: text),
+    );
+    session.session.addItems([item]);
+    // Save the transcript and context together so a restored session replays
+    // the same diagnostic in the same position.
+    run.persistedItemCount++;
+    unawaited(
+      _sessionStore.appendMessage(
+        session.id,
+        AgentChatRole.error,
+        text,
+        inputItem: item,
+      ),
+    );
   }
 
   bool _isCurrentRun(_AgentRun run) =>
@@ -520,7 +544,7 @@ final class _AgentRun {
 
   AgentChatMessage? reasoning;
 
-  /// Whether any assistant text (answer or error) was rendered.
+  /// Whether any assistant answer text was rendered.
   var hasText = false;
 
   /// Number of `AgentSession.items` already persisted for this run.

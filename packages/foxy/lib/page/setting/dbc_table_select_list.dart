@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/dbc_export_table_row.dart';
 import 'package:foxy/view_model/workflow/dbc_export_item.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Table-picker list shared by the DBC-export and MPQ-export dialogs:
@@ -18,6 +19,15 @@ class DbcTableSelectList extends StatelessWidget {
     required this.onToggle,
     this.emptyText = '没有可导出的表',
   });
+
+  static void reportCountErrors(List<DbcExportItem> items) {
+    final failed = items.where((item) => item.countFailed).toList();
+    if (failed.isEmpty) return;
+    final details = failed
+        .map((item) => '${item.dbcFileName}：${item.countError}')
+        .join('\n');
+    DialogUtil.instance.error('${failed.length} 张表统计失败，已禁用勾选。\n$details');
+  }
 
   @override
   Widget build(BuildContext context) {

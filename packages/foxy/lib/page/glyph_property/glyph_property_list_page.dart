@@ -22,8 +22,12 @@ class GlyphPropertyListPage extends StatefulWidget {
   State<GlyphPropertyListPage> createState() => _GlyphPropertyListPageState();
 }
 
-class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
+class _GlyphPropertyListPageState extends State<GlyphPropertyListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<GlyphPropertyListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +155,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

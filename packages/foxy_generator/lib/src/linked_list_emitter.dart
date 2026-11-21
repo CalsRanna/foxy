@@ -44,6 +44,7 @@ final class LinkedListEmitter {
       ..writeln('  final submitting = signal(false);')
       ..writeln()
       ..writeln('  final errorMessage = signal<String?>(null);')
+      ..writeln('  final refreshError = signal<String?>(null);')
       ..writeln();
 
     // Controller boilerplate reuses FormEmitter (with the behavior skeleton
@@ -323,6 +324,7 @@ final class LinkedListEmitter {
       ..writeln('    final token = ++_refreshToken;')
       ..writeln('    loading.value = true;')
       ..writeln('    errorMessage.value = null;')
+      ..writeln('    refreshError.value = null;')
       ..writeln('    try {')
       // count runs first by design: the page clamp (lastPage/nextPage)
       // depends on it, so unlike the main-table list VM the two queries
@@ -348,6 +350,7 @@ final class LinkedListEmitter {
       ..writeln('    } catch (error) {')
       ..writeln('      if (token == _refreshToken) {')
       ..writeln('        errorMessage.value = FoxyExceptions.message(error);')
+      ..writeln('        refreshError.value = errorMessage.value;')
       ..writeln("        LoggerUtil.instance.e('刷新子表列表失败: \$error');")
       ..writeln('      }')
       ..writeln('    } finally {')

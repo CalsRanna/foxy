@@ -21,8 +21,12 @@ class ConditionListPage extends StatefulWidget {
   State<ConditionListPage> createState() => _ConditionListPageState();
 }
 
-class _ConditionListPageState extends State<ConditionListPage> {
+class _ConditionListPageState extends State<ConditionListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<ConditionListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -175,8 +179,6 @@ class _ConditionListPageState extends State<ConditionListPage> {
       child: Column(
         spacing: 16,
         children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
           Expanded(child: table),
         ],

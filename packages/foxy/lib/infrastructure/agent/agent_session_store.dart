@@ -12,7 +12,8 @@ import 'package:path/path.dart' as p;
 /// One append-only file per session under `<app dir>/data/session/<id>.jsonl`.
 /// Line kinds:
 /// - `{"type":"session", ...}`: session header;
-/// - `{"type":"message", "role": ..., "text": ...}`: UI transcript row;
+/// - `{"type":"message", "role": ..., "text": ...}`: UI transcript row,
+///   optionally carrying an `item` to replay with it;
 /// - `{"type":"item", "item": {...}}`: protocol `input` item, replayed on load
 ///   to continue the conversation.
 /// Generated titles use a `.title` file so listing does not scan the transcript.
@@ -33,14 +34,19 @@ class AgentSessionStore {
   Future<void> appendItem(String id, Map<String, Object?> item) =>
       _enqueue(() => _appendLine(id, {'type': 'item', 'item': item}));
 
-  Future<void> appendMessage(String id, AgentChatRole role, String text) =>
-      _enqueue(
-        () => _appendLine(id, {
-          'type': 'message',
-          'role': role.name,
-          'text': text,
-        }),
-      );
+  Future<void> appendMessage(
+    String id,
+    AgentChatRole role,
+    String text, {
+    Map<String, Object?>? inputItem,
+  }) => _enqueue(
+    () => _appendLine(id, {
+      'type': 'message',
+      'role': role.name,
+      'text': text,
+      if (inputItem != null) 'item': inputItem,
+    }),
+  );
 
   Future<void> createSession(String id) => _enqueue(
     () => _appendLine(id, {
@@ -95,7 +101,6 @@ class AgentSessionStore {
         .map(AgentChatMessage.fromJson)
         .toList();
     final items = entries
-        .where((entry) => entry['type'] == 'item')
         .map((entry) => entry['item'])
         .whereType<Map<String, Object?>>()
         .map((item) => Map<String, Object?>.from(item))

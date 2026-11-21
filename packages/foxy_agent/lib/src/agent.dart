@@ -178,6 +178,10 @@ final class FoxyAgent {
           yield result;
         }
       }
+    } on AgentHttpException catch (error) {
+      // The failure can be replayed in a later request. The response body
+      // may echo credentials, so report only the HTTP status.
+      yield AgentFailedEvent('Provider returned HTTP ${error.statusCode}.');
     } on AgentException catch (error) {
       yield AgentFailedEvent(error.message);
     } on http.ClientException catch (error) {

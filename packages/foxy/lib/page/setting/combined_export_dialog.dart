@@ -21,7 +21,8 @@ class CombinedExportDialog extends StatefulWidget {
   State<CombinedExportDialog> createState() => _CombinedExportDialogState();
 }
 
-class _CombinedExportDialogState extends State<CombinedExportDialog> {
+class _CombinedExportDialogState extends State<CombinedExportDialog>
+    with DialogErrorState {
   final _dbcDirController = StringFieldController();
   final _mpqDirController = StringFieldController();
   final _fileNameController = StringFieldController();
@@ -38,6 +39,9 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
   CombinedExportWorkflowViewModel get _vm => widget.vm;
 
   @override
+  ReadonlySignal<String?> get dialogError => _vm.errorMessage;
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: DialogUtil.width,
@@ -51,7 +55,6 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
               workflowStatus == WorkflowStatus.preparing ||
               workflowStatus == WorkflowStatus.running ||
               workflowStatus == WorkflowStatus.cancelling;
-          final error = _vm.errorMessage.value;
           final success = workflowStatus == WorkflowStatus.succeeded;
           final theme = ShadTheme.of(context);
 
@@ -166,9 +169,6 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
               allItems
                   .where((item) => item.canSelect)
                   .every((item) => item.selected);
-          final failureCount = allItems
-              .where((item) => item.countFailed)
-              .length;
           final dbcTargetDir = _dbcOutputDir.value;
           final mpqTargetDir = _mpqOutputDir.value;
           final fileNameReady = _fileName.value.trim().isNotEmpty;
@@ -271,48 +271,32 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
                       _vm.setFileName(value);
                     },
                   ),
-                  if (error != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      spacing: 8,
-                      children: [
-                        SettingDialogShell.banner(
-                          context,
-                          text: error,
-                          color: theme.colorScheme.destructive,
-                          icon: LucideIcons.triangleAlert,
+                  if (workflowStatus == WorkflowStatus.failed)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ShadButton.outline(
+                        size: ShadButtonSize.sm,
+                        onPressed: dbcTargetDir == null || mpqTargetDir == null
+                            ? null
+                            : () async {
+                                _vm.setDbcOutputDirectory(dbcTargetDir);
+                                _vm.setMpqOutputDirectory(mpqTargetDir);
+                                _vm.setFileName(_fileName.value);
+                                try {
+                                  await _vm.retry();
+                                } catch (_) {
+                                  // The workflow reports through errorMessage.
+                                }
+                              },
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 6,
+                          children: [
+                            Icon(LucideIcons.rotateCw, size: 14),
+                            Text('重试'),
+                          ],
                         ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: ShadButton.outline(
-                            size: ShadButtonSize.sm,
-                            onPressed:
-                                dbcTargetDir == null || mpqTargetDir == null
-                                ? null
-                                : () {
-                                    _vm.setDbcOutputDirectory(dbcTargetDir);
-                                    _vm.setMpqOutputDirectory(mpqTargetDir);
-                                    _vm.setFileName(_fileName.value);
-                                    _vm.retry();
-                                  },
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: 6,
-                              children: [
-                                Icon(LucideIcons.rotateCw, size: 14),
-                                Text('重试'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  if (failureCount > 0)
-                    SettingDialogShell.banner(
-                      context,
-                      text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
-                      color: theme.colorScheme.destructive,
-                      icon: LucideIcons.circleAlert,
+                      ),
                     ),
                   Row(
                     spacing: 8,
@@ -395,7 +379,10 @@ class _CombinedExportDialogState extends State<CombinedExportDialog> {
     }
     _fileNameController.init(_vm.fileName.value);
     _fileName.value = _vm.fileName.value;
-    if (mounted) _loaded.value = true;
+    _loaded.value = true;
+    if (_vm.errorMessage.value == null) {
+      DbcTableSelectList.reportCountErrors(_vm.items.value);
+    }
   }
 
   Future<void> _browseDbc() async {

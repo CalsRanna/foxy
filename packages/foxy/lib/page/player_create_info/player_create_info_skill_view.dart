@@ -27,9 +27,13 @@ class PlayerCreateInfoSkillView extends StatefulWidget {
       _PlayerCreateInfoSkillViewState();
 }
 
-class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
+class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<PlayerCreateInfoSkillLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) => SignalBuilder(
@@ -55,8 +59,6 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
               ),
             ],
           ),
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           _buildTable(),
         ],
       ),

@@ -25,7 +25,7 @@ class AgentChatMessage {
 }
 
 /// Who produced a chat message.
-enum AgentChatRole { user, assistant, tool, reasoning }
+enum AgentChatRole { user, assistant, tool, reasoning, error }
 
 /// One conversation in the agent session list.
 class AgentChatSession {

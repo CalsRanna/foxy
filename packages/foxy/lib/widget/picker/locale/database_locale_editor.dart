@@ -3,7 +3,6 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/model/locale/database_locale_changes.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Legacy name kept for compatibility.
@@ -61,11 +60,7 @@ class DatabaseLocaleEditor extends StatefulWidget {
     } catch (e, s) {
       LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
-      try {
-        ShadSonner.of(context).show(
-          ShadToast(description: Text('加载失败: ${FoxyExceptions.message(e)}')),
-        );
-      } catch (_) {}
+      DialogUtil.instance.error('加载失败: ${FoxyExceptions.message(e)}');
       return null;
     }
     if (!context.mounted) return null;
@@ -103,7 +98,6 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
   late List<_DatabaseLocaleEditingRow> _rows;
   late Set<String> _initialLocales;
   bool _saving = false;
-  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +122,6 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FoxyInlineError(message: _errorMessage),
           _buildHeader(theme),
           Flexible(child: _buildTable()),
         ],
@@ -236,10 +229,8 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
   }
 
   Future<void> _save() async {
-    setState(() {
-      _saving = true;
-      _errorMessage = null;
-    });
+    if (_saving) return;
+    setState(() => _saving = true);
     try {
       final rows = _rows.map((row) {
         final map = <String, String>{};
@@ -272,12 +263,7 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
         stackTrace: s,
       );
       if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: ${FoxyExceptions.message(e)}');
-      try {
-        ShadSonner.of(context).show(
-          ShadToast(description: Text('保存失败: ${FoxyExceptions.message(e)}')),
-        );
-      } catch (_) {}
+      DialogUtil.instance.error('保存失败: ${FoxyExceptions.message(e)}');
     } finally {
       if (mounted) {
         setState(() => _saving = false);

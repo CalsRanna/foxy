@@ -6,6 +6,7 @@ import 'package:foxy/model/dbc/dbc_locale.dart';
 import 'package:foxy/model/locale/database_locale_changes.dart';
 import 'package:foxy/model/locale/foxy_locale_editor_delegate.dart';
 import 'package:foxy/repository/locale_query_settings.dart';
+import 'package:foxy/router/router.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/widget/picker/locale/database_locale_editor.dart';
@@ -310,7 +311,7 @@ void main() {
     expect(saved!.zhCN, '寒冰箭');
   });
 
-  testWidgets('加载失败时不打开弹窗并返回 null', (tester) async {
+  testWidgets('加载失败时显示一次错误并停留在原页面', (tester) async {
     final delegate = DbcLocaleFieldEditorDelegate(
       field: DbcLocaleFields.spellName,
       onLoad: (entry) async => throw StateError('DBC record not found'),
@@ -332,6 +333,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(DbcLocaleFieldEditor), findsNothing);
+    expect(find.text('错误'), findsOneWidget);
+    expect(find.textContaining('加载失败'), findsOneWidget);
+    await tester.tap(find.text('确定'));
+    await tester.pumpAndSettle();
+    expect(find.text('错误'), findsNothing);
   });
 
   testWidgets('保存失败时保留弹窗并显示错误', (tester) async {
@@ -361,10 +367,12 @@ void main() {
     await tester.tap(find.text('保存'));
     await tester.pumpAndSettle();
 
-    // Dialog still open with the error visible (in-dialog banner + a
-    // possible Toast)
+    expect(find.text('错误'), findsOneWidget);
+    expect(find.textContaining('保存失败'), findsOneWidget);
+    await tester.tap(find.text('确定'));
+    await tester.pumpAndSettle();
     expect(find.byType(DbcLocaleFieldEditor), findsOneWidget);
-    expect(find.textContaining('保存失败'), findsAtLeastNWidgets(1));
+    expect(find.textContaining('保存失败'), findsNothing);
   });
 
   testWidgets('主输入框未保存草稿在打开弹窗时合并进 zhCN', (tester) async {
@@ -437,5 +445,8 @@ void main() {
 }
 
 Widget _wrap(Widget child) {
-  return ShadApp(home: Scaffold(body: child));
+  return ShadApp(
+    navigatorKey: FoxyRouter.router.navigatorKey,
+    home: Scaffold(body: child),
+  );
 }

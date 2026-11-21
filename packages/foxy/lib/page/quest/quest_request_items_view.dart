@@ -21,9 +21,13 @@ class QuestRequestItemsView extends StatefulWidget {
   State<QuestRequestItemsView> createState() => _QuestRequestItemsViewState();
 }
 
-class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
+class _QuestRequestItemsViewState extends State<QuestRequestItemsView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<QuestRequestItemsLinkedDetailViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +108,6 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(title: '基本信息', children: basicRows),
             FoxyFormSection(title: '表情与完成文本', children: emoteTextRows),
             Row(

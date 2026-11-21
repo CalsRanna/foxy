@@ -89,6 +89,7 @@ class IconExtractWorkflowViewModel {
 
   Future<void> start() async {
     if (_isActive || _useCase.isRunning) return;
+    errorMessage.value = null;
     final directory = path.value?.trim();
     if (directory == null || directory.isEmpty) {
       final error = ValidationException('select the client directory first');
@@ -102,7 +103,6 @@ class IconExtractWorkflowViewModel {
     progress.value = 0;
     progressLabel.value = '准备提取...';
     progressDetail.value = '';
-    errorMessage.value = null;
     result.value = null;
     try {
       final nextResult = await _useCase.execute(

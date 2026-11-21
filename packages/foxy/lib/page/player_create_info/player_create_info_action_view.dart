@@ -25,10 +25,13 @@ class PlayerCreateInfoActionView extends StatefulWidget {
       _PlayerCreateInfoActionViewState();
 }
 
-class _PlayerCreateInfoActionViewState
-    extends State<PlayerCreateInfoActionView> {
+class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<PlayerCreateInfoActionLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +58,6 @@ class _PlayerCreateInfoActionViewState
                 ),
               ],
             ),
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             _buildTable(),
           ],
         ),

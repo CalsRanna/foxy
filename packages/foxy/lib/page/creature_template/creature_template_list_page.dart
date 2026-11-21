@@ -22,8 +22,12 @@ class CreatureTemplateListPage extends StatefulWidget {
       _CreatureTemplateListPageState();
 }
 
-class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
+class _CreatureTemplateListPageState extends State<CreatureTemplateListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<CreatureTemplateListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -164,12 +168,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

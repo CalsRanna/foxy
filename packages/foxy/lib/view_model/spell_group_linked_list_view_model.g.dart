@@ -22,6 +22,7 @@ mixin _SpellGroupLinkedListViewModelMixin on FieldControllerMixin {
   final submitting = signal(false);
 
   final errorMessage = signal<String?>(null);
+  final refreshError = signal<String?>(null);
 
   late final idController = registerController(IntFieldController());
   late final spellIdController = registerController(IntFieldController());
@@ -242,6 +243,7 @@ mixin _SpellGroupLinkedListViewModelMixin on FieldControllerMixin {
     final token = ++_refreshToken;
     loading.value = true;
     errorMessage.value = null;
+    refreshError.value = null;
     try {
       final count = await _repository.countSpellGroups(link);
       if (token != _refreshToken) return;
@@ -257,6 +259,7 @@ mixin _SpellGroupLinkedListViewModelMixin on FieldControllerMixin {
     } catch (error) {
       if (token == _refreshToken) {
         errorMessage.value = FoxyExceptions.message(error);
+        refreshError.value = errorMessage.value;
         LoggerUtil.instance.e('刷新子表列表失败: $error');
       }
     } finally {

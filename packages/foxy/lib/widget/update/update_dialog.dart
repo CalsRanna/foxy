@@ -49,7 +49,7 @@ class _ReleaseNotes extends StatelessWidget {
   }
 }
 
-class _UpdateDialogState extends State<UpdateDialog> {
+class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
   /// The current-version display uses a signal: SignalBuilder subscribes directly,
   /// avoiding a parent setState rebuilding the SignalBuilder and triggering
   /// signals_flutter's didUpdateWidget→recompute chain that would break the
@@ -57,6 +57,12 @@ class _UpdateDialogState extends State<UpdateDialog> {
   final _currentVersion = signal<String?>(null);
 
   UpdateViewModel get _vm => widget.vm;
+
+  @override
+  ReadonlySignal<String?> get dialogError => _vm.errorMessage;
+
+  @override
+  bool get showInitialDialogError => true;
 
   @override
   Widget build(BuildContext context) {
@@ -119,19 +125,12 @@ class _UpdateDialogState extends State<UpdateDialog> {
           }
 
           if (readyToRestart) {
-            // A restart failure (e.g. missing foxy_updater.exe) is reported
-            // through errorMessage while readyToRestart stays set; surface it
-            // here instead of silently keeping the "ready" view.
             final restartFailed = error != null;
             return SettingDialogShell(
               title: SettingDialogShell.titleRow(
-                restartFailed
-                    ? LucideIcons.triangleAlert
-                    : LucideIcons.circleCheck,
-                restartFailed ? '重启更新失败' : '更新已就绪',
-                iconColor: restartFailed
-                    ? theme.colorScheme.destructive
-                    : theme.colorScheme.primary,
+                restartFailed ? LucideIcons.refreshCw : LucideIcons.circleCheck,
+                restartFailed ? '软件更新' : '更新已就绪',
+                iconColor: theme.colorScheme.primary,
               ),
               actions: [
                 ShadButton.outline(
@@ -151,19 +150,16 @@ class _UpdateDialogState extends State<UpdateDialog> {
                     ),
                   ),
               ],
-              child: SettingDialogShell.banner(
-                context,
-                text: restartFailed
-                    ? error
-                    : '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
+              child: restartFailed
+                  ? const SizedBox.shrink()
+                  : SettingDialogShell.banner(
+                      context,
+                      text:
+                          '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
                           '点击「立即重启」将关闭 Foxy 并自动完成更新，重启后即为新版本。',
-                color: restartFailed
-                    ? theme.colorScheme.destructive
-                    : theme.colorScheme.primary,
-                icon: restartFailed
-                    ? LucideIcons.triangleAlert
-                    : LucideIcons.circleCheck,
-              ),
+                      color: theme.colorScheme.primary,
+                      icon: LucideIcons.circleCheck,
+                    ),
             );
           }
 
@@ -180,7 +176,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   child: const Text('稍后再说'),
                 ),
                 ShadButton(
-                  onPressed: error == null ? _download : null,
+                  onPressed: _download,
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: 6,
@@ -202,13 +198,6 @@ class _UpdateDialogState extends State<UpdateDialog> {
                     '新版本 ${update.version}（${update.buildNumber}）',
                   ),
                   _ReleaseNotes(notes: update.notes),
-                  if (error != null)
-                    SettingDialogShell.banner(
-                      context,
-                      text: error,
-                      color: theme.colorScheme.destructive,
-                      icon: LucideIcons.triangleAlert,
-                    ),
                 ],
               ),
             );
@@ -216,10 +205,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
           if (error != null) {
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.triangleAlert,
-                '检查更新失败',
-              ),
+              title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
               actions: [
                 ShadButton.outline(
                   onPressed: () => Navigator.of(context).maybePop(),
@@ -237,12 +223,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   ),
                 ),
               ],
-              child: SettingDialogShell.banner(
-                context,
-                text: error,
-                color: theme.colorScheme.destructive,
-                icon: LucideIcons.triangleAlert,
-              ),
+              child: const SizedBox.shrink(),
             );
           }
 

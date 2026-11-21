@@ -21,8 +21,12 @@ class PageTextListPage extends StatefulWidget {
   State<PageTextListPage> createState() => _PageTextListPageState();
 }
 
-class _PageTextListPageState extends State<PageTextListPage> {
+class _PageTextListPageState extends State<PageTextListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<PageTextListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -160,8 +164,6 @@ class _PageTextListPageState extends State<PageTextListPage> {
       child: Column(
         spacing: 16,
         children: [
-          if (viewModel.errorMessage.value != null)
-            FoxyInlineError(message: viewModel.errorMessage.value),
           toolbar,
           Expanded(child: table),
         ],

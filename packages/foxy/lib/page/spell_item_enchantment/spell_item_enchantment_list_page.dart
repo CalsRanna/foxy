@@ -23,8 +23,12 @@ class SpellItemEnchantmentListPage extends StatefulWidget {
 }
 
 class _SpellItemEnchantmentListPageState
-    extends State<SpellItemEnchantmentListPage> {
+    extends State<SpellItemEnchantmentListPage>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<SpellItemEnchantmentListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -156,12 +160,7 @@ class _SpellItemEnchantmentListPageState
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      Expanded(child: table),
-    ];
+    var children = [toolbar, Expanded(child: table)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }

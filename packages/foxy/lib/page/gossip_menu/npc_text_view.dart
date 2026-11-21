@@ -37,8 +37,6 @@ class _NpcTextViewState extends State<NpcTextView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             _buildMetaSection(),
             _buildEntrySection(
               index: 0,

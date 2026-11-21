@@ -19,8 +19,11 @@ class SpellGroupView extends StatefulWidget {
   State<SpellGroupView> createState() => _SpellGroupViewState();
 }
 
-class _SpellGroupViewState extends State<SpellGroupView> {
+class _SpellGroupViewState extends State<SpellGroupView> with DialogErrorState {
   final viewModel = GetIt.instance.get<SpellGroupLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -154,12 +157,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

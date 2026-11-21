@@ -97,7 +97,6 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   List<T> _items = [];
   int _total = 0;
   int? _selectedId;
-  String? _errorMessage;
 
   /// Whether the user actively clicked a row. Preselected values (an ID
   /// already in the input on open) are not highlighted, consistent with
@@ -149,7 +148,6 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
         mainAxisSize: MainAxisSize.min,
         spacing: 8,
         children: [
-          FoxyInlineError(message: _errorMessage),
           _buildFilter(),
           Flexible(child: _buildTable()),
         ],
@@ -303,7 +301,6 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       setState(() {
         _items = result;
         _total = count;
-        _errorMessage = null; // a successful search clears the previous error
         if (!_hasSelection) {
           _selectedId = null;
           _userSelected = false;
@@ -317,9 +314,10 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       setState(() {
         _selectedId = null;
         _userSelected = false;
-        _errorMessage =
-            '${widget.delegate.errorLabel}: ${FoxyExceptions.message(e)}';
       });
+      DialogUtil.instance.error(
+        '${widget.delegate.errorLabel}: ${FoxyExceptions.message(e)}',
+      );
     }
   }
 }

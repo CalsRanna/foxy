@@ -27,8 +27,12 @@ class ItemLootTemplateView extends StatefulWidget {
   State<ItemLootTemplateView> createState() => _ItemLootTemplateViewState();
 }
 
-class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
+class _ItemLootTemplateViewState extends State<ItemLootTemplateView>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<ItemLootTemplateLinkedListViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -290,12 +294,7 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
       },
     );
 
-    var children = [
-      if (viewModel.errorMessage.value != null)
-        FoxyInlineError(message: viewModel.errorMessage.value),
-      toolbar,
-      table,
-    ];
+    var children = [toolbar, table];
     final column = Column(spacing: 16, children: children);
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }

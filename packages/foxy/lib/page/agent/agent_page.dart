@@ -196,6 +196,14 @@ class _AgentPageState extends State<AgentPage> {
         );
       case AgentChatRole.reasoning:
         return AgentMarkdown(message.text, muted: true);
+      case AgentChatRole.error:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: SelectableText(
+            message.text,
+            style: theme.textTheme.small.copyWith(color: colors.destructive),
+          ),
+        );
       case AgentChatRole.tool:
         if (viewModel.isToolInProgress(message)) {
           return _buildStepStatus(

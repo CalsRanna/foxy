@@ -25,9 +25,13 @@ class CreatureTemplateAddonView extends StatefulWidget {
       _CreatureTemplateAddonViewState();
 }
 
-class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
+class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView>
+    with DialogErrorState {
   final viewModel = GetIt.instance
       .get<CreatureTemplateAddonLinkedDetailViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +42,6 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(
               title: '基础信息',
               children: [

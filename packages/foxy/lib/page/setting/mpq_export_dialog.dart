@@ -20,7 +20,8 @@ class MpqExportDialog extends StatefulWidget {
   State<MpqExportDialog> createState() => _MpqExportDialogState();
 }
 
-class _MpqExportDialogState extends State<MpqExportDialog> {
+class _MpqExportDialogState extends State<MpqExportDialog>
+    with DialogErrorState {
   final _dirController = StringFieldController();
   final _fileNameController = StringFieldController();
   final _searchController = StringFieldController();
@@ -33,6 +34,9 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
   final _loaded = signal(false);
   final _query = signal('');
   MpqExportWorkflowViewModel get _vm => widget.vm;
+
+  @override
+  ReadonlySignal<String?> get dialogError => _vm.errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,6 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
               workflowStatus == WorkflowStatus.preparing ||
               workflowStatus == WorkflowStatus.running ||
               workflowStatus == WorkflowStatus.cancelling;
-          final error = _vm.errorMessage.value;
           final success = workflowStatus == WorkflowStatus.succeeded;
           final theme = ShadTheme.of(context);
 
@@ -157,9 +160,6 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
               allItems
                   .where((item) => item.canSelect)
                   .every((item) => item.selected);
-          final failureCount = allItems
-              .where((item) => item.countFailed)
-              .length;
           final targetDir = _outputDir.value;
           final fileNameReady = _fileName.value.trim().isNotEmpty;
 
@@ -240,46 +240,31 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
                     _vm.setFileName(value);
                   },
                 ),
-                if (error != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 8,
-                    children: [
-                      SettingDialogShell.banner(
-                        context,
-                        text: error,
-                        color: theme.colorScheme.destructive,
-                        icon: LucideIcons.triangleAlert,
+                if (workflowStatus == WorkflowStatus.failed)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ShadButton.outline(
+                      size: ShadButtonSize.sm,
+                      onPressed: targetDir == null
+                          ? null
+                          : () async {
+                              _vm.setOutputDirectory(targetDir);
+                              _vm.setFileName(_fileName.value);
+                              try {
+                                await _vm.retry();
+                              } catch (_) {
+                                // The workflow reports through errorMessage.
+                              }
+                            },
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 6,
+                        children: [
+                          Icon(LucideIcons.rotateCw, size: 14),
+                          Text('重试'),
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: ShadButton.outline(
-                          size: ShadButtonSize.sm,
-                          onPressed: targetDir == null
-                              ? null
-                              : () {
-                                  _vm.setOutputDirectory(targetDir);
-                                  _vm.setFileName(_fileName.value);
-                                  _vm.retry();
-                                },
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            spacing: 6,
-                            children: [
-                              Icon(LucideIcons.rotateCw, size: 14),
-                              Text('重试'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                if (failureCount > 0)
-                  SettingDialogShell.banner(
-                    context,
-                    text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
-                    color: theme.colorScheme.destructive,
-                    icon: LucideIcons.circleAlert,
+                    ),
                   ),
                 Row(
                   spacing: 8,
@@ -355,7 +340,10 @@ class _MpqExportDialogState extends State<MpqExportDialog> {
     }
     _fileNameController.init(_vm.fileName.value);
     _fileName.value = _vm.fileName.value;
-    if (mounted) _loaded.value = true;
+    _loaded.value = true;
+    if (_vm.errorMessage.value == null) {
+      DbcTableSelectList.reportCountErrors(_vm.items.value);
+    }
   }
 
   Future<void> _browse() async {

@@ -21,8 +21,12 @@ class QuestOfferRewardView extends StatefulWidget {
   State<QuestOfferRewardView> createState() => _QuestOfferRewardViewState();
 }
 
-class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
+class _QuestOfferRewardViewState extends State<QuestOfferRewardView>
+    with DialogErrorState {
   final viewModel = GetIt.instance.get<QuestOfferRewardLinkedDetailViewModel>();
+
+  @override
+  ReadonlySignal<String?> get dialogError => viewModel.refreshError;
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +175,6 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            if (viewModel.errorMessage.value != null)
-              FoxyInlineError(message: viewModel.errorMessage.value),
             FoxyFormSection(title: '基本信息', children: basicRows),
             FoxyFormSection(title: '表情与奖励文本', children: emoteRows),
             Row(
