@@ -277,6 +277,7 @@ void main() {
     viewModel.draftController.init('继续的问题');
     await viewModel.send();
     final secondId = viewModel.activeSessionId.value!;
+    expect(secondId, isNot(firstId));
 
     await viewModel.selectSession(firstId);
     viewModel.stop();

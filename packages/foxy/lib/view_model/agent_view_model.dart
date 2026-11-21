@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:foxy/infrastructure/agent/agent_session_store.dart';
@@ -34,6 +35,7 @@ typedef AgentTitleGenerator = Future<String?> Function(
 /// lightweight metadata and content loads lazily when a session is selected.
 class AgentViewModel with FieldControllerMixin {
   static const _defaultTitle = '新会话';
+  static final _sessionIdRandom = Random.secure();
 
   final AgentProviderConfigUseCase _configUseCase;
 
@@ -290,7 +292,10 @@ class AgentViewModel with FieldControllerMixin {
   }
 
   AgentChatSession _createSession() {
-    final id = '${DateTime.now().microsecondsSinceEpoch}';
+    final id = List.generate(
+      16,
+      (_) => _sessionIdRandom.nextInt(256).toRadixString(16).padLeft(2, '0'),
+    ).join();
     final session = AgentChatSession(id: id, title: _defaultTitle);
     _loaded[id] = session;
     _activateSession(session);
