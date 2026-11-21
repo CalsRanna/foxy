@@ -1,19 +1,18 @@
 # Foxy
 
-AzerothCore(WoW 3.3.5 模拟器)world 数据库的可视化管理工具。
-
-Foxy 面向自建魔兽世界服务器(如 AzerothCore)的管理员与开发者,提供生物、物品、任务、法术、游戏对象、对话、SmartAI 脚本、掉落、本地化等 130 余张数据表的图形化编辑能力,同时支持 DBC 数据同步与客户端游戏图标提取,让原本依赖 SQL 与工具链的运维工作变得直观高效。
+Foxy 是面向 AzerothCore（WoW 3.3.5）的桌面数据库编辑器，支持编辑世界数据、同步客户端 DBC、生成 MPQ 补丁和提取游戏图标。可通过 AI 助手「博学者」用自然语言查询游戏数据。
 
 ## 功能特性
 
-- **数据表管理**:生物、物品、任务、法术、游戏对象、对话菜单、SmartAI、掉落模板、条件、天赋、宝石/雕文属性等 120+ 张 world 表,覆盖列表查询、分页筛选、详情表单、子表 Tab、复制/删除、复合主键等完整编辑链路。
-- **中文本地化**:通过 locale 表 JOIN 展示简体中文名称(如生物名、物品名),可编辑 `*_locale` 表与 DBC 宽表的 16 语言字段。
-- **DBC 同步**:导入/导出客户端 DBC 文件(约 50 张表,基于 warcrafty 解析),后台 isolate 执行,支持进度显示、取消与完整性校验(行数、重复 ID、列结构兼容)。
-- **图标提取**:从客户端 MPQ 归档提取游戏图标(BLP 解码,支持 DXT1/3/5),本地缓存并支持内存 LRU 复用,界面直接展示图标。
-- **活动日志**:所有创建/更新/删除/复制操作统一记录到 `foxy.activity_log`,工作台可查看最近动态。
-- **自动更新**:启动时检查新版本,支持 SHA-256 校验下载、断点取消、重启后自动替换(便携 zip 分发,无安装器)。
-- **新手向导**:首次运行三步引导——连接数据库 → DBC 同步 → 图标提取。
-- **桌面体验**:无边框窗口、窗口尺寸记忆、右侧键菜单、面包屑导航、快捷键(退出/设置/一键导出)。应用内任意页面按 `⌘⇧E`(macOS)或 `Ctrl+Shift+E`(Windows/Linux)可打开一键导出 DBC + MPQ 对话框。
+- **数据表管理**。编辑生物、物品、任务、法术、游戏对象、对话菜单、SmartAI、掉落模板、条件及 DBC 数据。支持分页筛选、详情表单、关联子表、复制、删除和复合主键。
+- **博学者**。在世界库、角色库、认证库和 Foxy 库中执行只读查询，支持筛选、排序、分页、分组统计、字段语义查询和关联记录展开。
+- **中文本地化**。可在「设置 → 编辑偏好」启用「使用独立本地化表」，优先展示 `*_locale` 表中的文本，也可编辑 DBC 的 16 语言字段。
+- **DBC 同步与 MPQ 导出**。后台 isolate 执行 DBC 导入与导出，支持进度、取消和完整性校验。可把导出的 DBC 打包为 MPQ 补丁。
+- **图标提取**。从客户端 MPQ 归档提取 BLP 图标，支持 DXT1、DXT3、DXT5 解码、本地缓存和内存 LRU 缓存。
+- **活动日志**。创建、更新、删除和复制操作记录到 `foxy.activity_log`，可在工作台查看最近动态。
+- **Windows 便携版更新**。支持检查新版本、取消下载、SHA-256 校验和重启后替换程序。
+- **首次引导**。连接数据库后配置客户端与服务端目录，再导入 DBC。没有游戏客户端时可以跳过图标提取。
+- **桌面操作**。支持窗口尺寸记忆、右键菜单和面包屑导航。在应用内按 `⌘⇧E`（macOS）或 `Ctrl+Shift+E`（Windows/Linux）可打开一键导出 DBC + MPQ 对话框。
 
 ## 技术栈
 
@@ -28,7 +27,7 @@ Foxy 面向自建魔兽世界服务器(如 AzerothCore)的管理员与开发者,
 
 ## 仓库结构
 
-本仓库是 Dart pub workspace monorepo,包含七个包:
+本仓库使用 Dart pub workspace，包含八个包。
 
 ```
 foxy/
@@ -38,13 +37,15 @@ foxy/
 │   │   ├── test/             # 按被测层与跨模块行为分类
 │   │   ├── tool/             # 发布工具与更新器
 │   │   └── windows|linux|macos/  # 平台工程
+│   ├── foxy_agent/           # 纯 Dart 的 Responses 客户端、会话与只读工具
 │   ├── foxy_annotation/      # 代码生成注解定义(Entity/Repository/ViewModel)
 │   ├── foxy_game_definition/ # 纯 Dart 的游戏枚举、标志位与参数定义
 │   ├── foxy_game_file/       # 纯 Dart 的 DBC 读写、MPQ 读取与打包、图标提取
 │   ├── foxy_generator/       # source_gen 代码生成器(读注解,产出 .g.dart)
-│   ├── foxy_lint/            # 项目专属 analyzer 插件(9 条 lint 规则)
+│   ├── foxy_lint/            # 项目专属 analyzer 插件
 │   └── foxy_widget/          # Flutter 共用组件、游戏图标显示及其测试
 ├── doc/codegen/              # 代码生成系统文档
+├── compose.yaml              # 本地 MySQL、AzerothCore 数据与 DBC 初始化
 └── pubspec.yaml              # workspace 根
 ```
 
@@ -68,11 +69,12 @@ Page (SignalBuilder 订阅) ──► ViewModel (signals + 表单控制器) ─�
 packages/foxy/lib/
 ├── constant/                # 应用的 DBC 表映射与多语言字段注册
 ├── entity/                  # 表实体、列表 DTO 与键类型
-├── model/                   # 跨层数据模型:DBC、本地化、选择器协议、工作进度
+├── model/                   # 助手会话、DBC、本地化、选择器协议与工作进度
 ├── exception/               # 业务异常与错误文案映射
 ├── repository/              # 数据读写、查询偏好、DBC 导出仓储注册表
 ├── use_case/<module>/       # 跨表、活动日志及导入导出业务流程
 ├── infrastructure/         # 数据库、文件、配置、平台服务
+│   ├── agent/              # 助手会话存储
 │   ├── database/migration/ # 数据库迁移,与连接、事务、迁移 runner 放在同一层
 │   ├── dbc/                # DBC 数据库同步与导入导出 worker
 │   ├── mpq/                # 数据库导出到 MPQ 的编排与 worker
@@ -82,6 +84,7 @@ packages/foxy/lib/
 │   ├── form/               # 字段控制器、数字解析与显示格式
 │   └── workflow/           # 手写工作流 ViewModel、状态、导出项与结果文案
 ├── page/<module>/          # 页面与模块专用组件
+│   ├── agent/              # 博学者对话、输入区与 Markdown 渲染
 │   ├── dashboard/component/ # 仪表盘专用卡片与内容
 │   ├── scaffold/           # 主外壳、首次引导与目录/DBC 提醒
 │   └── setting/            # 设置页面、导入导出弹窗及其表格组件
@@ -110,11 +113,13 @@ packages/foxy/lib/
 
 DBC 文件读取、写入、头校验、复制替换,以及 MPQ 读取、打包、图标提取和路径规则位于纯 Dart 包 `packages/foxy_game_file/`,通过 `package:foxy_game_file/foxy_game_file.dart` 使用。依赖方向为 `foxy → foxy_widget → foxy_game_file`,主应用也可直接使用文件包。`DbcFileReader` 返回字段值与原文件行索引,`DbcFileWriter` 接收 schema 与记录,`MpqFilePacker` 打包已有 DBC 文件。数据库查询、SQL 拼接、暂存表切换、表映射、配置和任务编排留在 `foxy`。文件包不依赖 Flutter 或数据库;提取的 BLP 原始文件由 `foxy_widget` 解码显示。
 
+`foxy_agent` 提供 Responses 流式客户端、会话状态和只读工具。应用在 `use_case/agent/` 实现 MySQL 查询、表和字段目录及字段语义，并在 `infrastructure/agent/` 保存会话。协议与工具接口见 [foxy_agent 文档](packages/foxy_agent/README.md)。
+
 ## 快速开始
 
 ### 环境要求
 
-- Flutter 3.47.x stable(Dart SDK ^3.13.0)
+- Flutter 3.47.x stable 与 Dart SDK `^3.13.0`。CI 使用 Flutter 3.47.8。
 - macOS 端构建需 macOS 12.0+(Flutter 3.47 与 file_selector_macos 0.9.5+2 起要求)与 Xcode,原生插件统一使用 Swift Package Manager,无需安装 CocoaPods
 - MySQL 5.7+ / 8.x(建议 utf8mb4;应用会自建 `foxy` 元数据库)
 
@@ -151,43 +156,64 @@ MySQL 数据保存在命名卷,DBC 保存在已被 Git 忽略的 `packages/foxy/
 
 ### 运行
 
+Windows 便携版可从 GitHub Releases 下载 ZIP，完整解压后在解压目录运行 `foxy.exe`。
+
+从仓库根目录执行以下命令。
+
 ```bash
 cd packages/foxy
 flutter pub get
-dart run build_runner build   # 重新生成 .g.dart(耗时数分钟)
-flutter analyze
-flutter test
 flutter run -d windows
 ```
 
-> 注:根目录为 workspace,应用的 Flutter 命令请在 `packages/foxy` 下执行;组件包在 `packages/foxy_widget` 执行 `flutter test`,游戏定义包和文件包分别在 `packages/foxy_game_definition`、`packages/foxy_game_file` 执行 `dart test`。代码生成器与 lint 包的纯 Dart 测试分别用 `cd packages/foxy_generator && dart test`、`cd packages/foxy_lint && dart test`。
+修改注解、路由或生成器后，在 `packages/foxy` 中运行 `dart run build_runner build` 重新生成代码。各包的验证命令见下方测试说明。
 
 macOS 使用 `flutter run -d macos` 或 `flutter build macos --release`,Flutter 会自动生成并解析 Swift Package Manager 插件依赖。使用 Xcode 时打开 `packages/foxy/macos/Runner.xcworkspace`。新增原生插件时需确认其 macOS 实现支持 Swift Package Manager。
 
+Linux 使用 `flutter run -d linux`。
+
 ### 配置
 
-运行时工作目录下的 `config.yaml`(gitignored)保存数据库连接与客户端路径:
+Foxy 将数据库连接、游戏目录和模型服务商设置写入运行目录下的 `config.yaml`。首次运行可通过界面填写。下面是使用本地 Compose 数据并跳过图标提取后的配置示例，目录改为本机实际路径。
 
 ```yaml
 host: 127.0.0.1
-port: 3306
+port: 63306
 database: acore_world
-username: acore
-password: acore
+username: root
+password: foxy_local_dev
 use_ssl: false
-locale_enabled: true
-dbc_path: D:/Simulators/Client
-client_dir: D:/Simulators/Client
-icons_extracted: true
+server_dir: D:/foxy/packages/foxy/data/azerothcore
+dbc_dir: D:/foxy/packages/foxy/data/azerothcore/dbc
+icons_skipped: true
 ```
 
-缺少 `config.yaml` 时应用会进入引导向导,向导完成即自动生成该文件。
+在「设置 → 游戏环境」选择服务端根目录时，Foxy 会定位 DBC 子目录并保存 `server_dir` 和 `dbc_dir`。选择客户端根目录 `client_dir` 后，Foxy 会识别 MPQ 目录并保存到 `mpq_dir`。图标提取也在「游戏环境」，DBC 导入导出和 MPQ 导出位于「数据工具」。
 
-Agent 复用同一 MySQL 连接读取角色库和认证库，默认库名为 `acore_characters` 和 `acore_auth`。如果部署使用其他库名，可在 `config.yaml` 设置 `characters_database` 和 `auth_database`，然后重启 Foxy。查询依赖连接账号的 `SELECT` 权限。认证库的 `account` 表只开放非凭据字段，`secret_digest` 表不进入 Agent 目录。
+### 使用博学者
+
+1. 在「设置 → 编辑偏好 → AI 模型」填写兼容 Responses 协议的服务商 Base URL、模型名称和 API Key。Foxy 会向 `{Base URL}/responses` 发送请求。本地服务允许匿名访问时，API Key 可留空。
+2. 打开侧栏「博学者」开始对话。查询步骤可展开，回复支持 Markdown 和代码复制。支持推理摘要的模型可在配置中启用该选项。
+
+助手复用当前 MySQL 连接，查询范围取决于连接账号的 `SELECT` 权限。角色库和认证库默认使用 `acore_characters` 和 `acore_auth`，可通过 `config.yaml` 中的 `characters_database` 和 `auth_database` 覆盖，修改后重启 Foxy。认证库的 `account` 只开放非凭据字段，`secret_digest` 不在查询目录中。
+
+对话内容和工具查询结果会发送给配置的模型服务商。会话自动命名，关闭后可继续。数据库密码和模型 API Key 以明文保存在本机的 `config.yaml` 中。
+
+### 本地数据
+
+源码运行时，运行目录为 `packages/foxy/`。便携版使用解压目录。以下路径均相对于运行目录，`config.yaml` 和 `data/` 已被 Git 忽略。
+
+| 路径 | 内容 |
+| --- | --- |
+| `config.yaml` | 数据库、游戏目录、编辑偏好和模型服务商设置 |
+| `data/azerothcore/` | Docker Compose 准备的 DBC 文件和下载标记 |
+| `data/session/` | 博学者的会话记录、标题和续聊上下文 |
+| `data/icon/` | 从游戏客户端提取的图标缓存 |
+| `data/cover/` | 首次引导使用的自定义封面 |
 
 ## 测试
 
-应用测试按被测职责和跨模块行为分类,生成器与 lint 测试保留在各自包内:
+在 `packages/foxy` 中运行 `flutter analyze` 和 `flutter test`。应用测试按被测职责和跨模块行为组织。
 
 - **game_data 测试**(`test/game_data/`):实体、仓储和 DBC 表映射对游戏定义的使用,纯内存运行。
 - **database_editing 测试**(`test/database_editing/`):复合主键值语义、编辑流程、查询构建行为,纯内存运行。
@@ -195,7 +221,8 @@ Agent 复用同一 MySQL 连接读取角色库和认证库，默认库名为 `ac
 - **分层测试**(`test/constant/`、`test/model/`、`test/infrastructure/`、`test/repository/`、`test/use_case/`、`test/view_model/`、`test/page/`、`test/widget/`):目录与被测代码对应,覆盖常量、更新服务、DBC 数据库同步与 MPQ 导出编排、表单控制器、业务流程及界面交互。
 - **依赖边界测试**(`test/architecture/`):检查基础设施、数据模型、仓储、业务流程和界面状态的依赖方向,避免文件再次进入错误的层。
 - **生成产物行为测试**(`test/codegen/`):真实生成代码的实体序列化、主键状态与列表刷新行为。
-- **集成测试**(`test/integration/`,标签 `integration`):对真实 MySQL 运行应用自身的启动链路(建库、全部迁移、utf8mb4 自愈、features 种子中文回读)与仓储读写(生成器的 store/update/destroy、异常映射、手写列表方法,含 locale JOIN、like 转义、联表分页、locale 批量事务回滚、creature_template 清单的精简夹具、DBC 导入的暂存表→行数/重复 ID 校验→原子改名链路,以及导出→导入往返;夹具表建在专用 `foxy_it_world` 库)。默认跳过(见 `dart_test.yaml`);本地先起一次性实例(`docker run -d --rm -p 3307:3306 -e MYSQL_ROOT_PASSWORD=foxy mysql:8.0`),再 `flutter test --tags integration --run-skipped -j 1`(DBC 用例还需 `FOXY_TEST_MYSQL_ALLOW_DBC_WRITE=1`,它会替换 `foxy.dbc_*` 表);CI 由 `ci.yml` 的 `database-integration` job 在 MySQL 8 容器上运行。
+- **集成测试**（`test/integration/`，标签 `integration`）。使用真实 MySQL 验证建库与迁移、仓储读写、DBC 导入导出往返，以及博学者的统计与引用展开。默认跳过。本地可先运行 `docker run -d --rm -p 127.0.0.1:3307:3306 -e MYSQL_ROOT_PASSWORD=foxy mysql:8.0` 创建一次性实例，待 MySQL 就绪后执行 `flutter test --tags integration --run-skipped -j 1`。重建 `foxy` 库和替换 `foxy.dbc_*` 表的用例分别通过 `FOXY_TEST_MYSQL_ALLOW_DROP=1`、`FOXY_TEST_MYSQL_ALLOW_DBC_WRITE=1` 在一次性实例上启用。
+- **助手核心测试**（`packages/foxy_agent/test/`）。在包目录运行 `dart analyze` 和 `dart test`，覆盖 Responses 流式协议、工具调用、统计和引用展开。应用侧的会话存储、只读查询适配和交互测试位于 `packages/foxy/test/`。
 - **生成器测试**(`packages/foxy_generator/test/`):`dart test` 纯 Dart 运行。
 - **lint 测试**(`packages/foxy_lint/test/`):analyzer 官方测试框架。
 - **组件测试**(`packages/foxy_widget/test/`):在该包目录运行 `flutter test`,覆盖表单布局、动态 Tab、表格滚动保持、BLP 像素解码、图片缓存和显示。BLP/PNG 样本随测试保存在该包中。
@@ -204,17 +231,19 @@ Agent 复用同一 MySQL 连接读取角色库和认证库，默认库名为 `ac
 
 ## 构建与发布
 
-发布流水线(`.github/workflows/release.yml`)由推送 `v*` tag 触发:
+推送 `v*` tag 会触发发布流水线 `.github/workflows/release.yml`。
 
-1. 手动 bump `packages/foxy/pubspec.yaml` 的 `version`,并在 `CHANGELOG.md` 补 `## vX.Y.Z` 段(流水线读取该段作为更新说明);
-2. 打 tag 并推送:`git tag vX.Y.Z && git push origin vX.Y.Z`;
-3. 单 job 依次执行:`flutter build windows --release` → 编译更新器 → 打包 zip → 生成 `latest.yaml`(含 SHA-256,保留最近 3 条) → 发布 GitHub Release。
+1. 更新 `packages/foxy/pubspec.yaml` 的 `version`，并在 `packages/foxy/CHANGELOG.md` 添加 `## vX.Y.Z`，流水线按 tag 读取对应段落。
+2. 提交改动后，运行 `git tag vX.Y.Z && git push origin vX.Y.Z`。
+3. 发布作业构建 Windows 版与更新器，打包 ZIP，生成包含 SHA-256 和最近三条发布记录的 `latest.yaml`，并发布 GitHub Release。
 
-应用与通用组件包的 analyze,以及应用、组件、生成器和 lint 四包测试不在这条流水线里,由 `.github/workflows/ci.yml` 在 push 与 PR 时运行,环境为 Windows,与发布构建保持一致。发布出问题时,删除该 tag 再重新推送即可重跑;同一 tag 重复推送会自动取消旧 run。
+如需重跑发布，可删除该 tag 后重新推送。同一 tag 的新任务会取消仍在进行的发布任务。
 
-更新入口固定为 `releases/latest/download/latest.yaml`,应用启动时自动检查(24 小时内不重复),也可在设置页手动检查。
+`.github/workflows/ci.yml` 在推送到 `main` 或发起指向 `main` 的 PR 时运行。Windows 作业对应用、组件、游戏定义和游戏文件包运行分析和测试，并以 `dart test -j 1` 执行生成器和 lint 测试。Linux 作业在 MySQL 8 容器上运行数据库集成测试。
 
-助手会话保存在运行目录的 `data/session/`，新版更新器会保留它。从会话仍存放在根目录 `session/` 的旧版升级时，请先退出 Foxy 并备份该目录，再将新版 ZIP 覆盖解压到原目录。如果 `data/session/` 尚未创建，新版首次打开助手时会迁移旧目录。
+更新入口为 `releases/latest/download/latest.yaml`。进入工作台时会自动检查，检查成功后至少间隔 24 小时。也可在「设置 → 关于 Foxy」手动检查。
+
+新版更新器会保留 `config.yaml`、`data/azerothcore/`、`data/session/`、`data/icon/`、`data/cover/` 和旧 `session/`。从会话仍存放在运行目录 `session/` 的旧版升级时，请先退出 Foxy 并备份该目录，再将新版 ZIP 覆盖解压到原目录。如果 `data/session/` 尚未创建，新版首次打开助手时会迁移旧目录。
 
 ## 文档
 
@@ -224,6 +253,7 @@ Agent 复用同一 MySQL 连接读取角色库和认证库，默认库名为 `ac
 - [doc/codegen/generators.md](doc/codegen/generators.md) — 生成器实现详解
 - [doc/codegen/extending.md](doc/codegen/extending.md) — 扩展生成器
 - [doc/module-workflow.md](doc/module-workflow.md) — 新增完整模块机械执行清单(逐步、可验证)
+- [packages/foxy/CHANGELOG.md](packages/foxy/CHANGELOG.md) — 版本更新记录
 
 ## 许可
 
