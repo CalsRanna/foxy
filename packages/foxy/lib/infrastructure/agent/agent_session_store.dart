@@ -44,7 +44,7 @@ class AgentSessionStore {
       'type': 'message',
       'role': role.name,
       'text': text,
-      if (inputItem != null) 'item': inputItem,
+      'item': ?inputItem,
     }),
   );
 
