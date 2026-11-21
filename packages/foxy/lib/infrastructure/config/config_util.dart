@@ -22,33 +22,6 @@ class ConfigUtil {
     return Map<String, dynamic>.of(await config);
   }
 
-  Future<Map<String, dynamic>> _readConfig() async {
-    final file = File(configPath);
-    LoggerUtil.instance.d(file.path);
-    if (!await file.exists()) return {};
-    final content = await file.readAsString();
-    if (content.trim().isEmpty) return {};
-    try {
-      final yaml = loadYaml(content);
-      if (yaml is! Map) {
-        // Parseable YAML of the wrong shape (scalar/list): the file is not
-        // usable as a config, and update() would otherwise merge onto an
-        // empty map and overwrite the original content forever — back it up
-        // like the unparseable case.
-        return await _backupCorruptFile(
-          file,
-          'config.yaml 顶层不是配置映射,已备份为 config.yaml.bak',
-        );
-      }
-      return Map<String, dynamic>.from(yaml);
-    } on YamlException catch (error) {
-      return _backupCorruptFile(
-        file,
-        'config.yaml 解析失败,已备份为 config.yaml.bak: $error',
-      );
-    }
-  }
-
   Future<void> update(Map<String, dynamic> values) {
     final snapshot = Map<String, dynamic>.from(values);
     final operation = _pendingUpdate
@@ -88,5 +61,32 @@ class ConfigUtil {
     await temporaryFile.writeAsString(editor.toString());
     await temporaryFile.rename(path);
     _cachedConfig = Future.value(savedConfig);
+  }
+
+  Future<Map<String, dynamic>> _readConfig() async {
+    final file = File(configPath);
+    LoggerUtil.instance.d(file.path);
+    if (!await file.exists()) return {};
+    final content = await file.readAsString();
+    if (content.trim().isEmpty) return {};
+    try {
+      final yaml = loadYaml(content);
+      if (yaml is! Map) {
+        // Parseable YAML of the wrong shape (scalar/list): the file is not
+        // usable as a config, and update() would otherwise merge onto an
+        // empty map and overwrite the original content forever — back it up
+        // like the unparseable case.
+        return await _backupCorruptFile(
+          file,
+          'config.yaml 顶层不是配置映射,已备份为 config.yaml.bak',
+        );
+      }
+      return Map<String, dynamic>.from(yaml);
+    } on YamlException catch (error) {
+      return _backupCorruptFile(
+        file,
+        'config.yaml 解析失败,已备份为 config.yaml.bak: $error',
+      );
+    }
   }
 }
