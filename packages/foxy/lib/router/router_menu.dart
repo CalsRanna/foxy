@@ -43,14 +43,6 @@ enum RouterMenu {
 
   const RouterMenu({required this.label, required this.icon});
 
-  static List<RouterMenu> sidebarMenus(Iterable<RouterMenu> pinned) => [
-    dashboard,
-    ...pinned,
-    more,
-    agent,
-    setting,
-  ];
-
   String get detailLabel => label.endsWith('列表')
       ? '${label.substring(0, label.length - 2)}详情'
       : '$label详情';
@@ -98,4 +90,12 @@ enum RouterMenu {
   RouterNode toNode() {
     return RouterNode(menu: this, label: label, route: route);
   }
+
+  static List<RouterMenu> sidebarMenus(Iterable<RouterMenu> pinned) => [
+    dashboard,
+    ...pinned,
+    more,
+    agent,
+    setting,
+  ];
 }

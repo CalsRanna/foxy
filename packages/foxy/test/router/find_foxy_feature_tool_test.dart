@@ -215,6 +215,18 @@ void main() {
   );
 }
 
+http.Response _completedResponse(List<Map<String, Object?>> output) {
+  final event = {
+    'type': 'response.completed',
+    'response': {'status': 'completed', 'output': output},
+  };
+  return http.Response(
+    'data: ${jsonEncode(event)}\n\n',
+    200,
+    headers: {'content-type': 'text/event-stream; charset=utf-8'},
+  );
+}
+
 FeatureEntity _module(RouterMenu menu, String name) => FeatureEntity(
   id: menu.index,
   name: name,
@@ -230,15 +242,3 @@ class _UnusedSqlDataSource extends Fake
         ReadOnlyDataSource,
         ReadOnlySqlDataSource,
         SqlDiagnosticsDataSource {}
-
-http.Response _completedResponse(List<Map<String, Object?>> output) {
-  final event = {
-    'type': 'response.completed',
-    'response': {'status': 'completed', 'output': output},
-  };
-  return http.Response(
-    'data: ${jsonEncode(event)}\n\n',
-    200,
-    headers: {'content-type': 'text/event-stream; charset=utf-8'},
-  );
-}

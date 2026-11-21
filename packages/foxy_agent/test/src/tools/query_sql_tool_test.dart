@@ -213,17 +213,6 @@ const _catalog = TableCatalog([
   ),
 ]);
 
-final class _SqlSource implements ReadOnlySqlDataSource {
-  final executed = <String>[];
-  List<Map<String, Object?>> rows = [];
-
-  @override
-  Future<List<Map<String, Object?>>> querySql(ReadOnlySql sql) async {
-    executed.add(sql.statement);
-    return rows;
-  }
-}
-
 final class _DiagnosticSource implements SqlDiagnosticsDataSource {
   final explained = <ReadOnlySql>[];
 
@@ -235,5 +224,16 @@ final class _DiagnosticSource implements SqlDiagnosticsDataSource {
         'query_block': {'select_id': 1},
       },
     };
+  }
+}
+
+final class _SqlSource implements ReadOnlySqlDataSource {
+  final executed = <String>[];
+  List<Map<String, Object?>> rows = [];
+
+  @override
+  Future<List<Map<String, Object?>>> querySql(ReadOnlySql sql) async {
+    executed.add(sql.statement);
+    return rows;
   }
 }

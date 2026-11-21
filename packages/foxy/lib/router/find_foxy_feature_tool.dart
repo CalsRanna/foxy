@@ -6,11 +6,6 @@ import 'package:foxy/widget/directory/directory_setting_row.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 
 final class FindFoxyFeatureTool extends AgentTool {
-  final List<_FeatureEntry> _entries;
-
-  FindFoxyFeatureTool(List<FeatureEntity> modules)
-    : _entries = _buildEntries(modules);
-
   static const _primaryTables = {
     RouterMenu.creatureTemplate: 'creature_template',
     RouterMenu.itemTemplate: 'item_template',
@@ -61,8 +56,10 @@ final class FindFoxyFeatureTool extends AgentTool {
     ),
   };
 
-  @override
-  String get name => 'find_foxy_feature';
+  final List<_FeatureEntry> _entries;
+
+  FindFoxyFeatureTool(List<FeatureEntity> modules)
+    : _entries = _buildEntries(modules);
 
   @override
   String get description =>
@@ -84,6 +81,9 @@ final class FindFoxyFeatureTool extends AgentTool {
     'required': ['query'],
     'additionalProperties': false,
   };
+
+  @override
+  String get name => 'find_foxy_feature';
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) async {
@@ -151,15 +151,6 @@ final class FindFoxyFeatureTool extends AgentTool {
       ),
     ];
   }
-
-  static _FeatureEntry _sidebarEntry(RouterMenu menu) => _FeatureEntry(
-    menu.label,
-    [menu.label],
-    menu == RouterMenu.more
-        ? '在侧栏打开「${menu.label}」，使用「搜索模块名称」查找功能卡片。'
-        : '在侧栏打开「${menu.label}」。',
-    keywords: [menu.name, menu.route.routeName],
-  );
 
   static List<_FeatureEntry> _moduleEntries(
     RouterMenu menu,
@@ -249,6 +240,15 @@ final class FindFoxyFeatureTool extends AgentTool {
       keywords: keywords,
     );
   }
+
+  static _FeatureEntry _sidebarEntry(RouterMenu menu) => _FeatureEntry(
+    menu.label,
+    [menu.label],
+    menu == RouterMenu.more
+        ? '在侧栏打开「${menu.label}」，使用「搜索模块名称」查找功能卡片。'
+        : '在侧栏打开「${menu.label}」。',
+    keywords: [menu.name, menu.route.routeName],
+  );
 }
 
 final class _FeatureEntry {
