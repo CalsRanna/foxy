@@ -219,6 +219,20 @@ class AgentSessionStore {
     items.add({'role': 'user', 'content': lastUser.text});
   }
 
+  File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));
+
+  static Map<String, Object?>? _decodeLine(String line) {
+    final trimmed = line.trim();
+    if (trimmed.isEmpty) return null;
+    try {
+      final decoded = jsonDecode(trimmed);
+      if (decoded is Map<String, Object?>) return decoded;
+    } on FormatException {
+      // A partially written trailing line is expected after a hard kill.
+    }
+    return null;
+  }
+
   static Directory _resolveDefaultRoot() {
     final appPath = Directory.current.path;
     final root = Directory(p.join(appPath, 'data', 'session'));
@@ -233,19 +247,5 @@ class AgentSessionStore {
       LoggerUtil.instance.w('move agent session directory failed: $error');
       return legacyRoot;
     }
-  }
-
-  File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));
-
-  static Map<String, Object?>? _decodeLine(String line) {
-    final trimmed = line.trim();
-    if (trimmed.isEmpty) return null;
-    try {
-      final decoded = jsonDecode(trimmed);
-      if (decoded is Map<String, Object?>) return decoded;
-    } on FormatException {
-      // A partially written trailing line is expected after a hard kill.
-    }
-    return null;
   }
 }
