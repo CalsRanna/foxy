@@ -13,8 +13,10 @@ import 'package:foxy/router/router.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
 import 'package:foxy/use_case/agent/agent_read_only_data_source.dart';
 import 'package:foxy/view_model/agent_view_model.dart';
+import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
 
 void main() {
   tearDown(() async => GetIt.instance.reset());
@@ -184,7 +186,7 @@ void main() {
     expect(tester.widget<TextField>(composer).focusNode!.hasFocus, isTrue);
   });
 
-  testWidgets('悬停时在会话标题行内显示删除图标', (tester) async {
+  testWidgets('会话标题行显示运行进度或悬停删除图标', (tester) async {
     final viewModel = _TestAgentViewModel(ConfigUtil());
     viewModel.sessions.value = [
       AgentChatSessionMeta(
@@ -211,6 +213,19 @@ void main() {
     await mouse.moveTo(tester.getCenter(title));
     await tester.pumpAndSettle();
     expect(trash, findsOneWidget);
+
+    final progress = find.descendant(
+      of: find.widgetWithText(ShadButton, '已有会话'),
+      matching: find.byType(FoxyLoadingIndicator),
+    );
+    viewModel.runningIds.value = {'session'};
+    await tester.pump();
+    expect(progress, findsOneWidget);
+    expect(trash, findsNothing);
+
+    viewModel.runningIds.value = {};
+    await tester.pumpAndSettle();
+    expect(progress, findsNothing);
     expect(
       find.descendant(
         of: find.widgetWithText(ShadButton, '已有会话'),
@@ -509,6 +524,7 @@ class _PendingAgentSessionStore extends AgentSessionStore {
 
 class _TestAgentViewModel extends AgentViewModel {
   AgentChatMessage? activeReasoning;
+  final runningIds = signal(<String>{});
 
   _TestAgentViewModel(ConfigUtil configUtil)
     : super(
@@ -518,6 +534,9 @@ class _TestAgentViewModel extends AgentViewModel {
       ) {
     ready.value = true;
   }
+
+  @override
+  Iterable<String> get runningSessionIds => runningIds.value;
 
   @override
   Future<void> initSignals() async {}

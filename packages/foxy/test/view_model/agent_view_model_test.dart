@@ -191,6 +191,111 @@ void main() {
     expect(viewModel.activeSession?.session.items, hasLength(1));
   });
 
+  test('finishes a background session while another is running', () async {
+    final firstChat = _FakeChat();
+    final secondChat = _FakeChat();
+    final viewModel = _buildViewModel(firstChat, store, nextChat: secondChat);
+    addTearDown(viewModel.dispose);
+    await viewModel.initSignals();
+
+    viewModel.draftController.init('第一问');
+    await viewModel.send();
+    final firstSession = viewModel.activeSession!;
+    firstChat.controller.add(const AgentReasoningDeltaEvent('第一段推理'));
+    await pumpEventQueue();
+    final reasoning = viewModel.messages.value.last;
+
+    viewModel.startNewSession();
+    expect(viewModel.running.value, isFalse);
+    viewModel.draftController.init('第二问');
+    await viewModel.send();
+    final secondSession = viewModel.activeSession!;
+    expect(secondSession.id, isNot(firstSession.id));
+
+    await viewModel.selectSession(firstSession.id);
+    expect(viewModel.running.value, isTrue);
+    expect(viewModel.isReasoningInProgress(reasoning), isTrue);
+    await viewModel.deleteSession(firstSession.id);
+    expect(viewModel.sessions.value, hasLength(2));
+    await viewModel.selectSession(secondSession.id);
+
+    firstChat.controller.add(const AgentTextDeltaEvent('第一答'));
+    firstSession.session.addItems([
+      {'role': 'assistant', 'content': '第一答'},
+    ]);
+    firstChat.controller.add(const AgentCompletedEvent());
+    await firstChat.controller.close();
+    expect(viewModel.running.value, isTrue);
+    expect(viewModel.messages.value.first.text, '第二问');
+    expect(firstChat.closeCount, 1);
+    expect(secondChat.closeCount, 0);
+
+    secondChat.controller.add(const AgentTextDeltaEvent('第二答'));
+    secondSession.session.addItems([
+      {'role': 'assistant', 'content': '第二答'},
+    ]);
+    await secondChat.controller.close();
+    expect(viewModel.running.value, isFalse);
+    expect(viewModel.messages.value.map((message) => message.text), [
+      '第二问',
+      '第二答',
+    ]);
+    expect(secondChat.closeCount, 1);
+
+    final firstSaved = (await store.load(firstSession.id))!;
+    final secondSaved = (await store.load(secondSession.id))!;
+    expect(firstSaved.messages.map((message) => message.text), [
+      '第一问',
+      '第一段推理',
+      '第一答',
+    ]);
+    expect(firstSaved.session.items.map((item) => item['content']), [
+      '第一问',
+      '第一答',
+    ]);
+    expect(secondSaved.session.items.map((item) => item['content']), [
+      '第二问',
+      '第二答',
+    ]);
+  });
+
+  test('stopping a session during startup leaves another run active', () async {
+    final firstCatalog = Completer<TableCatalog>();
+    final chat = _FakeChat();
+    final viewModel = _buildViewModel(
+      chat,
+      store,
+      dataSource: _FakeDataSource(firstCatalog: firstCatalog.future),
+    );
+    addTearDown(viewModel.dispose);
+    await viewModel.initSignals();
+
+    viewModel.draftController.init('要停止的问题');
+    final firstSend = viewModel.send();
+    final firstId = viewModel.activeSessionId.value!;
+    viewModel.startNewSession();
+    viewModel.draftController.init('继续的问题');
+    await viewModel.send();
+    final secondId = viewModel.activeSessionId.value!;
+
+    await viewModel.selectSession(firstId);
+    viewModel.stop();
+    expect(viewModel.running.value, isFalse);
+    await viewModel.selectSession(secondId);
+    firstCatalog.complete(const TableCatalog([]));
+    await firstSend;
+
+    expect(viewModel.running.value, isTrue);
+    expect(chat.closeCount, 0);
+    chat.controller.add(const AgentTextDeltaEvent('继续的回答'));
+    await pumpEventQueue();
+    viewModel.stop();
+    expect(viewModel.messages.value.last.text, '继续的回答');
+    expect(viewModel.running.value, isFalse);
+    expect(chat.closeCount, 1);
+    await chat.controller.close();
+  });
+
   test(
     'saves a draft only on send and names the originating session',
     () async {
@@ -263,23 +368,33 @@ void main() {
 AgentViewModel _buildViewModel(
   _FakeChat chat,
   AgentSessionStore store, {
+  _FakeChat? nextChat,
   AgentProviderConfigUseCase? configUseCase,
   AgentTitleGenerator? titleGenerator,
-}) => AgentViewModel(
-  configUseCase:
-      configUseCase ?? AgentProviderConfigUseCase(_MemoryConfigUtil()),
-  dataSource: _FakeDataSource(),
-  chatFactory: ({
-    required AgentProviderConfig provider,
-    required TableCatalog catalog,
-    required ReadOnlyDataSource dataSource,
-  }) => chat,
-  titleGenerator: titleGenerator ?? (_, _) async => null,
-  sessionStore: store,
-);
+  _FakeDataSource? dataSource,
+}) {
+  final chats = [chat, ?nextChat].iterator;
+  return AgentViewModel(
+    configUseCase:
+        configUseCase ?? AgentProviderConfigUseCase(_MemoryConfigUtil()),
+    dataSource: dataSource ?? _FakeDataSource(),
+    chatFactory:
+        ({
+          required AgentProviderConfig provider,
+          required TableCatalog catalog,
+          required ReadOnlyDataSource dataSource,
+        }) {
+          expect(chats.moveNext(), isTrue);
+          return chats.current;
+        },
+    titleGenerator: titleGenerator ?? (_, _) async => null,
+    sessionStore: store,
+  );
+}
 
 final class _FakeChat extends AgentChatUseCase {
   final controller = StreamController<AgentEvent>();
+  var closeCount = 0;
 
   _FakeChat()
     : super(
@@ -293,19 +408,26 @@ final class _FakeChat extends AgentChatUseCase {
       );
 
   @override
-  void close() {}
+  void close() => closeCount++;
 
   @override
-  Stream<AgentEvent> run(AgentSession session, String message) =>
-      controller.stream;
+  Stream<AgentEvent> run(AgentSession session, String message) {
+    session.addUserMessage(message);
+    return controller.stream;
+  }
 }
 
 final class _FakeDataSource extends AgentReadOnlyDataSource {
-  _FakeDataSource() : super(ConfigUtil());
+  Future<TableCatalog>? _firstCatalog;
+
+  _FakeDataSource({this._firstCatalog}) : super(ConfigUtil());
 
   @override
-  Future<TableCatalog> getCatalog({bool refresh = false}) async =>
-      const TableCatalog([]);
+  Future<TableCatalog> getCatalog({bool refresh = false}) async {
+    final firstCatalog = _firstCatalog;
+    _firstCatalog = null;
+    return firstCatalog == null ? const TableCatalog([]) : await firstCatalog;
+  }
 
   @override
   Future<List<Map<String, Object?>>> queryRows({

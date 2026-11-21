@@ -51,7 +51,7 @@ class AgentViewModel with FieldControllerMixin {
 
   final messages = signal<List<AgentChatMessage>>([]);
 
-  final running = signal(false);
+  late final running = computed(() => _activeRun != null);
 
   final ready = signal(false);
 
@@ -60,11 +60,7 @@ class AgentViewModel with FieldControllerMixin {
   final Map<String, AgentChatSession> _loaded = {};
   final Map<String?, String> _drafts = {};
 
-  StreamSubscription<AgentEvent>? _subscription;
-
-  AgentChatUseCase? _chat;
-
-  _AgentRun? _run;
+  final _runs = signal<Map<String, _AgentRun>>(const {});
 
   var _selectionToken = 0;
 
@@ -97,8 +93,12 @@ class AgentViewModel with FieldControllerMixin {
 
   ReadonlySignal<AgentProviderConfig?> get provider => _configUseCase.provider;
 
+  Iterable<String> get runningSessionIds => _runs.value.keys;
+
+  _AgentRun? get _activeRun => _runs.value[activeSessionId.value];
+
   Future<void> deleteSession(String id) async {
-    if (_run?.session.id == id) return;
+    if (_runs.value.containsKey(id)) return;
     _loaded.remove(id);
     sessions.value = sessions.value.where((meta) => meta.id != id).toList();
     await _sessionStore.deleteSession(id);
@@ -115,14 +115,9 @@ class AgentViewModel with FieldControllerMixin {
 
   void dispose() {
     _selectionToken++;
-    _subscription?.cancel();
-    _subscription = null;
-    _chat?.close();
-    _chat = null;
-    final run = _run;
-    if (run != null) _persistReasoningSegment(run);
-    _run = null;
-    running.value = false;
+    final runs = _runs.value.values;
+    _runs.value = const {};
+    runs.forEach(_closeRun);
     disposeControllers();
   }
 
@@ -148,10 +143,10 @@ class AgentViewModel with FieldControllerMixin {
   }
 
   bool isReasoningInProgress(AgentChatMessage message) =>
-      identical(_run?.reasoning, message);
+      identical(_activeRun?.reasoning, message);
 
   bool isToolInProgress(AgentChatMessage message) =>
-      _run?.pendingToolCalls.values.contains(message) ?? false;
+      _activeRun?.pendingToolCalls.values.contains(message) ?? false;
 
   Future<void> selectSession(String id) async {
     final cached = _loaded[id];
@@ -189,48 +184,45 @@ class AgentViewModel with FieldControllerMixin {
     final run = _AgentRun(session);
     run.assistant = _appendAssistant(run);
     run.persistedItemCount = session.session.items.length;
-    _run = run;
+    _runs.value = {..._runs.value, session.id: run};
     _touch(session);
     unawaited(
       _sessionStore.appendMessage(session.id, AgentChatRole.user, text),
     );
-    running.value = true;
     if (firstMessage) unawaited(_nameSession(session, config, text));
     try {
       final catalog = await _dataSource.getCatalog();
-      if (!running.value) return;
+      if (!_isCurrentRun(run)) return;
       final chat = _chatFactory(
         provider: config,
         catalog: catalog,
         dataSource: _dataSource,
       );
-      _chat = chat;
-      _subscription = chat
+      run.chat = chat;
+      run.subscription = chat
           .run(session.session, text)
           .listen(
             (event) => _handleEvent(event, run),
             onError: (Object error) {
               LoggerUtil.instance.e('agent run failed: $error');
-              _appendError(run, FoxyExceptions.message(error));
-              _finishRun(run);
+              _handleEvent(
+                AgentFailedEvent(FoxyExceptions.message(error)),
+                run,
+              );
             },
             onDone: () => _finishRun(run),
             cancelOnError: true,
           );
     } catch (error) {
-      _appendError(run, FoxyExceptions.message(error));
-      _finishRun(run);
+      _handleEvent(AgentFailedEvent(FoxyExceptions.message(error)), run);
     }
   }
 
   void startNewSession() => _activateSession(null);
 
   void stop() {
-    final run = _run;
-    if (!running.value || run == null) return;
-    _subscription?.cancel();
-    _subscription = null;
-    _finishRun(run);
+    final run = _activeRun;
+    if (run != null) _finishRun(run);
   }
 
   void _activateSession(AgentChatSession? session) {
@@ -285,6 +277,12 @@ class AgentViewModel with FieldControllerMixin {
     run.session.messages.remove(assistant);
   }
 
+  void _closeRun(_AgentRun run) {
+    unawaited(run.subscription?.cancel());
+    run.chat?.close();
+    _persistReasoningSegment(run);
+  }
+
   String _compactArguments(Map<String, Object?> arguments) {
     if (arguments.isEmpty) return '';
     final text = jsonEncode(arguments);
@@ -302,14 +300,9 @@ class AgentViewModel with FieldControllerMixin {
   }
 
   void _finishRun(_AgentRun run) {
-    if (!running.value) return;
-    running.value = false;
-    _subscription = null;
-    _chat?.close();
-    _chat = null;
-    _run = null;
+    if (!_isCurrentRun(run)) return;
     _persistNewItems(run);
-    _persistReasoningSegment(run);
+    _closeRun(run);
     final assistant = run.assistant;
     _clearEmptyAssistant(run);
     if (!run.hasText) {
@@ -333,10 +326,12 @@ class AgentViewModel with FieldControllerMixin {
         ),
       );
     }
+    _runs.value = {..._runs.value}..remove(run.session.id);
     _publish(run.session);
   }
 
   void _handleEvent(AgentEvent event, _AgentRun run) {
+    if (!_isCurrentRun(run)) return;
     switch (event) {
       case AgentReasoningStartedEvent():
         _persistReasoningSegment(run);
@@ -400,6 +395,9 @@ class AgentViewModel with FieldControllerMixin {
         _finishRun(run);
     }
   }
+
+  bool _isCurrentRun(_AgentRun run) =>
+      identical(_runs.value[run.session.id], run);
 
   Future<void> _nameSession(
     AgentChatSession session,
@@ -507,6 +505,9 @@ class AgentViewModel with FieldControllerMixin {
 final class _AgentRun {
   final AgentChatSession session;
   late final pendingToolCalls = <String, AgentChatMessage>{};
+
+  AgentChatUseCase? chat;
+  StreamSubscription<AgentEvent>? subscription;
 
   /// The assistant bubble receiving streamed text; cleared after a tool call
   /// so the next text segment starts a new bubble after the tool lines.

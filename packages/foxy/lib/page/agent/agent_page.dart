@@ -395,6 +395,7 @@ class _AgentPageState extends State<AgentPage> {
         builder: (_) {
           final sessions = viewModel.sessions.value;
           final activeId = viewModel.activeSessionId.value;
+          final runningIds = viewModel.runningSessionIds;
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             itemCount: sessions.isEmpty ? 0 : sessions.length + 1,
@@ -409,7 +410,11 @@ class _AgentPageState extends State<AgentPage> {
                 );
               }
               final session = sessions[index - 1];
-              return _buildSessionTile(session, session.id == activeId);
+              return _buildSessionTile(
+                session,
+                active: session.id == activeId,
+                running: runningIds.contains(session.id),
+              );
             },
           );
         },
@@ -418,7 +423,11 @@ class _AgentPageState extends State<AgentPage> {
     return Column(children: [header, list]);
   }
 
-  Widget _buildSessionTile(AgentChatSessionMeta meta, bool active) {
+  Widget _buildSessionTile(
+    AgentChatSessionMeta meta, {
+    required bool active,
+    required bool running,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
     final foreground = active ? colorScheme.onPrimary : colorScheme.onSurface;
     return Padding(
@@ -456,7 +465,15 @@ class _AgentPageState extends State<AgentPage> {
                   style: TextStyle(fontSize: 13, color: foreground),
                 ),
               ),
-              if (_hoveredSessionId == meta.id)
+              if (running)
+                Semantics(
+                  label: '生成中',
+                  child: ProgressIndicatorTheme(
+                    data: ProgressIndicatorThemeData(color: foreground),
+                    child: const FoxyLoadingIndicator(size: 14, strokeWidth: 2),
+                  ),
+                )
+              else if (_hoveredSessionId == meta.id)
                 Semantics(
                   button: true,
                   label: '删除会话',
