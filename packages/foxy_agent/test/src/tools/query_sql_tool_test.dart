@@ -26,7 +26,6 @@ ORDER BY item_count DESC LIMIT 10 OFFSET 2''';
       expect(await tool.call({'sql': '  $sql;\n'}), {
         'rows': source.rows,
         'truncated': false,
-        'elapsedMs': isNonNegative,
       });
       expect(
         source.executed.single,
@@ -41,7 +40,7 @@ ORDER BY item_count DESC LIMIT 10 OFFSET 2''';
         await tool.call({
           'sql': 'SELECT entry FROM item_template ORDER BY entry',
         }),
-        {'rows': hasLength(50), 'truncated': true, 'elapsedMs': isNonNegative},
+        {'rows': hasLength(50), 'truncated': true},
       );
       expect(source.executed.single, endsWith('ORDER BY entry LIMIT 51'));
     });
@@ -55,7 +54,6 @@ ORDER BY item_count DESC LIMIT 10 OFFSET 2''';
         expect(await tool.call({'sql': '$select $clause'}), {
           'rows': source.rows,
           'truncated': false,
-          'elapsedMs': isNonNegative,
         });
         expect(source.executed.last, endsWith('ORDER BY entry $clause'));
       }
@@ -76,7 +74,7 @@ ORDER BY item_count DESC LIMIT 10 OFFSET 2''';
         await tool.call({
           'sql': 'SELECT `a`.`username` FROM `acore_auth`.`account` AS `a` LIMIT 1',
         }),
-        {'rows': isEmpty, 'truncated': false, 'elapsedMs': isNonNegative},
+        {'rows': isEmpty, 'truncated': false},
       );
       expect(source.executed.single, contains('`acore_auth`.`account`'));
     });
@@ -91,7 +89,7 @@ ORDER BY item_count DESC LIMIT 10 OFFSET 2''';
 
       expect(
         await tool.call({'sql': 'SELECT v.entry, i.entry AS item_entry $from'}),
-        {'rows': isEmpty, 'truncated': false, 'elapsedMs': isNonNegative},
+        {'rows': isEmpty, 'truncated': false},
       );
       expect(source.executed, hasLength(1));
     });
@@ -151,40 +149,6 @@ ORDER BY item_count DESC LIMIT 10 OFFSET 2''';
       expect(source.executed, isEmpty);
     });
   });
-
-  test(
-    'explain_sql validates the SELECT and passes the same capped query',
-    () async {
-      final source = _DiagnosticSource();
-      final tool = ExplainSqlTool(_catalog, source);
-
-      expect(
-        await tool.call({'sql': 'SELECT password FROM acore_auth.account'}),
-        startsWith('SQL rejected:'),
-      );
-      expect(
-        await tool.call({
-          'sql': 'EXPLAIN ANALYZE SELECT entry FROM npc_vendor',
-        }),
-        startsWith('SQL rejected:'),
-      );
-      expect(source.explained, isEmpty);
-
-      expect(
-        await tool.call({
-          'sql': 'SELECT v.entry FROM npc_vendor v JOIN item_template i ON v.item = i.entry',
-        }),
-        {
-          'plan': {
-            'query_block': {'select_id': 1},
-          },
-        },
-      );
-      expect(source.explained.single.statement, endsWith('LIMIT 51'));
-      expect(source.explained.single.tables['v']?.name, 'npc_vendor');
-      expect(source.explained.single.tables['i']?.name, 'item_template');
-    },
-  );
 }
 
 const _catalog = TableCatalog([
@@ -212,20 +176,6 @@ const _catalog = TableCatalog([
     ],
   ),
 ]);
-
-final class _DiagnosticSource implements SqlDiagnosticsDataSource {
-  final explained = <ReadOnlySql>[];
-
-  @override
-  Future<Map<String, Object?>> explainSql(ReadOnlySql sql) async {
-    explained.add(sql);
-    return {
-      'plan': {
-        'query_block': {'select_id': 1},
-      },
-    };
-  }
-}
 
 final class _SqlSource implements ReadOnlySqlDataSource {
   final executed = <String>[];

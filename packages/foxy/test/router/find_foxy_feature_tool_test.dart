@@ -173,14 +173,17 @@ void main() {
                 'describe_references',
                 'server_time',
                 'query_sql',
-                'explain_sql',
                 'find_foxy_feature',
               ]),
             );
             expect(body['instructions'], contains('读取记录统一用 query_sql'));
             expect(
               body['instructions'],
-              isNot(matches(r'query_rows|get_row|count_rows|aggregate_rows')),
+              isNot(
+                matches(
+                  r'explain_sql|query_rows|get_row|count_rows|aggregate_rows',
+                ),
+              ),
             );
             expect(body['instructions'], contains('调用 find_foxy_feature'));
             expect(
@@ -246,7 +249,4 @@ FeatureEntity _module(RouterMenu menu, String name) => FeatureEntity(
 );
 
 class _UnusedSqlDataSource extends Fake
-    implements
-        ReadOnlyDataSource,
-        ReadOnlySqlDataSource,
-        SqlDiagnosticsDataSource {}
+    implements ReadOnlyDataSource, ReadOnlySqlDataSource {}

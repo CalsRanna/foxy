@@ -125,7 +125,6 @@ void main() {
             {'expansion': 0, 'related_count': 2, 'total': '1.25'},
           ],
           'truncated': false,
-          'elapsedMs': isNonNegative,
         },
       );
 
@@ -148,70 +147,6 @@ void main() {
         await tool.call({'sql': 'SELECT id FROM agent_stat_view'}),
         startsWith('SQL rejected: Table is outside the catalog'),
       );
-    },
-  );
-
-  test(
-    'explain_sql reports the plan and table statistics from MySQL',
-    () async {
-      final tools = createReadOnlyTools(catalog: catalog, dataSource: source);
-      final tool = tools.singleWhere((tool) => tool.name == 'explain_sql');
-      const select = 'SELECT f.id FROM agent_stat_fixture f';
-
-      final indexed = await tool.call({
-        'sql': '$select WHERE f.id BETWEEN 2 AND 4',
-      }) as Map<String, Object?>;
-      expect(
-        indexed['plan'],
-        containsPair(
-          'query_block',
-          allOf(
-            containsPair('cost_info', contains('query_cost')),
-            containsPair(
-              'table',
-              allOf(
-                containsPair('table_name', 'f'),
-                containsPair('key', 'PRIMARY'),
-                containsPair('used_key_parts', ['id']),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      final scanned = await tool.call({
-        'sql': "$select WHERE f.name LIKE '%Item%'",
-      }) as Map<String, Object?>;
-      expect(
-        scanned['plan'],
-        containsPair(
-          'query_block',
-          containsPair(
-            'table',
-            allOf(
-              containsPair('access_type', 'ALL'),
-              containsPair('rows_examined_per_scan', isPositive),
-              isNot(contains('key')),
-              isNot(contains('attached_condition')),
-            ),
-          ),
-        ),
-      );
-      expect(scanned['tables'], [
-        allOf(
-          containsPair('table', 'agent_stat_fixture'),
-          containsPair('aliases', ['f']),
-          containsPair('estimatedRows', isPositive),
-          containsPair('dataBytes', isPositive),
-          containsPair('indexBytes', isNonNegative),
-          containsPair('indexes', [
-            allOf(
-              containsPair('name', 'PRIMARY'),
-              containsPair('columns', [containsPair('column', 'id')]),
-            ),
-          ]),
-        ),
-      ]);
     },
   );
 

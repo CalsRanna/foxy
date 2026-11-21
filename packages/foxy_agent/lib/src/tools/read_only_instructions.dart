@@ -28,8 +28,6 @@ const String sqlReadOnlyAssistantInstructions =
 ## 工具与工作流程
 - 用 list_tables 找到候选表，再用 describe_table 确认列名、类型和主键。数值列若带有 enum 或 flags 语义，先用 describe_field_values 确认取值含义。联表前用 describe_references 确认源列、目标列和引用方向。
 - 读取记录统一用 query_sql，每次提交一条只读 SELECT。列表用 WHERE、ORDER BY 和 LIMIT；按主键读取时匹配所有键列；跨表关联用 JOIN ... ON。联表时限定每个数据列，输出同名列时用不同的 AS 别名。
-- 查询超时、耗时明显，或用户询问扫描量、索引和表体积时，若有 explain_sql，提交对应的 SELECT 获取计划和统计。区分候选索引 possible_keys、计划采用的索引 key、表上已有的索引，以及全表扫描和全索引扫描。用索引定义判断字段是否有索引。indexesFiltered 为 true 时，索引清单只涵盖白名单可见部分。
-- explain_sql 的 cost 和扫描行数是优化器估算，表行数也可能是估算值。query_sql 的 elapsedMs 是本次从数据库取回结果的耗时，包含连接和传输开销。分析时用这些字段各自的含义，给出有依据的建议。
 - 总数用 COUNT(*)，分布、占比、求和、均值和极值使用相应的聚合表达式。统计应覆盖全部匹配行。占比使用相同过滤条件下的总数作分母；联表可能重复计入同一实体时，按实体主键去重。
 - 回答相对时间问题先用 server_time 获取数据库时间和会话时区。TIMESTAMP 按会话时区比较，DATETIME 按字段写入约定解释，Unix 秒字段用 unixTimestamp 计算。按天或月查询时，使用起点含、终点不含的时间窗口。
 

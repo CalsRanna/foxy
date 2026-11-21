@@ -7,7 +7,6 @@ final class ReadOnlySql {
 
   final String statement;
   final int rowLimit;
-  final Map<String, TableInfo> tables;
 
   factory ReadOnlySql.parse(String sql, TableCatalog catalog) {
     if (sql.isEmpty || sql.length > 12000) {
@@ -16,7 +15,7 @@ final class ReadOnlySql {
     return _SelectParser(sql, catalog).parse();
   }
 
-  const ReadOnlySql._(this.statement, this.rowLimit, this.tables);
+  const ReadOnlySql._(this.statement, this.rowLimit);
 }
 
 final class _SelectParser {
@@ -163,7 +162,6 @@ final class _SelectParser {
     return ReadOnlySql._(
       '${select.text} /*+ MAX_EXECUTION_TIME(5000) */ $body$limit',
       rowLimit,
-      Map.unmodifiable(_tables),
     );
   }
 

@@ -33,11 +33,9 @@ List<AgentTool> createReadOnlyTools({
     DescribeFieldValuesTool(readableCatalog),
     DescribeReferencesTool(readableCatalog),
     ServerTimeTool(dataSource),
-    if (sqlSource != null) ...[
-      QuerySqlTool(readableCatalog, sqlSource),
-      if (dataSource is SqlDiagnosticsDataSource)
-        ExplainSqlTool(readableCatalog, dataSource as SqlDiagnosticsDataSource),
-    ] else ...[
+    if (sqlSource != null)
+      QuerySqlTool(readableCatalog, sqlSource)
+    else ...[
       CountRowsTool(catalog, dataSource),
       AggregateRowsTool(catalog, dataSource),
       QueryRowsTool(catalog, dataSource),

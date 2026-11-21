@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:foxy/constant/agent_field_semantics.dart';
 import 'package:foxy/constant/character_agent_field_semantics.dart';
@@ -14,10 +12,7 @@ import 'package:laconic/laconic.dart';
 /// The catalog is built from `information_schema` for the world, characters,
 /// auth and `foxy` schemas. Queries select only columns in that catalog.
 class AgentReadOnlyDataSource
-    implements
-        ReadOnlyDataSource,
-        ReadOnlySqlDataSource,
-        SqlDiagnosticsDataSource {
+    implements ReadOnlyDataSource, ReadOnlySqlDataSource {
   static const _foxySchema = 'foxy';
   static const _defaultCharactersDatabase = 'acore_characters';
   static const _defaultAuthDatabase = 'acore_auth';
@@ -47,42 +42,6 @@ class AgentReadOnlyDataSource
   };
 
   static const _maxRows = 51;
-
-  static const _planFields = {
-    'query_block',
-    'select_id',
-    'cost_info',
-    'query_cost',
-    'sort_cost',
-    'read_cost',
-    'eval_cost',
-    'prefix_cost',
-    'data_read_per_join',
-    'ordering_operation',
-    'grouping_operation',
-    'duplicates_removal',
-    'nested_loop',
-    'table',
-    'table_name',
-    'access_type',
-    'possible_keys',
-    'key',
-    'key_length',
-    'ref',
-    'rows_examined_per_scan',
-    'rows_produced_per_join',
-    'filtered',
-    'using_index',
-    'using_filesort',
-    'using_temporary_table',
-    'using_join_buffer',
-    'message',
-    'inputs',
-    'index_name',
-    'estimated_rows',
-    'estimated_total_cost',
-    'estimated_first_row_cost',
-  };
 
   final ConfigUtil _configUtil;
   final Laconic? _laconic;
@@ -142,23 +101,6 @@ class AgentReadOnlyDataSource
   }) async {
     final info = await _tableInfo(table);
     return _filteredQuery(info, filters).count();
-  }
-
-  @override
-  Future<Map<String, Object?>> explainSql(ReadOnlySql sql) async {
-    final database = _database;
-    final rows = await database.select('EXPLAIN FORMAT=JSON ${sql.statement}');
-    final plan = switch (rows.single.values) {
-      [final String value] => jsonDecode(value),
-      _ => throw const FormatException('MySQL did not return a JSON plan.'),
-    };
-    if (plan is! Map<String, Object?>) {
-      throw const FormatException('MySQL did not return a JSON plan object.');
-    }
-    return {
-      'plan': _diagnosticPlan(plan, sql.tables),
-      'tables': await _tableStatistics(database, sql.tables),
-    };
   }
 
   /// Loads (and caches) the table catalog from `information_schema`.
@@ -409,27 +351,6 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
   static String? _databaseName(Object? value) =>
       value is String && value.isNotEmpty ? value : null;
 
-  static Object? _diagnosticPlan(Object? node, Map<String, TableInfo> tables) {
-    return switch (node) {
-      final List<Object?> values =>
-        values.map((value) => _diagnosticPlan(value, tables)).toList(),
-      final Map<String, Object?> fields => {
-        for (final entry in fields.entries)
-          if (_planFields.contains(entry.key))
-            entry.key: _diagnosticPlan(entry.value, tables),
-        if (fields case {
-          'table_name': final String alias,
-          'used_key_parts': final List<Object?> parts,
-        })
-          'used_key_parts': parts
-              .whereType<String>()
-              .where((name) => tables[alias]?.findColumn(name) != null)
-              .toList(),
-      },
-      _ => node,
-    };
-  }
-
   static String _logicalType(String dataType) {
     final type = dataType.toLowerCase();
     if (type.contains('int')) return 'int';
@@ -474,87 +395,6 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
         )
         ?.value;
     return value is String ? value : '';
-  }
-
-  static Future<List<Map<String, Object?>>> _tableStatistics(
-    Laconic database,
-    Map<String, TableInfo> aliases,
-  ) async {
-    final tables = aliases.values.toSet();
-    final conditions = List.filled(
-      tables.length,
-      "(t.TABLE_SCHEMA = COALESCE(NULLIF(?, ''), DATABASE()) AND t.TABLE_NAME = ?)",
-    ).join(' OR ');
-    final rows = await database.select('''
-SELECT CASE WHEN BINARY t.TABLE_SCHEMA = BINARY DATABASE()
-            THEN '' ELSE t.TABLE_SCHEMA END AS catalogSchema,
-       t.TABLE_NAME AS tableName, t.ENGINE AS engine, t.TABLE_ROWS AS estimatedRows,
-       t.DATA_LENGTH AS dataBytes, t.INDEX_LENGTH AS indexBytes,
-       s.INDEX_NAME AS indexName, s.NON_UNIQUE AS nonUnique, s.INDEX_TYPE AS indexType,
-       s.SEQ_IN_INDEX AS position, s.COLUMN_NAME AS columnName,
-       s.SUB_PART AS prefixLength, s.CARDINALITY AS estimatedCardinality
-FROM information_schema.tables t
-LEFT JOIN information_schema.statistics s
-  ON t.TABLE_SCHEMA = s.TABLE_SCHEMA AND t.TABLE_NAME = s.TABLE_NAME
- AND BINARY t.TABLE_SCHEMA = BINARY s.TABLE_SCHEMA
- AND BINARY t.TABLE_NAME = BINARY s.TABLE_NAME
-WHERE t.TABLE_TYPE = 'BASE TABLE' AND ($conditions)
-ORDER BY t.TABLE_SCHEMA, t.TABLE_NAME, s.INDEX_NAME, s.SEQ_IN_INDEX
-''', tables.expand((table) => [table.database, table.name]).toList());
-    final groups = groupBy(
-      rows.map((row) => row.toMap()),
-      (row) => (row['catalogSchema'], row['tableName']),
-    );
-    return tables.map((table) {
-      final entries = groups[(table.database, table.name)] ?? const [];
-      final stats = entries.firstOrNull;
-      final indexes = groupBy(
-        entries.where((row) => row['indexName'] is String),
-        (row) => row['indexName'],
-      );
-      final visibleIndexes = indexes.values
-          .where(
-            (parts) => parts.every((part) {
-              final column = part['columnName'];
-              return column == null ||
-                  (column is String && table.findColumn(column) != null);
-            }),
-          )
-          .toList();
-      return {
-        'table': table.qualifiedName,
-        'aliases': aliases.entries
-            .where((entry) => entry.value == table)
-            .map((entry) => entry.key)
-            .toList(),
-        if (stats != null) ...{
-          'engine': stats['engine'],
-          'estimatedRows': stats['estimatedRows'],
-          'dataBytes': stats['dataBytes'],
-          'indexBytes': stats['indexBytes'],
-          if (visibleIndexes.length < indexes.length) 'indexesFiltered': true,
-          'indexes': visibleIndexes
-              .map(
-                (parts) => {
-                  'name': parts.first['indexName'],
-                  'unique': parts.first['nonUnique'] == 0,
-                  'type': parts.first['indexType'],
-                  'columns': parts
-                      .map(
-                        (part) => {
-                          'column': part['columnName'],
-                          'position': part['position'],
-                          'prefixLength': part['prefixLength'],
-                          'estimatedCardinality': part['estimatedCardinality'],
-                        },
-                      )
-                      .toList(),
-                },
-              )
-              .toList(),
-        },
-      };
-    }).toList();
   }
 
   static ColumnInfo _withSemantics(
