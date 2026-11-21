@@ -6,13 +6,25 @@ import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
 class ConfigUtil {
+  Future<Map<String, dynamic>>? _cachedConfig;
   Future<void> _pendingUpdate = Future.value();
 
   String get configPath => p.join(Directory.current.path, 'config.yaml');
 
   Future<Map<String, dynamic>> load() async {
-    LoggerUtil.instance.d(configPath);
+    final config = _cachedConfig ??= _readConfig().onError<Object>((
+      error,
+      stack,
+    ) {
+      _cachedConfig = null;
+      Error.throwWithStackTrace(error, stack);
+    });
+    return Map<String, dynamic>.of(await config);
+  }
+
+  Future<Map<String, dynamic>> _readConfig() async {
     final file = File(configPath);
+    LoggerUtil.instance.d(file.path);
     if (!await file.exists()) return {};
     final content = await file.readAsString();
     if (content.trim().isEmpty) return {};
@@ -61,15 +73,20 @@ class ConfigUtil {
   }
 
   Future<void> _performUpdate(Map<String, dynamic> values) async {
-    final file = File(configPath);
-    if (!await file.exists()) await file.create(recursive: true);
     final config = {...await load(), ...values};
     final editor = YamlEditor('');
     editor.update([], config);
+    // Use the parsed YAML so nested values remain read-only after saving.
+    final savedConfig = Map<String, dynamic>.from(
+      editor.parseAt([]) as YamlMap,
+    );
     // Temp file + rename atomic replacement, so an interrupted process never
     // leaves a truncated config.yaml.
-    final temporaryFile = File('$configPath.tmp');
+    final path = configPath;
+    final temporaryFile = File('$path.tmp');
+    await temporaryFile.parent.create(recursive: true);
     await temporaryFile.writeAsString(editor.toString());
-    await temporaryFile.rename(configPath);
+    await temporaryFile.rename(path);
+    _cachedConfig = Future.value(savedConfig);
   }
 }

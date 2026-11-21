@@ -21,11 +21,60 @@ void main() {
     expect(await configUtil.load(), isEmpty);
   });
 
+  test('并发首次加载后复用缓存，调用方可以修改返回的副本', () async {
+    final file = await File(configUtil.configPath).writeAsString('host: local');
+    final results = await Future.wait([configUtil.load(), configUtil.load()]);
+
+    results.first['host'] = 'modified';
+    await file.delete();
+
+    expect(results.last, {'host': 'local'});
+    expect(await configUtil.load(), {'host': 'local'});
+  });
+
   test('update 后 load 回读一致', () async {
-    await configUtil.update({'host': '192.168.1.10', 'use_ssl': true});
-    final loaded = await configUtil.load();
-    expect(loaded['host'], '192.168.1.10');
-    expect(loaded['use_ssl'], true);
+    final file = await File(configUtil.configPath).writeAsString('host: local');
+    await configUtil.load();
+    final notifiedTables = ['footstepterrainlookup'];
+    await Future.wait([
+      configUtil.update({'use_ssl': true}),
+      configUtil.update({'notified_tables': notifiedTables}),
+    ]);
+    notifiedTables.clear();
+
+    final saved = await _TempConfigUtil(tempDir.path).load();
+    await file.delete();
+
+    expect(saved, {
+      'host': 'local',
+      'use_ssl': true,
+      'notified_tables': ['footstepterrainlookup'],
+    });
+    expect(await configUtil.load(), saved);
+  });
+
+  test('保存失败时保留缓存，后续保存仍可成功', () async {
+    await configUtil.update({'host': 'local'});
+    final temporaryDir = await Directory('${configUtil.configPath}.tmp')
+        .create();
+
+    await expectLater(
+      configUtil.update({'host': 'failed'}),
+      throwsA(isA<FileSystemException>()),
+    );
+    expect(await configUtil.load(), {'host': 'local'});
+
+    await temporaryDir.delete();
+    await configUtil.update({'host': 'updated'});
+    expect(await configUtil.load(), {'host': 'updated'});
+  });
+
+  test('首次读取失败后可以重试', () async {
+    final file = await File(configUtil.configPath).writeAsBytes([0xff]);
+    await expectLater(configUtil.load(), throwsA(isA<FileSystemException>()));
+
+    await file.writeAsString('host: recovered');
+    expect(await configUtil.load(), {'host': 'recovered'});
   });
 
   test('损坏的 YAML 自愈:返回空配置并备份 .bak', () async {
