@@ -11,8 +11,8 @@ final class DescribeReferencesTool extends AgentTool {
   @override
   String get description =>
       'List incoming and outgoing catalog references for a table, including '
-      'known logical relationships. Use outgoing expandable references for '
-      'expand and incoming references to filter the referencing table.';
+      'known logical relationships. Use the source and target columns to '
+      'join related records or filter the referencing table.';
 
   @override
   Map<String, Object?> get inputSchema => const {

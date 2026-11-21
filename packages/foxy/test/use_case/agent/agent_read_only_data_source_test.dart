@@ -505,6 +505,7 @@ Map<String, Object?> _row(
 ) => {
   'TABLE_SCHEMA': schema,
   'TABLE_NAME': table,
+  'TABLE_TYPE': 'BASE TABLE',
   'COLUMN_NAME': column,
   'DATA_TYPE': dataType,
   'COLUMN_KEY': columnKey,

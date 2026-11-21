@@ -1,14 +1,14 @@
 import 'package:foxy_agent/src/agent_tool.dart';
 import 'package:foxy_agent/src/tools/aggregate_tools.dart';
+import 'package:foxy_agent/src/tools/query_sql_tool.dart';
 import 'package:foxy_agent/src/tools/read_only_data_source.dart';
 import 'package:foxy_agent/src/tools/read_only_tool_input.dart';
 import 'package:foxy_agent/src/tools/reference_tools.dart';
 import 'package:foxy_agent/src/tools/row_expansion.dart';
 import 'package:foxy_agent/src/tools/table_catalog.dart';
 
-/// The built-in read-only toolset: `list_tables`, `describe_table`,
-/// `describe_field_values`, `describe_references`, `server_time`, `count_rows`,
-/// `aggregate_rows`, `query_rows` and `get_row`.
+/// Combines catalog and server-time tools with the data source's query tools.
+/// A [ReadOnlySqlDataSource] exposes `query_sql` over catalog base tables.
 ///
 /// The host app supplies the metadata ([catalog]) and the data access
 /// ([dataSource]); tool implementations stay in this package. The catalog may
@@ -17,17 +17,34 @@ import 'package:foxy_agent/src/tools/table_catalog.dart';
 List<AgentTool> createReadOnlyTools({
   required TableCatalog catalog,
   required ReadOnlyDataSource dataSource,
-}) => [
-  ListTablesTool(catalog),
-  DescribeTableTool(catalog),
-  DescribeFieldValuesTool(catalog),
-  DescribeReferencesTool(catalog),
-  ServerTimeTool(dataSource),
-  CountRowsTool(catalog, dataSource),
-  AggregateRowsTool(catalog, dataSource),
-  QueryRowsTool(catalog, dataSource),
-  GetRowTool(catalog, dataSource),
-];
+}) {
+  final sqlSource = dataSource is ReadOnlySqlDataSource
+      ? dataSource as ReadOnlySqlDataSource
+      : null;
+  final readableCatalog = sqlSource == null
+      ? catalog
+      : TableCatalog(
+          catalog.tables.where((table) => table.isBaseTable).toList(),
+        );
+
+  return [
+    ListTablesTool(readableCatalog),
+    DescribeTableTool(readableCatalog),
+    DescribeFieldValuesTool(readableCatalog),
+    DescribeReferencesTool(readableCatalog),
+    ServerTimeTool(dataSource),
+    if (sqlSource != null) ...[
+      QuerySqlTool(readableCatalog, sqlSource),
+      if (dataSource is SqlDiagnosticsDataSource)
+        ExplainSqlTool(readableCatalog, dataSource as SqlDiagnosticsDataSource),
+    ] else ...[
+      CountRowsTool(catalog, dataSource),
+      AggregateRowsTool(catalog, dataSource),
+      QueryRowsTool(catalog, dataSource),
+      GetRowTool(catalog, dataSource),
+    ],
+  ];
+}
 
 /// Explains the full meaning of one column's values.
 final class DescribeFieldValuesTool extends AgentTool {
@@ -101,8 +118,7 @@ final class DescribeTableTool extends AgentTool {
   @override
   String get description =>
       'Describe one table: its columns, their types and meanings, and the '
-      'primary key. Use the returned column names in query_rows filters and '
-      'get_row keys.';
+      'primary key. Use the returned column names and keys in queries.';
 
   @override
   Map<String, Object?> get inputSchema => const {

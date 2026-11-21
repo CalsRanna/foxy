@@ -195,7 +195,7 @@ icons_skipped: true
 1. 在「设置 → 编辑偏好 → AI 模型」填写兼容 Responses 协议的服务商 Base URL、模型名称和 API Key。Foxy 会向 `{Base URL}/responses` 发送请求。本地服务允许匿名访问时，API Key 可留空。
 2. 打开侧栏「博学者」开始对话。查询步骤可展开，回复支持 Markdown 和代码复制。支持推理摘要的模型可在配置中启用该选项。
 
-助手复用当前 MySQL 连接，查询范围取决于连接账号的 `SELECT` 权限。角色库和认证库默认使用 `acore_characters` 和 `acore_auth`，可通过 `config.yaml` 中的 `characters_database` 和 `auth_database` 覆盖，修改后重启 Foxy。认证库的 `account` 只开放非凭据字段，`secret_digest` 不在查询目录中。
+助手通过 `query_sql` 查询目录中的基础表，复用当前 MySQL 连接及其 `SELECT` 权限。角色库和认证库默认使用 `acore_characters` 和 `acore_auth`，可通过 `config.yaml` 中的 `characters_database` 和 `auth_database` 覆盖，修改后重启 Foxy。认证库的 `account` 只开放非凭据字段，`secret_digest` 不在查询目录中。
 
 对话内容和工具查询结果会发送给配置的模型服务商。会话自动命名，关闭后可继续。数据库密码和模型 API Key 以明文保存在本机的 `config.yaml` 中。
 

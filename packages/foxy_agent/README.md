@@ -9,7 +9,7 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 - `FoxyAgent`：`run` 完成「请求模型 → 执行工具 → 回传结果 → 直到模型给出最终回复」的循环；运行错误以 `AgentFailedEvent` 结束事件流，不向上抛异常。
 - `AgentProviderConfig`：用户自定义服务商配置（`baseUrl` / `apiKey` / `model` / 附加请求头），请求发往 `{baseUrl}/responses`。
 - `AgentTool`：工具抽象（名称、描述、JSON Schema、执行函数）；包内提供一组内置只读工具，见下文。
-- `readOnlyAssistantInstructions`：与内置只读工具配套的系统提示词；应用可在其后追加领域上下文。
+- `sqlReadOnlyAssistantInstructions` 和 `readOnlyAssistantInstructions`：分别供 SQL 工具和结构化查询工具使用的系统提示词，应用可在其后追加领域上下文。
 - `AgentSession`：客户端持有的对话条目；请求无状态，每次携带完整 `input`，不依赖 `previous_response_id`。
 - 事件：`AgentTextDeltaEvent`、`AgentToolCallEvent`、`AgentToolResultEvent`、`AgentCompletedEvent`、`AgentFailedEvent`。
 - `AgentException` / `AgentHttpException`：英文诊断信息；界面中文文案由 `foxy` 按类型映射。
@@ -26,7 +26,7 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 
 ## 内置只读工具
 
-`createReadOnlyTools(catalog: ..., dataSource: ...)` 返回九个内置工具，应用只需提供元数据与数据访问实现：
+`createReadOnlyTools(catalog: ..., dataSource: ...)` 注册元数据和服务器时间工具。Foxy 的数据源实现了 `ReadOnlySqlDataSource`，数据查询统一走 `query_sql`，元数据目录仅发布基础表。其他数据源使用表中的四个结构化查询工具。
 
 | 工具 | 作用 |
 | --- | --- |
@@ -39,6 +39,29 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 | `aggregate_rows` | 对全部匹配行执行 `count` / `sum` / `avg` / `min` / `max`，可按最多 3 列分组，每页最多 50 组，支持按分组列或指标输出名排序 |
 | `query_rows` | 按列过滤、排序、分页，单页最多 50 行（默认 20），可用 `expand` 展开引用；操作符含 `equals`/`notEquals`/`contains`/`in`/大小比较，`in` 的 `value` 传数组 |
 | `get_row` | 按主键读取单行，也支持 `expand` |
+| `query_sql` | 执行一条通过目录白名单校验的 MySQL `SELECT`，支持联表、筛选、分组、聚合和排序 |
+| `explain_sql` | 查看同一条 `SELECT` 的估算代价、扫描行数、候选和选用索引，以及涉及表的大小和索引定义 |
+
+### SQL 联表查询
+
+`query_sql` 接收 `{"sql":"..."}`。使用 `list_tables` 返回的准确表名和 `describe_table` 返回的字段。联表时用表名或表别名限定字段，使用 `JOIN ... ON` 声明关联，使用 `AS` 为结果命名。查询可用 `CASE`、`WHERE`、`GROUP BY`、`HAVING` 和 `ORDER BY`。
+
+```sql
+SELECT v.entry, COUNT(*) AS item_count, AVG(i.BuyPrice) AS average_price
+FROM npc_vendor v
+JOIN item_template i ON v.item = i.entry
+GROUP BY v.entry
+ORDER BY item_count DESC
+LIMIT 20
+```
+
+省略 `LIMIT` 时最多返回 50 行，多读一行判断 `truncated`。显式 `LIMIT` 每页最多 200 行。需要读取超过 200 行时，使用可唯一确定顺序的 `ORDER BY` 和 `LIMIT ... OFFSET ...` 分页，取满一页后检查下一页。常用聚合函数及 `COUNT(*)` 可用，投影须显式列出字段。查询仅接受目录中的基础表。视图、SQL 注释、子查询、CTE 和多条语句会被拒绝。工具使用固定的 5 秒 MySQL 执行时间提示。Foxy 沿用当前数据库连接。
+
+### 查询诊断
+
+`query_sql` 的 `elapsedMs` 是 Foxy 取数耗时，包含连接和传输。支持 `SqlDiagnosticsDataSource` 的应用还注册 `explain_sql`。它接收相同的 `{"sql":"SELECT ..."}` 参数，按相同的白名单和分页规则生成 `EXPLAIN FORMAT=JSON`，并读取相关基础表的统计。
+
+`plan` 包含优化器估算的代价和扫描行数，以及 `access_type`、`possible_keys`、`key` 和可见的 `used_key_parts`。`tables` 提供表别名、存储引擎、估算行数、数据及索引字节数和索引列顺序。优化器代价使用 MySQL 的估算单位，`elapsedMs` 使用毫秒。用表的索引定义判断索引是否存在，用计划的访问类型和 `key` 判断本次如何访问。
 
 ### 排序与分页
 

@@ -15,6 +15,7 @@ void main() {
 
   setUpAll(() async {
     await connectIntegrationWorldDatabase([
+      'drop view if exists agent_stat_view',
       'drop table if exists agent_stat_fixture',
       '''create table agent_stat_fixture (
         id int not null primary key,
@@ -24,6 +25,7 @@ void main() {
         created_at timestamp not null default current_timestamp,
         name varchar(32) not null
       )''',
+      'create view agent_stat_view as select id from agent_stat_fixture',
     ]);
     final database = Database.instance.laconic;
     await database
@@ -43,6 +45,7 @@ void main() {
     source = AgentReadOnlyDataSource(_Config());
     final actual = await source.getCatalog();
     catalog = TableCatalog([
+      actual.find('agent_stat_view')!,
       TableInfo(
         name: 'agent_stat_fixture',
         columns: actual.find('agent_stat_fixture')!.columns.map((column) {
@@ -92,9 +95,146 @@ void main() {
 
   tearDownAll(() async {
     await Database.instance.laconic.statement(
+      'drop view if exists agent_stat_view',
+    );
+    await Database.instance.laconic.statement(
       'drop table if exists agent_stat_fixture',
     );
     await Database.instance.close();
+  });
+
+  test(
+    'query_sql executes a catalog-checked MySQL join and aggregation',
+    () async {
+      final tools = createReadOnlyTools(catalog: catalog, dataSource: source);
+      final tool = tools.singleWhere((tool) => tool.name == 'query_sql');
+
+      expect(
+        await tool.call({
+          'sql': '''
+      SELECT parent.expansion, COUNT(*) AS related_count, SUM(child.price) AS total
+      FROM agent_stat_fixture parent
+      JOIN agent_stat_fixture child ON parent.linked_id = child.id
+      GROUP BY parent.expansion
+      HAVING COUNT(*) >= 2
+      ORDER BY related_count DESC
+    ''',
+        }),
+        {
+          'rows': [
+            {'expansion': 0, 'related_count': 2, 'total': '1.25'},
+          ],
+          'truncated': false,
+          'elapsedMs': isNonNegative,
+        },
+      );
+
+      final page = await tool.call({
+        'sql': 'SELECT id FROM agent_stat_fixture ORDER BY id',
+      }) as Map<String, Object?>;
+      expect(page['rows'], hasLength(50));
+      expect(page['truncated'], isTrue);
+
+      expect(
+        await tools.singleWhere((tool) => tool.name == 'list_tables').call({}),
+        {
+          'tables': [
+            {'name': 'agent_stat_fixture'},
+          ],
+          'count': 1,
+        },
+      );
+      expect(
+        await tool.call({'sql': 'SELECT id FROM agent_stat_view'}),
+        startsWith('SQL rejected: Table is outside the catalog'),
+      );
+    },
+  );
+
+  test(
+    'explain_sql reports the plan and table statistics from MySQL',
+    () async {
+      final tools = createReadOnlyTools(catalog: catalog, dataSource: source);
+      final tool = tools.singleWhere((tool) => tool.name == 'explain_sql');
+      const select = 'SELECT f.id FROM agent_stat_fixture f';
+
+      final indexed = await tool.call({
+        'sql': '$select WHERE f.id BETWEEN 2 AND 4',
+      }) as Map<String, Object?>;
+      expect(
+        indexed['plan'],
+        containsPair(
+          'query_block',
+          allOf(
+            containsPair('cost_info', contains('query_cost')),
+            containsPair(
+              'table',
+              allOf(
+                containsPair('table_name', 'f'),
+                containsPair('key', 'PRIMARY'),
+                containsPair('used_key_parts', ['id']),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final scanned = await tool.call({
+        'sql': "$select WHERE f.name LIKE '%Item%'",
+      }) as Map<String, Object?>;
+      expect(
+        scanned['plan'],
+        containsPair(
+          'query_block',
+          containsPair(
+            'table',
+            allOf(
+              containsPair('access_type', 'ALL'),
+              containsPair('rows_examined_per_scan', isPositive),
+              isNot(contains('key')),
+              isNot(contains('attached_condition')),
+            ),
+          ),
+        ),
+      );
+      expect(scanned['tables'], [
+        allOf(
+          containsPair('table', 'agent_stat_fixture'),
+          containsPair('aliases', ['f']),
+          containsPair('estimatedRows', isPositive),
+          containsPair('dataBytes', isPositive),
+          containsPair('indexBytes', isNonNegative),
+          containsPair('indexes', [
+            allOf(
+              containsPair('name', 'PRIMARY'),
+              containsPair('columns', [containsPair('column', 'id')]),
+            ),
+          ]),
+        ),
+      ]);
+    },
+  );
+
+  test('query_sql paginates explicit 200-row pages in MySQL', () async {
+    final tool = QuerySqlTool(catalog, source);
+    const sql = '''
+SELECT a.id AS row_id, b.id AS joined_id
+FROM agent_stat_fixture a
+JOIN agent_stat_fixture b ON b.id <= 2
+ORDER BY a.id, b.id''';
+
+    final first =
+        await tool.call({'sql': '$sql LIMIT 200'}) as Map<String, Object?>;
+    final second = await tool.call({
+      'sql': '$sql LIMIT 200 OFFSET 200',
+    }) as Map<String, Object?>;
+    final firstRows = first['rows'] as List<Map<String, Object?>>;
+    final secondRows = second['rows'] as List<Map<String, Object?>>;
+
+    expect(firstRows, hasLength(200));
+    expect(firstRows.last, {'row_id': 100, 'joined_id': 2});
+    expect(secondRows, hasLength(40));
+    expect(secondRows.first, {'row_id': 101, 'joined_id': 1});
   });
 
   test(

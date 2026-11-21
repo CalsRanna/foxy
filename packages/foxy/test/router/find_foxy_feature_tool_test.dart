@@ -156,7 +156,7 @@ void main() {
           model: 'test-model',
         ),
         catalog: const TableCatalog([]),
-        dataSource: _UnusedDataSource(),
+        dataSource: _UnusedSqlDataSource(),
         featureTool: tool,
         httpClient: MockClient((request) async {
           requests++;
@@ -166,7 +166,21 @@ void main() {
                 .cast<Map<String, Object?>>();
             expect(
               tools.map((tool) => tool['name']),
-              containsAll(['query_rows', 'find_foxy_feature']),
+              unorderedEquals([
+                'list_tables',
+                'describe_table',
+                'describe_field_values',
+                'describe_references',
+                'server_time',
+                'query_sql',
+                'explain_sql',
+                'find_foxy_feature',
+              ]),
+            );
+            expect(body['instructions'], contains('读取记录统一用 query_sql'));
+            expect(
+              body['instructions'],
+              isNot(matches(r'query_rows|get_row|count_rows|aggregate_rows')),
             );
             expect(body['instructions'], contains('调用 find_foxy_feature'));
             return _completedResponse([
@@ -211,7 +225,11 @@ FeatureEntity _module(RouterMenu menu, String name) => FeatureEntity(
   updatedAt: DateTime(2026),
 );
 
-class _UnusedDataSource extends Fake implements ReadOnlyDataSource {}
+class _UnusedSqlDataSource extends Fake
+    implements
+        ReadOnlyDataSource,
+        ReadOnlySqlDataSource,
+        SqlDiagnosticsDataSource {}
 
 http.Response _completedResponse(List<Map<String, Object?>> output) {
   final event = {

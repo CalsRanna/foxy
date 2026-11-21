@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:foxy/constant/agent_field_semantics.dart';
 import 'package:foxy/constant/character_agent_field_semantics.dart';
@@ -11,7 +13,11 @@ import 'package:laconic/laconic.dart';
 ///
 /// The catalog is built from `information_schema` for the world, characters,
 /// auth and `foxy` schemas. Queries select only columns in that catalog.
-class AgentReadOnlyDataSource implements ReadOnlyDataSource {
+class AgentReadOnlyDataSource
+    implements
+        ReadOnlyDataSource,
+        ReadOnlySqlDataSource,
+        SqlDiagnosticsDataSource {
   static const _foxySchema = 'foxy';
   static const _defaultCharactersDatabase = 'acore_characters';
   static const _defaultAuthDatabase = 'acore_auth';
@@ -41,6 +47,42 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
   };
 
   static const _maxRows = 51;
+
+  static const _planFields = {
+    'query_block',
+    'select_id',
+    'cost_info',
+    'query_cost',
+    'sort_cost',
+    'read_cost',
+    'eval_cost',
+    'prefix_cost',
+    'data_read_per_join',
+    'ordering_operation',
+    'grouping_operation',
+    'duplicates_removal',
+    'nested_loop',
+    'table',
+    'table_name',
+    'access_type',
+    'possible_keys',
+    'key',
+    'key_length',
+    'ref',
+    'rows_examined_per_scan',
+    'rows_produced_per_join',
+    'filtered',
+    'using_index',
+    'using_filesort',
+    'using_temporary_table',
+    'using_join_buffer',
+    'message',
+    'inputs',
+    'index_name',
+    'estimated_rows',
+    'estimated_total_cost',
+    'estimated_first_row_cost',
+  };
 
   final ConfigUtil _configUtil;
   final Laconic? _laconic;
@@ -118,18 +160,19 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
         _defaultCharactersDatabase;
     final authDatabase =
         _databaseName(config['auth_database']) ?? _defaultAuthDatabase;
-    final rows = await _database
-        .table('information_schema.columns')
-        .whereIn('table_schema', [
-          worldDatabase,
-          _foxySchema,
-          charactersDatabase,
-          authDatabase,
-        ])
-        .orderBy('table_schema')
-        .orderBy('table_name')
-        .orderBy('ordinal_position')
-        .get();
+    final rows = await _database.select(
+      '''
+select c.*, t.TABLE_TYPE
+from information_schema.columns c
+join information_schema.tables t
+  on c.TABLE_SCHEMA = t.TABLE_SCHEMA and c.TABLE_NAME = t.TABLE_NAME
+ and binary c.TABLE_SCHEMA = binary t.TABLE_SCHEMA
+ and binary c.TABLE_NAME = binary t.TABLE_NAME
+where c.TABLE_SCHEMA in (?, ?, ?, ?)
+order by c.TABLE_SCHEMA, c.TABLE_NAME, c.ORDINAL_POSITION
+''',
+      [worldDatabase, _foxySchema, charactersDatabase, authDatabase],
+    );
     final catalog = buildCatalog(
       rows.map((row) => row.toMap()).toList(),
       worldDatabase: worldDatabase,
@@ -164,6 +207,131 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
     );
     final rows = await query.get();
     return rows.map((row) => row.toMap()).toList();
+  }
+
+  @override
+  Future<List<Map<String, Object?>>> querySql(ReadOnlySql sql) async {
+    final rows = await _database.select(sql.statement);
+    return rows.map((row) => row.toMap()).toList();
+  }
+
+  @override
+  Future<Map<String, Object?>> explainSql(ReadOnlySql sql) async {
+    final database = _database;
+    final rows = await database.select('EXPLAIN FORMAT=JSON ${sql.statement}');
+    final plan = switch (rows.single.values) {
+      [final String value] => jsonDecode(value),
+      _ => throw const FormatException('MySQL did not return a JSON plan.'),
+    };
+    if (plan is! Map<String, Object?>) {
+      throw const FormatException('MySQL did not return a JSON plan object.');
+    }
+    return {
+      'plan': _diagnosticPlan(plan, sql.tables),
+      'tables': await _tableStatistics(database, sql.tables),
+    };
+  }
+
+  static Object? _diagnosticPlan(Object? node, Map<String, TableInfo> tables) {
+    return switch (node) {
+      final List<Object?> values =>
+        values.map((value) => _diagnosticPlan(value, tables)).toList(),
+      final Map<String, Object?> fields => {
+        for (final entry in fields.entries)
+          if (_planFields.contains(entry.key))
+            entry.key: _diagnosticPlan(entry.value, tables),
+        if (fields case {
+          'table_name': final String alias,
+          'used_key_parts': final List<Object?> parts,
+        })
+          'used_key_parts': parts
+              .whereType<String>()
+              .where((name) => tables[alias]?.findColumn(name) != null)
+              .toList(),
+      },
+      _ => node,
+    };
+  }
+
+  static Future<List<Map<String, Object?>>> _tableStatistics(
+    Laconic database,
+    Map<String, TableInfo> aliases,
+  ) async {
+    final tables = aliases.values.toSet();
+    final conditions = List.filled(
+      tables.length,
+      "(t.TABLE_SCHEMA = COALESCE(NULLIF(?, ''), DATABASE()) AND t.TABLE_NAME = ?)",
+    ).join(' OR ');
+    final rows = await database.select('''
+SELECT CASE WHEN BINARY t.TABLE_SCHEMA = BINARY DATABASE()
+            THEN '' ELSE t.TABLE_SCHEMA END AS catalogSchema,
+       t.TABLE_NAME AS tableName, t.ENGINE AS engine, t.TABLE_ROWS AS estimatedRows,
+       t.DATA_LENGTH AS dataBytes, t.INDEX_LENGTH AS indexBytes,
+       s.INDEX_NAME AS indexName, s.NON_UNIQUE AS nonUnique, s.INDEX_TYPE AS indexType,
+       s.SEQ_IN_INDEX AS position, s.COLUMN_NAME AS columnName,
+       s.SUB_PART AS prefixLength, s.CARDINALITY AS estimatedCardinality
+FROM information_schema.tables t
+LEFT JOIN information_schema.statistics s
+  ON t.TABLE_SCHEMA = s.TABLE_SCHEMA AND t.TABLE_NAME = s.TABLE_NAME
+ AND BINARY t.TABLE_SCHEMA = BINARY s.TABLE_SCHEMA
+ AND BINARY t.TABLE_NAME = BINARY s.TABLE_NAME
+WHERE t.TABLE_TYPE = 'BASE TABLE' AND ($conditions)
+ORDER BY t.TABLE_SCHEMA, t.TABLE_NAME, s.INDEX_NAME, s.SEQ_IN_INDEX
+''', tables.expand((table) => [table.database, table.name]).toList());
+    final groups = groupBy(
+      rows.map((row) => row.toMap()),
+      (row) => (row['catalogSchema'], row['tableName']),
+    );
+    return tables.map((table) {
+      final entries = groups[(table.database, table.name)] ?? const [];
+      final stats = entries.firstOrNull;
+      final indexes = groupBy(
+        entries.where((row) => row['indexName'] is String),
+        (row) => row['indexName'],
+      );
+      final visibleIndexes = indexes.values
+          .where(
+            (parts) => parts.every((part) {
+              final column = part['columnName'];
+              return column == null ||
+                  (column is String && table.findColumn(column) != null);
+            }),
+          )
+          .toList();
+      return {
+        'table': table.qualifiedName,
+        'aliases': aliases.entries
+            .where((entry) => entry.value == table)
+            .map((entry) => entry.key)
+            .toList(),
+        if (stats != null) ...{
+          'engine': stats['engine'],
+          'estimatedRows': stats['estimatedRows'],
+          'dataBytes': stats['dataBytes'],
+          'indexBytes': stats['indexBytes'],
+          if (visibleIndexes.length < indexes.length) 'indexesFiltered': true,
+          'indexes': visibleIndexes
+              .map(
+                (parts) => {
+                  'name': parts.first['indexName'],
+                  'unique': parts.first['nonUnique'] == 0,
+                  'type': parts.first['indexType'],
+                  'columns': parts
+                      .map(
+                        (part) => {
+                          'column': part['columnName'],
+                          'position': part['position'],
+                          'prefixLength': part['prefixLength'],
+                          'estimatedCardinality': part['estimatedCardinality'],
+                        },
+                      )
+                      .toList(),
+                },
+              )
+              .toList(),
+        },
+      };
+    }).toList();
   }
 
   @override
@@ -259,6 +427,7 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
       return TableInfo(
         name: first.table,
         database: database,
+        isBaseTable: first.isBaseTable,
         columns: entry.value
             .map(
               (column) => _withSemantics(
@@ -366,6 +535,7 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
     return _CatalogColumn(
       schema: schema,
       table: tableName,
+      isBaseTable: _rowString(row, 'TABLE_TYPE') == 'BASE TABLE',
       column: ColumnInfo(
         name: columnName,
         label: _rowString(row, 'COLUMN_COMMENT'),
@@ -407,11 +577,14 @@ final class _CatalogColumn {
 
   final String table;
 
+  final bool isBaseTable;
+
   final ColumnInfo column;
 
   const _CatalogColumn({
     required this.schema,
     required this.table,
+    required this.isBaseTable,
     required this.column,
   });
 }

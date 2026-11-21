@@ -77,6 +77,9 @@ final class TableInfo {
   /// Human-readable meaning shown to the model.
   final String label;
 
+  /// SQL may reference base tables directly. Views may execute routines.
+  final bool isBaseTable;
+
   /// Column metadata; column names must be provided for filter validation.
   final List<ColumnInfo> columns;
 
@@ -84,6 +87,7 @@ final class TableInfo {
     required this.name,
     this.database = '',
     this.label = '',
+    this.isBaseTable = true,
     this.columns = const [],
   });
 
