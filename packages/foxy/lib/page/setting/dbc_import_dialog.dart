@@ -22,10 +22,10 @@ class _DbcImportDialogState extends State<DbcImportDialog>
   /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
 
-  DbcImportWorkflowViewModel get _vm => widget.vm;
-
   @override
   ReadonlySignal<String?> get dialogError => _vm.errorMessage;
+
+  DbcImportWorkflowViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {

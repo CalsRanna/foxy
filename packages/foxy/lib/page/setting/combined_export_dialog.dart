@@ -36,10 +36,10 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
   final _fileName = signal('');
   final _loaded = signal(false);
   final _query = signal('');
-  CombinedExportWorkflowViewModel get _vm => widget.vm;
-
   @override
   ReadonlySignal<String?> get dialogError => _vm.errorMessage;
+
+  CombinedExportWorkflowViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {

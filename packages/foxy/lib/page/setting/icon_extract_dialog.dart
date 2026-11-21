@@ -22,10 +22,10 @@ class _IconExtractDialogState extends State<IconExtractDialog>
   /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
 
-  IconExtractWorkflowViewModel get _vm => widget.vm;
-
   @override
   ReadonlySignal<String?> get dialogError => _vm.errorMessage;
+
+  IconExtractWorkflowViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {

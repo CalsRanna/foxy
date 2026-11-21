@@ -397,34 +397,6 @@ class AgentViewModel with FieldControllerMixin {
     }
   }
 
-  void _recordRunFailure(_AgentRun run, String message) {
-    _persistReasoningSegment(run);
-    _persistAssistantSegment(run);
-    _persistNewItems(run);
-
-    final text = '本轮未完成：$message';
-    final item = <String, Object?>{
-      'role': 'assistant',
-      'content': 'Foxy 运行诊断：$text',
-    };
-    final session = run.session;
-    session.messages.add(
-      AgentChatMessage(role: AgentChatRole.error, text: text),
-    );
-    session.session.addItems([item]);
-    // Save the transcript and context together so a restored session replays
-    // the same diagnostic in the same position.
-    run.persistedItemCount++;
-    unawaited(
-      _sessionStore.appendMessage(
-        session.id,
-        AgentChatRole.error,
-        text,
-        inputItem: item,
-      ),
-    );
-  }
-
   bool _isCurrentRun(_AgentRun run) =>
       identical(_runs.value[run.session.id], run);
 
@@ -504,6 +476,34 @@ class AgentViewModel with FieldControllerMixin {
   void _publish(AgentChatSession session) {
     if (session.id != activeSessionId.value) return;
     messages.value = List.of(session.messages);
+  }
+
+  void _recordRunFailure(_AgentRun run, String message) {
+    _persistReasoningSegment(run);
+    _persistAssistantSegment(run);
+    _persistNewItems(run);
+
+    final text = '本轮未完成：$message';
+    final item = <String, Object?>{
+      'role': 'assistant',
+      'content': 'Foxy 运行诊断：$text',
+    };
+    final session = run.session;
+    session.messages.add(
+      AgentChatMessage(role: AgentChatRole.error, text: text),
+    );
+    session.session.addItems([item]);
+    // Save the transcript and context together so a restored session replays
+    // the same diagnostic in the same position.
+    run.persistedItemCount++;
+    unawaited(
+      _sessionStore.appendMessage(
+        session.id,
+        AgentChatRole.error,
+        text,
+        inputItem: item,
+      ),
+    );
   }
 
   void _touch(AgentChatSession session) {

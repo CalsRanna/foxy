@@ -7,6 +7,38 @@ import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
+/// Reports failures from operations that handle exceptions in the view model.
+/// Each signal change is handled once, independently of widget rebuilds.
+mixin DialogErrorState<T extends StatefulWidget> on State<T> {
+  late final void Function() _unsubscribeError;
+
+  ReadonlySignal<String?> get dialogError;
+
+  bool get showInitialDialogError => false;
+
+  @override
+  void dispose() {
+    _unsubscribeError();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    var first = true;
+    _unsubscribeError = dialogError.subscribe((message) {
+      final show = !first || showInitialDialogError;
+      first = false;
+      if (!show || message == null) return;
+      final binding = WidgetsBinding.instance;
+      binding.addPostFrameCallback((_) {
+        if (mounted) DialogUtil.instance.error(message);
+      });
+      binding.ensureVisualUpdate();
+    });
+  }
+}
+
 /// Foxy dialog entry point: uniform sizing, project-wide behaviors, and
 /// singleton dialog service.
 ///
@@ -119,6 +151,37 @@ class DialogUtil {
     ShadSonner.of(context).show(ShadToast(description: Text(message)));
   }
 
+  Future<void> _showErrors() async {
+    while (_errors.isNotEmpty) {
+      final error = _errors.first;
+      final context = FoxyRouter.router.navigatorKey.currentContext;
+      try {
+        if (context == null || !context.mounted) continue;
+        await show<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => PopScope(
+            canPop: false,
+            child: ShadDialog.alert(
+              title: const Text('错误'),
+              description: Text(error),
+              closeIcon: const SizedBox.shrink(),
+              constraints: constraints(context),
+              actions: [
+                ShadButton(
+                  child: const Text('确定'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+        );
+      } finally {
+        _errors.removeFirst();
+      }
+    }
+  }
+
   /// Uniform dialog constraints: maxWidth fixed to [width], maxHeight by
   /// screen ratio.
   ///
@@ -169,68 +232,5 @@ class DialogUtil {
       variant: variant,
       opaque: opaque,
     );
-  }
-
-  Future<void> _showErrors() async {
-    while (_errors.isNotEmpty) {
-      final error = _errors.first;
-      final context = FoxyRouter.router.navigatorKey.currentContext;
-      try {
-        if (context == null || !context.mounted) continue;
-        await show<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => PopScope(
-            canPop: false,
-            child: ShadDialog.alert(
-              title: const Text('错误'),
-              description: Text(error),
-              closeIcon: const SizedBox.shrink(),
-              constraints: constraints(context),
-              actions: [
-                ShadButton(
-                  child: const Text('确定'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-          ),
-        );
-      } finally {
-        _errors.removeFirst();
-      }
-    }
-  }
-}
-
-/// Reports failures from operations that handle exceptions in the view model.
-/// Each signal change is handled once, independently of widget rebuilds.
-mixin DialogErrorState<T extends StatefulWidget> on State<T> {
-  ReadonlySignal<String?> get dialogError;
-
-  bool get showInitialDialogError => false;
-
-  late final void Function() _unsubscribeError;
-
-  @override
-  void initState() {
-    super.initState();
-    var first = true;
-    _unsubscribeError = dialogError.subscribe((message) {
-      final show = !first || showInitialDialogError;
-      first = false;
-      if (!show || message == null) return;
-      final binding = WidgetsBinding.instance;
-      binding.addPostFrameCallback((_) {
-        if (mounted) DialogUtil.instance.error(message);
-      });
-      binding.ensureVisualUpdate();
-    });
-  }
-
-  @override
-  void dispose() {
-    _unsubscribeError();
-    super.dispose();
   }
 }

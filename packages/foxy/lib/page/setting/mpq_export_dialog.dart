@@ -33,10 +33,10 @@ class _MpqExportDialogState extends State<MpqExportDialog>
   final _fileName = signal('');
   final _loaded = signal(false);
   final _query = signal('');
-  MpqExportWorkflowViewModel get _vm => widget.vm;
-
   @override
   ReadonlySignal<String?> get dialogError => _vm.errorMessage;
+
+  MpqExportWorkflowViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {

@@ -56,13 +56,13 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
   /// subscription.
   final _currentVersion = signal<String?>(null);
 
-  UpdateViewModel get _vm => widget.vm;
-
   @override
   ReadonlySignal<String?> get dialogError => _vm.errorMessage;
 
   @override
   bool get showInitialDialogError => true;
+
+  UpdateViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {

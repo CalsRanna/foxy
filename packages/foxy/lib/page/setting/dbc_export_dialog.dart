@@ -31,10 +31,10 @@ class _DbcExportDialogState extends State<DbcExportDialog>
   final _outputDir = signal<String?>(null);
   final _loaded = signal(false);
   final _query = signal('');
-  DbcExportWorkflowViewModel get _vm => widget.vm;
-
   @override
   ReadonlySignal<String?> get dialogError => _vm.errorMessage;
+
+  DbcExportWorkflowViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {

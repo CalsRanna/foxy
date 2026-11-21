@@ -463,6 +463,10 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     }
   }
 
+  void _reportError(String? message) {
+    if (mounted && message != null) DialogUtil.instance.error(message);
+  }
+
   /// Re-runs icon extraction, re-reading the configured client directory
   /// first: the path was captured when extraction originally started, so a
   /// directory corrected through 上一步 would otherwise be ignored and the
@@ -545,10 +549,6 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     if (_importVm.status.value == WorkflowStatus.succeeded) {
       await _startIconExtract();
     }
-  }
-
-  void _reportError(String? message) {
-    if (mounted && message != null) DialogUtil.instance.error(message);
   }
 
   static bool _isActive(WorkflowStatus status) =>

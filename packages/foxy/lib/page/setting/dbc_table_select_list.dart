@@ -20,15 +20,6 @@ class DbcTableSelectList extends StatelessWidget {
     this.emptyText = '没有可导出的表',
   });
 
-  static void reportCountErrors(List<DbcExportItem> items) {
-    final failed = items.where((item) => item.countFailed).toList();
-    if (failed.isEmpty) return;
-    final details = failed
-        .map((item) => '${item.dbcFileName}：${item.countError}')
-        .join('\n');
-    DialogUtil.instance.error('${failed.length} 张表统计失败，已禁用勾选。\n$details');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
@@ -94,5 +85,14 @@ class DbcTableSelectList extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  static void reportCountErrors(List<DbcExportItem> items) {
+    final failed = items.where((item) => item.countFailed).toList();
+    if (failed.isEmpty) return;
+    final details = failed
+        .map((item) => '${item.dbcFileName}：${item.countError}')
+        .join('\n');
+    DialogUtil.instance.error('${failed.length} 张表统计失败，已禁用勾选。\n$details');
   }
 }
