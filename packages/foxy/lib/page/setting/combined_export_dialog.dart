@@ -104,14 +104,10 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 12,
                 children: [
-                  SettingDialogShell.banner(
-                    context,
-                    text:
-                        '已导出 ${_vm.result.value?.completed ?? 0} 个 DBC 文件'
-                        '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}'
-                        '，并打包 MPQ 补丁。',
-                    color: theme.colorScheme.primary,
-                    icon: LucideIcons.circleCheck,
+                  SelectableText(
+                    '已导出 ${_vm.result.value?.completed ?? 0} 个 DBC 文件'
+                    '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}'
+                    '，并打包 MPQ 补丁。',
                   ),
                   if (dbcDirectory != null)
                     SettingDialogShell.mutedHint(

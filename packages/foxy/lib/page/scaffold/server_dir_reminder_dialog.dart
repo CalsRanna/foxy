@@ -17,7 +17,6 @@ class ServerDirReminderDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
     return SettingDialogShell(
       title: SettingDialogShell.titleRow(LucideIcons.hardDrive, '未配置服务端目录'),
       actions: [
@@ -44,12 +43,7 @@ class ServerDirReminderDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12,
         children: [
-          SettingDialogShell.banner(
-            context,
-            text: '未检测到服务端 DBC 目录配置，DBC 导入/导出功能不可用。',
-            color: theme.colorScheme.primary,
-            icon: LucideIcons.hardDrive,
-          ),
+          const SelectableText('未检测到服务端 DBC 目录配置，DBC 导入/导出功能不可用。'),
           SettingDialogShell.mutedHint(
             context,
             '请前往「设置 → 目录设置」配置服务端目录，'

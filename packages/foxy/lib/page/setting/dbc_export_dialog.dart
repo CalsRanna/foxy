@@ -95,20 +95,26 @@ class _DbcExportDialogState extends State<DbcExportDialog>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 12,
                 children: [
-                  SettingDialogShell.banner(
-                    context,
-                    text:
-                        '成功导出 ${result?.completed ?? 0} 个文件'
-                        '${(result?.skipped ?? 0) > 0 ? '，跳过 ${result!.skipped} 个空表' : ''}。',
-                    color: theme.colorScheme.primary,
-                    icon: LucideIcons.circleCheck,
+                  SelectableText(
+                    '成功导出 ${result?.completed ?? 0} 个文件'
+                    '${(result?.skipped ?? 0) > 0 ? '，跳过 ${result!.skipped} 个空表' : ''}。',
                   ),
                   if (warnings.isNotEmpty)
-                    SettingDialogShell.banner(
-                      context,
-                      text: warnings.map((w) => w.message).join('\n\n'),
-                      color: theme.colorScheme.destructive,
-                      icon: LucideIcons.alertTriangle,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8,
+                      children: [
+                        Icon(
+                          LucideIcons.alertTriangle,
+                          size: 16,
+                          color: theme.colorScheme.destructive,
+                        ),
+                        Expanded(
+                          child: SelectableText(
+                            warnings.map((w) => w.message).join('\n\n'),
+                          ),
+                        ),
+                      ],
                     ),
                   if (_outputDir.value != null)
                     SettingDialogShell.mutedHint(

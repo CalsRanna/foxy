@@ -33,37 +33,6 @@ class SettingDialogShell extends StatelessWidget {
     );
   }
 
-  /// Result banner (success/error/warning, with color and icon).
-  static Widget banner(
-    BuildContext context, {
-    required String text,
-    required Color color,
-    IconData? icon,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.22)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 10,
-        children: [
-          if (icon != null) Icon(icon, size: 16, color: color),
-          Expanded(
-            child: SelectableText(
-              text,
-              style: TextStyle(fontSize: 13, color: color, height: 1.4),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Muted hint text.
   static Widget mutedHint(BuildContext context, String text) {
     final theme = ShadTheme.of(context);

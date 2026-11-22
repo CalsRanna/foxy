@@ -236,7 +236,6 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   }
 
   Widget _buildIconCard(WorkflowStatus status, bool iconSucceeded) {
-    final theme = ShadTheme.of(context);
     final clientDir = _setupVm.clientDir.value;
     final running = _isActive(status);
     final failed = status == WorkflowStatus.failed;
@@ -257,12 +256,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
             child: Text(cancelling ? '正在取消…' : '取消提取'),
           ),
         ),
-        (_, true, _) => SettingDialogShell.banner(
-          context,
-          text: '提取完成：图标已缓存到应用数据目录，直接显示在列表页。',
-          color: theme.colorScheme.primary,
-          icon: LucideIcons.circleCheck,
-        ),
+        (_, true, _) => const SelectableText('提取完成：图标已缓存到应用数据目录，直接显示在列表页。'),
         (_, _, true) => SettingDialogShell.mutedHint(
           context,
           '可用「上一步」返回修改客户端目录后重试，也可以跳过图标提取，稍后在设置页补提取。',
@@ -289,7 +283,6 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   }
 
   Widget _buildImportCard(WorkflowStatus status) {
-    final theme = ShadTheme.of(context);
     final dbcPath = _setupVm.dbcPath.value;
     final running = _isActive(status);
     final failed = status == WorkflowStatus.failed;
@@ -310,13 +303,9 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
             child: Text(cancelling ? '正在取消…' : '取消导入'),
           ),
         ),
-        (_, true, _) => SettingDialogShell.banner(
-          context,
-          text:
-              '导入完成：写入 ${_importVm.result.value?.completed ?? 0} 个文件'
-              '${(_importVm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_importVm.result.value!.skipped} 个' : ''}。',
-          color: theme.colorScheme.primary,
-          icon: LucideIcons.circleCheck,
+        (_, true, _) => SelectableText(
+          '导入完成：写入 ${_importVm.result.value?.completed ?? 0} 个文件'
+          '${(_importVm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_importVm.result.value!.skipped} 个' : ''}。',
         ),
         (_, _, true) => SettingDialogShell.mutedHint(
           context,
