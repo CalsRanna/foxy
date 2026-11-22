@@ -25,8 +25,7 @@ class AgentChatUseCase {
     http.Client? httpClient,
   }) : _agent = FoxyAgent(
          provider: provider,
-         instructions:
-             '''$sqlReadOnlyAssistantInstructions
+         instructions: '''$sqlReadOnlyAssistantInstructions
 
 ## 其他可用数据
 - characters 库：角色、背包、公会等游戏进度数据。

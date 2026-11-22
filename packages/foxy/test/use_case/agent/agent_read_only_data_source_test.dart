@@ -368,7 +368,6 @@ void main() {
 
     expect(catalog.tables, isEmpty);
   });
-
 }
 
 Map<String, Object?> _row(

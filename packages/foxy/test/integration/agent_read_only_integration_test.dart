@@ -191,23 +191,20 @@ ORDER BY a.id, b.id''';
     );
   });
 
-  test(
-    'real MySQL expands declared references without multiplying rows',
-    () async {
-      final result = await QuerySqlTool(catalog, source).call({
-        'sql':
-            'SELECT parent.id, child.id AS linked_id, child.name AS linked_name '
-            'FROM agent_stat_fixture parent '
-            'LEFT JOIN agent_stat_fixture child ON parent.linked_id = child.id '
-            'WHERE parent.id IN (1, 3) ORDER BY parent.id',
-      }) as Map<String, Object?>;
-      final rows = result['rows']! as List<Map<String, Object?>>;
-      expect(rows, [
-        {'id': 1, 'linked_id': 2, 'linked_name': 'Item 2'},
-        {'id': 3, 'linked_id': null, 'linked_name': null},
-      ]);
-    },
-  );
+  test('real MySQL expands declared references without multiplying rows', () async {
+    final result = await QuerySqlTool(catalog, source).call({
+      'sql':
+          'SELECT parent.id, child.id AS linked_id, child.name AS linked_name '
+          'FROM agent_stat_fixture parent '
+          'LEFT JOIN agent_stat_fixture child ON parent.linked_id = child.id '
+          'WHERE parent.id IN (1, 3) ORDER BY parent.id',
+    }) as Map<String, Object?>;
+    final rows = result['rows']! as List<Map<String, Object?>>;
+    expect(rows, [
+      {'id': 1, 'linked_id': 2, 'linked_name': 'Item 2'},
+      {'id': 3, 'linked_id': null, 'linked_name': null},
+    ]);
+  });
 }
 
 class _Config extends ConfigUtil {

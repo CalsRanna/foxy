@@ -181,10 +181,7 @@ void main() {
             type: 'int',
             semantics: ColumnSemantics.reference(
               label: '多项',
-              reference: ColumnReference(
-                table: 'foxy.items',
-                column: 'name',
-              ),
+              reference: ColumnReference(table: 'foxy.items', column: 'name'),
             ),
           ),
         ],
