@@ -102,8 +102,16 @@ void main() {
     await pumpWizard(tester);
 
     expect(find.text('首次设置引导'), findsOneWidget);
+    expect(
+      tester.widget<ShadDialog>(find.byType(ShadDialog)).title,
+      isA<Text>(),
+    );
     expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
     expect(find.text('第 2 步：设置服务端目录'), findsNothing);
+    expect(
+      tester.widget<ShadButton>(find.widgetWithText(ShadButton, '浏览')).child,
+      isA<Text>(),
+    );
 
     // No close button (closeIcon hidden); PopScope blocks exit.
     expect(find.byIcon(LucideIcons.x), findsNothing);
@@ -180,12 +188,12 @@ void main() {
     });
 
     expect(find.text('第 3 步：导入 DBC 数据并提取游戏图标'), findsOneWidget);
-    expect(find.text('开始导入'), findsOneWidget);
+    expect(find.text('导入'), findsOneWidget);
 
     // Start import → the fake sync tool succeeds immediately → seamlessly
     // continues into the real icon extraction (2 icons).
     await tester.runAsync(() async {
-      await tester.tap(find.text('开始导入'));
+      await tester.tap(find.text('导入'));
       await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
     });
     await tester.pump();

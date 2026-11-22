@@ -27,7 +27,7 @@ enum RouterMenu {
   questSort(label: '任务排序列表', icon: LucideIcons.arrowUpDown),
   questInfo(label: '任务信息列表', icon: LucideIcons.info),
   itemExtendedCost(label: '扩展价格列表', icon: LucideIcons.coins),
-  scalingStatDistribution(label: '属性缩放分布列表', icon: LucideIcons.arrowUpDown),
+  scalingStatDistribution(label: '属性缩放分布列表', icon: LucideIcons.trendingUp),
   spellItemEnchantment(label: '法术附魔列表', icon: LucideIcons.wand),
   gemProperty(label: '宝石属性列表', icon: LucideIcons.gem),
   glyphProperty(label: '雕文属性列表', icon: LucideIcons.triangle),

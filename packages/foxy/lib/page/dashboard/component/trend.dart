@@ -114,8 +114,8 @@ class _TrendItem extends StatelessWidget {
   IconData _actionIcon(ActivityActionType type) {
     return switch (type) {
       ActivityActionType.create => LucideIcons.plus,
-      ActivityActionType.update => LucideIcons.pencil,
-      ActivityActionType.delete => LucideIcons.trash2,
+      ActivityActionType.update => LucideIcons.squarePen,
+      ActivityActionType.delete => LucideIcons.trash,
       ActivityActionType.copy => LucideIcons.copy,
     };
   }

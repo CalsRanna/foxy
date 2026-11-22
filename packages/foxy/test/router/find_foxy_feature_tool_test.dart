@@ -128,7 +128,7 @@ void main() {
           {
             'name': '导入 DBC 文件',
             'path': ['设置', '数据工具', '导入 DBC'],
-            'steps': allOf(contains('开始导入'), contains('覆盖 Foxy 数据库中的对应表')),
+            'steps': allOf(contains('导入'), contains('覆盖 Foxy 数据库中的对应表')),
           },
         ],
       });

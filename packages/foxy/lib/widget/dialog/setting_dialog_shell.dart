@@ -8,7 +8,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 class SettingDialogShell extends StatelessWidget {
   // ─── Common shell ──────────────────────────────────────────────────────────
 
-  final Widget title;
+  final String title;
 
   final Widget child;
 
@@ -33,7 +33,7 @@ class SettingDialogShell extends StatelessWidget {
           ? DialogUtil.compactConstraints(context)
           : DialogUtil.constraints(context),
       actionsMainAxisSize: compact ? MainAxisSize.max : null,
-      title: title,
+      title: Text(title),
       actions: actions,
       child: child,
     );
@@ -62,10 +62,6 @@ class SettingDialogShell extends StatelessWidget {
             controller: controller.controller,
             placeholder: Text(placeholder),
             enabled: enabled,
-            leading: const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Icon(LucideIcons.folderSearch, size: 16),
-            ),
             onChanged: onChanged,
             onSubmitted: onSubmitted,
           ),
@@ -73,11 +69,7 @@ class SettingDialogShell extends StatelessWidget {
         ShadButton.outline(
           size: ShadButtonSize.sm,
           onPressed: enabled ? onBrowse : null,
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 6,
-            children: [Icon(LucideIcons.folderOpen, size: 15), Text('浏览')],
-          ),
+          child: const Text('浏览'),
         ),
       ],
     );
@@ -153,17 +145,6 @@ class SettingDialogShell extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  /// Dialog title row (icon + text).
-  static Widget titleRow(IconData icon, String text, {Color? iconColor}) {
-    return Row(
-      spacing: 10,
-      children: [
-        Icon(icon, size: 20, color: iconColor),
-        Text(text),
-      ],
     );
   }
 }

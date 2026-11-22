@@ -32,6 +32,11 @@ void main() {
 
     expect(tester.takeException(), isNull);
 
+    final create = tester.widget<ShadButton>(
+      find.widgetWithText(ShadButton, '新增'),
+    );
+    expect(create.leading, isNull);
+
     final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
     expect(iconText.iconPath, 'Interface\\Icons\\Achievement_Boss_Ragnaros');
     expect(iconText.name, '干掉拉格纳罗斯');

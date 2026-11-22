@@ -375,35 +375,22 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildSectionButton(SettingSection section) {
     final colors = ShadTheme.of(context).colorScheme;
     final selected = section == _section;
-    final icon = switch (section) {
-      SettingSection.environment => LucideIcons.folders,
-      SettingSection.data => LucideIcons.database,
-      SettingSection.preferences => LucideIcons.slidersHorizontal,
-      SettingSection.about => LucideIcons.info,
-    };
     return Semantics(
       selected: selected,
       child: ShadButton.ghost(
         width: double.infinity,
         expands: true,
+        mainAxisAlignment: MainAxisAlignment.start,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         backgroundColor: selected ? colors.muted : null,
         foregroundColor: selected ? colors.foreground : colors.mutedForeground,
         onPressed: () => setState(() => _section = section),
-        child: Row(
-          spacing: 10,
-          children: [
-            Icon(icon, size: 17),
-            Expanded(
-              child: Text(
-                section.label,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
+        child: Text(
+          section.label,
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+          ),
         ),
       ),
     );

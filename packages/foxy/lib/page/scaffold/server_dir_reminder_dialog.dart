@@ -18,7 +18,7 @@ class ServerDirReminderDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingDialogShell(
-      title: SettingDialogShell.titleRow(LucideIcons.hardDrive, '未配置服务端目录'),
+      title: '未配置服务端目录',
       actions: [
         ShadButton.outline(
           onPressed: () => Navigator.of(context).maybePop(),
@@ -31,11 +31,7 @@ class ServerDirReminderDialog extends StatelessWidget {
               RouterMenu.setting,
             );
           },
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 6,
-            children: [Icon(LucideIcons.settings, size: 15), Text('前往设置')],
-          ),
+          child: const Text('前往设置'),
         ),
       ],
       child: Column(

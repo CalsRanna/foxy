@@ -94,7 +94,6 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage>
 
   Widget _buildTable() {
     var createButton = ShadButton(
-      leading: Icon(LucideIcons.plus, size: 16),
       onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );

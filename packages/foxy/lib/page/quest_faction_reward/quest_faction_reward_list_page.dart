@@ -90,7 +90,6 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
     // unlike a per-page check that misses rows on other pages.
     final canCreate = total < 2;
     var createButton = ShadButton(
-      leading: Icon(LucideIcons.plus, size: 16),
       onPressed: canCreate ? () => _navigateToDetail() : null,
       child: Text('新增'),
     );

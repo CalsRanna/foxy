@@ -169,6 +169,13 @@ void main() {
     final shortcut = find.text('Ctrl+N');
     final composer = find.byType(TextField);
     expect(
+      find.descendant(
+        of: find.widgetWithText(ShadButton, '新建会话'),
+        matching: find.byIcon(LucideIcons.plus),
+      ),
+      findsOneWidget,
+    );
+    expect(
       tester.getTopLeft(newSession).dy,
       lessThan(tester.getTopLeft(find.text('已有会话')).dy),
     );
@@ -220,7 +227,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final title = find.text('已有会话');
-    final trash = find.byIcon(LucideIcons.trash2);
+    final trash = find.byIcon(LucideIcons.trash);
     expect(trash, findsNothing);
     final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
     await mouse.addPointer(location: Offset.zero);

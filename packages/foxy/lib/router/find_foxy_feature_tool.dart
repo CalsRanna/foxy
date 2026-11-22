@@ -201,10 +201,10 @@ final class FindFoxyFeatureTool extends AgentTool {
   static _FeatureEntry _settingEntry(SettingEntry entry) {
     final steps = switch (entry) {
       SettingEntry.combinedExport =>
-        '设置「DBC 输出目录」「MPQ 输出目录」和「MPQ 文件名」，选中要导出的表，再点击「开始导出」。',
-      SettingEntry.dbcImport => '在弹窗确认服务端 DBC 目录，点击「开始导入」。导入会覆盖 Foxy 数据库中的对应表。',
-      SettingEntry.dbcExport => '在弹窗设置「输出目录」，选中要导出的表，再点击「开始导出」。',
-      SettingEntry.mpqExport => '在弹窗设置「输出目录」和「MPQ 文件名」，选中要打包的表，再点击「开始导出」。',
+        '设置「DBC 输出目录」「MPQ 输出目录」和「MPQ 文件名」，选中要导出的表，再点击「导出」。',
+      SettingEntry.dbcImport => '在弹窗确认服务端 DBC 目录，点击「导入」。导入会覆盖 Foxy 数据库中的对应表。',
+      SettingEntry.dbcExport => '在弹窗设置「输出目录」，选中要导出的表，再点击「导出」。',
+      SettingEntry.mpqExport => '在弹窗设置「输出目录」和「MPQ 文件名」，选中要打包的表，再点击「导出」。',
       SettingEntry.iconExtract =>
         '点击「${entry.actionLabel}」，从已配置的客户端 MPQ 归档提取游戏图标。',
       SettingEntry.localeTables =>

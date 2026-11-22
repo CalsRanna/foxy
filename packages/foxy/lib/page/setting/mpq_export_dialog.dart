@@ -57,10 +57,7 @@ class _MpqExportDialogState extends State<MpqExportDialog>
 
           if (!_loaded.value && !exporting) {
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.archive,
-                '导出 MPQ 补丁',
-              ),
+              title: '导出 MPQ 补丁',
               child: const SizedBox(
                 height: 140,
                 child: Center(
@@ -84,11 +81,7 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                 ? p.join(directory, name)
                 : null;
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.circleCheck,
-                '导出完成',
-                iconColor: theme.colorScheme.primary,
-              ),
+              title: '导出完成',
               actions: [
                 ShadButton(
                   onPressed: () => Navigator.of(context).maybePop(),
@@ -119,10 +112,7 @@ class _MpqExportDialogState extends State<MpqExportDialog>
             return PopScope(
               canPop: false,
               child: SettingDialogShell(
-                title: SettingDialogShell.titleRow(
-                  LucideIcons.archive,
-                  '正在导出 MPQ 补丁',
-                ),
+                title: '正在导出 MPQ 补丁',
                 child: SettingDialogShell.progressPanel(
                   context,
                   ratio: _vm.progress.value,
@@ -160,10 +150,7 @@ class _MpqExportDialogState extends State<MpqExportDialog>
           final fileNameReady = _fileName.value.trim().isNotEmpty;
 
           return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.archive,
-              '导出 MPQ 补丁',
-            ),
+            title: '导出 MPQ 补丁',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -182,11 +169,7 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                           // The workflow exposes the failure through errorMessage.
                         }
                       },
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.play, size: 15), Text('开始导出')],
-                ),
+                child: const Text('导出'),
               ),
             ],
             child: Column(
@@ -252,14 +235,7 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                                 // The workflow reports through errorMessage.
                               }
                             },
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 6,
-                        children: [
-                          Icon(LucideIcons.rotateCw, size: 14),
-                          Text('重试'),
-                        ],
-                      ),
+                      child: const Text('重试'),
                     ),
                   ),
                 Row(

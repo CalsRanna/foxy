@@ -387,7 +387,7 @@ class _AgentPageState extends State<AgentPage> {
         child: Row(
           spacing: 8,
           children: [
-            const Icon(LucideIcons.squarePen, size: 15),
+            const Icon(LucideIcons.plus, size: 15),
             const Expanded(child: Text('新建会话', textAlign: TextAlign.left)),
             if (_newSessionHovered)
               Text(
@@ -492,7 +492,7 @@ class _AgentPageState extends State<AgentPage> {
                       width: 20,
                       height: 20,
                       child: Icon(
-                        LucideIcons.trash2,
+                        LucideIcons.trash,
                         size: 14,
                         color: foreground.withValues(alpha: 0.7),
                       ),

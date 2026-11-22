@@ -60,10 +60,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
 
           if (!_loaded.value && !exporting) {
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.zap,
-                '一键导出 DBC + MPQ',
-              ),
+              title: '一键导出 DBC + MPQ',
               child: const SizedBox(
                 height: 140,
                 child: Center(
@@ -88,11 +85,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
                 ? p.join(mpqDirectory, name)
                 : null;
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.circleCheck,
-                '导出完成',
-                iconColor: theme.colorScheme.primary,
-              ),
+              title: '导出完成',
               actions: [
                 ShadButton(
                   onPressed: () => Navigator.of(context).maybePop(),
@@ -128,10 +121,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
             return PopScope(
               canPop: false,
               child: SettingDialogShell(
-                title: SettingDialogShell.titleRow(
-                  LucideIcons.zap,
-                  '正在一键导出 DBC + MPQ',
-                ),
+                title: '正在一键导出 DBC + MPQ',
                 child: SettingDialogShell.progressPanel(
                   context,
                   ratio: _vm.progress.value,
@@ -170,10 +160,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
           final fileNameReady = _fileName.value.trim().isNotEmpty;
 
           return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.zap,
-              '一键导出 DBC + MPQ',
-            ),
+            title: '一键导出 DBC + MPQ',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -196,11 +183,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
                           // The workflow exposes the failure through errorMessage.
                         }
                       },
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.play, size: 15), Text('开始导出')],
-                ),
+                child: const Text('导出'),
               ),
             ],
             child: SingleChildScrollView(
@@ -284,14 +267,7 @@ class _CombinedExportDialogState extends State<CombinedExportDialog>
                                   // The workflow reports through errorMessage.
                                 }
                               },
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 6,
-                          children: [
-                            Icon(LucideIcons.rotateCw, size: 14),
-                            Text('重试'),
-                          ],
-                        ),
+                        child: const Text('重试'),
                       ),
                     ),
                   Row(

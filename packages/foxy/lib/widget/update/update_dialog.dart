@@ -80,7 +80,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
         if (checking) {
           return SettingDialogShell(
             compact: true,
-            title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
+            title: '检查更新',
             child: SizedBox(
               height: 120,
               child: Center(
@@ -106,7 +106,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
           final progress = vm.downloadProgress.value ?? 0;
           return SettingDialogShell(
             compact: true,
-            title: SettingDialogShell.titleRow(LucideIcons.download, '正在下载更新'),
+            title: '正在下载更新',
             child: SettingDialogShell.progressPanel(
               context,
               ratio: progress,
@@ -125,11 +125,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
           final restartFailed = error != null;
           return SettingDialogShell(
             compact: true,
-            title: SettingDialogShell.titleRow(
-              restartFailed ? LucideIcons.refreshCw : LucideIcons.circleCheck,
-              restartFailed ? '软件更新' : '更新已就绪',
-              iconColor: theme.colorScheme.primary,
-            ),
+            title: restartFailed ? '软件更新' : '更新已就绪',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -138,14 +134,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
               if (!restartFailed)
                 ShadButton(
                   onPressed: _confirmRestart,
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 6,
-                    children: [
-                      Icon(LucideIcons.refreshCw, size: 15),
-                      Text('立即重启'),
-                    ],
-                  ),
+                  child: const Text('立即重启'),
                 ),
             ],
             child: restartFailed
@@ -160,27 +149,13 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
         if (update != null) {
           return SettingDialogShell(
             compact: true,
-            title: SettingDialogShell.titleRow(
-              LucideIcons.sparkles,
-              '发现新版本 ${update.version}',
-              iconColor: theme.colorScheme.primary,
-            ),
+            title: '发现新版本 ${update.version}',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
                 child: const Text('稍后再说'),
               ),
-              ShadButton(
-                onPressed: _download,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Icon(LucideIcons.download, size: 15),
-                    Text('下载并更新'),
-                  ],
-                ),
-              ),
+              ShadButton(onPressed: _download, child: const Text('下载并更新')),
             ],
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -201,20 +176,13 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
         if (error != null) {
           return SettingDialogShell(
             compact: true,
-            title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
+            title: '检查更新',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
                 child: const Text('关闭'),
               ),
-              ShadButton(
-                onPressed: _retry,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.rotateCw, size: 15), Text('重试')],
-                ),
-              ),
+              ShadButton(onPressed: _retry, child: const Text('重试')),
             ],
             child: const SizedBox.shrink(),
           );
@@ -223,11 +191,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
         if (upToDate) {
           return SettingDialogShell(
             compact: true,
-            title: SettingDialogShell.titleRow(
-              LucideIcons.circleCheck,
-              '已是最新版本',
-              iconColor: theme.colorScheme.primary,
-            ),
+            title: '已是最新版本',
             actions: [
               ShadButton(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -242,7 +206,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
         // state was reset).
         return SettingDialogShell(
           compact: true,
-          title: SettingDialogShell.titleRow(LucideIcons.refreshCw, '检查更新'),
+          title: '检查更新',
           child: const SizedBox(height: 120),
         );
       },

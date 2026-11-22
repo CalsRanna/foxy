@@ -22,10 +22,7 @@ class DbcReminderDialog extends StatelessWidget {
         ? '\n...等 ${result.missingTables.length} 张表'
         : '';
     return SettingDialogShell(
-      title: SettingDialogShell.titleRow(
-        LucideIcons.fileInput,
-        '发现未导入的 DBC 数据',
-      ),
+      title: '发现未导入的 DBC 数据',
       actions: [
         ShadButton.outline(
           onPressed: () => Navigator.of(context).maybePop(),
@@ -38,11 +35,7 @@ class DbcReminderDialog extends StatelessWidget {
               SettingSection.data,
             );
           },
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 6,
-            children: [Icon(LucideIcons.settings, size: 15), Text('前往导入')],
-          ),
+          child: const Text('前往导入'),
         ),
       ],
       child: Column(

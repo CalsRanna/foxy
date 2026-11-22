@@ -55,10 +55,7 @@ class _DbcExportDialogState extends State<DbcExportDialog>
 
           if (!_loaded.value && !exporting) {
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.fileOutput,
-                '导出 DBC',
-              ),
+              title: '导出 DBC',
               child: const SizedBox(
                 height: 140,
                 child: Center(
@@ -79,11 +76,7 @@ class _DbcExportDialogState extends State<DbcExportDialog>
             final result = _vm.result.value;
             final warnings = result?.warnings ?? const <DbcSyncWarning>[];
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.circleCheck,
-                '导出完成',
-                iconColor: theme.colorScheme.primary,
-              ),
+              title: '导出完成',
               actions: [
                 ShadButton(
                   onPressed: () => Navigator.of(context).maybePop(),
@@ -134,10 +127,7 @@ class _DbcExportDialogState extends State<DbcExportDialog>
             return PopScope(
               canPop: false,
               child: SettingDialogShell(
-                title: SettingDialogShell.titleRow(
-                  LucideIcons.fileOutput,
-                  '正在导出 DBC',
-                ),
+                title: '正在导出 DBC',
                 child: SettingDialogShell.progressPanel(
                   context,
                   ratio: _vm.progress.value,
@@ -173,10 +163,7 @@ class _DbcExportDialogState extends State<DbcExportDialog>
                   .every((item) => item.selected);
 
           return SettingDialogShell(
-            title: SettingDialogShell.titleRow(
-              LucideIcons.fileOutput,
-              '导出 DBC',
-            ),
+            title: '导出 DBC',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -193,11 +180,7 @@ class _DbcExportDialogState extends State<DbcExportDialog>
                           // The workflow exposes the failure through errorMessage.
                         }
                       },
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.play, size: 15), Text('开始导出')],
-                ),
+                child: const Text('导出'),
               ),
             ],
             child: Column(
@@ -240,14 +223,7 @@ class _DbcExportDialogState extends State<DbcExportDialog>
                                 // The workflow reports through errorMessage.
                               }
                             },
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 6,
-                        children: [
-                          Icon(LucideIcons.rotateCw, size: 14),
-                          Text('重试'),
-                        ],
-                      ),
+                      child: const Text('重试'),
                     ),
                   ),
                 Row(

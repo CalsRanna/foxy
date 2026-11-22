@@ -35,10 +35,7 @@ class _DbcImportDialogState extends State<DbcImportDialog>
         builder: (_) {
           if (!_ready.value) {
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.fileInput,
-                '导入 DBC',
-              ),
+              title: '导入 DBC',
               child: const SizedBox(
                 height: 120,
                 child: Center(child: FoxyLoadingIndicator()),
@@ -56,11 +53,7 @@ class _DbcImportDialogState extends State<DbcImportDialog>
 
           if (success) {
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.circleCheck,
-                '导入完成',
-                iconColor: theme.colorScheme.primary,
-              ),
+              title: '导入完成',
               actions: [
                 ShadButton(
                   onPressed: () => Navigator.of(context).maybePop(),
@@ -81,10 +74,7 @@ class _DbcImportDialogState extends State<DbcImportDialog>
             return PopScope(
               canPop: false,
               child: SettingDialogShell(
-                title: SettingDialogShell.titleRow(
-                  LucideIcons.fileInput,
-                  '正在导入 DBC',
-                ),
+                title: '正在导入 DBC',
                 child: SettingDialogShell.progressPanel(
                   context,
                   ratio: _vm.progress.value,
@@ -109,7 +99,7 @@ class _DbcImportDialogState extends State<DbcImportDialog>
           final path = _vm.path.value;
           final configured = path != null && path.trim().isNotEmpty;
           return SettingDialogShell(
-            title: SettingDialogShell.titleRow(LucideIcons.fileInput, '导入 DBC'),
+            title: '导入 DBC',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -117,11 +107,7 @@ class _DbcImportDialogState extends State<DbcImportDialog>
               ),
               ShadButton(
                 onPressed: configured ? _start : null,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
-                ),
+                child: const Text('导入'),
               ),
             ],
             child: Column(

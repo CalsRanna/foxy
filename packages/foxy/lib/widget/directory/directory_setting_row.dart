@@ -15,14 +15,12 @@ import 'package:signals/signals_flutter.dart';
 enum DirectoryConfigTarget {
   clientDir(
     title: '客户端目录',
-    icon: LucideIcons.folderCog,
     description:
         '魔兽客户端根目录（含 Data 目录及其语言归档），用于从 MPQ 归档提取游戏图标。'
         '保存时自动检测 MPQ 归档所在位置。',
   ),
   serverDir(
     title: '服务端目录',
-    icon: LucideIcons.hardDrive,
     description:
         '服务端根目录（如 AzerothCore）。保存时自动在其中搜索 DBC 文件所在目录，'
         '用于导入/导出 DBC 数据到 foxy 库。',
@@ -31,14 +29,9 @@ enum DirectoryConfigTarget {
   static const groupLabel = '目录设置';
 
   final String title;
-  final IconData icon;
   final String description;
 
-  const DirectoryConfigTarget({
-    required this.title,
-    required this.icon,
-    required this.description,
-  });
+  const DirectoryConfigTarget({required this.title, required this.description});
 
   void clearError(SetupStatusViewModel vm) {
     if (this == clientDir) {
@@ -246,10 +239,7 @@ class _DirectoryPathConfigDialogState extends State<DirectoryPathConfigDialog> {
   @override
   Widget build(BuildContext context) {
     return SettingDialogShell(
-      title: SettingDialogShell.titleRow(
-        widget.target.icon,
-        '设置${widget.target.title}',
-      ),
+      title: '设置${widget.target.title}',
       actions: [
         ShadButton.outline(
           onPressed: () => Navigator.of(context).maybePop(),

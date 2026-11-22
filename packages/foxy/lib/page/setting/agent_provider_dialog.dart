@@ -33,7 +33,7 @@ class _AgentProviderDialogState extends State<AgentProviderDialog> {
   @override
   Widget build(BuildContext context) {
     return SettingDialogShell(
-      title: SettingDialogShell.titleRow(LucideIcons.astroid, '模型服务商'),
+      title: '模型服务商',
       actions: [
         ShadButton.outline(
           onPressed: () => Navigator.of(context).pop(),

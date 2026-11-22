@@ -73,10 +73,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
           builder: (_) {
             if (!_checked.value) {
               return SettingDialogShell(
-                title: SettingDialogShell.titleRow(
-                  LucideIcons.wandSparkles,
-                  '首次设置',
-                ),
+                title: '首次设置',
                 child: const SizedBox(
                   height: 140,
                   child: Center(child: FoxyLoadingIndicator()),
@@ -84,10 +81,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
               );
             }
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.wandSparkles,
-                '首次设置引导',
-              ),
+              title: '首次设置引导',
               actions: _buildActions(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -202,14 +196,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
         onPressed: () => _step.value = 1,
         child: const Text('上一步'),
       ),
-      ShadButton(
-        onPressed: _startImport,
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 6,
-          children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
-        ),
-      ),
+      ShadButton(onPressed: _startImport, child: const Text('导入')),
     ];
   }
 

@@ -12,6 +12,7 @@ import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/use_case/combined/combined_export_use_case.dart';
 import 'package:foxy/use_case/dbc/check_dbc_reminder_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
@@ -139,6 +140,11 @@ void main() {
     await tester.sendKeyUpEvent(modifier);
   }
 
+  test('属性缩放分布和任务排序在侧栏使用不同的图标', () {
+    expect(RouterMenu.scalingStatDistribution.icon, LucideIcons.trendingUp);
+    expect(RouterMenu.questSort.icon, LucideIcons.arrowUpDown);
+  });
+
   testWidgets('任意页面可打开一键导出，输入框聚焦时也生效', (tester) async {
     await pumpApp(tester);
     expect(find.text('页面一'), findsOneWidget);
@@ -146,7 +152,14 @@ void main() {
     await pressExport(tester);
     await tester.pumpAndSettle();
     expect(find.byType(CombinedExportDialog), findsOneWidget);
-    expect(find.text('开始导出'), findsOneWidget);
+    expect(
+      tester.widget<ShadDialog>(find.byType(ShadDialog)).title,
+      isA<Text>(),
+    );
+    expect(
+      tester.widget<ShadButton>(find.widgetWithText(ShadButton, '导出')).child,
+      isA<Text>(),
+    );
 
     await tester.tap(find.text('关闭'));
     await tester.pumpAndSettle();

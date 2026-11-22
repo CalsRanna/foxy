@@ -35,7 +35,7 @@ class _IconExtractDialogState extends State<IconExtractDialog>
         builder: (_) {
           if (!_ready.value) {
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(LucideIcons.image, '提取游戏图标'),
+              title: '提取游戏图标',
               child: const SizedBox(
                 height: 120,
                 child: Center(child: FoxyLoadingIndicator()),
@@ -54,11 +54,7 @@ class _IconExtractDialogState extends State<IconExtractDialog>
           if (success) {
             final result = _vm.result.value;
             return SettingDialogShell(
-              title: SettingDialogShell.titleRow(
-                LucideIcons.circleCheck,
-                '提取完成',
-                iconColor: theme.colorScheme.primary,
-              ),
+              title: '提取完成',
               actions: [
                 ShadButton(
                   onPressed: () => Navigator.of(context).maybePop(),
@@ -80,7 +76,7 @@ class _IconExtractDialogState extends State<IconExtractDialog>
             return PopScope(
               canPop: false,
               child: SettingDialogShell(
-                title: SettingDialogShell.titleRow(LucideIcons.image, '正在提取图标'),
+                title: '正在提取图标',
                 child: SettingDialogShell.progressPanel(
                   context,
                   ratio: _vm.progress.value,
@@ -105,7 +101,7 @@ class _IconExtractDialogState extends State<IconExtractDialog>
           final path = _vm.path.value;
           final configured = path != null && path.trim().isNotEmpty;
           return SettingDialogShell(
-            title: SettingDialogShell.titleRow(LucideIcons.image, '提取游戏图标'),
+            title: '提取游戏图标',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
@@ -113,11 +109,7 @@ class _IconExtractDialogState extends State<IconExtractDialog>
               ),
               ShadButton(
                 onPressed: configured ? _start : null,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.play, size: 15), Text('开始提取')],
-                ),
+                child: const Text('开始提取'),
               ),
             ],
             child: Column(
