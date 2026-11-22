@@ -132,32 +132,6 @@ class DialogUtil {
     if (_errors.length == 1) unawaited(_showErrors());
   }
 
-  /// Renders the standard blocking error in an existing dialog route.
-  static Widget errorDialog(
-    BuildContext context,
-    String message, {
-    VoidCallback? onRetry,
-  }) {
-    return PopScope(
-      canPop: false,
-      child: ShadDialog.alert(
-        title: const Text('错误'),
-        description: Text(message),
-        closeIcon: const SizedBox.shrink(),
-        constraints: compactConstraints(context),
-        actionsMainAxisSize: MainAxisSize.max,
-        actions: [
-          if (onRetry != null)
-            ShadButton.outline(onPressed: onRetry, child: const Text('重试')),
-          ShadButton(
-            child: const Text('确定'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
-  }
-
   void loading() {
     final context = FoxyRouter.router.navigatorKey.currentContext!;
     show(
@@ -197,6 +171,12 @@ class DialogUtil {
     }
   }
 
+  /// Fixed width for dialogs that use the compact layout.
+  static BoxConstraints compactConstraints(BuildContext context) {
+    return constraints(context)
+        .copyWith(minWidth: _compactWidth, maxWidth: _compactWidth);
+  }
+
   /// Uniform dialog constraints: maxWidth fixed to [width], maxHeight by
   /// screen ratio.
   ///
@@ -209,10 +189,30 @@ class DialogUtil {
     );
   }
 
-  /// Fixed width for dialogs that use the compact layout.
-  static BoxConstraints compactConstraints(BuildContext context) {
-    return constraints(context)
-        .copyWith(minWidth: _compactWidth, maxWidth: _compactWidth);
+  /// Renders the standard blocking error in an existing dialog route.
+  static Widget errorDialog(
+    BuildContext context,
+    String message, {
+    VoidCallback? onRetry,
+  }) {
+    return PopScope(
+      canPop: false,
+      child: ShadDialog.alert(
+        title: const Text('错误'),
+        description: Text(message),
+        closeIcon: const SizedBox.shrink(),
+        constraints: compactConstraints(context),
+        actionsMainAxisSize: MainAxisSize.max,
+        actions: [
+          if (onRetry != null)
+            ShadButton.outline(onPressed: onRetry, child: const Text('重试')),
+          ShadButton(
+            child: const Text('确定'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Shows a dialog, wrapping [showShadDialog] with the project's default

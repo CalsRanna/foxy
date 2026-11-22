@@ -30,20 +30,6 @@ final class FoxyFieldMeaning {
   /// Public static method that receives the resolved physical column names.
   final Object Function(List<String>)? branches;
 
-  const FoxyFieldMeaning.enumValues(
-    String label, {
-    required Map<int, String> values,
-  }) : this._(label, values, null, null, null);
-
-  const FoxyFieldMeaning.flags(String label, {required List<FlagItem> flags})
-    : this._(label, null, flags, null, null);
-
-  const FoxyFieldMeaning.reference(
-    String label, {
-    required String table,
-    required String column,
-  }) : this._(label, null, null, table, column);
-
   const FoxyFieldMeaning.conditional(
     String label, {
     required List<String> dependsOn,
@@ -57,6 +43,20 @@ final class FoxyFieldMeaning {
          dependsOn: dependsOn,
          branches: branches,
        );
+
+  const FoxyFieldMeaning.enumValues(
+    String label, {
+    required Map<int, String> values,
+  }) : this._(label, values, null, null, null);
+
+  const FoxyFieldMeaning.flags(String label, {required List<FlagItem> flags})
+    : this._(label, null, flags, null, null);
+
+  const FoxyFieldMeaning.reference(
+    String label, {
+    required String table,
+    required String column,
+  }) : this._(label, null, null, table, column);
 
   const FoxyFieldMeaning._(
     this.label,

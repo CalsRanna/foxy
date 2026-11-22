@@ -127,25 +127,6 @@ class ConditionValueConfig {
   final IntegerFieldSpec<ConditionValueReference> value3;
   const ConditionValueConfig(this.value1, this.value2, this.value3);
 
-  /// Enumerates the contexts that affect the requested parameter.
-  static Iterable<({int type, int? value1})> parameterContexts({
-    required bool forValue2,
-  }) sync* {
-    for (final type in ConditionType.conditionTypeLabels.keys) {
-      final selector = forValue2 ? _value2Variants[type]?.call(0).value1 : null;
-      if (selector is IntegerEnumFieldSpec<ConditionValueReference>) {
-        for (final value1 in selector.options.keys) {
-          yield (type: type, value1: value1);
-        }
-      } else {
-        yield (type: type, value1: null);
-      }
-    }
-  }
-
-  static bool isUnused(IntegerFieldSpec<ConditionValueReference> spec) =>
-      identical(spec, _unused);
-
   static ConditionValueConfig forType(int type, {int value1 = 0}) {
     if (type < 0) return const ConditionValueConfig(_unused, _unused, _unused);
     final variant = _value2Variants[type];
@@ -461,6 +442,25 @@ class ConditionValueConfig {
         const IntegerNumberFieldSpec<ConditionValueReference>('参数 3'),
       ),
     };
+  }
+
+  static bool isUnused(IntegerFieldSpec<ConditionValueReference> spec) =>
+      identical(spec, _unused);
+
+  /// Enumerates the contexts that affect the requested parameter.
+  static Iterable<({int type, int? value1})> parameterContexts({
+    required bool forValue2,
+  }) sync* {
+    for (final type in ConditionType.conditionTypeLabels.keys) {
+      final selector = forValue2 ? _value2Variants[type]?.call(0).value1 : null;
+      if (selector is IntegerEnumFieldSpec<ConditionValueReference>) {
+        for (final value1 in selector.options.keys) {
+          yield (type: type, value1: value1);
+        }
+      } else {
+        yield (type: type, value1: null);
+      }
+    }
   }
 
   static ConditionValueConfig _config(

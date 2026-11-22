@@ -669,6 +669,26 @@ final class _FakeRegistry implements DbcExportRegistry {
   ];
 }
 
+/// In-memory ConfigUtil (no real IO), mirroring the wizard-test fake.
+final class _MemoryConfigUtil extends ConfigUtil {
+  final Map<String, dynamic> data;
+  bool failUpdate = false;
+
+  _MemoryConfigUtil(this.data);
+
+  @override
+  String get configPath => 'memory:config.yaml';
+
+  @override
+  Future<Map<String, dynamic>> load() async => Map<String, dynamic>.of(data);
+
+  @override
+  Future<void> update(Map<String, dynamic> values) async {
+    if (failUpdate) throw const FileSystemException('permission denied');
+    data.addAll(values);
+  }
+}
+
 final class _RunningDbcImportViewModel extends DbcImportWorkflowViewModel {
   _RunningDbcImportViewModel({
     required super.useCase,
@@ -694,26 +714,6 @@ final class _SuccessIconWorker {
         cancelled: false,
       ),
     ));
-  }
-}
-
-/// In-memory ConfigUtil (no real IO), mirroring the wizard-test fake.
-final class _MemoryConfigUtil extends ConfigUtil {
-  final Map<String, dynamic> data;
-  bool failUpdate = false;
-
-  _MemoryConfigUtil(this.data);
-
-  @override
-  String get configPath => 'memory:config.yaml';
-
-  @override
-  Future<Map<String, dynamic>> load() async => Map<String, dynamic>.of(data);
-
-  @override
-  Future<void> update(Map<String, dynamic> values) async {
-    if (failUpdate) throw const FileSystemException('permission denied');
-    data.addAll(values);
   }
 }
 

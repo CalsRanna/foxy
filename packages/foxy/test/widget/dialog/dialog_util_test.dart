@@ -56,13 +56,6 @@ void main() {
   });
 }
 
-Widget _host() {
-  return ShadApp(
-    navigatorKey: FoxyRouter.router.navigatorKey,
-    home: const Scaffold(),
-  );
-}
-
 Finder _dialogFrame() {
   return find
       .descendant(
@@ -70,4 +63,11 @@ Finder _dialogFrame() {
         matching: find.byType(ConstrainedBox),
       )
       .first;
+}
+
+Widget _host() {
+  return ShadApp(
+    navigatorKey: FoxyRouter.router.navigatorKey,
+    home: const Scaffold(),
+  );
 }

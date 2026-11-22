@@ -26,14 +26,23 @@ final class ColumnReference {
   Map<String, Object?> toJson() => {'table': table, 'column': column};
 }
 
-/// What kind of meaning a [ColumnSemantics] carries.
-enum ColumnSemanticKind {
-  enumValues,
-  flags,
-  reference,
-  number,
-  unused,
-  conditional,
+/// A field meaning that applies when every comparison in [when] holds.
+final class ColumnSemanticBranch {
+  final String label;
+  final List<ColumnSemanticCondition> when;
+  final ColumnSemantics semantics;
+
+  const ColumnSemanticBranch({
+    required this.label,
+    required this.when,
+    required this.semantics,
+  });
+
+  Map<String, Object?> toJson({required bool compact}) => {
+    'label': label,
+    'when': when.map((condition) => condition.toJson()).toList(),
+    'semantics': compact ? semantics.summaryJson() : semantics.toJson(),
+  };
 }
 
 /// An integer comparison over the row that determines a field's meaning.
@@ -63,23 +72,14 @@ final class ColumnSemanticCondition {
   };
 }
 
-/// A field meaning that applies when every comparison in [when] holds.
-final class ColumnSemanticBranch {
-  final String label;
-  final List<ColumnSemanticCondition> when;
-  final ColumnSemantics semantics;
-
-  const ColumnSemanticBranch({
-    required this.label,
-    required this.when,
-    required this.semantics,
-  });
-
-  Map<String, Object?> toJson({required bool compact}) => {
-    'label': label,
-    'when': when.map((condition) => condition.toJson()).toList(),
-    'semantics': compact ? semantics.summaryJson() : semantics.toJson(),
-  };
+/// What kind of meaning a [ColumnSemantics] carries.
+enum ColumnSemanticKind {
+  enumValues,
+  flags,
+  reference,
+  number,
+  unused,
+  conditional,
 }
 
 /// Machine-readable meaning of a physical column.
@@ -107,6 +107,20 @@ final class ColumnSemantics {
   final List<ColumnSemanticBranch> Function(List<String>)? _buildBranches;
   final Map<int, String> _specialValues;
 
+  const ColumnSemantics.conditional({
+    required String label,
+    required List<String> dependsOn,
+    required List<ColumnSemanticBranch> Function(List<String>) branches,
+  }) : this._(
+         label,
+         ColumnSemanticKind.conditional,
+         const {},
+         const [],
+         null,
+         dependsOn: dependsOn,
+         buildBranches: branches,
+       );
+
   const ColumnSemantics.enumValues({
     required String label,
     required Map<int, String> values,
@@ -116,6 +130,18 @@ final class ColumnSemantics {
     required String label,
     required List<ColumnFlag> flags,
   }) : this._(label, ColumnSemanticKind.flags, const {}, flags, null);
+
+  const ColumnSemantics.number({
+    required String label,
+    Map<int, String> specialValues = const {},
+  }) : this._(
+         label,
+         ColumnSemanticKind.number,
+         const {},
+         const [],
+         null,
+         specialValues: specialValues,
+       );
 
   const ColumnSemantics.reference({
     required String label,
@@ -130,34 +156,8 @@ final class ColumnSemantics {
          specialValues: specialValues,
        );
 
-  const ColumnSemantics.number({
-    required String label,
-    Map<int, String> specialValues = const {},
-  }) : this._(
-         label,
-         ColumnSemanticKind.number,
-         const {},
-         const [],
-         null,
-         specialValues: specialValues,
-       );
-
   const ColumnSemantics.unused({required String label})
     : this._(label, ColumnSemanticKind.unused, const {}, const [], null);
-
-  const ColumnSemantics.conditional({
-    required String label,
-    required List<String> dependsOn,
-    required List<ColumnSemanticBranch> Function(List<String>) branches,
-  }) : this._(
-         label,
-         ColumnSemanticKind.conditional,
-         const {},
-         const [],
-         null,
-         dependsOn: dependsOn,
-         buildBranches: branches,
-       );
 
   const ColumnSemantics._(
     this.label,
@@ -181,39 +181,6 @@ final class ColumnSemantics {
     ColumnSemanticKind.number => 'number',
     ColumnSemanticKind.unused => 'unused',
     ColumnSemanticKind.conditional => 'conditional',
-  };
-
-  /// Compact form shown by `describe_table`.
-  Map<String, Object?> summaryJson() => {
-    'kind': _kindName,
-    'label': label,
-    if (reference != null) 'reference': reference!.toJson(),
-    if (dependsOn.isNotEmpty) 'dependsOn': dependsOn,
-    if (_specialValues.isNotEmpty)
-      'specialValues': {
-        for (final entry in _specialValues.entries) '${entry.key}': entry.value,
-      },
-  };
-
-  /// Full form returned by `describe_field_values`.
-  Map<String, Object?> toJson() => {
-    ...summaryJson(),
-    ...switch (_kind) {
-      ColumnSemanticKind.enumValues => {
-        'values': {
-          for (final entry in _values.entries) '${entry.key}': entry.value,
-        },
-      },
-      ColumnSemanticKind.flags => {
-        'flags': [for (final flag in flags) flag.toJson()],
-      },
-      ColumnSemanticKind.conditional => {
-        'branches': _buildBranches!(dependsOn)
-            .map((branch) => branch.toJson(compact: true))
-            .toList(),
-      },
-      _ => const <String, Object?>{},
-    },
   };
 
   /// Returns the matching conditional branch and details for a row.
@@ -262,4 +229,37 @@ final class ColumnSemantics {
       'valueLabel': ?valueLabel,
     };
   }
+
+  /// Compact form shown by `describe_table`.
+  Map<String, Object?> summaryJson() => {
+    'kind': _kindName,
+    'label': label,
+    if (reference != null) 'reference': reference!.toJson(),
+    if (dependsOn.isNotEmpty) 'dependsOn': dependsOn,
+    if (_specialValues.isNotEmpty)
+      'specialValues': {
+        for (final entry in _specialValues.entries) '${entry.key}': entry.value,
+      },
+  };
+
+  /// Full form returned by `describe_field_values`.
+  Map<String, Object?> toJson() => {
+    ...summaryJson(),
+    ...switch (_kind) {
+      ColumnSemanticKind.enumValues => {
+        'values': {
+          for (final entry in _values.entries) '${entry.key}': entry.value,
+        },
+      },
+      ColumnSemanticKind.flags => {
+        'flags': [for (final flag in flags) flag.toJson()],
+      },
+      ColumnSemanticKind.conditional => {
+        'branches': _buildBranches!(dependsOn)
+            .map((branch) => branch.toJson(compact: true))
+            .toList(),
+      },
+      _ => const <String, Object?>{},
+    },
+  };
 }

@@ -468,18 +468,6 @@ final class _ColumnMeaning {
 
   final String? branches;
 
-  const _ColumnMeaning.enumValues(String label, Map<int, String> values)
-    : this._(label, _MeaningKind.enumValues, values, const [], null, null);
-
-  const _ColumnMeaning.flags(String label, List<_FlagMeaning> flags)
-    : this._(label, _MeaningKind.flags, const {}, flags, null, null);
-
-  const _ColumnMeaning.reference(
-    String label, {
-    required String table,
-    required String column,
-  }) : this._(label, _MeaningKind.reference, const {}, const [], table, column);
-
   const _ColumnMeaning.conditional(
     String label, {
     required List<String> dependsOn,
@@ -494,6 +482,18 @@ final class _ColumnMeaning {
          dependsOn: dependsOn,
          branches: branches,
        );
+
+  const _ColumnMeaning.enumValues(String label, Map<int, String> values)
+    : this._(label, _MeaningKind.enumValues, values, const [], null, null);
+
+  const _ColumnMeaning.flags(String label, List<_FlagMeaning> flags)
+    : this._(label, _MeaningKind.flags, const {}, flags, null, null);
+
+  const _ColumnMeaning.reference(
+    String label, {
+    required String table,
+    required String column,
+  }) : this._(label, _MeaningKind.reference, const {}, const [], table, column);
 
   const _ColumnMeaning._(
     this.label,
