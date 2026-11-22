@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
+import 'package:foxy/router/router.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:path/path.dart' as p;
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -72,6 +74,40 @@ void main() {
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.text('正在扫描 zhCN 客户端归档...'), findsOneWidget);
+  });
+
+  testWidgets('提取失败只需关闭一个对话框', (tester) async {
+    await tester.pumpWidget(
+      ShadApp(
+        navigatorKey: FoxyRouter.router.navigatorKey,
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ShadButton(
+              onPressed: () => DialogUtil.show<void>(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => IconExtractDialog(vm: vm),
+              ),
+              child: const Text('提取'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('提取'));
+    await tester.pumpAndSettle();
+
+    const message = '未在客户端目录中找到 MPQ 归档';
+    vm.errorMessage.value = message;
+    vm.status.value = WorkflowStatus.failed;
+    await tester.pumpAndSettle();
+    expect(find.text(message), findsOneWidget);
+    expect(find.text('重试').hitTestable(), findsOneWidget);
+
+    await tester.tap(find.text('确定'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ShadDialog), findsNothing);
+    expect(find.text('提取').hitTestable(), findsOneWidget);
   });
 }
 

@@ -15,15 +15,11 @@ class DbcImportDialog extends StatefulWidget {
   State<DbcImportDialog> createState() => _DbcImportDialogState();
 }
 
-class _DbcImportDialogState extends State<DbcImportDialog>
-    with DialogErrorState {
+class _DbcImportDialogState extends State<DbcImportDialog> {
   /// The ready flag uses a signal: SignalBuilder subscribes directly, avoiding a
   /// parent setState rebuilding the SignalBuilder and triggering signals_flutter's
   /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
-
-  @override
-  ReadonlySignal<String?> get dialogError => _vm.errorMessage;
 
   DbcImportWorkflowViewModel get _vm => widget.vm;
 
@@ -34,11 +30,14 @@ class _DbcImportDialogState extends State<DbcImportDialog>
       child: SignalBuilder(
         builder: (_) {
           if (!_ready.value) {
-            return SettingDialogShell(
-              title: '导入 DBC',
-              child: const SizedBox(
-                height: 120,
-                child: Center(child: FoxyLoadingIndicator()),
+            return const PopScope(
+              canPop: false,
+              child: SettingDialogShell(
+                title: '正在导入 DBC',
+                child: SizedBox(
+                  height: 120,
+                  child: Center(child: FoxyLoadingIndicator()),
+                ),
               ),
             );
           }
@@ -49,7 +48,6 @@ class _DbcImportDialogState extends State<DbcImportDialog>
               workflowStatus == WorkflowStatus.running ||
               workflowStatus == WorkflowStatus.cancelling;
           final success = workflowStatus == WorkflowStatus.succeeded;
-          final theme = ShadTheme.of(context);
 
           if (success) {
             return SettingDialogShell(
@@ -96,44 +94,25 @@ class _DbcImportDialogState extends State<DbcImportDialog>
             );
           }
 
-          final path = _vm.path.value;
-          final configured = path != null && path.trim().isNotEmpty;
+          if (workflowStatus == WorkflowStatus.failed) {
+            return DialogUtil.errorDialog(
+              context,
+              _vm.errorMessage.value ?? 'DBC 导入失败。',
+              onRetry: _prepareAndStart,
+            );
+          }
+
           return SettingDialogShell(
-            title: '导入 DBC',
+            title: '未配置服务端 DBC 目录',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('关闭'),
-              ),
-              ShadButton(
-                onPressed: configured ? _start : null,
-                child: const Text('导入'),
+                child: const Text('取消'),
               ),
             ],
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 14,
-              children: [
-                SettingDialogShell.mutedHint(
-                  context,
-                  '从配置的服务端 DBC 目录导入。导入以 DBC 为准：将覆盖数据库中'
-                  '对应表的数据；若需保留库内数据请先自行备份。',
-                ),
-                Text(
-                  '服务端 DBC 目录',
-                  style: theme.textTheme.small.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                if (configured)
-                  SettingDialogShell.readonlyPath(context, path)
-                else
-                  SettingDialogShell.mutedHint(
-                    context,
-                    '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
-                  ),
-              ],
+            child: SettingDialogShell.mutedHint(
+              context,
+              '请在「目录设置」中选择包含 DBC 文件的服务端目录。',
             ),
           );
         },
@@ -146,24 +125,20 @@ class _DbcImportDialogState extends State<DbcImportDialog>
     super.initState();
     // Prepare after the first frame so signal writes do not land during
     // the build phase.
-    WidgetsBinding.instance.addPostFrameCallback((_) => _prepare());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _prepareAndStart());
   }
 
-  Future<void> _prepare() async {
+  Future<void> _prepareAndStart() async {
+    if (!mounted) return;
+    _ready.value = false;
     try {
       await _vm.prepare();
+      if (!mounted) return;
+      _ready.value = true;
+      if (_vm.path.value != null) await _vm.start();
     } catch (_) {
       // The workflow exposes the failure through errorMessage.
-    }
-    if (!mounted) return;
-    _ready.value = true;
-  }
-
-  Future<void> _start() async {
-    try {
-      await _vm.start();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
+      if (mounted) _ready.value = true;
     }
   }
 }

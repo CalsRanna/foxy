@@ -161,7 +161,7 @@ void main() {
       isA<Text>(),
     );
 
-    await tester.tap(find.text('关闭'));
+    await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
     final innerRouter = router.innerRouterOf<StackRouter>('ScaffoldRoute')!;
     innerRouter.push(const NamedRoute('SecondRoute'));
@@ -171,7 +171,7 @@ void main() {
     await pressExport(tester);
     await tester.pumpAndSettle();
     expect(find.byType(CombinedExportDialog), findsOneWidget);
-    await tester.tap(find.text('关闭'));
+    await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
     expect(find.text('spell'), findsOneWidget);
   });
@@ -185,7 +185,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(CombinedExportDialog), findsOneWidget);
 
-    await tester.tap(find.text('关闭'));
+    await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
     expect(find.byType(CombinedExportDialog), findsNothing);
     await pressExport(tester);

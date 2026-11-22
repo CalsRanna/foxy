@@ -180,7 +180,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('关闭'),
+                child: const Text('取消'),
               ),
               ShadButton(onPressed: _retry, child: const Text('重试')),
             ],

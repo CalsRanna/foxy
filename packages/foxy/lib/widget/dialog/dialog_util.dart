@@ -132,6 +132,32 @@ class DialogUtil {
     if (_errors.length == 1) unawaited(_showErrors());
   }
 
+  /// Renders the standard blocking error in an existing dialog route.
+  static Widget errorDialog(
+    BuildContext context,
+    String message, {
+    VoidCallback? onRetry,
+  }) {
+    return PopScope(
+      canPop: false,
+      child: ShadDialog.alert(
+        title: const Text('错误'),
+        description: Text(message),
+        closeIcon: const SizedBox.shrink(),
+        constraints: compactConstraints(context),
+        actionsMainAxisSize: MainAxisSize.max,
+        actions: [
+          if (onRetry != null)
+            ShadButton.outline(onPressed: onRetry, child: const Text('重试')),
+          ShadButton(
+            child: const Text('确定'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
   void loading() {
     final context = FoxyRouter.router.navigatorKey.currentContext!;
     show(
@@ -163,22 +189,7 @@ class DialogUtil {
         await show<void>(
           context: context,
           barrierDismissible: false,
-          builder: (context) => PopScope(
-            canPop: false,
-            child: ShadDialog.alert(
-              title: const Text('错误'),
-              description: Text(error),
-              closeIcon: const SizedBox.shrink(),
-              constraints: compactConstraints(context),
-              actionsMainAxisSize: MainAxisSize.max,
-              actions: [
-                ShadButton(
-                  child: const Text('确定'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-          ),
+          builder: (context) => errorDialog(context, error),
         );
       } finally {
         _errors.removeFirst();

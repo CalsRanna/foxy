@@ -120,31 +120,4 @@ class SettingDialogShell extends StatelessWidget {
       ],
     );
   }
-
-  /// Read-only path display box (directory config comes from the settings
-  /// page; action dialogs no longer edit it directly).
-  static Widget readonlyPath(BuildContext context, String path) {
-    final theme = ShadTheme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: theme.colorScheme.border),
-      ),
-      child: Row(
-        spacing: 8,
-        children: [
-          Icon(
-            LucideIcons.folder,
-            size: 15,
-            color: theme.colorScheme.mutedForeground,
-          ),
-          Expanded(
-            child: SelectableText(path, style: const TextStyle(fontSize: 13)),
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -1,4 +1,3 @@
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/page/setting/dbc_table_select_list.dart';
@@ -22,13 +21,11 @@ class DbcExportDialog extends StatefulWidget {
 
 class _DbcExportDialogState extends State<DbcExportDialog>
     with DialogErrorState {
-  final _dirController = StringFieldController();
   final _searchController = StringFieldController();
 
   /// The following states use signals: SignalBuilder subscribes directly, avoiding
   /// a parent setState rebuilding the SignalBuilder and triggering signals_flutter's
   /// didUpdateWidget→recompute chain that would break the subscription.
-  final _outputDir = signal<String?>(null);
   final _loaded = signal(false);
   final _query = signal('');
   @override
@@ -109,11 +106,6 @@ class _DbcExportDialogState extends State<DbcExportDialog>
                         ),
                       ],
                     ),
-                  if (_outputDir.value != null)
-                    SettingDialogShell.mutedHint(
-                      context,
-                      '输出目录：${_outputDir.value}',
-                    ),
                 ],
               ),
             );
@@ -161,19 +153,19 @@ class _DbcExportDialogState extends State<DbcExportDialog>
               allItems
                   .where((item) => item.canSelect)
                   .every((item) => item.selected);
+          final hasOutputDirectory = _vm.outputDirectory.value != null;
 
           return SettingDialogShell(
             title: '导出 DBC',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('关闭'),
+                child: const Text('取消'),
               ),
               ShadButton(
-                onPressed: selectedCount == 0 || _outputDir.value == null
+                onPressed: selectedCount == 0 || !hasOutputDirectory
                     ? null
                     : () async {
-                        _vm.setOutputDirectory(_outputDir.value!);
                         try {
                           await _vm.start();
                         } catch (_) {
@@ -192,31 +184,19 @@ class _DbcExportDialogState extends State<DbcExportDialog>
                   context,
                   '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。',
                 ),
-                Text(
-                  '输出目录',
-                  style: theme.textTheme.small.copyWith(
-                    fontWeight: FontWeight.w600,
+                if (!hasOutputDirectory)
+                  SettingDialogShell.mutedHint(
+                    context,
+                    '请在「设置 → 游戏环境」中配置服务端目录。',
                   ),
-                ),
-                SettingDialogShell.pathField(
-                  controller: _dirController,
-                  placeholder: '选择导出目录',
-                  onBrowse: _browse,
-                  onChanged: (value) {
-                    final trimmed = value.trim();
-                    _outputDir.value = trimmed.isEmpty ? null : trimmed;
-                    _vm.setOutputDirectory(value);
-                  },
-                ),
                 if (workflowStatus == WorkflowStatus.failed)
                   Align(
                     alignment: Alignment.centerRight,
                     child: ShadButton.outline(
                       size: ShadButtonSize.sm,
-                      onPressed: _outputDir.value == null
+                      onPressed: !hasOutputDirectory
                           ? null
                           : () async {
-                              _vm.setOutputDirectory(_outputDir.value!);
                               try {
                                 await _vm.retry();
                               } catch (_) {
@@ -246,10 +226,6 @@ class _DbcExportDialogState extends State<DbcExportDialog>
                       child: ShadInput(
                         controller: _searchController.controller,
                         placeholder: const Text('搜索表名…'),
-                        leading: const Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Icon(LucideIcons.search, size: 14),
-                        ),
                       ),
                     ),
                   ],
@@ -270,7 +246,6 @@ class _DbcExportDialogState extends State<DbcExportDialog>
 
   @override
   void dispose() {
-    _dirController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -295,23 +270,10 @@ class _DbcExportDialogState extends State<DbcExportDialog>
       // The workflow exposes the failure through errorMessage.
     }
     if (!mounted) return;
-    final defaultDir = _vm.outputDirectory.value;
-    if (defaultDir != null) {
-      _dirController.init(defaultDir);
-      _outputDir.value = defaultDir;
-    }
     _loaded.value = true;
     if (_vm.errorMessage.value == null) {
       DbcTableSelectList.reportCountErrors(_vm.items.value);
     }
-  }
-
-  Future<void> _browse() async {
-    final dir = await getDirectoryPath();
-    if (dir == null || !mounted) return;
-    _dirController.init(dir);
-    _outputDir.value = dir;
-    _vm.setOutputDirectory(dir);
   }
 
   List<DbcExportItem> _filterItems(List<DbcExportItem> items) {

@@ -15,15 +15,11 @@ class IconExtractDialog extends StatefulWidget {
   State<IconExtractDialog> createState() => _IconExtractDialogState();
 }
 
-class _IconExtractDialogState extends State<IconExtractDialog>
-    with DialogErrorState {
+class _IconExtractDialogState extends State<IconExtractDialog> {
   /// The ready flag uses a signal: SignalBuilder subscribes directly, avoiding a
   /// parent setState rebuilding the SignalBuilder and triggering signals_flutter's
   /// didUpdateWidget→recompute chain that would break the subscription.
   final _ready = signal(false);
-
-  @override
-  ReadonlySignal<String?> get dialogError => _vm.errorMessage;
 
   IconExtractWorkflowViewModel get _vm => widget.vm;
 
@@ -35,7 +31,7 @@ class _IconExtractDialogState extends State<IconExtractDialog>
         builder: (_) {
           if (!_ready.value) {
             return SettingDialogShell(
-              title: '提取游戏图标',
+              title: '正在提取图标',
               child: const SizedBox(
                 height: 120,
                 child: Center(child: FoxyLoadingIndicator()),
@@ -49,7 +45,6 @@ class _IconExtractDialogState extends State<IconExtractDialog>
               workflowStatus == WorkflowStatus.running ||
               workflowStatus == WorkflowStatus.cancelling;
           final success = workflowStatus == WorkflowStatus.succeeded;
-          final theme = ShadTheme.of(context);
 
           if (success) {
             final result = _vm.result.value;
@@ -98,45 +93,23 @@ class _IconExtractDialogState extends State<IconExtractDialog>
             );
           }
 
-          final path = _vm.path.value;
-          final configured = path != null && path.trim().isNotEmpty;
+          if (workflowStatus == WorkflowStatus.failed) {
+            return DialogUtil.errorDialog(
+              context,
+              _vm.errorMessage.value ?? '图标提取失败。',
+              onRetry: _prepareAndStart,
+            );
+          }
+
           return SettingDialogShell(
-            title: '提取游戏图标',
+            title: '未配置客户端目录',
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('关闭'),
-              ),
-              ShadButton(
-                onPressed: configured ? _start : null,
-                child: const Text('开始提取'),
+                child: const Text('取消'),
               ),
             ],
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 14,
-              children: [
-                SettingDialogShell.mutedHint(
-                  context,
-                  '从配置的客户端目录的 Data\\<语言> 下 MPQ 归档提取全部图标'
-                  '（BLP 格式，约 6300 个），不内置在应用中。',
-                ),
-                Text(
-                  '客户端目录',
-                  style: theme.textTheme.small.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                if (configured)
-                  SettingDialogShell.readonlyPath(context, path)
-                else
-                  SettingDialogShell.mutedHint(
-                    context,
-                    '尚未配置客户端目录，请先前往设置页「目录设置」中配置。',
-                  ),
-              ],
-            ),
+            child: SettingDialogShell.mutedHint(context, '请先在「目录设置」中配置客户端目录。'),
           );
         },
       ),
@@ -147,24 +120,20 @@ class _IconExtractDialogState extends State<IconExtractDialog>
   void initState() {
     super.initState();
     // Prepare outside the build phase; see DbcExportDialog.initState.
-    WidgetsBinding.instance.addPostFrameCallback((_) => _prepare());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _prepareAndStart());
   }
 
-  Future<void> _prepare() async {
+  Future<void> _prepareAndStart() async {
+    if (!mounted) return;
+    _ready.value = false;
     try {
       await _vm.prepare();
+      if (!mounted) return;
+      _ready.value = true;
+      if (_vm.path.value != null) await _vm.start();
     } catch (_) {
       // The workflow exposes the failure through errorMessage.
-    }
-    if (!mounted) return;
-    _ready.value = true;
-  }
-
-  Future<void> _start() async {
-    try {
-      await _vm.start();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
+      if (mounted) _ready.value = true;
     }
   }
 }

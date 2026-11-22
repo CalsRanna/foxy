@@ -1,4 +1,3 @@
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/dbc_table_select_list.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
@@ -22,14 +21,12 @@ class MpqExportDialog extends StatefulWidget {
 
 class _MpqExportDialogState extends State<MpqExportDialog>
     with DialogErrorState {
-  final _dirController = StringFieldController();
   final _fileNameController = StringFieldController();
   final _searchController = StringFieldController();
 
   /// The following states use signals: SignalBuilder subscribes directly, avoiding
   /// a parent setState rebuilding the SignalBuilder and triggering signals_flutter's
   /// didUpdateWidget→recompute chain that would break the subscription.
-  final _outputDir = signal<String?>(null);
   final _fileName = signal('');
   final _loaded = signal(false);
   final _query = signal('');
@@ -75,11 +72,8 @@ class _MpqExportDialogState extends State<MpqExportDialog>
           }
 
           if (success) {
-            final directory = _outputDir.value;
-            final name = _fileName.value;
-            final target = directory != null && name.isNotEmpty
-                ? p.join(directory, name)
-                : null;
+            final name = p.basename(_vm.fileName.value);
+            final result = _vm.result.value;
             return SettingDialogShell(
               title: '导出完成',
               actions: [
@@ -88,19 +82,10 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                   child: const Text('完成'),
                 ),
               ],
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 12,
-                children: [
-                  SelectableText(
-                    '已生成 MPQ 补丁'
-                    '${(_vm.result.value?.completed ?? 0) > 0 ? '，打包 ${_vm.result.value!.completed} 张 DBC 表' : ''}'
-                    '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}。',
-                  ),
-                  if (target != null)
-                    SettingDialogShell.mutedHint(context, '已生成: $target'),
-                ],
+              child: SelectableText(
+                '已生成 MPQ 补丁 $name'
+                '${(result?.completed ?? 0) > 0 ? '，打包 ${result!.completed} 张 DBC 表' : ''}'
+                '${(result?.skipped ?? 0) > 0 ? '，跳过 ${result!.skipped} 个空表' : ''}。',
               ),
             );
           }
@@ -146,7 +131,7 @@ class _MpqExportDialogState extends State<MpqExportDialog>
               allItems
                   .where((item) => item.canSelect)
                   .every((item) => item.selected);
-          final targetDir = _outputDir.value;
+          final hasOutputDirectory = _vm.outputDirectory.value != null;
           final fileNameReady = _fileName.value.trim().isNotEmpty;
 
           return SettingDialogShell(
@@ -154,14 +139,13 @@ class _MpqExportDialogState extends State<MpqExportDialog>
             actions: [
               ShadButton.outline(
                 onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('关闭'),
+                child: const Text('取消'),
               ),
               ShadButton(
                 onPressed:
-                    selectedCount == 0 || targetDir == null || !fileNameReady
+                    selectedCount == 0 || !hasOutputDirectory || !fileNameReady
                     ? null
                     : () async {
-                        _vm.setOutputDirectory(targetDir);
                         _vm.setFileName(_fileName.value);
                         try {
                           await _vm.start();
@@ -179,25 +163,13 @@ class _MpqExportDialogState extends State<MpqExportDialog>
               children: [
                 SettingDialogShell.mutedHint(
                   context,
-                  '将选中的 DBC 表打包为 MPQ 补丁，放入客户端 MPQ 目录后，'
-                  '客户端启动时自动加载以覆盖原始 DBC。',
+                  '将选中的 DBC 表打包为 MPQ 补丁，客户端启动时会加载补丁以覆盖原始 DBC。',
                 ),
-                Text(
-                  '输出目录',
-                  style: theme.textTheme.small.copyWith(
-                    fontWeight: FontWeight.w600,
+                if (!hasOutputDirectory)
+                  SettingDialogShell.mutedHint(
+                    context,
+                    '请在「设置 → 游戏环境」中配置客户端目录。',
                   ),
-                ),
-                SettingDialogShell.pathField(
-                  controller: _dirController,
-                  placeholder: '客户端 MPQ 目录（如 Data\\zhCN）',
-                  onBrowse: _browse,
-                  onChanged: (value) {
-                    final trimmed = value.trim();
-                    _outputDir.value = trimmed.isEmpty ? null : trimmed;
-                    _vm.setOutputDirectory(value);
-                  },
-                ),
                 Text(
                   'MPQ 文件名',
                   style: theme.textTheme.small.copyWith(
@@ -208,10 +180,6 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                   controller: _fileNameController.controller,
                   placeholder: const Text(
                     MpqExportWorkflowViewModel.defaultPatchFileName,
-                  ),
-                  leading: const Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Icon(LucideIcons.fileArchive, size: 16),
                   ),
                   onChanged: (value) {
                     final trimmed = value.trim();
@@ -224,10 +192,9 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                     alignment: Alignment.centerRight,
                     child: ShadButton.outline(
                       size: ShadButtonSize.sm,
-                      onPressed: targetDir == null
+                      onPressed: !hasOutputDirectory
                           ? null
                           : () async {
-                              _vm.setOutputDirectory(targetDir);
                               _vm.setFileName(_fileName.value);
                               try {
                                 await _vm.retry();
@@ -258,10 +225,6 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                       child: ShadInput(
                         controller: _searchController.controller,
                         placeholder: const Text('搜索表名…'),
-                        leading: const Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Icon(LucideIcons.search, size: 14),
-                        ),
                       ),
                     ),
                   ],
@@ -282,7 +245,6 @@ class _MpqExportDialogState extends State<MpqExportDialog>
 
   @override
   void dispose() {
-    _dirController.dispose();
     _fileNameController.dispose();
     _searchController.dispose();
     super.dispose();
@@ -305,25 +267,12 @@ class _MpqExportDialogState extends State<MpqExportDialog>
       // The workflow exposes the failure through errorMessage.
     }
     if (!mounted) return;
-    final defaultDir = _vm.outputDirectory.value;
-    if (defaultDir != null) {
-      _dirController.init(defaultDir);
-      _outputDir.value = defaultDir;
-    }
     _fileNameController.init(_vm.fileName.value);
     _fileName.value = _vm.fileName.value;
     _loaded.value = true;
     if (_vm.errorMessage.value == null) {
       DbcTableSelectList.reportCountErrors(_vm.items.value);
     }
-  }
-
-  Future<void> _browse() async {
-    final dir = await getDirectoryPath();
-    if (dir == null || !mounted) return;
-    _dirController.init(dir);
-    _outputDir.value = dir;
-    _vm.setOutputDirectory(dir);
   }
 
   List<DbcExportItem> _filterItems(List<DbcExportItem> items) {

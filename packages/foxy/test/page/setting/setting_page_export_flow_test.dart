@@ -30,6 +30,7 @@ import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/workflow_status.dart';
+import 'package:foxy_game_file/foxy_game_file.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -95,10 +96,10 @@ void main() {
     final iconUseCase = ExtractGameIconsUseCase(
       configUtil: cfg,
       outputDir: tempDir.path,
-      workerEntry: (args) async {},
+      workerEntry: _SuccessIconWorker.run,
     );
 
-    importVm = DbcImportWorkflowViewModel(
+    importVm = _RunningDbcImportViewModel(
       useCase: importUseCase,
       configUtil: cfg,
     );
@@ -155,8 +156,11 @@ void main() {
       body: SettingPage(initialSection: SettingSection.preferences),
     ),
   );
-  const dataPage = ShadApp(
-    home: Scaffold(body: SettingPage(initialSection: SettingSection.data)),
+  final dataPage = ShadApp(
+    navigatorKey: FoxyRouter.router.navigatorKey,
+    home: const Scaffold(
+      body: SettingPage(initialSection: SettingSection.data),
+    ),
   );
 
   testWidgets('设置分类与操作区域适应桌面窗口宽度', (tester) async {
@@ -251,11 +255,40 @@ void main() {
     expect(find.byType(ShadDialog), findsNothing);
 
     selection = null;
-    await tester.tap(find.widgetWithText(ShadButton, '浏览目录'));
+    await tester.tap(configure.last);
     await tester.pumpAndSettle();
     expect(initialDirectories, [null, null, tempDir.path]);
     expect(cfg.data['server_dir'], tempDir.path);
     expect(find.byType(ShadDialog), findsNothing);
+  });
+
+  testWidgets('点击提取一次即可完成图标提取', (tester) async {
+    cfg.data['client_dir'] = tempDir.path;
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    final extract = find.widgetWithText(ShadButton, '提取');
+    await tester.ensureVisible(extract);
+    await tester.pumpAndSettle();
+
+    final iconVm = GetIt.instance.get<IconExtractWorkflowViewModel>();
+    await tester.runAsync(() async {
+      final finished = Completer<void>();
+      final unsubscribe = iconVm.status.subscribe((status) {
+        if (status == WorkflowStatus.succeeded) finished.complete();
+      });
+      try {
+        await tester.tap(extract);
+        await tester.pump();
+        await tester.pump();
+        expect(find.text('开始提取'), findsNothing);
+        await finished.future.timeout(const Duration(seconds: 5));
+      } finally {
+        unsubscribe();
+      }
+    });
+    await tester.pumpAndSettle();
+
+    expect(find.text('提取完成'), findsOneWidget);
+    expect(cfg.data['icons_extracted'], isTrue);
   });
 
   testWidgets('在设置中打开并保存已有的模型服务商配置', (tester) async {
@@ -434,52 +467,106 @@ void main() {
     expect(find.text('mpq:free'), findsOneWidget);
   });
 
-  testWidgets('进度中不可关闭对话框，任务结束后可关闭', (tester) async {
+  testWidgets('点击一次开始导入 DBC，完成或取消后一次关闭弹窗', (tester) async {
     await tester.pumpWidget(dataPage);
-    await tester.pump();
-    await tester.pump();
-
-    // Esc/系统返回最终走 Navigator.maybePop（DismissAction 的机制），
-    // 这里直接验证 PopScope 对路由弹出的拦截。
     final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
-
-    // idle 状态：无 PopScope，可正常关闭。（导入按钮在「一键导出」区块
-    // 之下，600px 测试视口内可能不可见，先滚动到可见。）
     await tester.ensureVisible(dbcImportButton());
     await tester.pumpAndSettle();
     await tester.tap(dbcImportButton());
-    await tester.pump();
-    await tester.pump();
-    expect(find.byType(ShadDialog), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('正在导入 DBC'), findsOneWidget);
+    expect(find.text('取消导入'), findsOneWidget);
+
     await nav.maybePop();
     await tester.pumpAndSettle();
-    expect(find.byType(ShadDialog), findsNothing);
-
-    // 重新打开，进入进度状态。
-    await tester.tap(dbcImportButton());
-    await tester.pump();
-    await tester.pump();
-    importVm.status.value = WorkflowStatus.running;
-    await tester.pump();
     expect(find.text('正在导入 DBC'), findsOneWidget);
 
-    // 进度中 must be blocked: closing mid-run would leave the task running
-    // in the background with no visible state.
-    await nav.maybePop();
-    await tester.pump();
-    await tester.pump();
-    expect(find.text('正在导入 DBC'), findsOneWidget, reason: '进度中不得关闭对话框');
-
-    // 任务完成：关闭恢复。
     importVm.status.value = WorkflowStatus.succeeded;
-    await tester.pump();
-    await tester.pump();
-    expect(find.text('导入完成'), findsOneWidget);
-
-    await nav.maybePop();
     await tester.pumpAndSettle();
-    expect(find.text('导入完成'), findsNothing);
+    expect(find.text('导入完成'), findsOneWidget);
+    await tester.tap(find.text('完成'));
+    await tester.pumpAndSettle();
     expect(find.byType(ShadDialog), findsNothing);
+
+    await tester.tap(dbcImportButton());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('取消导入'));
+    await tester.pumpAndSettle();
+    expect(find.text('正在取消…'), findsOneWidget);
+
+    const error = '导入已取消';
+    importVm.errorMessage.value = error;
+    importVm.status.value = WorkflowStatus.failed;
+    await tester.pumpAndSettle();
+    expect(find.text(error), findsOneWidget);
+    expect(find.text('重试').hitTestable(), findsOneWidget);
+    await tester.tap(find.text('确定'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ShadDialog), findsNothing);
+  });
+
+  testWidgets('三种导出窗口均使用配置的路径且不显示目录', (tester) async {
+    final dbcPath = '${tempDir.path}${Platform.pathSeparator}dbc';
+    final mpqPath = '${tempDir.path}${Platform.pathSeparator}mpq';
+    cfg.data.addAll({'dbc_dir': dbcPath, 'mpq_dir': mpqPath});
+    await tester.pumpWidget(dataPage);
+    final cases = [
+      (
+        button: dbcExportButton(),
+        patch: false,
+        finish: () {
+          expect(exportVm.outputDirectory.value, dbcPath);
+          exportVm.status.value = WorkflowStatus.succeeded;
+        },
+      ),
+      (
+        button: mpqExportButton(),
+        patch: true,
+        finish: () {
+          expect(mpqVm.outputDirectory.value, mpqPath);
+          mpqVm.status.value = WorkflowStatus.succeeded;
+        },
+      ),
+      (
+        button: combinedExportButton(),
+        patch: true,
+        finish: () {
+          expect(combinedVm.dbcOutputDirectory.value, dbcPath);
+          expect(combinedVm.mpqOutputDirectory.value, mpqPath);
+          combinedVm.status.value = WorkflowStatus.succeeded;
+        },
+      ),
+    ];
+
+    for (final scenario in cases) {
+      await tester.ensureVisible(scenario.button);
+      await tester.pumpAndSettle();
+      await tester.tap(scenario.button);
+      await tester.pumpAndSettle();
+
+      expect(find.text('浏览'), findsNothing);
+      expect(
+        find.text('MPQ 文件名'),
+        scenario.patch ? findsOneWidget : findsNothing,
+      );
+      expect(
+        buttonOf(tester, find.widgetWithText(ShadButton, '导出')).enabled,
+        isTrue,
+      );
+
+      scenario.finish();
+      await tester.pumpAndSettle();
+      expect(find.text('导出完成'), findsOneWidget);
+      expect(find.textContaining(tempDir.path), findsNothing);
+      if (scenario.patch) {
+        expect(
+          find.textContaining(MpqExportWorkflowViewModel.defaultPatchFileName),
+          findsOneWidget,
+        );
+      }
+      await tester.tap(find.text('完成'));
+      await tester.pumpAndSettle();
+    }
   });
 
   testWidgets('MPQ 导出完成后 DBC 导入/导出按钮恢复可用', (tester) async {
@@ -549,7 +636,7 @@ void main() {
 
     // 关闭后点击「一键导出」应能打开组合导出对话框（区块在页面最上，
     // 先滚动回顶部）。
-    await tester.tap(find.text('关闭'));
+    await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
     await tester.ensureVisible(combinedExportButton());
     await tester.pumpAndSettle();
@@ -580,6 +667,34 @@ final class _FakeRegistry implements DbcExportRegistry {
   Future<List<Map<String, dynamic>>> loadRows(String tableName) async => [
     {'ID': 1},
   ];
+}
+
+final class _RunningDbcImportViewModel extends DbcImportWorkflowViewModel {
+  _RunningDbcImportViewModel({
+    required super.useCase,
+    required super.configUtil,
+  });
+
+  @override
+  Future<void> start() async {
+    status.value = WorkflowStatus.running;
+    progress.value = 0.5;
+  }
+}
+
+final class _SuccessIconWorker {
+  static Future<void> run(GameIconExtractWorkerArgs args) async {
+    args.sendPort.send((
+      'result',
+      const GameIconExtractionResult(
+        extracted: 1,
+        skipped: 0,
+        failed: 0,
+        errors: [],
+        cancelled: false,
+      ),
+    ));
+  }
 }
 
 /// In-memory ConfigUtil (no real IO), mirroring the wizard-test fake.
