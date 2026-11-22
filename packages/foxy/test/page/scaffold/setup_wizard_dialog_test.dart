@@ -166,7 +166,7 @@ void main() {
     expect(configData['client_dir'], clientRoot.path);
   });
 
-  testWidgets('三步全流程：配置目录 → 导入 → 自动提取 → 进入应用', (tester) async {
+  testWidgets('三步全流程：浏览目录 → 导入 → 自动提取 → 进入应用', (tester) async {
     await pumpWizard(tester);
 
     // Step 1: client directory.

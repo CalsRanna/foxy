@@ -50,32 +50,30 @@ enum DirectoryConfigTarget {
   String? pathOf(SetupStatusViewModel vm) =>
       this == clientDir ? vm.clientDir.value : vm.serverDir.value;
 
-  Future<bool> save(SetupStatusViewModel vm, String path) =>
-      this == clientDir ? vm.saveClientDir(path) : vm.saveServerDir(path);
+  Future<bool> save(
+    BuildContext context,
+    SetupStatusViewModel vm,
+    String path,
+  ) async {
+    try {
+      final saved = await (this == clientDir
+          ? vm.saveClientDir(path)
+          : vm.saveServerDir(path));
+      if (!saved && context.mounted) {
+        final error = errorOf(vm);
+        if (error != null) DialogUtil.instance.error(error);
+      }
+      return saved;
+    } catch (error) {
+      if (context.mounted) {
+        DialogUtil.instance.error('保存目录失败：${FoxyExceptions.message(error)}');
+      }
+      return false;
+    }
+  }
 }
 
-/// Config dialog for a single directory: based on [DirectoryPathForm],
-/// with "Cancel / Save".
-class DirectoryPathConfigDialog extends StatefulWidget {
-  final SetupStatusViewModel vm;
-  final DirectoryConfigTarget target;
-
-  const DirectoryPathConfigDialog({
-    super.key,
-    required this.vm,
-    required this.target,
-  });
-
-  @override
-  State<DirectoryPathConfigDialog> createState() =>
-      _DirectoryPathConfigDialogState();
-}
-
-/// Directory-path input and browse form.
-///
-/// Reused by the directory-config dialog and wizard steps 1/2; saving goes
-/// through [SetupStatusViewModel]'s validation and persistence, with errors
-/// surfaced via the target's error signal.
+/// Directory-path input and browse form for setup wizard steps 1/2.
 class DirectoryPathForm extends StatefulWidget {
   final SetupStatusViewModel vm;
   final DirectoryConfigTarget target;
@@ -134,17 +132,7 @@ class DirectoryPathFormState extends State<DirectoryPathForm> {
     if (_saving) return false;
     _saving = true;
     try {
-      final saved = await target.save(widget.vm, controller.collect());
-      if (!saved && mounted) {
-        final error = target.errorOf(widget.vm);
-        if (error != null) DialogUtil.instance.error(error);
-      }
-      return saved;
-    } catch (error) {
-      if (mounted) {
-        DialogUtil.instance.error('保存目录失败：${FoxyExceptions.message(error)}');
-      }
-      return false;
+      return await target.save(context, widget.vm, controller.collect());
     } finally {
       _saving = false;
     }
@@ -159,7 +147,7 @@ class DirectoryPathFormState extends State<DirectoryPathForm> {
 
 /// Directory-config item on the settings page: title + description +
 /// current path + "Modify" button.
-class DirectorySettingRow extends StatelessWidget {
+class DirectorySettingRow extends StatefulWidget {
   final SetupStatusViewModel vm;
   final DirectoryConfigTarget target;
 
@@ -170,7 +158,16 @@ class DirectorySettingRow extends StatelessWidget {
   });
 
   @override
+  State<DirectorySettingRow> createState() => _DirectorySettingRowState();
+}
+
+class _DirectorySettingRowState extends State<DirectorySettingRow> {
+  bool _selecting = false;
+
+  @override
   Widget build(BuildContext context) {
+    final vm = widget.vm;
+    final target = widget.target;
     final theme = ShadTheme.of(context);
     final colors = theme.colorScheme;
     final detailStyle = theme.textTheme.muted.copyWith(
@@ -218,45 +215,32 @@ class DirectorySettingRow extends StatelessWidget {
             ),
             ShadButton.outline(
               size: ShadButtonSize.sm,
-              onPressed: () => DialogUtil.show(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) =>
-                    DirectoryPathConfigDialog(vm: vm, target: target),
-              ),
-              child: Text(path == null ? '配置目录' : '修改目录'),
+              onPressed: _selecting ? null : _selectDirectory,
+              child: Text('浏览目录'),
             ),
           ],
         );
       },
     );
   }
-}
 
-class _DirectoryPathConfigDialogState extends State<DirectoryPathConfigDialog> {
-  final _formKey = GlobalKey<DirectoryPathFormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return SettingDialogShell(
-      title: '设置${widget.target.title}',
-      actions: [
-        ShadButton.outline(
-          onPressed: () => Navigator.of(context).maybePop(),
-          child: const Text('取消'),
-        ),
-        ShadButton(onPressed: _save, child: const Text('保存')),
-      ],
-      child: DirectoryPathForm(
-        key: _formKey,
-        vm: widget.vm,
-        target: widget.target,
-      ),
-    );
-  }
-
-  Future<void> _save() async {
-    final saved = await _formKey.currentState?.save() ?? false;
-    if (saved && mounted) Navigator.of(context).maybePop();
+  Future<void> _selectDirectory() async {
+    if (_selecting) return;
+    setState(() => _selecting = true);
+    final vm = widget.vm;
+    final target = widget.target;
+    try {
+      final path = await getDirectoryPath(
+        initialDirectory: target.configuredOf(vm) ? target.pathOf(vm) : null,
+      );
+      if (path == null || !mounted) return;
+      await target.save(context, vm, path);
+    } catch (error) {
+      if (mounted) {
+        DialogUtil.instance.error('选择目录失败：${FoxyExceptions.message(error)}');
+      }
+    } finally {
+      if (mounted) setState(() => _selecting = false);
+    }
   }
 }

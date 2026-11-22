@@ -135,7 +135,7 @@ final class FindFoxyFeatureTool extends AgentTool {
           SettingSection.environment.label,
           DirectoryConfigTarget.groupLabel,
           target.title,
-        ], '点击「配置目录」或「修改目录」，选择目录后点击「保存」。'),
+        ], '点击「浏览目录」，选择目录后点击「保存」。'),
       ),
       _FeatureEntry(
         '动态',

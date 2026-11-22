@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_worker.dart';
@@ -206,6 +208,54 @@ void main() {
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('配置和修改游戏目录直接使用系统选择器', (tester) async {
+    const channel = MethodChannel('plugins.flutter.io/file_selector');
+    final messenger = tester.binding.defaultBinaryMessenger;
+    final initialDirectories = <Object?>[];
+    String? selection;
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      expect(call.method, 'getDirectoryPath');
+      initialDirectories.add(call.arguments['initialDirectory']);
+      return selection;
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
+    final configure = find.widgetWithText(ShadButton, '浏览目录');
+    await tester.tap(configure.first);
+    await tester.pumpAndSettle();
+    expect(initialDirectories, [null]);
+    expect(find.byType(ShadDialog), findsNothing);
+    expect(cfg.data['client_dir'], isNull);
+
+    final setup = GetIt.instance.get<SetupStatusViewModel>();
+    selection = tempDir.path;
+    await tester.runAsync(() async {
+      final saved = Completer<void>();
+      final unsubscribe = setup.serverDir.subscribe((path) {
+        if (path == tempDir.path) saved.complete();
+      });
+      try {
+        await tester.tap(configure.last);
+        await saved.future.timeout(const Duration(seconds: 5));
+      } finally {
+        unsubscribe();
+      }
+    });
+    await tester.pumpAndSettle();
+    expect(initialDirectories, [null, null]);
+    expect(cfg.data['server_dir'], tempDir.path);
+    expect(find.text(tempDir.path), findsOneWidget);
+    expect(find.byType(ShadDialog), findsNothing);
+
+    selection = null;
+    await tester.tap(find.widgetWithText(ShadButton, '浏览目录'));
+    await tester.pumpAndSettle();
+    expect(initialDirectories, [null, null, tempDir.path]);
+    expect(cfg.data['server_dir'], tempDir.path);
+    expect(find.byType(ShadDialog), findsNothing);
   });
 
   testWidgets('在设置中打开并保存已有的模型服务商配置', (tester) async {
