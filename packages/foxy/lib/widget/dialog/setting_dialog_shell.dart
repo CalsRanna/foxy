@@ -14,11 +14,14 @@ class SettingDialogShell extends StatelessWidget {
 
   final List<Widget> actions;
 
+  final bool compact;
+
   const SettingDialogShell({
     super.key,
     required this.title,
     required this.child,
     this.actions = const [],
+    this.compact = false,
   });
 
   @override
@@ -26,7 +29,10 @@ class SettingDialogShell extends StatelessWidget {
     return ShadDialog(
       closeIcon: const SizedBox.shrink(),
       titlePinned: true,
-      constraints: DialogUtil.constraints(context),
+      constraints: compact
+          ? DialogUtil.compactConstraints(context)
+          : DialogUtil.constraints(context),
+      actionsMainAxisSize: compact ? MainAxisSize.max : null,
       title: title,
       actions: actions,
       child: child,

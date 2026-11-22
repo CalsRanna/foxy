@@ -47,8 +47,10 @@ mixin DialogErrorState<T extends StatefulWidget> on State<T> {
 class DialogUtil {
   static final instance = DialogUtil._();
 
-  /// Uniform dialog max width (consistent across the project).
+  /// Default maximum width for business dialogs.
   static const width = 720.0;
+
+  static const _compactWidth = 480.0;
 
   /// Dialog max height = screen height × this ratio.
   static const maxHeightRatio = 0.8;
@@ -97,7 +99,8 @@ class DialogUtil {
         return ShadDialog.alert(
           title: Text(title),
           description: description != null ? Text(description) : null,
-          constraints: constraints(context),
+          constraints: compactConstraints(context),
+          actionsMainAxisSize: MainAxisSize.max,
           actions: [
             ShadButton.outline(
               child: Text(cancelText),
@@ -166,7 +169,8 @@ class DialogUtil {
               title: const Text('错误'),
               description: Text(error),
               closeIcon: const SizedBox.shrink(),
-              constraints: constraints(context),
+              constraints: compactConstraints(context),
+              actionsMainAxisSize: MainAxisSize.max,
               actions: [
                 ShadButton(
                   child: const Text('确定'),
@@ -192,6 +196,12 @@ class DialogUtil {
       maxWidth: width,
       maxHeight: MediaQuery.of(context).size.height * maxHeightRatio,
     );
+  }
+
+  /// Fixed width for dialogs that use the compact layout.
+  static BoxConstraints compactConstraints(BuildContext context) {
+    return constraints(context)
+        .copyWith(minWidth: _compactWidth, maxWidth: _compactWidth);
   }
 
   /// Shows a dialog, wrapping [showShadDialog] with the project's default
