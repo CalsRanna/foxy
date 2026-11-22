@@ -32,7 +32,7 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 | --- | --- |
 | `list_tables` | 列出可查询的表（可按名称/中文标签过滤） |
 | `describe_table` | 返回一张表的列、类型、中文含义与主键；带语义的列附带 `semantics` 摘要 |
-| `describe_field_values` | 按需返回某列 enum/flags/reference 的完整含义（值→标签、位定义、引用目标） |
+| `describe_field_values` | 按需解释某列的枚举、位标志、引用目标或条件分支 |
 | `describe_references` | 返回目录里可查询的入向和出向引用，标记哪些出向关系可以展开 |
 | `server_time` | 一次查询读取 MySQL 当前时间、会话时区与 UTC 偏移 |
 | `count_rows` | 对全部匹配行执行 `COUNT(*)`，支持与 `query_rows` 相同的过滤条件，不受 50 行上限影响 |
@@ -40,6 +40,10 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 | `query_rows` | 按列过滤、排序、分页，单页最多 50 行（默认 20），可用 `expand` 展开引用；操作符含 `equals`/`notEquals`/`contains`/`in`/大小比较，`in` 的 `value` 传数组 |
 | `get_row` | 按主键读取单行，也支持 `expand` |
 | `query_sql` | 执行一条通过目录白名单校验的 MySQL `SELECT`，支持联表、筛选、分组、聚合和排序 |
+
+### 条件字段
+
+`describe_table` 用 `kind: conditional` 和 `dependsOn` 标出按行变化的字段。调用 `describe_field_values` 时省略 `context` 可查看分支摘要，筛选或联表时带上所选分支的所有 `when` 条件。读取一行后可传入实际列值，例如 `{"table":"conditions","column":"ConditionValue2","context":{"ConditionTypeOrReference":31,"ConditionValue1":3,"ConditionValue2":123}}`，工具返回对应分支和原始值。如果缺少判断所需的列，`missingContext` 会列出它们。
 
 ### SQL 联表查询
 

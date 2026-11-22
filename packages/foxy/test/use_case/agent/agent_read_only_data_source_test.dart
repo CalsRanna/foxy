@@ -251,6 +251,190 @@ void main() {
     expect(column.semantics!.values[1], '野兽');
   });
 
+  group('conditional field meanings', () {
+    const type = 'ConditionTypeOrReference';
+    const value1 = 'ConditionValue1';
+    const value2 = 'ConditionValue2';
+    const value3 = 'ConditionValue3';
+    const rows = [
+      {type: 2, value1: 67, value2: 123},
+      {type: 31, value1: 3, value2: 123},
+      {type: 31, value1: 5, value2: 123},
+    ];
+
+    late _ReadOnlyDriver driver;
+    late List<AgentTool> tools;
+
+    AgentTool tool(String name) =>
+        tools.singleWhere((tool) => tool.name == name);
+
+    Future<Map<String, Object?>> describe(
+      String column, [
+      Map<String, Object?>? context,
+    ]) async {
+      final result = await tool('describe_field_values').call({
+        'table': 'conditions',
+        'column': column,
+        'context': ?context,
+      }) as Map<String, Object?>;
+      return result['semantics']! as Map<String, Object?>;
+    }
+
+    setUp(() async {
+      driver = _ReadOnlyDriver(
+        [type, value1, value2, value3]
+            .map(
+              (column) => _row('world', 'conditions', column, 'int', 'PRI', ''),
+            )
+            .toList(),
+        resultRows: rows,
+      );
+      final source = AgentReadOnlyDataSource(
+        _AgentConfig({'database': 'world'}),
+        laconic: Laconic(driver),
+      );
+      tools = createReadOnlyTools(
+        catalog: await source.getCatalog(),
+        dataSource: source,
+      );
+    });
+
+    test(
+      'discovers the exact predicates before querying three equal values',
+      () async {
+        final schema = await tool(
+          'describe_table',
+        ).call({'table': 'conditions'}) as Map<String, Object?>;
+        final table = schema['table']! as Map<String, Object?>;
+        final columns = table['columns']! as List<Map<String, Object?>>;
+        expect(columns.skip(1).map((column) => column['semantics']), [
+          containsPair('dependsOn', [type]),
+          containsPair('dependsOn', [type, value1]),
+          containsPair('dependsOn', [type]),
+        ]);
+        final discovery = await describe(value2);
+        final branches = discovery['branches']! as List<Map<String, Object?>>;
+        final creatureBranch = branches.singleWhere((branch) {
+          final semantics = branch['semantics']! as Map<String, Object?>;
+          final reference = semantics['reference'] as Map<String, Object?>?;
+          return reference?['table'] == 'creature_template';
+        });
+        final conditions =
+            creatureBranch['when']! as List<Map<String, Object?>>;
+        expect(conditions, [
+          {'column': type, 'operator': 'equals', 'value': 31},
+          {'column': value1, 'operator': 'equals', 'value': 3},
+        ]);
+
+        const select = 'SELECT $type, $value1, $value2 FROM conditions';
+        final querySql = tool('query_sql');
+        final all =
+            await querySql.call({'sql': select}) as Map<String, Object?>;
+        final rawRows = all['rows']! as List<Map<String, Object?>>;
+        expect(rawRows, rows);
+        final explanations = await Future.wait(
+          rawRows.map((row) => describe(value2, row)),
+        );
+        expect(
+          explanations.map((result) => result['status']),
+          everyElement('resolved'),
+        );
+        expect(explanations.map((result) => result['value']), [123, 123, 123]);
+        expect(
+          explanations.map(
+            (result) =>
+                (result['branch']! as Map<String, Object?>)['semantics'],
+          ),
+          [
+            {'kind': 'number', 'label': '数量'},
+            containsPair('reference', {
+              'table': 'creature_template',
+              'column': 'entry',
+            }),
+            containsPair('reference', {
+              'table': 'gameobject_template',
+              'column': 'entry',
+            }),
+          ],
+        );
+
+        expect(
+          rawRows.where(
+            (row) =>
+                row[value2] == 123 &&
+                conditions.every(
+                  (condition) => row[condition['column']] == condition['value'],
+                ),
+          ),
+          [rows[1]],
+        );
+        final predicates = conditions.map(
+          (condition) => '${condition['column']} = ${condition['value']}',
+        );
+        await querySql.call({
+          'sql': '$select WHERE ${predicates.join(' AND ')} AND $value2 = 123',
+        });
+        expect(
+          driver.queries.last.sql,
+          contains('WHERE $type = 31 AND $value1 = 3 AND $value2 = 123'),
+        );
+      },
+    );
+
+    test(
+      'handles partial context, unknown selectors, unused and special values',
+      () async {
+        final partial = await describe(value2, {type: 31});
+        expect(partial['status'], 'needsContext');
+        expect(partial['missingContext'], [value1]);
+        expect(partial['branches'], hasLength(4));
+
+        final unknown = await describe(value2, {
+          type: 31,
+          value1: 99,
+          value2: 123,
+        });
+        expect(unknown['status'], 'unknown');
+        expect(unknown['value'], 123);
+
+        final template = await describe(value2, {type: -3, value2: 0});
+        expect(
+          template['branch'],
+          containsPair('semantics', {'kind': 'unused', 'label': '未使用'}),
+        );
+
+        final anyEntry = await describe(value2, {
+          type: 31,
+          value1: 3,
+          value2: 0,
+        });
+        expect(anyEntry['valueLabel'], '不限制对象条目，无需联表');
+
+        final standState = await describe(value2, {
+          type: 42,
+          value1: 0,
+          value2: 1,
+        });
+        final standCategory = await describe(value2, {
+          type: 42,
+          value1: 1,
+          value2: 1,
+        });
+        expect(standState['valueLabel'], '坐下');
+        expect(standCategory['valueLabel'], isNot(standState['valueLabel']));
+
+        expect(
+          await tool('describe_field_values').call({
+            'table': 'conditions',
+            'column': value2,
+            'context': {type: '31'},
+          }),
+          'Context column "$type" must be an integer.',
+        );
+      },
+    );
+  });
+
   test('skips rows with missing identifiers', () {
     final catalog = AgentReadOnlyDataSource.buildCatalog([
       _row('acore_world', '', 'x', 'int', '', ''),

@@ -341,6 +341,57 @@ final class FoxySemanticsGenerator implements Generator {
         element: field,
       );
     }
+    final branches = annotation.getField('branches')?.toFunctionValue();
+    if (branches != null) {
+      final owner = branches.enclosingElement;
+      final method = branches.name;
+      if (branches is! MethodElement ||
+          !branches.isStatic ||
+          method == null ||
+          method.startsWith('_') ||
+          owner is! ClassElement ||
+          owner.name == null ||
+          owner.name!.startsWith('_')) {
+        throw InvalidGenerationSourceError(
+          '@FoxyFieldMeaning on $field requires a public static branch method.',
+          todo: 'Fix: pass a public static method on a public class.',
+          element: field,
+        );
+      }
+      final entity = field.enclosingElement as ClassElement;
+      final columns = <String>{};
+      final dependencies = annotation.getField('dependsOn')?.toListValue();
+      if (dependencies == null || dependencies.isEmpty) {
+        throw InvalidGenerationSourceError(
+          '@FoxyFieldMeaning on $field requires at least one dependency.',
+          todo: 'Fix: list the entity field names in dependsOn.',
+          element: field,
+        );
+      }
+      for (final dependency in dependencies) {
+        final name = dependency.toStringValue();
+        final source = entity.fields.firstWhereOrNull(
+          (candidate) => !candidate.isStatic && candidate.name == name,
+        );
+        final physicalField = source == null
+            ? null
+            : _fullFieldChecker.firstAnnotationOfExact(source);
+        final column = physicalField?.getField('name')?.toStringValue();
+        if (column == null || column.isEmpty || !columns.add(column)) {
+          throw InvalidGenerationSourceError(
+            '@FoxyFieldMeaning on $field has an unknown or repeated '
+            'dependency "$name".',
+            todo: 'Fix: list distinct entity fields declared with @FoxyFullField.',
+            element: field,
+          );
+        }
+      }
+      return _ColumnMeaning.conditional(
+        label,
+        dependsOn: columns.toList(),
+        branches: '${owner.name}.$method',
+      );
+    }
     final values = annotation.getField('values')?.toMapValue();
     if (values != null && values.isNotEmpty) {
       final options = <int, String>{};
@@ -393,8 +444,8 @@ final class FoxySemanticsGenerator implements Generator {
     }
     throw InvalidGenerationSourceError(
       '@FoxyFieldMeaning on $field declares no values, flags or reference '
-      'target.',
-      todo: 'Fix: use FoxyFieldMeaning.enumValues / .flags / .reference.',
+      'target or conditional branches.',
+      todo: 'Fix: use FoxyFieldMeaning.enumValues / .flags / .reference / .conditional.',
       element: field,
     );
   }
@@ -413,6 +464,10 @@ final class _ColumnMeaning {
 
   final String? referenceColumn;
 
+  final List<String> dependsOn;
+
+  final String? branches;
+
   const _ColumnMeaning.enumValues(String label, Map<int, String> values)
     : this._(label, _MeaningKind.enumValues, values, const [], null, null);
 
@@ -425,14 +480,31 @@ final class _ColumnMeaning {
     required String column,
   }) : this._(label, _MeaningKind.reference, const {}, const [], table, column);
 
+  const _ColumnMeaning.conditional(
+    String label, {
+    required List<String> dependsOn,
+    required String branches,
+  }) : this._(
+         label,
+         _MeaningKind.conditional,
+         const {},
+         const [],
+         null,
+         null,
+         dependsOn: dependsOn,
+         branches: branches,
+       );
+
   const _ColumnMeaning._(
     this.label,
     this.kind,
     this.values,
     this.flags,
     this.referenceTable,
-    this.referenceColumn,
-  );
+    this.referenceColumn, {
+    this.dependsOn = const [],
+    this.branches,
+  });
 
   String toDart() => switch (kind) {
     _MeaningKind.enumValues =>
@@ -445,6 +517,10 @@ final class _ColumnMeaning {
       'ColumnSemantics.reference(label: ${dartStringLiteral(label)}, '
           'reference: ColumnReference(table: ${dartStringLiteral(referenceTable!)}, '
           'column: ${dartStringLiteral(referenceColumn!)}))',
+    _MeaningKind.conditional =>
+      'ColumnSemantics.conditional(label: ${dartStringLiteral(label)}, '
+          'dependsOn: [${dependsOn.map(dartStringLiteral).join(', ')}], '
+          'branches: $branches)',
   };
 }
 
@@ -474,7 +550,7 @@ final class _InferenceStats {
   var resolveFailures = 0;
 }
 
-enum _MeaningKind { enumValues, flags, reference }
+enum _MeaningKind { enumValues, flags, reference, conditional }
 
 final class _ViewPicker {
   final String fieldName;

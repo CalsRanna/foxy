@@ -24,6 +24,12 @@ final class FoxyFieldMeaning {
   /// Referenced column, set by [FoxyFieldMeaning.reference].
   final String? referenceColumn;
 
+  /// Entity field names used to determine a conditional meaning.
+  final List<String>? dependsOn;
+
+  /// Public static method that receives the resolved physical column names.
+  final Object Function(List<String>)? branches;
+
   const FoxyFieldMeaning.enumValues(
     String label, {
     required Map<int, String> values,
@@ -38,11 +44,27 @@ final class FoxyFieldMeaning {
     required String column,
   }) : this._(label, null, null, table, column);
 
+  const FoxyFieldMeaning.conditional(
+    String label, {
+    required List<String> dependsOn,
+    required Object Function(List<String>) branches,
+  }) : this._(
+         label,
+         null,
+         null,
+         null,
+         null,
+         dependsOn: dependsOn,
+         branches: branches,
+       );
+
   const FoxyFieldMeaning._(
     this.label,
     this.values,
     this.flags,
     this.referenceTable,
-    this.referenceColumn,
-  );
+    this.referenceColumn, {
+    this.dependsOn,
+    this.branches,
+  });
 }

@@ -1,3 +1,5 @@
+import 'package:foxy_agent/src/tools/read_only_data_source.dart';
+
 /// One labelled bit inside a flags column.
 final class ColumnFlag {
   /// Bit value (a power of two for single-bit flags).
@@ -25,7 +27,60 @@ final class ColumnReference {
 }
 
 /// What kind of meaning a [ColumnSemantics] carries.
-enum ColumnSemanticKind { enumValues, flags, reference }
+enum ColumnSemanticKind {
+  enumValues,
+  flags,
+  reference,
+  number,
+  unused,
+  conditional,
+}
+
+/// An integer comparison over the row that determines a field's meaning.
+final class ColumnSemanticCondition {
+  final String column;
+  final FilterOperator operator;
+  final int value;
+
+  const ColumnSemanticCondition.equals(this.column, this.value)
+    : operator = FilterOperator.equals;
+
+  const ColumnSemanticCondition.lessThan(this.column, this.value)
+    : operator = FilterOperator.lessThan;
+
+  bool matches(Map<String, Object?> context) {
+    if (!context.containsKey(column)) return true;
+    final actual = context[column];
+    return operator == FilterOperator.equals
+        ? actual == value
+        : actual is num && actual < value;
+  }
+
+  Map<String, Object?> toJson() => {
+    'column': column,
+    'operator': operator.wireName,
+    'value': value,
+  };
+}
+
+/// A field meaning that applies when every comparison in [when] holds.
+final class ColumnSemanticBranch {
+  final String label;
+  final List<ColumnSemanticCondition> when;
+  final ColumnSemantics semantics;
+
+  const ColumnSemanticBranch({
+    required this.label,
+    required this.when,
+    required this.semantics,
+  });
+
+  Map<String, Object?> toJson({required bool compact}) => {
+    'label': label,
+    'when': when.map((condition) => condition.toJson()).toList(),
+    'semantics': compact ? semantics.summaryJson() : semantics.toJson(),
+  };
+}
 
 /// Machine-readable meaning of a physical column.
 ///
@@ -48,6 +103,10 @@ final class ColumnSemantics {
   /// Reference target (only for [ColumnSemanticKind.reference]).
   final ColumnReference? reference;
 
+  final List<String> dependsOn;
+  final List<ColumnSemanticBranch> Function(List<String>)? _buildBranches;
+  final Map<int, String> _specialValues;
+
   const ColumnSemantics.enumValues({
     required String label,
     required Map<int, String> values,
@@ -61,12 +120,43 @@ final class ColumnSemantics {
   const ColumnSemantics.reference({
     required String label,
     required ColumnReference reference,
+    Map<int, String> specialValues = const {},
   }) : this._(
          label,
          ColumnSemanticKind.reference,
          const {},
          const [],
          reference,
+         specialValues: specialValues,
+       );
+
+  const ColumnSemantics.number({
+    required String label,
+    Map<int, String> specialValues = const {},
+  }) : this._(
+         label,
+         ColumnSemanticKind.number,
+         const {},
+         const [],
+         null,
+         specialValues: specialValues,
+       );
+
+  const ColumnSemantics.unused({required String label})
+    : this._(label, ColumnSemanticKind.unused, const {}, const [], null);
+
+  const ColumnSemantics.conditional({
+    required String label,
+    required List<String> dependsOn,
+    required List<ColumnSemanticBranch> Function(List<String>) branches,
+  }) : this._(
+         label,
+         ColumnSemanticKind.conditional,
+         const {},
+         const [],
+         null,
+         dependsOn: dependsOn,
+         buildBranches: branches,
        );
 
   const ColumnSemantics._(
@@ -74,8 +164,11 @@ final class ColumnSemantics {
     this._kind,
     this._values,
     this.flags,
-    this.reference,
-  );
+    this.reference, {
+    this.dependsOn = const [],
+    this._buildBranches,
+    this._specialValues = const {},
+  });
 
   ColumnSemanticKind get kind => _kind;
 
@@ -85,6 +178,9 @@ final class ColumnSemantics {
     ColumnSemanticKind.enumValues => 'enum',
     ColumnSemanticKind.flags => 'flags',
     ColumnSemanticKind.reference => 'reference',
+    ColumnSemanticKind.number => 'number',
+    ColumnSemanticKind.unused => 'unused',
+    ColumnSemanticKind.conditional => 'conditional',
   };
 
   /// Compact form shown by `describe_table`.
@@ -92,12 +188,16 @@ final class ColumnSemantics {
     'kind': _kindName,
     'label': label,
     if (reference != null) 'reference': reference!.toJson(),
+    if (dependsOn.isNotEmpty) 'dependsOn': dependsOn,
+    if (_specialValues.isNotEmpty)
+      'specialValues': {
+        for (final entry in _specialValues.entries) '${entry.key}': entry.value,
+      },
   };
 
   /// Full form returned by `describe_field_values`.
   Map<String, Object?> toJson() => {
-    'kind': _kindName,
-    'label': label,
+    ...summaryJson(),
     ...switch (_kind) {
       ColumnSemanticKind.enumValues => {
         'values': {
@@ -107,7 +207,59 @@ final class ColumnSemantics {
       ColumnSemanticKind.flags => {
         'flags': [for (final flag in flags) flag.toJson()],
       },
-      ColumnSemanticKind.reference => {'reference': reference!.toJson()},
+      ColumnSemanticKind.conditional => {
+        'branches': _buildBranches!(dependsOn)
+            .map((branch) => branch.toJson(compact: true))
+            .toList(),
+      },
+      _ => const <String, Object?>{},
     },
   };
+
+  /// Returns the matching conditional branch and details for a row.
+  Map<String, Object?> describeForRow(
+    String column,
+    Map<String, Object?> context,
+  ) {
+    final matching = _buildBranches!(dependsOn)
+        .where((branch) => branch.when.every((test) => test.matches(context)))
+        .toList();
+    final missing = dependsOn
+        .where(
+          (name) =>
+              !context.containsKey(name) &&
+              matching.any(
+                (branch) => branch.when.any((test) => test.column == name),
+              ),
+        )
+        .toList();
+    final rawValue = context[column];
+    final result = {
+      ...summaryJson(),
+      if (context.containsKey(column)) 'value': rawValue,
+    };
+    if (missing.isNotEmpty) {
+      return {
+        ...result,
+        'status': 'needsContext',
+        'missingContext': missing,
+        'branches': matching
+            .map((branch) => branch.toJson(compact: true))
+            .toList(),
+      };
+    }
+    if (matching.length != 1) {
+      return {...result, 'status': 'unknown'};
+    }
+    final branch = matching.single;
+    final valueLabel =
+        branch.semantics._specialValues[rawValue] ??
+        branch.semantics.values[rawValue];
+    return {
+      ...result,
+      'status': 'resolved',
+      'branch': branch.toJson(compact: false),
+      'valueLabel': ?valueLabel,
+    };
+  }
 }

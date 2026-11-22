@@ -27,6 +27,9 @@ void main() {
                 contains("ColumnFlag(value: 1, label: '不可攻击')"),
                 contains('ColumnSemantics.reference('),
                 contains("table: 'creature_loot_template'"),
+                contains("'payload': ColumnSemantics.conditional("),
+                contains("dependsOn: ['type', 'unit_flags']"),
+                contains('branches: CodegenBranches.payload'),
                 // Inferred from the FoxyEnumPicker wiring in the view fixture.
                 contains("'rank'"),
                 contains("1: '精英'"),
@@ -53,6 +56,27 @@ void main() {
 
     expect(logContains(logs, 'requires @FoxyFullField'), isTrue);
   });
+
+  for (final dependency in ['missing', 'type']) {
+    test('rejects conditional dependency "$dependency"', () async {
+      final source = _meaningEntitySource.replaceFirst(
+        "dependsOn: ['type', 'unitFlags']",
+        "dependsOn: ['type', '$dependency']",
+      );
+      final logs = <String>[];
+      await testBuilder(
+        foxySemanticsBuilder(BuilderOptions.empty),
+        _assets(source),
+        isInput: (assetId) => assetId == _semanticsInputAsset,
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logContains(logs, 'unknown or repeated dependency "$dependency"'),
+        isTrue,
+      );
+    });
+  }
 }
 
 const _meaningEntityAsset = 'foxy|lib/entity/codegen_meaning_entity.dart';
@@ -82,14 +106,27 @@ class CodegenMeaningEntity with _CodegenMeaningEntityMixin {
   @FoxyFullField('lootid')
   final int lootId;
 
+  @FoxyFieldMeaning.conditional(
+    '参数',
+    dependsOn: ['type', 'unitFlags'],
+    branches: CodegenBranches.payload,
+  )
+  @FoxyFullField('payload')
+  final int payload;
+
   const CodegenMeaningEntity({
     this.type = 0,
     this.unitFlags = 0,
     this.lootId = 0,
+    this.payload = 0,
   });
 
   factory CodegenMeaningEntity.fromJson(Map<String, dynamic> json) =>
       _CodegenMeaningEntityMixin.fromJson(json);
+}
+
+class CodegenBranches {
+  static Object payload(List<String> columns) => columns;
 }
 ''';
 

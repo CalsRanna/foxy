@@ -30,6 +30,21 @@ abstract final class AgentFieldSemantics {
       ),
     },
     'conditions': {
+      'ConditionValue1': ColumnSemantics.conditional(
+        label: '条件参数 1',
+        dependsOn: ['ConditionTypeOrReference'],
+        branches: ConditionAgentFieldSemantics.value1,
+      ),
+      'ConditionValue2': ColumnSemantics.conditional(
+        label: '条件参数 2',
+        dependsOn: ['ConditionTypeOrReference', 'ConditionValue1'],
+        branches: ConditionAgentFieldSemantics.value2,
+      ),
+      'ConditionValue3': ColumnSemantics.conditional(
+        label: '条件参数 3',
+        dependsOn: ['ConditionTypeOrReference'],
+        branches: ConditionAgentFieldSemantics.value3,
+      ),
       'ErrorTextId': ColumnSemantics.enumValues(
         label: '自定义错误',
         values: {

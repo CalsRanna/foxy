@@ -1,5 +1,6 @@
 import 'package:foxy_agent/src/agent_tool.dart';
 import 'package:foxy_agent/src/tools/aggregate_tools.dart';
+import 'package:foxy_agent/src/tools/column_semantics.dart';
 import 'package:foxy_agent/src/tools/query_sql_tool.dart';
 import 'package:foxy_agent/src/tools/read_only_data_source.dart';
 import 'package:foxy_agent/src/tools/read_only_tool_input.dart';
@@ -52,10 +53,10 @@ final class DescribeFieldValuesTool extends AgentTool {
 
   @override
   String get description =>
-      'Explain what a column\'s values mean: enum value labels, bit flags, or '
-      'the referenced table/column. Columns with a semantics summary in '
-      'describe_table should be explained through this tool before drawing '
-      'conclusions; never guess the meaning of an undefined value.';
+      'Explain a column\'s enum values, bit flags, references, or conditional '
+      'meanings. For a conditional column, omit context to discover branches '
+      'before querying. Use every branch condition when filtering or joining. '
+      'Supply context to explain one row or inspect a specific branch.';
 
   @override
   Map<String, Object?> get inputSchema => const {
@@ -68,6 +69,13 @@ final class DescribeFieldValuesTool extends AgentTool {
       'column': {
         'type': 'string',
         'description': 'Column name from describe_table.',
+      },
+      'context': {
+        'type': 'object',
+        'description':
+            'Known physical column values for a conditional field. Include '
+            'the dependency columns and, if available, the value to explain.',
+        'additionalProperties': true,
       },
     },
     'required': ['table', 'column'],
@@ -99,10 +107,29 @@ final class DescribeFieldValuesTool extends AgentTool {
       return 'No semantic definition is available for "$columnName" on table '
           '"${table.qualifiedName}". Do not guess its meaning.';
     }
+    final rawContext = arguments['context'];
+    if (rawContext != null && rawContext is! Map<String, Object?>) {
+      return '"context" must be an object keyed by column name.';
+    }
+    final context = rawContext as Map<String, Object?>?;
+    if (semantics.kind == ColumnSemanticKind.conditional && context != null) {
+      for (final name in semantics.dependsOn) {
+        if (!context.containsKey(name)) continue;
+        final value = context[name];
+        if (value is! num ||
+            !value.isFinite ||
+            value != value.truncateToDouble()) {
+          return 'Context column "$name" must be an integer.';
+        }
+      }
+    }
     return {
       'table': table.qualifiedName,
       'column': columnName,
-      'semantics': semantics.toJson(),
+      'semantics':
+          semantics.kind == ColumnSemanticKind.conditional && context != null
+          ? semantics.describeForRow(columnName, context)
+          : semantics.toJson(),
     };
   }
 }

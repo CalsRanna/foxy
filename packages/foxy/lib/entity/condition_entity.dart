@@ -1,4 +1,6 @@
+import 'package:foxy/constant/condition_agent_field_semantics.dart';
 import 'package:foxy_annotation/entity_annotations.dart';
+import 'package:foxy_annotation/semantic_annotations.dart';
 import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'condition_entity.g.dart';
@@ -36,14 +38,29 @@ class ConditionEntity with _ConditionEntityMixin {
 
   @FoxyBriefField()
   @FoxyFullField('ConditionValue1', key: true)
+  @FoxyFieldMeaning.conditional(
+    '条件参数 1',
+    dependsOn: ['conditionTypeOrReference'],
+    branches: ConditionAgentFieldSemantics.value1,
+  )
   final int conditionValue1;
 
   @FoxyBriefField()
   @FoxyFullField('ConditionValue2', key: true)
+  @FoxyFieldMeaning.conditional(
+    '条件参数 2',
+    dependsOn: ['conditionTypeOrReference', 'conditionValue1'],
+    branches: ConditionAgentFieldSemantics.value2,
+  )
   final int conditionValue2;
 
   @FoxyBriefField()
   @FoxyFullField('ConditionValue3', key: true)
+  @FoxyFieldMeaning.conditional(
+    '条件参数 3',
+    dependsOn: ['conditionTypeOrReference'],
+    branches: ConditionAgentFieldSemantics.value3,
+  )
   final int conditionValue3;
 
   @FoxyFullField('NegativeCondition')

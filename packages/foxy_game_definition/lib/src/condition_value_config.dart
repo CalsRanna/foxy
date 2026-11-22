@@ -1,3 +1,4 @@
+import 'package:foxy_game_definition/src/condition_type.dart';
 import 'package:foxy_game_definition/src/creature_enums.dart';
 import 'package:foxy_game_definition/src/flag_item.dart';
 import 'package:foxy_game_definition/src/integer_field_spec.dart';
@@ -8,6 +9,10 @@ class ConditionValueConfig {
     Map<int, String>.from(SpellEnums.spellAuraTypeOptions)..remove(0),
   );
   static const _unused = IntegerNumberFieldSpec<ConditionValueReference>('未使用');
+  static const _value2Variants = {
+    31: _objectEntryConfig,
+    42: _standStateConfig,
+  };
   static const conditionUnitStateFlags = <FlagItem>[
     FlagItem(0x00000001, '死亡'),
     FlagItem(0x00000002, '近战攻击'),
@@ -121,53 +126,30 @@ class ConditionValueConfig {
 
   final IntegerFieldSpec<ConditionValueReference> value3;
   const ConditionValueConfig(this.value1, this.value2, this.value3);
+
+  /// Enumerates the contexts that affect the requested parameter.
+  static Iterable<({int type, int? value1})> parameterContexts({
+    required bool forValue2,
+  }) sync* {
+    for (final type in ConditionType.conditionTypeLabels.keys) {
+      final selector = forValue2 ? _value2Variants[type]?.call(0).value1 : null;
+      if (selector is IntegerEnumFieldSpec<ConditionValueReference>) {
+        for (final value1 in selector.options.keys) {
+          yield (type: type, value1: value1);
+        }
+      } else {
+        yield (type: type, value1: null);
+      }
+    }
+  }
+
+  static bool isUnused(IntegerFieldSpec<ConditionValueReference> spec) =>
+      identical(spec, _unused);
+
   static ConditionValueConfig forType(int type, {int value1 = 0}) {
     if (type < 0) return const ConditionValueConfig(_unused, _unused, _unused);
-    if (type == 31) {
-      return _config(
-        const IntegerEnumFieldSpec<ConditionValueReference>(
-          '对象类型',
-          options: {3: '单位', 4: '玩家', 5: '游戏对象', 7: '尸体'},
-        ),
-        switch (value1) {
-          3 => const IntegerReferenceFieldSpec<ConditionValueReference>(
-            '对象条目',
-            reference: ConditionValueReference.creature,
-          ),
-          5 => const IntegerReferenceFieldSpec<ConditionValueReference>(
-            '对象条目',
-            reference: ConditionValueReference.gameObject,
-          ),
-          _ => const IntegerNumberFieldSpec<ConditionValueReference>('对象条目'),
-        },
-        const IntegerNumberFieldSpec<ConditionValueReference>('生成/可攻击'),
-      );
-    }
-    if (type == 42) {
-      return _config(
-        const IntegerEnumFieldSpec<ConditionValueReference>(
-          '状态模式',
-          options: {0: '精确状态', 1: '站立/坐下分类'},
-        ),
-        IntegerEnumFieldSpec<ConditionValueReference>(
-          '站立状态',
-          options: value1 == 0
-              ? const {
-                  0: '站立',
-                  1: '坐下',
-                  2: '坐椅',
-                  3: '睡眠',
-                  4: '低椅',
-                  5: '中椅',
-                  6: '高椅',
-                  7: '死亡',
-                  8: '跪下',
-                  9: '浸没',
-                }
-              : ConditionValueConfig.conditionBooleanOptions,
-        ),
-      );
-    }
+    final variant = _value2Variants[type];
+    if (variant != null) return variant(value1);
     return switch (type) {
       1 => _config(
         IntegerReferenceFieldSpec<ConditionValueReference>(
@@ -486,6 +468,49 @@ class ConditionValueConfig {
     IntegerFieldSpec<ConditionValueReference> value2 = _unused,
     IntegerFieldSpec<ConditionValueReference> value3 = _unused,
   ]) => ConditionValueConfig(value1, value2, value3);
+
+  static ConditionValueConfig _objectEntryConfig(int value1) => _config(
+    const IntegerEnumFieldSpec<ConditionValueReference>(
+      '对象类型',
+      options: {3: '单位', 4: '玩家', 5: '游戏对象', 7: '尸体'},
+    ),
+    switch (value1) {
+      3 => const IntegerReferenceFieldSpec<ConditionValueReference>(
+        '对象条目',
+        reference: ConditionValueReference.creature,
+      ),
+      5 => const IntegerReferenceFieldSpec<ConditionValueReference>(
+        '对象条目',
+        reference: ConditionValueReference.gameObject,
+      ),
+      _ => const IntegerNumberFieldSpec<ConditionValueReference>('对象条目'),
+    },
+    const IntegerNumberFieldSpec<ConditionValueReference>('生成/可攻击'),
+  );
+
+  static ConditionValueConfig _standStateConfig(int value1) => _config(
+    const IntegerEnumFieldSpec<ConditionValueReference>(
+      '状态模式',
+      options: {0: '精确状态', 1: '站立/坐下分类'},
+    ),
+    IntegerEnumFieldSpec<ConditionValueReference>(
+      '站立状态',
+      options: value1 == 0
+          ? const {
+              0: '站立',
+              1: '坐下',
+              2: '坐椅',
+              3: '睡眠',
+              4: '低椅',
+              5: '中椅',
+              6: '高椅',
+              7: '死亡',
+              8: '跪下',
+              9: '浸没',
+            }
+          : ConditionValueConfig.conditionBooleanOptions,
+    ),
+  );
 }
 
 enum ConditionValueReference {

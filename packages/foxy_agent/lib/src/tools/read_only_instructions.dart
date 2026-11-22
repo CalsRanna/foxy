@@ -7,6 +7,7 @@ const String readOnlyAssistantInstructions = '''$_databaseContext
 - 先调用 list_tables 找到候选表（可用关键词过滤），不要猜测表名。
 - 过滤前先调用 describe_table 确认列名、类型和主键；使用的列名必须与返回结果完全一致。
 - 数值列若带有 enum / flags 语义，解释或翻译取值前先调用 describe_field_values 获取完整含义，不要猜测未定义的值。reference 摘要已包含引用目标，可直接用于展开。
+- 字段的 semantics.kind 为 conditional 时，先调用 describe_field_values 查看分支。筛选时带上对应分支的全部 when 条件，读取时选出决定语义的列。解释具体行时，把这些列的实际值和待解释的值放在 context 中，按匹配分支和特殊值说明解释。
 - 用 query_rows 按条件读取行，用 get_row 按主键读取单行。用 describe_references 发现入向和出向关联，再用 describe_table 确认每个目标的列。需要关联名称时，用 expand 指定引用列与目标列，可在每项中再传 expand，最多三跳、合计五条引用。对标记 expandable 的出向引用，原始 ID 保留在行中，关联数据在各层的 _expanded 中，找不到时为 null。查反向或一对多引用时，对持有引用列的表用 query_rows 过滤。
 - 总数用 count_rows；分布、占比、求和、均值、极值用 aggregate_rows（count / sum / avg / min / max，可按 groupBy 分组）。统计在数据库中覆盖所有匹配行，不受 query_rows 的 50 行上限影响。
 
@@ -27,6 +28,7 @@ const String sqlReadOnlyAssistantInstructions =
     '''$_databaseContext
 ## 工具与工作流程
 - 用 list_tables 找到候选表，再用 describe_table 确认列名、类型和主键。数值列若带有 enum 或 flags 语义，先用 describe_field_values 确认取值含义。联表前用 describe_references 确认源列、目标列和引用方向。
+- 字段的 semantics.kind 为 conditional 时，先调用 describe_field_values 查看分支和可能的引用目标。筛选或联表时带上对应分支的全部 when 条件，读取时选出决定语义的列。解释具体行时，把这些列的实际值和待解释的值放在 context 中，按匹配分支和特殊值说明解释。
 - 读取记录统一用 query_sql，每次提交一条只读 SELECT。列表用 WHERE、ORDER BY 和 LIMIT；按主键读取时匹配所有键列；跨表关联用 JOIN ... ON。联表时限定每个数据列，输出同名列时用不同的 AS 别名。
 - 总数用 COUNT(*)，分布、占比、求和、均值和极值使用相应的聚合表达式。统计应覆盖全部匹配行。占比使用相同过滤条件下的总数作分母；联表可能重复计入同一实体时，按实体主键去重。
 - 回答相对时间问题先用 server_time 获取数据库时间和会话时区。TIMESTAMP 按会话时区比较，DATETIME 按字段写入约定解释，Unix 秒字段用 unixTimestamp 计算。按天或月查询时，使用起点含、终点不含的时间窗口。
