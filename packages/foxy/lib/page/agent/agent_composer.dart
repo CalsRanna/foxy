@@ -63,7 +63,8 @@ class _AgentComposerState extends State<AgentComposer> {
       child: input,
       builder: (context, child) => AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+        margin: const EdgeInsetsDirectional.only(bottom: 16),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: colors.background,
           border: Border.all(

@@ -326,6 +326,7 @@ class _AgentPageState extends State<AgentPage> {
                   itemCount: groups.length,
                   itemBuilder: (context, index) =>
                       _buildMessageGroup(groups[index]),
+                  padding: EdgeInsets.symmetric(vertical: 16),
                 ),
               ),
             ),
@@ -588,10 +589,9 @@ class _AgentPageState extends State<AgentPage> {
 
   Widget _buildWorkspace() {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 160),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: 12,
         children: [
           Expanded(child: _buildMessageList()),
           _buildComposer(),
