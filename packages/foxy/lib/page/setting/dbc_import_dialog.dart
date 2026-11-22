@@ -67,13 +67,9 @@ class _DbcImportDialogState extends State<DbcImportDialog>
                   child: const Text('完成'),
                 ),
               ],
-              child: SettingDialogShell.banner(
-                context,
-                text:
-                    '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
-                    '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个' : ''}。',
-                color: theme.colorScheme.primary,
-                icon: LucideIcons.circleCheck,
+              child: SelectableText(
+                '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
+                '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个' : ''}。',
               ),
             );
           }

@@ -100,14 +100,10 @@ class _MpqExportDialogState extends State<MpqExportDialog>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 12,
                 children: [
-                  SettingDialogShell.banner(
-                    context,
-                    text:
-                        '已生成 MPQ 补丁'
-                        '${(_vm.result.value?.completed ?? 0) > 0 ? '，打包 ${_vm.result.value!.completed} 张 DBC 表' : ''}'
-                        '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}。',
-                    color: theme.colorScheme.primary,
-                    icon: LucideIcons.circleCheck,
+                  SelectableText(
+                    '已生成 MPQ 补丁'
+                    '${(_vm.result.value?.completed ?? 0) > 0 ? '，打包 ${_vm.result.value!.completed} 张 DBC 表' : ''}'
+                    '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}。',
                   ),
                   if (target != null)
                     SettingDialogShell.mutedHint(context, '已生成: $target'),

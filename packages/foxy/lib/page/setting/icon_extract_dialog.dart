@@ -65,14 +65,10 @@ class _IconExtractDialogState extends State<IconExtractDialog>
                   child: const Text('完成'),
                 ),
               ],
-              child: SettingDialogShell.banner(
-                context,
-                text:
-                    '提取完成：成功 ${result?.extracted ?? 0} 个'
-                    '${(result?.skipped ?? 0) > 0 ? '，跳过已存在 ${result!.skipped} 个' : ''}。'
-                    '图标已缓存到应用数据目录，直接显示在列表页。',
-                color: theme.colorScheme.primary,
-                icon: LucideIcons.circleCheck,
+              child: SelectableText(
+                '提取完成：成功 ${result?.extracted ?? 0} 个'
+                '${(result?.skipped ?? 0) > 0 ? '，跳过已存在 ${result!.skipped} 个' : ''}。'
+                '图标已缓存到应用数据目录，直接显示在列表页。',
               ),
             );
           }

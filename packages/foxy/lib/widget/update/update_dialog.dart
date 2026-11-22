@@ -152,13 +152,9 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
               ],
               child: restartFailed
                   ? const SizedBox.shrink()
-                  : SettingDialogShell.banner(
-                      context,
-                      text:
-                          '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
-                          '点击「立即重启」将关闭 Foxy 并自动完成更新，重启后即为新版本。',
-                      color: theme.colorScheme.primary,
-                      icon: LucideIcons.circleCheck,
+                  : SelectableText(
+                      '新版本 ${update?.version ?? ''} 已下载并校验完毕。'
+                      '点击「立即重启」将关闭 Foxy 并自动完成更新，重启后即为新版本。',
                     ),
             );
           }
@@ -240,12 +236,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
                   child: const Text('完成'),
                 ),
               ],
-              child: SettingDialogShell.banner(
-                context,
-                text: '当前已是最新版本，无需更新。',
-                color: theme.colorScheme.primary,
-                icon: LucideIcons.circleCheck,
-              ),
+              child: const SelectableText('当前已是最新版本，无需更新。'),
             );
           }
 

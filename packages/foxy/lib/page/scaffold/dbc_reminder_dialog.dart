@@ -17,7 +17,6 @@ class DbcReminderDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
     final shown = result.missingTables.take(5).join('\n');
     final suffix = result.missingTables.length > 5
         ? '\n...等 ${result.missingTables.length} 张表'
@@ -51,13 +50,9 @@ class DbcReminderDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12,
         children: [
-          SettingDialogShell.banner(
-            context,
-            text:
-                '检测到 ${result.missingTables.length} 张 DBC 表尚未导入数据库，'
-                '相关模块可能无法正常使用。',
-            color: theme.colorScheme.primary,
-            icon: LucideIcons.fileInput,
+          SelectableText(
+            '检测到 ${result.missingTables.length} 张 DBC 表尚未导入数据库，'
+            '相关模块可能无法正常使用。',
           ),
           SelectableText(
             shown + suffix,
