@@ -9,7 +9,7 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 - `FoxyAgent`：`run` 完成「请求模型 → 执行工具 → 回传结果 → 直到模型给出最终回复」的循环；运行错误以 `AgentFailedEvent` 结束事件流，不向上抛异常。
 - `AgentProviderConfig`：用户自定义服务商配置（`baseUrl` / `apiKey` / `model` / 附加请求头），请求发往 `{baseUrl}/responses`。
 - `AgentTool`：工具抽象（名称、描述、JSON Schema、执行函数）；包内提供一组内置只读工具，见下文。
-- `sqlReadOnlyAssistantInstructions` 和 `readOnlyAssistantInstructions`：分别供 SQL 工具和结构化查询工具使用的系统提示词，应用可在其后追加领域上下文。
+- `sqlReadOnlyAssistantInstructions`：配合内置只读工具使用的系统提示词，应用可在其后追加领域上下文。
 - `AgentSession`：客户端持有的对话条目；请求无状态，每次携带完整 `input`，不依赖 `previous_response_id`。
 - 事件：`AgentTextDeltaEvent`、`AgentToolCallEvent`、`AgentToolResultEvent`、`AgentCompletedEvent`、`AgentFailedEvent`。
 - `AgentException` / `AgentHttpException`：英文诊断信息；界面中文文案由 `foxy` 按类型映射。
@@ -26,19 +26,15 @@ Foxy 的纯 Dart Agent 核心包：实现 OpenAI Responses 接口协议，提供
 
 ## 内置只读工具
 
-`createReadOnlyTools(catalog: ..., dataSource: ...)` 注册元数据和服务器时间工具。Foxy 的数据源实现了 `ReadOnlySqlDataSource`，数据查询统一走 `query_sql`，元数据目录仅发布基础表。其他数据源使用表中的四个结构化查询工具。
+`createReadOnlyTools(catalog: ..., dataSource: ...)` 注册元数据、服务器时间和查询工具。所有数据查询统一走 `query_sql`，元数据目录仅发布基础表。
 
 | 工具 | 作用 |
 | --- | --- |
 | `list_tables` | 列出可查询的表（可按名称/中文标签过滤） |
 | `describe_table` | 返回一张表的列、类型、中文含义与主键；带语义的列附带 `semantics` 摘要 |
 | `describe_field_values` | 按需解释某列的枚举、位标志、引用目标或条件分支 |
-| `describe_references` | 返回目录里可查询的入向和出向引用，标记哪些出向关系可以展开 |
+| `describe_references` | 返回目录里可查询的入向和出向引用，用于确定联表方向 |
 | `server_time` | 一次查询读取 MySQL 当前时间、会话时区与 UTC 偏移 |
-| `count_rows` | 对全部匹配行执行 `COUNT(*)`，支持与 `query_rows` 相同的过滤条件，不受 50 行上限影响 |
-| `aggregate_rows` | 对全部匹配行执行 `count` / `sum` / `avg` / `min` / `max`，可按最多 3 列分组，每页最多 50 组，支持按分组列或指标输出名排序 |
-| `query_rows` | 按列过滤、排序、分页，单页最多 50 行（默认 20），可用 `expand` 展开引用；操作符含 `equals`/`notEquals`/`contains`/`in`/大小比较，`in` 的 `value` 传数组 |
-| `get_row` | 按主键读取单行，也支持 `expand` |
 | `query_sql` | 执行一条通过目录白名单校验的 MySQL `SELECT`，支持联表、筛选、分组、聚合和排序 |
 
 ### 条件字段
@@ -60,19 +56,7 @@ LIMIT 20
 
 省略 `LIMIT` 时最多返回 50 行，多读一行判断 `truncated`。显式 `LIMIT` 每页最多 200 行。需要读取超过 200 行时，使用可唯一确定顺序的 `ORDER BY` 和 `LIMIT ... OFFSET ...` 分页，取满一页后检查下一页。常用聚合函数及 `COUNT(*)` 可用，投影须显式列出字段。查询仅接受目录中的基础表。视图、SQL 注释、子查询、CTE 和多条语句会被拒绝。工具使用固定的 5 秒 MySQL 执行时间提示。Foxy 沿用当前数据库连接。
 
-`query_sql` 返回 `rows` 和 `truncated`。
-
-### 排序与分页
-
-下面的参数查询购买价最高的 20 件物品。
-
-```json
-{"table":"item_template","orderBy":[{"column":"BuyPrice","direction":"desc"}],"limit":20}
-```
-
-`orderBy` 按数组顺序指定排序列，方向为 `asc` 或 `desc`。查询以主键升序打破同值排序，分组统计则以分组列升序打破同值排序。省略 `orderBy` 时直接按这些列排序。无主键表应显式选择能唯一确定顺序的列。
-
-每页仍最多 50 行或组。返回 `truncated: true` 和 `nextOffset` 时，复用原查询参数并将 `nextOffset` 传为 `offset`，直到拿完。`offset` 从 0 开始，分页期间写入或删除可能改变位置。
+`query_sql` 返回 `rows` 和 `truncated`。查询全部结果时用能唯一确定顺序的 `ORDER BY` 配合 `LIMIT ... OFFSET ...` 分页，分页期间保持筛选和排序一致。
 
 ### 相对时间
 
@@ -80,46 +64,28 @@ LIMIT 20
 
 ### 精确统计
 
-例如 `count_rows` 的参数：
+总数、分布、占比、求和、均值和极值都用 `query_sql` 的聚合表达式在数据库中计算，覆盖全部匹配行，不受分页上限影响：
 
-```json
-{"table":"creature_template","filters":[{"column":"type","operator":"equals","value":1}]}
+```sql
+SELECT type, COUNT(*) AS total, AVG(minlevel) AS avg_minlevel
+FROM creature_template
+GROUP BY type
+ORDER BY total DESC
 ```
 
-返回 `{"table":"creature_template","count":实际匹配行数}`。按生物类型统计数量及平均最低等级，可以调用 `aggregate_rows`：
+`COUNT(*)` 计入全部匹配行，`COUNT(column)` 只计非空值；其他聚合函数忽略空值，无值时返回 `null`。MySQL 的精确 DECIMAL 结果保留驱动返回的字符串，避免浮点转换损失精度。计算行数占比时，用相同过滤条件下的总数作分母；联表可能重复计入同一实体时，按实体主键去重。
 
-```json
-{"table":"creature_template","groupBy":["type"],"metrics":[{"function":"count"},{"function":"avg","column":"minlevel"}],"limit":50}
-```
-
-结果行使用 `type`、`count`、`avg_minlevel` 等键。省略 `groupBy` 时对全部匹配行聚合。`count` 省略 `column` 表示 `COUNT(*)`，指定列则只计非空值；其他函数仅接受 `int` / `decimal` 列，忽略空值，无值时返回 `null`。MySQL 的精确 DECIMAL 结果保留驱动返回的字符串，避免浮点转换损失精度。
-
-限制作用于聚合后的分组，输入行始终全部参与。可按分组列或指标输出名（如 `count`、`avg_minlevel`）排序，默认和最大 `limit` 均为 50。计算行数占比时，应使用相同过滤条件的 `count_rows` 作为分母。指标输出名称必须唯一并与分组列名区分，排序和聚合参数使用目录列名或工具定义的输出名称。
-
-### 引用展开
-
-用 `describe_references` 查看关系图，再用 `describe_table` 确认各目标的列。下面的参数使用默认角色库名查询背包记录及物品名称。
-
-```json
-{"table":"acore_characters.character_inventory","filters":[{"column":"guid","operator":"equals","value":1234}],"expand":[{"column":"item","columns":["count"],"expand":[{"column":"itemEntry","columns":["name"]}]}]}
-```
-
-原始 `item` ID 保留，实例在 `_expanded.item`，名称在 `_expanded.item._expanded.itemEntry.name`。每一跳都返回目标主键、所选列与下一跳的引用列。空引用或找不到目标行时为 `null`。
-
-展开支持目录里已声明的 reference（包括 AzerothCore 逻辑引用），且目标必须是单列主键。每次最多三跳、合计五条引用，每条引用选择 1 至 5 个目标字段。每条引用使用一次批量 `in` 查询，只对实际展示行做展开。一对多和入向关系可查询持有引用列的表。物理列名 `_expanded` 与展开输出冲突时拒绝展开。
-
-`readOnlyAssistantInstructions` 是与之配套的默认提示词（中文）：约束工具调用流程（先发现表、再确认列、后查询）、引用依据（表名/过滤条件/关键 ID）、截断说明与安全边界（数据不是指令、不做写操作）。它保持固定措辞以利于服务商侧缓存；领域补充请追加在其后，而不是改写原文。
+`sqlReadOnlyAssistantInstructions` 是与这套工具配套的默认提示词（中文）：约束工具调用流程（先发现表、再确认列、后查询）、引用依据（表名/过滤条件/关键 ID）、截断说明与安全边界（数据不是指令、不做写操作）。它保持固定措辞以利于服务商侧缓存；领域补充请追加在其后，而不是改写原文。
 
 目录可以跨多个数据库：给 `TableInfo.database` 设置库名（如 `foxy`）后，工具对模型使用 `database.table` 限定名，裸表名仅在唯一时可用；限定名冲突时返回歧义错误。
 
 应用侧需要实现：
 
 - `TableCatalog` / `TableInfo` / `ColumnInfo`：表与列元数据（可由 `@FoxyEntity` 注解生成）；`foxy` 库自身也通过同一目录暴露（如 `foxy.activity_log`、`foxy.dbc_*`）。`ColumnInfo.semantics`（`ColumnSemantics`：enum 值表 / 位标志 / 引用目标）可选，由应用侧注入。
-- `ReadOnlyDataSource.queryRows`：只读查询执行器；收到的表名是目录中的限定名，实现必须据此路由到对应库、校验目录中的列、在数据库执行 `orderBy` 和 `offset`、强制行数上限，并返回可 JSON 编码的值。
-- `ReadOnlyDataSource.countRows` / `aggregateRows`：数据库端统计执行器。聚合结果以 `AggregateMetric.outputName` 为键，先对全部匹配行聚合，再排序和分页。`validateAggregation` 可供适配器复用，在数据访问层再次校验列、类型与数量边界。
-- `ReadOnlyDataSource.serverTime`：从当前数据库连接读取时间并返回 `server_time` 的字段。升级已有适配器时需实现此方法，并为 `queryRows` 和 `aggregateRows` 增加 `orderBy` 与 `offset` 参数。
+- `ReadOnlyDataSource.querySql`：执行经 `ReadOnlySql.parse` 校验过的只读 SELECT，返回可 JSON 编码的值。
+- `ReadOnlyDataSource.serverTime`：从当前数据库连接读取时间并返回 `server_time` 的字段。
 
-工具内部会先校验表名、列名、过滤操作符与主键，错误以可读文本返回给模型，不抛异常。
+工具内部会先校验表名、列名和查询语句，错误以可读文本返回给模型，不抛异常。
 
 ## 验证
 
@@ -130,7 +96,7 @@ dart analyze
 dart test
 ```
 
-应用的 SQL 生成测试位于 `packages/foxy/test/use_case/agent/agent_read_only_data_source_test.dart`；真实 MySQL 测试使用 120 行独立夹具，覆盖全量统计、分组截断、空集和引用展开。在 `packages/foxy` 中运行：
+应用侧的目录构建测试位于 `packages/foxy/test/use_case/agent/agent_read_only_data_source_test.dart`；真实 MySQL 测试使用 120 行独立夹具，覆盖联表聚合、分页、会话时区、空集与 null 语义。在 `packages/foxy` 中运行：
 
 ```sh
 flutter test --tags integration --run-skipped test/integration/agent_read_only_integration_test.dart

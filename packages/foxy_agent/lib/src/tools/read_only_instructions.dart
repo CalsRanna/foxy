@@ -1,28 +1,5 @@
 import 'package:foxy_agent/src/tools/read_only_sql.dart';
 
-/// Instructions for the structured read-only query tools.
-const String readOnlyAssistantInstructions = '''$_databaseContext
-## 工具与工作流程
-- 你只能通过提供的工具读取数据，不能修改任何数据。
-- 先调用 list_tables 找到候选表（可用关键词过滤），不要猜测表名。
-- 过滤前先调用 describe_table 确认列名、类型和主键；使用的列名必须与返回结果完全一致。
-- 数值列若带有 enum / flags 语义，解释或翻译取值前先调用 describe_field_values 获取完整含义，不要猜测未定义的值。reference 摘要已包含引用目标，可直接用于展开。
-- 字段的 semantics.kind 为 conditional 时，先调用 describe_field_values 查看分支。筛选时带上对应分支的全部 when 条件，读取时选出决定语义的列。解释具体行时，把这些列的实际值和待解释的值放在 context 中，按匹配分支和特殊值说明解释。
-- 用 query_rows 按条件读取行，用 get_row 按主键读取单行。用 describe_references 发现入向和出向关联，再用 describe_table 确认每个目标的列。需要关联名称时，用 expand 指定引用列与目标列，可在每项中再传 expand，最多三跳、合计五条引用。对标记 expandable 的出向引用，原始 ID 保留在行中，关联数据在各层的 _expanded 中，找不到时为 null。查反向或一对多引用时，对持有引用列的表用 query_rows 过滤。
-- 总数用 count_rows；分布、占比、求和、均值、极值用 aggregate_rows（count / sum / avg / min / max，可按 groupBy 分组）。统计在数据库中覆盖所有匹配行，不受 query_rows 的 50 行上限影响。
-
-## 查询规范
-- 用过滤条件缩小范围，避免拉取整表；默认返回 20 行，单次最多 50 行。
-- 互不依赖的工具调用尽量放在同一轮并行发起；需要一次匹配多个值时用 operator "in"、value 传数组，不要逐个值查询。
-- 探索性查询先取少量行确认数据形态，再逐步扩大或调整条件。
-- Top N 用 orderBy（数组项为 {column, direction}，direction 为 asc 或 desc）和 limit。query_rows 使用表列，aggregate_rows 使用分组列或指标输出名（如 count、sum_money）。
-- query_rows / aggregate_rows 返回 nextOffset 时，需要完整列表就保持过滤、排序、分组及指标参数一致，把 nextOffset 传为 offset，直至没有 nextOffset。无主键表要显式指定能唯一确定顺序的列。需要全量统计时用 count_rows / aggregate_rows，不要用明细样本估算总数。
-- aggregate_rows 最多返回 50 组；truncated 表示遗漏了部分分组，每个返回组的统计仍覆盖全部匹配行。行数占比的分母必须使用相同过滤条件的 count_rows，不能用截断分组的合计；分母为 0 时说明没有匹配数据。count 不指定 column 表示行数，指定 column 则只计非空值；其他聚合忽略空值，无可聚合值时为 null，不要当成 0。
-- 回答「最近 N 天」「上个月」等相对时间问题，先用 server_time 获取数据库当前时间。根据 describe_table 的类型和字段约定计算时间边界。MySQL TIMESTAMP 按会话时区比较，DATETIME 使用数据写入时的时间约定。对于确认使用 Unix 秒的字段，用 unixTimestamp 计算；查询「本次重启以来」还需确认对应服务器或 realm 的最近启动时间。按日或月查询可用 greaterOrEqual 和 lessThan 表达起点含、终点不含的窗口。
-- 收集到足够信息后立即回答，不要为了追求完整而继续无谓地调用工具。
-
-$_answerInstructions''';
-
 /// Instructions for metadata discovery and the `query_sql` tool.
 const String sqlReadOnlyAssistantInstructions =
     '''$_databaseContext

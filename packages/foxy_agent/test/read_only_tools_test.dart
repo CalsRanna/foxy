@@ -80,218 +80,6 @@ void main() {
     expect(result, contains('Unknown table "nope"'));
   });
 
-  test('query_rows validates filters and clamps the limit', () async {
-    final source = _FakeDataSource([
-      {'entry': 1},
-      {'entry': 2},
-    ]);
-    final tool = QueryRowsTool(_catalog, source);
-
-    final result = _asMap(
-      await tool.call({
-        'table': 'creature_template',
-        'filters': [
-          {'column': 'minlevel', 'operator': 'greaterOrEqual', 'value': 10},
-        ],
-        'limit': 999,
-      }),
-    );
-
-    expect(result['count'], 2);
-    expect(source.calls.single.table, 'creature_template');
-    expect(source.calls.single.limit, QueryRowsTool.maxLimit + 1);
-    final filter = source.calls.single.filters.single;
-    expect(filter.column, 'minlevel');
-    expect(filter.operator, FilterOperator.greaterOrEqual);
-    expect(filter.value, 10);
-  });
-
-  test('query_rows routes qualified names to the data source', () async {
-    final source = _FakeDataSource([
-      {'id': 1, 'module': 'item_template'},
-    ]);
-    final tool = QueryRowsTool(_catalog, source);
-
-    final result = _asMap(
-      await tool.call({
-        'table': 'foxy.activity_log',
-        'filters': [
-          {'column': 'module', 'operator': 'equals', 'value': 'item_template'},
-        ],
-        'limit': 5,
-      }),
-    );
-
-    expect(result['count'], 1);
-    expect(source.calls.single.table, 'foxy.activity_log');
-  });
-
-  test('query_rows marks truncated results', () async {
-    final source = _FakeDataSource([
-      {'entry': 1},
-      {'entry': 2},
-      {'entry': 3},
-    ]);
-    final tool = QueryRowsTool(_catalog, source);
-
-    final result = _asMap(
-      await tool.call({'table': 'creature_template', 'limit': 2}),
-    );
-
-    expect(result['count'], 2);
-    expect(result['truncated'], true);
-    expect(result['nextOffset'], 2);
-    expect(_asList(result['rows']), hasLength(2));
-  });
-
-  test(
-    'query_rows forwards ordering and can continue from nextOffset',
-    () async {
-      final source = _FakeDataSource([
-        for (var entry = 1; entry <= 120; entry++) {'entry': entry},
-      ]);
-      final tool = QueryRowsTool(_catalog, source);
-      final arguments = <String, Object?>{
-        'table': 'creature_template',
-        'limit': 50,
-        'orderBy': [
-          {'column': 'minlevel', 'direction': 'desc'},
-          {'column': 'entry', 'direction': 'asc'},
-        ],
-      };
-      final entries = <Object?>[];
-      var offset = 0;
-      for (final expectedOffset in [50, 100, null]) {
-        final page = _asMap(await tool.call({...arguments, 'offset': offset}));
-        entries.addAll(
-          _asList(page['rows']).map((row) => _asMap(row)['entry']),
-        );
-        final call = source.calls.last;
-        expect(call.offset, offset);
-        expect(call.orderBy.map((order) => (order.column, order.direction)), [
-          ('minlevel', SortDirection.desc),
-          ('entry', SortDirection.asc),
-        ]);
-        expect(page['nextOffset'], expectedOffset);
-        offset = page['nextOffset'] as int? ?? 0;
-      }
-      expect(entries, List.generate(120, (index) => index + 1));
-    },
-  );
-
-  test(
-    'query_rows rejects invalid sort keys, directions and offsets',
-    () async {
-      final source = _FakeDataSource([]);
-      final tool = QueryRowsTool(_catalog, source);
-      for (final invalid in <Map<String, Object?>>[
-        {'offset': -1},
-        {'offset': 1.5},
-        {'offset': '10'},
-        {'orderBy': 'entry desc'},
-        {
-          'orderBy': [
-            {'column': 'missing', 'direction': 'desc'},
-          ],
-        },
-        {
-          'orderBy': [
-            {'column': 'entry', 'direction': 'desc, rand()'},
-          ],
-        },
-        {
-          'orderBy': [
-            {'column': 'entry', 'direction': 'asc'},
-            {'column': 'entry', 'direction': 'desc'},
-          ],
-        },
-      ]) {
-        expect(
-          await tool.call({'table': 'creature_template', ...invalid}),
-          isA<String>(),
-        );
-      }
-      expect(source.calls, isEmpty);
-    },
-  );
-
-  test('query_rows rejects unknown columns and operators', () async {
-    final tool = QueryRowsTool(_catalog, _FakeDataSource([]));
-
-    final unknownColumn = await tool.call({
-      'table': 'creature_template',
-      'filters': [
-        {'column': 'nope', 'operator': 'equals', 'value': 1},
-      ],
-    });
-    expect(unknownColumn, contains('Unknown column "nope"'));
-
-    final unknownOperator = await tool.call({
-      'table': 'creature_template',
-      'filters': [
-        {'column': 'entry', 'operator': 'like', 'value': 1},
-      ],
-    });
-    expect(unknownOperator, contains('Unknown filter operator "like"'));
-  });
-
-  test('query_rows passes in-list filters to the data source', () async {
-    final source = _FakeDataSource([
-      {'entry': 1},
-    ]);
-    final tool = QueryRowsTool(_catalog, source);
-
-    final result = _asMap(
-      await tool.call({
-        'table': 'creature_template',
-        'filters': [
-          {
-            'column': 'entry',
-            'operator': 'in',
-            'value': [1, 2, 3],
-          },
-        ],
-      }),
-    );
-
-    expect(result['count'], 1);
-    final filter = source.calls.single.filters.single;
-    expect(filter.operator, FilterOperator.inList);
-    expect(filter.value, [1, 2, 3]);
-  });
-
-  test('query_rows validates in-list and scalar filter values', () async {
-    final tool = QueryRowsTool(_catalog, _FakeDataSource([]));
-
-    final emptyList = await tool.call({
-      'table': 'creature_template',
-      'filters': [
-        {'column': 'entry', 'operator': 'in', 'value': <Object?>[]},
-      ],
-    });
-    expect(emptyList, contains('non-empty array'));
-
-    final scalarForIn = await tool.call({
-      'table': 'creature_template',
-      'filters': [
-        {'column': 'entry', 'operator': 'in', 'value': 1},
-      ],
-    });
-    expect(scalarForIn, contains('non-empty array'));
-
-    final listForEquals = await tool.call({
-      'table': 'creature_template',
-      'filters': [
-        {
-          'column': 'entry',
-          'operator': 'equals',
-          'value': [1],
-        },
-      ],
-    });
-    expect(listForEquals, contains('must be a scalar'));
-  });
-
   test('describe_table exposes column semantics summaries', () async {
     const tool = DescribeTableTool(_catalog);
 
@@ -350,69 +138,6 @@ void main() {
     expect(result, contains('No semantic definition'));
   });
 
-  test('get_row queries by primary key with equality filters', () async {
-    final source = _FakeDataSource([
-      {'entry': 1234, 'name': 'Hogger'},
-    ]);
-    final tool = GetRowTool(_catalog, source);
-
-    final result = _asMap(
-      await tool.call({
-        'table': 'creature_template',
-        'key': {'entry': 1234},
-      }),
-    );
-
-    expect(result['found'], true);
-    expect(_asMap(result['row'])['name'], 'Hogger');
-    expect(source.calls.single.limit, 1);
-    final filter = source.calls.single.filters.single;
-    expect(filter.column, 'entry');
-    expect(filter.operator, FilterOperator.equals);
-  });
-
-  test('get_row reads rows from other databases by qualified name', () async {
-    final source = _FakeDataSource([
-      {'id': 7, 'module': 'item_template', 'action_type': 'update'},
-    ]);
-    final tool = GetRowTool(_catalog, source);
-
-    final result = _asMap(
-      await tool.call({
-        'table': 'foxy.activity_log',
-        'key': {'id': 7},
-      }),
-    );
-
-    expect(result['found'], true);
-    expect(source.calls.single.table, 'foxy.activity_log');
-    expect(source.calls.single.filters.single.operator, FilterOperator.equals);
-  });
-
-  test('get_row requires the primary-key columns', () async {
-    final tool = GetRowTool(_catalog, _FakeDataSource([]));
-
-    final result = await tool.call({
-      'table': 'creature_template',
-      'key': {'name': 'Hogger'},
-    });
-
-    expect(result, contains('Missing primary-key column(s) entry'));
-  });
-
-  test('get_row reports missing rows', () async {
-    final tool = GetRowTool(_catalog, _FakeDataSource([]));
-
-    final result = _asMap(
-      await tool.call({
-        'table': 'creature_template',
-        'key': {'entry': 1},
-      }),
-    );
-
-    expect(result['found'], false);
-  });
-
   test('createReadOnlyTools builds the full toolset', () {
     final tools = createReadOnlyTools(
       catalog: _catalog,
@@ -425,11 +150,63 @@ void main() {
       'describe_field_values',
       'describe_references',
       'server_time',
-      'count_rows',
-      'aggregate_rows',
-      'query_rows',
-      'get_row',
+      'query_sql',
     ]);
+  });
+
+  test('describe_references reports incoming and outgoing edges', () async {
+    const catalog = TableCatalog([
+      TableInfo(
+        name: 'items',
+        database: 'foxy',
+        columns: [
+          ColumnInfo(name: 'id', type: 'int', primaryKey: true),
+          ColumnInfo(name: 'name'),
+        ],
+      ),
+      TableInfo(
+        name: 'links',
+        columns: [
+          ColumnInfo(name: 'id', type: 'int', primaryKey: true),
+          ColumnInfo(
+            name: 'item',
+            type: 'int',
+            semantics: ColumnSemantics.reference(
+              label: '物品',
+              reference: ColumnReference(table: 'foxy.items', column: 'id'),
+            ),
+          ),
+          ColumnInfo(
+            name: 'many',
+            type: 'int',
+            semantics: ColumnSemantics.reference(
+              label: '多项',
+              reference: ColumnReference(
+                table: 'foxy.items',
+                column: 'name',
+              ),
+            ),
+          ),
+        ],
+      ),
+    ]);
+    const tool = DescribeReferencesTool(catalog);
+
+    final result = _asMap(await tool.call({'table': 'items'}));
+
+    final incoming = _asList(result['incoming']).cast<Map<String, Object?>>();
+    expect(incoming.map((edge) => edge['sourceColumn']), ['item', 'many']);
+    expect(incoming.first, {
+      'sourceTable': 'links',
+      'sourceColumn': 'item',
+      'targetTable': 'foxy.items',
+      'targetColumn': 'id',
+    });
+    expect(_asList(result['outgoing']), isEmpty);
+
+    final links = _asMap(await tool.call({'table': 'links'}));
+    expect(_asList(links['incoming']), isEmpty);
+    expect(_asList(links['outgoing']), incoming);
   });
 
   test('server_time returns the data source clock', () async {
@@ -438,7 +215,6 @@ void main() {
       'localTime': '2026-11-21 12:00:00',
       'sessionTimeZone': '+08:00',
     });
-    expect(source.calls, isEmpty);
   });
 }
 
@@ -502,53 +278,10 @@ Map<String, Object?> _asMap(Object? value) => value! as Map<String, Object?>;
 final class _FakeDataSource implements ReadOnlyDataSource {
   final List<Map<String, Object?>> rows;
 
-  final calls =
-      <
-        ({
-          String table,
-          List<RowFilter> filters,
-          int limit,
-          List<RowOrder> orderBy,
-          int offset,
-        })
-      >[];
-
   _FakeDataSource(this.rows);
 
   @override
-  Future<List<Map<String, Object?>>> aggregateRows({
-    required String table,
-    required List<RowFilter> filters,
-    required List<String> groupBy,
-    required List<AggregateMetric> metrics,
-    required int limit,
-    List<RowOrder> orderBy = const [],
-    int offset = 0,
-  }) => throw UnimplementedError();
-
-  @override
-  Future<int> countRows({
-    required String table,
-    required List<RowFilter> filters,
-  }) => throw UnimplementedError();
-
-  @override
-  Future<List<Map<String, Object?>>> queryRows({
-    required String table,
-    required List<RowFilter> filters,
-    required int limit,
-    List<RowOrder> orderBy = const [],
-    int offset = 0,
-  }) async {
-    calls.add((
-      table: table,
-      filters: filters,
-      limit: limit,
-      orderBy: orderBy,
-      offset: offset,
-    ));
-    return rows.skip(offset).take(limit).toList();
-  }
+  Future<List<Map<String, Object?>>> querySql(ReadOnlySql sql) async => rows;
 
   @override
   Future<Map<String, Object?>> serverTime() async => {

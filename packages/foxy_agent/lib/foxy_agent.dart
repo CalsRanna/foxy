@@ -4,7 +4,6 @@ export 'package:foxy_agent/src/agent_event.dart';
 export 'package:foxy_agent/src/agent_exception.dart';
 export 'package:foxy_agent/src/agent_session.dart';
 export 'package:foxy_agent/src/agent_tool.dart';
-export 'package:foxy_agent/src/tools/aggregate_tools.dart';
 export 'package:foxy_agent/src/tools/column_semantics.dart';
 export 'package:foxy_agent/src/tools/query_sql_tool.dart';
 export 'package:foxy_agent/src/tools/read_only_data_source.dart';

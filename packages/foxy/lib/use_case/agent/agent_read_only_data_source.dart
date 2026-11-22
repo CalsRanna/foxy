@@ -10,9 +10,8 @@ import 'package:laconic/laconic.dart';
 /// Read-only data access for the built-in agent tools.
 ///
 /// The catalog is built from `information_schema` for the world, characters,
-/// auth and `foxy` schemas. Queries select only columns in that catalog.
-class AgentReadOnlyDataSource
-    implements ReadOnlyDataSource, ReadOnlySqlDataSource {
+/// auth and `foxy` schemas. Queries run through [querySql] only.
+class AgentReadOnlyDataSource implements ReadOnlyDataSource {
   static const _foxySchema = 'foxy';
   static const _defaultCharactersDatabase = 'acore_characters';
   static const _defaultAuthDatabase = 'acore_auth';
@@ -41,8 +40,6 @@ class AgentReadOnlyDataSource
     'totaltime',
   };
 
-  static const _maxRows = 51;
-
   final ConfigUtil _configUtil;
   final Laconic? _laconic;
 
@@ -51,57 +48,6 @@ class AgentReadOnlyDataSource
   AgentReadOnlyDataSource(this._configUtil, {this._laconic});
 
   Laconic get _database => _laconic ?? Database.instance.laconic;
-
-  @override
-  Future<List<Map<String, Object?>>> aggregateRows({
-    required String table,
-    required List<RowFilter> filters,
-    required List<String> groupBy,
-    required List<AggregateMetric> metrics,
-    required int limit,
-    List<RowOrder> orderBy = const [],
-    int offset = 0,
-  }) async {
-    final info = await _tableInfo(table);
-    final error = validateAggregation(info, groupBy, metrics);
-    if (error != null) throw ValidationException(error);
-    final columns = groupBy.map(_quoteIdentifier).toList();
-    for (final metric in metrics) {
-      final column = metric.column == null
-          ? '*'
-          : _quoteIdentifier(metric.column!);
-      columns.add(
-        '${metric.function.name.toUpperCase()}($column) as '
-        '${_quoteIdentifier(metric.outputName)}',
-      );
-    }
-    final query = _filteredQuery(info, filters).select(columns);
-    for (final column in groupBy) {
-      query.groupBy(_quoteIdentifier(column));
-    }
-    _applyPage(
-      query,
-      orderBy: orderBy,
-      allowedColumns: {
-        ...groupBy,
-        for (final metric in metrics) metric.outputName,
-      },
-      tieBreakers: groupBy,
-      limit: limit.clamp(1, AggregateRowsTool.maxLimit + 1),
-      offset: offset,
-    );
-    final rows = await query.get();
-    return rows.map((row) => row.toMap()).toList();
-  }
-
-  @override
-  Future<int> countRows({
-    required String table,
-    required List<RowFilter> filters,
-  }) async {
-    final info = await _tableInfo(table);
-    return _filteredQuery(info, filters).count();
-  }
 
   /// Loads (and caches) the table catalog from `information_schema`.
   Future<TableCatalog> getCatalog({bool refresh = false}) async {
@@ -144,31 +90,6 @@ order by c.TABLE_SCHEMA, c.TABLE_NAME, c.ORDINAL_POSITION
   }
 
   @override
-  Future<List<Map<String, Object?>>> queryRows({
-    required String table,
-    required List<RowFilter> filters,
-    required int limit,
-    List<RowOrder> orderBy = const [],
-    int offset = 0,
-  }) async {
-    final info = await _tableInfo(table);
-    final columns = info.columns
-        .map((column) => _quoteIdentifier(column.name))
-        .toList();
-    final query = _filteredQuery(info, filters).select(columns);
-    _applyPage(
-      query,
-      orderBy: orderBy,
-      allowedColumns: {for (final column in info.columns) column.name},
-      tieBreakers: info.primaryKey.map((column) => column.name),
-      limit: limit.clamp(1, _maxRows),
-      offset: offset,
-    );
-    final rows = await query.get();
-    return rows.map((row) => row.toMap()).toList();
-  }
-
-  @override
   Future<List<Map<String, Object?>>> querySql(ReadOnlySql sql) async {
     final rows = await _database.select(sql.statement);
     return rows.map((row) => row.toMap()).toList();
@@ -187,47 +108,10 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
     return rows.single.toMap();
   }
 
-  QueryBuilder _filteredQuery(TableInfo info, List<RowFilter> filters) {
-    final table = _quoteIdentifier(info.name);
-    final qualified = info.database.isEmpty
-        ? table
-        : '${_quoteIdentifier(info.database)}.$table';
-    return filters.fold<QueryBuilder>(_database.table(qualified), (
-      builder,
-      filter,
-    ) {
-      if (info.findColumn(filter.column) == null) {
-        throw ValidationException(
-          'unknown column for agent table ${info.qualifiedName}: ${filter.column}',
-        );
-      }
-      final value = filter.value;
-      if (filter.operator == FilterOperator.inList) {
-        if (value is! List<Object?> ||
-            value.isEmpty ||
-            value.any((item) => item is List || item is Map)) {
-          throw const ValidationException(
-            'in filter requires a non-empty scalar array',
-          );
-        }
-      } else if (value is List || value is Map) {
-        throw const ValidationException('filter requires a scalar value');
-      }
-      return _applyFilter(builder, filter);
-    });
-  }
-
-  Future<TableInfo> _tableInfo(String table) async {
-    final catalog = await getCatalog();
-    final info = catalog.find(table);
-    if (info == null) throw ValidationException('unknown agent table: $table');
-    return info;
-  }
-
   /// Builds the agent catalog from `information_schema.columns` rows.
   ///
   /// World tables stay unqualified. Other tables retain their schema name.
-  /// Auth credentials are omitted from the catalog and query projections.
+  /// Auth credentials are omitted from the catalog.
   static TableCatalog buildCatalog(
     List<Map<String, Object?>> rows, {
     required String worldDatabase,
@@ -282,72 +166,6 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
     return TableCatalog(tables);
   }
 
-  static QueryBuilder _applyFilter(QueryBuilder builder, RowFilter filter) {
-    final column = _quoteIdentifier(filter.column);
-    final value = filter.value;
-    return switch (filter.operator) {
-      FilterOperator.equals =>
-        value == null
-            ? builder.whereNull(column)
-            : builder.where(column, value),
-      FilterOperator.notEquals =>
-        value == null
-            ? builder.whereNotNull(column)
-            : builder.whereNot(column, value),
-      FilterOperator.contains => builder.whereLike(column, '%$value%'),
-      FilterOperator.inList => builder.whereIn(
-        column,
-        value is List<Object?> ? value : const <Object?>[],
-      ),
-      FilterOperator.greaterThan => builder.where(
-        column,
-        value,
-        comparator: '>',
-      ),
-      FilterOperator.greaterOrEqual => builder.where(
-        column,
-        value,
-        comparator: '>=',
-      ),
-      FilterOperator.lessThan => builder.where(column, value, comparator: '<'),
-      FilterOperator.lessOrEqual => builder.where(
-        column,
-        value,
-        comparator: '<=',
-      ),
-    };
-  }
-
-  static void _applyPage(
-    QueryBuilder query, {
-    required List<RowOrder> orderBy,
-    required Set<String> allowedColumns,
-    required Iterable<String> tieBreakers,
-    required int limit,
-    required int offset,
-  }) {
-    if (offset < 0) {
-      throw const ValidationException('offset must be non-negative');
-    }
-    final sorted = <String>{};
-    for (final order in orderBy) {
-      if (!allowedColumns.contains(order.column) || !sorted.add(order.column)) {
-        throw ValidationException(
-          'unknown or duplicate sort column: ${order.column}',
-        );
-      }
-      query.orderBy(
-        _quoteIdentifier(order.column),
-        direction: order.direction.name,
-      );
-    }
-    for (final column in tieBreakers) {
-      if (!sorted.contains(column)) query.orderBy(_quoteIdentifier(column));
-    }
-    query.limit(limit);
-    if (offset != 0) query.offset(offset);
-  }
-
   static String? _databaseName(Object? value) =>
       value is String && value.isNotEmpty ? value : null;
 
@@ -384,9 +202,6 @@ select CAST(CURRENT_TIMESTAMP(6) AS CHAR) as `localTime`,
       ),
     );
   }
-
-  static String _quoteIdentifier(String value) =>
-      '`${value.replaceAll('`', '``')}`';
 
   static String _rowString(Map<String, Object?> row, String key) {
     final value = row.entries

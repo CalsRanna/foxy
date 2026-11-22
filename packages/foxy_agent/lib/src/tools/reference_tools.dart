@@ -3,6 +3,9 @@ import 'package:foxy_agent/src/tools/read_only_tool_input.dart';
 import 'package:foxy_agent/src/tools/table_catalog.dart';
 
 /// Describes catalog references in either direction for one table.
+///
+/// Each edge names the source and target table/column so the model can build
+/// `JOIN ... ON` conditions for `query_sql`.
 final class DescribeReferencesTool extends AgentTool {
   final TableCatalog catalog;
 
@@ -51,9 +54,6 @@ final class DescribeReferencesTool extends AgentTool {
           'sourceColumn': column.name,
           'targetTable': target.qualifiedName,
           'targetColumn': reference.column,
-          'expandable':
-              source.findColumn('_expanded') == null &&
-              target.hasSingleColumnPrimaryKey(reference.column),
         };
         if (source == table) outgoing.add(edge);
         if (target == table) incoming.add(edge);

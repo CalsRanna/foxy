@@ -26,7 +26,7 @@ class AgentChatUseCase {
   }) : _agent = FoxyAgent(
          provider: provider,
          instructions:
-             '''${dataSource is ReadOnlySqlDataSource ? sqlReadOnlyAssistantInstructions : readOnlyAssistantInstructions}
+             '''$sqlReadOnlyAssistantInstructions
 
 ## 其他可用数据
 - characters 库：角色、背包、公会等游戏进度数据。

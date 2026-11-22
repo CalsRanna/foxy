@@ -46,50 +46,7 @@ void main() {
     final actual = await source.getCatalog();
     catalog = TableCatalog([
       actual.find('agent_stat_view')!,
-      TableInfo(
-        name: 'agent_stat_fixture',
-        columns: actual.find('agent_stat_fixture')!.columns.map((column) {
-          if (column.name != 'linked_id') return column;
-          return ColumnInfo(
-            name: column.name,
-            type: column.type,
-            semantics: const ColumnSemantics.reference(
-              label: '关联记录',
-              reference: ColumnReference(
-                table: 'agent_stat_fixture',
-                column: 'id',
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    ]);
-  });
-
-  test('real MySQL ranks all rows and pages ties without duplicates', () async {
-    final tool = QueryRowsTool(catalog, source);
-    final arguments = <String, Object?>{
-      'table': 'agent_stat_fixture',
-      'orderBy': [
-        {'column': 'price', 'direction': 'desc'},
-      ],
-      'limit': 50,
-    };
-    final ids = <Object?>[];
-    var offset = 0;
-    for (final expectedNextOffset in [50, 100, null]) {
-      final page = await tool.call({
-        ...arguments,
-        'offset': offset,
-      }) as Map<String, Object?>;
-      final rows = page['rows']! as List<Map<String, Object?>>;
-      ids.addAll(rows.map((row) => row['id']));
-      expect(page['nextOffset'], expectedNextOffset);
-      offset = page['nextOffset'] as int? ?? 0;
-    }
-    expect(ids, [
-      for (var i = 1; i <= 120; i += 2) i,
-      for (var i = 2; i <= 120; i += 2) i,
+      actual.find('agent_stat_fixture')!,
     ]);
   });
 
@@ -172,64 +129,6 @@ ORDER BY a.id, b.id''';
     expect(secondRows.first, {'row_id': 101, 'joined_id': 1});
   });
 
-  test(
-    'real MySQL counts all 120 rows and filters instead of sampling 50',
-    () async {
-      final tool = CountRowsTool(catalog, source);
-      expect(await tool.call({'table': 'agent_stat_fixture'}), {
-        'table': 'agent_stat_fixture',
-        'count': 120,
-      });
-      expect(
-        await tool.call({
-          'table': 'agent_stat_fixture',
-          'filters': [
-            {'column': 'expansion', 'operator': 'equals', 'value': 0},
-          ],
-        }),
-        {'table': 'agent_stat_fixture', 'count': 80},
-      );
-    },
-  );
-
-  test('real MySQL groups every row before the output limit', () async {
-    final tool = AggregateRowsTool(catalog, source);
-    final arguments = <String, Object?>{
-      'table': 'agent_stat_fixture',
-      'groupBy': ['expansion'],
-      'metrics': [
-        {'function': 'count'},
-        {'function': 'count', 'column': 'price'},
-        {'function': 'sum', 'column': 'price'},
-        {'function': 'avg', 'column': 'price'},
-        {'function': 'min', 'column': 'price'},
-        {'function': 'max', 'column': 'price'},
-      ],
-      'orderBy': [
-        {'column': 'sum_price', 'direction': 'asc'},
-      ],
-      'limit': 1,
-    };
-    final result = await tool.call(arguments) as Map<String, Object?>;
-    final first = (result['rows']! as List<Map<String, Object?>>).single;
-    expect(first['expansion'], 1);
-    expect(first['count'], 40);
-    expect(result['nextOffset'], 1);
-    final next = await tool.call({
-      ...arguments,
-      'offset': result['nextOffset'],
-    }) as Map<String, Object?>;
-    final row = (next['rows']! as List<Map<String, Object?>>).single;
-    expect(next.containsKey('nextOffset'), isFalse);
-    expect(row['expansion'], 0);
-    expect(row['count'], 80);
-    expect(row['count_price'], 40);
-    expect(num.parse('${row['sum_price']}'), 50);
-    for (final name in ['avg_price', 'min_price', 'max_price']) {
-      expect(num.parse('${row[name]}'), 1.25);
-    }
-  });
-
   test('real MySQL reports its session clock for timestamp filters', () async {
     final database = Database.instance.laconic;
     await database.transaction(() async {
@@ -249,17 +148,17 @@ ORDER BY a.id, b.id''';
           'timestamp',
         );
         expect(
-          await CountRowsTool(catalog, source).call({
-            'table': 'agent_stat_fixture',
-            'filters': [
-              {
-                'column': 'created_at',
-                'operator': 'lessOrEqual',
-                'value': localTime,
-              },
-            ],
+          await QuerySqlTool(catalog, source).call({
+            'sql':
+                "SELECT COUNT(*) AS total FROM agent_stat_fixture "
+                "WHERE created_at <= '$localTime'",
           }),
-          {'table': 'agent_stat_fixture', 'count': 120},
+          {
+            'rows': [
+              {'total': 120},
+            ],
+            'truncated': false,
+          },
         );
       } finally {
         await database.statement('set session time_zone = default');
@@ -268,68 +167,45 @@ ORDER BY a.id, b.id''';
   });
 
   test('real MySQL preserves SQL empty-set and null semantics', () async {
-    final tool = AggregateRowsTool(catalog, source);
-    final arguments = <String, Object?>{
-      'table': 'agent_stat_fixture',
-      'filters': [
-        {'column': 'id', 'operator': 'equals', 'value': -1},
-      ],
-      'metrics': [
-        {'function': 'count'},
-        {'function': 'sum', 'column': 'price'},
-      ],
-    };
-    final empty = await tool.call(arguments) as Map<String, Object?>;
-    expect(empty['rows'], [
-      {'count': 0, 'sum_price': null},
-    ]);
-    final grouped = await tool.call({
-      ...arguments,
-      'groupBy': ['expansion'],
-    }) as Map<String, Object?>;
-    expect(grouped['rows'], isEmpty);
+    final tool = QuerySqlTool(catalog, source);
+    expect(
+      await tool.call({
+        'sql':
+            'SELECT COUNT(*) AS total, SUM(price) AS total_price '
+            'FROM agent_stat_fixture WHERE id = -1',
+      }),
+      {
+        'rows': [
+          {'total': 0, 'total_price': null},
+        ],
+        'truncated': false,
+      },
+    );
+    expect(
+      await tool.call({
+        'sql':
+            'SELECT expansion, COUNT(*) AS total FROM agent_stat_fixture '
+            'WHERE id = -1 GROUP BY expansion',
+      }),
+      {'rows': <Object?>[], 'truncated': false},
+    );
   });
 
   test(
     'real MySQL expands declared references without multiplying rows',
     () async {
-      final result = await QueryRowsTool(catalog, source).call({
-        'table': 'agent_stat_fixture',
-        'filters': [
-          {
-            'column': 'id',
-            'operator': 'in',
-            'value': [1, 3],
-          },
-        ],
-        'expand': [
-          {
-            'column': 'linked_id',
-            'columns': ['name'],
-            'expand': [
-              {
-                'column': 'linked_id',
-                'columns': ['name'],
-              },
-            ],
-          },
-        ],
+      final result = await QuerySqlTool(catalog, source).call({
+        'sql':
+            'SELECT parent.id, child.id AS linked_id, child.name AS linked_name '
+            'FROM agent_stat_fixture parent '
+            'LEFT JOIN agent_stat_fixture child ON parent.linked_id = child.id '
+            'WHERE parent.id IN (1, 3) ORDER BY parent.id',
       }) as Map<String, Object?>;
       final rows = result['rows']! as List<Map<String, Object?>>;
-      expect(rows, hasLength(2));
-      expect(rows.firstWhere((row) => row['id'] == 1)['_expanded'], {
-        'linked_id': {
-          'id': 2,
-          'name': 'Item 2',
-          'linked_id': 3,
-          '_expanded': {
-            'linked_id': {'id': 3, 'name': 'Item 3'},
-          },
-        },
-      });
-      expect(rows.firstWhere((row) => row['id'] == 3)['_expanded'], {
-        'linked_id': null,
-      });
+      expect(rows, [
+        {'id': 1, 'linked_id': 2, 'linked_name': 'Item 2'},
+        {'id': 3, 'linked_id': null, 'linked_name': null},
+      ]);
     },
   );
 }

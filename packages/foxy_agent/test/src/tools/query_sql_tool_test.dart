@@ -177,7 +177,7 @@ const _catalog = TableCatalog([
   ),
 ]);
 
-final class _SqlSource implements ReadOnlySqlDataSource {
+final class _SqlSource implements ReadOnlyDataSource {
   final executed = <String>[];
   List<Map<String, Object?>> rows = [];
 
@@ -186,4 +186,7 @@ final class _SqlSource implements ReadOnlySqlDataSource {
     executed.add(sql.statement);
     return rows;
   }
+
+  @override
+  Future<Map<String, Object?>> serverTime() async => const {};
 }

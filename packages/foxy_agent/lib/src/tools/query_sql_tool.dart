@@ -1,10 +1,11 @@
 import 'package:foxy_agent/src/agent_tool.dart';
+import 'package:foxy_agent/src/tools/read_only_data_source.dart';
 import 'package:foxy_agent/src/tools/read_only_sql.dart';
 import 'package:foxy_agent/src/tools/table_catalog.dart';
 
 final class QuerySqlTool extends AgentTool {
   final TableCatalog catalog;
-  final ReadOnlySqlDataSource dataSource;
+  final ReadOnlyDataSource dataSource;
 
   const QuerySqlTool(this.catalog, this.dataSource);
 
@@ -56,9 +57,4 @@ final class QuerySqlTool extends AgentTool {
       'truncated': truncated,
     };
   }
-}
-
-/// Executes a validated MySQL SELECT using the host app's data connection.
-abstract interface class ReadOnlySqlDataSource {
-  Future<List<Map<String, Object?>>> querySql(ReadOnlySql sql);
 }

@@ -109,11 +109,6 @@ final class TableInfo {
     return null;
   }
 
-  bool hasSingleColumnPrimaryKey(String column) {
-    final keys = primaryKey.toList();
-    return keys.length == 1 && keys.single.name == column;
-  }
-
   Map<String, Object?> toJson() => {
     'name': qualifiedName,
     if (database.isNotEmpty) 'database': database,

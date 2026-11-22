@@ -544,15 +544,6 @@ final class _FakeDataSource extends AgentReadOnlyDataSource {
     _firstCatalog = null;
     return firstCatalog == null ? const TableCatalog([]) : await firstCatalog;
   }
-
-  @override
-  Future<List<Map<String, Object?>>> queryRows({
-    required String table,
-    required List<RowFilter> filters,
-    required int limit,
-    List<RowOrder> orderBy = const [],
-    int offset = 0,
-  }) async => const [];
 }
 
 final class _MemoryConfigUtil extends ConfigUtil {

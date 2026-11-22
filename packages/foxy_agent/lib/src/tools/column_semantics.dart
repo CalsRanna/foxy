@@ -1,4 +1,13 @@
-import 'package:foxy_agent/src/tools/read_only_data_source.dart';
+/// Comparison used by a conditional semantic branch.
+enum FilterOperator {
+  equals('equals'),
+  lessThan('lessThan');
+
+  /// Name used in tool output.
+  final String wireName;
+
+  const FilterOperator(this.wireName);
+}
 
 /// One labelled bit inside a flags column.
 final class ColumnFlag {

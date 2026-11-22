@@ -248,5 +248,4 @@ FeatureEntity _module(RouterMenu menu, String name) => FeatureEntity(
   updatedAt: DateTime(2026),
 );
 
-class _UnusedSqlDataSource extends Fake
-    implements ReadOnlyDataSource, ReadOnlySqlDataSource {}
+class _UnusedSqlDataSource extends Fake implements ReadOnlyDataSource {}
