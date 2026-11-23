@@ -138,16 +138,17 @@ class _FoxyPaginationTileState extends State<_FoxyPaginationTile> {
       child: iconTheme,
     );
     var boxDecoration = BoxDecoration(
-      border: widget.active ? Border.all(color: primary) : null,
+      border: Border.all(color: widget.active ? primary : Colors.transparent),
       borderRadius: BorderRadius.circular(4),
       color: (!isDisabled && hovered) ? surfaceContainer : null,
     );
     var container = Container(
       alignment: Alignment.center,
+      constraints: const BoxConstraints(minWidth: 32),
       decoration: boxDecoration,
       height: 32,
       margin: EdgeInsets.all(4),
-      width: 32,
+      padding: const EdgeInsets.symmetric(horizontal: 3),
       child: merge,
     );
     var gestureDetector = GestureDetector(

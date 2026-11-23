@@ -77,8 +77,7 @@ class _TalentListPageState extends State<TalentListPage> with DialogErrorState {
     final credentialChildren = [
       Expanded(child: entryInput),
       Expanded(child: spellInput),
-      Expanded(child: row),
-      const Expanded(child: SizedBox()),
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
