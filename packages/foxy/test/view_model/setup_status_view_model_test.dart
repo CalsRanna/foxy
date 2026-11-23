@@ -211,6 +211,29 @@ void main() {
     expect(vm.isClientDirConfigured, isFalse);
     expect(vm.isSetupComplete, isTrue);
   });
+
+  test('跳过服务端目录后重启仍视为完成，补配目录时清除跳过状态', () async {
+    final vm = buildVm();
+    await vm.skipIconExtraction();
+    await vm.skipServerSetup();
+
+    final reloaded = SetupStatusViewModel(
+      configUtil: _TempConfigUtil(tempDir.path),
+    );
+    await reloaded.prepare();
+    expect(reloaded.isSetupComplete, isTrue);
+    expect(reloaded.serverSetupSkipped.value, isTrue);
+    expect(reloaded.isDbcPathConfigured, isFalse);
+
+    final server = buildServerRoot();
+    expect(await reloaded.saveServerDir(server.path), isTrue);
+    expect(reloaded.serverSetupSkipped.value, isFalse);
+    expect(reloaded.isDbcPathConfigured, isTrue);
+    expect(
+      (await _TempConfigUtil(tempDir.path).load())['server_setup_skipped'],
+      isFalse,
+    );
+  });
 }
 
 /// ConfigUtil pointing at a temp directory (so tests never pollute the

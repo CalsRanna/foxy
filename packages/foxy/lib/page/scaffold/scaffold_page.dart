@@ -205,16 +205,12 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     }
   }
 
-  /// Enforces the first-setup check: when incomplete (either directory
-  /// unconfigured or icons not extracted), opens the non-dismissable
-  /// three-step wizard; completed steps are detected and skipped inside
-  /// the wizard.
+  /// Opens the wizard for setup steps that have not been completed or skipped.
   ///
   /// Exception: when the client directory is already configured but the
   /// server directory is missing (e.g. an existing installation upgraded
   /// before `server_dir` existed), a lighter dismissable reminder opens
-  /// instead, guiding the user to the settings page. First-install and
-  /// icons-only paths behave exactly as before.
+  /// instead, guiding the user to the settings page.
   Future<void> _checkSetup() async {
     try {
       await setupViewModel.prepare();
@@ -228,14 +224,16 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
         _showSetupWizard();
         return;
       }
-      if (!setupViewModel.isServerDirConfigured) {
+      if (!setupViewModel.isServerSetupComplete) {
         _showServerDirReminderDialog();
         return;
       }
       _showSetupWizard();
       return;
     }
-    await _checkDbcReminder();
+    if (!setupViewModel.serverSetupSkipped.value) {
+      await _checkDbcReminder();
+    }
   }
 
   void _showCombinedExportDialog() {

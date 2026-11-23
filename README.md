@@ -11,7 +11,7 @@ Foxy 是面向 AzerothCore（WoW 3.3.5）的桌面数据库编辑器，支持编
 - **图标提取**。从客户端 MPQ 归档提取 BLP 图标，支持 DXT1、DXT3、DXT5 解码、本地缓存和内存 LRU 缓存。
 - **活动日志**。创建、更新、删除和复制操作记录到 `foxy.activity_log`，可在工作台查看最近动态。
 - **Windows 便携版更新**。支持检查新版本、取消下载、SHA-256 校验和重启后替换程序。
-- **首次引导**。连接数据库后配置客户端与服务端目录，再导入 DBC。没有游戏客户端时可以跳过图标提取。
+- **首次引导**。连接数据库后，可按需配置客户端和服务端目录。点击「进入应用」后，Foxy 会按已配置的目录检查并导入 DBC 或提取图标。跳过的项目可在设置中补做。
 - **桌面操作**。支持窗口尺寸记忆、右键菜单和面包屑导航。在应用内按 `⌘⇧E`（macOS）或 `Ctrl+Shift+E`（Windows/Linux）可打开一键导出 DBC + MPQ 对话框。
 
 ## 技术栈
@@ -144,7 +144,7 @@ Foxy 仍作为本机桌面应用运行,连接参数填写:
 | 用户名 | `root` |
 | 密码 | `foxy_local_dev` |
 
-首次引导没有游戏客户端时选择“跳过图标提取”,“服务端目录”选择本机的 `<仓库目录>/packages/foxy/data/azerothcore`,然后完成 DBC 导入。该目录不需要服务端程序;Foxy 会自动创建 `foxy` 元数据库。DBC 文件位于本机目录,不能填写容器内的 `/data` 路径。
+首次引导没有游戏客户端时，可在客户端目录步骤点「跳过」。如需导入 DBC，在服务端目录步骤选择本机的 `<仓库目录>/packages/foxy/data/azerothcore`，然后点击「进入应用」。该目录不需要服务端程序。Foxy 会自动创建 `foxy` 元数据库。DBC 文件位于本机目录，不能填写容器内的 `/data` 路径。
 
 MySQL 数据保存在命名卷,DBC 保存在已被 Git 忽略的 `packages/foxy/data/` 目录。再次启动会保留已有 DBC 文件,不会覆盖 Foxy 导出的修改。日常停止使用 `docker compose stop`,重新启动使用 `docker compose up -d`;`docker compose down` 保留数据,而 `docker compose down -v` 会删除数据库卷。
 

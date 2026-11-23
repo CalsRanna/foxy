@@ -17,6 +17,8 @@ import 'package:signals/signals.dart';
 /// - [serverDir]: server root directory (`server_dir` in `config.yaml`)
 /// - [dbcPath]: DBC file directory auto-detected inside the server root
 ///   (DBC import/export source; `dbc_dir` in `config.yaml`)
+/// - [serverSetupSkipped]: whether the user deferred the server directory
+///   and initial DBC import (`server_setup_skipped`)
 /// - [iconsExtracted]: whether icons were fully extracted (the
 ///   `icons_extracted` marker written on successful extraction)
 /// - [iconsSkipped]: the user chose to continue without icons
@@ -25,8 +27,8 @@ import 'package:signals/signals.dart';
 ///
 /// When a path is configured but its directory no longer exists (the user
 /// moved/deleted it): signals keep the original path for UI prefill, the
-/// `*Exists` signals mark validity, completion counts as incomplete, and
-/// the wizard reappears on the next startup.
+/// `*Exists` signals mark validity. A step the user has not skipped counts
+/// as incomplete when its directory is missing.
 class SetupStatusViewModel {
   final ConfigUtil _configUtil;
 
@@ -43,6 +45,7 @@ class SetupStatusViewModel {
   final clientDirExists = signal<bool>(false);
   final dbcPathExists = signal<bool>(false);
   final serverDirExists = signal<bool>(false);
+  final serverSetupSkipped = signal<bool>(false);
   final iconsExtracted = signal<bool>(false);
   final iconsSkipped = signal<bool>(false);
 
@@ -65,15 +68,13 @@ class SetupStatusViewModel {
   bool get isServerDirConfigured =>
       serverDir.value != null && serverDirExists.value;
 
-  /// Whether first setup is complete: the server directory is configured
-  /// and existing, and icons were extracted or deliberately skipped.
-  ///
-  /// Skipping also covers having no client directory at all (the client is
-  /// only needed for icons and MPQ patches), so a user whose client cannot
-  /// be validated is not kept out of the app.
-  bool get isSetupComplete =>
-      isServerDirConfigured &&
-      (iconsSkipped.value || (isClientDirConfigured && iconsExtracted.value));
+  bool get isServerSetupComplete =>
+      isServerDirConfigured || serverSetupSkipped.value;
+
+  bool get isIconSetupComplete =>
+      iconsSkipped.value || (isClientDirConfigured && iconsExtracted.value);
+
+  bool get isSetupComplete => isServerSetupComplete && isIconSetupComplete;
 
   /// Loads directory config and the icon-extraction marker from config.
   ///
@@ -92,6 +93,7 @@ class SetupStatusViewModel {
     serverDir.value = (server == null || server.isEmpty) ? null : server;
     serverDirExists.value =
         serverDir.value == null || await Directory(serverDir.value!).exists();
+    serverSetupSkipped.value = config['server_setup_skipped'] == true;
 
     final dbc = config['dbc_dir']?.toString().trim();
     dbcPath.value = (dbc == null || dbc.isEmpty) ? null : dbc;
@@ -134,12 +136,22 @@ class SetupStatusViewModel {
       serverDirError.value = '在服务端目录中未找到 DBC 文件(如 data/dbc),请确认 DBC 数据已放置';
       return false;
     }
-    await _configUtil.update({'server_dir': path.trim(), 'dbc_dir': dbc});
+    await _configUtil.update({
+      'server_dir': path.trim(),
+      'dbc_dir': dbc,
+      if (serverSetupSkipped.value) 'server_setup_skipped': false,
+    });
     serverDir.value = path.trim();
     serverDirExists.value = true;
     dbcPath.value = dbc;
     dbcPathExists.value = true;
+    serverSetupSkipped.value = false;
     return true;
+  }
+
+  Future<void> skipServerSetup() async {
+    serverSetupSkipped.value = true;
+    await _configUtil.update({'server_setup_skipped': true});
   }
 
   /// Marks the icon-extraction step as skipped so first setup counts as
@@ -147,8 +159,8 @@ class SetupStatusViewModel {
   /// the settings page can extract them later), and a client whose archives
   /// cannot be read must not keep the wizard reopening forever.
   Future<void> skipIconExtraction() async {
-    await _configUtil.update({'icons_skipped': true});
     iconsSkipped.value = true;
+    await _configUtil.update({'icons_skipped': true});
   }
 
   /// Shared directory validation: non-empty and existing, writing the

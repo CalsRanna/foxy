@@ -145,6 +145,32 @@ void main() {
     expect(RouterMenu.questSort.icon, LucideIcons.arrowUpDown);
   });
 
+  testWidgets('启动时尊重已保存的跳过选择，无需显示引导或检查 DBC', (tester) async {
+    final config = _MemoryConfigUtil({
+      'server_setup_skipped': true,
+      'icons_skipped': true,
+    });
+    await GetIt.instance.unregister<SetupStatusViewModel>();
+    GetIt.instance.registerSingleton(SetupStatusViewModel(configUtil: config));
+    await GetIt.instance.unregister<CheckDbcReminderUseCase>();
+    var tableChecks = 0;
+    GetIt.instance.registerSingleton(
+      CheckDbcReminderUseCase(
+        configUtil: config,
+        checkTables: () async {
+          tableChecks++;
+          return [];
+        },
+      ),
+    );
+
+    await pumpApp(tester);
+
+    expect(find.text('页面一'), findsOneWidget);
+    expect(find.byType(ShadDialog), findsNothing);
+    expect(tableChecks, 0);
+  });
+
   testWidgets('任意页面可打开一键导出，输入框聚焦时也生效', (tester) async {
     await pumpApp(tester);
     expect(find.text('页面一'), findsOneWidget);
@@ -260,6 +286,10 @@ class _EmptyRegistry implements DbcExportRegistry {
 }
 
 class _MemoryConfigUtil extends ConfigUtil {
+  final Map<String, dynamic> data;
+
+  _MemoryConfigUtil([this.data = const {}]);
+
   @override
-  Future<Map<String, dynamic>> load() async => {};
+  Future<Map<String, dynamic>> load() async => Map.of(data);
 }
