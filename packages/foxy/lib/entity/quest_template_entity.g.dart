@@ -4,7 +4,6 @@ part of 'quest_template_entity.dart';
 
 final class BriefQuestTemplateEntity {
   final int id;
-  final int questType;
   final int questLevel;
   final int minLevel;
   final String logTitle;
@@ -14,7 +13,6 @@ final class BriefQuestTemplateEntity {
 
   const BriefQuestTemplateEntity({
     this.id = 0,
-    this.questType = 2,
     this.questLevel = 1,
     this.minLevel = 0,
     this.logTitle = '',
@@ -30,11 +28,6 @@ final class BriefQuestTemplateEntity {
           : json['ID'] == false
           ? 0
           : (json['ID'] as num?)?.toInt() ?? 0,
-      questType: json['QuestType'] == true
-          ? 1
-          : json['QuestType'] == false
-          ? 0
-          : (json['QuestType'] as num?)?.toInt() ?? 2,
       questLevel: json['QuestLevel'] == true
           ? 1
           : json['QuestLevel'] == false
@@ -55,7 +48,6 @@ final class BriefQuestTemplateEntity {
   @override
   int get hashCode => Object.hashAll([
     id,
-    questType,
     questLevel,
     minLevel,
     logTitle,
@@ -71,7 +63,6 @@ final class BriefQuestTemplateEntity {
     return identical(this, other) ||
         other is BriefQuestTemplateEntity &&
             id == other.id &&
-            questType == other.questType &&
             questLevel == other.questLevel &&
             minLevel == other.minLevel &&
             logTitle == other.logTitle &&
@@ -84,7 +75,6 @@ final class BriefQuestTemplateEntity {
   String toString() {
     return 'BriefQuestTemplateEntity('
         'id: $id, '
-        'questType: $questType, '
         'questLevel: $questLevel, '
         'minLevel: $minLevel, '
         'logTitle: $logTitle, '

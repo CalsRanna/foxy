@@ -69,7 +69,6 @@ class QuestTemplateRepository
       if (localeEnabled) 'qtl.Title as localeTitle',
       'qt.QuestDescription',
       if (localeEnabled) 'qtl.Details as localeDetails',
-      'qt.QuestType',
       'qt.QuestLevel',
       'qt.MinLevel',
     ];

@@ -66,7 +66,6 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table).select([
       '`ID`',
-      '`QuestType`',
       '`QuestLevel`',
       '`MinLevel`',
       '`LogTitle`',

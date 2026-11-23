@@ -1,5 +1,4 @@
 import 'package:foxy_annotation/entity_annotations.dart';
-import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 part 'quest_template_entity.g.dart';
 
@@ -12,7 +11,6 @@ class QuestTemplateEntity with _QuestTemplateEntityMixin {
   @FoxyFullField('ID', key: true)
   final int id;
 
-  @FoxyBriefField()
   @FoxyFullField('QuestType')
   final int questType;
 
@@ -446,10 +444,4 @@ extension BriefQuestTemplateEntityDisplay on BriefQuestTemplateEntity {
       localeDetails.isNotEmpty ? localeDetails : questDescription;
 
   String get displayTitle => localeTitle.isNotEmpty ? localeTitle : logTitle;
-}
-
-extension BriefQuestTemplateEntityLabel on BriefQuestTemplateEntity {
-  /// 任务类型标签（自动完成等），未知值回退为原始数字。
-  String get typeLabel =>
-      QuestEnums.questMethodOptions[questType] ?? questType.toString();
 }
