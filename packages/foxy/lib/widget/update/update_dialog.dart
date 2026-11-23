@@ -195,7 +195,7 @@ class _UpdateDialogState extends State<UpdateDialog> with DialogErrorState {
             actions: [
               ShadButton(
                 onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('完成'),
+                child: const Text('确定'),
               ),
             ],
             child: const SelectableText('当前已是最新版本，无需更新。'),

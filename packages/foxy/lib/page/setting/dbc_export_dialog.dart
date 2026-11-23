@@ -77,7 +77,7 @@ class _DbcExportDialogState extends State<DbcExportDialog>
               actions: [
                 ShadButton(
                   onPressed: () => Navigator.of(context).maybePop(),
-                  child: const Text('完成'),
+                  child: const Text('确定'),
                 ),
               ],
               child: Column(

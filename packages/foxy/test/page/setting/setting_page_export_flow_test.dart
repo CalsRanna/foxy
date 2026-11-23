@@ -484,7 +484,7 @@ void main() {
     importVm.status.value = WorkflowStatus.succeeded;
     await tester.pumpAndSettle();
     expect(find.text('导入完成'), findsOneWidget);
-    await tester.tap(find.text('完成'));
+    await tester.tap(find.text('确定'));
     await tester.pumpAndSettle();
     expect(find.byType(ShadDialog), findsNothing);
 
@@ -564,7 +564,7 @@ void main() {
           findsOneWidget,
         );
       }
-      await tester.tap(find.text('完成'));
+      await tester.tap(find.text('确定'));
       await tester.pumpAndSettle();
     }
   });

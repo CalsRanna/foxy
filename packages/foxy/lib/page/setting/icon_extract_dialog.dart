@@ -53,7 +53,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
               actions: [
                 ShadButton(
                   onPressed: () => Navigator.of(context).maybePop(),
-                  child: const Text('完成'),
+                  child: const Text('确定'),
                 ),
               ],
               child: SelectableText(

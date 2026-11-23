@@ -36,7 +36,7 @@ void main() {
     vm.checking.value = false;
     await tester.pump();
     expect(find.text('已是最新版本'), findsOneWidget);
-    _expectRightAligned(tester, '完成');
+    _expectRightAligned(tester, '确定');
 
     vm.upToDate.value = false;
     vm.availableUpdate.value = UpdateManifestInfo(
