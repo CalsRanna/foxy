@@ -148,7 +148,7 @@ void main() {
   testWidgets('启动时尊重已保存的跳过选择，无需显示引导或检查 DBC', (tester) async {
     final config = _MemoryConfigUtil({
       'server_setup_skipped': true,
-      'icons_skipped': true,
+      'client_setup_skipped': true,
     });
     await GetIt.instance.unregister<SetupStatusViewModel>();
     GetIt.instance.registerSingleton(SetupStatusViewModel(configUtil: config));

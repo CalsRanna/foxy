@@ -217,7 +217,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       // from the beginning.
     }
     if (!mounted) return;
-    _clientSkipped = _setupVm.iconsSkipped.value;
+    _clientSkipped = _setupVm.clientSetupSkipped.value;
     if (!_setupVm.isClientDirConfigured && !_clientSkipped) {
       _step.value = 0;
     } else if (!_setupVm.isServerSetupComplete) {
@@ -229,7 +229,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
   }
 
   bool _isStepDone(int index) => switch (index) {
-    0 => _setupVm.isClientDirConfigured || _setupVm.iconsSkipped.value,
+    0 => _setupVm.isClientDirConfigured || _setupVm.clientSetupSkipped.value,
     1 => _setupVm.isServerSetupComplete,
     _ => false,
   };
@@ -240,9 +240,7 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     try {
       if (skip) {
         await _saveSkip(
-          stepIndex == 0
-              ? _setupVm.skipIconExtraction
-              : _setupVm.skipServerSetup,
+          stepIndex == 0 ? _setupVm.skipClientSetup : _setupVm.skipServerSetup,
         );
       } else {
         final formKey = stepIndex == 0 ? _step1FormKey : _step2FormKey;

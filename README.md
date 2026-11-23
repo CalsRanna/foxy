@@ -185,7 +185,7 @@ password: foxy_local_dev
 use_ssl: false
 server_dir: D:/foxy/packages/foxy/data/azerothcore
 dbc_dir: D:/foxy/packages/foxy/data/azerothcore/dbc
-icons_skipped: true
+client_setup_skipped: true
 ```
 
 在「设置 → 游戏环境」选择服务端根目录时，Foxy 会定位 DBC 子目录并保存 `server_dir` 和 `dbc_dir`。选择客户端根目录 `client_dir` 后，Foxy 会识别 MPQ 目录并保存到 `mpq_dir`。图标提取也在「游戏环境」，DBC 导入导出和 MPQ 导出位于「数据工具」。

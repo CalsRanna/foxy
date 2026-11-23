@@ -178,7 +178,7 @@ void main() {
     expect(vm.isSetupComplete, isTrue);
   });
 
-  test('skipIconExtraction 跳过图标步骤并让设置视为完成', () async {
+  test('skipClientSetup 保存跳过客户端设置的选择', () async {
     final client = Directory(p.join(tempDir.path, 'client'))..createSync();
     final server = buildServerRoot();
     String? findMpq(String root) => p.join(root, 'Data', 'zhCN');
@@ -188,15 +188,15 @@ void main() {
     await vm.saveServerDir(server.path);
     expect(vm.isSetupComplete, isFalse); // icon-extraction marker missing
 
-    await vm.skipIconExtraction();
-    expect(vm.iconsSkipped.value, isTrue);
+    await vm.skipClientSetup();
+    expect(vm.clientSetupSkipped.value, isTrue);
     expect(vm.isSetupComplete, isTrue);
 
-    // The marker is persisted, so the next launch does not reopen the
-    // wizard for an icon step the user already declined.
-    final reloaded = buildVm(findMpqDir: findMpq);
+    final freshConfig = _TempConfigUtil(tempDir.path);
+    expect((await freshConfig.load())['client_setup_skipped'], isTrue);
+    final reloaded = SetupStatusViewModel(configUtil: freshConfig);
     await reloaded.prepare();
-    expect(reloaded.iconsSkipped.value, isTrue);
+    expect(reloaded.clientSetupSkipped.value, isTrue);
     expect(reloaded.isSetupComplete, isTrue);
   });
 
@@ -207,14 +207,14 @@ void main() {
     await vm.saveServerDir(server.path);
     expect(vm.isSetupComplete, isFalse);
 
-    await vm.skipIconExtraction();
+    await vm.skipClientSetup();
     expect(vm.isClientDirConfigured, isFalse);
     expect(vm.isSetupComplete, isTrue);
   });
 
   test('跳过服务端目录后重启仍视为完成，补配目录时清除跳过状态', () async {
     final vm = buildVm();
-    await vm.skipIconExtraction();
+    await vm.skipClientSetup();
     await vm.skipServerSetup();
 
     final reloaded = SetupStatusViewModel(

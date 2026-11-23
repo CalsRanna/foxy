@@ -17,13 +17,12 @@ import 'package:signals/signals.dart';
 /// - [serverDir]: server root directory (`server_dir` in `config.yaml`)
 /// - [dbcPath]: DBC file directory auto-detected inside the server root
 ///   (DBC import/export source; `dbc_dir` in `config.yaml`)
+/// - [clientSetupSkipped]: whether the user deferred the client directory
+///   and initial icon extraction (`client_setup_skipped`)
 /// - [serverSetupSkipped]: whether the user deferred the server directory
 ///   and initial DBC import (`server_setup_skipped`)
 /// - [iconsExtracted]: whether icons were fully extracted (the
 ///   `icons_extracted` marker written on successful extraction)
-/// - [iconsSkipped]: the user chose to continue without icons
-///   (`icons_skipped`); this also counts as complete, so a client whose
-///   archives cannot be read never keeps reopening the wizard
 ///
 /// When a path is configured but its directory no longer exists (the user
 /// moved/deleted it): signals keep the original path for UI prefill, the
@@ -45,9 +44,9 @@ class SetupStatusViewModel {
   final clientDirExists = signal<bool>(false);
   final dbcPathExists = signal<bool>(false);
   final serverDirExists = signal<bool>(false);
+  final clientSetupSkipped = signal<bool>(false);
   final serverSetupSkipped = signal<bool>(false);
   final iconsExtracted = signal<bool>(false);
-  final iconsSkipped = signal<bool>(false);
 
   final clientDirError = signal<String?>(null);
   final serverDirError = signal<String?>(null);
@@ -71,10 +70,11 @@ class SetupStatusViewModel {
   bool get isServerSetupComplete =>
       isServerDirConfigured || serverSetupSkipped.value;
 
-  bool get isIconSetupComplete =>
-      iconsSkipped.value || (isClientDirConfigured && iconsExtracted.value);
+  bool get isClientSetupComplete =>
+      clientSetupSkipped.value ||
+      (isClientDirConfigured && iconsExtracted.value);
 
-  bool get isSetupComplete => isServerSetupComplete && isIconSetupComplete;
+  bool get isSetupComplete => isServerSetupComplete && isClientSetupComplete;
 
   /// Loads directory config and the icon-extraction marker from config.
   ///
@@ -88,6 +88,7 @@ class SetupStatusViewModel {
     clientDir.value = (client == null || client.isEmpty) ? null : client;
     clientDirExists.value =
         clientDir.value == null || await Directory(clientDir.value!).exists();
+    clientSetupSkipped.value = config['client_setup_skipped'] == true;
 
     final server = config['server_dir']?.toString().trim();
     serverDir.value = (server == null || server.isEmpty) ? null : server;
@@ -104,7 +105,6 @@ class SetupStatusViewModel {
     mpqDir.value = (mpq == null || mpq.isEmpty) ? null : mpq;
 
     iconsExtracted.value = config['icons_extracted'] == true;
-    iconsSkipped.value = config['icons_skipped'] == true;
   }
 
   /// Validates and persists the client directory, auto-detecting the MPQ
@@ -154,13 +154,9 @@ class SetupStatusViewModel {
     await _configUtil.update({'server_setup_skipped': true});
   }
 
-  /// Marks the icon-extraction step as skipped so first setup counts as
-  /// complete: icons are optional (list pages fall back to placeholders and
-  /// the settings page can extract them later), and a client whose archives
-  /// cannot be read must not keep the wizard reopening forever.
-  Future<void> skipIconExtraction() async {
-    iconsSkipped.value = true;
-    await _configUtil.update({'icons_skipped': true});
+  Future<void> skipClientSetup() async {
+    clientSetupSkipped.value = true;
+    await _configUtil.update({'client_setup_skipped': true});
   }
 
   /// Shared directory validation: non-empty and existing, writing the
