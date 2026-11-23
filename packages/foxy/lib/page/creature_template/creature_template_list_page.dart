@@ -63,7 +63,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage>
     );
     var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
-      placeholder: '姓名（name）',
+      placeholder: '名称（name）',
     );
     var subNameInput = FoxyStringInput(
       controller: viewModel.subNameController,
@@ -121,7 +121,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage>
           cell: (_, template) => Text(template.entry.toString()),
         ),
         FoxyTableColumn.flex(
-          label: '姓名',
+          label: '名称',
           cell: (_, template) => Text(template.displayName),
         ),
         FoxyTableColumn.flex(

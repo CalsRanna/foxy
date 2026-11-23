@@ -36,7 +36,7 @@ final class FindFoxyFeatureTool extends AgentTool {
     RouterMenu.achievement: 'dbc_achievement',
   };
 
-  static const _creatureLookup = '按「编号（entry）」或「姓名（name）」查询，双击结果。';
+  static const _creatureLookup = '按「编号（entry）」或「名称（name）」查询，双击结果。';
 
   static const _templateGuides = {
     RouterMenu.creatureTemplate: (
