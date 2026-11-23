@@ -61,6 +61,10 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage>
       controller: viewModel.idController,
       placeholder: '编号（ID）',
     );
+    var spellIdInput = FoxyStringInput(
+      controller: viewModel.spellIdController,
+      placeholder: '法术编号（SpellID）',
+    );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
       size: ShadButtonSize.sm,
@@ -74,7 +78,8 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage>
     var row = Row(spacing: 16, children: [searchButton, resetButton]);
     final credentialChildren = [
       Expanded(child: entryInput),
-      Expanded(flex: 3, child: row),
+      Expanded(child: spellIdInput),
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -110,6 +115,11 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage>
           width: 120,
           cell: (_, item) => Text(item.id.toString()),
         ),
+        FoxyTableColumn.fixed(
+          label: '法术编号',
+          width: 120,
+          cell: (_, item) => Text(item.spellId.toString()),
+        ),
         FoxyTableColumn.flex(
           label: '法术',
           cell: (_, item) => FoxyIconText(
@@ -117,8 +127,9 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage>
             name: item.displaySpellName,
           ),
         ),
-        FoxyTableColumn.flex(
+        FoxyTableColumn.fixed(
           label: '雕文类型',
+          width: 120,
           cell: (_, item) => Text(
             GlyphPropertyConstants.glyphPropertySlotTypeOptions[item
                     .glyphSlotFlags] ??

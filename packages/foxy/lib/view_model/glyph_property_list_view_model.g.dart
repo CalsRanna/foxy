@@ -22,6 +22,8 @@ mixin _GlyphPropertyListViewModelMixin
 
   late final idController = registerController(StringFieldController());
 
+  late final spellIdController = registerController(StringFieldController());
+
   int _refreshToken = 0;
 
   Future<void> copy(int key) async {
@@ -77,6 +79,7 @@ mixin _GlyphPropertyListViewModelMixin
 
   Future<void> reset() async {
     idController.init('');
+    spellIdController.init('');
     page.value = 1;
     markQueryVersion();
     await _refresh();
@@ -89,7 +92,10 @@ mixin _GlyphPropertyListViewModelMixin
   }
 
   GlyphPropertyFilter _collectFilter() {
-    return GlyphPropertyFilter(id: idController.collect());
+    return GlyphPropertyFilter(
+      id: idController.collect(),
+      spellId: spellIdController.collect(),
+    );
   }
 
   /// Fires the activity-log event after a write; persistence is handled by

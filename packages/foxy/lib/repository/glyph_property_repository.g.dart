@@ -4,19 +4,26 @@ part of 'glyph_property_repository.dart';
 
 final class GlyphPropertyFilter {
   final String id;
+  final String spellId;
 
-  const GlyphPropertyFilter({this.id = ''});
+  const GlyphPropertyFilter({this.id = '', this.spellId = ''});
 
   factory GlyphPropertyFilter.fromJson(Map<String, dynamic> json) {
-    return GlyphPropertyFilter(id: json['id']?.toString() ?? '');
+    return GlyphPropertyFilter(
+      id: json['id']?.toString() ?? '',
+      spellId: json['spellId']?.toString() ?? '',
+    );
   }
 
-  GlyphPropertyFilter copyWith({String? id}) {
-    return GlyphPropertyFilter(id: id ?? this.id);
+  GlyphPropertyFilter copyWith({String? id, String? spellId}) {
+    return GlyphPropertyFilter(
+      id: id ?? this.id,
+      spellId: spellId ?? this.spellId,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id};
+    return {'id': id, 'spellId': spellId};
   }
 }
 
@@ -148,6 +155,9 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('`ID`', filter.id);
+    }
+    if (filter.spellId.isNotEmpty) {
+      builder = builder.where('`SpellID`', filter.spellId);
     }
     return builder;
   }

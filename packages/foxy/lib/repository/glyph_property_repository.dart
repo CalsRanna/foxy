@@ -8,6 +8,7 @@ part 'glyph_property_repository.g.dart';
 
 @FoxyRepository()
 @FoxyFilter.text('id')
+@FoxyFilter.text('spellId')
 class GlyphPropertyRepository
     with RepositoryMixin, _GlyphPropertyRepositoryMixin {
   @override
@@ -70,6 +71,11 @@ class GlyphPropertyRepository
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('gp.ID', filter.id);
+    }
+    if (filter.spellId.isNotEmpty) {
+      final spellId = int.tryParse(filter.spellId, radix: 10);
+      if (spellId == null) return builder.whereRaw('1 = 0');
+      builder = builder.where('gp.SpellID', spellId);
     }
     return builder;
   }
