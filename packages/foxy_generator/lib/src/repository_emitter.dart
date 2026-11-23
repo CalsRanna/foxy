@@ -508,11 +508,6 @@ final class RepositoryEmitter {
       ..writeln();
   }
 
-  String _keyFromEntity(RepositoryGenerationModel model, String entity) =>
-      model.keyFields.length == 1
-      ? '$entity.${model.keyFields.single.dartName}'
-      : '${model.baseName}Key.fromEntity($entity)';
-
   void _emitWhereKey(StringBuffer buffer, RepositoryGenerationModel model) {
     buffer.writeln(
       '  Map<String, Object?> activityKey(${model.keyType} key) => {',
@@ -563,6 +558,11 @@ final class RepositoryEmitter {
       )
       ..writeln();
   }
+
+  String _keyFromEntity(RepositoryGenerationModel model, String entity) =>
+      model.keyFields.length == 1
+      ? '$entity.${model.keyFields.single.dartName}'
+      : '${model.baseName}Key.fromEntity($entity)';
 
   /// Link-key parameter list: `int race, int class_` (empty list → empty string).
   String _linkParams(List<RepositoryKeyFieldModel> links) =>

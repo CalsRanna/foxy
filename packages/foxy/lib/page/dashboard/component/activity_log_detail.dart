@@ -44,6 +44,12 @@ class ActivityLogDetail extends StatelessWidget {
     );
   }
 
+  static String _keyLabel(Map<String, Object?> key) => key.entries
+      .map((entry) => '${entry.key}=${_value(entry.value)}')
+      .join(' · ');
+
+  static String _pad(int value) => value.toString().padLeft(2, '0');
+
   static String _timestamp(DateTime value) {
     final local = value.toLocal();
     final date = [local.year, local.month, local.day].map(_pad).join('-');
@@ -51,61 +57,11 @@ class ActivityLogDetail extends StatelessWidget {
     return '$date $time';
   }
 
-  static String _pad(int value) => value.toString().padLeft(2, '0');
-
-  static String _keyLabel(Map<String, Object?> key) => key.entries
-      .map((entry) => '${entry.key}=${_value(entry.value)}')
-      .join(' · ');
-
   static String _value(Object? value) => switch (value) {
     null => 'NULL',
     '' => '空字符串',
     _ => '$value',
   };
-}
-
-class _RowDetail extends StatelessWidget {
-  static const _labels = {
-    'creature_template': {'minlevel': '最低等级', 'maxlevel': '最高等级'},
-  };
-
-  final ActivityRowChange row;
-
-  const _RowDetail({required this.row});
-
-  @override
-  Widget build(BuildContext context) {
-    final before = row.beforeKey;
-    final after = row.afterKey;
-    final keyLabel = switch ((before, after)) {
-      (null, final key?) => '新增 · ${ActivityLogDetail._keyLabel(key)}',
-      (final key?, null) => '删除 · ${ActivityLogDetail._keyLabel(key)}',
-      (final oldKey?, final newKey?)
-          when !const DeepCollectionEquality().equals(oldKey, newKey) =>
-        '${ActivityLogDetail._keyLabel(oldKey)} → ${ActivityLogDetail._keyLabel(newKey)}',
-      (final key?, _) => ActivityLogDetail._keyLabel(key),
-      _ => '',
-    };
-    return Column(
-      spacing: 4,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${row.table} · $keyLabel',
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
-        if (before != null && after != null && row.changes.isEmpty)
-          const Text('差异暂不可用'),
-        ...row.changes.entries.map((entry) {
-          final label =
-              _labels[row.table]?[entry.key] ??
-              AgentFieldSemantics.values[row.table]?[entry.key]?.label ??
-              entry.key;
-          return _FieldDetail(label: label, change: entry.value);
-        }),
-      ],
-    );
-  }
 }
 
 class _FieldDetail extends StatelessWidget {
@@ -198,5 +154,49 @@ class _FieldDetail extends StatelessWidget {
       }
     }
     return result;
+  }
+}
+
+class _RowDetail extends StatelessWidget {
+  static const _labels = {
+    'creature_template': {'minlevel': '最低等级', 'maxlevel': '最高等级'},
+  };
+
+  final ActivityRowChange row;
+
+  const _RowDetail({required this.row});
+
+  @override
+  Widget build(BuildContext context) {
+    final before = row.beforeKey;
+    final after = row.afterKey;
+    final keyLabel = switch ((before, after)) {
+      (null, final key?) => '新增 · ${ActivityLogDetail._keyLabel(key)}',
+      (final key?, null) => '删除 · ${ActivityLogDetail._keyLabel(key)}',
+      (final oldKey?, final newKey?)
+          when !const DeepCollectionEquality().equals(oldKey, newKey) =>
+        '${ActivityLogDetail._keyLabel(oldKey)} → ${ActivityLogDetail._keyLabel(newKey)}',
+      (final key?, _) => ActivityLogDetail._keyLabel(key),
+      _ => '',
+    };
+    return Column(
+      spacing: 4,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${row.table} · $keyLabel',
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        if (before != null && after != null && row.changes.isEmpty)
+          const Text('差异暂不可用'),
+        ...row.changes.entries.map((entry) {
+          final label =
+              _labels[row.table]?[entry.key] ??
+              AgentFieldSemantics.values[row.table]?[entry.key]?.label ??
+              entry.key;
+          return _FieldDetail(label: label, change: entry.value);
+        }),
+      ],
+    );
   }
 }

@@ -146,13 +146,6 @@ void main() {
   });
 }
 
-final class _TestRepository extends ConditionRepository {
-  @override
-  final Laconic laconic;
-
-  _TestRepository(this.laconic);
-}
-
 final class _RecordingDriver implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
@@ -175,6 +168,13 @@ final class _RecordingDriver implements DatabaseDriver {
   }
 
   @override
+  Future<void> close() async {}
+
+  @override
+  Future<int> insertAndGetId(String sql, [List<Object?> params = const []]) =>
+      throw UnimplementedError();
+
+  @override
   Future<List<LaconicResult>> select(
     String sql, [
     List<Object?> params = const [],
@@ -184,6 +184,13 @@ final class _RecordingDriver implements DatabaseDriver {
     operations.add('select');
     keys.add(params);
     return [LaconicResult.fromMap(keys.length == 1 ? before : after)];
+  }
+
+  @override
+  Future<void> statement(String sql, [List<Object?> params = const []]) async {
+    expect(inTransaction, isTrue);
+    expect(sql, startsWith('insert'));
+    operations.add('insert');
   }
 
   @override
@@ -202,18 +209,11 @@ final class _RecordingDriver implements DatabaseDriver {
       inTransaction = false;
     }
   }
+}
 
+final class _TestRepository extends ConditionRepository {
   @override
-  Future<void> close() async {}
+  final Laconic laconic;
 
-  @override
-  Future<int> insertAndGetId(String sql, [List<Object?> params = const []]) =>
-      throw UnimplementedError();
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {
-    expect(inTransaction, isTrue);
-    expect(sql, startsWith('insert'));
-    operations.add('insert');
-  }
+  _TestRepository(this.laconic);
 }

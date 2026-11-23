@@ -21,15 +21,6 @@ class DatabaseTransaction {
 
   const DatabaseTransaction([this._connection]);
 
-  static void afterCommit(void Function() callback) {
-    final callbacks = Zone.current[_txKey] as List<void Function()>?;
-    if (callbacks == null) {
-      callback();
-    } else {
-      callbacks.add(callback);
-    }
-  }
-
   Future<T> execute<T>(Future<T> Function() action) async {
     if (Zone.current[_txKey] != null) {
       // 已在外层事务中:合并执行,不新开事务。
@@ -74,5 +65,14 @@ class DatabaseTransaction {
   /// that script transactions without a live MySQL.
   Future<T> runTransaction<T>(Future<T> Function() action) {
     return (_connection ?? Database.instance.laconic).transaction(action);
+  }
+
+  static void afterCommit(void Function() callback) {
+    final callbacks = Zone.current[_txKey] as List<void Function()>?;
+    if (callbacks == null) {
+      callback();
+    } else {
+      callbacks.add(callback);
+    }
   }
 }

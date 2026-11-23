@@ -16,23 +16,6 @@ mixin RepositoryMixin {
 
   Laconic get laconic => Database.instance.laconic;
 
-  Future<T> trackActivityWrite<T>(
-    String table, {
-    Map<String, Object?>? beforeKey,
-    Map<String, Object?>? afterKey,
-    Iterable<String> columns = const [],
-    Set<String> binaryKeyColumns = const {},
-    required Future<T> Function() write,
-  }) => ActivityRowWrite.capture(
-    laconic,
-    table,
-    beforeKey: beforeKey,
-    afterKey: afterKey,
-    columns: columns,
-    binaryKeyColumns: binaryKeyColumns,
-    write: write,
-  );
-
   /// Whether to JOIN the `*_locale` tables to show localized names.
   ///
   /// Reads the infrastructure layer's locale-query setting; defaults to
@@ -123,6 +106,23 @@ mixin RepositoryMixin {
         '`${_assertIdentifier(entry.key)}`': entry.value,
     };
   }
+
+  Future<T> trackActivityWrite<T>(
+    String table, {
+    Map<String, Object?>? beforeKey,
+    Map<String, Object?>? afterKey,
+    Iterable<String> columns = const [],
+    Set<String> binaryKeyColumns = const {},
+    required Future<T> Function() write,
+  }) => ActivityRowWrite.capture(
+    laconic,
+    table,
+    beforeKey: beforeKey,
+    afterKey: afterKey,
+    columns: columns,
+    binaryKeyColumns: binaryKeyColumns,
+    write: write,
+  );
 
   /// Defensive identifier whitelist: identifiers are spliced verbatim into
   /// SQL (laconic does not escape them), so anything that flows into
