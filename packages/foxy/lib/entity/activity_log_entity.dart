@@ -1,3 +1,5 @@
+import 'package:foxy/model/activity_log_details.dart';
+
 enum ActivityActionType {
   create('新建'),
   update('更新'),
@@ -21,6 +23,7 @@ class ActivityLogEntity {
   final ActivityActionType actionType;
   final String entityName;
   final DateTime createdAt;
+  final ActivityLogDetails? details;
 
   const ActivityLogEntity({
     this.id = 0,
@@ -28,6 +31,7 @@ class ActivityLogEntity {
     required this.actionType,
     required this.entityName,
     required this.createdAt,
+    this.details,
   });
 
   factory ActivityLogEntity.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,10 @@ class ActivityLogEntity {
       actionType: ActivityActionType.fromString(json['action_type'] as String),
       entityName: (json['entity_name'] as String?) ?? '',
       createdAt: DateTime.parse(json['created_at'] as String),
+      details: switch (json['details']) {
+        final String details => ActivityLogDetails.fromJson(details),
+        _ => null,
+      },
     );
   }
 
@@ -46,6 +54,7 @@ class ActivityLogEntity {
     ActivityActionType? actionType,
     String? entityName,
     DateTime? createdAt,
+    ActivityLogDetails? details,
   }) {
     return ActivityLogEntity(
       id: id ?? this.id,
@@ -53,6 +62,7 @@ class ActivityLogEntity {
       actionType: actionType ?? this.actionType,
       entityName: entityName ?? this.entityName,
       createdAt: createdAt ?? this.createdAt,
+      details: details ?? this.details,
     );
   }
 
@@ -61,6 +71,7 @@ class ActivityLogEntity {
       'module': module,
       'action_type': actionType.name,
       'entity_name': entityName,
+      if (details != null) 'details': details!.toJson(),
     };
   }
 }

@@ -56,7 +56,7 @@ mixin _GemPropertyDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -89,7 +89,7 @@ mixin _GemPropertyDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(GemPropertyEntity gemProperty) {}
 
@@ -115,14 +115,13 @@ mixin _GemPropertyDetailViewModelMixin on FieldControllerMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, GemPropertyEntity gemProperty) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_gem_properties',
-          actionType: action,
-          entityName: 'GemProperty ${gemProperty.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_gem_properties',
+        actionType: action,
+        entityName: 'GemProperty ${gemProperty.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

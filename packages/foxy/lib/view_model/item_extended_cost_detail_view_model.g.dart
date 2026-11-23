@@ -71,7 +71,7 @@ mixin _ItemExtendedCostDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -104,7 +104,7 @@ mixin _ItemExtendedCostDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(ItemExtendedCostEntity itemExtendedCost) {}
 
@@ -155,14 +155,13 @@ mixin _ItemExtendedCostDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     ItemExtendedCostEntity itemExtendedCost,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_item_extended_cost',
-          actionType: action,
-          entityName: 'ItemExtendedCost ${itemExtendedCost.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_item_extended_cost',
+        actionType: action,
+        entityName: 'ItemExtendedCost ${itemExtendedCost.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

@@ -46,7 +46,11 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySpellLinkedSpell(SpellLinkedSpellKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_linked_spell record not found');
     }
@@ -89,7 +93,11 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellLinkedSpell);
     final json = prepareWriteJson(spellLinkedSpell.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(SpellLinkedSpellKey.fromEntity(spellLinkedSpell)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in spell_linked_spell');
@@ -101,13 +109,17 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     SpellLinkedSpellEntity spellLinkedSpell,
   ) async {
     await _beforeUpdate(originalKey, spellLinkedSpell);
-    final json = prepareWriteJson(spellLinkedSpell.toJson());
+    final values = spellLinkedSpell.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(SpellLinkedSpellKey.fromEntity(spellLinkedSpell)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in spell_linked_spell');
@@ -127,6 +139,12 @@ mixin _SpellLinkedSpellRepositoryMixin on RepositoryMixin {
     SpellLinkedSpellKey originalKey,
     SpellLinkedSpellEntity spellLinkedSpell,
   ) async {}
+
+  Map<String, Object?> activityKey(SpellLinkedSpellKey key) => {
+    'spell_trigger': key.spellTrigger,
+    'spell_effect': key.spellEffect,
+    'type': key.type,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, SpellLinkedSpellKey key) {
     var query = builder;

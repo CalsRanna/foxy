@@ -54,7 +54,11 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyGossipMenu(GossipMenuKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('gossip_menu record not found');
     }
@@ -91,7 +95,11 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     await _beforeStore(gossipMenu);
     final json = prepareWriteJson(gossipMenu.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(GossipMenuKey.fromEntity(gossipMenu)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in gossip_menu');
@@ -103,13 +111,17 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     GossipMenuEntity gossipMenu,
   ) async {
     await _beforeUpdate(originalKey, gossipMenu);
-    final json = prepareWriteJson(gossipMenu.toJson());
+    final values = gossipMenu.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(GossipMenuKey.fromEntity(gossipMenu)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in gossip_menu');
@@ -140,6 +152,11 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     GossipMenuKey originalKey,
     GossipMenuEntity gossipMenu,
   ) async {}
+
+  Map<String, Object?> activityKey(GossipMenuKey key) => {
+    'MenuID': key.menuId,
+    'TextID': key.textId,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, GossipMenuKey key) {
     var query = builder;

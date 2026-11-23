@@ -14,7 +14,14 @@ class ActivityLogRepository with RepositoryMixin {
   Future<List<ActivityLogEntity>> getActivityLogs({int limit = 20}) async {
     final rows = await laconic
         .table(_table)
-        .select(['id', 'module', 'action_type', 'entity_name', 'created_at'])
+        .select([
+          'id',
+          'module',
+          'action_type',
+          'entity_name',
+          'created_at',
+          'details',
+        ])
         .orderBy('id', direction: 'desc')
         .limit(limit)
         .get();

@@ -9,7 +9,11 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     QuestRequestItemsLocaleKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'quest_request_items_locale record not found',
@@ -31,16 +35,26 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(questRequestItemsLocale);
     final json = prepareWriteJson(questRequestItemsLocale.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          QuestRequestItemsLocaleKey.fromEntity(questRequestItemsLocale),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = questRequestItemsLocale.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(QuestRequestItemsLocaleKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -58,13 +72,19 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     QuestRequestItemsLocaleEntity questRequestItemsLocale,
   ) async {
     await _beforeUpdate(originalKey, questRequestItemsLocale);
-    final json = prepareWriteJson(questRequestItemsLocale.toJson());
+    final values = questRequestItemsLocale.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          QuestRequestItemsLocaleKey.fromEntity(questRequestItemsLocale),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -90,6 +110,11 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     QuestRequestItemsLocaleKey originalKey,
     QuestRequestItemsLocaleEntity questRequestItemsLocale,
   ) async {}
+
+  Map<String, Object?> activityKey(QuestRequestItemsLocaleKey key) => {
+    'ID': key.id,
+    'locale': key.locale,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, QuestRequestItemsLocaleKey key) {
     var query = builder;

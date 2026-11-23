@@ -26,43 +26,45 @@ mixin _ReferenceLootTemplateListViewModelMixin
 
   int _refreshToken = 0;
 
-  Future<void> copy(ReferenceLootTemplateKey key) async {
-    if (submitting.value) {
-      throw BusyException('operation already in progress');
-    }
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copyReferenceLootTemplate(key);
-      await _logActivity(ActivityActionType.copy, key);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> copy(ReferenceLootTemplateKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.copyReferenceLootTemplate(key);
+          await _logActivity(ActivityActionType.copy, key);
+          await _refresh();
+        } catch (error) {
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(ReferenceLootTemplateKey key) async {
-    if (submitting.value) {
-      throw BusyException('operation already in progress');
-    }
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final record = await _repository.getReferenceLootTemplate(key);
-      await _repository.destroyReferenceLootTemplate(key);
-      await _logActivity(ActivityActionType.delete, key, record);
-      normalizePageAfterDelete(total.value - 1);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(ReferenceLootTemplateKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          final record = await _repository.getReferenceLootTemplate(key);
+          await _repository.destroyReferenceLootTemplate(key);
+          await _logActivity(ActivityActionType.delete, key, record);
+          normalizePageAfterDelete(total.value - 1);
+          await _refresh();
+        } catch (error) {
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() {
     disposeControllers();
@@ -115,14 +117,13 @@ mixin _ReferenceLootTemplateListViewModelMixin
         : resolved.comment.isNotEmpty
         ? resolved.comment
         : key.toString();
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'reference_loot_template',
-          actionType: action,
-          entityName: entityName,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'reference_loot_template',
+        actionType: action,
+        entityName: entityName,
+        createdAt: DateTime.now(),
       ),
     );
   }

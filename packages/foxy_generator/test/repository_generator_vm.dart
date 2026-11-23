@@ -33,7 +33,10 @@ void main() {
                 contains('laconic.table(_table)'),
                 contains("String get _table => 'foxy.sample';"),
                 contains('MysqlErrorUtil.isDuplicateEntry(error)'),
-                contains('prepareWriteJson(sample.toJson())'),
+                contains('final values = sample.toJson();'),
+                contains('beforeKey: activityKey(originalKey),'),
+                contains('afterKey: activityKey(sample.id),'),
+                contains('columns: values.keys,'),
                 contains('Future<void> _beforeDestroy(int key) async {}'),
                 contains(
                   'QueryBuilder _whereKey(QueryBuilder builder, int key)',

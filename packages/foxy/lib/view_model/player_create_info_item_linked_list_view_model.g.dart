@@ -40,14 +40,13 @@ mixin _PlayerCreateInfoItemLinkedListViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     PlayerCreateInfoItemEntity playerCreateInfoItem,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'playercreateinfo_item',
-          actionType: action,
-          entityName: 'PlayerCreateInfoItem',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'playercreateinfo_item',
+        actionType: action,
+        entityName: 'PlayerCreateInfoItem',
+        createdAt: DateTime.now(),
       ),
     );
   }

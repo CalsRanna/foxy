@@ -19,7 +19,9 @@ final class ListEmitter {
     _emitCopy(buffer, model);
     buffer
       ..writeln()
-      ..writeln('  Future<void> destroy(${model.keyParameter}) async {')
+      ..writeln(
+        '  Future<void> destroy(${model.keyParameter}) => EntityWrittenEvent.capture(() async {',
+      )
       ..writeln('    if (submitting.value) {')
       ..writeln("      throw BusyException('operation already in progress');")
       ..writeln('    }')
@@ -48,7 +50,7 @@ final class ListEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }')
+      ..writeln('  });')
       ..writeln()
       ..writeln('  void dispose() {')
       ..writeln('    disposeControllers();')
@@ -146,7 +148,9 @@ final class ListEmitter {
 
   void _emitCopy(StringBuffer buffer, ListGenerationModel model) {
     buffer
-      ..writeln('  Future<void> copy(${model.keyParameter}) async {')
+      ..writeln(
+        '  Future<void> copy(${model.keyParameter}) => EntityWrittenEvent.capture(() async {',
+      )
       ..writeln('    if (submitting.value) {')
       ..writeln("      throw BusyException('operation already in progress');")
       ..writeln('    }')
@@ -166,7 +170,7 @@ final class ListEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }');
+      ..writeln('  }, sourceKey: _repository.activityKey(key));');
   }
 
   void _emitFields(StringBuffer buffer, ListGenerationModel model) {

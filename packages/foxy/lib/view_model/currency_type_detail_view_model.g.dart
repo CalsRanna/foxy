@@ -53,7 +53,7 @@ mixin _CurrencyTypeDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -86,7 +86,7 @@ mixin _CurrencyTypeDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(CurrencyTypeEntity currencyType) {}
 
@@ -113,14 +113,13 @@ mixin _CurrencyTypeDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     CurrencyTypeEntity currencyType,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_currency_types',
-          actionType: action,
-          entityName: 'CurrencyType ${currencyType.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_currency_types',
+        actionType: action,
+        entityName: 'CurrencyType ${currencyType.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

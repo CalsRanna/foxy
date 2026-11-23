@@ -122,7 +122,7 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -149,7 +149,7 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(SmartScriptEntity smartScript) {}
 
@@ -227,14 +227,13 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, SmartScriptEntity smartScript) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'smart_scripts',
-          actionType: action,
-          entityName: 'SmartScript',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'smart_scripts',
+        actionType: action,
+        entityName: 'SmartScript',
+        createdAt: DateTime.now(),
       ),
     );
   }

@@ -68,7 +68,7 @@ mixin _EmoteTextDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -101,7 +101,7 @@ mixin _EmoteTextDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(EmoteTextEntity emoteText) {}
 
@@ -155,14 +155,13 @@ mixin _EmoteTextDetailViewModelMixin on FieldControllerMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, EmoteTextEntity emoteText) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_emotes_text',
-          actionType: action,
-          entityName: emoteText.name,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_emotes_text',
+        actionType: action,
+        entityName: emoteText.name,
+        createdAt: DateTime.now(),
       ),
     );
   }

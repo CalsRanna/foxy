@@ -26,7 +26,7 @@ class ReferenceLootTemplateDetailViewModel
   }
 
   @override
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) throw BusyException('operation already in progress');
     final candidate = _collectCandidate();
     final originalKey = persistedKey.value;
@@ -50,7 +50,7 @@ class ReferenceLootTemplateDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _syncReferenceState() {
     try {

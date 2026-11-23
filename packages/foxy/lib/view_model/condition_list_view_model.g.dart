@@ -29,7 +29,7 @@ mixin _ConditionListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
 
   int _refreshToken = 0;
 
-  Future<void> copy(ConditionKey key) async {
+  Future<void> copy(ConditionKey key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -45,27 +45,28 @@ mixin _ConditionListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(ConditionKey key) async {
-    if (submitting.value) {
-      throw BusyException('operation already in progress');
-    }
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final record = await _repository.getCondition(key);
-      await _repository.destroyCondition(key);
-      await _logActivity(ActivityActionType.delete, key, record);
-      normalizePageAfterDelete(total.value - 1);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(ConditionKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          final record = await _repository.getCondition(key);
+          await _repository.destroyCondition(key);
+          await _logActivity(ActivityActionType.delete, key, record);
+          normalizePageAfterDelete(total.value - 1);
+          await _refresh();
+        } catch (error) {
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() {
     disposeControllers();
@@ -118,14 +119,13 @@ mixin _ConditionListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
         : resolved.comment.isNotEmpty
         ? resolved.comment
         : key.toString();
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'conditions',
-          actionType: action,
-          entityName: entityName,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'conditions',
+        actionType: action,
+        entityName: entityName,
+        createdAt: DateTime.now(),
       ),
     );
   }

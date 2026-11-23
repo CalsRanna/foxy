@@ -162,8 +162,13 @@ void main() {
         'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                contains('Future<void> copy(SampleKey key) async {'),
-                contains('Future<void> destroy(SampleKey key) async {'),
+                contains(
+                  'Future<void> copy(SampleKey key) => EntityWrittenEvent.capture(',
+                ),
+                contains('sourceKey: _repository.activityKey(key)'),
+                contains(
+                  'Future<void> destroy(SampleKey key) => EntityWrittenEvent.capture(',
+                ),
               ]),
             ),
       },
@@ -208,7 +213,9 @@ class BriefSampleEntity {
         'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                contains('Future<void> copy(int key) async {'),
+                contains(
+                  'Future<void> copy(int key) => EntityWrittenEvent.capture(',
+                ),
                 contains('await _repository.copySample(key);'),
                 contains('await _repository.destroySample(key);'),
                 contains('_repository.getBriefSamples('),

@@ -168,6 +168,7 @@ class _Driver implements DatabaseDriver {
     List<Object?> params = const [],
   ]) async {
     updates.add(List.of(params));
+    source.addAll(Map.fromIterables(source.keys, params.take(source.length)));
     return 1;
   }
 
@@ -186,7 +187,7 @@ class _Driver implements DatabaseDriver {
     List<Object?> params = const [],
   ]) async => [
     LaconicResult.fromMap(
-      sql.toLowerCase().contains('max(') ? {'max_id': maxId} : source,
+      sql.toLowerCase().contains('max(') ? {'max_id': maxId} : Map.of(source),
     ),
   ];
   @override

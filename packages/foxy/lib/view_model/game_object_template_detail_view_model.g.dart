@@ -88,7 +88,7 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -121,7 +121,7 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(GameObjectTemplateEntity gameObjectTemplate) {}
 
@@ -210,14 +210,13 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     GameObjectTemplateEntity gameObjectTemplate,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'gameobject_template',
-          actionType: action,
-          entityName: gameObjectTemplate.name,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'gameobject_template',
+        actionType: action,
+        entityName: gameObjectTemplate.name,
+        createdAt: DateTime.now(),
       ),
     );
   }

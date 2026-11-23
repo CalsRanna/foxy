@@ -40,14 +40,13 @@ mixin _PlayerCreateInfoCastSpellLinkedListViewModelMixin
     ActivityActionType action,
     PlayerCreateInfoCastSpellEntity playerCreateInfoCastSpell,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'playercreateinfo_cast_spell',
-          actionType: action,
-          entityName: 'PlayerCreateInfoCastSpell',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'playercreateinfo_cast_spell',
+        actionType: action,
+        entityName: 'PlayerCreateInfoCastSpell',
+        createdAt: DateTime.now(),
       ),
     );
   }

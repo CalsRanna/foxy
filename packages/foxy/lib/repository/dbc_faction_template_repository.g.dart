@@ -43,7 +43,11 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyDbcFactionTemplate(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_faction_template record not found',
@@ -68,16 +72,24 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(dbcFactionTemplate);
     final json = prepareWriteJson(dbcFactionTemplate.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(dbcFactionTemplate.id),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = dbcFactionTemplate.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.id),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -96,13 +108,17 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     DbcFactionTemplateEntity dbcFactionTemplate,
   ) async {
     await _beforeUpdate(originalKey, dbcFactionTemplate);
-    final json = prepareWriteJson(dbcFactionTemplate.toJson());
+    final values = dbcFactionTemplate.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(dbcFactionTemplate.id),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -128,6 +144,8 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     int originalKey,
     DbcFactionTemplateEntity dbcFactionTemplate,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'ID': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);

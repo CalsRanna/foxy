@@ -62,10 +62,12 @@ final class LinkedDetailEmitter {
       ..writeln('  int _refreshToken = 0;')
       ..writeln('  int _linkToken = 0;')
       ..writeln()
-      ..writeln('  Future<void> destroy() async {')
       ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
+        '  Future<void> destroy() => EntityWrittenEvent.capture(() async {',
       )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    final key = editingKey.value;')
       ..writeln('    if (key == null) return;')
       ..writeln('    final linkSnapshot = linkKey.value;')
@@ -112,7 +114,7 @@ final class LinkedDetailEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }')
+      ..writeln('  });')
       ..writeln()
       ..writeln('  void dispose() {')
       ..writeln('    disposeControllers();')
@@ -124,10 +126,12 @@ final class LinkedDetailEmitter {
       ..writeln('    return setLinkKey(linkKey);')
       ..writeln('  }')
       ..writeln()
-      ..writeln('  Future<void> persist() async {')
       ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
+        '  Future<void> persist() => EntityWrittenEvent.capture(() async {',
       )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    final linkSnapshot = linkKey.value;')
       ..writeln('    if (linkSnapshot == null) {')
       ..writeln("      throw LinkNotLoadedException('link record not loaded');")
@@ -146,6 +150,20 @@ final class LinkedDetailEmitter {
         'originalKey, candidate);',
       )
       ..writeln('      }')
+      ..writeln('      final action = originalKey == null')
+      ..writeln('          ? ActivityActionType.create')
+      ..writeln('          : ActivityActionType.update;')
+      ..writeln('      try {')
+      ..writeln(
+        '        ${model.logNameFields.isEmpty ? '' : 'await '}_logActivity(action, '
+        'candidate.${model.singleKeyFieldName});',
+      )
+      ..writeln('      } catch (_) {')
+      ..writeln(
+        '        // Activity log is best-effort; failure (e.g. not registered in\n'
+        '        // tests) must not affect the main flow.',
+      )
+      ..writeln('      }')
       ..writeln(
         '      if (linkToken != _linkToken || linkKey.value != linkSnapshot) {',
       )
@@ -155,20 +173,6 @@ final class LinkedDetailEmitter {
       ..writeln(
         '      editingKey.value = candidate.${model.singleKeyFieldName};',
       )
-      ..writeln('      final action = originalKey == null')
-      ..writeln('          ? ActivityActionType.create')
-      ..writeln('          : ActivityActionType.update;')
-      ..writeln('      try {')
-      ..writeln(
-        '        ${model.logNameFields.isEmpty ? '' : 'await '}_logActivity(action, '
-        'originalKey ?? candidate.${model.singleKeyFieldName});',
-      )
-      ..writeln('      } catch (_) {')
-      ..writeln(
-        '        // Activity log is best-effort; failure (e.g. not registered in\n'
-        '        // tests) must not affect the main flow.',
-      )
-      ..writeln('      }')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
       ..writeln(
@@ -181,7 +185,7 @@ final class LinkedDetailEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }')
+      ..writeln('  });')
       ..writeln()
       ..writeln('  Future<void> setLinkKey(${model.keyType} linkKey) async {')
       ..writeln(

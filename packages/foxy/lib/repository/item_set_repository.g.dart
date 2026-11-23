@@ -47,7 +47,11 @@ mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<void> destroyItemSet(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_item_set record not found');
     }
@@ -103,16 +107,24 @@ mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
     await _beforeStore(itemSet);
     final json = prepareWriteJson(itemSet.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(itemSet.id),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemSet.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.id),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -126,13 +138,17 @@ mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<void> updateItemSet(int originalKey, ItemSetEntity itemSet) async {
     await _beforeUpdate(originalKey, itemSet);
-    final json = prepareWriteJson(itemSet.toJson());
+    final values = itemSet.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(itemSet.id),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in foxy.dbc_item_set');
@@ -160,6 +176,8 @@ mixin _ItemSetRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> _beforeStore(ItemSetEntity itemSet) async {}
 
   Future<void> _beforeUpdate(int originalKey, ItemSetEntity itemSet) async {}
+
+  Map<String, Object?> activityKey(int key) => {'ID': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);

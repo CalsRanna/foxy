@@ -62,35 +62,38 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
   int _interactionToken = 0;
   void cancel() => _clearEditingState();
 
-  Future<void> copy(GossipMenuOptionKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copyGossipMenuOption(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        _logActivity(ActivityActionType.copy, key);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> copy(GossipMenuOptionKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.copyGossipMenuOption(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          try {
+            _logActivity(ActivityActionType.copy, key);
+          } catch (_) {
+            // Activity log is best-effort; failure (e.g. not registered in
+            // tests) must not affect the main flow.
+          }
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      }, sourceKey: _repository.activityKey(key));
 
   Future<void> create({bool showForm = true}) async {
     if (submitting.value) throw BusyException('operation already in progress');
@@ -128,12 +131,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
     try {
       await _destroyUseCase.execute(key);
       if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        _logActivity(ActivityActionType.delete, key);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -208,18 +205,6 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
         ),
       );
       if (token != _interactionToken || linkKey.value != link) return;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      try {
-        _logActivity(
-          action,
-          originalKey ?? GossipMenuOptionKey.fromEntity(candidate),
-        );
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -290,7 +275,7 @@ class GossipMenuOptionLinkedListViewModel with FieldControllerMixin {
       entityName: key.toString(),
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+    EntityWrittenEvent.publish(GetIt.instance.get<EventBus>(), log);
   }
 
   Future<void> _refresh() async {

@@ -7,7 +7,11 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyCreatureTemplateAddon(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_template_addon record not found');
     }
@@ -30,16 +34,24 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureTemplateAddon);
     final json = prepareWriteJson(creatureTemplateAddon.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(creatureTemplateAddon.entry),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureTemplateAddon.copyWith(
         entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.entry),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -58,13 +70,17 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     CreatureTemplateAddonEntity creatureTemplateAddon,
   ) async {
     await _beforeUpdate(originalKey, creatureTemplateAddon);
-    final json = prepareWriteJson(creatureTemplateAddon.toJson());
+    final values = creatureTemplateAddon.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(creatureTemplateAddon.entry),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in creature_template_addon');
@@ -86,6 +102,8 @@ mixin _CreatureTemplateAddonRepositoryMixin on RepositoryMixin {
     int originalKey,
     CreatureTemplateAddonEntity creatureTemplateAddon,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'entry': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`entry`', key);

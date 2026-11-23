@@ -25,7 +25,7 @@ mixin _PageTextListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
 
   int _refreshToken = 0;
 
-  Future<void> copy(int key) async {
+  Future<void> copy(int key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -41,9 +41,9 @@ mixin _PageTextListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(int key) async {
+  Future<void> destroy(int key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -60,7 +60,7 @@ mixin _PageTextListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void dispose() {
     disposeControllers();
@@ -100,14 +100,13 @@ mixin _PageTextListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, int key) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'page_text',
-          actionType: action,
-          entityName: key.toString(),
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'page_text',
+        actionType: action,
+        entityName: key.toString(),
+        createdAt: DateTime.now(),
       ),
     );
   }

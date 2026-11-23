@@ -32,14 +32,13 @@ mixin _ItemEnchantmentTemplateLinkedListViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'item_enchantment_template',
-          actionType: action,
-          entityName: 'ItemEnchantmentTemplate',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'item_enchantment_template',
+        actionType: action,
+        entityName: 'ItemEnchantmentTemplate',
+        createdAt: DateTime.now(),
       ),
     );
   }

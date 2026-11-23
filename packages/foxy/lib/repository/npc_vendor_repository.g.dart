@@ -38,7 +38,11 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyNpcVendor(NpcVendorKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('npc_vendor record not found');
     }
@@ -79,7 +83,11 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     await _beforeStore(npcVendor);
     final json = prepareWriteJson(npcVendor.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(NpcVendorKey.fromEntity(npcVendor)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in npc_vendor');
@@ -91,13 +99,17 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     NpcVendorEntity npcVendor,
   ) async {
     await _beforeUpdate(originalKey, npcVendor);
-    final json = prepareWriteJson(npcVendor.toJson());
+    final values = npcVendor.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(NpcVendorKey.fromEntity(npcVendor)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in npc_vendor');
@@ -117,6 +129,12 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
     NpcVendorKey originalKey,
     NpcVendorEntity npcVendor,
   ) async {}
+
+  Map<String, Object?> activityKey(NpcVendorKey key) => {
+    'entry': key.entry,
+    'item': key.item,
+    'ExtendedCost': key.extendedCost,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, NpcVendorKey key) {
     var query = builder;

@@ -38,14 +38,13 @@ mixin _PlayerCreateInfoSpellCustomLinkedListViewModelMixin
     ActivityActionType action,
     PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'playercreateinfo_spell_custom',
-          actionType: action,
-          entityName: 'PlayerCreateInfoSpellCustom',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'playercreateinfo_spell_custom',
+        actionType: action,
+        entityName: 'PlayerCreateInfoSpellCustom',
+        createdAt: DateTime.now(),
       ),
     );
   }

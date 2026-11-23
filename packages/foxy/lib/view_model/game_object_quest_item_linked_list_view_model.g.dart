@@ -53,35 +53,38 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> copy(GameObjectQuestItemKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copyGameObjectQuestItem(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        _logActivity(ActivityActionType.copy, key);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> copy(GameObjectQuestItemKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.copyGameObjectQuestItem(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          try {
+            _logActivity(ActivityActionType.copy, key);
+          } catch (_) {
+            // Activity log is best-effort; failure (e.g. not registered in
+            // tests) must not affect the main flow.
+          }
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      }, sourceKey: _repository.activityKey(key));
 
   Future<void> create() async {
     if (submitting.value) throw BusyException('operation already in progress');
@@ -106,35 +109,38 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> destroy(GameObjectQuestItemKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyGameObjectQuestItem(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        _logActivity(ActivityActionType.delete, key);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(GameObjectQuestItemKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.destroyGameObjectQuestItem(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          try {
+            _logActivity(ActivityActionType.delete, key);
+          } catch (_) {
+            // Activity log is best-effort; failure (e.g. not registered in
+            // tests) must not affect the main flow.
+          }
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() => disposeControllers();
 
@@ -176,8 +182,10 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
-  Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     final link = linkKey.value;
     if (link == null) {
       throw LinkNotLoadedException('link record not loaded');
@@ -197,10 +205,7 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       try {
-        _logActivity(
-          action,
-          originalKey ?? GameObjectQuestItemKey.fromEntity(candidate),
-        );
+        _logActivity(action, GameObjectQuestItemKey.fromEntity(candidate));
       } catch (_) {
         // Activity log is best-effort; failure (e.g. not registered in
         // tests) must not affect the main flow.
@@ -216,7 +221,7 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   Future<void> setLinkKey(int linkKey) async {
     _interactionToken++;
@@ -232,14 +237,13 @@ mixin _GameObjectQuestItemLinkedListViewModelMixin on FieldControllerMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, GameObjectQuestItemKey key) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'gameobject_questitem',
-          actionType: action,
-          entityName: key.toString(),
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'gameobject_questitem',
+        actionType: action,
+        entityName: key.toString(),
+        createdAt: DateTime.now(),
       ),
     );
   }

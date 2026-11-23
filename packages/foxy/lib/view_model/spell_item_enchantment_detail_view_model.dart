@@ -103,6 +103,6 @@ class SpellItemEnchantmentDetailViewModel
       entityName: spellItemEnchantment.nameLangZhCN,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+    EntityWrittenEvent.publish(GetIt.instance.get<EventBus>(), log);
   }
 }

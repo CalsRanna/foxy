@@ -55,7 +55,7 @@ mixin _GlyphPropertyDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -88,7 +88,7 @@ mixin _GlyphPropertyDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(GlyphPropertyEntity glyphProperty) {}
 
@@ -115,14 +115,13 @@ mixin _GlyphPropertyDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     GlyphPropertyEntity glyphProperty,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_glyph_properties',
-          actionType: action,
-          entityName: 'GlyphProperty ${glyphProperty.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_glyph_properties',
+        actionType: action,
+        entityName: 'GlyphProperty ${glyphProperty.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

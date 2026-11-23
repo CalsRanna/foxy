@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
 void main() {
-  test('ActivityLog 只保留日志行 ID 和可读目标标签', () {
+  test('历史日志保留日志行 ID 和可读目标标签', () {
     final createdAt = DateTime.utc(2026, 7, 19);
     final log = ActivityLogEntity.fromJson({
       'id': 7,

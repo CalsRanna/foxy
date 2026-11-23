@@ -38,7 +38,11 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyGossipMenuOption(GossipMenuOptionKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('gossip_menu_option record not found');
     }
@@ -81,7 +85,11 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
     await _beforeStore(gossipMenuOption);
     final json = prepareWriteJson(gossipMenuOption.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(GossipMenuOptionKey.fromEntity(gossipMenuOption)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gossipMenuOption.copyWith(
@@ -92,9 +100,13 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(GossipMenuOptionKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -110,13 +122,17 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
     GossipMenuOptionEntity gossipMenuOption,
   ) async {
     await _beforeUpdate(originalKey, gossipMenuOption);
-    final json = prepareWriteJson(gossipMenuOption.toJson());
+    final values = gossipMenuOption.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(GossipMenuOptionKey.fromEntity(gossipMenuOption)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in gossip_menu_option');
@@ -136,6 +152,11 @@ mixin _GossipMenuOptionRepositoryMixin on RepositoryMixin {
     GossipMenuOptionKey originalKey,
     GossipMenuOptionEntity gossipMenuOption,
   ) async {}
+
+  Map<String, Object?> activityKey(GossipMenuOptionKey key) => {
+    'MenuID': key.menuId,
+    'OptionID': key.optionId,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, GossipMenuOptionKey key) {
     var query = builder;

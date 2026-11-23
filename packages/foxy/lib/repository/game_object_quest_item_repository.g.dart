@@ -43,7 +43,11 @@ mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyGameObjectQuestItem(GameObjectQuestItemKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('gameobject_questitem record not found');
     }
@@ -83,7 +87,13 @@ mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
     await _beforeStore(gameObjectQuestItem);
     final json = prepareWriteJson(gameObjectQuestItem.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          GameObjectQuestItemKey.fromEntity(gameObjectQuestItem),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gameObjectQuestItem.copyWith(
@@ -94,9 +104,13 @@ mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(GameObjectQuestItemKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -112,13 +126,19 @@ mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
     GameObjectQuestItemEntity gameObjectQuestItem,
   ) async {
     await _beforeUpdate(originalKey, gameObjectQuestItem);
-    final json = prepareWriteJson(gameObjectQuestItem.toJson());
+    final values = gameObjectQuestItem.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          GameObjectQuestItemKey.fromEntity(gameObjectQuestItem),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in gameobject_questitem');
@@ -140,6 +160,11 @@ mixin _GameObjectQuestItemRepositoryMixin on RepositoryMixin {
     GameObjectQuestItemKey originalKey,
     GameObjectQuestItemEntity gameObjectQuestItem,
   ) async {}
+
+  Map<String, Object?> activityKey(GameObjectQuestItemKey key) => {
+    'GameObjectEntry': key.gameObjectEntry,
+    'Idx': key.idx,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, GameObjectQuestItemKey key) {
     var query = builder;

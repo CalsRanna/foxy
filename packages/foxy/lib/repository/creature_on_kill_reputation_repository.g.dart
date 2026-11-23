@@ -7,7 +7,11 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyCreatureOnKillReputation(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'creature_onkill_reputation record not found',
@@ -34,16 +38,24 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureOnKillReputation);
     final json = prepareWriteJson(creatureOnKillReputation.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(creatureOnKillReputation.creatureID),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureOnKillReputation.copyWith(
         creatureID: await nextMaxPlusOne(_table, '`creature_id`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.creatureID),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.creatureID;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -62,13 +74,17 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     CreatureOnKillReputationEntity creatureOnKillReputation,
   ) async {
     await _beforeUpdate(originalKey, creatureOnKillReputation);
-    final json = prepareWriteJson(creatureOnKillReputation.toJson());
+    final values = creatureOnKillReputation.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(creatureOnKillReputation.creatureID),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -94,6 +110,8 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     int originalKey,
     CreatureOnKillReputationEntity creatureOnKillReputation,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'creature_id': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`creature_id`', key);

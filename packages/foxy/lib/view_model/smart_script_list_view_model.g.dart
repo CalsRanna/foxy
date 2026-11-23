@@ -28,7 +28,7 @@ mixin _SmartScriptListViewModelMixin
 
   int _refreshToken = 0;
 
-  Future<void> copy(SmartScriptKey key) async {
+  Future<void> copy(SmartScriptKey key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -44,27 +44,28 @@ mixin _SmartScriptListViewModelMixin
     } finally {
       submitting.value = false;
     }
-  }
+  }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(SmartScriptKey key) async {
-    if (submitting.value) {
-      throw BusyException('operation already in progress');
-    }
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final record = await _repository.getSmartScript(key);
-      await _repository.destroySmartScript(key);
-      await _logActivity(ActivityActionType.delete, key, record);
-      normalizePageAfterDelete(total.value - 1);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(SmartScriptKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          final record = await _repository.getSmartScript(key);
+          await _repository.destroySmartScript(key);
+          await _logActivity(ActivityActionType.delete, key, record);
+          normalizePageAfterDelete(total.value - 1);
+          await _refresh();
+        } catch (error) {
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() {
     disposeControllers();
@@ -117,14 +118,13 @@ mixin _SmartScriptListViewModelMixin
         : resolved.comment.isNotEmpty
         ? resolved.comment
         : key.toString();
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'smart_scripts',
-          actionType: action,
-          entityName: entityName,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'smart_scripts',
+        actionType: action,
+        entityName: entityName,
+        createdAt: DateTime.now(),
       ),
     );
   }

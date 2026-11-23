@@ -56,7 +56,11 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyItemLootTemplate(ItemLootTemplateKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('item_loot_template record not found');
     }
@@ -100,7 +104,11 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemLootTemplate);
     final json = prepareWriteJson(itemLootTemplate.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(ItemLootTemplateKey.fromEntity(itemLootTemplate)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemLootTemplate.copyWith(
@@ -111,9 +119,13 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(ItemLootTemplateKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -129,13 +141,17 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     ItemLootTemplateEntity itemLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, itemLootTemplate);
-    final json = prepareWriteJson(itemLootTemplate.toJson());
+    final values = itemLootTemplate.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(ItemLootTemplateKey.fromEntity(itemLootTemplate)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in item_loot_template');
@@ -155,6 +171,11 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     ItemLootTemplateKey originalKey,
     ItemLootTemplateEntity itemLootTemplate,
   ) async {}
+
+  Map<String, Object?> activityKey(ItemLootTemplateKey key) => {
+    'Entry': key.entry,
+    'Item': key.item,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, ItemLootTemplateKey key) {
     var query = builder;

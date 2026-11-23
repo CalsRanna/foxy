@@ -69,10 +69,12 @@ final class LinkedListEmitter {
       ..writeln('  int _refreshToken = 0;')
       ..writeln('  int _interactionToken = 0;')
       ..writeln()
-      ..writeln('  Future<void> copy(${model.keyType} key) async {')
       ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
+        '  Future<void> copy(${model.keyType} key) => EntityWrittenEvent.capture(() async {',
       )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    final link = linkKey.value;')
       ..writeln('    if (link == null) {')
       ..writeln("      throw LinkNotLoadedException('link record not loaded');")
@@ -109,7 +111,7 @@ final class LinkedListEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }')
+      ..writeln('  }, sourceKey: _repository.activityKey(key));')
       ..writeln()
       ..writeln('  Future<void> create() async {')
       ..writeln(
@@ -142,10 +144,12 @@ final class LinkedListEmitter {
       ..writeln('    }')
       ..writeln('  }')
       ..writeln()
-      ..writeln('  Future<void> destroy(${model.keyType} key) async {')
       ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
+        '  Future<void> destroy(${model.keyType} key) => EntityWrittenEvent.capture(() async {',
       )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    final link = linkKey.value;')
       ..writeln('    if (link == null) {')
       ..writeln("      throw LinkNotLoadedException('link record not loaded');")
@@ -190,7 +194,7 @@ final class LinkedListEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }')
+      ..writeln('  });')
       ..writeln()
       ..writeln('  void dispose() => disposeControllers();')
       ..writeln()
@@ -243,10 +247,12 @@ final class LinkedListEmitter {
       ..writeln('    await _refresh();')
       ..writeln('  }')
       ..writeln()
-      ..writeln('  Future<void> persist() async {')
       ..writeln(
-        "    if (submitting.value) throw BusyException('operation already in progress');",
+        '  Future<void> persist() => EntityWrittenEvent.capture(() async {',
       )
+      ..writeln('    if (submitting.value) {')
+      ..writeln("      throw BusyException('operation already in progress');")
+      ..writeln('    }')
       ..writeln('    final link = linkKey.value;')
       ..writeln('    if (link == null) {')
       ..writeln("      throw LinkNotLoadedException('link record not loaded');")
@@ -271,7 +277,7 @@ final class LinkedListEmitter {
       ..writeln('      try {')
       ..writeln(
         '        ${model.logNameFields.isEmpty ? '' : 'await '}_logActivity(action, '
-        '${model.singleKeyFieldName != null ? 'originalKey ?? candidate.${model.singleKeyFieldName}' : 'originalKey ?? ${model.baseName}Key.fromEntity(candidate)'});',
+        '${model.singleKeyFieldName != null ? 'candidate.${model.singleKeyFieldName}' : '${model.baseName}Key.fromEntity(candidate)'});',
       )
       ..writeln('      } catch (_) {')
       ..writeln(
@@ -294,7 +300,7 @@ final class LinkedListEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }')
+      ..writeln('  });')
       ..writeln()
       ..writeln(
         '  Future<void> setLinkKey(${model.linkKeyType} linkKey) async {',

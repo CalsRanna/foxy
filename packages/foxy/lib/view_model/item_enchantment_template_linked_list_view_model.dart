@@ -73,29 +73,32 @@ class ItemEnchantmentTemplateLinkedListViewModel
     }
   }
 
-  Future<void> destroy(ItemEnchantmentTemplateKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyItemEnchantmentTemplate(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(ItemEnchantmentTemplateKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.destroyItemEnchantmentTemplate(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() => disposeControllers();
 
@@ -138,7 +141,7 @@ class ItemEnchantmentTemplateLinkedListViewModel
     await _refresh();
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) throw BusyException('operation already in progress');
     final link = linkKey.value;
     if (link == null) {
@@ -155,13 +158,13 @@ class ItemEnchantmentTemplateLinkedListViewModel
       } else {
         await _repository.updateItemEnchantmentTemplate(originalKey, candidate);
       }
-      if (token != _interactionToken || linkKey.value != link) return;
       _logActivity(
         originalKey == null
             ? ActivityActionType.create
             : ActivityActionType.update,
         candidate,
       );
+      if (token != _interactionToken || linkKey.value != link) return;
       await _refresh();
     } catch (error) {
       if (token != _interactionToken || linkKey.value != link) {
@@ -172,7 +175,7 @@ class ItemEnchantmentTemplateLinkedListViewModel
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   Future<void> setLinkKey(ItemEnchantmentTemplateLinkKey linkKey) async {
     _interactionToken++;

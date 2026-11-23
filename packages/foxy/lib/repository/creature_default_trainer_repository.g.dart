@@ -7,7 +7,11 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyCreatureDefaultTrainer(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'creature_default_trainer record not found',
@@ -34,16 +38,24 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureDefaultTrainer);
     final json = prepareWriteJson(creatureDefaultTrainer.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(creatureDefaultTrainer.creatureId),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureDefaultTrainer.copyWith(
         creatureId: await nextMaxPlusOne(_table, '`CreatureId`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.creatureId),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.creatureId;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -62,13 +74,17 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     CreatureDefaultTrainerEntity creatureDefaultTrainer,
   ) async {
     await _beforeUpdate(originalKey, creatureDefaultTrainer);
-    final json = prepareWriteJson(creatureDefaultTrainer.toJson());
+    final values = creatureDefaultTrainer.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(creatureDefaultTrainer.creatureId),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -94,6 +110,8 @@ mixin _CreatureDefaultTrainerRepositoryMixin on RepositoryMixin {
     int originalKey,
     CreatureDefaultTrainerEntity creatureDefaultTrainer,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'CreatureId': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`CreatureId`', key);

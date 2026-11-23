@@ -301,7 +301,10 @@ class DI {
     _instance.registerLazySingleton(() => DbcSyncUtil());
     _instance.registerLazySingleton(() => DbcExportRegistry());
     _instance.registerLazySingleton(
-      () => ActivityLogService(_instance.get<ActivityLogRepository>()),
+      () => ActivityLogService(
+        _instance.get<ActivityLogRepository>(),
+        _instance.get<EventBus>(),
+      ),
     );
     // Activity log persistence aspect: subscribes EntityWrittenEvent once
     // the bus exists; generated VMs fire the event after writes. The service

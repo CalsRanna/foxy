@@ -56,7 +56,11 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyPlayerCreateInfo(PlayerCreateInfoKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('playercreateinfo record not found');
     }
@@ -108,7 +112,11 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
     await _beforeStore(playerCreateInfo);
     final json = prepareWriteJson(playerCreateInfo.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(PlayerCreateInfoKey.fromEntity(playerCreateInfo)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in playercreateinfo');
@@ -120,13 +128,17 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoEntity playerCreateInfo,
   ) async {
     await _beforeUpdate(originalKey, playerCreateInfo);
-    final json = prepareWriteJson(playerCreateInfo.toJson());
+    final values = playerCreateInfo.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(PlayerCreateInfoKey.fromEntity(playerCreateInfo)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in playercreateinfo');
@@ -160,6 +172,11 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoKey originalKey,
     PlayerCreateInfoEntity playerCreateInfo,
   ) async {}
+
+  Map<String, Object?> activityKey(PlayerCreateInfoKey key) => {
+    'race': key.race,
+    'class': key.class_,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, PlayerCreateInfoKey key) {
     var query = builder;

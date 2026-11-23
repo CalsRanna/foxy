@@ -39,7 +39,11 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySpellRank(SpellRankKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_ranks record not found');
     }
@@ -74,7 +78,11 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellRank);
     final json = prepareWriteJson(spellRank.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(SpellRankKey.fromEntity(spellRank)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellRank.copyWith(
@@ -85,9 +93,13 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(SpellRankKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -103,13 +115,17 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
     SpellRankEntity spellRank,
   ) async {
     await _beforeUpdate(originalKey, spellRank);
-    final json = prepareWriteJson(spellRank.toJson());
+    final values = spellRank.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(SpellRankKey.fromEntity(spellRank)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in spell_ranks');
@@ -129,6 +145,11 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
     SpellRankKey originalKey,
     SpellRankEntity spellRank,
   ) async {}
+
+  Map<String, Object?> activityKey(SpellRankKey key) => {
+    'first_spell_id': key.firstSpellId,
+    'rank': key.rank,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, SpellRankKey key) {
     var query = builder;

@@ -203,13 +203,13 @@ final class FormEmitter {
         '${model.entityClassName} ${model.entityCamelName}) {',
       )
       ..writeln(
-        '    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(',
+        '    EntityWrittenEvent.publish(GetIt.instance.get<EventBus>(), ActivityLogEntity(',
       )
       ..writeln('      module: \'${model.moduleName}\',')
       ..writeln('      actionType: action,')
       ..writeln('      entityName: $entityNameExpr,')
       ..writeln('      createdAt: DateTime.now(),')
-      ..writeln('    )));')
+      ..writeln('    ));')
       ..writeln('  }');
   }
 
@@ -223,7 +223,9 @@ final class FormEmitter {
         ? 'candidate.${model.singleKeyFieldName}'
         : '${model.baseName}Key.fromEntity(candidate)';
     buffer
-      ..writeln('  Future<void> persist() async {')
+      ..writeln(
+        '  Future<void> persist() => EntityWrittenEvent.capture(() async {',
+      )
       ..writeln('    if (submitting.value) {')
       ..writeln("      throw BusyException('operation already in progress');")
       ..writeln('    }')
@@ -284,7 +286,7 @@ final class FormEmitter {
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
       ..writeln('    }')
-      ..writeln('  }');
+      ..writeln('  });');
   }
 
   void _emitSkeletonFields(StringBuffer buffer, FormGenerationModel model) {

@@ -41,12 +41,12 @@ class LogActivityHookEmitter {
   /// fallback variant logs the key.
   String get body {
     final fire =
-        '    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(ActivityLogEntity(\n'
+        '    EntityWrittenEvent.publish(GetIt.instance.get<EventBus>(), ActivityLogEntity(\n'
         '      module: \'$moduleName\',\n'
         '      actionType: action,\n'
         '      entityName: ${logNameFields.isEmpty ? 'key.toString()' : 'entityName'},\n'
         '      createdAt: DateTime.now(),\n'
-        '    )));';
+        '    ));';
     if (logNameFields.isEmpty) return fire;
     final chain = StringBuffer()
       ..writeln('    final entityName = resolved == null')

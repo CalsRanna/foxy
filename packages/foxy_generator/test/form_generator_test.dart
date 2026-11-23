@@ -90,6 +90,8 @@ void main() {
         _output: decodedMatches(
           allOf(<Matcher>[
             contains('candidate = candidate.copyWith(id: storedKey);'),
+            contains('EntityWrittenEvent.capture(() async {'),
+            contains('EntityWrittenEvent.publish('),
             isNot(contains('idController')),
           ]),
         ),

@@ -43,7 +43,11 @@ mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyCreatureQuestItem(CreatureQuestItemKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_questitem record not found');
     }
@@ -83,7 +87,13 @@ mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureQuestItem);
     final json = prepareWriteJson(creatureQuestItem.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          CreatureQuestItemKey.fromEntity(creatureQuestItem),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureQuestItem.copyWith(
@@ -94,9 +104,13 @@ mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(CreatureQuestItemKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -112,13 +126,19 @@ mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
     CreatureQuestItemEntity creatureQuestItem,
   ) async {
     await _beforeUpdate(originalKey, creatureQuestItem);
-    final json = prepareWriteJson(creatureQuestItem.toJson());
+    final values = creatureQuestItem.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          CreatureQuestItemKey.fromEntity(creatureQuestItem),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in creature_questitem');
@@ -138,6 +158,11 @@ mixin _CreatureQuestItemRepositoryMixin on RepositoryMixin {
     CreatureQuestItemKey originalKey,
     CreatureQuestItemEntity creatureQuestItem,
   ) async {}
+
+  Map<String, Object?> activityKey(CreatureQuestItemKey key) => {
+    'CreatureEntry': key.creatureEntry,
+    'Idx': key.idx,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, CreatureQuestItemKey key) {
     var query = builder;

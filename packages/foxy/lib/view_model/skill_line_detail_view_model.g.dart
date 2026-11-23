@@ -72,7 +72,7 @@ mixin _SkillLineDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -105,7 +105,7 @@ mixin _SkillLineDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(SkillLineEntity skillLine) {}
 
@@ -143,14 +143,13 @@ mixin _SkillLineDetailViewModelMixin on FieldControllerMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, SkillLineEntity skillLine) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_skill_line',
-          actionType: action,
-          entityName: 'SkillLine ${skillLine.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_skill_line',
+        actionType: action,
+        entityName: 'SkillLine ${skillLine.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

@@ -86,7 +86,7 @@ mixin _AreaTableDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -119,7 +119,7 @@ mixin _AreaTableDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(AreaTableEntity areaTable) {}
 
@@ -180,14 +180,13 @@ mixin _AreaTableDetailViewModelMixin on FieldControllerMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, AreaTableEntity areaTable) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_area_table',
-          actionType: action,
-          entityName: 'AreaTable ${areaTable.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_area_table',
+        actionType: action,
+        entityName: 'AreaTable ${areaTable.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

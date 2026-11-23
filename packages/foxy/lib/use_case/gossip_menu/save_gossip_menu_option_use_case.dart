@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
@@ -45,7 +46,7 @@ final class SaveGossipMenuOptionUseCase {
 
   Future<SaveGossipMenuOptionResult> execute(
     SaveGossipMenuOptionInput input,
-  ) async {
+  ) => EntityWrittenEvent.capture(() async {
     await _transaction.execute(() async {
       final originalKey = input.originalKey;
       if (originalKey == null) {
@@ -79,7 +80,7 @@ final class SaveGossipMenuOptionUseCase {
     final localeKey = input.localeCandidate == null
         ? null
         : GossipMenuOptionLocaleKey.fromEntity(input.localeCandidate!);
-    _activityLogService.recordBestEffort(
+    _activityLogService.publishBestEffort(
       ActivityLogEntity(
         module: 'gossip_menu_option',
         actionType: input.originalKey == null
@@ -94,5 +95,5 @@ final class SaveGossipMenuOptionUseCase {
       persistedKey: persistedKey,
       localeKey: localeKey,
     );
-  }
+  });
 }

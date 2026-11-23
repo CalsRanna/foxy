@@ -47,7 +47,11 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyPageText(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('page_text record not found');
     }
@@ -91,16 +95,24 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     await _beforeStore(pageText);
     final json = prepareWriteJson(pageText.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(pageText.id),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = pageText.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.id),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -114,13 +126,17 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
 
   Future<void> updatePageText(int originalKey, PageTextEntity pageText) async {
     await _beforeUpdate(originalKey, pageText);
-    final json = prepareWriteJson(pageText.toJson());
+    final values = pageText.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(pageText.id),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in page_text');
@@ -148,6 +164,8 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
   Future<void> _beforeStore(PageTextEntity pageText) async {}
 
   Future<void> _beforeUpdate(int originalKey, PageTextEntity pageText) async {}
+
+  Map<String, Object?> activityKey(int key) => {'ID': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);

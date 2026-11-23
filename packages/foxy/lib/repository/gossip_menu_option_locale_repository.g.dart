@@ -9,7 +9,11 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     GossipMenuOptionLocaleKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'gossip_menu_option_locale record not found',
@@ -31,7 +35,13 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(gossipMenuOptionLocale);
     final json = prepareWriteJson(gossipMenuOptionLocale.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          GossipMenuOptionLocaleKey.fromEntity(gossipMenuOptionLocale),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in gossip_menu_option_locale');
@@ -43,13 +53,19 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     GossipMenuOptionLocaleEntity gossipMenuOptionLocale,
   ) async {
     await _beforeUpdate(originalKey, gossipMenuOptionLocale);
-    final json = prepareWriteJson(gossipMenuOptionLocale.toJson());
+    final values = gossipMenuOptionLocale.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          GossipMenuOptionLocaleKey.fromEntity(gossipMenuOptionLocale),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -75,6 +91,12 @@ mixin _GossipMenuOptionLocaleRepositoryMixin on RepositoryMixin {
     GossipMenuOptionLocaleKey originalKey,
     GossipMenuOptionLocaleEntity gossipMenuOptionLocale,
   ) async {}
+
+  Map<String, Object?> activityKey(GossipMenuOptionLocaleKey key) => {
+    'MenuID': key.menuId,
+    'OptionID': key.optionId,
+    'Locale': key.locale,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, GossipMenuOptionLocaleKey key) {
     var query = builder;

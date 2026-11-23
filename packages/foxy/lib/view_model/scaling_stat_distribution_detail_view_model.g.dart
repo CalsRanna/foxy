@@ -91,7 +91,7 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -126,7 +126,7 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(
     ScalingStatDistributionEntity scalingStatDistribution,
@@ -191,14 +191,13 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     ScalingStatDistributionEntity scalingStatDistribution,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_scaling_stat_distribution',
-          actionType: action,
-          entityName: 'ScalingStatDistribution ${scalingStatDistribution.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_scaling_stat_distribution',
+        actionType: action,
+        entityName: 'ScalingStatDistribution ${scalingStatDistribution.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

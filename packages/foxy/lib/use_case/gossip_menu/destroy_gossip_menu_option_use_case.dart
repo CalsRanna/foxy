@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
@@ -19,24 +20,25 @@ final class DestroyGossipMenuOptionUseCase {
     required this._activityLogService,
   });
 
-  Future<void> execute(GossipMenuOptionKey key) async {
-    await _transaction.execute(() async {
-      final locales = await _localeRepository
-          .getGossipMenuOptionLocalesForOption(key);
-      for (final locale in locales) {
-        await _localeRepository.destroyGossipMenuOptionLocale(
-          GossipMenuOptionLocaleKey.fromEntity(locale),
+  Future<void> execute(GossipMenuOptionKey key) =>
+      EntityWrittenEvent.capture(() async {
+        await _transaction.execute(() async {
+          final locales = await _localeRepository
+              .getGossipMenuOptionLocalesForOption(key);
+          for (final locale in locales) {
+            await _localeRepository.destroyGossipMenuOptionLocale(
+              GossipMenuOptionLocaleKey.fromEntity(locale),
+            );
+          }
+          await _optionRepository.destroyGossipMenuOption(key);
+        });
+        _activityLogService.publishBestEffort(
+          ActivityLogEntity(
+            module: 'gossip_menu_option',
+            actionType: ActivityActionType.delete,
+            entityName: 'GossipMenuOption ${key.menuId}/${key.optionId}',
+            createdAt: DateTime.now(),
+          ),
         );
-      }
-      await _optionRepository.destroyGossipMenuOption(key);
-    });
-    _activityLogService.recordBestEffort(
-      ActivityLogEntity(
-        module: 'gossip_menu_option',
-        actionType: ActivityActionType.delete,
-        entityName: 'GossipMenuOption ${key.menuId}/${key.optionId}',
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
+      });
 }

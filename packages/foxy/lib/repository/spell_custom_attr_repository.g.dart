@@ -7,7 +7,11 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySpellCustomAttr(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_custom_attr record not found');
     }
@@ -30,16 +34,24 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellCustomAttr);
     final json = prepareWriteJson(spellCustomAttr.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(spellCustomAttr.spellId),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellCustomAttr.copyWith(
         spellId: await nextMaxPlusOne(_table, '`spell_id`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.spellId),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.spellId;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -56,13 +68,17 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
     SpellCustomAttrEntity spellCustomAttr,
   ) async {
     await _beforeUpdate(originalKey, spellCustomAttr);
-    final json = prepareWriteJson(spellCustomAttr.toJson());
+    final values = spellCustomAttr.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(spellCustomAttr.spellId),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in spell_custom_attr');
@@ -82,6 +98,8 @@ mixin _SpellCustomAttrRepositoryMixin on RepositoryMixin {
     int originalKey,
     SpellCustomAttrEntity spellCustomAttr,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'spell_id': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`spell_id`', key);

@@ -75,6 +75,6 @@ class QuestInfoDetailViewModel
       entityName: questInfo.infoNameLangZhCN,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+    EntityWrittenEvent.publish(GetIt.instance.get<EventBus>(), log);
   }
 }

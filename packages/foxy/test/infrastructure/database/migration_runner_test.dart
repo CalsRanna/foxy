@@ -28,7 +28,7 @@ void main() {
       );
       expect(driver.sqlLog, contains(contains('create table if not exists')));
       // All migrations run and are recorded in foxy.migrations.
-      expect(driver.appliedMigrations, hasLength(10));
+      expect(driver.appliedMigrations, hasLength(11));
       expect(
         driver.appliedMigrations,
         containsAll([
@@ -39,6 +39,7 @@ void main() {
           'migration_202608090000',
           'migration_202608090001',
           'migration_202608090002',
+          'migration_202611230000',
         ]),
       );
       // With an empty information_schema driver, 202607190000 takes the
@@ -49,8 +50,8 @@ void main() {
         isEmpty,
       );
       expect(
-        driver.sqlLog.where((sql) => sql.contains('alter table')),
-        isEmpty,
+        driver.sqlLog.where((sql) => sql.contains('alter table')).toList(),
+        ['alter table foxy.activity_log add column details longtext null'],
       );
       // Record order = create database → create table → migrations.
       final createDatabaseIndex = driver.sqlLog.indexWhere(
@@ -77,7 +78,7 @@ void main() {
           .length;
       // A second run produces no INSERTs (all skipped).
       expect(insertCountAfterSecondRun, insertCountAfterFirstRun);
-      expect(driver.appliedMigrations, hasLength(10));
+      expect(driver.appliedMigrations, hasLength(11));
     });
 
     test('存在非 utf8mb4 存量表时,引导段逐个转换后仍跑完迁移', () async {
@@ -97,7 +98,7 @@ void main() {
       expect(converts.first, contains('`features`'));
       expect(converts.last, contains('`activity_log`'));
       // Existing legacy tables do not affect migration execution.
-      expect(driver.appliedMigrations, hasLength(10));
+      expect(driver.appliedMigrations, hasLength(11));
     });
 
     test('迁移执行失败时不记录版本,后续迁移不执行', () async {
@@ -218,7 +219,12 @@ final class _FakeDriver implements DatabaseDriver {
       // The columns probe (202607190000) follows config; the tables probe
       // (202608030000) always returns "table missing" → the migration
       // idles.
-      final count = sql.contains('columns') && hasEntityIdColumn ? 1 : 0;
+      final count =
+          sql.contains('columns') &&
+              params.contains('entity_id') &&
+              hasEntityIdColumn
+          ? 1
+          : 0;
       return [
         LaconicResult.fromMap({'aggregate': count}),
       ];

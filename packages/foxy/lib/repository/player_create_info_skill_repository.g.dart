@@ -52,7 +52,11 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSkillKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('playercreateinfo_skills record not found');
     }
@@ -99,7 +103,13 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     await _beforeStore(playerCreateInfoSkill);
     final json = prepareWriteJson(playerCreateInfoSkill.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          PlayerCreateInfoSkillKey.fromEntity(playerCreateInfoSkill),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = playerCreateInfoSkill.copyWith(
@@ -113,9 +123,13 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(PlayerCreateInfoSkillKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -133,13 +147,19 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSkillEntity playerCreateInfoSkill,
   ) async {
     await _beforeUpdate(originalKey, playerCreateInfoSkill);
-    final json = prepareWriteJson(playerCreateInfoSkill.toJson());
+    final values = playerCreateInfoSkill.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          PlayerCreateInfoSkillKey.fromEntity(playerCreateInfoSkill),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in playercreateinfo_skills');
@@ -161,6 +181,12 @@ mixin _PlayerCreateInfoSkillRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSkillKey originalKey,
     PlayerCreateInfoSkillEntity playerCreateInfoSkill,
   ) async {}
+
+  Map<String, Object?> activityKey(PlayerCreateInfoSkillKey key) => {
+    'raceMask': key.raceMask,
+    'classMask': key.classMask,
+    'skill': key.skill,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, PlayerCreateInfoSkillKey key) {
     var query = builder;

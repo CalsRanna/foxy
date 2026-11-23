@@ -26,7 +26,7 @@ mixin _GameObjectTemplateListViewModelMixin
 
   int _refreshToken = 0;
 
-  Future<void> copy(int key) async {
+  Future<void> copy(int key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -42,9 +42,9 @@ mixin _GameObjectTemplateListViewModelMixin
     } finally {
       submitting.value = false;
     }
-  }
+  }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(int key) async {
+  Future<void> destroy(int key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -62,7 +62,7 @@ mixin _GameObjectTemplateListViewModelMixin
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void dispose() {
     disposeControllers();
@@ -115,14 +115,13 @@ mixin _GameObjectTemplateListViewModelMixin
         : resolved.name.isNotEmpty
         ? resolved.name
         : key.toString();
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'gameobject_template',
-          actionType: action,
-          entityName: entityName,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'gameobject_template',
+        actionType: action,
+        entityName: entityName,
+        createdAt: DateTime.now(),
       ),
     );
   }

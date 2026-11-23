@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/page/dashboard/component/activity_log_detail.dart';
 import 'package:foxy/page/dashboard/component/foxy_card.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class Trend extends StatelessWidget {
@@ -52,7 +54,10 @@ class Trend extends StatelessWidget {
 
     return FoxyCard(
       title: const Text('动态'),
-      child: Column(children: children),
+      child: Material(
+        type: MaterialType.transparency,
+        child: Column(children: children),
+      ),
     );
   }
 }
@@ -81,19 +86,30 @@ class _TrendItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      child: Row(
+    final changes = activity.details?.fieldCount ?? 0;
+    final summary = [
+      '${activity.actionType.label} ${activity.entityName}',
+      if (changes > 0) '$changes 个字段',
+    ].join(' · ');
+
+    return ListTile(
+      key: ObjectKey(activity),
+      dense: true,
+      onTap: () => DialogUtil.show<void>(
+        context: context,
+        builder: (_) => ActivityLogDetail(activity: activity),
+      ),
+      leading: Icon(
+        _actionIcon(activity.actionType),
+        size: 14,
+        color: _actionColor(activity.actionType),
+      ),
+      title: Row(
+        spacing: 8,
         children: [
-          Icon(
-            _actionIcon(activity.actionType),
-            size: 14,
-            color: _actionColor(activity.actionType),
-          ),
-          const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '${activity.actionType.label} ${activity.entityName}',
+              summary,
               style: theme.textTheme.small,
               overflow: TextOverflow.ellipsis,
             ),
@@ -105,6 +121,11 @@ class _TrendItem extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      trailing: Icon(
+        LucideIcons.chevronRight,
+        size: 16,
+        color: theme.colorScheme.mutedForeground,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
@@ -29,23 +30,24 @@ final class CreateGossipMenuUseCase {
     required this._activityLogService,
   });
 
-  Future<void> execute(CreateGossipMenuInput input) async {
-    final candidate = input.candidate;
-    await _transaction.execute(() async {
-      if (candidate.textId == input.reservedTextId) {
-        await _npcTextRepository.storeNpcText(
-          NpcTextEntity(id: candidate.textId),
+  Future<void> execute(CreateGossipMenuInput input) =>
+      EntityWrittenEvent.capture(() async {
+        final candidate = input.candidate;
+        await _transaction.execute(() async {
+          if (candidate.textId == input.reservedTextId) {
+            await _npcTextRepository.storeNpcText(
+              NpcTextEntity(id: candidate.textId),
+            );
+          }
+          await _gossipMenuRepository.storeGossipMenu(candidate);
+        });
+        _activityLogService.publishBestEffort(
+          ActivityLogEntity(
+            module: 'gossip_menu',
+            actionType: ActivityActionType.create,
+            entityName: 'GossipMenu ${candidate.menuId}/${candidate.textId}',
+            createdAt: DateTime.now(),
+          ),
         );
-      }
-      await _gossipMenuRepository.storeGossipMenu(candidate);
-    });
-    _activityLogService.recordBestEffort(
-      ActivityLogEntity(
-        module: 'gossip_menu',
-        actionType: ActivityActionType.create,
-        entityName: 'GossipMenu ${candidate.menuId}/${candidate.textId}',
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
+      });
 }

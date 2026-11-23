@@ -38,7 +38,7 @@ class CreatureTemplateDetailViewModel
 
   /// Leaves the page
   @override
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
@@ -68,5 +68,5 @@ class CreatureTemplateDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
+  });
 }

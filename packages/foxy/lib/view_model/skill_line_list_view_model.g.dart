@@ -25,7 +25,7 @@ mixin _SkillLineListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
 
   int _refreshToken = 0;
 
-  Future<void> copy(int key) async {
+  Future<void> copy(int key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -41,9 +41,9 @@ mixin _SkillLineListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(int key) async {
+  Future<void> destroy(int key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -61,7 +61,7 @@ mixin _SkillLineListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void dispose() {
     disposeControllers();
@@ -114,14 +114,13 @@ mixin _SkillLineListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
         : resolved.displayNameLangZhCN.isNotEmpty
         ? resolved.displayNameLangZhCN
         : key.toString();
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_skill_line',
-          actionType: action,
-          entityName: entityName,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_skill_line',
+        actionType: action,
+        entityName: entityName,
+        createdAt: DateTime.now(),
       ),
     );
   }

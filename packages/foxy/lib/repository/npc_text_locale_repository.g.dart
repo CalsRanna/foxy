@@ -7,7 +7,11 @@ mixin _NpcTextLocaleRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyNpcTextLocale(NpcTextLocaleKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('npc_text_locale record not found');
     }
@@ -23,16 +27,24 @@ mixin _NpcTextLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(npcTextLocale);
     final json = prepareWriteJson(npcTextLocale.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(NpcTextLocaleKey.fromEntity(npcTextLocale)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = npcTextLocale.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(NpcTextLocaleKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -48,13 +60,17 @@ mixin _NpcTextLocaleRepositoryMixin on RepositoryMixin {
     NpcTextLocaleEntity npcTextLocale,
   ) async {
     await _beforeUpdate(originalKey, npcTextLocale);
-    final json = prepareWriteJson(npcTextLocale.toJson());
+    final values = npcTextLocale.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(NpcTextLocaleKey.fromEntity(npcTextLocale)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in npc_text_locale');
@@ -74,6 +90,11 @@ mixin _NpcTextLocaleRepositoryMixin on RepositoryMixin {
     NpcTextLocaleKey originalKey,
     NpcTextLocaleEntity npcTextLocale,
   ) async {}
+
+  Map<String, Object?> activityKey(NpcTextLocaleKey key) => {
+    'ID': key.id,
+    'Locale': key.locale,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, NpcTextLocaleKey key) {
     var query = builder;

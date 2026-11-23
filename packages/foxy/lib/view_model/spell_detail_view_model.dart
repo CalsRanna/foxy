@@ -610,7 +610,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
@@ -637,7 +637,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _applyCandidate(SpellEntity template) {
     idController.init(template.id);
@@ -1089,7 +1089,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       entityName: t.nameLangZhCN,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+    EntityWrittenEvent.publish(GetIt.instance.get<EventBus>(), log);
   }
 
   /// Listens to EnumFieldController changes and syncs them to a signal.

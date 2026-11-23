@@ -5,6 +5,13 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
   static const _table = 'playercreateinfo_cast_spell';
 
+  Map<String, Object?> activityKey(PlayerCreateInfoCastSpellKey key) => {
+    'raceMask': key.raceMask,
+    'classMask': key.classMask,
+    'spell': key.spell,
+    'note': key.note,
+  };
+
   Future<void> copyPlayerCreateInfoCastSpell(
     PlayerCreateInfoCastSpellKey key,
   ) async {
@@ -38,12 +45,12 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
         'delete from `playercreateinfo_cast_spell` '
         'where `raceMask` = ? and `classMask` = ? and `spell` = ? '
         'and binary `note` <=> binary ? limit 1';
-    final deletedRows = await laconic.affectingStatement(sql, [
-      key.raceMask,
-      key.classMask,
-      key.spell,
-      key.note,
-    ]);
+    final values = activityKey(key);
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: values,
+      write: () => laconic.affectingStatement(sql, values.values.toList()),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('record not found');
     }
@@ -107,7 +114,11 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoCastSpell(
     PlayerCreateInfoCastSpellEntity entity,
   ) async {
-    await laconic.table(_table).insert([entity.toJson()]);
+    await trackActivityWrite(
+      _table,
+      afterKey: activityKey(PlayerCreateInfoCastSpellKey.fromEntity(entity)),
+      write: () => laconic.table(_table).insert([entity.toJson()]),
+    );
   }
 
   Future<void> updatePlayerCreateInfoCastSpell(
@@ -119,16 +130,17 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
         'set `raceMask` = ?, `classMask` = ?, `spell` = ?, `note` = ? '
         'where `raceMask` = ? and `classMask` = ? and `spell` = ? '
         'and binary `note` <=> binary ? limit 1';
-    final matchedRows = await laconic.affectingStatement(sql, [
-      entity.raceMask,
-      entity.classMask,
-      entity.spell,
-      entity.note,
-      originalKey.raceMask,
-      originalKey.classMask,
-      originalKey.spell,
-      originalKey.note,
-    ]);
+    final before = activityKey(originalKey);
+    final after = activityKey(PlayerCreateInfoCastSpellKey.fromEntity(entity));
+    final matchedRows = await trackActivityWrite(
+      _table,
+      beforeKey: before,
+      afterKey: after,
+      columns: after.keys,
+      binaryKeyColumns: const {'note'},
+      write: () =>
+          laconic.affectingStatement(sql, [...after.values, ...before.values]),
+    );
     if (matchedRows == 0) {
       throw RecordNotFoundException('record not found');
     }

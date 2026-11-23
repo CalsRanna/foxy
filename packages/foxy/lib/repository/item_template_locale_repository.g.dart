@@ -7,7 +7,11 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyItemTemplateLocale(ItemTemplateLocaleKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('item_template_locale record not found');
     }
@@ -27,16 +31,26 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemTemplateLocale);
     final json = prepareWriteJson(itemTemplateLocale.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          ItemTemplateLocaleKey.fromEntity(itemTemplateLocale),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemTemplateLocale.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(ItemTemplateLocaleKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -52,13 +66,19 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
     ItemTemplateLocaleEntity itemTemplateLocale,
   ) async {
     await _beforeUpdate(originalKey, itemTemplateLocale);
-    final json = prepareWriteJson(itemTemplateLocale.toJson());
+    final values = itemTemplateLocale.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          ItemTemplateLocaleKey.fromEntity(itemTemplateLocale),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in item_template_locale');
@@ -80,6 +100,11 @@ mixin _ItemTemplateLocaleRepositoryMixin on RepositoryMixin {
     ItemTemplateLocaleKey originalKey,
     ItemTemplateLocaleEntity itemTemplateLocale,
   ) async {}
+
+  Map<String, Object?> activityKey(ItemTemplateLocaleKey key) => {
+    'ID': key.id,
+    'locale': key.locale,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, ItemTemplateLocaleKey key) {
     var query = builder;

@@ -29,7 +29,11 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyZoneIntroMusic(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_zone_intro_music_table record not found',
@@ -52,16 +56,24 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
     await _beforeStore(zoneIntroMusic);
     final json = prepareWriteJson(zoneIntroMusic.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(zoneIntroMusic.id),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = zoneIntroMusic.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.id),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -80,13 +92,17 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
     ZoneIntroMusicEntity zoneIntroMusic,
   ) async {
     await _beforeUpdate(originalKey, zoneIntroMusic);
-    final json = prepareWriteJson(zoneIntroMusic.toJson());
+    final values = zoneIntroMusic.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(zoneIntroMusic.id),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -110,6 +126,8 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
     int originalKey,
     ZoneIntroMusicEntity zoneIntroMusic,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'ID': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);

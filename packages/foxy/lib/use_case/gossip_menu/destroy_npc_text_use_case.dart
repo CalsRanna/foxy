@@ -1,5 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
+import 'package:foxy/event/entity_written_event.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
@@ -25,21 +26,22 @@ final class DestroyNpcTextUseCase {
     required this._activityLogService,
   });
 
-  Future<void> execute(DestroyNpcTextInput input) async {
-    await _transaction.execute(() async {
-      final localeKey = input.localeKey;
-      if (localeKey != null) {
-        await _localeRepository.destroyNpcTextLocale(localeKey);
-      }
-      await _npcTextRepository.destroyNpcText(input.key);
-    });
-    _activityLogService.recordBestEffort(
-      ActivityLogEntity(
-        module: 'npc_text',
-        actionType: ActivityActionType.delete,
-        entityName: 'NpcText ${input.key}',
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
+  Future<void> execute(DestroyNpcTextInput input) =>
+      EntityWrittenEvent.capture(() async {
+        await _transaction.execute(() async {
+          final localeKey = input.localeKey;
+          if (localeKey != null) {
+            await _localeRepository.destroyNpcTextLocale(localeKey);
+          }
+          await _npcTextRepository.destroyNpcText(input.key);
+        });
+        _activityLogService.publishBestEffort(
+          ActivityLogEntity(
+            module: 'npc_text',
+            actionType: ActivityActionType.delete,
+            entityName: 'NpcText ${input.key}',
+            createdAt: DateTime.now(),
+          ),
+        );
+      });
 }

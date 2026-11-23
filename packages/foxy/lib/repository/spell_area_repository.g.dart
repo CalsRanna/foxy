@@ -56,7 +56,11 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySpellArea(SpellAreaKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_area record not found');
     }
@@ -103,7 +107,11 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellArea);
     final json = prepareWriteJson(spellArea.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(SpellAreaKey.fromEntity(spellArea)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in spell_area');
@@ -115,13 +123,17 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     SpellAreaEntity spellArea,
   ) async {
     await _beforeUpdate(originalKey, spellArea);
-    final json = prepareWriteJson(spellArea.toJson());
+    final values = spellArea.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(SpellAreaKey.fromEntity(spellArea)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in spell_area');
@@ -141,6 +153,15 @@ mixin _SpellAreaRepositoryMixin on RepositoryMixin {
     SpellAreaKey originalKey,
     SpellAreaEntity spellArea,
   ) async {}
+
+  Map<String, Object?> activityKey(SpellAreaKey key) => {
+    'spell': key.spell,
+    'area': key.area,
+    'quest_start': key.questStart,
+    'aura_spell': key.auraSpell,
+    'racemask': key.racemask,
+    'gender': key.gender,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, SpellAreaKey key) {
     var query = builder;

@@ -26,42 +26,44 @@ mixin _PlayerCreateInfoListViewModelMixin
 
   int _refreshToken = 0;
 
-  Future<void> copy(PlayerCreateInfoKey key) async {
-    if (submitting.value) {
-      throw BusyException('operation already in progress');
-    }
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copyPlayerCreateInfo(key);
-      _logActivity(ActivityActionType.copy, key);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> copy(PlayerCreateInfoKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.copyPlayerCreateInfo(key);
+          _logActivity(ActivityActionType.copy, key);
+          await _refresh();
+        } catch (error) {
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(PlayerCreateInfoKey key) async {
-    if (submitting.value) {
-      throw BusyException('operation already in progress');
-    }
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyPlayerCreateInfo(key);
-      _logActivity(ActivityActionType.delete, key);
-      normalizePageAfterDelete(total.value - 1);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(PlayerCreateInfoKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.destroyPlayerCreateInfo(key);
+          _logActivity(ActivityActionType.delete, key);
+          normalizePageAfterDelete(total.value - 1);
+          await _refresh();
+        } catch (error) {
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() {
     disposeControllers();
@@ -101,14 +103,13 @@ mixin _PlayerCreateInfoListViewModelMixin
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, PlayerCreateInfoKey key) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'playercreateinfo',
-          actionType: action,
-          entityName: key.toString(),
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'playercreateinfo',
+        actionType: action,
+        entityName: key.toString(),
+        createdAt: DateTime.now(),
       ),
     );
   }

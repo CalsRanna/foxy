@@ -62,7 +62,11 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     ProspectingLootTemplateKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'prospecting_loot_template record not found',
@@ -106,7 +110,13 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(prospectingLootTemplate);
     final json = prepareWriteJson(prospectingLootTemplate.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          ProspectingLootTemplateKey.fromEntity(prospectingLootTemplate),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = prospectingLootTemplate.copyWith(
@@ -117,9 +127,13 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(ProspectingLootTemplateKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -137,13 +151,19 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     ProspectingLootTemplateEntity prospectingLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, prospectingLootTemplate);
-    final json = prepareWriteJson(prospectingLootTemplate.toJson());
+    final values = prospectingLootTemplate.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          ProspectingLootTemplateKey.fromEntity(prospectingLootTemplate),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -169,6 +189,11 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     ProspectingLootTemplateKey originalKey,
     ProspectingLootTemplateEntity prospectingLootTemplate,
   ) async {}
+
+  Map<String, Object?> activityKey(ProspectingLootTemplateKey key) => {
+    'Entry': key.entry,
+    'Item': key.item,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, ProspectingLootTemplateKey key) {
     var query = builder;

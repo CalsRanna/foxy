@@ -29,7 +29,11 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyItemDisplayInfo(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_item_display_info record not found',
@@ -54,16 +58,24 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     await _beforeStore(itemDisplayInfo);
     final json = prepareWriteJson(itemDisplayInfo.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(itemDisplayInfo.id),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemDisplayInfo.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.id),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -82,13 +94,17 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     ItemDisplayInfoEntity itemDisplayInfo,
   ) async {
     await _beforeUpdate(originalKey, itemDisplayInfo);
-    final json = prepareWriteJson(itemDisplayInfo.toJson());
+    final values = itemDisplayInfo.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(itemDisplayInfo.id),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -112,6 +128,8 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     int originalKey,
     ItemDisplayInfoEntity itemDisplayInfo,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'ID': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);

@@ -207,10 +207,13 @@ final class RepositoryEmitter {
         '  Future<void> destroy${model.baseName}(${model.keyType} key) async {',
       )
       ..writeln('    await _beforeDestroy(key);')
+      ..writeln('    final deletedRows = await trackActivityWrite(')
+      ..writeln('      _table,')
+      ..writeln('      beforeKey: activityKey(key),')
       ..writeln(
-        '    final deletedRows = await _whereKey('
-        'laconic.table(_table), key).delete();',
+        '      write: () => _whereKey(laconic.table(_table), key).delete(),',
       )
+      ..writeln('    );')
       ..writeln('    if (deletedRows == 0) {')
       ..writeln(
         "      throw RecordNotFoundException('${model.table} record not found');",
@@ -390,7 +393,13 @@ final class RepositoryEmitter {
       ..writeln('    await _beforeStore($parameter);')
       ..writeln('    final json = prepareWriteJson($parameter.toJson());')
       ..writeln('    try {')
-      ..writeln('      await laconic.table(_table).insert([json]);')
+      ..writeln('      await trackActivityWrite(')
+      ..writeln('        _table,')
+      ..writeln(
+        '        afterKey: activityKey(${_keyFromEntity(model, parameter)}),',
+      )
+      ..writeln('        write: () => laconic.table(_table).insert([json]),')
+      ..writeln('      );')
       ..writeln('    } catch (error) {')
       ..writeln('      if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;');
     if (retriedKeys.length != 1) {
@@ -418,10 +427,16 @@ final class RepositoryEmitter {
         ..writeln('        ),')
         ..writeln('      );')
         ..writeln('      try {')
+        ..writeln('        await trackActivityWrite(')
+        ..writeln('          _table,')
         ..writeln(
-          '        await laconic.table(_table)'
-          '.insert([prepareWriteJson(retried.toJson())]);',
+          '          afterKey: activityKey(${_keyFromEntity(model, 'retried')}),',
         )
+        ..writeln('          write: () => laconic.table(_table)')
+        ..writeln(
+          '              .insert([prepareWriteJson(retried.toJson())]),',
+        )
+        ..writeln('        );')
         ..writeln(
           returnsKey
               ? '        return retried.$retriedKey;'
@@ -458,13 +473,21 @@ final class RepositoryEmitter {
         '${model.entityClassName} $parameter) async {',
       )
       ..writeln('    await _beforeUpdate(originalKey, $parameter);')
-      ..writeln('    final json = prepareWriteJson($parameter.toJson());')
+      ..writeln('    final values = $parameter.toJson();')
+      ..writeln('    final json = prepareWriteJson(values);')
       ..writeln('    final int matchedRows;')
       ..writeln('    try {')
-      ..writeln('      matchedRows = await _whereKey(')
-      ..writeln('        laconic.table(_table),')
-      ..writeln('        originalKey,')
-      ..writeln('      ).update(json);')
+      ..writeln('      matchedRows = await trackActivityWrite(')
+      ..writeln('        _table,')
+      ..writeln('        beforeKey: activityKey(originalKey),')
+      ..writeln(
+        '        afterKey: activityKey(${_keyFromEntity(model, parameter)}),',
+      )
+      ..writeln('        columns: values.keys,')
+      ..writeln(
+        '        write: () => _whereKey(laconic.table(_table), originalKey).update(json),',
+      )
+      ..writeln('      );')
       ..writeln('    } catch (error) {')
       ..writeln('      if (MysqlErrorUtil.isDuplicateEntry(error)) {')
       ..writeln(
@@ -485,7 +508,24 @@ final class RepositoryEmitter {
       ..writeln();
   }
 
+  String _keyFromEntity(RepositoryGenerationModel model, String entity) =>
+      model.keyFields.length == 1
+      ? '$entity.${model.keyFields.single.dartName}'
+      : '${model.baseName}Key.fromEntity($entity)';
+
   void _emitWhereKey(StringBuffer buffer, RepositoryGenerationModel model) {
+    buffer.writeln(
+      '  Map<String, Object?> activityKey(${model.keyType} key) => {',
+    );
+    for (final field in model.keyFields) {
+      final value = model.keyFields.length == 1
+          ? 'key'
+          : 'key.${field.dartName}';
+      buffer.writeln('    ${dartStringLiteral(field.columnName)}: $value,');
+    }
+    buffer
+      ..writeln('  };')
+      ..writeln();
     buffer.writeln(
       '  QueryBuilder _whereKey(QueryBuilder builder, ${model.keyType} key) {',
     );

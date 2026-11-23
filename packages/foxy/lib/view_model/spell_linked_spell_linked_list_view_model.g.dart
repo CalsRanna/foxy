@@ -53,35 +53,38 @@ mixin _SpellLinkedSpellLinkedListViewModelMixin on FieldControllerMixin {
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> copy(SpellLinkedSpellKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copySpellLinkedSpell(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        await _logActivity(ActivityActionType.copy, key);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> copy(SpellLinkedSpellKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.copySpellLinkedSpell(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          try {
+            await _logActivity(ActivityActionType.copy, key);
+          } catch (_) {
+            // Activity log is best-effort; failure (e.g. not registered in
+            // tests) must not affect the main flow.
+          }
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      }, sourceKey: _repository.activityKey(key));
 
   Future<void> create() async {
     if (submitting.value) throw BusyException('operation already in progress');
@@ -106,36 +109,39 @@ mixin _SpellLinkedSpellLinkedListViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> destroy(SpellLinkedSpellKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final record = await _repository.getSpellLinkedSpell(key);
-      await _repository.destroySpellLinkedSpell(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        await _logActivity(ActivityActionType.delete, key, record);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(SpellLinkedSpellKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          final record = await _repository.getSpellLinkedSpell(key);
+          await _repository.destroySpellLinkedSpell(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          try {
+            await _logActivity(ActivityActionType.delete, key, record);
+          } catch (_) {
+            // Activity log is best-effort; failure (e.g. not registered in
+            // tests) must not affect the main flow.
+          }
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() => disposeControllers();
 
@@ -177,8 +183,10 @@ mixin _SpellLinkedSpellLinkedListViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
-  Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     final link = linkKey.value;
     if (link == null) {
       throw LinkNotLoadedException('link record not loaded');
@@ -198,10 +206,7 @@ mixin _SpellLinkedSpellLinkedListViewModelMixin on FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       try {
-        await _logActivity(
-          action,
-          originalKey ?? SpellLinkedSpellKey.fromEntity(candidate),
-        );
+        await _logActivity(action, SpellLinkedSpellKey.fromEntity(candidate));
       } catch (_) {
         // Activity log is best-effort; failure (e.g. not registered in
         // tests) must not affect the main flow.
@@ -217,7 +222,7 @@ mixin _SpellLinkedSpellLinkedListViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   Future<void> setLinkKey(int linkKey) async {
     _interactionToken++;
@@ -246,14 +251,13 @@ mixin _SpellLinkedSpellLinkedListViewModelMixin on FieldControllerMixin {
         : resolved.comment.isNotEmpty
         ? resolved.comment
         : key.toString();
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'spell_linked_spell',
-          actionType: action,
-          entityName: entityName,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'spell_linked_spell',
+        actionType: action,
+        entityName: entityName,
+        createdAt: DateTime.now(),
       ),
     );
   }

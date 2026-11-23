@@ -42,7 +42,11 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     CreatureTemplateSpellKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('creature_template_spell record not found');
     }
@@ -82,7 +86,13 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     await _beforeStore(creatureTemplateSpell);
     final json = prepareWriteJson(creatureTemplateSpell.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          CreatureTemplateSpellKey.fromEntity(creatureTemplateSpell),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = creatureTemplateSpell.copyWith(
@@ -93,9 +103,13 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(CreatureTemplateSpellKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -113,13 +127,19 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     CreatureTemplateSpellEntity creatureTemplateSpell,
   ) async {
     await _beforeUpdate(originalKey, creatureTemplateSpell);
-    final json = prepareWriteJson(creatureTemplateSpell.toJson());
+    final values = creatureTemplateSpell.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          CreatureTemplateSpellKey.fromEntity(creatureTemplateSpell),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in creature_template_spell');
@@ -141,6 +161,11 @@ mixin _CreatureTemplateSpellRepositoryMixin on RepositoryMixin {
     CreatureTemplateSpellKey originalKey,
     CreatureTemplateSpellEntity creatureTemplateSpell,
   ) async {}
+
+  Map<String, Object?> activityKey(CreatureTemplateSpellKey key) => {
+    'CreatureID': key.creatureID,
+    'Index': key.index,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, CreatureTemplateSpellKey key) {
     var query = builder;

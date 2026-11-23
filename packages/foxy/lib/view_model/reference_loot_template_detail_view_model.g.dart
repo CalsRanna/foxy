@@ -61,7 +61,7 @@ mixin _ReferenceLootTemplateDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -88,7 +88,7 @@ mixin _ReferenceLootTemplateDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(
     ReferenceLootTemplateEntity referenceLootTemplate,
@@ -129,14 +129,13 @@ mixin _ReferenceLootTemplateDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     ReferenceLootTemplateEntity referenceLootTemplate,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'reference_loot_template',
-          actionType: action,
-          entityName: 'ReferenceLootTemplate',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'reference_loot_template',
+        actionType: action,
+        entityName: 'ReferenceLootTemplate',
+        createdAt: DateTime.now(),
       ),
     );
   }

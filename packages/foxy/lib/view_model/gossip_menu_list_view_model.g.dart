@@ -25,7 +25,7 @@ mixin _GossipMenuListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
 
   int _refreshToken = 0;
 
-  Future<void> copy(GossipMenuKey key) async {
+  Future<void> copy(GossipMenuKey key) => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -41,26 +41,27 @@ mixin _GossipMenuListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  }, sourceKey: _repository.activityKey(key));
 
-  Future<void> destroy(GossipMenuKey key) async {
-    if (submitting.value) {
-      throw BusyException('operation already in progress');
-    }
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyGossipMenu(key);
-      _logActivity(ActivityActionType.delete, key);
-      normalizePageAfterDelete(total.value - 1);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(GossipMenuKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.destroyGossipMenu(key);
+          _logActivity(ActivityActionType.delete, key);
+          normalizePageAfterDelete(total.value - 1);
+          await _refresh();
+        } catch (error) {
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() {
     disposeControllers();
@@ -100,14 +101,13 @@ mixin _GossipMenuListViewModelMixin on FieldControllerMixin, QueryVersionMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, GossipMenuKey key) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'gossip_menu',
-          actionType: action,
-          entityName: key.toString(),
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'gossip_menu',
+        actionType: action,
+        entityName: key.toString(),
+        createdAt: DateTime.now(),
       ),
     );
   }

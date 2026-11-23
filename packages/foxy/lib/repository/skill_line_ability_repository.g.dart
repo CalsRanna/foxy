@@ -37,7 +37,11 @@ mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySkillLineAbility(SkillLineAbilityKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_skill_line_ability record not found',
@@ -80,7 +84,11 @@ mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
     await _beforeStore(skillLineAbility);
     final json = prepareWriteJson(skillLineAbility.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(SkillLineAbilityKey.fromEntity(skillLineAbility)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = skillLineAbility.copyWith(
@@ -91,9 +99,13 @@ mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(SkillLineAbilityKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -111,13 +123,17 @@ mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
     SkillLineAbilityEntity skillLineAbility,
   ) async {
     await _beforeUpdate(originalKey, skillLineAbility);
-    final json = prepareWriteJson(skillLineAbility.toJson());
+    final values = skillLineAbility.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(SkillLineAbilityKey.fromEntity(skillLineAbility)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -141,6 +157,11 @@ mixin _SkillLineAbilityRepositoryMixin on RepositoryMixin {
     SkillLineAbilityKey originalKey,
     SkillLineAbilityEntity skillLineAbility,
   ) async {}
+
+  Map<String, Object?> activityKey(SkillLineAbilityKey key) => {
+    'ID': key.id,
+    'SkillLine': key.skillLine,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, SkillLineAbilityKey key) {
     var query = builder;

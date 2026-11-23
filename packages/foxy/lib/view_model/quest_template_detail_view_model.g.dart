@@ -300,7 +300,7 @@ mixin _QuestTemplateDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -333,7 +333,7 @@ mixin _QuestTemplateDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(QuestTemplateEntity questTemplate) {}
 
@@ -574,14 +574,13 @@ mixin _QuestTemplateDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     QuestTemplateEntity questTemplate,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'quest_template',
-          actionType: action,
-          entityName: 'QuestTemplate ${questTemplate.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'quest_template',
+        actionType: action,
+        entityName: 'QuestTemplate ${questTemplate.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

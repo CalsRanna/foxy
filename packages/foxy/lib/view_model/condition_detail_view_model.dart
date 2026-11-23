@@ -133,7 +133,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
@@ -164,7 +164,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _applyCandidate(ConditionEntity c) {
     sourceModeController.init(_decodeMode(c.sourceTypeOrReferenceId));
@@ -261,7 +261,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
             '${c.comment.isEmpty ? '' : ' - ${c.comment}'}',
         createdAt: DateTime.now(),
       );
-      GetIt.instance.get<EventBus>().fire(EntityWrittenEvent(log));
+      EntityWrittenEvent.publish(GetIt.instance.get<EventBus>(), log);
     } catch (e) {
       LoggerUtil.instance.e('记录条件活动失败: $e');
     }

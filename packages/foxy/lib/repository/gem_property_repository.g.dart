@@ -43,7 +43,11 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyGemProperty(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('foxy.dbc_gem_properties record not found');
     }
@@ -91,16 +95,24 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
     await _beforeStore(gemProperty);
     final json = prepareWriteJson(gemProperty.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(gemProperty.id),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gemProperty.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.id),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -119,13 +131,17 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
     GemPropertyEntity gemProperty,
   ) async {
     await _beforeUpdate(originalKey, gemProperty);
-    final json = prepareWriteJson(gemProperty.toJson());
+    final values = gemProperty.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(gemProperty.id),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in foxy.dbc_gem_properties');
@@ -153,6 +169,8 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
     int originalKey,
     GemPropertyEntity gemProperty,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'ID': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);

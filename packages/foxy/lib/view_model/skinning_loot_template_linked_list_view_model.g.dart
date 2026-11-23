@@ -71,35 +71,38 @@ mixin _SkinningLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> copy(SkinningLootTemplateKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copySkinningLootTemplate(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        await _logActivity(ActivityActionType.copy, key);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> copy(SkinningLootTemplateKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          await _repository.copySkinningLootTemplate(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          try {
+            await _logActivity(ActivityActionType.copy, key);
+          } catch (_) {
+            // Activity log is best-effort; failure (e.g. not registered in
+            // tests) must not affect the main flow.
+          }
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      }, sourceKey: _repository.activityKey(key));
 
   Future<void> create() async {
     if (submitting.value) throw BusyException('operation already in progress');
@@ -124,36 +127,39 @@ mixin _SkinningLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> destroy(SkinningLootTemplateKey key) async {
-    if (submitting.value) throw BusyException('operation already in progress');
-    final link = linkKey.value;
-    if (link == null) {
-      throw LinkNotLoadedException('link record not loaded');
-    }
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final record = await _repository.getSkinningLootTemplate(key);
-      await _repository.destroySkinningLootTemplate(key);
-      if (token != _interactionToken || linkKey.value != link) return;
-      try {
-        await _logActivity(ActivityActionType.delete, key, record);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || linkKey.value != link) {
-        return;
-      }
-      errorMessage.value = FoxyExceptions.message(error);
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
+  Future<void> destroy(SkinningLootTemplateKey key) =>
+      EntityWrittenEvent.capture(() async {
+        if (submitting.value) {
+          throw BusyException('operation already in progress');
+        }
+        final link = linkKey.value;
+        if (link == null) {
+          throw LinkNotLoadedException('link record not loaded');
+        }
+        final token = ++_interactionToken;
+        submitting.value = true;
+        errorMessage.value = null;
+        try {
+          final record = await _repository.getSkinningLootTemplate(key);
+          await _repository.destroySkinningLootTemplate(key);
+          if (token != _interactionToken || linkKey.value != link) return;
+          try {
+            await _logActivity(ActivityActionType.delete, key, record);
+          } catch (_) {
+            // Activity log is best-effort; failure (e.g. not registered in
+            // tests) must not affect the main flow.
+          }
+          await _refresh();
+        } catch (error) {
+          if (token != _interactionToken || linkKey.value != link) {
+            return;
+          }
+          errorMessage.value = FoxyExceptions.message(error);
+          rethrow;
+        } finally {
+          submitting.value = false;
+        }
+      });
 
   void dispose() => disposeControllers();
 
@@ -195,8 +201,10 @@ mixin _SkinningLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
     await _refresh();
   }
 
-  Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     final link = linkKey.value;
     if (link == null) {
       throw LinkNotLoadedException('link record not loaded');
@@ -218,7 +226,7 @@ mixin _SkinningLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
       try {
         await _logActivity(
           action,
-          originalKey ?? SkinningLootTemplateKey.fromEntity(candidate),
+          SkinningLootTemplateKey.fromEntity(candidate),
         );
       } catch (_) {
         // Activity log is best-effort; failure (e.g. not registered in
@@ -235,7 +243,7 @@ mixin _SkinningLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   Future<void> setLinkKey(int linkKey) async {
     _interactionToken++;
@@ -264,14 +272,13 @@ mixin _SkinningLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
         : resolved.comment.isNotEmpty
         ? resolved.comment
         : key.toString();
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'skinning_loot_template',
-          actionType: action,
-          entityName: entityName,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'skinning_loot_template',
+        actionType: action,
+        entityName: entityName,
+        createdAt: DateTime.now(),
       ),
     );
   }

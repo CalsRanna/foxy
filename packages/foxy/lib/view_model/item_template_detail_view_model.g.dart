@@ -323,7 +323,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -356,7 +356,7 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(ItemTemplateEntity itemTemplate) {}
 
@@ -657,14 +657,13 @@ mixin _ItemTemplateDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     ItemTemplateEntity itemTemplate,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'item_template',
-          actionType: action,
-          entityName: itemTemplate.name,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'item_template',
+        actionType: action,
+        entityName: itemTemplate.name,
+        createdAt: DateTime.now(),
       ),
     );
   }

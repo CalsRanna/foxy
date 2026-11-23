@@ -54,8 +54,10 @@ mixin _QuestRequestItemsLinkedDetailViewModelMixin on FieldControllerMixin {
   int _refreshToken = 0;
   int _linkToken = 0;
 
-  Future<void> destroy() async {
-    if (submitting.value) throw BusyException('operation already in progress');
+  Future<void> destroy() => EntityWrittenEvent.capture(() async {
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     final key = editingKey.value;
     if (key == null) return;
     final linkSnapshot = linkKey.value;
@@ -84,7 +86,7 @@ mixin _QuestRequestItemsLinkedDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void dispose() {
     disposeControllers();
@@ -94,8 +96,10 @@ mixin _QuestRequestItemsLinkedDetailViewModelMixin on FieldControllerMixin {
     return setLinkKey(linkKey);
   }
 
-  Future<void> persist() async {
-    if (submitting.value) throw BusyException('operation already in progress');
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
+    if (submitting.value) {
+      throw BusyException('operation already in progress');
+    }
     final linkSnapshot = linkKey.value;
     if (linkSnapshot == null) {
       throw LinkNotLoadedException('link record not loaded');
@@ -111,20 +115,20 @@ mixin _QuestRequestItemsLinkedDetailViewModelMixin on FieldControllerMixin {
       } else {
         await _repository.updateQuestRequestItems(originalKey, candidate);
       }
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      try {
+        _logActivity(action, candidate.id);
+      } catch (_) {
+        // Activity log is best-effort; failure (e.g. not registered in
+        // tests) must not affect the main flow.
+      }
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
         return;
       }
       entity.value = candidate;
       editingKey.value = candidate.id;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      try {
-        _logActivity(action, originalKey ?? candidate.id);
-      } catch (_) {
-        // Activity log is best-effort; failure (e.g. not registered in
-        // tests) must not affect the main flow.
-      }
       await _refresh();
     } catch (error) {
       if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
@@ -135,7 +139,7 @@ mixin _QuestRequestItemsLinkedDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   Future<void> setLinkKey(int linkKey) async {
     if (this.linkKey.value == linkKey && entity.value != null) return;
@@ -148,14 +152,13 @@ mixin _QuestRequestItemsLinkedDetailViewModelMixin on FieldControllerMixin {
   /// Fires the activity-log event after a write; persistence is handled by
   /// the single ActivityLogListener aspect.
   void _logActivity(ActivityActionType action, int key) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'quest_request_items',
-          actionType: action,
-          entityName: key.toString(),
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'quest_request_items',
+        actionType: action,
+        entityName: key.toString(),
+        createdAt: DateTime.now(),
       ),
     );
   }

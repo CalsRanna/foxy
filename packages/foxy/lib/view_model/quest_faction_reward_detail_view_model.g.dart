@@ -60,7 +60,7 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -93,7 +93,7 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(QuestFactionRewardEntity questFactionReward) {}
 
@@ -134,14 +134,13 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     QuestFactionRewardEntity questFactionReward,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'dbc_quest_faction_reward',
-          actionType: action,
-          entityName: 'QuestFactionReward ${questFactionReward.id}',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'dbc_quest_faction_reward',
+        actionType: action,
+        entityName: 'QuestFactionReward ${questFactionReward.id}',
+        createdAt: DateTime.now(),
       ),
     );
   }

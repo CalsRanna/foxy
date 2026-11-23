@@ -33,7 +33,11 @@ mixin _ItemRandomPropertiesRepositoryMixin
 
   Future<void> destroyItemRandomProperties(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'foxy.dbc_item_random_properties record not found',
@@ -69,16 +73,24 @@ mixin _ItemRandomPropertiesRepositoryMixin
     await _beforeStore(itemRandomProperties);
     final json = prepareWriteJson(itemRandomProperties.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(itemRandomProperties.id),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = itemRandomProperties.copyWith(
         id: await nextMaxPlusOne(_table, '`ID`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.id),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.id;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -97,13 +109,17 @@ mixin _ItemRandomPropertiesRepositoryMixin
     ItemRandomPropertiesEntity itemRandomProperties,
   ) async {
     await _beforeUpdate(originalKey, itemRandomProperties);
-    final json = prepareWriteJson(itemRandomProperties.toJson());
+    final values = itemRandomProperties.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(itemRandomProperties.id),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -129,6 +145,8 @@ mixin _ItemRandomPropertiesRepositoryMixin
     int originalKey,
     ItemRandomPropertiesEntity itemRandomProperties,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'ID': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);

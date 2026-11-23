@@ -7,7 +7,11 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySpellBonusData(int key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('spell_bonus_data record not found');
     }
@@ -28,16 +32,24 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     await _beforeStore(spellBonusData);
     final json = prepareWriteJson(spellBonusData.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(spellBonusData.entry),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = spellBonusData.copyWith(
         entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(retried.entry),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return retried.entry;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -54,13 +66,17 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     SpellBonusDataEntity spellBonusData,
   ) async {
     await _beforeUpdate(originalKey, spellBonusData);
-    final json = prepareWriteJson(spellBonusData.toJson());
+    final values = spellBonusData.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(spellBonusData.entry),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in spell_bonus_data');
@@ -80,6 +96,8 @@ mixin _SpellBonusDataRepositoryMixin on RepositoryMixin {
     int originalKey,
     SpellBonusDataEntity spellBonusData,
   ) async {}
+
+  Map<String, Object?> activityKey(int key) => {'entry': key};
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`entry`', key);

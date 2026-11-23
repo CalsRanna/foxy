@@ -56,7 +56,11 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyMillingLootTemplate(MillingLootTemplateKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('milling_loot_template record not found');
     }
@@ -100,7 +104,13 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(millingLootTemplate);
     final json = prepareWriteJson(millingLootTemplate.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          MillingLootTemplateKey.fromEntity(millingLootTemplate),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = millingLootTemplate.copyWith(
@@ -111,9 +121,13 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(MillingLootTemplateKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -129,13 +143,19 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     MillingLootTemplateEntity millingLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, millingLootTemplate);
-    final json = prepareWriteJson(millingLootTemplate.toJson());
+    final values = millingLootTemplate.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          MillingLootTemplateKey.fromEntity(millingLootTemplate),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in milling_loot_template');
@@ -157,6 +177,11 @@ mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
     MillingLootTemplateKey originalKey,
     MillingLootTemplateEntity millingLootTemplate,
   ) async {}
+
+  Map<String, Object?> activityKey(MillingLootTemplateKey key) => {
+    'Entry': key.entry,
+    'Item': key.item,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, MillingLootTemplateKey key) {
     var query = builder;

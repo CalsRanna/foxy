@@ -1,4 +1,5 @@
 import 'package:foxy/exception/foxy_exceptions.dart';
+import 'package:foxy/infrastructure/database/activity_row_write.dart';
 import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
@@ -14,6 +15,23 @@ mixin RepositoryMixin {
   final kPageSize = 50;
 
   Laconic get laconic => Database.instance.laconic;
+
+  Future<T> trackActivityWrite<T>(
+    String table, {
+    Map<String, Object?>? beforeKey,
+    Map<String, Object?>? afterKey,
+    Iterable<String> columns = const [],
+    Set<String> binaryKeyColumns = const {},
+    required Future<T> Function() write,
+  }) => ActivityRowWrite.capture(
+    laconic,
+    table,
+    beforeKey: beforeKey,
+    afterKey: afterKey,
+    columns: columns,
+    binaryKeyColumns: binaryKeyColumns,
+    write: write,
+  );
 
   /// Whether to JOIN the `*_locale` tables to show localized names.
   ///

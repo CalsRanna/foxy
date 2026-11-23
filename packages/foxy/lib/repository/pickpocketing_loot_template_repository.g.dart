@@ -62,7 +62,11 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     PickpocketingLootTemplateKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'pickpocketing_loot_template record not found',
@@ -106,7 +110,13 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(pickpocketingLootTemplate);
     final json = prepareWriteJson(pickpocketingLootTemplate.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          PickpocketingLootTemplateKey.fromEntity(pickpocketingLootTemplate),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = pickpocketingLootTemplate.copyWith(
@@ -117,9 +127,15 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(
+            PickpocketingLootTemplateKey.fromEntity(retried),
+          ),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -137,13 +153,19 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     PickpocketingLootTemplateEntity pickpocketingLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, pickpocketingLootTemplate);
-    final json = prepareWriteJson(pickpocketingLootTemplate.toJson());
+    final values = pickpocketingLootTemplate.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          PickpocketingLootTemplateKey.fromEntity(pickpocketingLootTemplate),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -169,6 +191,11 @@ mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
     PickpocketingLootTemplateKey originalKey,
     PickpocketingLootTemplateEntity pickpocketingLootTemplate,
   ) async {}
+
+  Map<String, Object?> activityKey(PickpocketingLootTemplateKey key) => {
+    'Entry': key.entry,
+    'Item': key.item,
+  };
 
   QueryBuilder _whereKey(
     QueryBuilder builder,

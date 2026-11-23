@@ -90,7 +90,11 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyCondition(ConditionKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('conditions record not found');
     }
@@ -160,7 +164,11 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     await _beforeStore(condition);
     final json = prepareWriteJson(condition.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(ConditionKey.fromEntity(condition)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       throw DuplicateKeyException('duplicate key in conditions');
@@ -172,13 +180,17 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     ConditionEntity condition,
   ) async {
     await _beforeUpdate(originalKey, condition);
-    final json = prepareWriteJson(condition.toJson());
+    final values = condition.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(ConditionKey.fromEntity(condition)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in conditions');
@@ -212,6 +224,19 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     ConditionKey originalKey,
     ConditionEntity condition,
   ) async {}
+
+  Map<String, Object?> activityKey(ConditionKey key) => {
+    'SourceTypeOrReferenceId': key.sourceTypeOrReferenceId,
+    'SourceGroup': key.sourceGroup,
+    'SourceEntry': key.sourceEntry,
+    'SourceId': key.sourceId,
+    'ElseGroup': key.elseGroup,
+    'ConditionTypeOrReference': key.conditionTypeOrReference,
+    'ConditionTarget': key.conditionTarget,
+    'ConditionValue1': key.conditionValue1,
+    'ConditionValue2': key.conditionValue2,
+    'ConditionValue3': key.conditionValue3,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, ConditionKey key) {
     var query = builder;

@@ -8,6 +8,7 @@ import 'package:foxy/infrastructure/database/migration/migration_202608030000.da
 import 'package:foxy/infrastructure/database/migration/migration_202608090000.dart';
 import 'package:foxy/infrastructure/database/migration/migration_202608090001.dart';
 import 'package:foxy/infrastructure/database/migration/migration_202608090002.dart';
+import 'package:foxy/infrastructure/database/migration/migration_202611230000.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:laconic/laconic.dart';
 
@@ -120,6 +121,7 @@ class MigrationRunner {
       Migration202608090000(),
       Migration202608090001(),
       Migration202608090002(),
+      Migration202611230000(),
     ];
 
     for (final migration in migrations) {

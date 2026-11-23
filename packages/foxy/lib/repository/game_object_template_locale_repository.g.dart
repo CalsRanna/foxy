@@ -9,7 +9,11 @@ mixin _GameObjectTemplateLocaleRepositoryMixin on RepositoryMixin {
     GameObjectTemplateLocaleKey key,
   ) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException(
         'gameobject_template_locale record not found',
@@ -31,16 +35,28 @@ mixin _GameObjectTemplateLocaleRepositoryMixin on RepositoryMixin {
     await _beforeStore(gameObjectTemplateLocale);
     final json = prepareWriteJson(gameObjectTemplateLocale.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          GameObjectTemplateLocaleKey.fromEntity(gameObjectTemplateLocale),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = gameObjectTemplateLocale.copyWith(
         entry: await nextMaxPlusOne(_table, '`entry`'),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(
+            GameObjectTemplateLocaleKey.fromEntity(retried),
+          ),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -58,13 +74,19 @@ mixin _GameObjectTemplateLocaleRepositoryMixin on RepositoryMixin {
     GameObjectTemplateLocaleEntity gameObjectTemplateLocale,
   ) async {
     await _beforeUpdate(originalKey, gameObjectTemplateLocale);
-    final json = prepareWriteJson(gameObjectTemplateLocale.toJson());
+    final values = gameObjectTemplateLocale.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          GameObjectTemplateLocaleKey.fromEntity(gameObjectTemplateLocale),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException(
@@ -90,6 +112,11 @@ mixin _GameObjectTemplateLocaleRepositoryMixin on RepositoryMixin {
     GameObjectTemplateLocaleKey originalKey,
     GameObjectTemplateLocaleEntity gameObjectTemplateLocale,
   ) async {}
+
+  Map<String, Object?> activityKey(GameObjectTemplateLocaleKey key) => {
+    'entry': key.entry,
+    'locale': key.locale,
+  };
 
   QueryBuilder _whereKey(
     QueryBuilder builder,

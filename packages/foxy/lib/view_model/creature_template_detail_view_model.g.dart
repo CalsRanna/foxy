@@ -158,7 +158,7 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -191,7 +191,7 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(CreatureTemplateEntity creatureTemplate) {}
 
@@ -320,14 +320,13 @@ mixin _CreatureTemplateDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     CreatureTemplateEntity creatureTemplate,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'creature_template',
-          actionType: action,
-          entityName: creatureTemplate.name,
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'creature_template',
+        actionType: action,
+        entityName: creatureTemplate.name,
+        createdAt: DateTime.now(),
       ),
     );
   }

@@ -36,7 +36,11 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
 
   Future<void> destroyNpcTrainer(NpcTrainerKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('trainer_spell record not found');
     }
@@ -73,7 +77,11 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     await _beforeStore(npcTrainer);
     final json = prepareWriteJson(npcTrainer.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(NpcTrainerKey.fromEntity(npcTrainer)),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = npcTrainer.copyWith(
@@ -84,9 +92,13 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(NpcTrainerKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -102,13 +114,17 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     NpcTrainerEntity npcTrainer,
   ) async {
     await _beforeUpdate(originalKey, npcTrainer);
-    final json = prepareWriteJson(npcTrainer.toJson());
+    final values = npcTrainer.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(NpcTrainerKey.fromEntity(npcTrainer)),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in trainer_spell');
@@ -128,6 +144,11 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
     NpcTrainerKey originalKey,
     NpcTrainerEntity npcTrainer,
   ) async {}
+
+  Map<String, Object?> activityKey(NpcTrainerKey key) => {
+    'TrainerId': key.trainerId,
+    'SpellId': key.spellId,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, NpcTrainerKey key) {
     var query = builder;

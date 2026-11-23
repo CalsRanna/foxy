@@ -49,6 +49,7 @@ void main() {
     );
     await vm.persist();
     expect(driver.updates.last, [..._source.toJson().values, 1]);
+    expect(events, isEmpty);
 
     vm.factionController.controller.value = null;
     vm.titleLangZhCNController.init('标题草稿');
@@ -202,6 +203,7 @@ final _source = AchievementEntity.fromJson({
 });
 
 class _Driver implements DatabaseDriver {
+  final _row = _source.toJson();
   int maxId = 10;
   bool collide = false;
   int insertAttempts = 0;
@@ -217,6 +219,7 @@ class _Driver implements DatabaseDriver {
     List<Object?> params = const [],
   ]) async {
     updates.add(List.of(params));
+    _row.addAll(Map.fromIterables(_row.keys, params.take(_row.length)));
     return 1;
   }
 
@@ -235,7 +238,7 @@ class _Driver implements DatabaseDriver {
     List<Object?> params = const [],
   ]) async => [
     LaconicResult.fromMap(
-      sql.toLowerCase().contains('max(') ? {'max_id': maxId} : _source.toJson(),
+      sql.toLowerCase().contains('max(') ? {'max_id': maxId} : Map.of(_row),
     ),
   ];
   @override

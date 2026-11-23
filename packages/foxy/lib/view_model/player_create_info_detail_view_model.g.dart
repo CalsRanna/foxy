@@ -63,7 +63,7 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
     }
   }
 
-  Future<void> persist() async {
+  Future<void> persist() => EntityWrittenEvent.capture(() async {
     if (submitting.value) {
       throw BusyException('operation already in progress');
     }
@@ -90,7 +90,7 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
+  });
 
   void _afterApplyCandidate(PlayerCreateInfoEntity playerCreateInfo) {}
 
@@ -125,14 +125,13 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
     ActivityActionType action,
     PlayerCreateInfoEntity playerCreateInfo,
   ) {
-    GetIt.instance.get<EventBus>().fire(
-      EntityWrittenEvent(
-        ActivityLogEntity(
-          module: 'playercreateinfo',
-          actionType: action,
-          entityName: 'PlayerCreateInfo',
-          createdAt: DateTime.now(),
-        ),
+    EntityWrittenEvent.publish(
+      GetIt.instance.get<EventBus>(),
+      ActivityLogEntity(
+        module: 'playercreateinfo',
+        actionType: action,
+        entityName: 'PlayerCreateInfo',
+        createdAt: DateTime.now(),
       ),
     );
   }

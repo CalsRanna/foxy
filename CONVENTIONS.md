@@ -96,7 +96,7 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 - **两个命名空间**：AzerothCore `world` 表（无前缀，如 `creature_template`）与应用自有 **`foxy` 元库**（`foxy.features` / `foxy.migrations` / `foxy.activity_log` / `foxy.dbc_*` 镜像表）。
 - **迁移**：`lib/infrastructure/database/migration/migration_YYYYMMDDHHMM.dart`，按时间顺序追加到 `lib/infrastructure/database/migration_runner.dart` 的列表。Runner 还会强制建 `foxy` 库为 utf8mb4，并幂等地把非 utf8mb4 表转为 utf8mb4。
 - **依赖装配全部显式**：`lib/di.dart` 用 get_it 显式注册（无服务定位器魔法）。
-- **活动日志**：每次 create/update/delete/copy 由生成的 `_logActivity` 经 `EventBus` 发 `EntityWrittenEvent`；**单个** `ActivityLogListener`（eager singleton）通过 `ActivityLogService.recordBestEffort` 落库（日志永不拖垮主写入）。
+- **活动日志**：编辑入口按一次用户操作收集记录变更。在事务中锁定更新前的记录，写入后读回并比较实际变化的列。提交后经 `EventBus` 发布 `EntityWrittenEvent`，由 `ActivityLogListener` 尽力落库。`foxy.activity_log.details` 保存 JSON 文本，包括记录的完整主键与字段旧值、新值。没有实际变化的更新跳过日志。
 - **事务**：跨表用例用 `DatabaseTransaction.execute()`（`lib/infrastructure/database/database_transaction.dart`）；嵌套调用经 zone marker **合并**为同一事务（laconic_mysql 每次 `transaction()` 都新开连接，嵌套会独立提交）。Repository 从不协调事务。
 - **本地化**：`RepositoryMixin.localeEnabled` 控制 zhCN JOIN 开关；`@FoxyBriefField.text` 标记 locale 展示名列；DBC 宽表用 `DbcLocaleRepositoryMixin` + `DbcLocaleFields`（16 语言）。
 - **游戏语义知识**（flags、enums、动态参数定义）集中在 `foxy_game_definition`；应用的 DBC schema 与数据库表映射、locale 字段注册集中在 `foxy/lib/constant/`，不得散落在页面里。

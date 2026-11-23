@@ -58,7 +58,11 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
 
   Future<void> destroySkinningLootTemplate(SkinningLootTemplateKey key) async {
     await _beforeDestroy(key);
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    final deletedRows = await trackActivityWrite(
+      _table,
+      beforeKey: activityKey(key),
+      write: () => _whereKey(laconic.table(_table), key).delete(),
+    );
     if (deletedRows == 0) {
       throw RecordNotFoundException('skinning_loot_template record not found');
     }
@@ -102,7 +106,13 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     await _beforeStore(skinningLootTemplate);
     final json = prepareWriteJson(skinningLootTemplate.toJson());
     try {
-      await laconic.table(_table).insert([json]);
+      await trackActivityWrite(
+        _table,
+        afterKey: activityKey(
+          SkinningLootTemplateKey.fromEntity(skinningLootTemplate),
+        ),
+        write: () => laconic.table(_table).insert([json]),
+      );
     } catch (error) {
       if (!MysqlErrorUtil.isDuplicateEntry(error)) rethrow;
       final retried = skinningLootTemplate.copyWith(
@@ -113,9 +123,13 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
         ),
       );
       try {
-        await laconic.table(_table).insert([
-          prepareWriteJson(retried.toJson()),
-        ]);
+        await trackActivityWrite(
+          _table,
+          afterKey: activityKey(SkinningLootTemplateKey.fromEntity(retried)),
+          write: () => laconic.table(_table).insert([
+            prepareWriteJson(retried.toJson()),
+          ]),
+        );
         return;
       } catch (retryError) {
         if (MysqlErrorUtil.isDuplicateEntry(retryError)) {
@@ -133,13 +147,19 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     SkinningLootTemplateEntity skinningLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, skinningLootTemplate);
-    final json = prepareWriteJson(skinningLootTemplate.toJson());
+    final values = skinningLootTemplate.toJson();
+    final json = prepareWriteJson(values);
     final int matchedRows;
     try {
-      matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
+      matchedRows = await trackActivityWrite(
+        _table,
+        beforeKey: activityKey(originalKey),
+        afterKey: activityKey(
+          SkinningLootTemplateKey.fromEntity(skinningLootTemplate),
+        ),
+        columns: values.keys,
+        write: () => _whereKey(laconic.table(_table), originalKey).update(json),
+      );
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw DuplicateKeyException('duplicate key in skinning_loot_template');
@@ -161,6 +181,11 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
     SkinningLootTemplateKey originalKey,
     SkinningLootTemplateEntity skinningLootTemplate,
   ) async {}
+
+  Map<String, Object?> activityKey(SkinningLootTemplateKey key) => {
+    'Entry': key.entry,
+    'Item': key.item,
+  };
 
   QueryBuilder _whereKey(QueryBuilder builder, SkinningLootTemplateKey key) {
     var query = builder;

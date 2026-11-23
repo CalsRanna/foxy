@@ -35,7 +35,7 @@ const _databaseContext = '''
 ## 可用数据
 - world 库：游戏数据（生物、物品、任务、法术配置、SmartAI 等）。
 - foxy 库：应用自身的数据，表名带 foxy. 前缀，常见的例如：
-  - foxy.activity_log：操作日志（模块、操作类型、实体名称、时间），适合回答「最近改了什么」；
+  - foxy.activity_log：操作日志。details 列是 JSON 文本，rows 中可包含记录主键和 changes，每个变化字段包含 before 与 after。历史日志的 details 可以为空；
   - foxy.features：功能目录与收藏；
   - foxy.dbc_*：DBC 数据镜像表（法术、物品、生物显示等）。
 - AzerothCore 的 world 库（默认名 acore_world）已不再存储 DBC 数据。所有 DBC 数据只从 foxy.dbc_* 查询，具体表名由 list_tables 确认。
