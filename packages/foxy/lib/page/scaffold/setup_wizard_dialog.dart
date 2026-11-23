@@ -27,6 +27,8 @@ class SetupWizardDialog extends StatefulWidget {
   State<SetupWizardDialog> createState() => _SetupWizardDialogState();
 }
 
+enum _SetupTask { checkDbc, importDbc, extractIcons }
+
 class _SetupWizardDialogState extends State<SetupWizardDialog> {
   final _step = signal(0);
   final _checked = signal(false);
@@ -157,6 +159,60 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     );
   }
 
+  Widget _buildProgressDialog(Signal<_SetupTask> task) {
+    return PopScope(
+      canPop: false,
+      child: SignalBuilder(
+        builder: (context) {
+          if (task.value == _SetupTask.checkDbc) {
+            return const SettingDialogShell(
+              title: '正在检查 DBC 数据',
+              child: SizedBox(
+                height: 120,
+                child: Center(child: FoxyLoadingIndicator()),
+              ),
+            );
+          }
+          final importing = task.value == _SetupTask.importDbc;
+          final status = importing
+              ? _importVm.status.value
+              : _iconVm.status.value;
+          final cancelling = status == WorkflowStatus.cancelling;
+          return SettingDialogShell(
+            title: importing ? '正在导入 DBC' : '正在提取图标',
+            child: SettingDialogShell.progressPanel(
+              context,
+              ratio: importing
+                  ? _importVm.progress.value
+                  : _iconVm.progress.value,
+              label: importing
+                  ? _importVm.progressLabel.value
+                  : _iconVm.progressLabel.value,
+              detail: importing
+                  ? _importVm.progressDetail.value
+                  : _iconVm.progressDetail.value,
+              trailing: ShadButton.outline(
+                size: ShadButtonSize.sm,
+                onPressed: cancelling
+                    ? null
+                    : importing
+                    ? _importVm.cancel
+                    : _iconVm.cancel,
+                child: Text(
+                  cancelling
+                      ? '正在取消…'
+                      : importing
+                      ? '取消导入'
+                      : '取消提取',
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildStep3() {
     final importsDbc = _dbcImportPath != null;
     final extractsIcons = _iconExtractPath != null;
@@ -228,40 +284,6 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     _checked.value = true;
   }
 
-  bool _isStepDone(int index) => switch (index) {
-    0 => _setupVm.isClientDirConfigured || _setupVm.clientSetupSkipped.value,
-    1 => _setupVm.isServerSetupComplete,
-    _ => false,
-  };
-
-  Future<void> _saveAndAdvance(int stepIndex, {bool skip = false}) async {
-    if (_saving.value) return;
-    _saving.value = true;
-    try {
-      if (skip) {
-        await _saveSkip(
-          stepIndex == 0 ? _setupVm.skipClientSetup : _setupVm.skipServerSetup,
-        );
-      } else {
-        final formKey = stepIndex == 0 ? _step1FormKey : _step2FormKey;
-        if (await formKey.currentState?.save() != true) return;
-      }
-      if (!mounted) return;
-      if (stepIndex == 0) _clientSkipped = skip;
-      _step.value = stepIndex + 1;
-    } finally {
-      _saving.value = false;
-    }
-  }
-
-  Future<void> _saveSkip(Future<void> Function() save) async {
-    try {
-      await save();
-    } catch (_) {
-      // The in-memory choice still applies if the config is read-only.
-    }
-  }
-
   Future<void> _enterApp() async {
     if (_saving.value) return;
     _saving.value = true;
@@ -276,6 +298,12 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
       _saving.value = false;
     }
   }
+
+  bool _isStepDone(int index) => switch (index) {
+    0 => _setupVm.isClientDirConfigured || _setupVm.clientSetupSkipped.value,
+    1 => _setupVm.isServerSetupComplete,
+    _ => false,
+  };
 
   Future<void> _prepareGameData(String? dbcPath, String? clientDir) async {
     final task = signal(
@@ -334,62 +362,34 @@ class _SetupWizardDialogState extends State<SetupWizardDialog> {
     }
   }
 
-  Widget _buildProgressDialog(Signal<_SetupTask> task) {
-    return PopScope(
-      canPop: false,
-      child: SignalBuilder(
-        builder: (context) {
-          if (task.value == _SetupTask.checkDbc) {
-            return const SettingDialogShell(
-              title: '正在检查 DBC 数据',
-              child: SizedBox(
-                height: 120,
-                child: Center(child: FoxyLoadingIndicator()),
-              ),
-            );
-          }
-          final importing = task.value == _SetupTask.importDbc;
-          final status = importing
-              ? _importVm.status.value
-              : _iconVm.status.value;
-          final cancelling = status == WorkflowStatus.cancelling;
-          return SettingDialogShell(
-            title: importing ? '正在导入 DBC' : '正在提取图标',
-            child: SettingDialogShell.progressPanel(
-              context,
-              ratio: importing
-                  ? _importVm.progress.value
-                  : _iconVm.progress.value,
-              label: importing
-                  ? _importVm.progressLabel.value
-                  : _iconVm.progressLabel.value,
-              detail: importing
-                  ? _importVm.progressDetail.value
-                  : _iconVm.progressDetail.value,
-              trailing: ShadButton.outline(
-                size: ShadButtonSize.sm,
-                onPressed: cancelling
-                    ? null
-                    : importing
-                    ? _importVm.cancel
-                    : _iconVm.cancel,
-                child: Text(
-                  cancelling
-                      ? '正在取消…'
-                      : importing
-                      ? '取消导入'
-                      : '取消提取',
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+  Future<void> _saveAndAdvance(int stepIndex, {bool skip = false}) async {
+    if (_saving.value) return;
+    _saving.value = true;
+    try {
+      if (skip) {
+        await _saveSkip(
+          stepIndex == 0 ? _setupVm.skipClientSetup : _setupVm.skipServerSetup,
+        );
+      } else {
+        final formKey = stepIndex == 0 ? _step1FormKey : _step2FormKey;
+        if (await formKey.currentState?.save() != true) return;
+      }
+      if (!mounted) return;
+      if (stepIndex == 0) _clientSkipped = skip;
+      _step.value = stepIndex + 1;
+    } finally {
+      _saving.value = false;
+    }
+  }
+
+  Future<void> _saveSkip(Future<void> Function() save) async {
+    try {
+      await save();
+    } catch (_) {
+      // The in-memory choice still applies if the config is read-only.
+    }
   }
 }
-
-enum _SetupTask { checkDbc, importDbc, extractIcons }
 
 class _StepChip extends StatelessWidget {
   final int index;

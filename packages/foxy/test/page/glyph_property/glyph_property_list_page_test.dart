@@ -67,6 +67,9 @@ class _ReadDriver implements DatabaseDriver {
   final SqlGrammar grammar = MysqlGrammar();
 
   @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+
+  @override
   Future<List<LaconicResult>> select(
     String sql, [
     List<Object?> params = const [],
@@ -77,7 +80,4 @@ class _ReadDriver implements DatabaseDriver {
           : {'ID': 7, 'SpellID': 12345, 'spellName': '测试法术'},
     ),
   ];
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

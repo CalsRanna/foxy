@@ -62,6 +62,10 @@ class SetupStatusViewModel {
   bool get isClientDirConfigured =>
       clientDir.value != null && clientDirExists.value;
 
+  bool get isClientSetupComplete =>
+      clientSetupSkipped.value ||
+      (isClientDirConfigured && iconsExtracted.value);
+
   bool get isDbcPathConfigured => dbcPath.value != null && dbcPathExists.value;
 
   bool get isServerDirConfigured =>
@@ -69,10 +73,6 @@ class SetupStatusViewModel {
 
   bool get isServerSetupComplete =>
       isServerDirConfigured || serverSetupSkipped.value;
-
-  bool get isClientSetupComplete =>
-      clientSetupSkipped.value ||
-      (isClientDirConfigured && iconsExtracted.value);
 
   bool get isSetupComplete => isServerSetupComplete && isClientSetupComplete;
 
@@ -149,14 +149,14 @@ class SetupStatusViewModel {
     return true;
   }
 
-  Future<void> skipServerSetup() async {
-    serverSetupSkipped.value = true;
-    await _configUtil.update({'server_setup_skipped': true});
-  }
-
   Future<void> skipClientSetup() async {
     clientSetupSkipped.value = true;
     await _configUtil.update({'client_setup_skipped': true});
+  }
+
+  Future<void> skipServerSetup() async {
+    serverSetupSkipped.value = true;
+    await _configUtil.update({'server_setup_skipped': true});
   }
 
   /// Shared directory validation: non-empty and existing, writing the
