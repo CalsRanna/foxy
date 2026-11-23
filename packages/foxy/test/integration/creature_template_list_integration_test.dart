@@ -10,7 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'integration_mysql.dart';
 
 /// The app's landing module (`creature_template` list) against a real MySQL:
-/// the zhCN locale JOIN, both `whereAny` filters (name and subName), the
+/// the zhCN locale JOIN, the `whereAny` name filter, the
 /// `localeEnabled` switch and joined pagination.
 ///
 /// The fixture is a **reduced** `creature_template`: only the five columns the
@@ -138,20 +138,19 @@ create table `creature_template` (
     );
   });
 
-  test('称号过滤同时搜 ct.subname 与 zhCN 称号', () async {
+  test('名称过滤不匹配原始称号或 zhCN 称号', () async {
     await insertCreature(1, 'Kobold Vermin', null, 1, 2);
     await insertCreature(2, 'Wolf', 'Beast', 3, 4);
     await insertLocale(1, 'zhCN', '狗头人苦工', '怪物');
 
-    final byLocale = await repository.getBriefCreatureTemplates(
-      filter: const CreatureTemplateFilter(subName: '怪物'),
-    );
-    expect(byLocale.map((row) => row.entry).toList(), [1]);
-
-    final byOriginal = await repository.getBriefCreatureTemplates(
-      filter: const CreatureTemplateFilter(subName: 'Beast'),
-    );
-    expect(byOriginal.map((row) => row.entry).toList(), [2]);
+    for (final title in ['怪物', 'Beast']) {
+      final filter = CreatureTemplateFilter(name: title);
+      expect(
+        await repository.getBriefCreatureTemplates(filter: filter),
+        isEmpty,
+      );
+      expect(await repository.countCreatureTemplates(filter: filter), 0);
+    }
   });
 
   test('entry 过滤走无联表分支,entry+name 同时过滤不越界', () async {

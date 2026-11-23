@@ -10,7 +10,6 @@ part 'creature_template_repository.g.dart';
 @FoxyRepository()
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
-@FoxyFilter.text('subName')
 class CreatureTemplateRepository
     with RepositoryMixin, _CreatureTemplateRepositoryMixin {
   @override
@@ -29,9 +28,7 @@ class CreatureTemplateRepository
   @override
   Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async {
     final needsLocaleJoin =
-        localeEnabled &&
-        filter != null &&
-        (filter.name.isNotEmpty || filter.subName.isNotEmpty);
+        localeEnabled && filter != null && filter.name.isNotEmpty;
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.entry.isNotEmpty) {
@@ -41,13 +38,6 @@ class CreatureTemplateRepository
         builder = builder.where(
           'name',
           '%${ParseUtil.escapeLike(filter.name)}%',
-          comparator: 'like',
-        );
-      }
-      if (filter != null && filter.subName.isNotEmpty) {
-        builder = builder.where(
-          'subname',
-          '%${ParseUtil.escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       }
@@ -129,21 +119,6 @@ class CreatureTemplateRepository
         builder = builder.where(
           'ct.name',
           '%${ParseUtil.escapeLike(filter.name)}%',
-          comparator: 'like',
-        );
-      }
-    }
-    if (filter.subName.isNotEmpty) {
-      if (localeEnabled) {
-        builder = builder.whereAny(
-          ['ct.subname', 'ctl.Title'],
-          '%${ParseUtil.escapeLike(filter.subName)}%',
-          comparator: 'like',
-        );
-      } else {
-        builder = builder.where(
-          'ct.subname',
-          '%${ParseUtil.escapeLike(filter.subName)}%',
           comparator: 'like',
         );
       }

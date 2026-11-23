@@ -65,10 +65,6 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage>
       controller: viewModel.nameController,
       placeholder: '名称（name）',
     );
-    var subNameInput = FoxyStringInput(
-      controller: viewModel.subNameController,
-      placeholder: '称号（subname）',
-    );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
       size: ShadButtonSize.sm,
@@ -83,8 +79,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage>
     final credentialChildren = [
       Expanded(child: entryInput),
       Expanded(child: nameInput),
-      Expanded(child: subNameInput),
-      Expanded(child: row),
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),

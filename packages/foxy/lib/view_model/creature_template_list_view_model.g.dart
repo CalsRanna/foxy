@@ -24,8 +24,6 @@ mixin _CreatureTemplateListViewModelMixin
 
   late final nameController = registerController(StringFieldController());
 
-  late final subNameController = registerController(StringFieldController());
-
   int _refreshToken = 0;
 
   Future<void> copy(int key) async {
@@ -83,7 +81,6 @@ mixin _CreatureTemplateListViewModelMixin
   Future<void> reset() async {
     entryController.init('');
     nameController.init('');
-    subNameController.init('');
     page.value = 1;
     markQueryVersion();
     await _refresh();
@@ -99,7 +96,6 @@ mixin _CreatureTemplateListViewModelMixin
     return CreatureTemplateFilter(
       entry: entryController.collect(),
       name: nameController.collect(),
-      subName: subNameController.collect(),
     );
   }
 
