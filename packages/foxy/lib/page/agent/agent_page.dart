@@ -274,6 +274,7 @@ class _AgentPageState extends State<AgentPage> {
     ].join(' · ');
     return _AgentStepAccordion(
       key: PageStorageKey((group.first, true)),
+      maxHeight: callCount > 0 ? 320 : null,
       title: _buildStepStatus(
         label,
         thinking: thinking,
@@ -650,11 +651,13 @@ class _AgentPageState extends State<AgentPage> {
 class _AgentStepAccordion extends StatefulWidget {
   final Widget title;
   final List<Widget> children;
+  final double? maxHeight;
 
   const _AgentStepAccordion({
     required super.key,
     required this.title,
     required this.children,
+    this.maxHeight,
   });
 
   @override
@@ -663,10 +666,19 @@ class _AgentStepAccordion extends StatefulWidget {
 
 class _AgentStepAccordionState extends State<_AgentStepAccordion> {
   late final ShadAccordionController<bool> _controller;
+  ScrollController? _contentScrollController;
 
   @override
   Widget build(BuildContext context) {
-    return ShadAccordion<bool>(
+    final content = Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: widget.children,
+      ),
+    );
+    final maxHeight = widget.maxHeight;
+    final accordion = ShadAccordion<bool>(
       controller: _controller,
       children: [
         ShadAccordionItem<bool>(
@@ -676,20 +688,59 @@ class _AgentStepAccordionState extends State<_AgentStepAccordion> {
           underlineTitleOnHover: false,
           separator: const SizedBox.shrink(),
           icon: const SizedBox.shrink(),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: widget.children,
-            ),
-          ),
+          effects: maxHeight == null ? null : const [],
+          child: maxHeight == null ? content : const SizedBox.shrink(),
         ),
       ],
+    );
+    if (maxHeight == null) return accordion;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          accordion,
+          Flexible(
+            child: ValueListenableBuilder(
+              valueListenable: _controller,
+              builder: (context, expanded, child) => TweenAnimationBuilder(
+                tween: Tween<double>(begin: 0, end: expanded.isEmpty ? 0 : 1),
+                duration: const Duration(milliseconds: 300),
+                curve: const Cubic(0.87, 0, 0.13, 1),
+                builder: (context, factor, child) => factor == 0
+                    ? const SizedBox.shrink()
+                    : ClipRect(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          heightFactor: factor,
+                          child: child,
+                        ),
+                      ),
+                child: child,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: SingleChildScrollView(
+                  primary: false,
+                  // The accordion's PageStorageKey stores its expanded state.
+                  controller: _contentScrollController ??= ScrollController(
+                    keepScrollOffset: false,
+                  ),
+                  child: content,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   void dispose() {
+    _contentScrollController?.dispose();
     _controller.dispose();
     super.dispose();
   }

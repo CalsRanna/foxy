@@ -526,6 +526,71 @@ void main() {
     expect(groupFailure, findsNothing);
     expect(find.text(thirdCall.text), findsNothing);
   });
+
+  testWidgets('70 条工具调用的合并组整体限高并可在组内滚动', (tester) async {
+    final viewModel = _TestAgentViewModel(ConfigUtil());
+    final arguments = List.filled(40, '查询参数').join('\n');
+    viewModel.messages.value = [
+      AgentChatMessage(
+        role: AgentChatRole.tool,
+        text: '调用 query_rows_1 $arguments',
+      ),
+      for (var index = 2; index <= 70; index++)
+        AgentChatMessage(
+          role: AgentChatRole.tool,
+          text: '调用 query_rows_$index',
+        ),
+      AgentChatMessage(role: AgentChatRole.assistant, text: '查询完成'),
+    ];
+    GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+    await tester.pumpWidget(const ShadApp(home: Scaffold(body: AgentPage())));
+
+    final group = find.text('工具调用（70 次）');
+    final groupFrame = find.byKey(
+      PageStorageKey((viewModel.messages.value.first, true)),
+    );
+    expect(tester.getSize(groupFrame).height, lessThan(320));
+    await tester.tap(group);
+    await tester.pumpAndSettle();
+    expect(tester.getSize(groupFrame).height, 320);
+
+    final firstCall = find.text('调用 query_rows_1');
+    final lastCall = find.text('调用 query_rows_70');
+    final reply = find.text('查询完成', findRichText: true);
+    expect(firstCall.hitTestable(), findsOneWidget);
+    expect(lastCall.hitTestable(), findsNothing);
+    expect(reply.hitTestable(), findsOneWidget);
+    await tester.tap(firstCall);
+    await tester.pumpAndSettle();
+
+    final details = find.text(arguments);
+    expect(tester.getSize(details).height, greaterThan(320));
+    expect(tester.getSize(groupFrame).height, 320);
+    expect(
+      find.ancestor(of: details, matching: find.byType(Scrollable)),
+      findsNWidgets(2),
+    );
+
+    final content = find.ancestor(
+      of: firstCall,
+      matching: find.byType(SingleChildScrollView),
+    );
+    final groupOffset = tester.getTopLeft(group);
+    final replyOffset = tester.getTopLeft(reply);
+    final scrollExtent = tester
+        .widget<SingleChildScrollView>(content)
+        .controller!
+        .position
+        .maxScrollExtent;
+    final mouse = TestPointer(1, PointerDeviceKind.mouse)
+      ..hover(tester.getCenter(content));
+    await tester.sendEventToBinding(mouse.scroll(Offset(0, scrollExtent)));
+    await tester.pumpAndSettle();
+
+    expect(lastCall.hitTestable(), findsOneWidget);
+    expect(tester.getTopLeft(group), groupOffset);
+    expect(tester.getTopLeft(reply), replyOffset);
+  });
 }
 
 class _PendingAgentSessionStore extends AgentSessionStore {
