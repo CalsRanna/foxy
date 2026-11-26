@@ -105,7 +105,7 @@ class AgentSessionStore {
         .whereType<Map<String, Object?>>()
         .map((item) => Map<String, Object?>.from(item))
         .toList();
-    _repairTrailingUserItem(messages, items);
+    _repairTrailingUserItem(entries, items);
     final firstUser = messages.firstWhereOrNull(
       (message) =>
           message.role == AgentChatRole.user && message.text.trim().isNotEmpty,
@@ -210,18 +210,20 @@ class AgentSessionStore {
   /// persisted before the run could append its item (crash between send and
   /// the first model round).
   void _repairTrailingUserItem(
-    List<AgentChatMessage> messages,
+    List<Map<String, Object?>> entries,
     List<Map<String, Object?>> items,
   ) {
-    final lastUser = messages.lastWhereOrNull(
-      (message) => message.role == AgentChatRole.user,
-    );
-    if (lastUser == null) return;
-    final hasUserItem = items.any(
-      (item) => item['role'] == 'user' && item['content'] == lastUser.text,
-    );
-    if (hasUserItem) return;
-    items.add({'role': 'user', 'content': lastUser.text});
+    for (final entry in entries.reversed) {
+      // The protocol item is stored on or after its transcript row.
+      final item = entry['item'];
+      if (item is Map<String, Object?> && item['role'] == 'user') return;
+      if (entry['type'] == 'message' &&
+          entry['role'] == AgentChatRole.user.name) {
+        final message = AgentChatMessage.fromJson(entry);
+        items.add({'role': 'user', 'content': message.text});
+        return;
+      }
+    }
   }
 
   List<Map<String, Object?>> _repairInterruptedToolCalls(

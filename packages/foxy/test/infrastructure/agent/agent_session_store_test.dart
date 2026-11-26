@@ -141,6 +141,28 @@ void main() {
     ]);
   });
 
+  test('repairs only the missing item for a repeated user message', () async {
+    const user = {'role': 'user', 'content': 'hello'};
+    const answer = {'role': 'assistant', 'content': 'hi'};
+    await store.createSession('s1');
+    await store.appendMessage('s1', AgentChatRole.user, 'hello');
+    await store.appendItem('s1', user);
+    await store.appendMessage(
+      's1',
+      AgentChatRole.assistant,
+      'hi',
+      inputItem: answer,
+    );
+    await store.appendMessage('s1', AgentChatRole.user, 'hello');
+
+    final repaired = (await store.load('s1'))!;
+    expect(repaired.session.items, [user, answer, user]);
+
+    await store.appendItem('s1', user);
+    final complete = (await store.load('s1'))!;
+    expect(complete.session.items, repaired.session.items);
+  });
+
   test(
     'repairs unanswered tool calls when replaying a saved session',
     () async {
