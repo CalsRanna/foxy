@@ -7,14 +7,6 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
-final _cjk = RegExp(
-  r'[\p{Script=Han}\u3000-\u303F\uFF00-\uFFEF]',
-  unicode: true,
-);
-final _yamlScalarPrefix = RegExp(r'(?:\s|[!&]\S+|#[^\r\n]*)*');
-
-typedef _Comment = ({int line, String text});
-
 void main() {
   test('Dart checks comment tokens, including trailing and block comments', () {
     const source = r'''
@@ -89,19 +81,12 @@ anchored: &note # 锚点注释
   });
 }
 
-String _git(List<String> arguments, {String? workingDirectory}) {
-  final result = Process.runSync(
-    'git',
-    arguments,
-    workingDirectory: workingDirectory,
-    stdoutEncoding: utf8,
-  );
-  expect(result.exitCode, 0, reason: '${result.stderr}');
-  return result.stdout as String;
-}
+final _cjk = RegExp(
+  r'[\p{Script=Han}\u3000-\u303F\uFF00-\uFFEF]',
+  unicode: true,
+);
 
-Iterable<_Comment> _violations(Iterable<_Comment> comments) =>
-    comments.where((comment) => _cjk.hasMatch(comment.text));
+final _yamlScalarPrefix = RegExp(r'(?:\s|[!&]\S+|#[^\r\n]*)*');
 
 Iterable<_Comment> _dartComments(String source) sync* {
   final result = parseString(content: source, throwIfDiagnostics: false);
@@ -123,6 +108,20 @@ Iterable<_Comment> _dartComments(String source) sync* {
     if (token.isEof) break;
   }
 }
+
+String _git(List<String> arguments, {String? workingDirectory}) {
+  final result = Process.runSync(
+    'git',
+    arguments,
+    workingDirectory: workingDirectory,
+    stdoutEncoding: utf8,
+  );
+  expect(result.exitCode, 0, reason: '${result.stderr}');
+  return result.stdout as String;
+}
+
+Iterable<_Comment> _violations(Iterable<_Comment> comments) =>
+    comments.where((comment) => _cjk.hasMatch(comment.text));
 
 Iterable<_Comment> _yamlComments(String source) sync* {
   // Hide hash characters inside scalar values while preserving source lines.
@@ -168,3 +167,5 @@ Iterable<YamlScalar> _yamlScalars(YamlNode node) sync* {
     }
   }
 }
+
+typedef _Comment = ({int line, String text});

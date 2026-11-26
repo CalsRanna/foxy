@@ -56,28 +56,26 @@ import 'package:get_it/get_it.dart';
 class FoxyLocalePickerDelegates {
   static final instance = FoxyLocalePickerDelegates._();
 
-  static ApplyDatabaseLocaleChangesUseCase get _applyDatabaseLocaleChanges =>
-      GetIt.instance.get<ApplyDatabaseLocaleChangesUseCase>();
-
   static DatabaseLocaleEditorDelegate get creatureTemplateName =>
       instance._creatureTemplateName;
 
   static DatabaseLocaleEditorDelegate get creatureTemplateTitle =>
       instance._creatureTemplateTitle;
+
   static DbcLocaleFieldEditorDelegate get dbcAchievementCategoryName =>
       instance._dbcAchievementCategoryName;
   static DbcLocaleFieldEditorDelegate get dbcAchievementCriteriaDescription =>
       instance._dbcAchievementCriteriaDescription;
   static DbcLocaleFieldEditorDelegate get dbcAchievementDescription =>
       instance._dbcAchievementDescription;
-
   static DbcLocaleFieldEditorDelegate get dbcAchievementReward =>
       instance._dbcAchievementReward;
+
   static DbcLocaleFieldEditorDelegate get dbcAchievementTitle =>
       instance._dbcAchievementTitle;
-
   static DbcLocaleFieldEditorDelegate get dbcAreaTableAreaName =>
       instance._dbcAreaTableAreaName;
+
   static DbcLocaleFieldEditorDelegate get dbcCharTitlesName =>
       instance._dbcCharTitlesName;
   static DbcLocaleFieldEditorDelegate get dbcCharTitlesName1 =>
@@ -140,37 +138,37 @@ class FoxyLocalePickerDelegates {
       instance._gameObjectName;
   static CompositeKeyLocaleEditorDelegate get gossipMenuOptionBoxText =>
       instance._gossipMenuOptionBoxText;
-
   static CompositeKeyLocaleEditorDelegate get gossipMenuOptionOptionText =>
       instance._gossipMenuOptionOptionText;
+
   static DatabaseLocaleEditorDelegate get itemDescription =>
       instance._itemDescription;
   static DatabaseLocaleEditorDelegate get itemName => instance._itemName;
   static DatabaseLocaleEditorDelegate get npcTextText00 =>
       instance._npcTextText00;
-
   static DatabaseLocaleEditorDelegate get npcTextText01 =>
       instance._npcTextText01;
+
   static DatabaseLocaleEditorDelegate get npcTextText10 =>
       instance._npcTextText10;
-
   static DatabaseLocaleEditorDelegate get npcTextText11 =>
       instance._npcTextText11;
+
   static DatabaseLocaleEditorDelegate get npcTextText20 =>
       instance._npcTextText20;
-
   static DatabaseLocaleEditorDelegate get npcTextText21 =>
       instance._npcTextText21;
+
   static DatabaseLocaleEditorDelegate get npcTextText30 =>
       instance._npcTextText30;
-
   static DatabaseLocaleEditorDelegate get npcTextText31 =>
       instance._npcTextText31;
+
   static DatabaseLocaleEditorDelegate get npcTextText40 =>
       instance._npcTextText40;
-
   static DatabaseLocaleEditorDelegate get npcTextText41 =>
       instance._npcTextText41;
+
   static DatabaseLocaleEditorDelegate get npcTextText50 =>
       instance._npcTextText50;
   static DatabaseLocaleEditorDelegate get npcTextText51 =>
@@ -205,9 +203,11 @@ class FoxyLocalePickerDelegates {
       instance._questTemplateObjectiveText3;
   static DatabaseLocaleEditorDelegate get questTemplateObjectiveText4 =>
       instance._questTemplateObjectiveText4;
-
   static DatabaseLocaleEditorDelegate get questTemplateTitle =>
       instance._questTemplateTitle;
+
+  static ApplyDatabaseLocaleChangesUseCase get _applyDatabaseLocaleChanges =>
+      GetIt.instance.get<ApplyDatabaseLocaleChangesUseCase>();
   late final _creatureTemplateName = _creatureTemplateField('name', '名称');
 
   late final _creatureTemplateTitle = _creatureTemplateField('title', '称号');

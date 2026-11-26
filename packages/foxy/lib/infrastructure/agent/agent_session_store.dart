@@ -206,26 +206,6 @@ class AgentSessionStore {
     return _defaultTitle;
   }
 
-  /// Synthesizes the protocol user item for a trailing user message that was
-  /// persisted before the run could append its item (crash between send and
-  /// the first model round).
-  void _repairTrailingUserItem(
-    List<Map<String, Object?>> entries,
-    List<Map<String, Object?>> items,
-  ) {
-    for (final entry in entries.reversed) {
-      // The protocol item is stored on or after its transcript row.
-      final item = entry['item'];
-      if (item is Map<String, Object?> && item['role'] == 'user') return;
-      if (entry['type'] == 'message' &&
-          entry['role'] == AgentChatRole.user.name) {
-        final message = AgentChatMessage.fromJson(entry);
-        items.add({'role': 'user', 'content': message.text});
-        return;
-      }
-    }
-  }
-
   List<Map<String, Object?>> _repairInterruptedToolCalls(
     String id,
     List<Map<String, Object?>> items,
@@ -264,6 +244,26 @@ class AgentSessionStore {
       );
     }
     return replay;
+  }
+
+  /// Synthesizes the protocol user item for a trailing user message that was
+  /// persisted before the run could append its item (crash between send and
+  /// the first model round).
+  void _repairTrailingUserItem(
+    List<Map<String, Object?>> entries,
+    List<Map<String, Object?>> items,
+  ) {
+    for (final entry in entries.reversed) {
+      // The protocol item is stored on or after its transcript row.
+      final item = entry['item'];
+      if (item is Map<String, Object?> && item['role'] == 'user') return;
+      if (entry['type'] == 'message' &&
+          entry['role'] == AgentChatRole.user.name) {
+        final message = AgentChatMessage.fromJson(entry);
+        items.add({'role': 'user', 'content': message.text});
+        return;
+      }
+    }
   }
 
   File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));

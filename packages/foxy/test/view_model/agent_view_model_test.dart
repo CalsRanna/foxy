@@ -16,12 +16,6 @@ import 'package:http/testing.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
-const _testProvider = AgentProviderConfig(
-  baseUrl: 'https://example.test/v1',
-  apiKey: 'test-key',
-  model: 'test-model',
-);
-
 void main() {
   late Directory tempDir;
   late AgentSessionStore store;
@@ -603,6 +597,12 @@ void main() {
   });
 }
 
+const _testProvider = AgentProviderConfig(
+  baseUrl: 'https://example.test/v1',
+  apiKey: 'test-key',
+  model: 'test-model',
+);
+
 AgentViewModel _buildViewModel(
   AgentChatUseCase chat,
   AgentSessionStore store, {
@@ -630,6 +630,33 @@ AgentViewModel _buildViewModel(
   );
 }
 
+final class _CatalogDriver extends Fake implements DatabaseDriver {
+  final tables = <String>[];
+  var readCount = 0;
+
+  @override
+  final SqlGrammar grammar = MysqlGrammar();
+
+  @override
+  Future<List<LaconicResult>> select(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
+    expect(sql, contains('information_schema.columns'));
+    readCount++;
+    return [
+      for (final table in tables)
+        LaconicResult.fromMap({
+          'TABLE_SCHEMA': 'foxy',
+          'TABLE_NAME': table,
+          'TABLE_TYPE': 'BASE TABLE',
+          'COLUMN_NAME': 'ID',
+          'DATA_TYPE': 'int',
+        }),
+    ];
+  }
+}
+
 final class _FakeChat extends AgentChatUseCase {
   final controller = StreamController<AgentEvent>();
   var closeCount = 0;
@@ -648,26 +675,6 @@ final class _FakeChat extends AgentChatUseCase {
   Stream<AgentEvent> run(AgentSession session, String message) {
     session.addUserMessage(message);
     return controller.stream;
-  }
-}
-
-final class _PendingTool extends AgentTool {
-  final started = Completer<void>();
-  final result = Completer<String>();
-
-  @override
-  String get description => 'Waits for a result.';
-
-  @override
-  Map<String, Object?> get inputSchema => const {'type': 'object'};
-
-  @override
-  String get name => 'pending_tool';
-
-  @override
-  Future<String> call(Map<String, Object?> arguments) {
-    started.complete();
-    return result.future;
   }
 }
 
@@ -700,29 +707,22 @@ final class _MemoryConfigUtil extends ConfigUtil {
       _data.addAll(values);
 }
 
-final class _CatalogDriver extends Fake implements DatabaseDriver {
-  final tables = <String>[];
-  var readCount = 0;
+final class _PendingTool extends AgentTool {
+  final started = Completer<void>();
+  final result = Completer<String>();
 
   @override
-  final SqlGrammar grammar = MysqlGrammar();
+  String get description => 'Waits for a result.';
 
   @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    expect(sql, contains('information_schema.columns'));
-    readCount++;
-    return [
-      for (final table in tables)
-        LaconicResult.fromMap({
-          'TABLE_SCHEMA': 'foxy',
-          'TABLE_NAME': table,
-          'TABLE_TYPE': 'BASE TABLE',
-          'COLUMN_NAME': 'ID',
-          'DATA_TYPE': 'int',
-        }),
-    ];
+  Map<String, Object?> get inputSchema => const {'type': 'object'};
+
+  @override
+  String get name => 'pending_tool';
+
+  @override
+  Future<String> call(Map<String, Object?> arguments) {
+    started.complete();
+    return result.future;
   }
 }

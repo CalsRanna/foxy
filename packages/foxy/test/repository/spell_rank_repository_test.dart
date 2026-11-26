@@ -40,13 +40,6 @@ void main() {
   });
 }
 
-class _Repository extends SpellRankRepository {
-  @override
-  final Laconic laconic;
-
-  _Repository(this.laconic);
-}
-
 class _RankDriver extends Fake implements DatabaseDriver {
   static const _rows = [
     {'first_spell_id': 133, 'spell_id': 133, 'rank': 1},
@@ -82,4 +75,11 @@ class _RankDriver extends Fake implements DatabaseDriver {
     }
     return rows.map(LaconicResult.fromMap).toList();
   }
+}
+
+class _Repository extends SpellRankRepository {
+  @override
+  final Laconic laconic;
+
+  _Repository(this.laconic);
 }

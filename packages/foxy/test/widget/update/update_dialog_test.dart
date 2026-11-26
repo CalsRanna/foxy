@@ -154,24 +154,6 @@ void main() {
   });
 }
 
-final class _PendingDownloadService extends UpdateService {
-  final finish = Completer<void>();
-
-  @override
-  Future<Directory> prepareUpdate(
-    UpdateManifestInfo update, {
-    required Directory appDir,
-    void Function(double fraction)? onProgress,
-    UpdateCancelToken? cancelToken,
-  }) async {
-    await finish.future;
-    if (cancelToken?.isCanceled ?? false) {
-      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by user');
-    }
-    return appDir;
-  }
-}
-
 Rect _dialogFrame(WidgetTester tester) {
   return tester.getRect(
     find
@@ -188,4 +170,22 @@ void _expectRightAligned(WidgetTester tester, String buttonText) {
   final button = tester.getRect(find.widgetWithText(ShadButton, buttonText));
   expect(frame.width, 480);
   expect(button.right, frame.right - 24);
+}
+
+final class _PendingDownloadService extends UpdateService {
+  final finish = Completer<void>();
+
+  @override
+  Future<Directory> prepareUpdate(
+    UpdateManifestInfo update, {
+    required Directory appDir,
+    void Function(double fraction)? onProgress,
+    UpdateCancelToken? cancelToken,
+  }) async {
+    await finish.future;
+    if (cancelToken?.isCanceled ?? false) {
+      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by user');
+    }
+    return appDir;
+  }
 }
