@@ -13,6 +13,8 @@ import 'package:foxy/view_model/agent_view_model.dart';
 import 'package:foxy_agent/foxy_agent.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:laconic/laconic.dart';
+import 'package:laconic_mysql/laconic_mysql.dart';
 
 const _testProvider = AgentProviderConfig(
   baseUrl: 'https://example.test/v1',
@@ -32,6 +34,40 @@ void main() {
   tearDown(() async {
     await store.list();
     await tempDir.delete(recursive: true);
+  });
+
+  test('the next send sees DBC tables added to the database', () async {
+    final config = _MemoryConfigUtil();
+    final driver = _CatalogDriver();
+    final firstChat = _FakeChat();
+    final secondChat = _FakeChat();
+    final catalogs = <TableCatalog>[];
+    final viewModel = AgentViewModel(
+      configUseCase: AgentProviderConfigUseCase(config),
+      dataSource: AgentReadOnlyDataSource(config, laconic: Laconic(driver)),
+      sessionStore: store,
+      titleGenerator: (_, _) async => null,
+      chatFactory:
+          ({required provider, required catalog, required dataSource}) {
+            catalogs.add(catalog);
+            return catalogs.length == 1 ? firstChat : secondChat;
+          },
+    );
+    addTearDown(viewModel.dispose);
+    await viewModel.initSignals();
+
+    viewModel.draftController.init('有哪些 DBC 表？');
+    await viewModel.send();
+    await firstChat.controller.close();
+    expect(catalogs.single.find('foxy.dbc_spell'), isNull);
+
+    driver.tables.add('dbc_spell');
+    viewModel.draftController.init('现在有哪些 DBC 表？');
+    await viewModel.send();
+    await secondChat.controller.close();
+
+    expect(catalogs.last.find('foxy.dbc_spell'), isNotNull);
+    expect(driver.readCount, 2);
   });
 
   test('interleaves assistant text and tool calls in model order', () async {
@@ -641,7 +677,7 @@ final class _FakeDataSource extends AgentReadOnlyDataSource {
   _FakeDataSource({this._firstCatalog}) : super(ConfigUtil());
 
   @override
-  Future<TableCatalog> getCatalog({bool refresh = false}) async {
+  Future<TableCatalog> getCatalog() async {
     final firstCatalog = _firstCatalog;
     _firstCatalog = null;
     return firstCatalog == null ? const TableCatalog([]) : await firstCatalog;
@@ -650,6 +686,7 @@ final class _FakeDataSource extends AgentReadOnlyDataSource {
 
 final class _MemoryConfigUtil extends ConfigUtil {
   final _data = <String, dynamic>{
+    'database': 'acore_world',
     'agent_base_url': 'https://example.test/v1',
     'agent_api_key': 'test-key',
     'agent_model': 'test-model',
@@ -661,4 +698,31 @@ final class _MemoryConfigUtil extends ConfigUtil {
   @override
   Future<void> update(Map<String, dynamic> values) async =>
       _data.addAll(values);
+}
+
+final class _CatalogDriver extends Fake implements DatabaseDriver {
+  final tables = <String>[];
+  var readCount = 0;
+
+  @override
+  final SqlGrammar grammar = MysqlGrammar();
+
+  @override
+  Future<List<LaconicResult>> select(
+    String sql, [
+    List<Object?> params = const [],
+  ]) async {
+    expect(sql, contains('information_schema.columns'));
+    readCount++;
+    return [
+      for (final table in tables)
+        LaconicResult.fromMap({
+          'TABLE_SCHEMA': 'foxy',
+          'TABLE_NAME': table,
+          'TABLE_TYPE': 'BASE TABLE',
+          'COLUMN_NAME': 'ID',
+          'DATA_TYPE': 'int',
+        }),
+    ];
+  }
 }

@@ -64,6 +64,38 @@ void main() {
   );
 
   test(
+    'loads newly added tables and updated columns on the next read',
+    () async {
+      final driver = _ReadOnlyDriver([
+        _row('foxy', 'dbc_spell', 'ID', 'int', 'PRI', ''),
+        _row('foxy', 'dbc_spell', 'old_column', 'int', '', ''),
+      ]);
+      final source = AgentReadOnlyDataSource(
+        _AgentConfig({'database': 'acore_world'}),
+        laconic: Laconic(driver),
+      );
+      final before = await source.getCatalog();
+      expect(before.find('foxy.dbc_spell_icon'), isNull);
+      expect(
+        before.find('foxy.dbc_spell')!.findColumn('old_column'),
+        isNotNull,
+      );
+
+      driver.catalogRows
+        ..removeLast()
+        ..addAll([
+          _row('foxy', 'dbc_spell', 'SpellIconID', 'int', '', ''),
+          _row('foxy', 'dbc_spell_icon', 'ID', 'int', 'PRI', ''),
+        ]);
+
+      final after = await source.getCatalog();
+      expect(after.find('foxy.dbc_spell_icon'), isNotNull);
+      final spell = after.find('foxy.dbc_spell')!;
+      expect(spell.columns.map((column) => column.name), ['ID', 'SpellIconID']);
+    },
+  );
+
+  test(
     'reads configured characters and auth tables without selecting credentials',
     () async {
       final driver = _ReadOnlyDriver([

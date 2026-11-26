@@ -43,16 +43,12 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
   final ConfigUtil _configUtil;
   final Laconic? _laconic;
 
-  TableCatalog? _catalog;
-
   AgentReadOnlyDataSource(this._configUtil, {this._laconic});
 
   Laconic get _database => _laconic ?? Database.instance.laconic;
 
-  /// Loads (and caches) the table catalog from `information_schema`.
-  Future<TableCatalog> getCatalog({bool refresh = false}) async {
-    final cached = _catalog;
-    if (!refresh && cached != null) return cached;
+  /// Loads the current table catalog for a new agent run.
+  Future<TableCatalog> getCatalog() async {
     final config = await _configUtil.load();
     final worldDatabase = _databaseName(config['database']);
     if (worldDatabase == null) {
@@ -67,7 +63,8 @@ class AgentReadOnlyDataSource implements ReadOnlyDataSource {
         _databaseName(config['auth_database']) ?? _defaultAuthDatabase;
     final rows = await _database.select(
       '''
-select c.*, t.TABLE_TYPE
+select c.TABLE_SCHEMA, c.TABLE_NAME, c.COLUMN_NAME, c.DATA_TYPE,
+       c.COLUMN_KEY, c.COLUMN_COMMENT, t.TABLE_TYPE
 from information_schema.columns c
 join information_schema.tables t
   on c.TABLE_SCHEMA = t.TABLE_SCHEMA and c.TABLE_NAME = t.TABLE_NAME
@@ -78,15 +75,13 @@ order by c.TABLE_SCHEMA, c.TABLE_NAME, c.ORDINAL_POSITION
 ''',
       [worldDatabase, _foxySchema, charactersDatabase, authDatabase],
     );
-    final catalog = buildCatalog(
+    return buildCatalog(
       rows.map((row) => row.toMap()).toList(),
       worldDatabase: worldDatabase,
       charactersDatabase: charactersDatabase,
       authDatabase: authDatabase,
       semantics: AgentFieldSemantics.values,
     );
-    _catalog = catalog;
-    return catalog;
   }
 
   @override
