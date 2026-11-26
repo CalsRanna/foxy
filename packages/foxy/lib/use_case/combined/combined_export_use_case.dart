@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/database/saved_mysql_config.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/model/dbc/dbc_export_table.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
@@ -91,7 +92,7 @@ class CombinedExportUseCase {
     await DbcFileWriter.ensureWritableDirectory(dbcOutputDirectory);
     await DbcFileWriter.ensureWritableDirectory(mpqDirectory);
 
-    final mysqlConfig = await DbcExportShared.mysqlConfigFromSaved(_configUtil);
+    final mysqlConfig = SavedMysqlConfig.fromMap(await _configUtil.load());
 
     final tempDir = await Directory.systemTemp.createTemp('foxy_dbc_export_');
     try {

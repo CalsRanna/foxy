@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/database/saved_mysql_config.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/model/dbc/dbc_export_table.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/repository/dbc_export_registry.dart';
 import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
 import 'package:foxy_game_file/foxy_game_file.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 
 final class MpqExportInput {
@@ -73,16 +73,7 @@ class MpqExportUseCase {
     }
     await DbcFileWriter.ensureWritableDirectory(outputDirectory);
 
-    final config = await _configUtil.load();
-    final mysqlConfig = MysqlConfig(
-      host: config['host']?.toString() ?? '127.0.0.1',
-      port: _parsePort(config['port']),
-      database: config['database']?.toString() ?? 'acore_world',
-      username: config['username']?.toString() ?? 'acore',
-      password: config['password']?.toString() ?? 'acore',
-      useSsl: config['use_ssl'] == true,
-      allowPublicKeyRetrieval: config['use_ssl'] != true,
-    );
+    final mysqlConfig = SavedMysqlConfig.fromMap(await _configUtil.load());
 
     DbcSyncResult? result;
     await for (final progress in _dbcSyncUtil.exportMpq(
@@ -101,9 +92,4 @@ class MpqExportUseCase {
 
   Future<List<DbcExportTable>> loadTables() =>
       DbcExportShared.loadDbcExportTables(_registry);
-
-  static int _parsePort(Object? value) {
-    if (value is int) return value;
-    return int.tryParse(value?.toString() ?? '') ?? 3306;
-  }
 }

@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/database/saved_mysql_config.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
 
 final class ImportDbcInput {
   final String directory;
@@ -71,19 +71,7 @@ final class ImportDbcUseCase {
         return _cancelledResult;
       }
 
-      final mysqlConfig = MysqlConfig(
-        host: config['host']?.toString() ?? '127.0.0.1',
-        port: _parsePort(config['port']),
-        database: config['database']?.toString() ?? 'acore_world',
-        username: config['username']?.toString() ?? 'acore',
-        password: config['password']?.toString() ?? 'acore',
-        // The TLS switch follows the saved config (`use_ssl: true` opt-in);
-        // off by default. Non-TLS needs RSA public-key retrieval for MySQL
-        // 8's caching_sha2_password (laconic_mysql 3.2.0 disables it by
-        // default).
-        useSsl: config['use_ssl'] == true,
-        allowPublicKeyRetrieval: config['use_ssl'] != true,
-      );
+      final mysqlConfig = SavedMysqlConfig.fromMap(config);
 
       DbcSyncResult? result;
       await for (final progress in _dbcSyncUtil.import(
@@ -100,10 +88,5 @@ final class ImportDbcUseCase {
     } finally {
       _executing = false;
     }
-  }
-
-  static int _parsePort(Object? value) {
-    if (value is int) return value;
-    return int.tryParse(value?.toString() ?? '') ?? 3306;
   }
 }

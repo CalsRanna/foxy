@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/database/saved_mysql_config.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/model/dbc/dbc_export_table.dart';
 import 'package:foxy/model/dbc/dbc_sync_progress.dart';
@@ -54,7 +55,7 @@ final class ExportDbcUseCase {
     }
     await DbcFileWriter.ensureWritableDirectory(outputDirectory);
 
-    final mysqlConfig = await DbcExportShared.mysqlConfigFromSaved(_configUtil);
+    final mysqlConfig = SavedMysqlConfig.fromMap(await _configUtil.load());
 
     // Files are written into a temp directory first, then copied over:
     // nothing lands in the target before it is fully written, and the same
