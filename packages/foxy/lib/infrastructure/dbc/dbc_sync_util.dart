@@ -111,7 +111,9 @@ class DbcSyncUtil {
       try {
         await _cleanupStaging(job.jobId).timeout(const Duration(seconds: 5));
       } on TimeoutException {
-        LoggerUtil.instance.w('DBC 取消后清理 staging 表超时: ${job.jobId}');
+        LoggerUtil.instance.w(
+          'Timed out cleaning up DBC staging tables after cancellation: ${job.jobId}',
+        );
       }
       final finish = job.finish;
       if (finish != null) {
@@ -499,7 +501,9 @@ class DbcSyncUtil {
           .join(', ');
       await Database.instance.laconic.statement('drop table if exists $tables');
     } catch (error) {
-      LoggerUtil.instance.w('DBC 取消后清理 staging/backup 表失败: $error');
+      LoggerUtil.instance.w(
+        'Failed to clean up DBC staging/backup tables after cancellation: $error',
+      );
     }
   }
 
@@ -698,7 +702,7 @@ class DbcSyncUtil {
         isolate.kill(priority: Isolate.immediate);
       }
     } catch (error) {
-      LoggerUtil.instance.e('DBC 导出异常: $error');
+      LoggerUtil.instance.e('DBC export failed: $error');
       await finish(
         DbcSyncResult(
           operation: DbcSyncOperation.export,
@@ -900,7 +904,7 @@ class DbcSyncUtil {
         isolate.kill(priority: Isolate.immediate);
       }
     } catch (error) {
-      LoggerUtil.instance.e('DBC 导入异常: $error');
+      LoggerUtil.instance.e('DBC import failed: $error');
       await finish(
         DbcSyncResult(
           operation: DbcSyncOperation.import,

@@ -5,7 +5,8 @@ Foxy 的项目级**硬性约定**（可判定的规则，不是建议）。行�
 ## 1. 语言与文案
 
 - 代码注释一律英文（`//`、`///`、yaml `#`）。CI 的 `foxy_lint` 测试会拦截 Dart 和 YAML 注释中的汉字与中文标点。
-- UI 文案、日志消息、文档（README / AGENTS / CONVENTIONS / doc）用中文。
+- UI 文案、文档（README / AGENTS / CONVENTIONS / doc）用中文。
+- 日志消息一律英文，包括代码生成的日志与命令行工具的诊断输出。
 - 异常消息一律英文 —— 由 lint `no_chinese_throw` 强制。
 - 导入统一 `package:` 绝对路径，禁止相对导入（`always_use_package_imports`，在 `packages/foxy/analysis_options.yaml` 开启）。
 - 提交信息 `type(scope): description`，描述用英文，如 `feat(codegen): add parent-key query layer`；主干分支 `main`。

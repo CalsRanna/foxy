@@ -30,8 +30,8 @@ class MigrationRunner {
       // database/table creation during bootstrap; the log adds a permission
       // hint so users know extra grants on the foxy database are needed.
       LoggerUtil.instance.e(
-        '迁移失败:检查数据库账号是否拥有 foxy 库的 CREATE/ALTER/RENAME 权限。'
-        '原始错误: $error',
+        'Migration failed. Check that the database account has CREATE, ALTER, '
+        'and RENAME privileges on the foxy database.',
         error: error,
         stackTrace: stackTrace,
       );

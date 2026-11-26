@@ -47,7 +47,7 @@ class ActivityLogRepository with RepositoryMixin {
     try {
       await storeActivityLog(log);
     } catch (e) {
-      LoggerUtil.instance.e('写入活动日志失败: $e');
+      LoggerUtil.instance.e('Failed to write activity log: $e');
     }
   }
 }

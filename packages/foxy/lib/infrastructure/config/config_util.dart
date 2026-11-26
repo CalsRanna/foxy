@@ -78,14 +78,14 @@ class ConfigUtil {
         // like the unparseable case.
         return await _backupCorruptFile(
           file,
-          'config.yaml 顶层不是配置映射,已备份为 config.yaml.bak',
+          'The root of config.yaml is not a mapping. Backing up to config.yaml.bak.',
         );
       }
       return Map<String, dynamic>.from(yaml);
     } on YamlException catch (error) {
       return _backupCorruptFile(
         file,
-        'config.yaml 解析失败,已备份为 config.yaml.bak: $error',
+        'Failed to parse config.yaml. Backing up to config.yaml.bak: $error',
       );
     }
   }

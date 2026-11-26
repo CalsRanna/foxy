@@ -310,7 +310,7 @@ mixin _SkinningLootTemplateLinkedListViewModelMixin on FieldControllerMixin {
       if (token == _refreshToken) {
         errorMessage.value = FoxyExceptions.message(error);
         refreshError.value = errorMessage.value;
-        LoggerUtil.instance.e('刷新子表列表失败: $error');
+        LoggerUtil.instance.e('Failed to refresh child table list: $error');
       }
     } finally {
       if (token == _refreshToken) loading.value = false;

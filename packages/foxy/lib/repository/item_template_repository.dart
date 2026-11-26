@@ -177,7 +177,7 @@ class ItemTemplateRepository
       // The DBC row never existed (e.g. legacy item); nothing to remove.
     } catch (error, stackTrace) {
       LoggerUtil.instance.e(
-        '删除 Item.dbc 条目失败 (entry=$key)',
+        'Failed to delete Item.dbc entry (entry=$key)',
         error: error,
         stackTrace: stackTrace,
       );
@@ -199,7 +199,7 @@ class ItemTemplateRepository
       }
     } catch (error, stackTrace) {
       LoggerUtil.instance.e(
-        '同步 Item.dbc 失败 (entry=${item.entry})',
+        'Failed to sync Item.dbc (entry=${item.entry})',
         error: error,
         stackTrace: stackTrace,
       );

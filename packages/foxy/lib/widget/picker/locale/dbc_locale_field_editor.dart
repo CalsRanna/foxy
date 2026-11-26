@@ -45,7 +45,11 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     try {
       values = await onLoad();
     } catch (e, s) {
-      LoggerUtil.instance.e('加载 DBC 本地化失败: $title', error: e, stackTrace: s);
+      LoggerUtil.instance.e(
+        'Failed to load DBC translations for ${field.tableName}.${field.columnPrefix} (entry=$entry)',
+        error: e,
+        stackTrace: s,
+      );
       if (!context.mounted) return null;
       DialogUtil.instance.error('加载失败: ${FoxyExceptions.message(e)}');
       return null;
@@ -187,7 +191,8 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
       }
     } catch (e, s) {
       LoggerUtil.instance.e(
-        '保存 DBC 本地化失败: ${widget.title}',
+        'Failed to save DBC translations for '
+        '${widget.field.tableName}.${widget.field.columnPrefix} (entry=${widget.entry})',
         error: e,
         stackTrace: s,
       );

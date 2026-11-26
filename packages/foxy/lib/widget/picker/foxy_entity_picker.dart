@@ -307,7 +307,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
         }
       });
     } catch (e) {
-      LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
+      LoggerUtil.instance.e('Failed to search entities of type $T: $e');
       if (!mounted || seq != _searchSeq) return;
       // The UI only shows user copy mapped by FoxyExceptions.message; raw
       // exception strings go to the log.

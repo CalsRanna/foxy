@@ -152,7 +152,9 @@ class UpdateSwapper {
           await dir.delete(recursive: true);
         }
       } catch (error) {
-        LoggerUtil.instance.w('清理更新临时目录失败: $error');
+        LoggerUtil.instance.w(
+          'Failed to clean up temporary update directory: $error',
+        );
       }
     });
   }

@@ -112,7 +112,7 @@ class UpdateViewModel {
       final info = await PackageInfo.fromPlatform();
       currentVersion.value = '${info.version}+${info.buildNumber}';
     } catch (error) {
-      LoggerUtil.instance.w('读取版本信息失败: $error');
+      LoggerUtil.instance.w('Failed to read version information: $error');
     }
   }
 
@@ -126,7 +126,7 @@ class UpdateViewModel {
     final updaterExe = File(p.join(appDir.path, UpdateSwapper.updaterExeName));
     if (!await updaterExe.exists()) {
       errorMessage.value = '更新程序文件缺失，请重新下载完整版本';
-      LoggerUtil.instance.e('更新辅助程序缺失: ${updaterExe.path}');
+      LoggerUtil.instance.e('Update helper is missing: ${updaterExe.path}');
       return;
     }
     try {
@@ -143,7 +143,7 @@ class UpdateViewModel {
       exit(0);
     } catch (error) {
       errorMessage.value = '启动更新程序失败，请重试';
-      LoggerUtil.instance.e('启动更新辅助程序失败: $error');
+      LoggerUtil.instance.e('Failed to launch update helper: $error');
     }
   }
 
@@ -169,7 +169,7 @@ class UpdateViewModel {
       availableUpdate.value = null;
       errorMessage.value = FoxyExceptions.message(error);
       if (!manual) {
-        LoggerUtil.instance.w('自动检查更新失败: $error');
+        LoggerUtil.instance.w('Automatic update check failed: $error');
       }
       return false;
     } finally {

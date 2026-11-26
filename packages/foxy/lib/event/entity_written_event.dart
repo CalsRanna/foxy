@@ -33,7 +33,7 @@ class EntityWrittenEvent {
         }
         deliver(log.copyWith(details: log.details ?? capture?.details));
       } catch (error) {
-        LoggerUtil.instance.e('发布活动日志失败', error: error);
+        LoggerUtil.instance.e('Failed to publish activity log', error: error);
       }
     });
   }

@@ -252,7 +252,11 @@ mixin _QuestTemplateAddonLinkedDetailViewModelMixin on FieldControllerMixin {
       if (token != _refreshToken || isDisposed) return;
       errorMessage.value = FoxyExceptions.message(error);
       refreshError.value = errorMessage.value;
-      LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
+      LoggerUtil.instance.e(
+        'Failed to load single-row editor',
+        error: error,
+        stackTrace: stackTrace,
+      );
     } finally {
       if (token == _refreshToken && !isDisposed) loading.value = false;
     }

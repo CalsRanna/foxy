@@ -455,7 +455,7 @@ class NpcTextLinkedDetailViewModel with FieldControllerMixin {
       if (token != _refreshToken) return;
       errorMessage.value = FoxyExceptions.message(error);
       LoggerUtil.instance.e(
-        '加载 NPC 文本失败',
+        'Failed to load NPC text',
         error: error,
         stackTrace: stackTrace,
       );

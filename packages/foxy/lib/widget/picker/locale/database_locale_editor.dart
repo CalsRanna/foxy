@@ -58,7 +58,11 @@ class DatabaseLocaleEditor extends StatefulWidget {
     try {
       loadedRows = await onLoad();
     } catch (e, s) {
-      LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
+      LoggerUtil.instance.e(
+        'Failed to load database translations (entry=$entry, fields=${fields.join(', ')})',
+        error: e,
+        stackTrace: s,
+      );
       if (!context.mounted) return null;
       DialogUtil.instance.error('加载失败: ${FoxyExceptions.message(e)}');
       return null;
@@ -258,7 +262,8 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       }
     } catch (e, s) {
       LoggerUtil.instance.e(
-        '保存多语言失败: ${widget.title}',
+        'Failed to save database translations '
+        '(entry=${widget.entry}, fields=${widget.fields.join(', ')})',
         error: e,
         stackTrace: s,
       );

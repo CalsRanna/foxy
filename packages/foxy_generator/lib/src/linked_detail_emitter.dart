@@ -239,7 +239,7 @@ final class LinkedDetailEmitter {
       ..writeln('      refreshError.value = errorMessage.value;')
       ..writeln(
         '      LoggerUtil.instance.e('
-        "'加载单行编辑器失败', error: error, stackTrace: stackTrace);",
+        "'Failed to load single-row editor', error: error, stackTrace: stackTrace);",
       )
       ..writeln('    } finally {')
       ..writeln(

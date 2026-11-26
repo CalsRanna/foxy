@@ -67,7 +67,7 @@ abstract final class MakeUpdateManifest {
     final existingPath = options['--existing'];
     if (zipPath == null || tag == null || outPath == null) {
       stderr.writeln(
-        '用法: dart run tool/release/make_update_manifest.dart '
+        'Usage: dart run tool/release/make_update_manifest.dart '
         '--zip <zip> --tag <vX.Y.Z> --out <latest.yaml> '
         '[--notes-out <notes.md>] [--existing <latest.yaml>]',
       );
@@ -82,7 +82,7 @@ abstract final class MakeUpdateManifest {
     final version = _readPubspecVersion();
     final mainTag = _stripPrereleaseSuffix(tag);
     if (!mainTag.startsWith('v') || mainTag.substring(1) != version) {
-      stderr.writeln('tag($tag) 主版本与 pubspec 版本($version)不一致,拒绝生成');
+      stderr.writeln('Tag $tag does not match pubspec version $version.');
       exit(1);
     }
     final isPrerelease = mainTag != tag;
@@ -95,7 +95,7 @@ abstract final class MakeUpdateManifest {
     // 3. zip checksum.
     final zipFile = File(zipPath);
     if (!await zipFile.exists()) {
-      stderr.writeln('zip 不存在: $zipPath');
+      stderr.writeln('ZIP file does not exist: $zipPath');
       exit(1);
     }
     final sha256Hex = (await sha256.bind(zipFile.openRead()).first).bytes
@@ -136,7 +136,7 @@ abstract final class MakeUpdateManifest {
     }
 
     stdout.writeln(
-      'latest.yaml 已生成: version=$version build=$buildNumber '
+      'Generated latest.yaml: version=$version build=$buildNumber '
       'isPrerelease=$isPrerelease releases=${kept.length} '
       'size=$sizeBytes sha256=${sha256Hex.substring(0, 12)}…',
     );
@@ -181,12 +181,12 @@ abstract final class MakeUpdateManifest {
   static YamlMap _loadPubspec() {
     final file = File('pubspec.yaml');
     if (!file.existsSync()) {
-      stderr.writeln('pubspec.yaml 不存在(请在项目根目录运行)');
+      stderr.writeln('pubspec.yaml does not exist. Run from the project root.');
       exit(1);
     }
     final loaded = loadYaml(file.readAsStringSync());
     if (loaded is! YamlMap) {
-      stderr.writeln('pubspec.yaml 解析失败');
+      stderr.writeln('Failed to parse pubspec.yaml.');
       exit(1);
     }
     return loaded;
@@ -211,7 +211,9 @@ abstract final class MakeUpdateManifest {
   static String _readChangelogSection(String tag) {
     final file = File('CHANGELOG.md');
     if (!file.existsSync()) {
-      stderr.writeln('CHANGELOG.md 不存在,请先补充 $tag 的更新说明');
+      stderr.writeln(
+        'CHANGELOG.md does not exist. Add release notes for $tag.',
+      );
       exit(1);
     }
     final lines = file.readAsLinesSync();
@@ -220,8 +222,8 @@ abstract final class MakeUpdateManifest {
         _findSectionStart(lines, '## ${_stripPrereleaseSuffix(tag)}');
     if (sectionStart == null) {
       stderr.writeln(
-        'CHANGELOG.md 缺少 "$tag" 或 "## ${_stripPrereleaseSuffix(tag)}" 段,'
-        '请先补充更新说明',
+        'CHANGELOG.md is missing a "## $tag" or '
+        '"## ${_stripPrereleaseSuffix(tag)}" section. Add release notes first.',
       );
       exit(1);
     }
@@ -232,7 +234,9 @@ abstract final class MakeUpdateManifest {
     }
     final notes = section.join('\n').trim();
     if (notes.isEmpty) {
-      stderr.writeln('CHANGELOG.md 的 "## $tag" 段为空,请补充更新说明');
+      stderr.writeln(
+        'The "## $tag" section in CHANGELOG.md is empty. Add release notes.',
+      );
       exit(1);
     }
     return notes;
@@ -264,7 +268,9 @@ abstract final class MakeUpdateManifest {
       }
       return result;
     } catch (error) {
-      stderr.writeln('解析现有清单失败,仅保留当前条目: $error');
+      stderr.writeln(
+        'Failed to parse existing manifest. Keeping only the current release: $error',
+      );
       return const [];
     }
   }
@@ -273,7 +279,7 @@ abstract final class MakeUpdateManifest {
     final pubspec = _loadPubspec();
     final version = pubspec['version'];
     if (version is! String) {
-      stderr.writeln('pubspec.yaml 缺少 version 字段');
+      stderr.writeln('pubspec.yaml is missing the version field.');
       exit(1);
     }
     final plus = version.indexOf('+');
@@ -284,7 +290,7 @@ abstract final class MakeUpdateManifest {
     final pubspec = _loadPubspec();
     final version = pubspec['version'];
     if (version is! String) {
-      stderr.writeln('pubspec.yaml 缺少 version 字段');
+      stderr.writeln('pubspec.yaml is missing the version field.');
       exit(1);
     }
     final plus = version.indexOf('+');

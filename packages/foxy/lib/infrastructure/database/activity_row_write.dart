@@ -77,7 +77,10 @@ final class ActivityRowWrite {
       return rows.firstOrNull?.toMap();
     } on LaconicException catch (error) {
       if (error.code == '1213' || error.code == '1205') rethrow;
-      LoggerUtil.instance.e('读取活动日志差异失败', error: error);
+      LoggerUtil.instance.e(
+        'Failed to read activity log changes',
+        error: error,
+      );
       return null;
     }
   }

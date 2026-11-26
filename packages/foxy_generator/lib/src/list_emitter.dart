@@ -119,7 +119,9 @@ final class ListEmitter {
       ..writeln('      total.value = nextTotal;')
       ..writeln('    } catch (error) {')
       ..writeln('      if (token != _refreshToken) return;')
-      ..writeln("      LoggerUtil.instance.e('刷新列表失败: \$error');")
+      ..writeln(
+        "      LoggerUtil.instance.e('Failed to refresh list: \$error');",
+      )
       ..writeln(
         "      errorMessage.value = '刷新列表失败: \${FoxyExceptions.message(error)}';",
       )

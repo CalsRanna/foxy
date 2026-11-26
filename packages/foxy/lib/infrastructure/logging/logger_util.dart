@@ -49,15 +49,20 @@ class _PlainPrinter extends LogPrinter {
   List<String> log(LogEvent event) {
     final level = event.level.name.toUpperCase();
     final time = event.time.toString().substring(0, 19);
+    final error = event.error;
     var message = '[$level][$time] ${event.message}';
-    if (event.error != null) {
-      message += '\nError: ${event.error}';
+    if (error != null) {
+      message += '\nError: $error';
     }
-    if (event.error is Error) {
-      message += '\n${(event.error as Error).stackTrace}';
-    }
-    if (event.stackTrace != null) {
-      message += '\n${event.stackTrace}';
+    if (const bool.fromEnvironment(
+      'FOXY_LOG_STACK_TRACES',
+      defaultValue: true,
+    )) {
+      final stackTrace =
+          event.stackTrace ?? (error is Error ? error.stackTrace : null);
+      if (stackTrace != null) {
+        message += '\n$stackTrace';
+      }
     }
     return [message];
   }

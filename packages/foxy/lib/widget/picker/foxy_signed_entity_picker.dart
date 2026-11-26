@@ -311,7 +311,9 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
         }
       });
     } catch (e) {
-      LoggerUtil.instance.e('${_source.errorLabel}: $e');
+      LoggerUtil.instance.e(
+        'Failed to search signed entities (positive=$_isPositive): $e',
+      );
       if (!mounted || seq != _searchSeq) return;
       setState(() {
         _selectedId = null;

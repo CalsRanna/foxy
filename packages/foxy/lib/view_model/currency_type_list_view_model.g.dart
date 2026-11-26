@@ -129,7 +129,7 @@ mixin _CurrencyTypeListViewModelMixin
       total.value = nextTotal;
     } catch (error) {
       if (token != _refreshToken) return;
-      LoggerUtil.instance.e('刷新列表失败: $error');
+      LoggerUtil.instance.e('Failed to refresh list: $error');
       errorMessage.value = '刷新列表失败: ${FoxyExceptions.message(error)}';
       refreshError.value = errorMessage.value;
     } finally {

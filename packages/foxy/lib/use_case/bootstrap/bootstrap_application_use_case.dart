@@ -113,7 +113,7 @@ final class BootstrapApplicationUseCase {
       });
     } catch (error) {
       configSaved = false;
-      LoggerUtil.instance.e('保存配置文件失败: $error');
+      LoggerUtil.instance.e('Failed to save configuration file: $error');
     }
 
     return BootstrapApplicationResult(

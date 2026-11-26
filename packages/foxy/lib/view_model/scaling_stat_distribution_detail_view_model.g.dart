@@ -84,7 +84,11 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
       persistedKey.value = key;
     } catch (error, stackTrace) {
       errorMessage.value = FoxyExceptions.message(error);
-      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      LoggerUtil.instance.e(
+        'Failed to load details',
+        error: error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     } finally {
       loading.value = false;

@@ -357,7 +357,9 @@ final class LinkedListEmitter {
       ..writeln('      if (token == _refreshToken) {')
       ..writeln('        errorMessage.value = FoxyExceptions.message(error);')
       ..writeln('        refreshError.value = errorMessage.value;')
-      ..writeln("        LoggerUtil.instance.e('刷新子表列表失败: \$error');")
+      ..writeln(
+        "        LoggerUtil.instance.e('Failed to refresh child table list: \$error');",
+      )
       ..writeln('      }')
       ..writeln('    } finally {')
       ..writeln('      if (token == _refreshToken) loading.value = false;')
