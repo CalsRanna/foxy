@@ -24,12 +24,13 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
 
   @override
   Future<SpellRankEntity> createSpellRank(int firstSpellId) async {
+    final resolved = await _getFirstSpellId(firstSpellId) ?? firstSpellId;
     return SpellRankEntity(
-      firstSpellId: firstSpellId,
+      firstSpellId: resolved,
       rank: await nextMaxPlusOne(
         _table,
         'rank',
-        where: {'first_spell_id': firstSpellId},
+        where: {'first_spell_id': resolved},
       ),
     );
   }
@@ -71,7 +72,7 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
           'foxy.dbc_spell_icon as dsi',
           (join) => join.on('ds.SpellIconID', 'dsi.ID'),
         )
-        .where('sr.first_spell_id', firstSpellId)
+        .where('sr.first_spell_id', resolved)
         .orderBy('sr.`rank`')
         .limit(kPageSize)
         .offset((page - 1) * kPageSize)
