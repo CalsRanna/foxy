@@ -122,17 +122,25 @@ void main() {
       },
     );
 
-    test('finds the DBC import entry and reports what it changes', () async {
-      expect(await tool.call({'query': '导入 DBC'}), {
-        'features': [
-          {
-            'name': '导入 DBC 文件',
-            'path': ['设置', '数据工具', '导入 DBC'],
-            'steps': allOf(contains('导入'), contains('覆盖 Foxy 数据库中的对应表')),
-          },
-        ],
-      });
-    });
+    test(
+      'describes replacement before the automatic DBC import step',
+      () async {
+        expect(await tool.call({'query': '导入 DBC'}), {
+          'features': [
+            {
+              'name': '导入 DBC 文件',
+              'path': ['设置', '数据工具', '导入 DBC'],
+              'steps': stringContainsInOrder([
+                '整表替换',
+                'foxy.dbc_*',
+                '设置 → 游戏环境 → 目录设置 → 服务端目录',
+                '点击「导入 DBC」会自动开始导入',
+              ]),
+            },
+          ],
+        });
+      },
+    );
 
     test('returns no GUI path for an unsupported table', () async {
       expect(await tool.call({'query': 'acore_auth.account_banned'}), {
@@ -192,6 +200,7 @@ void main() {
                 contains('所有 DBC 数据只从 foxy.dbc_* 查询'),
                 contains('所需的 DBC 表缺失或整表为空'),
                 contains('调用 find_foxy_feature 搜索「导入 DBC」'),
+                contains('先按工具结果说明自动开始的条件和整表替换范围'),
               ),
             );
             return _completedResponse([

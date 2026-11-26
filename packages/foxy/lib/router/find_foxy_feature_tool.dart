@@ -202,7 +202,11 @@ final class FindFoxyFeatureTool extends AgentTool {
     final steps = switch (entry) {
       SettingEntry.combinedExport =>
         '设置「DBC 输出目录」「MPQ 输出目录」和「MPQ 文件名」，选中要导出的表，再点击「导出」。',
-      SettingEntry.dbcImport => '在弹窗确认服务端 DBC 目录，点击「导入」。导入会覆盖 Foxy 数据库中的对应表。',
+      SettingEntry.dbcImport =>
+        '导入会整表替换与本次导入文件对应的已有 `foxy.dbc_*` 表。'
+            '先在「${RouterMenu.setting.label} → ${SettingSection.environment.label} → '
+            '${DirectoryConfigTarget.groupLabel} → ${DirectoryConfigTarget.serverDir.title}」核对服务端目录。'
+            '已配置 DBC 目录时，点击「${entry.actionLabel}」会自动开始导入。',
       SettingEntry.dbcExport => '在弹窗设置「输出目录」，选中要导出的表，再点击「导出」。',
       SettingEntry.mpqExport => '在弹窗设置「输出目录」和「MPQ 文件名」，选中要打包的表，再点击「导出」。',
       SettingEntry.iconExtract =>
