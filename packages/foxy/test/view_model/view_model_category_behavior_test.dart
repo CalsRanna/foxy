@@ -93,7 +93,10 @@ void main() {
     repository.failFavorite = true;
     await expectLater(viewModel.toggleFavorite(1), throwsStateError);
     expect(viewModel.allFeatures.value.single.isFavorite, isTrue);
-    expect(viewModel.errorMessage.value, contains('更新收藏状态失败'));
+    expect(
+      viewModel.errorMessage.value,
+      startsWith('Failed to update favorite status: '),
+    );
   });
 
   test(
