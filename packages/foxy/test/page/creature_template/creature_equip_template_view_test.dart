@@ -13,35 +13,38 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('装备模板行的武器列显示图标，空槽位不显示占位图标', (tester) async {
-    tester.view.physicalSize = const Size(1600, 800);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    'Equipment rows show weapon icons and leave empty slots without placeholders',
+    (tester) async {
+      tester.view.physicalSize = const Size(1600, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    GetIt.instance.registerSingleton<CreatureEquipTemplateRepository>(
-      _FakeCreatureEquipTemplateRepository(),
-    );
-    GetIt.instance.registerFactory(
-      () => CreatureEquipTemplateLinkedListViewModel(),
-    );
+      GetIt.instance.registerSingleton<CreatureEquipTemplateRepository>(
+        _FakeCreatureEquipTemplateRepository(),
+      );
+      GetIt.instance.registerFactory(
+        () => CreatureEquipTemplateLinkedListViewModel(),
+      );
 
-    await tester.pumpWidget(
-      const ShadApp(
-        home: Scaffold(body: CreatureEquipTemplateView(creatureId: 1)),
-      ),
-    );
-    await tester.pump();
-    await tester.pump();
+      await tester.pumpWidget(
+        const ShadApp(
+          home: Scaffold(body: CreatureEquipTemplateView(creatureId: 1)),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
 
-    expect(tester.takeException(), isNull);
+      expect(tester.takeException(), isNull);
 
-    // The main hand has an icon and name. Empty off-hand and ranged slots show text.
-    final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
-    expect(iconText.iconPath, 'Interface\\Icons\\INV_Sword');
-    expect(iconText.name, '测试武器');
-    expect(find.byType(FoxyIconText), findsOneWidget);
-  });
+      // The main hand has an icon and name. Empty off-hand and ranged slots show text.
+      final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
+      expect(iconText.iconPath, 'Interface\\Icons\\INV_Sword');
+      expect(iconText.name, '测试武器');
+      expect(find.byType(FoxyIconText), findsOneWidget);
+    },
+  );
 }
 
 class _FakeCreatureEquipTemplateRepository

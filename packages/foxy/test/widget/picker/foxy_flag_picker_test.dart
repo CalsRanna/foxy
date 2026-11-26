@@ -6,22 +6,27 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
-  testWidgets('Checkbox 多选只修改草稿，确定后提交组合值', (tester) async {
-    final controller = FlagFieldController()..init(4);
-    await _openPicker(tester, controller);
+  testWidgets(
+    'Checkbox changes edit only the draft and confirmation commits the combined mask',
+    (tester) async {
+      final controller = FlagFieldController()..init(4);
+      await _openPicker(tester, controller);
 
-    await tester.tap(find.byType(ShadCheckbox).at(0));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byType(ShadCheckbox).at(1));
-    await tester.pumpAndSettle();
-    expect(controller.collect(), 4);
+      await tester.tap(find.byType(ShadCheckbox).at(0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(ShadCheckbox).at(1));
+      await tester.pumpAndSettle();
+      expect(controller.collect(), 4);
 
-    await tester.tap(find.text('确定'));
-    await tester.pumpAndSettle();
-    expect(controller.collect(), 7);
-  });
+      await tester.tap(find.text('确定'));
+      await tester.pumpAndSettle();
+      expect(controller.collect(), 7);
+    },
+  );
 
-  testWidgets('双击立即提交该行的标志值，不混入其他已选标志', (tester) async {
+  testWidgets('Double-click immediately commits only that row\'s flag', (
+    tester,
+  ) async {
     final controller = FlagFieldController()..init(4);
     await _openPicker(tester, controller);
 
@@ -34,7 +39,7 @@ void main() {
     expect(find.byType(ShadDialog), findsNothing);
   });
 
-  testWidgets('取消丢弃勾选草稿', (tester) async {
+  testWidgets('Cancel discards the checkbox draft', (tester) async {
     final controller = FlagFieldController()..init(4);
     await _openPicker(tester, controller);
 

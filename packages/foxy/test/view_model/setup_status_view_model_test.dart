@@ -35,30 +35,33 @@ void main() {
     findMpqDir: findMpqDir ?? (_) => null,
   );
 
-  test('prepare 加载目录配置与图标提取标记', () async {
-    final client = Directory(p.join(tempDir.path, 'client'))..createSync();
-    final server = buildServerRoot();
-    await configUtil.update({
-      'client_dir': client.path,
-      'server_dir': server.path,
-      'dbc_dir': p.join(server.path, 'data', 'dbc'),
-      'icons_extracted': true,
-    });
+  test(
+    'prepare loads directory settings and the icon extraction flag',
+    () async {
+      final client = Directory(p.join(tempDir.path, 'client'))..createSync();
+      final server = buildServerRoot();
+      await configUtil.update({
+        'client_dir': client.path,
+        'server_dir': server.path,
+        'dbc_dir': p.join(server.path, 'data', 'dbc'),
+        'icons_extracted': true,
+      });
 
-    final vm = buildVm();
-    await vm.prepare();
+      final vm = buildVm();
+      await vm.prepare();
 
-    expect(vm.clientDir.value, client.path);
-    expect(vm.clientDirExists.value, isTrue);
-    expect(vm.serverDir.value, server.path);
-    expect(vm.serverDirExists.value, isTrue);
-    expect(vm.dbcPath.value, p.join(server.path, 'data', 'dbc'));
-    expect(vm.dbcPathExists.value, isTrue);
-    expect(vm.iconsExtracted.value, isTrue);
-    expect(vm.isSetupComplete, isTrue);
-  });
+      expect(vm.clientDir.value, client.path);
+      expect(vm.clientDirExists.value, isTrue);
+      expect(vm.serverDir.value, server.path);
+      expect(vm.serverDirExists.value, isTrue);
+      expect(vm.dbcPath.value, p.join(server.path, 'data', 'dbc'));
+      expect(vm.dbcPathExists.value, isTrue);
+      expect(vm.iconsExtracted.value, isTrue);
+      expect(vm.isSetupComplete, isTrue);
+    },
+  );
 
-  test('配置了但目录已不存在 → 视为未配置并保留原始路径', () async {
+  test('A missing configured directory counts as unconfigured and preserves the original path', () async {
     final gone = p.join(tempDir.path, '已删除');
     await configUtil.update({'client_dir': gone});
 
@@ -71,37 +74,45 @@ void main() {
     expect(vm.isSetupComplete, isFalse);
   });
 
-  test('saveClientDir 目录不存在时失败并写入错误信号', () async {
-    final vm = buildVm();
-    final ok = await vm.saveClientDir(p.join(tempDir.path, '不存在'));
+  test(
+    'saveClientDir rejects a missing directory and sets the error signal',
+    () async {
+      final vm = buildVm();
+      final ok = await vm.saveClientDir(p.join(tempDir.path, '不存在'));
 
-    expect(ok, isFalse);
-    expect(vm.clientDirError.value, contains('不存在'));
-    expect(vm.isClientDirConfigured, isFalse);
-  });
+      expect(ok, isFalse);
+      expect(vm.clientDirError.value, contains('不存在'));
+      expect(vm.isClientDirConfigured, isFalse);
+    },
+  );
 
-  test('saveClientDir 空路径失败并提示', () async {
+  test('saveClientDir rejects an empty path and shows an error', () async {
     final vm = buildVm();
     expect(await vm.saveClientDir('   '), isFalse);
     expect(vm.clientDirError.value, contains('客户端目录'));
   });
 
-  test('saveClientDir 持久化 client_dir 并自动探测写入 mpq_dir', () async {
-    final client = Directory(p.join(tempDir.path, 'client'))..createSync();
-    final mpq = p.join(client.path, 'Data', 'zhCN');
-    final vm = buildVm(findMpqDir: (root) => root == client.path ? mpq : null);
+  test(
+    'saveClientDir persists client_dir and detects and stores mpq_dir',
+    () async {
+      final client = Directory(p.join(tempDir.path, 'client'))..createSync();
+      final mpq = p.join(client.path, 'Data', 'zhCN');
+      final vm = buildVm(
+        findMpqDir: (root) => root == client.path ? mpq : null,
+      );
 
-    expect(await vm.saveClientDir(client.path), isTrue);
-    expect(vm.clientDir.value, client.path);
-    expect(vm.clientDirExists.value, isTrue);
-    expect(vm.mpqDir.value, mpq);
+      expect(await vm.saveClientDir(client.path), isTrue);
+      expect(vm.clientDir.value, client.path);
+      expect(vm.clientDirExists.value, isTrue);
+      expect(vm.mpqDir.value, mpq);
 
-    final config = await configUtil.load();
-    expect(config['client_dir'], client.path);
-    expect(config['mpq_dir'], mpq);
-  });
+      final config = await configUtil.load();
+      expect(config['client_dir'], client.path);
+      expect(config['mpq_dir'], mpq);
+    },
+  );
 
-  test('saveClientDir 探测不到 MPQ 时失败并写入错误信号', () async {
+  test('saveClientDir fails and sets the error signal when it cannot find MPQ files', () async {
     final client = Directory(p.join(tempDir.path, 'client'))..createSync();
     await configUtil.update({'mpq_dir': p.join('旧', 'mpq')});
     final vm = buildVm();
@@ -116,23 +127,26 @@ void main() {
     expect(config['mpq_dir'], p.join('旧', 'mpq'));
   });
 
-  test('saveServerDir 校验并持久化 server_dir 与探测出的 dbc_dir', () async {
-    final server = buildServerRoot();
-    final vm = buildVm();
+  test(
+    'saveServerDir validates and persists server_dir and the detected dbc_dir',
+    () async {
+      final server = buildServerRoot();
+      final vm = buildVm();
 
-    expect(await vm.saveServerDir(server.path), isTrue);
-    expect(vm.serverDir.value, server.path);
-    expect(vm.serverDirExists.value, isTrue);
-    expect(vm.serverDirError.value, isNull);
-    expect(vm.dbcPath.value, p.join(server.path, 'data', 'dbc'));
-    expect(vm.dbcPathExists.value, isTrue);
+      expect(await vm.saveServerDir(server.path), isTrue);
+      expect(vm.serverDir.value, server.path);
+      expect(vm.serverDirExists.value, isTrue);
+      expect(vm.serverDirError.value, isNull);
+      expect(vm.dbcPath.value, p.join(server.path, 'data', 'dbc'));
+      expect(vm.dbcPathExists.value, isTrue);
 
-    final config = await configUtil.load();
-    expect(config['server_dir'], server.path);
-    expect(config['dbc_dir'], p.join(server.path, 'data', 'dbc'));
-  });
+      final config = await configUtil.load();
+      expect(config['server_dir'], server.path);
+      expect(config['dbc_dir'], p.join(server.path, 'data', 'dbc'));
+    },
+  );
 
-  test('saveServerDir 探测不到 DBC 时失败并写入错误信号', () async {
+  test('saveServerDir fails and sets the error signal when it cannot find DBC files', () async {
     final server = Directory(p.join(tempDir.path, 'server'))..createSync();
     final vm = buildVm(findDbcDir: (_) async => null);
 
@@ -142,27 +156,33 @@ void main() {
     expect((await configUtil.load())['server_dir'], isNull);
   });
 
-  test('saveServerDir 目录不存在时失败并写入错误信号', () async {
-    final vm = buildVm();
-    expect(await vm.saveServerDir(p.join(tempDir.path, '不存在')), isFalse);
-    expect(vm.serverDirError.value, contains('不存在'));
-  });
+  test(
+    'saveServerDir rejects a missing directory and sets the error signal',
+    () async {
+      final vm = buildVm();
+      expect(await vm.saveServerDir(p.join(tempDir.path, '不存在')), isFalse);
+      expect(vm.serverDirError.value, contains('不存在'));
+    },
+  );
 
-  test('prepare 仅读 dbc_dir,旧 dbc_path 视为未配置', () async {
-    final oldDbc = Directory(p.join(tempDir.path, 'old'))..createSync();
-    await configUtil.update({'dbc_path': oldDbc.path});
+  test(
+    'prepare reads dbc_dir and treats legacy dbc_path as unconfigured',
+    () async {
+      final oldDbc = Directory(p.join(tempDir.path, 'old'))..createSync();
+      await configUtil.update({'dbc_path': oldDbc.path});
 
-    final vm = buildVm();
-    await vm.prepare();
+      final vm = buildVm();
+      await vm.prepare();
 
-    expect(vm.dbcPath.value, isNull);
-    // An unset directory needs no repair, consistent with clientDirExists.
-    expect(vm.dbcPathExists.value, isTrue);
-    expect(vm.isServerDirConfigured, isFalse);
-    expect(vm.isSetupComplete, isFalse);
-  });
+      expect(vm.dbcPath.value, isNull);
+      // An unset directory needs no repair, consistent with clientDirExists.
+      expect(vm.dbcPathExists.value, isTrue);
+      expect(vm.isServerDirConfigured, isFalse);
+      expect(vm.isSetupComplete, isFalse);
+    },
+  );
 
-  test('isSetupComplete 需要全部步骤完成', () async {
+  test('isSetupComplete requires every step to finish', () async {
     final client = Directory(p.join(tempDir.path, 'client'))..createSync();
     final server = buildServerRoot();
     final vm = buildVm(findMpqDir: (_) => p.join(client.path, 'Data', 'zhCN'));
@@ -178,7 +198,7 @@ void main() {
     expect(vm.isSetupComplete, isTrue);
   });
 
-  test('skipClientSetup 保存跳过客户端设置的选择', () async {
+  test('skipClientSetup persists the choice to skip client setup', () async {
     final client = Directory(p.join(tempDir.path, 'client'))..createSync();
     final server = buildServerRoot();
     String? findMpq(String root) => p.join(root, 'Data', 'zhCN');
@@ -200,19 +220,22 @@ void main() {
     expect(reloaded.isSetupComplete, isTrue);
   });
 
-  test('跳过后没有客户端目录也算设置完成', () async {
-    final server = buildServerRoot();
-    final vm = buildVm();
+  test(
+    'Client setup is complete without a client directory after skipping',
+    () async {
+      final server = buildServerRoot();
+      final vm = buildVm();
 
-    await vm.saveServerDir(server.path);
-    expect(vm.isSetupComplete, isFalse);
+      await vm.saveServerDir(server.path);
+      expect(vm.isSetupComplete, isFalse);
 
-    await vm.skipClientSetup();
-    expect(vm.isClientDirConfigured, isFalse);
-    expect(vm.isSetupComplete, isTrue);
-  });
+      await vm.skipClientSetup();
+      expect(vm.isClientDirConfigured, isFalse);
+      expect(vm.isSetupComplete, isTrue);
+    },
+  );
 
-  test('跳过服务端目录后重启仍视为完成，补配目录时清除跳过状态', () async {
+  test('Skipping the server directory survives restart and configuring it clears the skipped state', () async {
     final vm = buildVm();
     await vm.skipClientSetup();
     await vm.skipServerSetup();

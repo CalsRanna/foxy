@@ -2,13 +2,13 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('GameobjectTypes 完整覆盖 AzerothCore 0..35', () {
+  test('GameobjectTypes covers the full AzerothCore range from 0 to 35', () {
     expect(GameObjectConstants.gameObjectTypeOptions.keys.toSet(), {
       for (var type = 0; type <= 35; type++) type,
     });
   });
 
-  test('GameObjectFlags 只包含服务端定义的 9 个数据库位', () {
+  test('GameObjectFlags contains only the nine database bits defined by the server', () {
     expect(
       GameObjectConstants.gameObjectFlagItems.map((item) => item.value).toSet(),
       {
@@ -25,61 +25,64 @@ void main() {
     );
   });
 
-  test('Data0..Data23 可编辑槽位与 GameObjectData.h 联合体一致', () {
-    final expected = <int, Set<int>>{
-      0: _range(0, 6),
-      1: _range(0, 8),
-      2: _range(0, 9),
-      3: _range(0, 16),
-      4: {},
-      5: _range(0, 5),
-      6: _range(0, 14),
-      7: _range(0, 3),
-      8: _range(0, 6),
-      9: _range(0, 3),
-      10: _range(0, 20),
-      11: _range(0, 4),
-      12: _range(0, 7),
-      13: _range(0, 3),
-      14: {},
-      15: _range(0, 8),
-      16: {},
-      17: {},
-      18: _range(0, 7),
-      19: {},
-      20: {},
-      21: _range(0, 1),
-      22: _range(0, 4),
-      23: _range(0, 2),
-      24: _range(0, 7),
-      25: _range(0, 4),
-      26: _range(0, 4),
-      27: {0},
-      28: {},
-      29: _range(0, 21),
-      30: _range(0, 6),
-      31: _range(0, 1),
-      32: _range(0, 1),
-      33: {0, 1, 2, 3, 4, 5, 9, 10, 14, 16, 18, 19, 22},
-      34: {},
-      35: _range(0, 2),
-    };
+  test(
+    'Editable Data0 through Data23 slots match the GameObjectData.h union',
+    () {
+      final expected = <int, Set<int>>{
+        0: _range(0, 6),
+        1: _range(0, 8),
+        2: _range(0, 9),
+        3: _range(0, 16),
+        4: {},
+        5: _range(0, 5),
+        6: _range(0, 14),
+        7: _range(0, 3),
+        8: _range(0, 6),
+        9: _range(0, 3),
+        10: _range(0, 20),
+        11: _range(0, 4),
+        12: _range(0, 7),
+        13: _range(0, 3),
+        14: {},
+        15: _range(0, 8),
+        16: {},
+        17: {},
+        18: _range(0, 7),
+        19: {},
+        20: {},
+        21: _range(0, 1),
+        22: _range(0, 4),
+        23: _range(0, 2),
+        24: _range(0, 7),
+        25: _range(0, 4),
+        26: _range(0, 4),
+        27: {0},
+        28: {},
+        29: _range(0, 21),
+        30: _range(0, 6),
+        31: _range(0, 1),
+        32: _range(0, 1),
+        33: {0, 1, 2, 3, 4, 5, 9, 10, 14, 16, 18, 19, 22},
+        34: {},
+        35: _range(0, 2),
+      };
 
-    for (var type = 0; type <= 35; type++) {
-      final actual = <int>{};
-      for (var index = 0; index < 24; index++) {
-        if (!identical(
-          GameObjectConstants.dataFieldSpec(type, index),
-          GameObjectConstants.unusedGameObjectDataField,
-        )) {
-          actual.add(index);
+      for (var type = 0; type <= 35; type++) {
+        final actual = <int>{};
+        for (var index = 0; index < 24; index++) {
+          if (!identical(
+            GameObjectConstants.dataFieldSpec(type, index),
+            GameObjectConstants.unusedGameObjectDataField,
+          )) {
+            actual.add(index);
+          }
         }
+        expect(actual, expected[type], reason: 'GameObject type $type');
       }
-      expect(actual, expected[type], reason: 'GameObject type $type');
-    }
-  });
+    },
+  );
 
-  test('关键 Data 外键指向精确 Store 或世界表', () {
+  test('Key Data references point to the exact store or world table', () {
     GameObjectDataReference referenceOf(int type, int index) =>
         switch (GameObjectConstants.dataFieldSpec(type, index)) {
           IntegerReferenceFieldSpec(:final reference) => reference,
@@ -94,7 +97,7 @@ void main() {
     expect(referenceOf(3, 1), GameObjectDataReference.gameObjectLoot);
   });
 
-  test('trap type、boolean、椅子高度为 select 规格，未使用槽位回落未使用 number', () {
+  test('Trap type, boolean, and chair height use selects and unused slots use unused number fields', () {
     expect(
       GameObjectConstants.dataFieldSpec(6, 4),
       isA<IntegerEnumFieldSpec<GameObjectDataReference>>(),

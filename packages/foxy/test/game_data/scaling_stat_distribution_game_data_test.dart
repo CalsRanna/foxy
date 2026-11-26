@@ -3,7 +3,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 
 void main() {
-  test('空槽为 -1 且属性类型 0 能正常显示', () {
+  test('Empty slots use -1 and stat type zero is displayed', () {
     const entity = ScalingStatDistributionEntity(
       id: 1,
       statId0: 0,
@@ -14,7 +14,7 @@ void main() {
     expect(const ScalingStatDistributionEntity().maxlevel, 80);
   });
 
-  test('属性分布用属性名显示并过滤无效槽位', () {
+  test('Stat distribution shows stat names and filters invalid slots', () {
     const entity = ScalingStatDistributionEntity(
       id: 1,
       statId0: 0,
@@ -27,12 +27,12 @@ void main() {
     expect(entity.displayStats, '敏捷(300), 生命值(300)');
   });
 
-  test('全部槽位为空时显示 -', () {
+  test('An entirely empty distribution displays a dash', () {
     const entity = ScalingStatDistributionEntity(id: 1);
     expect(entity.displayStats, '-');
   });
 
-  test('常量表外的未知属性回退为数字', () {
+  test('Unknown stats fall back to their numeric values', () {
     const entity = ScalingStatDistributionEntity(
       id: 1,
       statId1: 2, // Legacy Mana ID missing from the current lookup table.
@@ -41,7 +41,7 @@ void main() {
     expect(entity.displayStats, '2(300)');
   });
 
-  test('statEntries 返回过滤后的槽位列表', () {
+  test('statEntries returns only valid slots', () {
     const entity = ScalingStatDistributionEntity(
       id: 1,
       statId0: -1, // Empty slot.
@@ -59,10 +59,14 @@ void main() {
     );
   });
 
-  test('DBC definition 与 AzerothCore 3.3.5a 的 22 列格式一致', () {
-    final definition = DbcDefinitions.byTable['dbc_scaling_stat_distribution']!;
-    expect(definition.fileName, 'ScalingStatDistribution.dbc');
-    expect(definition.schema.format, 'niiiiiiiiiiiiiiiiiiiii');
-    expect(definition.schema.fields, hasLength(22));
-  });
+  test(
+    'The DBC definition matches the 22-column AzerothCore 3.3.5a format',
+    () {
+      final definition =
+          DbcDefinitions.byTable['dbc_scaling_stat_distribution']!;
+      expect(definition.fileName, 'ScalingStatDistribution.dbc');
+      expect(definition.schema.format, 'niiiiiiiiiiiiiiiiiiiii');
+      expect(definition.schema.fields, hasLength(22));
+    },
+  );
 }

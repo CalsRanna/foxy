@@ -19,16 +19,19 @@ void main() {
   File writeBytes(String name, List<int> bytes) =>
       File(p.join(tempDir.path, name))..writeAsBytesSync(bytes);
 
-  test('目录不存在或为空时返回空候选,pick 返回 null', () {
-    expect(
-      CoverSelector.listCandidates(p.join(tempDir.path, 'missing')),
-      isEmpty,
-    );
-    expect(CoverSelector.pick(p.join(tempDir.path, 'missing')), isNull);
-    expect(CoverSelector.pick(tempDir.path), isNull);
-  });
+  test(
+    'A missing or empty directory has no candidates and pick returns null',
+    () {
+      expect(
+        CoverSelector.listCandidates(p.join(tempDir.path, 'missing')),
+        isEmpty,
+      );
+      expect(CoverSelector.pick(p.join(tempDir.path, 'missing')), isNull);
+      expect(CoverSelector.pick(tempDir.path), isNull);
+    },
+  );
 
-  test('只保留支持扩展名的文件:大小写不敏感,gif 与隐藏文件排除', () {
+  test('Supported extensions are matched case-insensitively and GIFs and hidden files are excluded', () {
     writeBytes('a.png', kPngBytes);
     writeBytes('b.PNG', kPngBytes);
     writeBytes('c.Jpg', kPngBytes);
@@ -45,14 +48,14 @@ void main() {
     expect(names, ['a.png', 'b.PNG', 'c.Jpg', 'd.webp']);
   });
 
-  test('魔数校验:伪装扩展名的非图片被排除', () {
+  test('Magic byte validation excludes nonimages with image extensions', () {
     writeBytes('fake.png', 'this is plain text, not an image'.codeUnits);
     writeBytes('fake.jpg', [0x00, 0x01, 0x02, 0x03, 0x04, 0x05]);
 
     expect(CoverSelector.listCandidates(tempDir.path), isEmpty);
   });
 
-  test('魔数识别:png/jpg/webp 通过,gif/文本/短 header 拒绝', () {
+  test('Magic byte validation accepts PNG, JPEG, and WebP and rejects GIFs, text, and short headers', () {
     expect(CoverSelector.isSupportedImageHeader(kPngBytes), isTrue);
     expect(
       CoverSelector.isSupportedImageHeader([0xFF, 0xD8, 0xFF, 0xE0]),
@@ -78,7 +81,7 @@ void main() {
     );
   });
 
-  test('子目录不递归收集', () {
+  test('Candidate collection does not recurse into subdirectories', () {
     writeBytes('root.png', kPngBytes);
     final sub = Directory(p.join(tempDir.path, 'sub'))..createSync();
     File(p.join(sub.path, 'nested.png')).writeAsBytesSync(kPngBytes);
@@ -89,7 +92,7 @@ void main() {
     expect(names, ['root.png']);
   });
 
-  test('pick 返回候选之一,相同种子结果稳定', () {
+  test('pick returns a candidate and is deterministic for a fixed seed', () {
     writeBytes('a.png', kPngBytes);
     writeBytes('b.png', kPngBytes);
     writeBytes('c.png', kPngBytes);

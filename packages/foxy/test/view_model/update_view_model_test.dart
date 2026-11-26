@@ -34,7 +34,7 @@ void main() {
   });
 
   group('checkManually', () {
-    test('发现新版本 → availableUpdate 置位', () async {
+    test('A newer release sets availableUpdate', () async {
       final service = _StubUpdateService(
         onCheck: () async => UpdateAvailable(_update()),
       );
@@ -48,7 +48,7 @@ void main() {
       expect(vm.errorMessage.value, isNull);
     });
 
-    test('已是最新 → upToDate 置位', () async {
+    test('The latest installed version sets upToDate', () async {
       final service = _StubUpdateService(onCheck: () async => const UpToDate());
       final vm = UpdateViewModel(service: service);
 
@@ -58,7 +58,7 @@ void main() {
       expect(vm.upToDate.value, isTrue);
     });
 
-    test('检查失败 → errorMessage 为中文映射', () async {
+    test('A failed check maps errorMessage to localized text', () async {
       final service = _StubUpdateService(
         onCheck: () async => throw const UpdateException(
           UpdateErrorKind.network,
@@ -74,7 +74,7 @@ void main() {
   });
 
   group('checkSilently', () {
-    test('24h 内已检查 → 跳过(不调服务)', () async {
+    test('A check within 24 hours skips the update service', () async {
       SharedPreferences.setMockInitialValues({
         'last_update_check_at': DateTime.now().toIso8601String(),
       });
@@ -86,7 +86,7 @@ void main() {
       expect(service.checkCalls, 0);
     });
 
-    test('超过 24h → 执行检查', () async {
+    test('Checks for updates after more than 24 hours', () async {
       SharedPreferences.setMockInitialValues({
         'last_update_check_at': DateTime.now()
             .subtract(const Duration(hours: 25))
@@ -107,7 +107,7 @@ void main() {
       expect(last, isNotNull);
     });
 
-    test('从未检查过 → 执行检查', () async {
+    test('Checks for updates when no previous check exists', () async {
       final service = _StubUpdateService(onCheck: () async => const UpToDate());
       final vm = UpdateViewModel(service: service);
 
@@ -115,7 +115,7 @@ void main() {
       expect(service.checkCalls, 1);
     });
 
-    test('静默失败不抛异常,errorMessage 置位', () async {
+    test('A silent check failure sets errorMessage without throwing', () async {
       final service = _StubUpdateService(
         onCheck: () async => throw const UpdateException(
           UpdateErrorKind.network,
@@ -131,21 +131,24 @@ void main() {
   });
 
   group('downloadAndPrepare', () {
-    test('下载成功 → readyToRestart 置位,进度信号恢复', () async {
-      final service = _StubUpdateService(
-        onCheck: () async => UpdateAvailable(_update()),
-      );
-      final vm = UpdateViewModel(service: service);
-      await vm.checkManually();
+    test(
+      'A successful download sets readyToRestart and resets progress',
+      () async {
+        final service = _StubUpdateService(
+          onCheck: () async => UpdateAvailable(_update()),
+        );
+        final vm = UpdateViewModel(service: service);
+        await vm.checkManually();
 
-      final ok = await vm.downloadAndPrepare();
-      expect(ok, isTrue);
-      expect(vm.readyToRestart.value, isTrue);
-      expect(vm.downloadProgress.value, isNull);
-      expect(vm.errorMessage.value, isNull);
-    });
+        final ok = await vm.downloadAndPrepare();
+        expect(ok, isTrue);
+        expect(vm.readyToRestart.value, isTrue);
+        expect(vm.downloadProgress.value, isNull);
+        expect(vm.errorMessage.value, isNull);
+      },
+    );
 
-    test('无可用更新时直接返回 false', () async {
+    test('Downloading with no available update returns false', () async {
       final service = _StubUpdateService(onCheck: () async => const UpToDate());
       final vm = UpdateViewModel(service: service);
       await vm.checkManually();
@@ -154,7 +157,7 @@ void main() {
       expect(ok, isFalse);
     });
 
-    test('下载失败 → errorMessage 中文映射', () async {
+    test('A failed download maps errorMessage to localized text', () async {
       final service = _StubUpdateService(
         onCheck: () async => UpdateAvailable(_update()),
         prepareShouldFail: true,
@@ -168,7 +171,7 @@ void main() {
       expect(vm.readyToRestart.value, isFalse);
     });
 
-    test('下载中取消 → 返回可下载状态，可重新下载', () async {
+    test('Canceling a download returns to a state where it can be downloaded again', () async {
       final service = _StubUpdateService(
         onCheck: () async => UpdateAvailable(_update()),
       );
@@ -193,22 +196,25 @@ void main() {
   });
 
   group('restartToApply', () {
-    test('辅助程序缺失 → errorMessage 置位,应用不退出', () async {
-      final service = _StubUpdateService(
-        onCheck: () async => UpdateAvailable(_update()),
-      );
-      final vm = UpdateViewModel(service: service);
-      await vm.checkManually();
-      await vm.downloadAndPrepare();
+    test(
+      'A missing helper sets errorMessage and keeps the application open',
+      () async {
+        final service = _StubUpdateService(
+          onCheck: () async => UpdateAvailable(_update()),
+        );
+        final vm = UpdateViewModel(service: service);
+        await vm.checkManually();
+        await vm.downloadAndPrepare();
 
-      await vm.restartToApply();
-      // The test working directory (repo root) has no foxy_updater.exe.
-      expect(vm.errorMessage.value, '更新程序文件缺失，请重新下载完整版本');
-    });
+        await vm.restartToApply();
+        // The test working directory (repo root) has no foxy_updater.exe.
+        expect(vm.errorMessage.value, '更新程序文件缺失，请重新下载完整版本');
+      },
+    );
   });
 
   group('prepare', () {
-    test('加载当前版本信息', () async {
+    test('Loads current version information', () async {
       final vm = UpdateViewModel(service: _StubUpdateService());
       await vm.prepare();
       expect(vm.currentVersion.value, isNotNull);
@@ -216,8 +222,8 @@ void main() {
     });
   });
 
-  group('异常映射', () {
-    test('FoxyExceptions.message 覆盖全部 UpdateErrorKind', () {
+  group('Exception mapping', () {
+    test('FoxyExceptions.message covers every UpdateErrorKind', () {
       expect(
         FoxyExceptions.message(
           const UpdateException(UpdateErrorKind.network, 'x'),

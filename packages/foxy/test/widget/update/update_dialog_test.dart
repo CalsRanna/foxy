@@ -26,42 +26,47 @@ void main() {
     );
   }
 
-  testWidgets('检查更新和结果使用相同宽度，底部操作靠右', (tester) async {
-    final vm = UpdateViewModel();
-    vm.currentVersion.value = '1.0.0+628';
-    vm.checking.value = true;
+  testWidgets(
+    'Update check and result dialogs share their width and have right-aligned actions',
+    (tester) async {
+      final vm = UpdateViewModel();
+      vm.currentVersion.value = '1.0.0+628';
+      vm.checking.value = true;
 
-    await tester.pumpWidget(wrap(UpdateDialog(vm: vm)));
-    expect(find.text('正在检查更新…'), findsOneWidget);
-    final checkingFrame = _dialogFrame(tester);
-    expect(checkingFrame.width, 480);
+      await tester.pumpWidget(wrap(UpdateDialog(vm: vm)));
+      expect(find.text('正在检查更新…'), findsOneWidget);
+      final checkingFrame = _dialogFrame(tester);
+      expect(checkingFrame.width, 480);
 
-    vm.upToDate.value = true;
-    vm.checking.value = false;
-    await tester.pump();
-    expect(find.text('已是最新版本'), findsOneWidget);
-    _expectRightAligned(tester, '确定');
+      vm.upToDate.value = true;
+      vm.checking.value = false;
+      await tester.pump();
+      expect(find.text('已是最新版本'), findsOneWidget);
+      _expectRightAligned(tester, '确定');
 
-    vm.upToDate.value = false;
-    vm.availableUpdate.value = UpdateManifestInfo(
-      version: '1.1.0',
-      buildNumber: '630',
-      zipUrl: Uri.parse('https://example.com/foxy.zip'),
-      sizeBytes: 42,
-      sha256: 'a',
-      notes: '更新说明',
-    );
-    await tester.pump();
-    expect(find.text('发现新版本 1.1.0'), findsOneWidget);
-    _expectRightAligned(tester, '下载并更新');
+      vm.upToDate.value = false;
+      vm.availableUpdate.value = UpdateManifestInfo(
+        version: '1.1.0',
+        buildNumber: '630',
+        zipUrl: Uri.parse('https://example.com/foxy.zip'),
+        sizeBytes: 42,
+        sha256: 'a',
+        notes: '更新说明',
+      );
+      await tester.pump();
+      expect(find.text('发现新版本 1.1.0'), findsOneWidget);
+      _expectRightAligned(tester, '下载并更新');
 
-    vm.downloadProgress.value = 0.5;
-    await tester.pump();
-    expect(find.text('正在下载更新'), findsOneWidget);
-    _expectRightAligned(tester, '取消下载');
-  });
+      vm.downloadProgress.value = 0.5;
+      await tester.pump();
+      expect(find.text('正在下载更新'), findsOneWidget);
+      _expectRightAligned(tester, '取消下载');
+    },
+  );
 
-  testWidgets('检查更新失败 → 关闭错误框后，重试按钮靠右', (tester) async {
+  testWidgets('After dismissing a check error, Retry is right-aligned', (
+    tester,
+  ) async {
     final vm = UpdateViewModel();
     vm.errorMessage.value = '无法连接更新服务器，请检查网络后重试';
 
@@ -74,18 +79,23 @@ void main() {
     _expectRightAligned(tester, '重试');
   });
 
-  testWidgets('更新就绪 → 显示就绪视图与立即重启按钮', (tester) async {
-    final vm = UpdateViewModel();
-    vm.readyToRestart.value = true;
+  testWidgets(
+    'An update ready to install shows the ready view and Restart Now',
+    (tester) async {
+      final vm = UpdateViewModel();
+      vm.readyToRestart.value = true;
 
-    await tester.pumpWidget(wrap(UpdateDialog(vm: vm)));
-    await tester.pump();
+      await tester.pumpWidget(wrap(UpdateDialog(vm: vm)));
+      await tester.pump();
 
-    expect(find.text('更新已就绪'), findsOneWidget);
-    _expectRightAligned(tester, '立即重启');
-  });
+      expect(find.text('更新已就绪'), findsOneWidget);
+      _expectRightAligned(tester, '立即重启');
+    },
+  );
 
-  testWidgets('重启失败 → 显示失败原因并隐藏立即重启按钮', (tester) async {
+  testWidgets('A failed restart displays the reason and hides Restart Now', (
+    tester,
+  ) async {
     const error = '更新程序文件缺失，请重新下载完整版本';
     final vm = UpdateViewModel();
     vm.readyToRestart.value = true;
@@ -125,7 +135,9 @@ void main() {
     expect(find.text('错误'), findsNothing);
   });
 
-  testWidgets('取消下载后返回可下载状态', (tester) async {
+  testWidgets('Canceling the download restores the downloadable state', (
+    tester,
+  ) async {
     final service = _PendingDownloadService();
     final vm = UpdateViewModel(service: service);
     vm.currentVersion.value = '1.0.0+628';

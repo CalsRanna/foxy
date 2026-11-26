@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 
 void main() {
-  test('Entity 默认值与 AzerothCore core SQL 一致', () {
+  test('Entity defaults match AzerothCore SQL', () {
     final entity = const ReferenceLootTemplateEntity();
     expect(entity.entry, 0);
     expect(entity.item, 0);
@@ -16,32 +16,35 @@ void main() {
     expect(entity.comment, '');
   });
 
-  test('fromJson 接受 MySQL 数值类型并保持十列 round-trip', () {
-    final entity = ReferenceLootTemplateEntity.fromJson({
-      'Entry': 1001,
-      'Item': 36917,
-      'Reference': 0,
-      'Chance': 16,
-      'QuestRequired': 1,
-      'LootMode': 0x8001,
-      'GroupId': 1,
-      'MinCount': 1,
-      'MaxCount': 2,
-      'Comment': 'Bloodstone',
-    });
-    expect(entity.chance, 16.0);
-    expect(entity.questRequired, isTrue);
-    expect(entity.toJson(), {
-      'Entry': 1001,
-      'Item': 36917,
-      'Reference': 0,
-      'Chance': 16.0,
-      'QuestRequired': 1,
-      'LootMode': 0x8001,
-      'GroupId': 1,
-      'MinCount': 1,
-      'MaxCount': 2,
-      'Comment': 'Bloodstone',
-    });
-  });
+  test(
+    'fromJson accepts MySQL numeric types and round trips all ten columns',
+    () {
+      final entity = ReferenceLootTemplateEntity.fromJson({
+        'Entry': 1001,
+        'Item': 36917,
+        'Reference': 0,
+        'Chance': 16,
+        'QuestRequired': 1,
+        'LootMode': 0x8001,
+        'GroupId': 1,
+        'MinCount': 1,
+        'MaxCount': 2,
+        'Comment': 'Bloodstone',
+      });
+      expect(entity.chance, 16.0);
+      expect(entity.questRequired, isTrue);
+      expect(entity.toJson(), {
+        'Entry': 1001,
+        'Item': 36917,
+        'Reference': 0,
+        'Chance': 16.0,
+        'QuestRequired': 1,
+        'LootMode': 0x8001,
+        'GroupId': 1,
+        'MinCount': 1,
+        'MaxCount': 2,
+        'Comment': 'Bloodstone',
+      });
+    },
+  );
 }

@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('标量 key 不生成额外类型', () async {
+  test('A scalar key produces no extra key type', () async {
     await testBuilder(
       foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, standardEntitySource),
@@ -17,7 +17,7 @@ void main() {
     );
   });
 
-  test('复合 key 包含全部主键字段并从实体提取对应值', () async {
+  test('A composite key includes all primary key fields and reads their entity values', () async {
     await testBuilder(
       foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(compositeEntityAsset, compositeEntitySource),
@@ -38,7 +38,7 @@ void main() {
     );
   });
 
-  test('没有 key 字段时拒绝生成', () async {
+  test('Generation rejects entities without key fields', () async {
     final source = standardEntitySource.replaceFirst(
       "@FoxyFullField('ID', key: true)",
       "@FoxyFullField('ID')",

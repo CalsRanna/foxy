@@ -1,151 +1,101 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
 import 'package:foxy/view_model/game_object_quest_ender_linked_list_view_model.dart';
 import 'package:foxy/view_model/game_object_quest_starter_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('开始与结束关系 Key、Brief 完整覆盖 id + quest', () {
-    const starter = GameObjectQuestStarterEntity(id: 10, quest: 20);
-    const ender = GameObjectQuestEnderEntity(id: 10, quest: 20);
-    final starterKey = GameObjectQuestStarterKey.fromEntity(starter);
-    final enderKey = GameObjectQuestEnderKey.fromEntity(ender);
+  test(
+    'Quest starter and ender keys and brief entities include id and quest',
+    () {
+      const starter = GameObjectQuestStarterEntity(id: 10, quest: 20);
+      const ender = GameObjectQuestEnderEntity(id: 10, quest: 20);
+      final starterKey = GameObjectQuestStarterKey.fromEntity(starter);
+      final enderKey = GameObjectQuestEnderKey.fromEntity(ender);
 
-    expect(
-      starterKey,
-      GameObjectQuestStarterKey.fromEntity(starter.copyWith()),
-    );
-    expect(
-      starterKey.hashCode,
-      GameObjectQuestStarterKey.fromEntity(starter.copyWith()).hashCode,
-    );
-    expect(
-      starterKey,
-      isNot(GameObjectQuestStarterKey.fromEntity(starter.copyWith(id: 11))),
-    );
-    expect(
-      starterKey,
-      isNot(GameObjectQuestStarterKey.fromEntity(starter.copyWith(quest: 21))),
-    );
-    expect(
-      const BriefGameObjectQuestStarterEntity(id: 10, quest: 20).key,
-      starterKey,
-    );
-
-    expect(enderKey, GameObjectQuestEnderKey.fromEntity(ender.copyWith()));
-    expect(
-      enderKey.hashCode,
-      GameObjectQuestEnderKey.fromEntity(ender.copyWith()).hashCode,
-    );
-    expect(
-      enderKey,
-      isNot(GameObjectQuestEnderKey.fromEntity(ender.copyWith(id: 11))),
-    );
-    expect(
-      enderKey,
-      isNot(GameObjectQuestEnderKey.fromEntity(ender.copyWith(quest: 21))),
-    );
-    expect(
-      const BriefGameObjectQuestEnderEntity(id: 10, quest: 20).key,
-      enderKey,
-    );
-  });
-
-  test('两张表 UPDATE 使用旧 key 并写入完整 candidate', () async {
-    final starterQueries = <LaconicQuery>[];
-    final starterRepository = _TestStarterRepository(
-      Laconic(_RecordingDriver(), listen: starterQueries.add),
-    );
-    const starterKey = GameObjectQuestStarterKey(id: 10, quest: 20);
-    const starterCandidate = GameObjectQuestStarterEntity(id: 11, quest: 21);
-    await starterRepository.updateGameObjectQuestStarter(
-      starterKey,
-      starterCandidate,
-    );
-    expect(starterQueries.single.bindings, [11, 21, 10, 20]);
-
-    final enderQueries = <LaconicQuery>[];
-    final enderRepository = _TestEnderRepository(
-      Laconic(_RecordingDriver(), listen: enderQueries.add),
-    );
-    const enderKey = GameObjectQuestEnderKey(id: 30, quest: 40);
-    const enderCandidate = GameObjectQuestEnderEntity(id: 31, quest: 41);
-    await enderRepository.updateGameObjectQuestEnder(enderKey, enderCandidate);
-    expect(enderQueries.single.bindings, [31, 41, 30, 40]);
-  });
-
-  test('两张表零行写入报错，Brief 查询稳定分页', () async {
-    final starterMissing = _TestStarterRepository(
-      Laconic(_RecordingDriver(affectedRows: 0)),
-    );
-    const starterKey = GameObjectQuestStarterKey(id: 10, quest: 20);
-    await expectLater(
-      starterMissing.updateGameObjectQuestStarter(
+      expectRowKeyEquality(
         starterKey,
-        const GameObjectQuestStarterEntity(),
-      ),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      starterMissing.destroyGameObjectQuestStarter(starterKey),
-      throwsA(isA<RecordNotFoundException>()),
-    );
+        GameObjectQuestStarterKey.fromEntity,
+        sameKeyRow: starter.copyWith(),
+        differentKeyRows: [
+          starter.copyWith(id: 11),
+          starter.copyWith(quest: 21),
+        ],
+      );
+      expect(
+        const BriefGameObjectQuestStarterEntity(id: 10, quest: 20).key,
+        starterKey,
+      );
 
-    final enderMissing = _TestEnderRepository(
-      Laconic(_RecordingDriver(affectedRows: 0)),
-    );
-    const enderKey = GameObjectQuestEnderKey(id: 10, quest: 20);
-    await expectLater(
-      enderMissing.updateGameObjectQuestEnder(
+      expectRowKeyEquality(
         enderKey,
-        const GameObjectQuestEnderEntity(),
-      ),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      enderMissing.destroyGameObjectQuestEnder(enderKey),
-      throwsA(isA<RecordNotFoundException>()),
+        GameObjectQuestEnderKey.fromEntity,
+        sameKeyRow: ender.copyWith(),
+        differentKeyRows: [ender.copyWith(id: 11), ender.copyWith(quest: 21)],
+      );
+      expect(
+        const BriefGameObjectQuestEnderEntity(id: 10, quest: 20).key,
+        enderKey,
+      );
+    },
+  );
+
+  group('GameObjectQuestStarterRepository write contract', () {
+    testRepositoryWrites(
+      createRepository: _TestStarterRepository.new,
+      originalKey: const GameObjectQuestStarterKey(id: 10, quest: 20),
+      candidate: const GameObjectQuestStarterEntity(id: 11, quest: 21),
+      missingCandidate: const GameObjectQuestStarterEntity(),
+      update: (repository, key, row) =>
+          repository.updateGameObjectQuestStarter(key, row),
+      destroy: (repository, key) =>
+          repository.destroyGameObjectQuestStarter(key),
+      expectedBindings: [11, 21, 10, 20],
     );
 
-    final starterQueries = <LaconicQuery>[];
-    final starterRepository = _TestStarterRepository(
-      Laconic(_RecordingDriver(), listen: starterQueries.add),
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestStarterRepository(laconic)
+              .getBriefGameObjectQuestStarters(20, page: 2),
+      tableAlias: 'gos',
     );
-    await starterRepository.getBriefGameObjectQuestStarters(20, page: 2);
-    expect(starterQueries.single.sql.toLowerCase(), contains('order by'));
-    expect(
-      starterQueries.single.bindings.sublist(
-        starterQueries.single.bindings.length - 2,
-      ),
-      [50, 50],
+  });
+
+  group('GameObjectQuestEnderRepository write contract', () {
+    testRepositoryWrites(
+      createRepository: _TestEnderRepository.new,
+      originalKey: const GameObjectQuestEnderKey(id: 30, quest: 40),
+      candidate: const GameObjectQuestEnderEntity(id: 31, quest: 41),
+      missingCandidate: const GameObjectQuestEnderEntity(),
+      update: (repository, key, row) =>
+          repository.updateGameObjectQuestEnder(key, row),
+      destroy: (repository, key) => repository.destroyGameObjectQuestEnder(key),
+      expectedBindings: [31, 41, 30, 40],
     );
 
-    final enderQueries = <LaconicQuery>[];
-    final enderRepository = _TestEnderRepository(
-      Laconic(_RecordingDriver(), listen: enderQueries.add),
-    );
-    await enderRepository.getBriefGameObjectQuestEnders(20, page: 2);
-    expect(enderQueries.single.sql.toLowerCase(), contains('order by'));
-    expect(
-      enderQueries.single.bindings.sublist(
-        enderQueries.single.bindings.length - 2,
-      ),
-      [50, 50],
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestEnderRepository(laconic)
+              .getBriefGameObjectQuestEnders(20, page: 2),
+      tableAlias: 'goe',
     );
   });
 
   group('inline editing identity', () {
     tearDown(() async => GetIt.instance.reset());
 
-    test('开始关系修改双 key 失败后保留旧身份并可重试', () async {
+    test('A failed composite key change on a quest starter preserves its identity for retry', () async {
       final repository = _FakeStarterRepository([
         const GameObjectQuestStarterEntity(id: 10, quest: 20),
       ]);
@@ -160,20 +110,20 @@ void main() {
       const oldKey = GameObjectQuestStarterKey(id: 10, quest: 20);
       viewModel.idController.init(11);
       viewModel.questController.init(21);
-      repository.failUpdates = true;
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-      repository.failUpdates = false;
-      await viewModel.persist();
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: oldKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
 
-      expect(repository.updateKeys, [oldKey, oldKey]);
       expect(repository.rows.single.toJson(), {'id': 11, 'quest': 21});
       expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('结束关系修改双 key 失败后保留旧身份并可重试', () async {
+    test('A failed composite key change on a quest ender preserves its identity for retry', () async {
       final repository = _FakeEnderRepository([
         const GameObjectQuestEnderEntity(id: 10, quest: 20),
       ]);
@@ -188,14 +138,14 @@ void main() {
       const oldKey = GameObjectQuestEnderKey(id: 10, quest: 20);
       viewModel.idController.init(11);
       viewModel.questController.init(21);
-      repository.failUpdates = true;
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-      repository.failUpdates = false;
-      await viewModel.persist();
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: oldKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
 
-      expect(repository.updateKeys, [oldKey, oldKey]);
       expect(repository.rows.single.toJson(), {'id': 11, 'quest': 21});
       expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
@@ -203,12 +153,20 @@ void main() {
   });
 }
 
-class _FakeEnderRepository extends GameObjectQuestEnderRepository {
+class _FakeEnderRepository extends GameObjectQuestEnderRepository
+    with
+        InMemoryRowEditing<
+          GameObjectQuestEnderEntity,
+          GameObjectQuestEnderKey
+        > {
+  @override
   final List<GameObjectQuestEnderEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <GameObjectQuestEnderKey>[];
 
   _FakeEnderRepository(this.rows);
+
+  @override
+  GameObjectQuestEnderKey keyOf(GameObjectQuestEnderEntity row) =>
+      GameObjectQuestEnderKey.fromEntity(row);
 
   @override
   Future<int> countGameObjectQuestEnders(int questId) async =>
@@ -231,34 +189,29 @@ class _FakeEnderRepository extends GameObjectQuestEnderRepository {
   @override
   Future<GameObjectQuestEnderEntity?> getGameObjectQuestEnder(
     GameObjectQuestEnderKey key,
-  ) async {
-    for (final row in rows) {
-      if (GameObjectQuestEnderKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> updateGameObjectQuestEnder(
     GameObjectQuestEnderKey originalKey,
     GameObjectQuestEnderEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => GameObjectQuestEnderKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = model;
-  }
+  ) async => updateRow(originalKey, model);
 }
 
-class _FakeStarterRepository extends GameObjectQuestStarterRepository {
+class _FakeStarterRepository extends GameObjectQuestStarterRepository
+    with
+        InMemoryRowEditing<
+          GameObjectQuestStarterEntity,
+          GameObjectQuestStarterKey
+        > {
+  @override
   final List<GameObjectQuestStarterEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <GameObjectQuestStarterKey>[];
 
   _FakeStarterRepository(this.rows);
+
+  @override
+  GameObjectQuestStarterKey keyOf(GameObjectQuestStarterEntity row) =>
+      GameObjectQuestStarterKey.fromEntity(row);
 
   @override
   Future<int> countGameObjectQuestStarters(int questId) async =>
@@ -279,61 +232,13 @@ class _FakeStarterRepository extends GameObjectQuestStarterRepository {
   @override
   Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
     GameObjectQuestStarterKey key,
-  ) async {
-    for (final row in rows) {
-      if (GameObjectQuestStarterKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> updateGameObjectQuestStarter(
     GameObjectQuestStarterKey originalKey,
     GameObjectQuestStarterEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => GameObjectQuestStarterKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = model;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, model);
 }
 
 class _TestEnderRepository extends GameObjectQuestEnderRepository {

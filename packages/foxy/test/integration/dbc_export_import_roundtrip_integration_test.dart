@@ -109,34 +109,41 @@ void main() {
     await Database.instance.close();
   });
 
-  test('导出按行序输出,并对缺失行序的表给出提示', () async {
-    if (!guardDbcWrite()) return;
-    await seedRows();
+  test(
+    'Export follows row positions and warns about tables without them',
+    () async {
+      if (!guardDbcWrite()) return;
+      await seedRows();
 
-    final result = await runExport();
+      final result = await runExport();
 
-    expect(result.success, isTrue, reason: result.errors.join(' | '));
-    expect(result.completed, 1);
-    expect(result.skipped, 0);
-    expect(result.warnings, hasLength(1), reason: '存在行序为 NULL 的行时应提示导出行序可能不正确');
-    expect(result.warnings.single.message, contains(definition.fileName));
+      expect(result.success, isTrue, reason: result.errors.join(' | '));
+      expect(result.completed, 1);
+      expect(result.skipped, 0);
+      expect(
+        result.warnings,
+        hasLength(1),
+        reason: '存在行序为 NULL 的行时应提示导出行序可能不正确',
+      );
+      expect(result.warnings.single.message, contains(definition.fileName));
 
-    final loader = DbcLoader(exportedPath, definition.schema.format);
-    final records = loader.records.toList();
-    expect(records, hasLength(3));
-    expect(records.map((record) => record.getInt(0)).toList(), [
-      3,
-      1,
-      2,
-    ], reason: '先按 __dbc_order,再按 ID');
-    expect(records.map((record) => record.getString(1)).toList(), [
-      'three',
-      '中文一',
-      'Interface\\Icons\\Spell_Two',
-    ]);
-  });
+      final loader = DbcLoader(exportedPath, definition.schema.format);
+      final records = loader.records.toList();
+      expect(records, hasLength(3));
+      expect(records.map((record) => record.getInt(0)).toList(), [
+        3,
+        1,
+        2,
+      ], reason: '先按 __dbc_order,再按 ID');
+      expect(records.map((record) => record.getString(1)).toList(), [
+        'three',
+        '中文一',
+        'Interface\\Icons\\Spell_Two',
+      ]);
+    },
+  );
 
-  test('往返一致:导出的文件重新导入后内容与行序不变', () async {
+  test('Reimporting an exported file preserves data and row order', () async {
     if (!guardDbcWrite()) return;
     await seedRows();
     expect((await runExport()).success, isTrue);
@@ -158,7 +165,7 @@ void main() {
     expect(rows.map((row) => row['__dbc_order']).toList(), [0, 1, 2]);
   });
 
-  test('二次往返字节稳定', () async {
+  test('A second round trip preserves the exported bytes', () async {
     if (!guardDbcWrite()) return;
     await seedRows();
     expect((await runExport()).success, isTrue);
@@ -171,7 +178,7 @@ void main() {
     expect(second, first, reason: '内容与行序都不变时,导出的字节应完全一致');
   });
 
-  test('空表导出被跳过且不产生文件', () async {
+  test('Export skips empty tables without producing files', () async {
     if (!guardDbcWrite()) return;
     if (File(exportedPath).existsSync()) File(exportedPath).deleteSync();
     await Database.instance.laconic.statement('drop table if exists $table');

@@ -72,14 +72,14 @@ void main() {
     stream.removeListener(listener);
   }
 
-  testWidgets('成功图标显示 RawImage', (tester) async {
+  testWidgets('A loaded icon displays a RawImage', (tester) async {
     await tester.runAsync(() => preload('foxy_fixture_dxt1'));
     await tester.pumpWidget(iconApp());
     await tester.pumpAndSettle();
     expect(find.byType(RawImage), findsOneWidget);
   });
 
-  testWidgets('缺失图标显示占位图标', (tester) async {
+  testWidgets('A missing icon displays a placeholder', (tester) async {
     await tester.pumpWidget(iconApp(rawPath: 'no_such_icon'));
     // Use runAsync for the missing-file check because it requires real file I/O.
     // The errorBuilder displays the placeholder icon.
@@ -91,7 +91,9 @@ void main() {
     expect(find.byType(Icon), findsOneWidget);
   });
 
-  testWidgets('图标被缓存驱逐后,仍在显示的图标重绘不崩溃', (tester) async {
+  testWidgets('A visible icon repaints safely after cache eviction', (
+    tester,
+  ) async {
     await tester.runAsync(() => preload('foxy_fixture_dxt1'));
     await tester.pumpWidget(iconApp());
     await tester.pumpAndSettle();
@@ -118,7 +120,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('换图标时正常加载新图标', (tester) async {
+  testWidgets('Changing the icon loads the replacement', (tester) async {
     await tester.runAsync(() async {
       await preload('foxy_fixture_dxt1');
       await preload('foxy_fixture_dxt3');

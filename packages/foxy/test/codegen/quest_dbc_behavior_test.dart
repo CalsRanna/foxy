@@ -26,7 +26,7 @@ void main() {
     await GetIt.instance.reset();
   });
 
-  test('QuestInfo 普通保存保留全部语言，语言回填保留 ID 和 Flags 草稿', () async {
+  test('Saving QuestInfo preserves all locales and applying locale edits preserves ID and flag drafts', () async {
     final row = _localizedRow('InfoName_lang');
     final driver = _Driver(row);
     GetIt.instance.registerSingleton<QuestInfoRepository>(
@@ -52,7 +52,7 @@ void main() {
     expect(events.last.log.entityName, 'edited zhCN');
   });
 
-  test('QuestSort 普通保存保留全部语言，语言回填保留 ID 和 Flags 草稿', () async {
+  test('Saving QuestSort preserves all locales and applying locale edits preserves ID and flag drafts', () async {
     final row = _localizedRow('SortName_lang');
     final driver = _Driver(row);
     GetIt.instance.registerSingleton<QuestSortRepository>(
@@ -99,7 +99,7 @@ void main() {
         }
       });
 
-      test('创建与复制允许分配上限 ID，耗尽后拒绝分配', () async {
+      test('Create and copy allow the maximum ID and reject allocation once IDs are exhausted', () async {
         driver.maxId = limit - 1;
         expect(await create(), limit);
         expect(await copy(1), limit);
@@ -111,7 +111,7 @@ void main() {
         expect(driver.insertAttempts, 1);
       });
 
-      test('复制冲突后返回实际主键并保留全部语言和 Flags', () async {
+      test('Copy returns the assigned key after a collision and preserves all locales and flags', () async {
         driver.collide = true;
         final key = await copy(1);
         expect(key, 12);
@@ -120,7 +120,7 @@ void main() {
         ]);
       });
 
-      test('冲突重试在 ID 耗尽时停止，不写入越界 ID', () async {
+      test('Collision retry stops at ID exhaustion before writing an out-of-range ID', () async {
         driver.maxId = limit - 1;
         driver.collide = true;
         await expectLater(copy(1), throwsA(isA<IdExhaustedException>()));

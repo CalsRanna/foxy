@@ -21,7 +21,7 @@ void main() {
   CombinedExportWorkflowViewModel buildVm() =>
       CombinedExportWorkflowViewModel(useCase: useCase, configUtil: configUtil);
 
-  test('prepare 从 config 加载 dbc_dir/mpq_dir 与默认文件名并填充表统计', () async {
+  test('prepare loads dbc_dir, mpq_dir, and the default file name and populates table counts', () async {
     final dbcDir = r'D:\server\dbc';
     final mpqDir = r'D:\client\Data\zhCN';
     await configUtil.update({'dbc_dir': dbcDir, 'mpq_dir': mpqDir});
@@ -40,20 +40,25 @@ void main() {
     expect(vm.status.value, WorkflowStatus.idle);
   });
 
-  test('prepare 未配置目录时输出目录为 null', () async {
-    useCase.tables = [
-      DbcExportTable(definition: DbcDefinitions.byTable['dbc_spell_duration']!),
-    ];
+  test(
+    'prepare leaves output directories null when they are unconfigured',
+    () async {
+      useCase.tables = [
+        DbcExportTable(
+          definition: DbcDefinitions.byTable['dbc_spell_duration']!,
+        ),
+      ];
 
-    final vm = buildVm();
-    await vm.prepare();
+      final vm = buildVm();
+      await vm.prepare();
 
-    expect(vm.dbcOutputDirectory.value, isNull);
-    expect(vm.mpqOutputDirectory.value, isNull);
-    expect(vm.isRunning, isFalse);
-  });
+      expect(vm.dbcOutputDirectory.value, isNull);
+      expect(vm.mpqOutputDirectory.value, isNull);
+      expect(vm.isRunning, isFalse);
+    },
+  );
 
-  test('start 未选中表时校验失败', () async {
+  test('start fails validation without selected tables', () async {
     final vm = buildVm();
     await vm.prepare();
     vm.setAllSelectableSelected(false);
@@ -64,29 +69,35 @@ void main() {
     expect(useCase.executedInputs, isEmpty);
   });
 
-  test('start 未配置 DBC 目录时校验失败', () async {
-    final vm = buildVm();
-    await vm.prepare();
-    vm.setMpqOutputDirectory(r'D:\client\Data\zhCN');
+  test(
+    'start fails validation when the DBC directory is not configured',
+    () async {
+      final vm = buildVm();
+      await vm.prepare();
+      vm.setMpqOutputDirectory(r'D:\client\Data\zhCN');
 
-    await expectLater(vm.start(), throwsA(anything));
-    expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, isNotNull);
-    expect(useCase.executedInputs, isEmpty);
-  });
+      await expectLater(vm.start(), throwsA(anything));
+      expect(vm.status.value, WorkflowStatus.failed);
+      expect(vm.errorMessage.value, isNotNull);
+      expect(useCase.executedInputs, isEmpty);
+    },
+  );
 
-  test('start 未配置 MPQ 目录时校验失败', () async {
-    final vm = buildVm();
-    await vm.prepare();
-    vm.setDbcOutputDirectory(r'D:\server\dbc');
+  test(
+    'start fails validation when the MPQ directory is not configured',
+    () async {
+      final vm = buildVm();
+      await vm.prepare();
+      vm.setDbcOutputDirectory(r'D:\server\dbc');
 
-    await expectLater(vm.start(), throwsA(anything));
-    expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, isNotNull);
-    expect(useCase.executedInputs, isEmpty);
-  });
+      await expectLater(vm.start(), throwsA(anything));
+      expect(vm.status.value, WorkflowStatus.failed);
+      expect(vm.errorMessage.value, isNotNull);
+      expect(useCase.executedInputs, isEmpty);
+    },
+  );
 
-  test('start 成功时按两个目录与文件名执行并置为 succeeded', () async {
+  test('start supplies both directories and the file name and sets succeeded on success', () async {
     final dbcDir = r'D:\server\dbc';
     final mpqDir = r'D:\client\Data\zhCN';
     await configUtil.update({'dbc_dir': dbcDir, 'mpq_dir': mpqDir});
@@ -110,7 +121,7 @@ void main() {
     expect(vm.result.value?.success, isTrue);
   });
 
-  test('setFileName 空值回退默认文件名', () async {
+  test('setFileName falls back to the default when empty', () async {
     final vm = buildVm();
     vm.setFileName('   ');
     expect(vm.fileName.value, MpqExportWorkflowViewModel.defaultPatchFileName);

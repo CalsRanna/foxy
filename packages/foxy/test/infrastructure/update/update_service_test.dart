@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('UpdateManifestInfo.fromMap', () {
-    test('解析完整字段', () {
+    test('Parses all manifest fields', () {
       final update = _manifest(_releaseMap());
       expect(update.version, '1.1.0');
       expect(update.buildNumber, '630');
@@ -23,32 +23,32 @@ void main() {
       expect(update.notes, '更新说明');
     });
 
-    test('sha256 大写转小写', () {
+    test('Normalizes uppercase SHA-256 to lowercase', () {
       final map = _releaseMap()..['sha256'] = 'A' * 64;
       expect(_manifest(map).sha256, 'a' * 64);
     });
 
-    test('isPrerelease 缺省视为正式版', () {
+    test('Missing isPrerelease defaults to a stable release', () {
       expect(_manifest(_releaseMap()).isPrerelease, isFalse);
     });
 
-    test('isPrerelease 为 true', () {
+    test('Reads isPrerelease when true', () {
       expect(_manifest(_releaseMap(isPrerelease: true)).isPrerelease, isTrue);
     });
 
-    test('缺字段抛 FormatException', () {
+    test('Missing fields throw FormatException', () {
       final map = _releaseMap()..remove('notes');
       expect(() => _manifest(map), throwsFormatException);
     });
 
-    test('类型不符抛 FormatException', () {
+    test('Unexpected field types throw FormatException', () {
       final map = _releaseMap()..['sizeBytes'] = '42';
       expect(() => _manifest(map), throwsFormatException);
     });
   });
 
   group('checkForUpdates', () {
-    test('清单版本更高 → UpdateAvailable', () async {
+    test('A newer manifest version returns UpdateAvailable', () async {
       final service = UpdateService(client: _clientReturning(_manifestYaml()));
       final result = await service.checkForUpdates(
         installedVersion: '1.0.0',
@@ -59,38 +59,44 @@ void main() {
       expect(update.version, '1.1.0');
     });
 
-    test('无 charset 响应头时中文更新日志仍按 UTF-8 解码', () async {
-      // GitHub serves release assets as `application/octet-stream` (no
-      // charset); the http package would fall back to latin-1 and garble
-      // the Chinese notes if bodyBytes were not decoded as UTF-8.
-      final service = UpdateService(
-        client: _clientReturning(
-          _manifestYaml(releases: [_releaseMap(notes: '新增自动更新功能')]),
-        ),
-      );
-      final result = await service.checkForUpdates(
-        installedVersion: '1.0.0',
-        installedBuildNumber: '628',
-      );
-      expect(result, isA<UpdateAvailable>());
-      final update = (result as UpdateAvailable).update;
-      expect(update.notes, '新增自动更新功能');
-    });
+    test(
+      'Chinese release notes decode as UTF-8 without a charset header',
+      () async {
+        // GitHub serves release assets as `application/octet-stream` (no
+        // charset); the http package would fall back to latin-1 and garble
+        // the Chinese notes if bodyBytes were not decoded as UTF-8.
+        final service = UpdateService(
+          client: _clientReturning(
+            _manifestYaml(releases: [_releaseMap(notes: '新增自动更新功能')]),
+          ),
+        );
+        final result = await service.checkForUpdates(
+          installedVersion: '1.0.0',
+          installedBuildNumber: '628',
+        );
+        expect(result, isA<UpdateAvailable>());
+        final update = (result as UpdateAvailable).update;
+        expect(update.notes, '新增自动更新功能');
+      },
+    );
 
-    test('版本相同但 build 号更高 → UpdateAvailable', () async {
-      final service = UpdateService(
-        client: _clientReturning(
-          _manifestYaml(version: '1.0.0', buildNumber: '700'),
-        ),
-      );
-      final result = await service.checkForUpdates(
-        installedVersion: '1.0.0',
-        installedBuildNumber: '628',
-      );
-      expect(result, isA<UpdateAvailable>());
-    });
+    test(
+      'A higher build number for the same version returns UpdateAvailable',
+      () async {
+        final service = UpdateService(
+          client: _clientReturning(
+            _manifestYaml(version: '1.0.0', buildNumber: '700'),
+          ),
+        );
+        final result = await service.checkForUpdates(
+          installedVersion: '1.0.0',
+          installedBuildNumber: '628',
+        );
+        expect(result, isA<UpdateAvailable>());
+      },
+    );
 
-    test('版本相同且 build 号相同 → UpToDate', () async {
+    test('Matching version and build numbers return UpToDate', () async {
       final service = UpdateService(
         client: _clientReturning(
           _manifestYaml(version: '1.0.0', buildNumber: '628'),
@@ -103,7 +109,7 @@ void main() {
       expect(result, isA<UpToDate>());
     });
 
-    test('已装版本更高 → UpToDate', () async {
+    test('A newer installed version returns UpToDate', () async {
       final service = UpdateService(
         client: _clientReturning(_manifestYaml(version: '1.0.0')),
       );
@@ -114,7 +120,7 @@ void main() {
       expect(result, isA<UpToDate>());
     });
 
-    test('清单标记预发布 → 不视为更新', () async {
+    test('Prerelease manifests are excluded from update selection', () async {
       final service = UpdateService(
         client: _clientReturning(_manifestYaml(isPrerelease: true)),
       );
@@ -125,31 +131,34 @@ void main() {
       expect(result, isA<UpToDate>());
     });
 
-    test('当前在预发布版,后续正式版更旧 → 不降级', () async {
-      // User runs the 1.1.3-alpha build itself; the manifest holds that
-      // alpha and the older 1.1.2 stable — neither is an update.
-      final service = UpdateService(
-        client: _clientReturning(
-          _manifestYaml(
-            releases: [
-              _releaseMap(
-                version: '1.1.3',
-                buildNumber: '691',
-                isPrerelease: true,
-              ),
-              _releaseMap(version: '1.1.2', buildNumber: '690'),
-            ],
+    test(
+      'An installed prerelease is never downgraded to an older stable release',
+      () async {
+        // User runs the 1.1.3-alpha build itself; the manifest holds that
+        // alpha and the older 1.1.2 stable — neither is an update.
+        final service = UpdateService(
+          client: _clientReturning(
+            _manifestYaml(
+              releases: [
+                _releaseMap(
+                  version: '1.1.3',
+                  buildNumber: '691',
+                  isPrerelease: true,
+                ),
+                _releaseMap(version: '1.1.2', buildNumber: '690'),
+              ],
+            ),
           ),
-        ),
-      );
-      final result = await service.checkForUpdates(
-        installedVersion: '1.1.3',
-        installedBuildNumber: '691',
-      );
-      expect(result, isA<UpToDate>());
-    });
+        );
+        final result = await service.checkForUpdates(
+          installedVersion: '1.1.3',
+          installedBuildNumber: '691',
+        );
+        expect(result, isA<UpToDate>());
+      },
+    );
 
-    test('清单正式版 → 正常更新', () async {
+    test('A stable manifest is eligible for updates', () async {
       final service = UpdateService(
         client: _clientReturning(_manifestYaml(isPrerelease: false)),
       );
@@ -160,16 +169,21 @@ void main() {
       expect(result, isA<UpdateAvailable>());
     });
 
-    test('旧清单缺 isPrerelease 字段 → 视为正式版', () async {
-      final service = UpdateService(client: _clientReturning(_manifestYaml()));
-      final result = await service.checkForUpdates(
-        installedVersion: '1.0.0',
-        installedBuildNumber: '628',
-      );
-      expect(result, isA<UpdateAvailable>());
-    });
+    test(
+      'Legacy manifests without isPrerelease are treated as stable',
+      () async {
+        final service = UpdateService(
+          client: _clientReturning(_manifestYaml()),
+        );
+        final result = await service.checkForUpdates(
+          installedVersion: '1.0.0',
+          installedBuildNumber: '628',
+        );
+        expect(result, isA<UpdateAvailable>());
+      },
+    );
 
-    test('isPrerelease 类型不符 → invalidManifest', () async {
+    test('An invalid isPrerelease type returns invalidManifest', () async {
       final map = _releaseMap()..['isPrerelease'] = 'yes';
       final service = UpdateService(
         client: _clientReturning(_manifestYaml(releases: [map])),
@@ -189,7 +203,7 @@ void main() {
       );
     });
 
-    test('releases 依次检查:首条与当前相同,取次条更高版本', () async {
+    test('Skips the release matching the current version and selects the next newer entry', () async {
       final service = UpdateService(
         client: _clientReturning(
           _manifestYaml(
@@ -208,34 +222,37 @@ void main() {
       expect((result as UpdateAvailable).update.version, '2.0.0');
     });
 
-    test('首条预发布更高不拦截,选后续正式版', () async {
-      // A prerelease at the top of the manifest (the CI published an alpha
-      // after a stable) must not shadow the stable release below it.
-      final service = UpdateService(
-        client: _clientReturning(
-          _manifestYaml(
-            releases: [
-              _releaseMap(
-                version: '1.2.0',
-                buildNumber: '700',
-                isPrerelease: true,
-              ),
-              _releaseMap(version: '1.1.2', buildNumber: '690'),
-            ],
+    test(
+      'Skips a newer prerelease and selects the following stable release',
+      () async {
+        // A prerelease at the top of the manifest (the CI published an alpha
+        // after a stable) must not shadow the stable release below it.
+        final service = UpdateService(
+          client: _clientReturning(
+            _manifestYaml(
+              releases: [
+                _releaseMap(
+                  version: '1.2.0',
+                  buildNumber: '700',
+                  isPrerelease: true,
+                ),
+                _releaseMap(version: '1.1.2', buildNumber: '690'),
+              ],
+            ),
           ),
-        ),
-      );
-      final result = await service.checkForUpdates(
-        installedVersion: '1.1.0',
-        installedBuildNumber: '664',
-      );
-      expect(result, isA<UpdateAvailable>());
-      final update = (result as UpdateAvailable).update;
-      expect(update.version, '1.1.2');
-      expect(update.isPrerelease, isFalse);
-    });
+        );
+        final result = await service.checkForUpdates(
+          installedVersion: '1.1.0',
+          installedBuildNumber: '664',
+        );
+        expect(result, isA<UpdateAvailable>());
+        final update = (result as UpdateAvailable).update;
+        expect(update.version, '1.1.2');
+        expect(update.isPrerelease, isFalse);
+      },
+    );
 
-    test('全部条目为预发布 → UpToDate', () async {
+    test('A list containing only prereleases returns UpToDate', () async {
       final service = UpdateService(
         client: _clientReturning(
           _manifestYaml(
@@ -253,7 +270,7 @@ void main() {
       expect(result, isA<UpToDate>());
     });
 
-    test('appId 不符 → invalidManifest', () async {
+    test('A mismatched appId returns invalidManifest', () async {
       final service = UpdateService(
         client: _clientReturning(_manifestYaml(appId: 'com.other.app')),
       );
@@ -272,7 +289,7 @@ void main() {
       );
     });
 
-    test('releases 为空 → invalidManifest', () async {
+    test('An empty releases list returns invalidManifest', () async {
       final service = UpdateService(
         client: _clientReturning(
           _manifestYaml(releases: <Map<String, Object?>>[]),
@@ -293,7 +310,7 @@ void main() {
       );
     });
 
-    test('HTTP 非 200 → UpdateException.network', () async {
+    test('A non-200 HTTP response throws UpdateException.network', () async {
       final service = UpdateService(
         client: _clientReturning('not found', status: 404),
       );
@@ -312,7 +329,7 @@ void main() {
       );
     });
 
-    test('非法 YAML → UpdateException.invalidManifest', () async {
+    test('Malformed YAML throws UpdateException.invalidManifest', () async {
       final service = UpdateService(client: _clientReturning('{oops: ['));
       await expectLater(
         service.checkForUpdates(
@@ -329,22 +346,25 @@ void main() {
       );
     });
 
-    test('非对象 YAML → UpdateException.invalidManifest', () async {
-      final service = UpdateService(client: _clientReturning('- a\n- b'));
-      await expectLater(
-        service.checkForUpdates(
-          installedVersion: '1.0.0',
-          installedBuildNumber: '628',
-        ),
-        throwsA(
-          isA<UpdateException>().having(
-            (e) => e.code,
-            'code',
-            UpdateErrorKind.invalidManifest,
+    test(
+      'A non-object YAML root throws UpdateException.invalidManifest',
+      () async {
+        final service = UpdateService(client: _clientReturning('- a\n- b'));
+        await expectLater(
+          service.checkForUpdates(
+            installedVersion: '1.0.0',
+            installedBuildNumber: '628',
           ),
-        ),
-      );
-    });
+          throwsA(
+            isA<UpdateException>().having(
+              (e) => e.code,
+              'code',
+              UpdateErrorKind.invalidManifest,
+            ),
+          ),
+        );
+      },
+    );
   });
 
   group('downloadZip', () {
@@ -354,7 +374,7 @@ void main() {
     });
     final manifest = _manifest(_releaseMap()..['sizeBytes'] = bytes.length);
 
-    test('下载成功并校验大小与 SHA-256', () async {
+    test('Downloads the file and verifies size and SHA-256', () async {
       final zipService = UpdateService(
         client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
@@ -373,7 +393,7 @@ void main() {
       file.deleteSync();
     });
 
-    test('大小不符 → UpdateException.verification 且删除半成品', () async {
+    test('A size mismatch throws UpdateException.verification and deletes the partial file', () async {
       final service = UpdateService(
         client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
@@ -403,7 +423,7 @@ void main() {
       );
     });
 
-    test('SHA-256 不符 → UpdateException.verification', () async {
+    test('A SHA-256 mismatch throws UpdateException.verification', () async {
       final service = UpdateService(
         client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
@@ -428,7 +448,7 @@ void main() {
       );
     });
 
-    test('已取消 → UpdateException.canceled 且删除半成品', () async {
+    test('Cancellation throws UpdateException.canceled and deletes the partial file', () async {
       final service = UpdateService(
         client: MockClient((request) async => http.Response.bytes(bytes, 200)),
       );
@@ -460,7 +480,7 @@ void main() {
       );
     });
 
-    test('非 200 → UpdateException.network', () async {
+    test('A non-200 response throws UpdateException.network', () async {
       final service = UpdateService(
         client: MockClient((request) async => http.Response('oops', 403)),
       );
@@ -502,40 +522,43 @@ void main() {
       );
     }
 
-    test('解压到 .update_tmp 并返回 payload 根', () async {
-      final zipBytes = _zipBytes({
-        'foxy.exe': 'new-binary',
-        'data/flutter_assets/asset.png': 'png',
-        'data/icudtl.dat': 'icu',
-      });
-      final service = UpdateService(
-        client: MockClient(
-          (request) async => http.Response.bytes(zipBytes, 200),
-        ),
-      );
-      final payloadRoot = await service.prepareUpdate(
-        zipManifest(zipBytes),
-        appDir: appDir,
-      );
-      expect(payloadRoot.path, p.join(appDir.path, '.update_tmp'));
-      expect(
-        File(p.join(payloadRoot.path, 'foxy.exe')).readAsStringSync(),
-        'new-binary',
-      );
-      expect(
-        File(p.join(payloadRoot.path, 'data', 'flutter_assets', 'asset.png'))
-            .existsSync(),
-        isTrue,
-      );
-      // The zip is cleaned up after extraction.
-      expect(
-        File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.6.zip'))
-            .existsSync(),
-        isFalse,
-      );
-    });
+    test(
+      'Extracts the archive to .update_tmp and returns the payload root',
+      () async {
+        final zipBytes = _zipBytes({
+          'foxy.exe': 'new-binary',
+          'data/flutter_assets/asset.png': 'png',
+          'data/icudtl.dat': 'icu',
+        });
+        final service = UpdateService(
+          client: MockClient(
+            (request) async => http.Response.bytes(zipBytes, 200),
+          ),
+        );
+        final payloadRoot = await service.prepareUpdate(
+          zipManifest(zipBytes),
+          appDir: appDir,
+        );
+        expect(payloadRoot.path, p.join(appDir.path, '.update_tmp'));
+        expect(
+          File(p.join(payloadRoot.path, 'foxy.exe')).readAsStringSync(),
+          'new-binary',
+        );
+        expect(
+          File(p.join(payloadRoot.path, 'data', 'flutter_assets', 'asset.png'))
+              .existsSync(),
+          isTrue,
+        );
+        // The zip is cleaned up after extraction.
+        expect(
+          File(p.join(Directory.systemTemp.path, 'foxy_update_9.9.6.zip'))
+              .existsSync(),
+          isFalse,
+        );
+      },
+    );
 
-    test('zip 含单个顶层目录 → 返回该目录作为 payload 根', () async {
+    test('An archive with one top-level directory uses that directory as the payload root', () async {
       final zipBytes = _zipBytes({
         'Foxy/foxy.exe': 'new-binary',
         'Foxy/data/flutter_assets/asset.png': 'png',
@@ -552,26 +575,29 @@ void main() {
       expect(payloadRoot.path, p.join(appDir.path, '.update_tmp', 'Foxy'));
     });
 
-    test('zip-slip 条目被丢弃,不写到目标目录之外', () async {
-      final zipBytes = _zipBytes({
-        'foxy.exe': 'new-binary',
-        '../evil.txt': 'evil',
-      });
-      final service = UpdateService(
-        client: MockClient(
-          (request) async => http.Response.bytes(zipBytes, 200),
-        ),
-      );
-      await service.prepareUpdate(zipManifest(zipBytes), appDir: appDir);
-      expect(
-        File(p.join(appDir.parent.path, 'evil.txt')).existsSync(),
-        isFalse,
-      );
-      expect(
-        File(p.join(appDir.path, '.update_tmp', 'foxy.exe')).existsSync(),
-        isTrue,
-      );
-    });
+    test(
+      'Zip-slip entries are discarded without writing outside the destination',
+      () async {
+        final zipBytes = _zipBytes({
+          'foxy.exe': 'new-binary',
+          '../evil.txt': 'evil',
+        });
+        final service = UpdateService(
+          client: MockClient(
+            (request) async => http.Response.bytes(zipBytes, 200),
+          ),
+        );
+        await service.prepareUpdate(zipManifest(zipBytes), appDir: appDir);
+        expect(
+          File(p.join(appDir.parent.path, 'evil.txt')).existsSync(),
+          isFalse,
+        );
+        expect(
+          File(p.join(appDir.path, '.update_tmp', 'foxy.exe')).existsSync(),
+          isTrue,
+        );
+      },
+    );
   });
 
   group('resolvePayloadRoot', () {
@@ -585,18 +611,18 @@ void main() {
       if (dir.existsSync()) dir.deleteSync(recursive: true);
     });
 
-    test('根目录含文件 → 返回自身', () {
+    test('A root containing files is returned as the payload root', () {
       File(p.join(dir.path, 'a.txt')).writeAsStringSync('x');
       expect(UpdateService.resolvePayloadRoot(dir).path, dir.path);
     });
 
-    test('多个顶层目录 → 返回自身', () {
+    test('Multiple top-level directories keep the extraction root', () {
       Directory(p.join(dir.path, 'd1')).createSync();
       Directory(p.join(dir.path, 'd2')).createSync();
       expect(UpdateService.resolvePayloadRoot(dir).path, dir.path);
     });
 
-    test('单个顶层目录且无根文件 → 返回该目录', () {
+    test('A single top-level directory with no root files becomes the payload root', () {
       final sub = Directory(p.join(dir.path, 'Foxy'))..createSync();
       File(p.join(sub.path, 'foxy.exe')).writeAsStringSync('x');
       expect(

@@ -23,7 +23,7 @@ void main() {
   });
 
   group('FoxyBlpIconProvider', () {
-    test('obtainKey 归一化 rawPath', () async {
+    test('obtainKey normalizes rawPath', () async {
       final provider = FoxyBlpIconProvider(
         rawPath: 'Interface\\Icons\\INV_Misc_Foo',
       );
@@ -31,7 +31,7 @@ void main() {
       expect(key.name, 'inv_misc_foo');
     });
 
-    test('provider 相等性基于 rawPath', () {
+    test('Provider equality depends on rawPath', () {
       expect(
         FoxyBlpIconProvider(rawPath: 'a') == FoxyBlpIconProvider(rawPath: 'a'),
         isTrue,
@@ -42,7 +42,7 @@ void main() {
       );
     });
 
-    test('加载成功返回 64×64 图像', () async {
+    test('Successful loading returns a 64 by 64 image', () async {
       final provider = FoxyBlpIconProvider(
         rawPath: 'foxy_fixture_dxt1',
         iconDir: p.dirname(fixtureBlp),
@@ -54,38 +54,44 @@ void main() {
       info.dispose();
     });
 
-    test('文件缺失抛错,失败的 key 从 ImageCache 驱逐', () async {
-      PaintingBinding.instance.imageCache.clear();
-      final provider = FoxyBlpIconProvider(
-        rawPath: 'no_such_icon',
-        iconDir: p.dirname(fixtureBlp),
-      );
-      expect(await resolveViaStream(provider), isNull);
-      final key = await provider.obtainKey(const ImageConfiguration());
-      expect(
-        PaintingBinding.instance.imageCache.statusForKey(key).untracked,
-        isTrue,
-        reason: '失败的 key 不残留(否则会卡住后续重试)',
-      );
-    });
+    test(
+      'A missing file throws and evicts the failed key from ImageCache',
+      () async {
+        PaintingBinding.instance.imageCache.clear();
+        final provider = FoxyBlpIconProvider(
+          rawPath: 'no_such_icon',
+          iconDir: p.dirname(fixtureBlp),
+        );
+        expect(await resolveViaStream(provider), isNull);
+        final key = await provider.obtainKey(const ImageConfiguration());
+        expect(
+          PaintingBinding.instance.imageCache.statusForKey(key).untracked,
+          isTrue,
+          reason: '失败的 key 不残留(否则会卡住后续重试)',
+        );
+      },
+    );
 
-    test('损坏 BLP 抛错,失败的 key 从 ImageCache 驱逐', () async {
-      PaintingBinding.instance.imageCache.clear();
-      File(p.join(tempDir.path, 'broken.blp'))
-          .writeAsBytesSync(List.filled(128, 0));
-      final provider = FoxyBlpIconProvider(
-        rawPath: 'broken',
-        iconDir: tempDir.path,
-      );
-      expect(await resolveViaStream(provider), isNull);
-      final key = await provider.obtainKey(const ImageConfiguration());
-      expect(
-        PaintingBinding.instance.imageCache.statusForKey(key).untracked,
-        isTrue,
-      );
-    });
+    test(
+      'A corrupt BLP throws and evicts the failed key from ImageCache',
+      () async {
+        PaintingBinding.instance.imageCache.clear();
+        File(p.join(tempDir.path, 'broken.blp'))
+            .writeAsBytesSync(List.filled(128, 0));
+        final provider = FoxyBlpIconProvider(
+          rawPath: 'broken',
+          iconDir: tempDir.path,
+        );
+        expect(await resolveViaStream(provider), isNull);
+        final key = await provider.obtainKey(const ImageConfiguration());
+        expect(
+          PaintingBinding.instance.imageCache.statusForKey(key).untracked,
+          isTrue,
+        );
+      },
+    );
 
-    test('失败后文件出现,同一 key 可重新加载', () async {
+    test('The same key can load again when the missing file appears', () async {
       PaintingBinding.instance.imageCache.clear();
       // Resolve again after the file appears to verify that the failed load
       // was evicted and can be retried.

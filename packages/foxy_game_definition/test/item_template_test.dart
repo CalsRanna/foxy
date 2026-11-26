@@ -2,7 +2,7 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('item_template 枚举、运行时保留值和 Flags 覆盖 AzerothCore 取值集', () {
+  test('item_template enums, reserved runtime values, and flags cover the AzerothCore domain', () {
     expect(ItemConstants.itemClasses, hasLength(17));
     expect(ItemConstants.itemInventoryTypes, hasLength(29));
     expect(ItemEnums.itemQualityOptions.keys.toSet(), {0, 1, 2, 3, 4, 5, 6, 7});

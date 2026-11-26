@@ -3,7 +3,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 
 void main() {
-  test('QuestInfo DBC 与本地化定义对应 3.3.5.12340', () {
+  test('QuestInfo DBC and locale definitions match 3.3.5.12340', () {
     final definition = DbcDefinitions.byTable['dbc_quest_info']!;
     expect(definition.fileName, 'QuestInfo.dbc');
     expect(definition.schema.format, 'nssssssssssssssssi');

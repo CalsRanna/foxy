@@ -126,73 +126,79 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('全新用户从步骤 1 开始，对话框不可关闭', (tester) async {
-    await pumpWizard(tester);
+  testWidgets(
+    'First-time users start at step one and cannot dismiss the dialog',
+    (tester) async {
+      await pumpWizard(tester);
 
-    expect(find.text('首次设置引导'), findsOneWidget);
-    expect(
-      tester.widget<ShadDialog>(find.byType(ShadDialog)).title,
-      isA<Text>(),
-    );
-    expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
-    expect(find.text('第 2 步：设置服务端目录'), findsNothing);
-    expect(
-      tester.widget<ShadButton>(find.widgetWithText(ShadButton, '浏览')).child,
-      isA<Text>(),
-    );
-
-    // No close button (closeIcon hidden); PopScope blocks exit.
-    expect(find.byIcon(LucideIcons.x), findsNothing);
-    final popScope = tester.widget<PopScope>(
-      find.descendant(
-        of: find.byType(SetupWizardDialog),
-        matching: find.byType(PopScope),
-      ),
-    );
-    expect(popScope.canPop, isFalse);
-  });
-
-  testWidgets('路径校验与步骤导航：无效路径报错，有效路径进入下一步', (tester) async {
-    await pumpWizard(tester);
-
-    // Empty path: validation fails on save, an error dialog opens, and the
-    // wizard stays on the current step.
-    await tester.runAsync(() async {
-      await tester.tap(find.text('下一步'));
-      await _waitFor(() => setupVm.clientDirError.value != null);
-      await tester.pump();
-    });
-    expect(find.textContaining('请选择客户端目录'), findsOneWidget);
-    await dismissError(tester);
-    expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
-
-    // Invalid path: save fails, an error dialog opens, and the wizard
-    // stays on the current step.
-    await tester.runAsync(() async {
-      await tester.enterText(
-        find.byType(ShadInput),
-        p.join(tempDir.path, '不存在'),
+      expect(find.text('首次设置引导'), findsOneWidget);
+      expect(
+        tester.widget<ShadDialog>(find.byType(ShadDialog)).title,
+        isA<Text>(),
       );
-      await tester.tap(find.text('下一步'));
-      await _waitFor(
-        () => setupVm.clientDirError.value?.contains('不存在') ?? false,
+      expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
+      expect(find.text('第 2 步：设置服务端目录'), findsNothing);
+      expect(
+        tester.widget<ShadButton>(find.widgetWithText(ShadButton, '浏览')).child,
+        isA<Text>(),
       );
-      await tester.pump();
-    });
-    expect(find.textContaining('目录不存在'), findsOneWidget);
-    await dismissError(tester);
-    expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
 
-    // Valid path: proceed to step 2.
-    await tester.runAsync(() async {
-      await tester.enterText(find.byType(ShadInput), clientRoot.path);
-      await tester.tap(find.text('下一步'));
-      await _waitFor(() => setupVm.clientDir.value != null);
-      await tester.pump();
-    });
-    expect(find.text('第 2 步：设置服务端目录'), findsOneWidget);
-    expect(configData['client_dir'], clientRoot.path);
-  });
+      // No close button (closeIcon hidden); PopScope blocks exit.
+      expect(find.byIcon(LucideIcons.x), findsNothing);
+      final popScope = tester.widget<PopScope>(
+        find.descendant(
+          of: find.byType(SetupWizardDialog),
+          matching: find.byType(PopScope),
+        ),
+      );
+      expect(popScope.canPop, isFalse);
+    },
+  );
+
+  testWidgets(
+    'Invalid paths display an error and valid paths advance to the next step',
+    (tester) async {
+      await pumpWizard(tester);
+
+      // Empty path: validation fails on save, an error dialog opens, and the
+      // wizard stays on the current step.
+      await tester.runAsync(() async {
+        await tester.tap(find.text('下一步'));
+        await _waitFor(() => setupVm.clientDirError.value != null);
+        await tester.pump();
+      });
+      expect(find.textContaining('请选择客户端目录'), findsOneWidget);
+      await dismissError(tester);
+      expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
+
+      // Invalid path: save fails, an error dialog opens, and the wizard
+      // stays on the current step.
+      await tester.runAsync(() async {
+        await tester.enterText(
+          find.byType(ShadInput),
+          p.join(tempDir.path, '不存在'),
+        );
+        await tester.tap(find.text('下一步'));
+        await _waitFor(
+          () => setupVm.clientDirError.value?.contains('不存在') ?? false,
+        );
+        await tester.pump();
+      });
+      expect(find.textContaining('目录不存在'), findsOneWidget);
+      await dismissError(tester);
+      expect(find.text('第 1 步：设置客户端目录'), findsOneWidget);
+
+      // Valid path: proceed to step 2.
+      await tester.runAsync(() async {
+        await tester.enterText(find.byType(ShadInput), clientRoot.path);
+        await tester.tap(find.text('下一步'));
+        await _waitFor(() => setupVm.clientDir.value != null);
+        await tester.pump();
+      });
+      expect(find.text('第 2 步：设置服务端目录'), findsOneWidget);
+      expect(configData['client_dir'], clientRoot.path);
+    },
+  );
 
   Future<void> saveDirectory(WidgetTester tester, Directory directory) async {
     await tester.runAsync(() async {
@@ -221,68 +227,76 @@ void main() {
     );
   }
 
-  testWidgets('第三步仅有进入应用，点击后显示统一进度对话框并执行两项任务', (tester) async {
-    dbcSync.tablesReady = false;
-    final finishImport = Completer<void>();
-    dbcSync.importGate = finishImport.future;
-    await openWizard(tester);
-    await tester.pumpAndSettle();
-    await saveDirectory(tester, clientRoot);
-    await saveDirectory(tester, serverRoot);
+  testWidgets(
+    'Step three offers only entry to the app and runs both tasks in one progress dialog',
+    (tester) async {
+      dbcSync.tablesReady = false;
+      final finishImport = Completer<void>();
+      dbcSync.importGate = finishImport.future;
+      await openWizard(tester);
+      await tester.pumpAndSettle();
+      await saveDirectory(tester, clientRoot);
+      await saveDirectory(tester, serverRoot);
 
-    expectSingleEntryAction();
-    expect(dbcSync.tableChecks, 0);
-    expect(iconVm.status.value, WorkflowStatus.idle);
+      expectSingleEntryAction();
+      expect(dbcSync.tableChecks, 0);
+      expect(iconVm.status.value, WorkflowStatus.idle);
 
-    await tester.runAsync(() async {
+      await tester.runAsync(() async {
+        await tester.tap(find.text('进入应用'));
+        await _waitFor(() => importVm.progress.value == 0.5);
+      });
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(ShadDialog, '正在导入 DBC'), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      expect(find.text('50%'), findsOneWidget);
+      expect(iconVm.status.value, WorkflowStatus.idle);
+
+      await tester.runAsync(() async {
+        finishImport.complete();
+        await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
+      });
+      await tester.pumpAndSettle();
+
+      expect(importVm.status.value, WorkflowStatus.succeeded);
+      expect(dbcSync.importedDirectories, [
+        p.join(serverRoot.path, 'data', 'dbc'),
+      ]);
+      expect(iconVm.result.value?.extracted, 2);
+      expect(find.byType(SetupWizardDialog), findsNothing);
+      expect(find.byType(ShadDialog), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Ready DBC files are preserved and step three remains usable in a narrow window',
+    (tester) async {
+      tester.view.physicalSize = const Size(480, 720);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await openWizard(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('跳过'));
+      await tester.pumpAndSettle();
+      await saveDirectory(tester, serverRoot);
+
+      expectSingleEntryAction();
+      expect(dbcSync.tableChecks, 0);
       await tester.tap(find.text('进入应用'));
-      await _waitFor(() => importVm.progress.value == 0.5);
-    });
-    await tester.pumpAndSettle();
-    expect(find.widgetWithText(ShadDialog, '正在导入 DBC'), findsOneWidget);
-    expect(find.byType(LinearProgressIndicator), findsOneWidget);
-    expect(find.text('50%'), findsOneWidget);
-    expect(iconVm.status.value, WorkflowStatus.idle);
+      await tester.pumpAndSettle();
 
-    await tester.runAsync(() async {
-      finishImport.complete();
-      await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
-    });
-    await tester.pumpAndSettle();
+      expect(dbcSync.tableChecks, 1);
+      expect(dbcSync.importedDirectories, isEmpty);
+      expect(iconVm.status.value, WorkflowStatus.idle);
+      expect(find.byType(SetupWizardDialog), findsNothing);
+    },
+  );
 
-    expect(importVm.status.value, WorkflowStatus.succeeded);
-    expect(dbcSync.importedDirectories, [
-      p.join(serverRoot.path, 'data', 'dbc'),
-    ]);
-    expect(iconVm.result.value?.extracted, 2);
-    expect(find.byType(SetupWizardDialog), findsNothing);
-    expect(find.byType(ShadDialog), findsNothing);
-  });
-
-  testWidgets('DBC 已就绪时不重复覆盖，第三步在窄窗口仍可进入应用', (tester) async {
-    tester.view.physicalSize = const Size(480, 720);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await openWizard(tester);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('跳过'));
-    await tester.pumpAndSettle();
-    await saveDirectory(tester, serverRoot);
-
-    expectSingleEntryAction();
-    expect(dbcSync.tableChecks, 0);
-    await tester.tap(find.text('进入应用'));
-    await tester.pumpAndSettle();
-
-    expect(dbcSync.tableChecks, 1);
-    expect(dbcSync.importedDirectories, isEmpty);
-    expect(iconVm.status.value, WorkflowStatus.idle);
-    expect(find.byType(SetupWizardDialog), findsNothing);
-  });
-
-  testWidgets('只配置服务端目录时仅导入 DBC', (tester) async {
+  testWidgets('A server-only configuration imports DBC files only', (
+    tester,
+  ) async {
     dbcSync.tablesReady = false;
     await openWizard(tester);
     await tester.pumpAndSettle();
@@ -305,29 +319,34 @@ void main() {
     expect(find.byType(SetupWizardDialog), findsNothing);
   });
 
-  testWidgets('跳过两个目录时直接进入应用并保留选择', (tester) async {
-    await openWizard(tester);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('跳过'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('跳过'));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Skipping both directories enters the app and saves the choices',
+    (tester) async {
+      await openWizard(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('跳过'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('跳过'));
+      await tester.pumpAndSettle();
 
-    expectSingleEntryAction();
-    await tester.tap(find.text('进入应用'));
-    await tester.pumpAndSettle();
+      expectSingleEntryAction();
+      await tester.tap(find.text('进入应用'));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ShadDialog), findsNothing);
-    expect(dbcSync.tableChecks, 0);
-    expect(iconVm.status.value, WorkflowStatus.idle);
-    final reloaded = SetupStatusViewModel(configUtil: configUtil);
-    await reloaded.prepare();
-    expect(reloaded.isSetupComplete, isTrue);
-    expect(reloaded.isClientDirConfigured, isFalse);
-    expect(reloaded.isServerDirConfigured, isFalse);
-  });
+      expect(find.byType(ShadDialog), findsNothing);
+      expect(dbcSync.tableChecks, 0);
+      expect(iconVm.status.value, WorkflowStatus.idle);
+      final reloaded = SetupStatusViewModel(configUtil: configUtil);
+      await reloaded.prepare();
+      expect(reloaded.isSetupComplete, isTrue);
+      expect(reloaded.isClientDirConfigured, isFalse);
+      expect(reloaded.isServerDirConfigured, isFalse);
+    },
+  );
 
-  testWidgets('只配置客户端目录时仅提取图标', (tester) async {
+  testWidgets('A client-only configuration extracts icons only', (
+    tester,
+  ) async {
     await openWizard(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.text('跳过'));
@@ -351,26 +370,29 @@ void main() {
     expect(find.byType(SetupWizardDialog), findsNothing);
   });
 
-  testWidgets('导入失败后仍尝试提取，确认错误后可进入应用', (tester) async {
-    dbcSync.tablesReady = false;
-    dbcSync.importFails = true;
-    await openWizard(tester);
-    await tester.pumpAndSettle();
-    await saveDirectory(tester, clientRoot);
-    await saveDirectory(tester, serverRoot);
+  testWidgets(
+    'Icon extraction is attempted after import failure and acknowledging the error allows entry',
+    (tester) async {
+      dbcSync.tablesReady = false;
+      dbcSync.importFails = true;
+      await openWizard(tester);
+      await tester.pumpAndSettle();
+      await saveDirectory(tester, clientRoot);
+      await saveDirectory(tester, serverRoot);
 
-    await tester.runAsync(() async {
-      await tester.tap(find.text('进入应用'));
-      await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
-    });
-    await tester.pumpAndSettle();
+      await tester.runAsync(() async {
+        await tester.tap(find.text('进入应用'));
+        await _waitFor(() => iconVm.status.value == WorkflowStatus.succeeded);
+      });
+      await tester.pumpAndSettle();
 
-    expect(importVm.status.value, WorkflowStatus.failed);
-    expect(find.textContaining('可在设置中重试'), findsOneWidget);
-    await tester.runAsync(() => dismissError(tester));
-    await tester.pumpAndSettle();
-    expect(find.byType(SetupWizardDialog), findsNothing);
-  });
+      expect(importVm.status.value, WorkflowStatus.failed);
+      expect(find.textContaining('可在设置中重试'), findsOneWidget);
+      await tester.runAsync(() => dismissError(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(SetupWizardDialog), findsNothing);
+    },
+  );
 }
 
 /// Uses warcrafty to write a minimal MPQ containing 2 icons.

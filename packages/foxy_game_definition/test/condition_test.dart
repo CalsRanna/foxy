@@ -2,19 +2,31 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('来源类型精确排除 NONE、3.3.5a 不支持值和枚举哨兵', () {
-    expect(ConditionSourceTypes.conditionSourceTypeLabels.keys.toSet(), {
-      for (var value = 1; value <= 24; value++) value,
-      28,
-      29,
-      30,
-    });
-    expect(ConditionSourceTypes.conditionSourceTypeLabels, isNot(contains(0)));
-    expect(ConditionSourceTypes.conditionSourceTypeLabels, isNot(contains(25)));
-    expect(ConditionSourceTypes.conditionSourceTypeLabels, isNot(contains(31)));
-  });
+  test(
+    'Source types exclude NONE, unsupported 3.3.5a values, and enum sentinels',
+    () {
+      expect(ConditionSourceTypes.conditionSourceTypeLabels.keys.toSet(), {
+        for (var value = 1; value <= 24; value++) value,
+        28,
+        29,
+        30,
+      });
+      expect(
+        ConditionSourceTypes.conditionSourceTypeLabels,
+        isNot(contains(0)),
+      );
+      expect(
+        ConditionSourceTypes.conditionSourceTypeLabels,
+        isNot(contains(25)),
+      );
+      expect(
+        ConditionSourceTypes.conditionSourceTypeLabels,
+        isNot(contains(31)),
+      );
+    },
+  );
 
-  test('条件类型精确匹配 ConditionMgr 当前可加载集合', () {
+  test('Condition types match the set ConditionMgr can load', () {
     expect(ConditionType.conditionTypeLabels.keys.toSet(), {
       for (var value = 1; value <= 40; value++) value,
       for (var value = 42; value <= 49; value++) value,
@@ -27,14 +39,14 @@ void main() {
     expect(ConditionType.conditionTypeLabels, isNot(contains(107)));
   });
 
-  test('ConditionTarget 数量按 ConditionMgr 来源分支计算', () {
+  test('ConditionTarget counts come from the ConditionMgr source branches', () {
     expect(ConditionSourceTypes.targetCount(22), 3);
     expect(ConditionSourceTypes.targetCount(17), 2);
     expect(ConditionSourceTypes.targetCount(30), 2);
     expect(ConditionSourceTypes.targetCount(19), 1);
   });
 
-  test('ErrorType 和 ErrorTextId 使用 SpellCastResult 精确枚举', () {
+  test('ErrorType and ErrorTextId use the exact SpellCastResult enum', () {
     expect(ConditionErrorTypes.conditionErrorTypeOptions.keys.toSet(), {
       for (var value = 0; value <= 187; value++) value,
     });
@@ -44,7 +56,7 @@ void main() {
     });
   });
 
-  test('三个 Value 字段分别使用运行时消费的枚举、Flags 和引用', () {
+  test('Each Value field uses the enums, flags, and references consumed at runtime', () {
     final item = ConditionValueConfig.forType(2);
     expect(
       (item.value1 as IntegerReferenceFieldSpec).reference,

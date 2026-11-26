@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 
 void main() {
-  test('fromJson 接受 MySQL 整数坐标且 copyWith 不丢失联合字段', () {
+  test('fromJson accepts MySQL integer coordinates and copyWith preserves composite fields', () {
     final source = const SmartScriptEntity(
       entryOrGuid: 1,
       sourceType: 0,

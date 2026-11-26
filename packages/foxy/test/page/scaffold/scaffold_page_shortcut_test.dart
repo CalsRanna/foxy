@@ -140,69 +140,82 @@ void main() {
     await tester.sendKeyUpEvent(modifier);
   }
 
-  test('属性缩放分布和任务排序在侧栏使用不同的图标', () {
-    expect(RouterMenu.scalingStatDistribution.icon, LucideIcons.trendingUp);
-    expect(RouterMenu.questSort.icon, LucideIcons.arrowUpDown);
-  });
+  test(
+    'Scaling stat distribution and quest sort use distinct sidebar icons',
+    () {
+      expect(RouterMenu.scalingStatDistribution.icon, LucideIcons.trendingUp);
+      expect(RouterMenu.questSort.icon, LucideIcons.arrowUpDown);
+    },
+  );
 
-  testWidgets('启动时尊重已保存的跳过选择，无需显示引导或检查 DBC', (tester) async {
-    final config = _MemoryConfigUtil({
-      'server_setup_skipped': true,
-      'client_setup_skipped': true,
-    });
-    await GetIt.instance.unregister<SetupStatusViewModel>();
-    GetIt.instance.registerSingleton(SetupStatusViewModel(configUtil: config));
-    await GetIt.instance.unregister<CheckDbcReminderUseCase>();
-    var tableChecks = 0;
-    GetIt.instance.registerSingleton(
-      CheckDbcReminderUseCase(
-        configUtil: config,
-        checkTables: () async {
-          tableChecks++;
-          return [];
-        },
-      ),
-    );
+  testWidgets(
+    'Startup honors saved skip choices without showing setup or checking DBC',
+    (tester) async {
+      final config = _MemoryConfigUtil({
+        'server_setup_skipped': true,
+        'client_setup_skipped': true,
+      });
+      await GetIt.instance.unregister<SetupStatusViewModel>();
+      GetIt.instance.registerSingleton(
+        SetupStatusViewModel(configUtil: config),
+      );
+      await GetIt.instance.unregister<CheckDbcReminderUseCase>();
+      var tableChecks = 0;
+      GetIt.instance.registerSingleton(
+        CheckDbcReminderUseCase(
+          configUtil: config,
+          checkTables: () async {
+            tableChecks++;
+            return [];
+          },
+        ),
+      );
 
-    await pumpApp(tester);
+      await pumpApp(tester);
 
-    expect(find.text('页面一'), findsOneWidget);
-    expect(find.byType(ShadDialog), findsNothing);
-    expect(tableChecks, 0);
-  });
+      expect(find.text('页面一'), findsOneWidget);
+      expect(find.byType(ShadDialog), findsNothing);
+      expect(tableChecks, 0);
+    },
+  );
 
-  testWidgets('任意页面可打开一键导出，输入框聚焦时也生效', (tester) async {
-    await pumpApp(tester);
-    expect(find.text('页面一'), findsOneWidget);
+  testWidgets(
+    'The export shortcut works on any page even when a text field has focus',
+    (tester) async {
+      await pumpApp(tester);
+      expect(find.text('页面一'), findsOneWidget);
 
-    await pressExport(tester);
-    await tester.pumpAndSettle();
-    expect(find.byType(CombinedExportDialog), findsOneWidget);
-    expect(
-      tester.widget<ShadDialog>(find.byType(ShadDialog)).title,
-      isA<Text>(),
-    );
-    expect(
-      tester.widget<ShadButton>(find.widgetWithText(ShadButton, '导出')).child,
-      isA<Text>(),
-    );
+      await pressExport(tester);
+      await tester.pumpAndSettle();
+      expect(find.byType(CombinedExportDialog), findsOneWidget);
+      expect(
+        tester.widget<ShadDialog>(find.byType(ShadDialog)).title,
+        isA<Text>(),
+      );
+      expect(
+        tester.widget<ShadButton>(find.widgetWithText(ShadButton, '导出')).child,
+        isA<Text>(),
+      );
 
-    await tester.tap(find.text('取消'));
-    await tester.pumpAndSettle();
-    final innerRouter = router.innerRouterOf<StackRouter>('ScaffoldRoute')!;
-    innerRouter.push(const NamedRoute('SecondRoute'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(ShadInput), 'spell');
+      await tester.tap(find.text('取消'));
+      await tester.pumpAndSettle();
+      final innerRouter = router.innerRouterOf<StackRouter>('ScaffoldRoute')!;
+      innerRouter.push(const NamedRoute('SecondRoute'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(ShadInput), 'spell');
 
-    await pressExport(tester);
-    await tester.pumpAndSettle();
-    expect(find.byType(CombinedExportDialog), findsOneWidget);
-    await tester.tap(find.text('取消'));
-    await tester.pumpAndSettle();
-    expect(find.text('spell'), findsOneWidget);
-  });
+      await pressExport(tester);
+      await tester.pumpAndSettle();
+      expect(find.byType(CombinedExportDialog), findsOneWidget);
+      await tester.tap(find.text('取消'));
+      await tester.pumpAndSettle();
+      expect(find.text('spell'), findsOneWidget);
+    },
+  );
 
-  testWidgets('连续按键和对话框打开后再次触发不会叠加导出弹窗', (tester) async {
+  testWidgets('Repeated shortcut presses do not stack export dialogs', (
+    tester,
+  ) async {
     await pumpApp(tester);
     await pressExport(tester);
     await pressExport(tester);
@@ -219,33 +232,36 @@ void main() {
     expect(find.byType(CombinedExportDialog), findsOneWidget);
   });
 
-  testWidgets('DBC 或 MPQ 任务忙碌时不触发，结束后恢复', (tester) async {
-    await pumpApp(tester);
-    final statuses = [
-      importVm.status,
-      exportVm.status,
-      mpqVm.status,
-      combinedVm.status,
-    ];
-    for (final status in statuses) {
-      for (final busy in [
-        WorkflowStatus.preparing,
-        WorkflowStatus.running,
-        WorkflowStatus.cancelling,
-      ]) {
-        status.value = busy;
-        await pressExport(tester);
-        await tester.pumpAndSettle();
-        expect(find.byType(CombinedExportDialog), findsNothing);
+  testWidgets(
+    'The export shortcut is disabled while DBC or MPQ work is running and resumes afterward',
+    (tester) async {
+      await pumpApp(tester);
+      final statuses = [
+        importVm.status,
+        exportVm.status,
+        mpqVm.status,
+        combinedVm.status,
+      ];
+      for (final status in statuses) {
+        for (final busy in [
+          WorkflowStatus.preparing,
+          WorkflowStatus.running,
+          WorkflowStatus.cancelling,
+        ]) {
+          status.value = busy;
+          await pressExport(tester);
+          await tester.pumpAndSettle();
+          expect(find.byType(CombinedExportDialog), findsNothing);
+        }
+        status.value = WorkflowStatus.succeeded;
       }
-      status.value = WorkflowStatus.succeeded;
-    }
-    await pressExport(tester);
-    await tester.pumpAndSettle();
-    expect(find.byType(CombinedExportDialog), findsOneWidget);
-  });
+      await pressExport(tester);
+      await tester.pumpAndSettle();
+      expect(find.byType(CombinedExportDialog), findsOneWidget);
+    },
+  );
 
-  testWidgets('缺少 Shift 时不触发导出', (tester) async {
+  testWidgets('The export shortcut requires Shift', (tester) async {
     await pumpApp(tester);
     await pressExport(tester, shift: false);
     await tester.pumpAndSettle();

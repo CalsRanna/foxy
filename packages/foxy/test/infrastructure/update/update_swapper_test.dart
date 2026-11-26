@@ -67,7 +67,7 @@ void main() {
     appDir.parent.deleteSync(recursive: true);
   });
 
-  test('镜像替换:新文件覆盖、旧文件删除、用户数据保留', () async {
+  test('Mirroring replaces changed files, deletes stale files, and preserves user data', () async {
     final result = await UpdateSwapper.applyUpdate(
       appDir: appDir,
       payloadRoot: payloadDir,
@@ -141,7 +141,7 @@ void main() {
     );
   });
 
-  test('isPreserved 命中自身与子树', () {
+  test('isPreserved matches an entry and its descendants', () {
     expect(UpdateSwapper.isPreserved('config.yaml'), isTrue);
     expect(UpdateSwapper.isPreserved('data/icon'), isTrue);
     expect(UpdateSwapper.isPreserved('data/icon/icon1.blp'), isTrue);
@@ -154,62 +154,72 @@ void main() {
     expect(UpdateSwapper.isPreserved('data/icon_extra'), isFalse);
   });
 
-  test('单文件失败记录到 failures,不中断整体交换', () async {
-    // Lock an old file slated for deletion (deletion fails on Windows).
-    final locked = File(p.join(appDir.path, 'stale.dll'));
-    final handle = locked.openSync(mode: FileMode.writeOnlyAppend);
-    try {
+  test(
+    'A single file failure is recorded and does not stop the swap',
+    () async {
+      // Lock an old file slated for deletion (deletion fails on Windows).
+      final locked = File(p.join(appDir.path, 'stale.dll'));
+      final handle = locked.openSync(mode: FileMode.writeOnlyAppend);
+      try {
+        final result = await UpdateSwapper.applyUpdate(
+          appDir: appDir,
+          payloadRoot: payloadDir,
+          maxRetries: 1,
+        );
+        // The new file is still in place.
+        expect(
+          File(p.join(appDir.path, 'foxy.exe')).readAsStringSync(),
+          'new-exe',
+        );
+        // A failure may be recorded (locked-file deletion), or the platform
+        // may allow deletion and succeed. Either way, the swap must not
+        // throw and the new file must be in place.
+        if (result.hasFailures) {
+          expect(result.failures.first.path, locked.path);
+        }
+      } finally {
+        handle.closeSync();
+      }
+    },
+  );
+
+  test(
+    'A payload nested under .update_tmp can be fully removed after the swap',
+    () async {
+      // Simulate: payload under .update_tmp/Foxy, with other leftovers in
+      // .update_tmp.
+      final updateTemp = Directory(
+        p.join(appDir.path, UpdateSwapper.tempDirName),
+      )..createSync();
+      final nested = Directory(p.join(updateTemp.path, 'Foxy'))..createSync();
+      File(p.join(nested.path, 'foxy.exe')).writeAsStringSync('nested-exe');
+      File(p.join(updateTemp.path, 'junk.bin')).writeAsStringSync('junk');
+
       final result = await UpdateSwapper.applyUpdate(
         appDir: appDir,
-        payloadRoot: payloadDir,
-        maxRetries: 1,
+        payloadRoot: nested,
       );
-      // The new file is still in place.
+      expect(result.hasFailures, isFalse);
+      // The new version comes from a nested payload.
       expect(
         File(p.join(appDir.path, 'foxy.exe')).readAsStringSync(),
-        'new-exe',
+        'nested-exe',
       );
-      // A failure may be recorded (locked-file deletion), or the platform
-      // may allow deletion and succeed. Either way, the swap must not
-      // throw and the new file must be in place.
-      if (result.hasFailures) {
-        expect(result.failures.first.path, locked.path);
-      }
-    } finally {
-      handle.closeSync();
-    }
-  });
-
-  test('payload 根为 .update_tmp 子目录时,交换后可被完整删除', () async {
-    // Simulate: payload under .update_tmp/Foxy, with other leftovers in
-    // .update_tmp.
-    final updateTemp = Directory(p.join(appDir.path, UpdateSwapper.tempDirName))
-      ..createSync();
-    final nested = Directory(p.join(updateTemp.path, 'Foxy'))..createSync();
-    File(p.join(nested.path, 'foxy.exe')).writeAsStringSync('nested-exe');
-    File(p.join(updateTemp.path, 'junk.bin')).writeAsStringSync('junk');
-
-    final result = await UpdateSwapper.applyUpdate(
-      appDir: appDir,
-      payloadRoot: nested,
-    );
-    expect(result.hasFailures, isFalse);
-    // The new version comes from a nested payload.
-    expect(
-      File(p.join(appDir.path, 'foxy.exe')).readAsStringSync(),
-      'nested-exe',
-    );
-    // User data is still there.
-    expect(File(p.join(appDir.path, 'config.yaml')).existsSync(), isTrue);
-    expect(Directory(p.join(appDir.path, 'data', 'icon')).existsSync(), isTrue);
-    // The swapper never touches .update_tmp (the helper deletes the whole
-    // directory after swapping); simulate the helper deleting the temp
-    // directory and verify the swapped app files are unaffected.
-    updateTemp.deleteSync(recursive: true);
-    expect(updateTemp.existsSync(), isFalse);
-    expect(
-      File(p.join(appDir.path, 'foxy.exe')).readAsStringSync(),
-      'nested-exe',
-    );
-  });
+      // User data is still there.
+      expect(File(p.join(appDir.path, 'config.yaml')).existsSync(), isTrue);
+      expect(
+        Directory(p.join(appDir.path, 'data', 'icon')).existsSync(),
+        isTrue,
+      );
+      // The swapper never touches .update_tmp (the helper deletes the whole
+      // directory after swapping); simulate the helper deleting the temp
+      // directory and verify the swapped app files are unaffected.
+      updateTemp.deleteSync(recursive: true);
+      expect(updateTemp.existsSync(), isFalse);
+      expect(
+        File(p.join(appDir.path, 'foxy.exe')).readAsStringSync(),
+        'nested-exe',
+      );
+    },
+  );
 }

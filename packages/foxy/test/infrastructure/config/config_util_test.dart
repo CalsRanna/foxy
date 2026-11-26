@@ -17,11 +17,11 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  test('不存在的配置文件返回空配置', () async {
+  test('A missing file returns an empty configuration', () async {
     expect(await configUtil.load(), isEmpty);
   });
 
-  test('并发首次加载后复用缓存，调用方可以修改返回的副本', () async {
+  test('Concurrent initial loads share the cache and callers can modify their returned copies', () async {
     final file = await File(configUtil.configPath).writeAsString('host: local');
     final results = await Future.wait([configUtil.load(), configUtil.load()]);
 
@@ -32,7 +32,7 @@ void main() {
     expect(await configUtil.load(), {'host': 'local'});
   });
 
-  test('update 后 load 回读一致', () async {
+  test('Loading after an update returns the updated configuration', () async {
     final file = await File(configUtil.configPath).writeAsString('host: local');
     await configUtil.load();
     final notifiedTables = ['footstepterrainlookup'];
@@ -53,7 +53,7 @@ void main() {
     expect(await configUtil.load(), saved);
   });
 
-  test('保存失败时保留缓存，后续保存仍可成功', () async {
+  test('A failed save preserves the cache and allows a later save', () async {
     await configUtil.update({'host': 'local'});
     final temporaryDir = await Directory('${configUtil.configPath}.tmp')
         .create();
@@ -69,7 +69,7 @@ void main() {
     expect(await configUtil.load(), {'host': 'updated'});
   });
 
-  test('首次读取失败后可以重试', () async {
+  test('An initial read failure can be retried', () async {
     final file = await File(configUtil.configPath).writeAsBytes([0xff]);
     await expectLater(configUtil.load(), throwsA(isA<FileSystemException>()));
 
@@ -77,7 +77,7 @@ void main() {
     expect(await configUtil.load(), {'host': 'recovered'});
   });
 
-  test('损坏的 YAML 自愈:返回空配置并备份 .bak', () async {
+  test('Malformed YAML is backed up to .bak and replaced with an empty configuration', () async {
     final file = File(configUtil.configPath);
     await file.writeAsString('host: [unclosed\n  broken: yaml: :');
 
@@ -90,7 +90,7 @@ void main() {
     expect((await configUtil.load())['host'], '127.0.0.1');
   });
 
-  test('非 Map 的顶层 YAML(如纯字符串)自愈:返回空配置并备份 .bak', () async {
+  test('A non-map YAML root is backed up to .bak and replaced with an empty configuration', () async {
     final file = File(configUtil.configPath);
     await file.writeAsString('just a string');
 

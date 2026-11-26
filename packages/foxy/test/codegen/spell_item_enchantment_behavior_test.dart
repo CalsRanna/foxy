@@ -39,7 +39,7 @@ void main() {
     return vm;
   }
 
-  test('表单往返保存保留多语言和效果参数，语言回填不覆盖其他草稿', () async {
+  test('Form round trip preserves locales and effect parameters and locale edits preserve other drafts', () async {
     final vm = await form(key: 1);
     await vm.persist();
     expect(driver.updates.last, [..._source.toJson().values, 1]);
@@ -91,7 +91,7 @@ void main() {
     expect(events.last.log.entityName, 'edited zhCN');
   });
 
-  test('新建遇到主键冲突后同步实际主键，再次保存使用新主键', () async {
+  test('Creation updates the key after a collision and uses the assigned key on the next save', () async {
     driver.collide = true;
     final vm = await form();
     vm.nameController.init('新附魔');
@@ -108,30 +108,33 @@ void main() {
     expect(vm.entity.value!.effectArg0, 48);
   });
 
-  test('复制冲突返回实际写入主键，并保留多语言和效果数据', () async {
+  test('Copy returns the persisted key after a collision and preserves locales and effect data', () async {
     driver.collide = true;
     final key = await repository.copySpellItemEnchantment(1);
     expect(key, 12);
     expect(driver.inserts.single, _source.copyWith(id: key).toJson().values);
   });
 
-  test('创建和复制允许 int32 最大 ID，耗尽后停止分配', () async {
-    driver.maxId = 0x7ffffffe;
-    expect((await repository.createSpellItemEnchantment()).id, 0x7fffffff);
-    expect(await repository.copySpellItemEnchantment(1), 0x7fffffff);
-    expect(driver.inserts.single.first, 0x7fffffff);
-    await expectLater(
-      repository.createSpellItemEnchantment(),
-      throwsA(isA<IdExhaustedException>()),
-    );
-    await expectLater(
-      repository.copySpellItemEnchantment(1),
-      throwsA(isA<IdExhaustedException>()),
-    );
-    expect(driver.insertAttempts, 1);
-  });
+  test(
+    'Create and copy accept the maximum int32 ID and stop at exhaustion',
+    () async {
+      driver.maxId = 0x7ffffffe;
+      expect((await repository.createSpellItemEnchantment()).id, 0x7fffffff);
+      expect(await repository.copySpellItemEnchantment(1), 0x7fffffff);
+      expect(driver.inserts.single.first, 0x7fffffff);
+      await expectLater(
+        repository.createSpellItemEnchantment(),
+        throwsA(isA<IdExhaustedException>()),
+      );
+      await expectLater(
+        repository.copySpellItemEnchantment(1),
+        throwsA(isA<IdExhaustedException>()),
+      );
+      expect(driver.insertAttempts, 1);
+    },
+  );
 
-  test('冲突重试在 int32 ID 耗尽时停止，不写入越界 ID', () async {
+  test('Collision retry stops at int32 ID exhaustion before writing an out-of-range ID', () async {
     driver.maxId = 0x7ffffffe;
     driver.collide = true;
     await expectLater(

@@ -20,7 +20,7 @@ void main() {
   MpqExportWorkflowViewModel buildVm() =>
       MpqExportWorkflowViewModel(useCase: useCase, configUtil: configUtil);
 
-  test('prepare 从 config 加载 mpq_dir 与默认文件名并填充表统计', () async {
+  test('prepare loads mpq_dir and the default file name and populates table counts', () async {
     final mpqDir = r'D:\client\Data\zhCN';
     await configUtil.update({'mpq_dir': mpqDir});
     useCase.tables = [
@@ -37,7 +37,7 @@ void main() {
     expect(vm.status.value, WorkflowStatus.idle);
   });
 
-  test('prepare 无 mpq_dir 时输出目录为 null', () async {
+  test('prepare leaves the output directory null without mpq_dir', () async {
     useCase.tables = [
       DbcExportTable(definition: DbcDefinitions.byTable['dbc_spell_duration']!),
     ];
@@ -49,7 +49,7 @@ void main() {
     expect(vm.isRunning, isFalse);
   });
 
-  test('start 未选中表时校验失败', () async {
+  test('start fails validation without selected tables', () async {
     final vm = buildVm();
     await vm.prepare();
     vm.setAllSelectableSelected(false);
@@ -60,35 +60,43 @@ void main() {
     expect(useCase.executedPaths, isEmpty);
   });
 
-  test('start 未配置输出目录时校验失败', () async {
-    final vm = buildVm();
-    await vm.prepare();
+  test(
+    'start fails validation when the output directory is not configured',
+    () async {
+      final vm = buildVm();
+      await vm.prepare();
 
-    await expectLater(vm.start(), throwsA(anything));
-    expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, isNotNull);
-    expect(useCase.executedPaths, isEmpty);
-  });
+      await expectLater(vm.start(), throwsA(anything));
+      expect(vm.status.value, WorkflowStatus.failed);
+      expect(vm.errorMessage.value, isNotNull);
+      expect(useCase.executedPaths, isEmpty);
+    },
+  );
 
-  test('start 成功时按 目录/文件名 执行并置为 succeeded', () async {
-    final mpqDir = r'D:\client\Data\zhCN';
-    await configUtil.update({'mpq_dir': mpqDir});
-    useCase.tables = [
-      DbcExportTable(definition: DbcDefinitions.byTable['dbc_spell_duration']!),
-    ];
+  test(
+    'start uses the directory and file name and sets succeeded on success',
+    () async {
+      final mpqDir = r'D:\client\Data\zhCN';
+      await configUtil.update({'mpq_dir': mpqDir});
+      useCase.tables = [
+        DbcExportTable(
+          definition: DbcDefinitions.byTable['dbc_spell_duration']!,
+        ),
+      ];
 
-    final vm = buildVm();
-    await vm.prepare();
-    vm.setFileName('custom.mpq');
+      final vm = buildVm();
+      await vm.prepare();
+      vm.setFileName('custom.mpq');
 
-    await vm.start();
+      await vm.start();
 
-    expect(useCase.executedPaths, [p.join(mpqDir, 'custom.mpq')]);
-    expect(vm.status.value, WorkflowStatus.succeeded);
-    expect(vm.result.value?.success, isTrue);
-  });
+      expect(useCase.executedPaths, [p.join(mpqDir, 'custom.mpq')]);
+      expect(vm.status.value, WorkflowStatus.succeeded);
+      expect(vm.result.value?.success, isTrue);
+    },
+  );
 
-  test('setFileName 空值回退默认文件名', () async {
+  test('setFileName falls back to the default when empty', () async {
     final vm = buildVm();
     vm.setFileName('   ');
     expect(vm.fileName.value, MpqExportWorkflowViewModel.defaultPatchFileName);

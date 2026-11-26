@@ -3,7 +3,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 
 void main() {
-  test('Talent 与 TalentTab definition 使用 3.3.5.12340 物理格式', () {
+  test('Talent and TalentTab match the 3.3.5.12340 physical formats', () {
     final talent = DbcDefinitions.byTable['dbc_talent']!;
     expect(talent.fileName, 'Talent.dbc');
     expect(talent.schema.format, 'niiiiiiiiiiiiiiiiiiiiii');

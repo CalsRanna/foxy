@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 
 void main() {
-  testWidgets('表单标签最多允许六个汉字宽度', (tester) async {
+  testWidgets('Form labels allow up to six Chinese characters of width', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
@@ -15,15 +17,18 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('表单标签超过六个汉字宽度时触发断言', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: FoxyFormItem(label: '一二三四五六七', child: SizedBox()),
+  testWidgets(
+    'Form labels wider than six Chinese characters trigger an assertion',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FoxyFormItem(label: '一二三四五六七', child: SizedBox()),
+          ),
         ),
-      ),
-    );
+      );
 
-    expect(tester.takeException(), isA<AssertionError>());
-  });
+      expect(tester.takeException(), isA<AssertionError>());
+    },
+  );
 }

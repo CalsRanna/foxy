@@ -47,7 +47,7 @@ void main() {
     );
   }
 
-  test('事务锁定旧键，按新键读回并比较数据库实际值', () async {
+  test('The transaction locks the old key, reads by the new key, and compares stored values', () async {
     final candidate = original.copyWith(conditionValue1: 20, comment: 'draft');
     driver.after = {...candidate.toJson(), 'Comment': 'persisted'};
 
@@ -80,7 +80,7 @@ void main() {
     expect(readBack.details!.toJson(), saved.details!.toJson());
   });
 
-  test('保存没有实际差异时不发布动态', () async {
+  test('Saving with no actual changes publishes no activity', () async {
     await EntityWrittenEvent.capture(() async {
       await repository.updateCondition(originalKey, original);
       publishUpdate();
@@ -90,7 +90,7 @@ void main() {
     expect(events, isEmpty);
   });
 
-  test('外层事务未提交时不发布动态，回滚后丢弃', () async {
+  test('Activity waits for the outer transaction to commit and is discarded on rollback', () async {
     final candidate = original.copyWith(comment: 'changed');
     driver.after = candidate.toJson();
     final transaction = DatabaseTransaction(repository.laconic);
@@ -116,34 +116,37 @@ void main() {
     expect(events, isEmpty);
   });
 
-  test('外层事务提交后合并实际变化的记录', () async {
-    final candidate = original.copyWith(comment: 'changed');
-    final newRecord = original.copyWith(elseGroup: 2);
-    driver.after = candidate.toJson();
+  test(
+    'Outer transaction commit combines the records that actually changed',
+    () async {
+      final candidate = original.copyWith(comment: 'changed');
+      final newRecord = original.copyWith(elseGroup: 2);
+      driver.after = candidate.toJson();
 
-    await DatabaseTransaction(repository.laconic).execute(() async {
-      await EntityWrittenEvent.capture(() async {
-        await repository.updateCondition(originalKey, candidate);
-        await repository.storeCondition(newRecord);
-        publishUpdate();
+      await DatabaseTransaction(repository.laconic).execute(() async {
+        await EntityWrittenEvent.capture(() async {
+          await repository.updateCondition(originalKey, candidate);
+          await repository.storeCondition(newRecord);
+          publishUpdate();
+        });
+        expect(events, isEmpty);
       });
-      expect(events, isEmpty);
-    });
 
-    expect(driver.operations, [
-      'begin',
-      'select',
-      'update',
-      'select',
-      'insert',
-      'commit',
-    ]);
-    final rows = events.single.details!.rows;
-    expect(rows, hasLength(2));
-    expect(rows.first.changes['Comment']!.after, 'changed');
-    expect(rows.last.beforeKey, isNull);
-    expect(rows.last.afterKey!['ElseGroup'], 2);
-  });
+      expect(driver.operations, [
+        'begin',
+        'select',
+        'update',
+        'select',
+        'insert',
+        'commit',
+      ]);
+      final rows = events.single.details!.rows;
+      expect(rows, hasLength(2));
+      expect(rows.first.changes['Comment']!.after, 'changed');
+      expect(rows.last.beforeKey, isNull);
+      expect(rows.last.afterKey!['ElseGroup'], 2);
+    },
+  );
 }
 
 final class _RecordingDriver implements DatabaseDriver {

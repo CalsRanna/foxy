@@ -1,97 +1,79 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_equip_template_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('CreatureEquipTemplateKey 和 Brief 完整覆盖两列主键', () {
+  test('CreatureEquipTemplateKey and its brief entity include both primary key fields', () {
     const entity = CreatureEquipTemplateEntity(creatureID: 10, id: 2);
     final key = CreatureEquipTemplateKey.fromEntity(entity);
-    final same = CreatureEquipTemplateKey.fromEntity(
-      entity.copyWith(itemID1: 123),
-    );
     const brief = BriefCreatureEquipTemplateEntity(creatureID: 10, id: 2);
 
-    expect(key, same);
-    expect(key.hashCode, same.hashCode);
-    expect(
+    expectRowKeyEquality(
       key,
-      isNot(CreatureEquipTemplateKey.fromEntity(entity.copyWith(id: 3))),
+      CreatureEquipTemplateKey.fromEntity,
+      sameKeyRow: entity.copyWith(itemID1: 123),
+      differentKeyRows: [entity.copyWith(id: 3)],
     );
     expect(brief.key, key);
   });
 
   group('CreatureEquipTemplateRepository write contract', () {
-    test('UPDATE 使用完整旧 key 定位并写入 candidate 六列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestCreatureEquipTemplateRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-      const oldKey = CreatureEquipTemplateKey(creatureID: 10, id: 2);
-      const candidate = CreatureEquipTemplateEntity(
-        creatureID: 11,
-        id: 3,
-        itemID1: 101,
-        itemID2: 102,
-        itemID3: 103,
-        verifiedBuild: 12340,
-      );
+    const oldKey = CreatureEquipTemplateKey(creatureID: 10, id: 2);
+    const candidate = CreatureEquipTemplateEntity(
+      creatureID: 11,
+      id: 3,
+      itemID1: 101,
+      itemID2: 102,
+      itemID3: 103,
+      verifiedBuild: 12340,
+    );
 
-      await repository.updateCreatureEquipTemplate(oldKey, candidate);
-
-      expect(queries.single.bindings, [
+    testRepositoryWrites(
+      createRepository: _TestCreatureEquipTemplateRepository.new,
+      originalKey: oldKey,
+      candidate: candidate,
+      missingCandidate: const CreatureEquipTemplateEntity(),
+      update: (repository, key, row) =>
+          repository.updateCreatureEquipTemplate(key, row),
+      destroy: (repository, key) =>
+          repository.destroyCreatureEquipTemplate(key),
+      expectedBindings: [
         ...candidate.toJson().values,
         oldKey.creatureID,
         oldKey.id,
-      ]);
-    });
+      ],
+    );
 
-    test('UPDATE 与 DELETE 零行结果报告旧记录不存在', () async {
-      final repository = _TestCreatureEquipTemplateRepository(
-        Laconic(_RecordingDriver(affectedRows: 0)),
-      );
-      const key = CreatureEquipTemplateKey(creatureID: 10, id: 2);
-      await expectLater(
-        repository.updateCreatureEquipTemplate(
-          key,
-          const CreatureEquipTemplateEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        repository.destroyCreatureEquipTemplate(key),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-    });
-
-    test('Brief 查询显式选择三个物品槽并分页', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestCreatureEquipTemplateRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-      await repository.getBriefCreatureEquipTemplates(10, page: 2);
-      expect(queries.single.sql, isNot(contains('cet.*')));
-      expect(queries.single.sql, contains('cet.ItemID1'));
-      expect(queries.single.sql, contains('cet.ItemID2'));
-      expect(queries.single.sql, contains('cet.ItemID3'));
-      expect(
-        queries.single.bindings.sublist(queries.single.bindings.length - 2),
-        [50, 50],
-      );
-    });
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestCreatureEquipTemplateRepository(laconic)
+              .getBriefCreatureEquipTemplates(10, page: 2),
+      tableAlias: 'cet',
+      verifyQuery: (query) {
+        expect(query.sql, contains('cet.ItemID1'));
+        expect(query.sql, contains('cet.ItemID2'));
+        expect(query.sql, contains('cet.ItemID3'));
+      },
+    );
   });
 
   group('CreatureEquipTemplate inline identity', () {
     late _FakeCreatureEquipTemplateRepository repository;
 
-    setUp(() {
+    late CreatureEquipTemplateLinkedListViewModel viewModel;
+
+    setUp(() async {
       repository = _FakeCreatureEquipTemplateRepository([
         const CreatureEquipTemplateEntity(creatureID: 10, id: 2, itemID1: 101),
       ]);
@@ -99,45 +81,41 @@ void main() {
         repository,
       );
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+
+      viewModel = CreatureEquipTemplateLinkedListViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(linkKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value.single.key;
+      await viewModel.edit(viewModel.selectedKey.value!);
     });
 
     tearDown(() async => GetIt.instance.reset());
 
-    test('键变化用旧 key 更新，失败时保留旧 key 供重试', () async {
-      final viewModel = CreatureEquipTemplateLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('Changing the key updates by the old key and a failed save preserves it for retry', () async {
       const oldKey = CreatureEquipTemplateKey(creatureID: 10, id: 2);
-      repository.failUpdates = true;
       viewModel.creatureIDController.init(11);
       viewModel.idController.init(3);
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [oldKey, oldKey]);
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: oldKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
       expect(repository.rows.single.creatureID, 11);
       expect(repository.rows.single.id, 3);
       expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('父范围变化和新建清空 editingKey 并使用显式预分配 ID', () async {
-      final viewModel = CreatureEquipTemplateLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-
-      await viewModel.setLinkKey(12);
-      expect(viewModel.editingKey.value, isNull);
-      await viewModel.create();
+    test('Changing the parent and creating clear editingKey and creation uses the preallocated ID', () async {
+      await expectParentChangeAndCreateClearIdentity(
+        editingKey: viewModel.editingKey,
+        selectedKey: viewModel.selectedKey,
+        changeParent: () => viewModel.setLinkKey(12),
+        create: viewModel.create,
+      );
       expect(viewModel.idController.collect(), 1);
-      expect(viewModel.editingKey.value, isNull);
       await viewModel.persist();
       expect(repository.storeCount, 1);
     });
@@ -145,13 +123,21 @@ void main() {
 }
 
 class _FakeCreatureEquipTemplateRepository
-    extends CreatureEquipTemplateRepository {
+    extends CreatureEquipTemplateRepository
+    with
+        InMemoryRowEditing<
+          CreatureEquipTemplateEntity,
+          CreatureEquipTemplateKey
+        > {
+  @override
   final List<CreatureEquipTemplateEntity> rows;
-  bool failUpdates = false;
   int storeCount = 0;
-  final updateKeys = <CreatureEquipTemplateKey>[];
 
   _FakeCreatureEquipTemplateRepository(this.rows);
+
+  @override
+  CreatureEquipTemplateKey keyOf(CreatureEquipTemplateEntity row) =>
+      CreatureEquipTemplateKey.fromEntity(row);
 
   @override
   Future<int> countCreatureEquipTemplates(int creatureID) async =>
@@ -189,12 +175,7 @@ class _FakeCreatureEquipTemplateRepository
   @override
   Future<CreatureEquipTemplateEntity?> getCreatureEquipTemplate(
     CreatureEquipTemplateKey key,
-  ) async {
-    for (final row in rows) {
-      if (CreatureEquipTemplateKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> storeCreatureEquipTemplate(
@@ -208,43 +189,7 @@ class _FakeCreatureEquipTemplateRepository
   Future<void> updateCreatureEquipTemplate(
     CreatureEquipTemplateKey originalKey,
     CreatureEquipTemplateEntity equip,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => CreatureEquipTemplateKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = equip;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-  _RecordingDriver({this.affectedRows = 1});
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, equip);
 }
 
 class _TestCreatureEquipTemplateRepository

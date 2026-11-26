@@ -4,7 +4,7 @@ import 'package:signals/signals.dart';
 
 void main() {
   group('QueryVersionMixin', () {
-    test('markQueryVersion 使 queryVersion 递增', () {
+    test('markQueryVersion increments queryVersion', () {
       final vm = _FakeVm();
       expect(vm.queryVersion.value, 0);
       vm.markQueryVersion();
@@ -13,7 +13,7 @@ void main() {
       expect(vm.queryVersion.value, 2);
     });
 
-    test('翻页/搜索场景：页码变化且版本递增（表格回顶）', () {
+    test('Paging and searching change the page and increment the version so the table scrolls to the top', () {
       final vm = _FakeVm();
       vm.page.value = 2;
       vm.markQueryVersion();
@@ -22,21 +22,21 @@ void main() {
     });
 
     group('normalizePageAfterDelete', () {
-      test('删除导致页超界时回退页码并递增版本（如 total=51 删光第 2 页）', () {
+      test('Deleting the last row on an out-of-range page moves back and increments the version', () {
         final vm = _FakeVm()..page.value = 2;
         vm.normalizePageAfterDelete(50);
         expect(vm.page.value, 1);
         expect(vm.queryVersion.value, 1);
       });
 
-      test('页内删除不修正页码、不递增版本（保持浏览位置）', () {
+      test('Deletion within a valid page preserves the page, version, and scroll position', () {
         final vm = _FakeVm()..page.value = 3;
         vm.normalizePageAfterDelete(4999);
         expect(vm.page.value, 3);
         expect(vm.queryVersion.value, 0);
       });
 
-      test('删除后当前页仍合法时不修正页码', () {
+      test('Deletion keeps the current page when it remains valid', () {
         // total=101 → 2 pages; after deleting 1 row on page=2, total=100
         // still 2 pages
         final vm = _FakeVm()..page.value = 2;
@@ -45,7 +45,7 @@ void main() {
         expect(vm.queryVersion.value, 0);
       });
 
-      test('第一页删光全部数据时回退到第 1 页', () {
+      test('Deleting all rows on the first page returns to page one', () {
         final vm = _FakeVm(); // page = 1
         vm.normalizePageAfterDelete(0);
         expect(vm.page.value, 1);

@@ -5,7 +5,9 @@ import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
-  testWidgets('整数输入保留非法原文，读取时拒绝而不改成其他数值', (tester) async {
+  testWidgets('Integer input preserves invalid text and rejects it on read', (
+    tester,
+  ) async {
     final controller = IntFieldController();
     await _pumpInput(tester, controller);
 
@@ -17,17 +19,22 @@ void main() {
     }
   });
 
-  testWidgets('浮点输入保留非法原文，读取时拒绝而不改成其他数值', (tester) async {
-    final controller = DoubleFieldController();
-    await _pumpInput(tester, controller);
+  testWidgets(
+    'Floating-point input preserves invalid text and rejects it on read',
+    (tester) async {
+      final controller = DoubleFieldController();
+      await _pumpInput(tester, controller);
 
-    await tester.enterText(find.byType(EditableText), '12a');
+      await tester.enterText(find.byType(EditableText), '12a');
 
-    expect(controller.controller.text, '12a');
-    expect(controller.collect, throwsFormatException);
-  });
+      expect(controller.controller.text, '12a');
+      expect(controller.collect, throwsFormatException);
+    },
+  );
 
-  testWidgets('浮点输入保留并正确解析科学计数法', (tester) async {
+  testWidgets('Floating-point input preserves and parses scientific notation', (
+    tester,
+  ) async {
     final controller = DoubleFieldController();
     await _pumpInput(tester, controller);
 

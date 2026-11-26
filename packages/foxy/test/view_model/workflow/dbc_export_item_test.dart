@@ -6,7 +6,7 @@ void main() {
   final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
 
   group('DbcExportItem', () {
-    test('成功计数：空表与有数据', () {
+    test('Successful counts cover empty and populated tables', () {
       final empty = DbcExportItem(definition: definition, recordCount: 0);
       final filled = DbcExportItem(definition: definition, recordCount: 12);
 
@@ -18,20 +18,23 @@ void main() {
       expect(filled.canSelect, isTrue);
     });
 
-    test('计数失败：不可勾选，标签为计数失败', () {
-      final failed = DbcExportItem(
-        definition: definition,
-        countError: 'Table not found',
-        selected: false,
-      );
+    test(
+      'A failed count disables selection and displays the count-failed label',
+      () {
+        final failed = DbcExportItem(
+          definition: definition,
+          countError: 'Table not found',
+          selected: false,
+        );
 
-      expect(failed.countFailed, isTrue);
-      expect(failed.canSelect, isFalse);
-      expect(failed.recordCountLabel, '计数失败');
-      expect(failed.selected, isFalse);
-    });
+        expect(failed.countFailed, isTrue);
+        expect(failed.canSelect, isFalse);
+        expect(failed.recordCountLabel, '计数失败');
+        expect(failed.selected, isFalse);
+      },
+    );
 
-    test('copyWith 保留 countError 与 recordCount', () {
+    test('copyWith retains countError and recordCount', () {
       final failed = DbcExportItem(
         definition: definition,
         countError: 'boom',

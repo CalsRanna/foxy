@@ -1,111 +1,102 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_spell_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('CreatureTemplateSpellKey 和 Brief 完整覆盖两列主键', () {
+  test('CreatureTemplateSpellKey and its brief entity include both primary key fields', () {
     const entity = CreatureTemplateSpellEntity(creatureID: 10, index: 2);
     final key = CreatureTemplateSpellKey.fromEntity(entity);
-    final same = CreatureTemplateSpellKey.fromEntity(
-      entity.copyWith(spell: 123),
-    );
     const brief = BriefCreatureTemplateSpellEntity(creatureID: 10, index: 2);
 
-    expect(key, same);
-    expect(key.hashCode, same.hashCode);
-    expect(
+    expectRowKeyEquality(
       key,
-      isNot(CreatureTemplateSpellKey.fromEntity(entity.copyWith(index: 3))),
+      CreatureTemplateSpellKey.fromEntity,
+      sameKeyRow: entity.copyWith(spell: 123),
+      differentKeyRows: [entity.copyWith(index: 3)],
     );
     expect(brief.key, key);
   });
 
   group('CreatureTemplateSpellRepository write contract', () {
-    test('UPDATE 使用完整旧 key 定位并写入全部 candidate 字段', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestCreatureTemplateSpellRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-      const originalKey = CreatureTemplateSpellKey(creatureID: 10, index: 2);
-      const candidate = CreatureTemplateSpellEntity(
-        creatureID: 11,
-        index: 3,
-        spell: 123,
-        verifiedBuild: 12340,
-      );
+    const originalKey = CreatureTemplateSpellKey(creatureID: 10, index: 2);
+    const candidate = CreatureTemplateSpellEntity(
+      creatureID: 11,
+      index: 3,
+      spell: 123,
+      verifiedBuild: 12340,
+    );
 
-      await repository.updateCreatureTemplateSpell(originalKey, candidate);
+    testUpdateQuery(
+      execute: (laconic) =>
+          _TestCreatureTemplateSpellRepository(laconic)
+              .updateCreatureTemplateSpell(originalKey, candidate),
+      verify: (query) {
+        final sql = query.sql;
+        final setColumns = sql
+            .substring(sql.indexOf(' set ') + 5, sql.indexOf(' where '))
+            .split(', ')
+            .map((assignment) => assignment.split(' = ').first)
+            .toList();
+        final bindings = query.bindings;
 
-      expect(queries, hasLength(1));
-      final sql = queries.single.sql;
-      final setColumns = sql
-          .substring(sql.indexOf(' set ') + 5, sql.indexOf(' where '))
-          .split(', ')
-          .map((assignment) => assignment.split(' = ').first)
-          .toList();
-      final bindings = queries.single.bindings;
+        // Assert the column→value mapping rather than bind indices; the SET
+        // clause column order follows the Entity field declaration order and
+        // is not part of the write contract. Backticks are the escaping
+        // requirement of the reserved-word column `Index`.
+        expect(
+          Map.fromIterables(setColumns, bindings.take(setColumns.length)),
+          {
+            '`CreatureID`': candidate.creatureID,
+            '`Index`': candidate.index,
+            '`Spell`': candidate.spell,
+            '`VerifiedBuild`': candidate.verifiedBuild,
+          },
+        );
+        expect(bindings.skip(setColumns.length).toList(), [
+          originalKey.creatureID,
+          originalKey.index,
+        ]);
+      },
+    );
 
-      // Assert the column→value mapping rather than bind indices; the SET
-      // clause column order follows the Entity field declaration order and
-      // is not part of the write contract. Backticks are the escaping
-      // requirement of the reserved-word column `Index`.
-      expect(Map.fromIterables(setColumns, bindings.take(setColumns.length)), {
-        '`CreatureID`': candidate.creatureID,
-        '`Index`': candidate.index,
-        '`Spell`': candidate.spell,
-        '`VerifiedBuild`': candidate.verifiedBuild,
-      });
-      expect(bindings.skip(setColumns.length).toList(), [
-        originalKey.creatureID,
-        originalKey.index,
-      ]);
-    });
+    testMissingWrites(
+      createRepository: _TestCreatureTemplateSpellRepository.new,
+      update: (repository) => repository.updateCreatureTemplateSpell(
+        originalKey,
+        const CreatureTemplateSpellEntity(),
+      ),
+      destroy: (repository) =>
+          repository.destroyCreatureTemplateSpell(originalKey),
+    );
 
-    test('UPDATE 与 DELETE 零行结果报告旧记录不存在', () async {
-      final repository = _TestCreatureTemplateSpellRepository(
-        Laconic(_RecordingDriver(affectedRows: 0)),
-      );
-      const key = CreatureTemplateSpellKey(creatureID: 10, index: 2);
-
-      await expectLater(
-        repository.updateCreatureTemplateSpell(
-          key,
-          const CreatureTemplateSpellEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        repository.destroyCreatureTemplateSpell(key),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-    });
-
-    test('Brief 查询不加载完整行并稳定分页', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestCreatureTemplateSpellRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-
-      await repository.getBriefCreatureTemplateSpells(10, page: 2);
-
-      expect(queries.single.sql, isNot(contains('cts.*')));
-      expect(queries.single.sql.toLowerCase(), contains('order by'));
-      expect(queries.single.bindings, [10, 50, 50]);
-    });
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestCreatureTemplateSpellRepository(laconic)
+              .getBriefCreatureTemplateSpells(10, page: 2),
+      tableAlias: 'cts',
+      verifyQuery: (query) {
+        expect(query.bindings, [10, 50, 50]);
+      },
+    );
   });
 
   group('CreatureTemplateSpell inline identity', () {
     late _FakeCreatureTemplateSpellRepository repository;
 
-    setUp(() {
+    late CreatureTemplateSpellLinkedListViewModel viewModel;
+
+    setUp(() async {
       repository = _FakeCreatureTemplateSpellRepository([
         const CreatureTemplateSpellEntity(creatureID: 10, index: 2, spell: 123),
       ]);
@@ -113,18 +104,19 @@ void main() {
         repository,
       );
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+
+      viewModel = CreatureTemplateSpellLinkedListViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(linkKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value.single.key;
+      await viewModel.edit(viewModel.selectedKey.value!);
     });
 
     tearDown(() async {
       await GetIt.instance.reset();
     });
 
-    test('修改两列 candidate key 仍按完整旧 key 更新并清空范围状态', () async {
-      final viewModel = CreatureTemplateSpellLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('Changing both key fields updates by the full old key and clears scoped state', () async {
       const originalKey = CreatureTemplateSpellKey(creatureID: 10, index: 2);
 
       viewModel.creatureIDController.init(11);
@@ -138,37 +130,31 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('保存失败保留旧 editingKey 供修正后重试', () async {
-      final viewModel = CreatureTemplateSpellLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-      final originalKey = viewModel.editingKey.value;
-      repository.failUpdates = true;
-      viewModel.indexController.init(3);
+    test(
+      'A failed save preserves editingKey so the user can correct and retry',
+      () async {
+        final originalKey = repository.keyOf(repository.rows.single);
+        viewModel.indexController.init(3);
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, originalKey);
+        await expectSaveRetry(
+          repository: repository,
+          originalKey: originalKey,
+          editingKey: viewModel.editingKey,
+          persist: viewModel.persist,
+        );
+      },
+    );
 
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [originalKey, originalKey]);
-    });
-
-    test('父范围变化和新建会清空 editingKey', () async {
-      final viewModel = CreatureTemplateSpellLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-
-      await viewModel.setLinkKey(12);
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.creatureIDController.collect(), 12);
-
-      await viewModel.create();
-      expect(viewModel.editingKey.value, isNull);
+    test('Changing the parent scope and creating clear editingKey', () async {
+      await expectParentChangeAndCreateClearIdentity(
+        editingKey: viewModel.editingKey,
+        selectedKey: viewModel.selectedKey,
+        changeParent: () async {
+          await viewModel.setLinkKey(12);
+          expect(viewModel.creatureIDController.collect(), 12);
+        },
+        create: viewModel.create,
+      );
       viewModel.spellController.init(456);
       await viewModel.persist();
       expect(repository.storeCount, 1);
@@ -177,13 +163,21 @@ void main() {
 }
 
 class _FakeCreatureTemplateSpellRepository
-    extends CreatureTemplateSpellRepository {
+    extends CreatureTemplateSpellRepository
+    with
+        InMemoryRowEditing<
+          CreatureTemplateSpellEntity,
+          CreatureTemplateSpellKey
+        > {
+  @override
   final List<CreatureTemplateSpellEntity> rows;
-  bool failUpdates = false;
   int storeCount = 0;
-  final updateKeys = <CreatureTemplateSpellKey>[];
 
   _FakeCreatureTemplateSpellRepository(this.rows);
+
+  @override
+  CreatureTemplateSpellKey keyOf(CreatureTemplateSpellEntity row) =>
+      CreatureTemplateSpellKey.fromEntity(row);
 
   @override
   Future<int> countCreatureTemplateSpells(int creatureID) async {
@@ -224,12 +218,7 @@ class _FakeCreatureTemplateSpellRepository
   @override
   Future<CreatureTemplateSpellEntity?> getCreatureTemplateSpell(
     CreatureTemplateSpellKey key,
-  ) async {
-    for (final row in rows) {
-      if (CreatureTemplateSpellKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> storeCreatureTemplateSpell(
@@ -243,45 +232,7 @@ class _FakeCreatureTemplateSpellRepository
   Future<void> updateCreatureTemplateSpell(
     CreatureTemplateSpellKey originalKey,
     CreatureTemplateSpellEntity spell,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => CreatureTemplateSpellKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = spell;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, spell);
 }
 
 class _TestCreatureTemplateSpellRepository

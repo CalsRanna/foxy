@@ -21,7 +21,7 @@ import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 
 void main() {
-  test('11 个关联 Tab 的 Entity 写出字段与目标 SQL 列一致', () {
+  test('Entities for all 11 related tabs serialize the target SQL columns', () {
     expect(const CreatureTemplateAddonEntity().toJson().keys.toSet(), {
       'entry',
       'path_id',
@@ -109,34 +109,40 @@ void main() {
     });
   });
 
-  test('关联表复合主键与 AzerothCore SQL 一致', () {
-    expect(NpcVendorRepository.primaryKeyColumns, {
-      'entry',
-      'item',
-      'ExtendedCost',
-    });
-    expect(NpcTrainerRepository.primaryKeyColumns, {'TrainerId', 'SpellId'});
-    expect(CreatureLootTemplateRepository.primaryKeyColumns, {
-      'Entry',
-      'Item',
-      'Reference',
-      'GroupId',
-    });
-    expect(PickpocketingLootTemplateRepository.primaryKeyColumns, {
-      'Entry',
-      'Item',
-    });
-    expect(SkinningLootTemplateRepository.primaryKeyColumns, {'Entry', 'Item'});
-  });
+  test(
+    'Related tables use the same composite primary keys as AzerothCore SQL',
+    () {
+      expect(NpcVendorRepository.primaryKeyColumns, {
+        'entry',
+        'item',
+        'ExtendedCost',
+      });
+      expect(NpcTrainerRepository.primaryKeyColumns, {'TrainerId', 'SpellId'});
+      expect(CreatureLootTemplateRepository.primaryKeyColumns, {
+        'Entry',
+        'Item',
+        'Reference',
+        'GroupId',
+      });
+      expect(PickpocketingLootTemplateRepository.primaryKeyColumns, {
+        'Entry',
+        'Item',
+      });
+      expect(SkinningLootTemplateRepository.primaryKeyColumns, {
+        'Entry',
+        'Item',
+      });
+    },
+  );
 
-  test('掉落新增项不为 Item 外键自动造号', () async {
+  test('New loot rows do not auto-assign an item foreign key', () async {
     final repository = CreatureLootTemplateRepository();
     final loot = await repository.createCreatureLootTemplate(123);
     expect(loot.entry, 123);
     expect(loot.item, 0);
   });
 
-  test('装备模板 Item.dbc Picker 只允许服务端可持握位置', () {
+  test('The equipment template Item.dbc picker allows only server-supported wield slots', () {
     expect(DbcItemRepository.handEquippableInventoryTypes.toSet(), {
       13,
       14,
@@ -150,7 +156,7 @@ void main() {
     });
   });
 
-  test('抗性学校与技能槽只分配服务端支持的空缺值', () {
+  test('Resistance schools and spell slots allocate only unused server-supported values', () {
     expect(
       CreatureTemplateResistanceRepository.nextAvailableSchool({1, 3, 4}),
       2,
@@ -175,13 +181,16 @@ void main() {
     );
   });
 
-  test('主记录落库前禁用全部 11 个关联 Tab', () {
-    expect(CreatureTemplateDetailPage.disabledTabIndexes(null, 12), {
-      for (var index = 1; index < 12; index++) index,
-    });
-    expect(CreatureTemplateDetailPage.disabledTabIndexes(0, 12), {
-      for (var index = 1; index < 12; index++) index,
-    });
-    expect(CreatureTemplateDetailPage.disabledTabIndexes(1, 12), isEmpty);
-  });
+  test(
+    'All 11 related tabs are disabled until the main record is persisted',
+    () {
+      expect(CreatureTemplateDetailPage.disabledTabIndexes(null, 12), {
+        for (var index = 1; index < 12; index++) index,
+      });
+      expect(CreatureTemplateDetailPage.disabledTabIndexes(0, 12), {
+        for (var index = 1; index < 12; index++) index,
+      });
+      expect(CreatureTemplateDetailPage.disabledTabIndexes(1, 12), isEmpty);
+    },
+  );
 }

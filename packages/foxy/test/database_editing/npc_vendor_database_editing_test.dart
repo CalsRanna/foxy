@@ -1,33 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/npc_vendor_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('NpcVendorKey 与 Brief Entity', () {
-    test('完整覆盖 entry、item、ExtendedCost 并实现值相等', () {
+  group('NpcVendorKey and brief entity', () {
+    test('Entry, item, and ExtendedCost all participate in value equality', () {
       const vendor = NpcVendorEntity(entry: 10, item: 20, extendedCost: 30);
       final key = NpcVendorKey.fromEntity(vendor);
-      final same = NpcVendorKey.fromEntity(vendor.copyWith(slot: 2));
 
-      expect(key, same);
-      expect(key.hashCode, same.hashCode);
-      expect(key, isNot(NpcVendorKey.fromEntity(vendor.copyWith(entry: 11))));
-      expect(key, isNot(NpcVendorKey.fromEntity(vendor.copyWith(item: 21))));
-      expect(
+      expectRowKeyEquality(
         key,
-        isNot(NpcVendorKey.fromEntity(vendor.copyWith(extendedCost: 31))),
+        NpcVendorKey.fromEntity,
+        sameKeyRow: vendor.copyWith(slot: 2),
+        differentKeyRows: [
+          vendor.copyWith(entry: 11),
+          vendor.copyWith(item: 21),
+          vendor.copyWith(extendedCost: 31),
+        ],
       );
     });
 
-    test('Brief Entity 只保留展示列和完整 key', () {
+    test('The brief entity exposes display columns and the complete key', () {
       const brief = BriefNpcVendorEntity(
         entry: 10,
         slot: 1,
@@ -45,87 +49,67 @@ void main() {
   });
 
   group('NpcVendorRepository write contract', () {
-    test('UPDATE 使用完整旧 key 定位并写入 candidate 全部七列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestNpcVendorRepository(
-        Laconic(_RecordingDriver(affectedRows: 1), listen: queries.add),
-      );
-      const originalKey = NpcVendorKey(entry: 10, item: 20, extendedCost: 30);
-      const candidate = NpcVendorEntity(
-        entry: 11,
-        slot: 2,
-        item: 21,
-        maxcount: 5,
-        incrtime: 60,
-        extendedCost: 31,
-        verifiedBuild: 12340,
-      );
+    const originalKey = NpcVendorKey(entry: 10, item: 20, extendedCost: 30);
+    const candidate = NpcVendorEntity(
+      entry: 11,
+      slot: 2,
+      item: 21,
+      maxcount: 5,
+      incrtime: 60,
+      extendedCost: 31,
+      verifiedBuild: 12340,
+    );
 
-      await repository.updateNpcVendor(originalKey, candidate);
-
-      expect(queries, hasLength(1));
-      expect(queries.single.sql.toLowerCase(), startsWith('update'));
-      expect(queries.single.bindings, [
+    testRepositoryWrites(
+      createRepository: _TestNpcVendorRepository.new,
+      originalKey: originalKey,
+      candidate: candidate,
+      missingCandidate: const NpcVendorEntity(),
+      update: (repository, key, row) => repository.updateNpcVendor(key, row),
+      destroy: (repository, key) => repository.destroyNpcVendor(key),
+      expectedBindings: [
         ...candidate.toJson().values,
         originalKey.entry,
         originalKey.item,
         originalKey.extendedCost,
-      ]);
-    });
+      ],
+    );
 
-    test('UPDATE 与 DELETE 零行结果报告旧记录不存在', () async {
-      final repository = _TestNpcVendorRepository(
-        Laconic(_RecordingDriver(affectedRows: 0)),
-      );
-      const key = NpcVendorKey(entry: 10, item: 20, extendedCost: 30);
-
-      await expectLater(
-        repository.updateNpcVendor(key, const NpcVendorEntity()),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        repository.destroyNpcVendor(key),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-    });
-
-    test('Brief 查询显式选择字段并分页，不读取完整行', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestNpcVendorRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-
-      await repository.getBriefNpcVendors(10, page: 2);
-
-      final sql = queries.single.sql;
-      expect(sql, isNot(contains('nv.*')));
-      expect(sql, isNot(contains('VerifiedBuild')));
-      expect(sql.toLowerCase(), contains('limit ? offset ?'));
-      expect(queries.single.bindings.sublist(2), [50, 50]);
-    });
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestNpcVendorRepository(laconic).getBriefNpcVendors(10, page: 2),
+      tableAlias: 'nv',
+      verifyQuery: (query) {
+        expect(query.sql, isNot(contains('VerifiedBuild')));
+        expect(query.bindings.sublist(2), [50, 50]);
+      },
+    );
   });
 
   group('NpcVendor inline editing identity', () {
     late _FakeNpcVendorRepository repository;
 
-    setUp(() {
+    late NpcVendorLinkedListViewModel viewModel;
+
+    setUp(() async {
       repository = _FakeNpcVendorRepository([
         const NpcVendorEntity(entry: 10, slot: 0, item: 20, extendedCost: 30),
       ]);
       GetIt.instance.registerSingleton<NpcVendorRepository>(repository);
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+
+      viewModel = NpcVendorLinkedListViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(linkKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value.single.key;
+      await viewModel.edit(viewModel.selectedKey.value!);
     });
 
     tearDown(() async {
       await GetIt.instance.reset();
     });
 
-    test('选中 Brief 后使用旧 key 更新，多列键变化后清空范围状态', () async {
-      final viewModel = NpcVendorLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('Editing a selected brief row uses the old key and a multi-column key change clears scoped state', () async {
       const originalKey = NpcVendorKey(entry: 10, item: 20, extendedCost: 30);
       expect(viewModel.editingKey.value, originalKey);
 
@@ -145,54 +129,51 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('保存失败保留 editingKey，修正后仍可按旧 key 重试', () async {
-      final viewModel = NpcVendorLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-      final originalKey = viewModel.editingKey.value;
-      repository.failUpdates = true;
+    test('A failed save retains editingKey so a corrected retry can use the old key', () async {
+      final originalKey = repository.keyOf(repository.rows.single);
       viewModel.itemController.init(21);
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, originalKey);
-
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [originalKey, originalKey]);
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: originalKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
     });
 
-    test('新建和父范围切换都会清空子行身份', () async {
-      final viewModel = NpcVendorLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-      expect(viewModel.editingKey.value, isNotNull);
+    test(
+      'Creating and changing the parent clear the child row identity',
+      () async {
+        expect(viewModel.editingKey.value, isNotNull);
 
-      await viewModel.setLinkKey(12);
-      expect(viewModel.linkKey.value, 12);
-      expect(viewModel.entryController.collect(), 12);
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedKey.value, isNull);
-
-      await viewModel.create();
-      expect(viewModel.editingKey.value, isNull);
-      viewModel.itemController.init(50);
-      await viewModel.persist();
-      expect(repository.storeCount, 1);
-    });
+        await expectParentChangeAndCreateClearIdentity(
+          editingKey: viewModel.editingKey,
+          selectedKey: viewModel.selectedKey,
+          changeParent: () async {
+            await viewModel.setLinkKey(12);
+            expect(viewModel.linkKey.value, 12);
+            expect(viewModel.entryController.collect(), 12);
+          },
+          create: viewModel.create,
+        );
+        viewModel.itemController.init(50);
+        await viewModel.persist();
+        expect(repository.storeCount, 1);
+      },
+    );
   });
 }
 
-class _FakeNpcVendorRepository extends NpcVendorRepository {
+class _FakeNpcVendorRepository extends NpcVendorRepository
+    with InMemoryRowEditing<NpcVendorEntity, NpcVendorKey> {
+  @override
   final List<NpcVendorEntity> rows;
-  bool failUpdates = false;
   int storeCount = 0;
-  final updateKeys = <NpcVendorKey>[];
 
   _FakeNpcVendorRepository(this.rows);
+
+  @override
+  NpcVendorKey keyOf(NpcVendorEntity row) => NpcVendorKey.fromEntity(row);
 
   @override
   Future<int> countNpcVendors(int entry) async {
@@ -231,12 +212,7 @@ class _FakeNpcVendorRepository extends NpcVendorRepository {
   }
 
   @override
-  Future<NpcVendorEntity?> getNpcVendor(NpcVendorKey key) async {
-    for (final row in rows) {
-      if (NpcVendorKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  Future<NpcVendorEntity?> getNpcVendor(NpcVendorKey key) async => findRow(key);
 
   @override
   Future<void> storeNpcVendor(NpcVendorEntity vendor) async {
@@ -248,51 +224,7 @@ class _FakeNpcVendorRepository extends NpcVendorRepository {
   Future<void> updateNpcVendor(
     NpcVendorKey originalKey,
     NpcVendorEntity vendor,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => NpcVendorKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = vendor;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, vendor);
 }
 
 class _TestNpcVendorRepository extends NpcVendorRepository {

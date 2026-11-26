@@ -37,7 +37,7 @@ void main() {
     return vm;
   }
 
-  test('保存保留三组语言及 Flags，文本可编辑且未选择阵营时使用 -1', () async {
+  test('Preserves all three locale groups and flags, allows text edits, and defaults to faction -1', () async {
     final vm = await form(key: 1);
     expect(
       [
@@ -76,7 +76,7 @@ void main() {
     expect(events.last.log.entityName, '标题草稿');
   });
 
-  test('三组语言依次回填互不覆盖，并保留数值和 Flags 信号草稿', () async {
+  test('Applying three locale groups keeps their values, numeric drafts, and flags independent', () async {
     final vm = await form(key: 1);
     vm.idController.init(2);
     vm.factionController.init(0);
@@ -127,7 +127,7 @@ void main() {
     }
   });
 
-  test('新建保留默认值，冲突后同步实际主键并以该主键再次保存', () async {
+  test('Creation preserves defaults and subsequent saves use the ID assigned after a collision', () async {
     driver.collide = true;
     final vm = await form();
     expect(vm.idController.collect(), 11);
@@ -145,14 +145,14 @@ void main() {
     expect(vm.entity.value!.titleLangZhCN, '新成就');
   });
 
-  test('复制冲突返回实际 ID，并保留三组语言、Flags 和其他字段', () async {
+  test('Copy returns the assigned ID after a collision and preserves all locale groups, flags, and other fields', () async {
     driver.collide = true;
     final key = await repository.copyAchievement(1);
     expect(key, 12);
     expect(driver.inserts.single, _source.copyWith(id: key).toJson().values);
   });
 
-  test('创建和复制允许分配 ID 65535，耗尽后拒绝分配', () async {
+  test('Create and copy can allocate ID 65535 and reject allocation once IDs are exhausted', () async {
     driver.maxId = 65534;
     expect((await repository.createAchievement()).id, 65535);
     expect(await repository.copyAchievement(1), 65535);
@@ -168,7 +168,7 @@ void main() {
     expect(driver.insertAttempts, 1);
   });
 
-  test('冲突重试在 ID 上限耗尽时停止，不写入 65536', () async {
+  test('Collision retry stops at the ID limit before writing 65536', () async {
     driver.maxId = 65534;
     driver.collide = true;
     await expectLater(

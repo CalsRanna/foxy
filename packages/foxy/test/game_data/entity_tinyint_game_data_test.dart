@@ -6,8 +6,8 @@ import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 /// otherwise reading real data throws TypeError (creature_onkill_reputation
 /// crashes on load).
 void main() {
-  group('CreatureOnKillReputationEntity.fromJson tinyint(1) 双容忍', () {
-    test('bool 形态(驱动解码 tinyint(1) 的真实形态)不抛 TypeError', () {
+  group('CreatureOnKillReputationEntity.fromJson accepts both tinyint(1) representations', () {
+    test('Accepts the boolean tinyint(1) value decoded by the driver without a TypeError', () {
       final entity = CreatureOnKillReputationEntity.fromJson({
         'creature_id': 1,
         'TeamDependent': true,
@@ -18,7 +18,7 @@ void main() {
       expect(entity.isTeamAward1, false);
     });
 
-    test('num 形态(旧驱动/文本协议)依旧兼容', () {
+    test('Accepts numeric values from older drivers and the text protocol', () {
       final entity = CreatureOnKillReputationEntity.fromJson({
         'creature_id': 1,
         'TeamDependent': 1,
@@ -28,14 +28,14 @@ void main() {
       expect(entity.isTeamAward1, false);
     });
 
-    test('缺失字段回落默认值', () {
+    test('Missing fields use their defaults', () {
       final entity = CreatureOnKillReputationEntity.fromJson({
         'creature_id': 1,
       });
       expect(entity.teamDependent, 0);
     });
 
-    test('toJson 写路径保持 1/0 数值形态', () {
+    test('Serialization writes boolean values as numeric 1 and 0', () {
       final entity = CreatureOnKillReputationEntity.fromJson({
         'creature_id': 1,
         'TeamDependent': true,

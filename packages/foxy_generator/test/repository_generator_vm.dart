@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('FoxyRepository 生成标准公有 CRUD 与标量物理 Key 定位', () async {
+  test('FoxyRepository generates public CRUD and uses the physical scalar key to locate rows', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -49,7 +49,7 @@ void main() {
     );
   });
 
-  test('无列表页时手写 CRUD 合法(壳 override 生成版)', () async {
+  test('Handwritten CRUD can override the generated methods when there is no list page', () async {
     final source = scalarRepositorySource.replaceFirst(
       'class SampleRepository with _SampleRepositoryMixin {',
       '''
@@ -75,7 +75,7 @@ class SampleRepository with _SampleRepositoryMixin {
     );
   });
 
-  test('列表查询生成筛选、投影和分页，创建时预分配主键', () async {
+  test('List queries generate filtering, projection, and pagination and create preallocates the key', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -120,7 +120,7 @@ class SampleRepository with _SampleRepositoryMixin {
     );
   });
 
-  test('辅音 + y 结尾的 base name 按 y → ies 复数化', () async {
+  test('Names ending in a consonant plus y pluralize with ies', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -151,7 +151,7 @@ class SampleRepository with _SampleRepositoryMixin {
     );
   });
 
-  test('filter 无同名实体字段且未声明 column 时拒绝生成查询层', () async {
+  test('Query generation rejects a filter with neither a matching entity field nor an explicit column', () async {
     final repository = filterRepositorySource.replaceFirst(
       "@FoxyFilter.text('name', column: 'Name_lang_zhCN')",
       "@FoxyFilter.text('unknown')",
@@ -177,53 +177,58 @@ class SampleRepository with _SampleRepositoryMixin {
     );
   });
 
-  test('声明 linkKey 时生成父键形态(count/getBrief/create/copy)', () async {
-    await testBuilder(
-      foxyRepositoryBuilder(BuilderOptions.empty),
-      {
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        childEntityAsset: childEntitySource,
-        childRepositoryAsset: childRepositorySource,
-      },
-      outputs: {
-        'foxy|lib/repository/child_record_repository.foxy_repository.g.part':
-            decodedMatches(
-              allOf(<Matcher>[
-                // count: parent-key equality, no filter parameter
-                contains('Future<int> countChildRecords(int parentId) async {'),
-                contains("where('`ParentID`', parentId)"),
-                isNot(contains('filter')),
-                // getBrief: parent-key filter + pagination
-                contains('Future<List<BriefChildRecordEntity>>'),
-                contains('getBriefChildRecords('),
-                contains("builder = builder.where('`ParentID`', parentId);"),
-                // create: parent-key fields use the passed values, other
-                // key fields use nextMaxPlusOne (where carries the parent
-                // key)
-                contains(
-                  'Future<ChildRecordEntity> createChildRecord(int parentId) async {',
-                ),
-                contains('parentId: parentId,'),
-                contains('childId: await nextMaxPlusOne('),
-                contains("'`ChildID`',"),
-                // _linkWhereMap backticks columns (laconic does not escape
-                // identifiers; reserved-word link columns need quoting).
-                contains("where: {'`ParentID`': parentId}"),
-                // copy: create carrying the parent key
-                contains(
-                  'final blank = await createChildRecord(source.parentId);',
-                ),
-                // Child tables generate no full list or _applyFilter
-                isNot(contains('getChildren()')),
-                isNot(contains('_applyFilter')),
-              ]),
-            ),
-      },
-    );
-  });
+  test(
+    'linkKey generates parent-scoped count, getBrief, create, and copy methods',
+    () async {
+      await testBuilder(
+        foxyRepositoryBuilder(BuilderOptions.empty),
+        {
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          childEntityAsset: childEntitySource,
+          childRepositoryAsset: childRepositorySource,
+        },
+        outputs: {
+          'foxy|lib/repository/child_record_repository.foxy_repository.g.part':
+              decodedMatches(
+                allOf(<Matcher>[
+                  // count: parent-key equality, no filter parameter
+                  contains(
+                    'Future<int> countChildRecords(int parentId) async {',
+                  ),
+                  contains("where('`ParentID`', parentId)"),
+                  isNot(contains('filter')),
+                  // getBrief: parent-key filter + pagination
+                  contains('Future<List<BriefChildRecordEntity>>'),
+                  contains('getBriefChildRecords('),
+                  contains("builder = builder.where('`ParentID`', parentId);"),
+                  // create: parent-key fields use the passed values, other
+                  // key fields use nextMaxPlusOne (where carries the parent
+                  // key)
+                  contains(
+                    'Future<ChildRecordEntity> createChildRecord(int parentId) async {',
+                  ),
+                  contains('parentId: parentId,'),
+                  contains('childId: await nextMaxPlusOne('),
+                  contains("'`ChildID`',"),
+                  // _linkWhereMap backticks columns (laconic does not escape
+                  // identifiers; reserved-word link columns need quoting).
+                  contains("where: {'`ParentID`': parentId}"),
+                  // copy: create carrying the parent key
+                  contains(
+                    'final blank = await createChildRecord(source.parentId);',
+                  ),
+                  // Child tables generate no full list or _applyFilter
+                  isNot(contains('getChildren()')),
+                  isNot(contains('_applyFilter')),
+                ]),
+              ),
+        },
+      );
+    },
+  );
 
-  test('linkKey 指向非 key 字段时拒绝生成', () async {
+  test('Generation rejects a linkKey that names a non-key field', () async {
     final repository = childRepositorySource.replaceFirst(
       "linkKey: ['parentId']",
       "linkKey: ['note']",
@@ -248,36 +253,41 @@ class SampleRepository with _SampleRepositoryMixin {
     );
   });
 
-  test('混入 DbcLocaleRepositoryMixin 时生成 locale helper 并扩宽 on 子句', () async {
-    await testBuilder(
-      foxyRepositoryBuilder(BuilderOptions.empty),
-      {
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        localeEntityAsset: localeEntitySource,
-        localeRepositoryAsset: localeRepositorySource,
-        repositoryMixinAsset: repositoryMixinSource,
-        dbcLocaleMixinAsset: dbcLocaleMixinSource,
-      },
-      outputs: {
-        'foxy|lib/repository/locale_repository.foxy_repository.g.part':
-            decodedMatches(
-              allOf(<Matcher>[
-                contains(
-                  'mixin _LocaleRepositoryMixin on '
-                  'RepositoryMixin, DbcLocaleRepositoryMixin {',
-                ),
-                contains('Future<List<DbcLocaleFieldValue>> getLocaleLocales('),
-                contains('loadDbcLocaleField(id, field);'),
-                contains('Future<void> saveLocaleLocales('),
-                contains('storeDbcLocaleField(id, field, locales);'),
-              ]),
-            ),
-      },
-    );
-  });
+  test(
+    'DbcLocaleRepositoryMixin adds locale helpers and widens the on clauses',
+    () async {
+      await testBuilder(
+        foxyRepositoryBuilder(BuilderOptions.empty),
+        {
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          localeEntityAsset: localeEntitySource,
+          localeRepositoryAsset: localeRepositorySource,
+          repositoryMixinAsset: repositoryMixinSource,
+          dbcLocaleMixinAsset: dbcLocaleMixinSource,
+        },
+        outputs: {
+          'foxy|lib/repository/locale_repository.foxy_repository.g.part':
+              decodedMatches(
+                allOf(<Matcher>[
+                  contains(
+                    'mixin _LocaleRepositoryMixin on '
+                    'RepositoryMixin, DbcLocaleRepositoryMixin {',
+                  ),
+                  contains(
+                    'Future<List<DbcLocaleFieldValue>> getLocaleLocales(',
+                  ),
+                  contains('loadDbcLocaleField(id, field);'),
+                  contains('Future<void> saveLocaleLocales('),
+                  contains('storeDbcLocaleField(id, field, locales);'),
+                ]),
+              ),
+        },
+      );
+    },
+  );
 
-  test('FoxyRepository 使用复合 Key 的全部物理列定位', () async {
+  test('FoxyRepository locates rows using every physical column of a composite key', () async {
     const compositeEntity = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
@@ -317,7 +327,7 @@ class SampleEntity {
     );
   });
 
-  test('Entity 的 nullable key 字段拒绝生成 CRUD', () async {
+  test('CRUD generation rejects nullable entity key fields', () async {
     const nullableKeyEntity = r'''
 import 'package:foxy_annotation/entity_annotations.dart';
 
@@ -355,39 +365,46 @@ class SampleEntity {
     );
   });
 
-  test('Repository 与 Entity base name 不一致时拒绝生成', () async {
-    final entity = scalarEntitySource.replaceAll('SampleEntity', 'OtherEntity');
-    final source = scalarRepositorySource
-        .replaceFirst(
-          '@FoxyRepository(entity: SampleEntity)',
-          '@FoxyRepository(entity: OtherEntity)',
-        )
-        .replaceFirst(
-          "import 'package:foxy/entity/sample_entity.dart';",
-          "import 'package:foxy/entity/sample_entity.dart' show OtherEntity;",
-        );
-    final logs = <String>[];
+  test(
+    'Generation rejects mismatched repository and entity base names',
+    () async {
+      final entity = scalarEntitySource.replaceAll(
+        'SampleEntity',
+        'OtherEntity',
+      );
+      final source = scalarRepositorySource
+          .replaceFirst(
+            '@FoxyRepository(entity: SampleEntity)',
+            '@FoxyRepository(entity: OtherEntity)',
+          )
+          .replaceFirst(
+            "import 'package:foxy/entity/sample_entity.dart';",
+            "import 'package:foxy/entity/sample_entity.dart' show OtherEntity;",
+          );
+      final logs = <String>[];
 
-    await testBuilder(
-      foxyRepositoryBuilder(BuilderOptions.empty),
-      {
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        entityAsset: entity,
-        repositoryAsset: source,
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logs.any(
-        (log) => log.contains('do not follow the one-to-one naming convention'),
-      ),
-      isTrue,
-    );
-  });
+      await testBuilder(
+        foxyRepositoryBuilder(BuilderOptions.empty),
+        {
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          entityAsset: entity,
+          repositoryAsset: source,
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any(
+          (log) =>
+              log.contains('do not follow the one-to-one naming convention'),
+        ),
+        isTrue,
+      );
+    },
+  );
 
-  test('别名列 filter 时手写 count/getBrief 覆写后生成合格 SQL', () async {
+  test('Handwritten count and getBrief overrides allow valid SQL for aliased filters', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -413,7 +430,7 @@ class SampleEntity {
     );
   });
 
-  test('别名列 filter 未手写 count 时拒绝生成', () async {
+  test('An aliased filter requires a handwritten count override', () async {
     final logs = <String>[];
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
@@ -439,7 +456,7 @@ class SampleEntity {
     );
   });
 
-  test('别名列 filter 未手写 getBrief 时拒绝生成', () async {
+  test('An aliased filter requires a handwritten getBrief override', () async {
     final logs = <String>[];
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
@@ -467,54 +484,63 @@ class SampleEntity {
     );
   });
 
-  test('类级 Brief 别名字段未手写 getBrief 时拒绝生成', () async {
-    final logs = <String>[];
-    await testBuilder(
-      foxyRepositoryBuilder(BuilderOptions.empty),
-      {
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        entityAsset: aliasBriefEntitySource,
-        repositoryAsset: filterRepositorySource,
-        listViewModelAsset: listViewModelSource,
-        listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logs.any(
-        (log) =>
-            log.contains('getBriefSamples must be hand-written') &&
-            log.contains('Brief projection fields'),
-      ),
-      isTrue,
-      reason: '类级 @FoxyBriefField.* 是 JOIN 别名，生成器无法填充',
-    );
-  });
+  test(
+    'A class-level brief alias requires a handwritten getBrief override',
+    () async {
+      final logs = <String>[];
+      await testBuilder(
+        foxyRepositoryBuilder(BuilderOptions.empty),
+        {
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          entityAsset: aliasBriefEntitySource,
+          repositoryAsset: filterRepositorySource,
+          listViewModelAsset: listViewModelSource,
+          listAnnotationAsset: foxyAnnotationSource('list_annotations.dart'),
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any(
+          (log) =>
+              log.contains('getBriefSamples must be hand-written') &&
+              log.contains('Brief projection fields'),
+        ),
+        isTrue,
+        reason: '类级 @FoxyBriefField.* 是 JOIN 别名，生成器无法填充',
+      );
+    },
+  );
 
-  test('手写 _table 残留时拒绝生成(表名单一来源)', () async {
-    final repository = scalarRepositorySource.replaceFirst(
-      'class SampleRepository with _SampleRepositoryMixin {}',
-      '''
+  test(
+    'Generation rejects a handwritten _table so the table name has one source',
+    () async {
+      final repository = scalarRepositorySource.replaceFirst(
+        'class SampleRepository with _SampleRepositoryMixin {}',
+        '''
 class SampleRepository with _SampleRepositoryMixin {
   static const _table = 'foxy.sample';
 }''',
-    );
-    final logs = <String>[];
-    await testBuilder(
-      foxyRepositoryBuilder(BuilderOptions.empty),
-      {
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        entityAsset: scalarEntitySource,
-        repositoryAsset: repository,
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(logs.any((log) => log.contains('Remove the _table member')), isTrue);
-  });
+      );
+      final logs = <String>[];
+      await testBuilder(
+        foxyRepositoryBuilder(BuilderOptions.empty),
+        {
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          entityAsset: scalarEntitySource,
+          repositoryAsset: repository,
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any((log) => log.contains('Remove the _table member')),
+        isTrue,
+      );
+    },
+  );
 }
 
 /// Entity whose Brief declares a class-level projection alias

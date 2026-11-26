@@ -12,7 +12,7 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 /// silently wrote unrelated garbage rows whose entryorguid was
 /// table-max+1.
 void main() {
-  test('store 重复键重试:只重分配 id,作用域 entryorguid+source_type', () async {
+  test('A duplicate store reallocates only id within the entryorguid and source_type scope', () async {
     final driver = _DuplicateRetryDriver();
     final queries = <LaconicQuery>[];
     final repository = _TestRepository(Laconic(driver, listen: queries.add));
@@ -46,7 +46,7 @@ void main() {
     expect(retriedBindings, retriedJson.values.toList());
   });
 
-  test('重试仍冲突时抛 DuplicateKeyException 而不是写入垃圾行', () async {
+  test('A second collision throws DuplicateKeyException without inserting an invalid row', () async {
     final driver = _DuplicateRetryDriver(retryAlsoFails: true);
     final queries = <LaconicQuery>[];
     final repository = _TestRepository(Laconic(driver, listen: queries.add));

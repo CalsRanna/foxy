@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('关联详情按父键加载或创建，保存后记录持久化主键', () async {
+  test('Linked detail loads or creates by parent key and records the persisted key after save', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
@@ -46,55 +46,61 @@ void main() {
     );
   });
 
-  test('复合键实体拒绝生成 Linked Detail 骨架', () async {
-    final logs = <String>[];
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        formAnnotationAsset: formAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        compositeEntityAsset: compositeEntitySource,
-        compositeRepositoryAsset: compositeRepositorySource,
-        compositeViewModelAsset: compositeViewModelSource,
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logs.any(
-        (log) => log.contains(
-          'is a composite-key entity; a Linked Detail skeleton '
-          'cannot be generated',
+  test(
+    'Linked detail generation rejects entities with composite keys',
+    () async {
+      final logs = <String>[];
+      await testBuilder(
+        foxyViewModelBuilder(BuilderOptions.empty),
+        {
+          formAnnotationAsset: formAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          compositeEntityAsset: compositeEntitySource,
+          compositeRepositoryAsset: compositeRepositorySource,
+          compositeViewModelAsset: compositeViewModelSource,
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any(
+          (log) => log.contains(
+            'is a composite-key entity; a Linked Detail skeleton '
+            'cannot be generated',
+          ),
         ),
-      ),
-      isTrue,
-    );
-  });
+        isTrue,
+      );
+    },
+  );
 
-  test('绑定 Repository 无 linkKey 时允许生成(手写 create 兜底)', () async {
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        formAnnotationAsset: formAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: addonEntitySource,
-        repositoryAsset: addonRepositorySource.replaceFirst(
-          ", linkKey: ['entry']",
-          '',
-        ),
-        viewModelAsset: linkedDetailViewModelSource,
-      },
-      outputs: {
-        'foxy|lib/view_model/addon_linked_detail_view_model'
-                '.foxy_view_model.g.part':
-            anything,
-      },
-    );
-  });
+  test(
+    'A repository without linkKey can use a handwritten create method',
+    () async {
+      await testBuilder(
+        foxyViewModelBuilder(BuilderOptions.empty),
+        {
+          formAnnotationAsset: formAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAsset: addonEntitySource,
+          repositoryAsset: addonRepositorySource.replaceFirst(
+            ", linkKey: ['entry']",
+            '',
+          ),
+          viewModelAsset: linkedDetailViewModelSource,
+        },
+        outputs: {
+          'foxy|lib/view_model/addon_linked_detail_view_model'
+                  '.foxy_view_model.g.part':
+              anything,
+        },
+      );
+    },
+  );
 
-  test('绑定 Repository 声明多个 linkKey 时拒绝生成', () async {
+  test('Generation rejects more than one repository linkKey', () async {
     final logs = <String>[];
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
@@ -118,31 +124,34 @@ void main() {
     );
   });
 
-  test('linkKey 与实体主键不匹配时拒绝生成', () async {
-    final logs = <String>[];
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        formAnnotationAsset: formAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: addonEntitySource,
-        repositoryAsset: addonRepositorySource.replaceFirst(
-          "linkKey: ['entry']",
-          "linkKey: ['comment']",
+  test(
+    'Generation rejects a linkKey that does not match the entity primary key',
+    () async {
+      final logs = <String>[];
+      await testBuilder(
+        foxyViewModelBuilder(BuilderOptions.empty),
+        {
+          formAnnotationAsset: formAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAsset: addonEntitySource,
+          repositoryAsset: addonRepositorySource.replaceFirst(
+            "linkKey: ['entry']",
+            "linkKey: ['comment']",
+          ),
+          viewModelAsset: linkedDetailViewModelSource,
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any(
+          (log) => log.contains('must equal the entity primary key entry'),
         ),
-        viewModelAsset: linkedDetailViewModelSource,
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logs.any(
-        (log) => log.contains('must equal the entity primary key entry'),
-      ),
-      isTrue,
-    );
-  });
+        isTrue,
+      );
+    },
+  );
 }
 
 const addonEntitySource = r'''

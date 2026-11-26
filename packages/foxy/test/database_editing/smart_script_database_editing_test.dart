@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/event/event_bus.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -10,44 +9,48 @@ import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('SmartScriptKey 与 Brief 覆盖四列主键', () {
-    const entity = SmartScriptEntity(
-      entryOrGuid: 10,
-      sourceType: 1,
-      id: 2,
-      link: 3,
-    );
-    final key = SmartScriptKey.fromEntity(entity);
-    final same = SmartScriptKey.fromEntity(entity.copyWith(comment: 'x'));
-    const brief = BriefSmartScriptEntity(
-      entryOrGuid: 10,
-      sourceType: 1,
-      id: 2,
-      link: 3,
-      comment: '测试脚本',
-    );
+  test(
+    'SmartScriptKey and its brief entity include all four primary key fields',
+    () {
+      const entity = SmartScriptEntity(
+        entryOrGuid: 10,
+        sourceType: 1,
+        id: 2,
+        link: 3,
+      );
+      final key = SmartScriptKey.fromEntity(entity);
+      const brief = BriefSmartScriptEntity(
+        entryOrGuid: 10,
+        sourceType: 1,
+        id: 2,
+        link: 3,
+        comment: '测试脚本',
+      );
 
-    expect(key, same);
-    expect(key.hashCode, same.hashCode);
-    expect(
-      key,
-      isNot(SmartScriptKey.fromEntity(entity.copyWith(sourceType: 2))),
-    );
-    expect(key, isNot(SmartScriptKey.fromEntity(entity.copyWith(link: 4))));
-    expect(brief.key, key);
-    expect(brief.displayName, '测试脚本');
-  });
+      expectRowKeyEquality(
+        key,
+        SmartScriptKey.fromEntity,
+        sameKeyRow: entity.copyWith(comment: 'x'),
+        differentKeyRows: [
+          entity.copyWith(sourceType: 2),
+          entity.copyWith(link: 4),
+        ],
+      );
+      expect(brief.key, key);
+      expect(brief.displayName, '测试脚本');
+    },
+  );
 
-  test('UPDATE 用旧四列 key 定位并写入 candidate 全部 31 列', () async {
-    final queries = <LaconicQuery>[];
-    final repository = _TestRepository(
-      Laconic(_RecordingDriver(), listen: queries.add),
-    );
+  group('SmartScriptRepository write contract', () {
     const oldKey = SmartScriptKey(
       entryOrGuid: 10,
       sourceType: 0,
@@ -65,29 +68,20 @@ void main() {
       comment: 'candidate',
     );
 
-    await repository.updateSmartScript(oldKey, candidate);
-
-    expect(queries.single.bindings, [
-      ...candidate.toJson().values,
-      oldKey.entryOrGuid,
-      oldKey.sourceType,
-      oldKey.id,
-      oldKey.link,
-    ]);
-  });
-
-  test('UPDATE 和 DELETE 零行报告旧记录不存在', () async {
-    final repository = _TestRepository(
-      Laconic(_RecordingDriver(affectedRows: 0)),
-    );
-    const key = SmartScriptKey(entryOrGuid: 10, sourceType: 0, id: 2, link: 3);
-    await expectLater(
-      repository.updateSmartScript(key, const SmartScriptEntity()),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      repository.destroySmartScript(key),
-      throwsA(isA<RecordNotFoundException>()),
+    testRepositoryWrites(
+      createRepository: _TestRepository.new,
+      originalKey: oldKey,
+      candidate: candidate,
+      missingCandidate: const SmartScriptEntity(),
+      update: (repository, key, row) => repository.updateSmartScript(key, row),
+      destroy: (repository, key) => repository.destroySmartScript(key),
+      expectedBindings: [
+        ...candidate.toJson().values,
+        oldKey.entryOrGuid,
+        oldKey.sourceType,
+        oldKey.id,
+        oldKey.link,
+      ],
     );
   });
 
@@ -120,7 +114,7 @@ void main() {
 
     tearDown(() async => GetIt.instance.reset());
 
-    test('主键更新失败保留旧 key，重试后切换到新 key', () async {
+    test('A failed primary key update retains the old key and a successful retry adopts the new key', () async {
       const oldKey = SmartScriptKey(
         entryOrGuid: 10,
         sourceType: 0,
@@ -133,40 +127,42 @@ void main() {
       viewModel.entryOrGuidController.init(11);
       viewModel.idController.init(3);
       viewModel.linkController.init(4);
-      repository.failUpdates = true;
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.persistedKey.value, oldKey);
-
-      repository.failUpdates = false;
-      await viewModel.persist();
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: oldKey,
+        editingKey: viewModel.persistedKey,
+        persist: viewModel.persist,
+      );
       const newKey = SmartScriptKey(
         entryOrGuid: 11,
         sourceType: 0,
         id: 3,
         link: 4,
       );
-      expect(repository.updateKeys, [oldKey, oldKey]);
       expect(viewModel.persistedKey.value, newKey);
       expect(viewModel.entity.value, isNotNull);
     });
 
-    test('新建候选在表单打开时已有显式 id，保存不重新分配', () async {
-      repository.rows.clear();
-      final viewModel = SmartScriptDetailViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals();
-      expect(viewModel.idController.collect(), 1);
-      viewModel.entryOrGuidController.init(20);
-      viewModel.eventTypeController.init(4);
-      viewModel.actionTypeController.init(24);
-      viewModel.targetTypeController.init(1);
+    test(
+      'Opening a new form preallocates an explicit ID that is reused on save',
+      () async {
+        repository.rows.clear();
+        final viewModel = SmartScriptDetailViewModel();
+        addTearDown(viewModel.dispose);
+        await viewModel.initSignals();
+        expect(viewModel.idController.collect(), 1);
+        viewModel.entryOrGuidController.init(20);
+        viewModel.eventTypeController.init(4);
+        viewModel.actionTypeController.init(24);
+        viewModel.targetTypeController.init(1);
 
-      await viewModel.persist();
+        await viewModel.persist();
 
-      expect(repository.stored.single.id, 1);
-      expect(viewModel.persistedKey.value?.id, 1);
-    });
+        expect(repository.stored.single.id, 1);
+        expect(viewModel.persistedKey.value?.id, 1);
+      },
+    );
   });
 }
 
@@ -175,13 +171,16 @@ class _FakeActivityLogRepository extends ActivityLogRepository {
   void storeActivityLogBestEffort(ActivityLogEntity log) {}
 }
 
-class _FakeRepository extends SmartScriptRepository {
+class _FakeRepository extends SmartScriptRepository
+    with InMemoryRowEditing<SmartScriptEntity, SmartScriptKey> {
+  @override
   final List<SmartScriptEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <SmartScriptKey>[];
   final stored = <SmartScriptEntity>[];
 
   _FakeRepository(this.rows);
+
+  @override
+  SmartScriptKey keyOf(SmartScriptEntity row) => SmartScriptKey.fromEntity(row);
 
   @override
   Future<SmartScriptEntity> createSmartScript({
@@ -194,12 +193,8 @@ class _FakeRepository extends SmartScriptRepository {
   );
 
   @override
-  Future<SmartScriptEntity?> getSmartScript(SmartScriptKey key) async {
-    for (final row in rows) {
-      if (SmartScriptKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  Future<SmartScriptEntity?> getSmartScript(SmartScriptKey key) async =>
+      findRow(key);
 
   @override
   Future<void> storeSmartScript(SmartScriptEntity script) async {
@@ -211,44 +206,7 @@ class _FakeRepository extends SmartScriptRepository {
   Future<void> updateSmartScript(
     SmartScriptKey originalKey,
     SmartScriptEntity script,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => SmartScriptKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = script;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, script);
 }
 
 class _TestRepository extends SmartScriptRepository {

@@ -4,40 +4,48 @@ import 'package:foxy_widget/foxy_widget.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
-  testWidgets('queryVersion 变化（翻页/搜索）时垂直滚动回到第一行', (tester) async {
-    final controller = ScrollController();
-    addTearDown(controller.dispose);
-    await tester.pumpWidget(buildScrollableTable(0, controller));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Changing queryVersion during pagination or search scrolls back to the first row',
+    (tester) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(buildScrollableTable(0, controller));
+      await tester.pumpAndSettle();
 
-    // Scroll down a bit
-    await tester.drag(find.byType(ShadTable), const Offset(0, -800));
-    await tester.pumpAndSettle();
-    expect(controller.offset, greaterThan(0));
+      // Scroll down a bit
+      await tester.drag(find.byType(ShadTable), const Offset(0, -800));
+      await tester.pumpAndSettle();
+      expect(controller.offset, greaterThan(0));
 
-    // Query version changes → back to the first row
-    await tester.pumpWidget(buildScrollableTable(1, controller));
-    await tester.pumpAndSettle();
-    expect(controller.offset, 0);
-  });
+      // Query version changes → back to the first row
+      await tester.pumpWidget(buildScrollableTable(1, controller));
+      await tester.pumpAndSettle();
+      expect(controller.offset, 0);
+    },
+  );
 
-  testWidgets('queryVersion 不变（删除/编辑保存）时保持滚动位置', (tester) async {
-    final controller = ScrollController();
-    addTearDown(controller.dispose);
-    await tester.pumpWidget(buildScrollableTable(0, controller));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Deleting or saving with the same queryVersion preserves scroll position',
+    (tester) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(buildScrollableTable(0, controller));
+      await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(ShadTable), const Offset(0, -800));
-    await tester.pumpAndSettle();
-    expect(controller.offset, greaterThan(0));
+      await tester.drag(find.byType(ShadTable), const Offset(0, -800));
+      await tester.pumpAndSettle();
+      expect(controller.offset, greaterThan(0));
 
-    // Data refresh: version unchanged → position kept
-    await tester.pumpWidget(buildScrollableTable(0, controller));
-    await tester.pumpAndSettle();
-    expect(controller.offset, greaterThan(0));
-  });
+      // Data refresh: version unchanged → position kept
+      await tester.pumpWidget(buildScrollableTable(0, controller));
+      await tester.pumpAndSettle();
+      expect(controller.offset, greaterThan(0));
+    },
+  );
 
-  testWidgets('shrinkWrap 表格传 queryVersion 不抛异常', (tester) async {
+  testWidgets('A shrink-wrapped table accepts queryVersion without throwing', (
+    tester,
+  ) async {
     await tester.pumpWidget(buildShrinkWrapTable(0));
     await tester.pumpAndSettle();
     await tester.pumpWidget(buildShrinkWrapTable(1));

@@ -14,7 +14,9 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('专业技能 picker 的名称列显示法术图标', (tester) async {
+  testWidgets('The profession picker name column displays spell icons', (
+    tester,
+  ) async {
     GetIt.instance.registerSingleton<SkillLineRepository>(
       _FakeSkillLineRepository(),
     );

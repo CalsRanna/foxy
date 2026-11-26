@@ -9,37 +9,43 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 void main() {
   setUp(() => GetIt.instance.reset());
 
-  test('新建物品自动写入 foxy.dbc_item,8 列映射正确', () async {
-    final env = _build();
-    final candidate = _candidate();
+  test(
+    'Creating an item writes all eight mapped columns to foxy.dbc_item',
+    () async {
+      final env = _build();
+      final candidate = _candidate();
 
-    final storedKey = await env.repository.storeItemTemplate(candidate);
-    expect(storedKey, 56807);
+      final storedKey = await env.repository.storeItemTemplate(candidate);
+      expect(storedKey, 56807);
 
-    final dbcQueries = _dbcQueries(env.queries);
-    expect(dbcQueries, hasLength(2));
-    expect(dbcQueries[0].sql.toLowerCase(), contains('select'));
-    expect(dbcQueries[0].bindings.first, 56807);
-    expect(dbcQueries[1].sql.toLowerCase(), contains('insert'));
-    expect(dbcQueries[1].bindings, [56807, 16, 8, -1, 0, 58830, 0, 2]);
-  });
+      final dbcQueries = _dbcQueries(env.queries);
+      expect(dbcQueries, hasLength(2));
+      expect(dbcQueries[0].sql.toLowerCase(), contains('select'));
+      expect(dbcQueries[0].bindings.first, 56807);
+      expect(dbcQueries[1].sql.toLowerCase(), contains('insert'));
+      expect(dbcQueries[1].bindings, [56807, 16, 8, -1, 0, 58830, 0, 2]);
+    },
+  );
 
-  test('已存在的 DBC 行走 update 而非重复插入', () async {
-    final env = _build(
-      selectResult: [
-        {'ID': 56807},
-      ],
-    );
+  test(
+    'An existing DBC row is updated without inserting a duplicate',
+    () async {
+      final env = _build(
+        selectResult: [
+          {'ID': 56807},
+        ],
+      );
 
-    await env.repository.storeItemTemplate(_candidate());
+      await env.repository.storeItemTemplate(_candidate());
 
-    final dbcQueries = _dbcQueries(env.queries);
-    expect(dbcQueries, hasLength(2));
-    expect(dbcQueries[1].sql.toLowerCase(), contains('update'));
-    expect(dbcQueries[1].bindings, [56807, 16, 8, -1, 0, 58830, 0, 2, 56807]);
-  });
+      final dbcQueries = _dbcQueries(env.queries);
+      expect(dbcQueries, hasLength(2));
+      expect(dbcQueries[1].sql.toLowerCase(), contains('update'));
+      expect(dbcQueries[1].bindings, [56807, 16, 8, -1, 0, 58830, 0, 2, 56807]);
+    },
+  );
 
-  test('修改 displayid 保存后 DBC 行同步更新', () async {
+  test('Saving a changed display ID updates the DBC row', () async {
     final env = _build(
       selectResult: [
         {'ID': 56807},
@@ -57,28 +63,31 @@ void main() {
     expect(dbcQueries[1].bindings, [56807, 16, 8, -1, 0, 70000, 0, 2, 56807]);
   });
 
-  test('修改 entry 后旧行删除、新 ID 行写入', () async {
-    final env = _build(
-      selectResult: [
-        {'ID': 56807},
-      ],
-    );
+  test(
+    'Changing entry deletes the old DBC row and writes the new ID',
+    () async {
+      final env = _build(
+        selectResult: [
+          {'ID': 56807},
+        ],
+      );
 
-    await env.repository.updateItemTemplate(
-      50000,
-      _candidate().copyWith(entry: 56807),
-    );
+      await env.repository.updateItemTemplate(
+        50000,
+        _candidate().copyWith(entry: 56807),
+      );
 
-    final dbcQueries = _dbcQueries(env.queries);
-    expect(dbcQueries, hasLength(3));
-    expect(dbcQueries[0].sql.toLowerCase(), contains('delete'));
-    expect(dbcQueries[0].bindings, [50000]);
-    expect(dbcQueries[1].bindings.first, 56807);
-    expect(dbcQueries[2].sql.toLowerCase(), contains('update'));
-    expect(dbcQueries[2].bindings, [56807, 16, 8, -1, 0, 58830, 0, 2, 56807]);
-  });
+      final dbcQueries = _dbcQueries(env.queries);
+      expect(dbcQueries, hasLength(3));
+      expect(dbcQueries[0].sql.toLowerCase(), contains('delete'));
+      expect(dbcQueries[0].bindings, [50000]);
+      expect(dbcQueries[1].bindings.first, 56807);
+      expect(dbcQueries[2].sql.toLowerCase(), contains('update'));
+      expect(dbcQueries[2].bindings, [56807, 16, 8, -1, 0, 58830, 0, 2, 56807]);
+    },
+  );
 
-  test('删除物品时 DBC 行一并删除', () async {
+  test('Deleting an item also deletes its DBC row', () async {
     final env = _build();
 
     await env.repository.destroyItemTemplate(56807);
@@ -89,7 +98,7 @@ void main() {
     expect(dbcQueries.single.bindings, [56807]);
   });
 
-  test('删除物品时 DBC 行不存在不抛错', () async {
+  test('Deleting an item succeeds when its DBC row is missing', () async {
     final env = _build(
       affectingRowsFor: (sql) => sql.contains('dbc_item') ? 0 : 1,
     );
@@ -97,17 +106,20 @@ void main() {
     await env.repository.destroyItemTemplate(56807);
   });
 
-  test('DBC 同步失败不影响物品保存(best-effort)', () async {
-    final env = _build(selectThrowsFor: (sql) => sql.contains('dbc_item'));
+  test(
+    'Best-effort DBC synchronization failures do not prevent an item save',
+    () async {
+      final env = _build(selectThrowsFor: (sql) => sql.contains('dbc_item'));
 
-    final storedKey = await env.repository.storeItemTemplate(_candidate());
-    expect(storedKey, 56807);
-    // The existence-check select is recorded even though it throws; the
-    // sync must stop there and never reach a dbc_item insert.
-    final dbcQueries = _dbcQueries(env.queries);
-    expect(dbcQueries, hasLength(1));
-    expect(dbcQueries.single.sql.toLowerCase(), contains('select'));
-  });
+      final storedKey = await env.repository.storeItemTemplate(_candidate());
+      expect(storedKey, 56807);
+      // The existence-check select is recorded even though it throws; the
+      // sync must stop there and never reach a dbc_item insert.
+      final dbcQueries = _dbcQueries(env.queries);
+      expect(dbcQueries, hasLength(1));
+      expect(dbcQueries.single.sql.toLowerCase(), contains('select'));
+    },
+  );
 }
 
 ({List<LaconicQuery> queries, ItemTemplateRepository repository}) _build({

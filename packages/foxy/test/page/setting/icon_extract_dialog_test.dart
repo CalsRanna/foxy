@@ -46,7 +46,7 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('提取中显示进度条与计数', (tester) async {
+  testWidgets('Extraction shows a progress bar and count', (tester) async {
     await pumpDialog(tester);
 
     // Drive the VM signals manually, simulating worker progress events
@@ -63,7 +63,9 @@ void main() {
     expect(find.text('取消提取'), findsOneWidget);
   });
 
-  testWidgets('扫描阶段（无比例）显示加载指示与状态文本', (tester) async {
+  testWidgets('Scanning shows an indeterminate indicator and status text', (
+    tester,
+  ) async {
     await pumpDialog(tester);
 
     vm.status.value = WorkflowStatus.running;
@@ -76,7 +78,9 @@ void main() {
     expect(find.text('正在扫描 zhCN 客户端归档...'), findsOneWidget);
   });
 
-  testWidgets('提取失败只需关闭一个对话框', (tester) async {
+  testWidgets('An extraction failure requires closing only one dialog', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ShadApp(
         navigatorKey: FoxyRouter.router.navigatorKey,

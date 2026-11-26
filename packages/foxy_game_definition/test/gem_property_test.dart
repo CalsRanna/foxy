@@ -2,7 +2,7 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('颜色值使用 GemProperties 专属 SocketColor 组合', () {
+  test('GemProperties colors use the dedicated SocketColor combinations', () {
     expect(GemPropertyConstants.gemPropertyColorOptions.keys.toSet(), {
       0x01,
       0x02,

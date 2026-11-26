@@ -39,55 +39,61 @@ void main() {
 
   tearDownAll(() => Database.instance.close());
 
-  test('引导后 foxy 库与全部表都是 utf8mb4', () async {
-    final schemata = await Database.instance.laconic
-        .table('information_schema.schemata')
-        .select(['default_collation_name'])
-        .where('schema_name', 'foxy')
-        .get();
-    expect(schemata, hasLength(1), reason: 'MigrationRunner 应已建库 foxy');
-    expect(
-      schemata.first.toMap()['DEFAULT_COLLATION_NAME'] as String,
-      startsWith('utf8mb4'),
-    );
+  test(
+    'Bootstrap creates the foxy database and all tables with utf8mb4',
+    () async {
+      final schemata = await Database.instance.laconic
+          .table('information_schema.schemata')
+          .select(['default_collation_name'])
+          .where('schema_name', 'foxy')
+          .get();
+      expect(schemata, hasLength(1), reason: 'MigrationRunner 应已建库 foxy');
+      expect(
+        schemata.first.toMap()['DEFAULT_COLLATION_NAME'] as String,
+        startsWith('utf8mb4'),
+      );
 
-    // The same scan _ensureUtf8mb4 performs: at steady state it must find
-    // nothing, otherwise the app would ALTER tables on every startup.
-    final legacyTables = await Database.instance.laconic
-        .table('information_schema.tables')
-        .select(['table_name', 'table_collation'])
-        .where('table_schema', 'foxy')
-        .whereRaw('table_collation not like ?', ['utf8mb4%'])
-        .get();
-    expect(legacyTables, isEmpty, reason: '不应残留非 utf8mb4 表');
-  });
+      // The same scan _ensureUtf8mb4 performs: at steady state it must find
+      // nothing, otherwise the app would ALTER tables on every startup.
+      final legacyTables = await Database.instance.laconic
+          .table('information_schema.tables')
+          .select(['table_name', 'table_collation'])
+          .where('table_schema', 'foxy')
+          .whereRaw('table_collation not like ?', ['utf8mb4%'])
+          .get();
+      expect(legacyTables, isEmpty, reason: '不应残留非 utf8mb4 表');
+    },
+  );
 
-  test('全部迁移按序记录到 foxy.migrations', () async {
+  test('foxy.migrations records all migrations in order', () async {
     final applied = await _appliedMigrations();
     expect(applied, containsAll(knownMigrations));
     expect(applied.length, greaterThanOrEqualTo(knownMigrations.length));
     expect(applied.toSet(), hasLength(applied.length), reason: '同一迁移不应被记录两次');
   });
 
-  test('重复运行幂等:不新增迁移记录,features 种子不重复', () async {
-    final migrationsBefore = await _appliedMigrations();
-    final featureCountBefore = await _featureCount();
-    expect(featureCountBefore, greaterThan(0), reason: 'features 种子应已写入');
+  test(
+    'Rerunning creates no duplicate migration records or feature seed rows',
+    () async {
+      final migrationsBefore = await _appliedMigrations();
+      final featureCountBefore = await _featureCount();
+      expect(featureCountBefore, greaterThan(0), reason: 'features 种子应已写入');
 
-    await MigrationRunner(Database.instance.laconic).run();
+      await MigrationRunner(Database.instance.laconic).run();
 
-    expect(await _appliedMigrations(), migrationsBefore);
-    expect(await _featureCount(), featureCountBefore);
-  });
+      expect(await _appliedMigrations(), migrationsBefore);
+      expect(await _featureCount(), featureCountBefore);
+    },
+  );
 
-  test('features 中文名可原样读回(utf8mb4 端到端)', () async {
+  test('Chinese feature names round trip through utf8mb4 unchanged', () async {
     final names =
         (await Database.instance.laconic.table('foxy.features').pluck('name'))
             .cast<String>();
     expect(names, containsAll(['生物', '物品', '任务']));
   });
 
-  test('从零重建:drop 掉 foxy 后首次运行建库、建表并跑完全部迁移', () async {
+  test('Running from scratch recreates the foxy database and tables and runs every migration', () async {
     if (!allowDropFoxyDatabase) {
       // Deliberately not `skip:` — the documented local command uses
       // `--run-skipped`, which would override a skip and wipe the foxy schema

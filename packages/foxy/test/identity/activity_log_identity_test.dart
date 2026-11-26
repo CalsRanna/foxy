@@ -9,53 +9,59 @@ import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
 void main() {
-  test('历史日志保留日志行 ID 和可读目标标签', () {
-    final createdAt = DateTime.utc(2026, 7, 19);
-    final log = ActivityLogEntity.fromJson({
-      'id': 7,
-      'module': 'conditions',
-      'action_type': 'update',
-      'entity_name': 'Condition 17/0/123/0/0',
-      'created_at': createdAt.toIso8601String(),
-    });
+  test(
+    'Historical activity keeps the log row ID and a readable target label',
+    () {
+      final createdAt = DateTime.utc(2026, 7, 19);
+      final log = ActivityLogEntity.fromJson({
+        'id': 7,
+        'module': 'conditions',
+        'action_type': 'update',
+        'entity_name': 'Condition 17/0/123/0/0',
+        'created_at': createdAt.toIso8601String(),
+      });
 
-    expect(log.id, 7);
-    expect(log.entityName, 'Condition 17/0/123/0/0');
-    expect(log.createdAt, createdAt);
-    expect(log.toJson(), {
-      'module': 'conditions',
-      'action_type': 'update',
-      'entity_name': 'Condition 17/0/123/0/0',
-    });
-    expect(log.toJson(), isNot(contains('id')));
-    expect(log.toJson(), isNot(contains('entity_id')));
-  });
+      expect(log.id, 7);
+      expect(log.entityName, 'Condition 17/0/123/0/0');
+      expect(log.createdAt, createdAt);
+      expect(log.toJson(), {
+        'module': 'conditions',
+        'action_type': 'update',
+        'entity_name': 'Condition 17/0/123/0/0',
+      });
+      expect(log.toJson(), isNot(contains('id')));
+      expect(log.toJson(), isNot(contains('entity_id')));
+    },
+  );
 
-  test('best-effort 日志失败不会泄漏异步错误', () async {
-    final eventBus = EventBus(sync: true);
-    GetIt.instance.registerSingleton<EventBus>(eventBus);
-    addTearDown(() async {
-      eventBus.destroy();
-      await GetIt.instance.reset();
-    });
-    final repository = _TestActivityLogRepository(Laconic(_FailingDriver()));
-    final uncaught = <Object>[];
+  test(
+    'Best-effort logging failures do not leak asynchronous errors',
+    () async {
+      final eventBus = EventBus(sync: true);
+      GetIt.instance.registerSingleton<EventBus>(eventBus);
+      addTearDown(() async {
+        eventBus.destroy();
+        await GetIt.instance.reset();
+      });
+      final repository = _TestActivityLogRepository(Laconic(_FailingDriver()));
+      final uncaught = <Object>[];
 
-    runZonedGuarded(() {
-      repository.storeActivityLogBestEffort(
-        ActivityLogEntity(
-          module: 'conditions',
-          actionType: ActivityActionType.update,
-          entityName: 'Condition 17/0/123/0/0',
-          createdAt: DateTime.now(),
-        ),
-      );
-    }, (error, stackTrace) => uncaught.add(error));
-    await Future<void>.delayed(Duration.zero);
-    await Future<void>.delayed(Duration.zero);
+      runZonedGuarded(() {
+        repository.storeActivityLogBestEffort(
+          ActivityLogEntity(
+            module: 'conditions',
+            actionType: ActivityActionType.update,
+            entityName: 'Condition 17/0/123/0/0',
+            createdAt: DateTime.now(),
+          ),
+        );
+      }, (error, stackTrace) => uncaught.add(error));
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
-    expect(uncaught, isEmpty);
-  });
+      expect(uncaught, isEmpty);
+    },
+  );
 }
 
 class _FailingDriver implements DatabaseDriver {

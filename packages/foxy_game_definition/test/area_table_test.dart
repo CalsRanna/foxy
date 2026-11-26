@@ -2,7 +2,7 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('AreaTeams 与 AreaFlags 对应当前 core 和 3.3.5a DBC', () {
+  test('AreaTeams and AreaFlags match the current core and the 3.3.5a DBC', () {
     expect(AreaTableConstants.areaTeamOptions.keys.toList(), [0, 2, 4, 6]);
     expect(
       AreaTableConstants.areaFlagOptions.map((item) => item.value).toList(),

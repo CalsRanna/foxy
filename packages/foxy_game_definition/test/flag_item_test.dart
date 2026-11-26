@@ -8,16 +8,16 @@ void main() {
     FlagItem(0x04, '矮人'),
   ];
 
-  test('掩码命中多个 flag 时按声明顺序展开为标签', () {
+  test('Matching flags expand to labels in declaration order', () {
     expect(FlagItem.maskLabel(0x01 | 0x04, flags), '人类, 矮人');
   });
 
-  test('未命中任何 flag 时回退为原始掩码', () {
+  test('An unmatched mask falls back to its original value', () {
     expect(FlagItem.maskLabel(0x00, flags), '0');
     expect(FlagItem.maskLabel(0x08, flags), '8');
   });
 
-  test('空 flag 列表时回退为原始掩码', () {
+  test('An empty flag list returns the original mask', () {
     expect(FlagItem.maskLabel(5, const []), '5');
   });
 }

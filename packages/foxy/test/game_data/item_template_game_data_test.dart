@@ -10,46 +10,52 @@ import 'package:foxy/repository/milling_loot_template_repository.dart';
 import 'package:foxy/repository/prospecting_loot_template_repository.dart';
 
 void main() {
-  test('ItemTemplateEntity 成组列使用独立字段而不是数组', () {
-    const entity = ItemTemplateEntity(
-      statType10: 7,
-      statValue10: 25,
-      spellId5: 123,
-      spellTrigger5: 2,
-      socketColor3: 4,
-      socketContent3: 456,
-    );
+  test(
+    'ItemTemplateEntity represents repeated columns as individual fields',
+    () {
+      const entity = ItemTemplateEntity(
+        statType10: 7,
+        statValue10: 25,
+        spellId5: 123,
+        spellTrigger5: 2,
+        socketColor3: 4,
+        socketContent3: 456,
+      );
 
-    expect(entity.statType10, 7);
-    expect(entity.statValue10, 25);
-    expect(entity.spellId5, 123);
-    expect(entity.spellTrigger5, 2);
-    expect(entity.socketColor3, 4);
-    expect(entity.socketContent3, 456);
-    expect(entity.toJson()['stat_type10'], 7);
-    expect(entity.toJson()['spellid_5'], 123);
-    expect(entity.toJson()['socketColor_3'], 4);
-  });
+      expect(entity.statType10, 7);
+      expect(entity.statValue10, 25);
+      expect(entity.spellId5, 123);
+      expect(entity.spellTrigger5, 2);
+      expect(entity.socketColor3, 4);
+      expect(entity.socketContent3, 456);
+      expect(entity.toJson()['stat_type10'], 7);
+      expect(entity.toJson()['spellid_5'], 123);
+      expect(entity.toJson()['socketColor_3'], 4);
+    },
+  );
 
-  test('item_template SQL 浮点类型和新建默认值正确', () {
-    final entity = const ItemTemplateEntity();
-    final json = entity.toJson();
+  test(
+    'item_template floating-point types and new-record defaults match SQL',
+    () {
+      final entity = const ItemTemplateEntity();
+      final json = entity.toJson();
 
-    expect(entity.statsCount, 0);
-    expect(json['SoundOverrideSubclass'], -1);
-    expect(json['BuyCount'], 1);
-    expect(json['delay'], 1000);
-    expect(json['RequiredDisenchantSkill'], -1);
-    expect(json['RangedModRange'], isA<double>());
-    expect(json['ArmorDamageModifier'], isA<double>());
-    for (var i = 1; i <= 5; i++) {
-      expect(json['spellppmRate_$i'], isA<double>());
-      expect(json['spellcooldown_$i'], -1);
-      expect(json['spellcategorycooldown_$i'], -1);
-    }
-  });
+      expect(entity.statsCount, 0);
+      expect(json['SoundOverrideSubclass'], -1);
+      expect(json['BuyCount'], 1);
+      expect(json['delay'], 1000);
+      expect(json['RequiredDisenchantSkill'], -1);
+      expect(json['RangedModRange'], isA<double>());
+      expect(json['ArmorDamageModifier'], isA<double>());
+      for (var i = 1; i <= 5; i++) {
+        expect(json['spellppmRate_$i'], isA<double>());
+        expect(json['spellcooldown_$i'], -1);
+        expect(json['spellcategorycooldown_$i'], -1);
+      }
+    },
+  );
 
-  test('StatsCount 按非零 stat_value 派生，不参与持久化', () {
+  test('StatsCount is derived from nonzero stat_value fields and is excluded from persistence', () {
     const entity = ItemTemplateEntity(
       statType1: 3,
       statValue1: 10,
@@ -60,7 +66,7 @@ void main() {
     expect(entity.toJson(), isNot(contains('StatsCount')));
   });
 
-  test('5 个关联 Tab 的 Entity 字段和复合主键正确', () {
+  test('Entities for the five related tabs use the correct fields and composite primary keys', () {
     expect(const ItemEnchantmentTemplateEntity().toJson().keys.toSet(), {
       'entry',
       'ench',
@@ -92,34 +98,40 @@ void main() {
     }
   });
 
-  test('随机附魔组按 RandomProperty/RandomSuffix 使用正确 DBC', () {
-    expect(
-      ItemEnchantmentTemplateRepository.dbcTableFor(
-        ItemEnchantmentKind.randomProperty,
-      ),
-      'foxy.dbc_item_random_properties',
-    );
-    expect(
-      ItemEnchantmentTemplateRepository.dbcTableFor(
-        ItemEnchantmentKind.randomSuffix,
-      ),
-      'foxy.dbc_item_random_suffix',
-    );
-  });
+  test(
+    'Random property and suffix groups use their corresponding DBC tables',
+    () {
+      expect(
+        ItemEnchantmentTemplateRepository.dbcTableFor(
+          ItemEnchantmentKind.randomProperty,
+        ),
+        'foxy.dbc_item_random_properties',
+      );
+      expect(
+        ItemEnchantmentTemplateRepository.dbcTableFor(
+          ItemEnchantmentKind.randomSuffix,
+        ),
+        'foxy.dbc_item_random_suffix',
+      );
+    },
+  );
 
-  test('item 模块所需 DBC 已纳入 required 定义', () {
-    expect(
-      DbcDefinitions.byTable['dbc_item_bag_family']?.fileName,
-      'ItemBagFamily.dbc',
-    );
-    expect(
-      DbcDefinitions.byTable['dbc_item_limit_category']?.fileName,
-      'ItemLimitCategory.dbc',
-    );
-    expect(
-      DbcDefinitions.byTable['dbc_totem_category']?.fileName,
-      'TotemCategory.dbc',
-    );
-    expect(DbcDefinitions.byTable['dbc_holidays']?.fileName, 'Holidays.dbc');
-  });
+  test(
+    'DBC definitions required by the item module are marked as required',
+    () {
+      expect(
+        DbcDefinitions.byTable['dbc_item_bag_family']?.fileName,
+        'ItemBagFamily.dbc',
+      );
+      expect(
+        DbcDefinitions.byTable['dbc_item_limit_category']?.fileName,
+        'ItemLimitCategory.dbc',
+      );
+      expect(
+        DbcDefinitions.byTable['dbc_totem_category']?.fileName,
+        'TotemCategory.dbc',
+      );
+      expect(DbcDefinitions.byTable['dbc_holidays']?.fileName, 'Holidays.dbc');
+    },
+  );
 }

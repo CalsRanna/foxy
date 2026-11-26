@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('关联列表将父键传给查询和创建，并使用复合键编辑', () async {
+  test('Linked lists pass the parent key to queries and creation and edit by composite key', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
@@ -43,30 +43,33 @@ void main() {
     );
   });
 
-  test('仓库未声明 linkKey 时拒绝生成编辑器骨架', () async {
-    final repository = childRepositorySource.replaceFirst(
-      ", linkKey: ['parentId']",
-      '',
-    );
-    final logs = <String>[];
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        formAnnotationAsset: formAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: childEntitySource,
-        repositoryAsset: repository,
-        viewModelAsset: editorViewModelSource,
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logs.any((log) => log.contains('must declare exactly one linkKey')),
-      isTrue,
-    );
-  });
+  test(
+    'Generation rejects an editor skeleton when the repository has no linkKey',
+    () async {
+      final repository = childRepositorySource.replaceFirst(
+        ", linkKey: ['parentId']",
+        '',
+      );
+      final logs = <String>[];
+      await testBuilder(
+        foxyViewModelBuilder(BuilderOptions.empty),
+        {
+          formAnnotationAsset: formAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAsset: childEntitySource,
+          repositoryAsset: repository,
+          viewModelAsset: editorViewModelSource,
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any((log) => log.contains('must declare exactly one linkKey')),
+        isTrue,
+      );
+    },
+  );
 }
 
 const childEntitySource = r'''

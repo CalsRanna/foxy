@@ -29,80 +29,96 @@ void main() {
 
   tearDown(() => GetIt.instance.reset());
 
-  testWidgets('物品类别确认后更新子类别选项，取消保持原类别', (tester) async {
-    GetIt.instance.registerSingleton<ItemTemplateRepository>(_ItemRepository());
-    final vm = ItemTemplateDetailViewModel();
-    await vm.initSignals();
-    await _pumpEditor(tester, ItemTemplateView(viewModel: vm));
-    await _pick(tester, '类别', 2, confirm: false);
-    expect(vm.classNameController.collect(), 0);
-    await _pick(tester, '类别', 2);
-    expect(vm.classNameController.collect(), 2);
-    final subclass = tester.widget<FoxyEnumPicker<int>>(_picker('子类别'));
-    expect(subclass.options, ItemConstants.itemSubclasses[2].asMap());
-    await _pick(tester, '子类别', 1);
-    expect(vm.subclassController.collect(), 1);
-    await tester.pumpWidget(const SizedBox());
-    vm.dispose();
-  });
+  testWidgets(
+    'Confirming an item category updates subcategory choices and canceling preserves the category',
+    (tester) async {
+      GetIt.instance.registerSingleton<ItemTemplateRepository>(
+        _ItemRepository(),
+      );
+      final vm = ItemTemplateDetailViewModel();
+      await vm.initSignals();
+      await _pumpEditor(tester, ItemTemplateView(viewModel: vm));
+      await _pick(tester, '类别', 2, confirm: false);
+      expect(vm.classNameController.collect(), 0);
+      await _pick(tester, '类别', 2);
+      expect(vm.classNameController.collect(), 2);
+      final subclass = tester.widget<FoxyEnumPicker<int>>(_picker('子类别'));
+      expect(subclass.options, ItemConstants.itemSubclasses[2].asMap());
+      await _pick(tester, '子类别', 1);
+      expect(vm.subclassController.collect(), 1);
+      await tester.pumpWidget(const SizedBox());
+      vm.dispose();
+    },
+  );
 
-  testWidgets('SmartAI 动作确认后切换动态枚举并回写参数组', (tester) async {
-    GetIt.instance.registerSingleton<SmartScriptRepository>(_SmartRepository());
-    final vm = SmartScriptDetailViewModel();
-    await vm.initSignals();
-    await _pumpEditor(tester, SmartScriptView(viewModel: vm));
-    await _pick(tester, '动作类型', 1, confirm: false);
-    expect(vm.selectedActionType.value, 0);
-    expect(_picker('使用动作目标'), findsNothing);
-    await _pick(tester, '动作类型', 1);
-    expect(vm.selectedActionType.value, 1);
-    expect(vm.actionParam3Controller.editor, IntegerFieldEditor.enumValue);
-    await _pick(tester, '使用动作目标', 1);
-    expect(vm.actionParam3Controller.collect(), 1);
-    await _pick(tester, '动作类型', 4);
-    expect(_picker('使用动作目标'), findsNothing);
-    expect(_picker('仅自身'), findsOneWidget);
-    await tester.pumpWidget(const SizedBox());
-    vm.dispose();
-  });
+  testWidgets(
+    'Confirming a SmartAI action changes the dynamic enum and writes back to the parameter group',
+    (tester) async {
+      GetIt.instance.registerSingleton<SmartScriptRepository>(
+        _SmartRepository(),
+      );
+      final vm = SmartScriptDetailViewModel();
+      await vm.initSignals();
+      await _pumpEditor(tester, SmartScriptView(viewModel: vm));
+      await _pick(tester, '动作类型', 1, confirm: false);
+      expect(vm.selectedActionType.value, 0);
+      expect(_picker('使用动作目标'), findsNothing);
+      await _pick(tester, '动作类型', 1);
+      expect(vm.selectedActionType.value, 1);
+      expect(vm.actionParam3Controller.editor, IntegerFieldEditor.enumValue);
+      await _pick(tester, '使用动作目标', 1);
+      expect(vm.actionParam3Controller.collect(), 1);
+      await _pick(tester, '动作类型', 4);
+      expect(_picker('使用动作目标'), findsNothing);
+      expect(_picker('仅自身'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      vm.dispose();
+    },
+  );
 
-  testWidgets('条件类型切换为枚举后提交值，切回数值保留参数', (tester) async {
-    GetIt.instance.registerSingleton<ConditionRepository>(
-      ConditionRepository(),
-    );
-    final vm = ConditionDetailViewModel();
-    await vm.initSignals();
-    await _pumpEditor(tester, ConditionView(viewModel: vm));
-    await _pick(tester, '条件类型', 6);
-    expect(vm.selectedConditionType.value, 6);
-    expect(vm.conditionValue1Controller.editor, IntegerFieldEditor.enumValue);
-    await _pick(tester, '阵营', 469);
-    expect(vm.conditionValue1Controller.collect(), 469);
-    await _pick(tester, '条件类型', 27);
-    expect(vm.conditionValue1Controller.editor, IntegerFieldEditor.number);
-    expect(vm.conditionValue1Controller.collect(), 469);
-    expect(_picker('阵营'), findsNothing);
-    await tester.pumpWidget(const SizedBox());
-    vm.dispose();
-  });
+  testWidgets(
+    'An enum selection commits its value and switching the condition editor back to numbers preserves it',
+    (tester) async {
+      GetIt.instance.registerSingleton<ConditionRepository>(
+        ConditionRepository(),
+      );
+      final vm = ConditionDetailViewModel();
+      await vm.initSignals();
+      await _pumpEditor(tester, ConditionView(viewModel: vm));
+      await _pick(tester, '条件类型', 6);
+      expect(vm.selectedConditionType.value, 6);
+      expect(vm.conditionValue1Controller.editor, IntegerFieldEditor.enumValue);
+      await _pick(tester, '阵营', 469);
+      expect(vm.conditionValue1Controller.collect(), 469);
+      await _pick(tester, '条件类型', 27);
+      expect(vm.conditionValue1Controller.editor, IntegerFieldEditor.number);
+      expect(vm.conditionValue1Controller.collect(), 469);
+      expect(_picker('阵营'), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+      vm.dispose();
+    },
+  );
 
-  testWidgets('法术杂项枚举确认后通过适配控制器回写原字段', (tester) async {
-    GetIt.instance.registerSingleton<SpellRepository>(_SpellRepository());
-    final vm = SpellDetailViewModel();
-    await vm.initSignals();
-    await _pumpEditor(tester, SpellView(viewModel: vm));
-    await _pick(tester, '效果1 · 类型', 30);
-    expect(_picker('效果1 · 能量类型'), findsOneWidget);
-    await _pick(tester, '效果1 · 能量类型', 1, confirm: false);
-    expect(vm.effectMiscValue0Controller.collect(), 0);
-    await _pick(tester, '效果1 · 能量类型', 1);
-    expect(vm.effectMiscValue0Controller.collect(), 1);
-    await _pick(tester, '效果1 · 类型', 0);
-    expect(_picker('效果1 · 能量类型'), findsNothing);
-    expect(vm.effectMiscValue0Controller.collect(), 1);
-    await tester.pumpWidget(const SizedBox());
-    vm.dispose();
-  });
+  testWidgets(
+    'Confirming a spell miscellaneous enum writes to the original field through its adapter',
+    (tester) async {
+      GetIt.instance.registerSingleton<SpellRepository>(_SpellRepository());
+      final vm = SpellDetailViewModel();
+      await vm.initSignals();
+      await _pumpEditor(tester, SpellView(viewModel: vm));
+      await _pick(tester, '效果1 · 类型', 30);
+      expect(_picker('效果1 · 能量类型'), findsOneWidget);
+      await _pick(tester, '效果1 · 能量类型', 1, confirm: false);
+      expect(vm.effectMiscValue0Controller.collect(), 0);
+      await _pick(tester, '效果1 · 能量类型', 1);
+      expect(vm.effectMiscValue0Controller.collect(), 1);
+      await _pick(tester, '效果1 · 类型', 0);
+      expect(_picker('效果1 · 能量类型'), findsNothing);
+      expect(vm.effectMiscValue0Controller.collect(), 1);
+      await tester.pumpWidget(const SizedBox());
+      vm.dispose();
+    },
+  );
 }
 
 Future<void> _pick(

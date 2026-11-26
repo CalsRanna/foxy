@@ -7,7 +7,7 @@ import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
 
 void main() {
-  test('gossip_menu 与全部关联 Entity 逐列覆盖物理结构', () {
+  test('gossip_menu and all related entities cover the physical columns', () {
     final rows = <Map<String, dynamic>>[
       const GossipMenuEntity().toJson(),
       const NpcTextEntity().toJson(),
@@ -24,7 +24,7 @@ void main() {
     }
   });
 
-  test('npc_text 90 列 fromJson/toJson 不发生槽位错位', () {
+  test('All 90 npc_text fields round trip without shifting slots', () {
     final source = <String, dynamic>{};
     final keys = const NpcTextEntity().toJson().keys;
     var number = 1;
@@ -41,7 +41,7 @@ void main() {
     expect(NpcTextEntity.fromJson(source).toJson(), source);
   });
 
-  test('NPC 标识掩码展开为标签，未命中回退', () {
+  test('NPC flag masks expand to labels and unmatched values fall back', () {
     const option = BriefGossipMenuOptionEntity(optionNpcFlag: 0x01 | 0x80);
     expect(option.optionNpcFlagLabel, '对话, 商人');
     expect(

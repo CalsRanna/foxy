@@ -36,7 +36,7 @@ void main() {
     return vm;
   }
 
-  test('普通保存保留三组全部语言、Flags 和基础字段，中文输入可独立修改', () async {
+  test('Saving preserves all three locale groups, flags, and base fields and allows independent Chinese text edits', () async {
     final vm = await form(key: 1);
     await vm.persist();
     expect(driver.updates.last, [..._source.toJson().values, 1]);
@@ -60,7 +60,7 @@ void main() {
     expect(events.last.log.entityName, '名称草稿');
   });
 
-  test('依次回填三组语言互不覆盖，保存保留其他中文和数值草稿', () async {
+  test('Applying successive locale groups preserves the other groups, Chinese text, and numeric drafts', () async {
     final vm = await form(key: 1);
     vm.idController.init(2);
     vm.categoryIdController.init(9);
@@ -117,7 +117,7 @@ void main() {
     }
   });
 
-  test('新建预填 MAX+1，冲突后同步实际主键并以该主键再次保存', () async {
+  test('Creation prefills MAX + 1 and subsequent saves use the assigned key after a collision', () async {
     driver.collide = true;
     final vm = await form();
     expect(vm.idController.collect(), 11);
@@ -134,7 +134,7 @@ void main() {
     expect(vm.entity.value!.displayNameLangZhCN, '新技能');
   });
 
-  test('复制冲突返回实际 ID，并保留三组语言、Flags 和基础字段', () async {
+  test('Copy returns the assigned ID after a collision and preserves all three locale groups, flags, and base fields', () async {
     driver.collide = true;
     final key = await repository.copySkillLine(1);
     expect(key, 12);

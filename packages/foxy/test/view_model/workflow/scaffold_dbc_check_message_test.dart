@@ -3,26 +3,29 @@ import 'package:foxy/model/dbc/dbc_sync_progress.dart';
 import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 
 void main() {
-  test('结构不兼容时使用对应标题并列出详情', () {
-    final message = DbcImportWorkflowViewModel.formatBlockingMessage([
-      const DbcTableCheckResult(
-        tableName: 'dbc_spell',
-        state: DbcTableState.incompatible,
-        message: '缺少字段: foo',
-      ),
-      const DbcTableCheckResult(
-        tableName: 'dbc_map',
-        state: DbcTableState.error,
-        message: 'timeout',
-      ),
-    ]);
+  test(
+    'Schema incompatibilities show the corresponding title and list details',
+    () {
+      final message = DbcImportWorkflowViewModel.formatBlockingMessage([
+        const DbcTableCheckResult(
+          tableName: 'dbc_spell',
+          state: DbcTableState.incompatible,
+          message: '缺少字段: foo',
+        ),
+        const DbcTableCheckResult(
+          tableName: 'dbc_map',
+          state: DbcTableState.error,
+          message: 'timeout',
+        ),
+      ]);
 
-    expect(message, startsWith('DBC 表结构不兼容'));
-    expect(message, contains('dbc_spell: 缺少字段: foo'));
-    expect(message, contains('dbc_map: timeout'));
-  });
+      expect(message, startsWith('DBC 表结构不兼容'));
+      expect(message, contains('dbc_spell: 缺少字段: foo'));
+      expect(message, contains('dbc_map: timeout'));
+    },
+  );
 
-  test('仅查询错误时使用检查失败标题', () {
+  test('Query errors alone use the check-failed title', () {
     final message = DbcImportWorkflowViewModel.formatBlockingMessage([
       const DbcTableCheckResult(
         tableName: 'dbc_spell',
@@ -35,7 +38,7 @@ void main() {
     expect(message, contains('access denied'));
   });
 
-  test('超过 5 条时追加省略提示', () {
+  test('More than five entries adds an omission notice', () {
     final blocking = List.generate(
       6,
       (index) => DbcTableCheckResult(

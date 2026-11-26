@@ -13,36 +13,41 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('击杀掉落行在名称前渲染物品图标，关联掉落行保持占位文本', (tester) async {
-    tester.view.physicalSize = const Size(1600, 800);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    'Kill loot shows an item icon before the name and reference loot keeps placeholder text',
+    (tester) async {
+      tester.view.physicalSize = const Size(1600, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    GetIt.instance.registerSingleton<CreatureLootTemplateRepository>(
-      _FakeCreatureLootTemplateRepository(),
-    );
-    GetIt.instance.registerFactory(
-      () => CreatureLootTemplateLinkedListViewModel(),
-    );
+      GetIt.instance.registerSingleton<CreatureLootTemplateRepository>(
+        _FakeCreatureLootTemplateRepository(),
+      );
+      GetIt.instance.registerFactory(
+        () => CreatureLootTemplateLinkedListViewModel(),
+      );
 
-    await tester.pumpWidget(
-      const ShadApp(home: Scaffold(body: CreatureLootTemplateView(linkKey: 1))),
-    );
-    await tester.pump();
-    await tester.pump();
+      await tester.pumpWidget(
+        const ShadApp(
+          home: Scaffold(body: CreatureLootTemplateView(linkKey: 1)),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
 
-    expect(tester.takeException(), isNull);
+      expect(tester.takeException(), isNull);
 
-    // A regular loot row displays the icon and localized name.
-    final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
-    expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Foo');
-    expect(iconText.name, '测试物品');
+      // A regular loot row displays the icon and localized name.
+      final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
+      expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Foo');
+      expect(iconText.name, '测试物品');
 
-    // A reference row displays gray placeholder text.
-    expect(find.text('关联掉落'), findsOneWidget);
-    expect(find.byType(FoxyIconText), findsOneWidget);
-  });
+      // A reference row displays gray placeholder text.
+      expect(find.text('关联掉落'), findsOneWidget);
+      expect(find.byType(FoxyIconText), findsOneWidget);
+    },
+  );
 }
 
 class _FakeCreatureLootTemplateRepository

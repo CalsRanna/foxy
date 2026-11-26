@@ -43,7 +43,9 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('打开选择对话框渲染表格不抛类型错误', (tester) async {
+  testWidgets('Opening the picker renders the table without a type error', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ShadApp(
         home: Scaffold(

@@ -1,42 +1,40 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_loot_template_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('SpellLootTemplateKey 和 Brief 完整覆盖两列主键', () {
-    const entity = SpellLootTemplateEntity(entry: 10, item: 20);
-    final key = SpellLootTemplateKey.fromEntity(entity);
-    final same = SpellLootTemplateKey.fromEntity(
-      entity.copyWith(reference: 30, groupId: 40),
-    );
-    const brief = BriefSpellLootTemplateEntity(entry: 10, item: 20);
+  test(
+    'SpellLootTemplateKey and its brief entity include both primary key fields',
+    () {
+      const entity = SpellLootTemplateEntity(entry: 10, item: 20);
+      final key = SpellLootTemplateKey.fromEntity(entity);
+      const brief = BriefSpellLootTemplateEntity(entry: 10, item: 20);
 
-    expect(key, same);
-    expect(key.hashCode, same.hashCode);
-    expect(
-      key,
-      isNot(SpellLootTemplateKey.fromEntity(entity.copyWith(entry: 11))),
-    );
-    expect(
-      key,
-      isNot(SpellLootTemplateKey.fromEntity(entity.copyWith(item: 21))),
-    );
-    expect(brief.key, key);
-  });
+      expectRowKeyEquality(
+        key,
+        SpellLootTemplateKey.fromEntity,
+        sameKeyRow: entity.copyWith(reference: 30, groupId: 40),
+        differentKeyRows: [
+          entity.copyWith(entry: 11),
+          entity.copyWith(item: 21),
+        ],
+      );
+      expect(brief.key, key);
+    },
+  );
 
-  test('UPDATE 使用完整旧 key 定位并写入 candidate 十列', () async {
-    final queries = <LaconicQuery>[];
-    final repository = _TestRepository(
-      Laconic(_RecordingDriver(), listen: queries.add),
-    );
+  group('SpellLootTemplateRepository write contract', () {
     const oldKey = SpellLootTemplateKey(entry: 10, item: 20);
     const candidate = SpellLootTemplateEntity(
       entry: 11,
@@ -51,105 +49,92 @@ void main() {
       comment: 'candidate',
     );
 
-    await repository.updateSpellLootTemplate(oldKey, candidate);
-
-    expect(queries.single.bindings, [
-      ...candidate.toJson().values,
-      oldKey.entry,
-      oldKey.item,
-    ]);
-  });
-
-  test('UPDATE、DELETE 零行报错且 Brief 查询稳定分页', () async {
-    final missingRepository = _TestRepository(
-      Laconic(_RecordingDriver(affectedRows: 0)),
-    );
-    const key = SpellLootTemplateKey(entry: 10, item: 20);
-    await expectLater(
-      missingRepository.updateSpellLootTemplate(
-        key,
-        const SpellLootTemplateEntity(),
-      ),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      missingRepository.destroySpellLootTemplate(key),
-      throwsA(isA<RecordNotFoundException>()),
+    testRepositoryWrites(
+      createRepository: _TestRepository.new,
+      originalKey: oldKey,
+      candidate: candidate,
+      missingCandidate: const SpellLootTemplateEntity(),
+      update: (repository, key, row) =>
+          repository.updateSpellLootTemplate(key, row),
+      destroy: (repository, key) => repository.destroySpellLootTemplate(key),
+      expectedBindings: [
+        ...candidate.toJson().values,
+        oldKey.entry,
+        oldKey.item,
+      ],
     );
 
-    final queries = <LaconicQuery>[];
-    final repository = _TestRepository(
-      Laconic(_RecordingDriver(), listen: queries.add),
-    );
-    await repository.getBriefSpellLootTemplates(10, page: 2);
-    expect(queries.single.sql, isNot(contains('slt.*')));
-    expect(queries.single.sql.toLowerCase(), contains('order by'));
-    expect(
-      queries.single.bindings.sublist(queries.single.bindings.length - 2),
-      [50, 50],
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestRepository(laconic).getBriefSpellLootTemplates(10, page: 2),
+      tableAlias: 'slt',
     );
   });
 
   group('inline editing identity', () {
     late _FakeRepository repository;
 
-    setUp(() {
+    late SpellLootTemplateLinkedListViewModel viewModel;
+
+    setUp(() async {
       repository = _FakeRepository([
         const SpellLootTemplateEntity(entry: 10, item: 20),
       ]);
       GetIt.instance.registerSingleton<SpellLootTemplateRepository>(repository);
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+
+      viewModel = SpellLootTemplateLinkedListViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(linkKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value.single.key;
+      await viewModel.edit(viewModel.selectedKey.value!);
     });
 
     tearDown(() async => GetIt.instance.reset());
 
-    test('修改两列 key 仍按旧 key 更新，失败时保留并可重试', () async {
-      final viewModel = SpellLootTemplateLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('Changing both key fields updates by the old key and a failed save preserves it for retry', () async {
       const oldKey = SpellLootTemplateKey(entry: 10, item: 20);
       expect(viewModel.editingKey.value, oldKey);
       viewModel.entryController.init(11);
       viewModel.itemController.init(21);
-      repository.failUpdates = true;
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [oldKey, oldKey]);
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: oldKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
       expect(repository.rows.single.entry, 11);
       expect(repository.rows.single.item, 21);
       expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('切换父范围和新建都会清空旧行身份', () async {
-      final viewModel = SpellLootTemplateLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-
-      await viewModel.setLinkKey(12);
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedKey.value, isNull);
-      await viewModel.create();
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.entryController.collect(), 12);
-    });
+    test(
+      'Changing the parent scope and creating clear the previous row identity',
+      () async {
+        await expectParentChangeAndCreateClearIdentity(
+          editingKey: viewModel.editingKey,
+          selectedKey: viewModel.selectedKey,
+          changeParent: () => viewModel.setLinkKey(12),
+          create: viewModel.create,
+        );
+        expect(viewModel.entryController.collect(), 12);
+      },
+    );
   });
 }
 
-class _FakeRepository extends SpellLootTemplateRepository {
+class _FakeRepository extends SpellLootTemplateRepository
+    with InMemoryRowEditing<SpellLootTemplateEntity, SpellLootTemplateKey> {
+  @override
   final List<SpellLootTemplateEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <SpellLootTemplateKey>[];
 
   _FakeRepository(this.rows);
+
+  @override
+  SpellLootTemplateKey keyOf(SpellLootTemplateEntity row) =>
+      SpellLootTemplateKey.fromEntity(row);
 
   @override
   Future<int> countSpellLootTemplates(int entry) async {
@@ -188,61 +173,13 @@ class _FakeRepository extends SpellLootTemplateRepository {
   @override
   Future<SpellLootTemplateEntity?> getSpellLootTemplate(
     SpellLootTemplateKey key,
-  ) async {
-    for (final row in rows) {
-      if (SpellLootTemplateKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> updateSpellLootTemplate(
     SpellLootTemplateKey originalKey,
     SpellLootTemplateEntity data,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => SpellLootTemplateKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = data;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, data);
 }
 
 class _TestRepository extends SpellLootTemplateRepository {

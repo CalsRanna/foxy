@@ -1,46 +1,39 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_resistance_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('CreatureTemplateResistance key 与 Brief Entity', () {
-    test('两列 key 实现完整值相等', () {
+  group('CreatureTemplateResistance key and brief entity', () {
+    test('Both primary key fields participate in value equality', () {
       const entity = CreatureTemplateResistanceEntity(
         creatureID: 10,
         school: 2,
       );
       final key = CreatureTemplateResistanceKey.fromEntity(entity);
-      final same = CreatureTemplateResistanceKey.fromEntity(
-        entity.copyWith(resistance: 20),
-      );
 
-      expect(key, same);
-      expect(key.hashCode, same.hashCode);
-      expect(
+      expectRowKeyEquality(
         key,
-        isNot(
-          CreatureTemplateResistanceKey.fromEntity(
-            entity.copyWith(creatureID: 11),
-          ),
-        ),
-      );
-      expect(
-        key,
-        isNot(
-          CreatureTemplateResistanceKey.fromEntity(entity.copyWith(school: 3)),
-        ),
+        CreatureTemplateResistanceKey.fromEntity,
+        sameKeyRow: entity.copyWith(resistance: 20),
+        differentKeyRows: [
+          entity.copyWith(creatureID: 11),
+          entity.copyWith(school: 3),
+        ],
       );
     });
 
-    test('Brief Entity 提供完整 typed key', () {
+    test('The brief entity provides the full typed key', () {
       const brief = BriefCreatureTemplateResistanceEntity(
         creatureID: 10,
         school: 2,
@@ -53,69 +46,49 @@ void main() {
   });
 
   group('CreatureTemplateResistanceRepository write contract', () {
-    test('UPDATE 使用完整旧 key 定位并写入 candidate 全部四列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestCreatureTemplateResistanceRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-      const originalKey = CreatureTemplateResistanceKey(
-        creatureID: 10,
-        school: 2,
-      );
-      const candidate = CreatureTemplateResistanceEntity(
-        creatureID: 11,
-        school: 3,
-        resistance: 50,
-        verifiedBuild: 12340,
-      );
+    const originalKey = CreatureTemplateResistanceKey(
+      creatureID: 10,
+      school: 2,
+    );
+    const candidate = CreatureTemplateResistanceEntity(
+      creatureID: 11,
+      school: 3,
+      resistance: 50,
+      verifiedBuild: 12340,
+    );
 
-      await repository.updateCreatureTemplateResistance(originalKey, candidate);
-
-      expect(queries, hasLength(1));
-      expect(queries.single.bindings, [
+    testRepositoryWrites(
+      createRepository: _TestCreatureTemplateResistanceRepository.new,
+      originalKey: originalKey,
+      candidate: candidate,
+      missingCandidate: const CreatureTemplateResistanceEntity(),
+      update: (repository, key, row) =>
+          repository.updateCreatureTemplateResistance(key, row),
+      destroy: (repository, key) =>
+          repository.destroyCreatureTemplateResistance(key),
+      expectedBindings: [
         ...candidate.toJson().values,
         originalKey.creatureID,
         originalKey.school,
-      ]);
-    });
+      ],
+    );
 
-    test('UPDATE 与 DELETE 零行结果报告旧记录不存在', () async {
-      final repository = _TestCreatureTemplateResistanceRepository(
-        Laconic(_RecordingDriver(affectedRows: 0)),
-      );
-      const key = CreatureTemplateResistanceKey(creatureID: 10, school: 2);
-
-      await expectLater(
-        repository.updateCreatureTemplateResistance(
-          key,
-          const CreatureTemplateResistanceEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        repository.destroyCreatureTemplateResistance(key),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-    });
-
-    test('Brief 查询显式选择字段、稳定排序并分页', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestCreatureTemplateResistanceRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-
-      await repository.getBriefCreatureTemplateResistances(10, page: 2);
-
-      expect(queries.single.sql, isNot(contains('*')));
-      expect(queries.single.sql.toLowerCase(), contains('order by'));
-      expect(queries.single.bindings, [10, 50, 50]);
-    });
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestCreatureTemplateResistanceRepository(laconic)
+              .getBriefCreatureTemplateResistances(10, page: 2),
+      verifyQuery: (query) {
+        expect(query.bindings, [10, 50, 50]);
+      },
+    );
   });
 
   group('CreatureTemplateResistance inline identity', () {
     late _FakeCreatureTemplateResistanceRepository repository;
 
-    setUp(() {
+    late CreatureTemplateResistanceLinkedListViewModel viewModel;
+
+    setUp(() async {
       repository = _FakeCreatureTemplateResistanceRepository([
         const CreatureTemplateResistanceEntity(
           creatureID: 10,
@@ -127,18 +100,19 @@ void main() {
         repository,
       );
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+
+      viewModel = CreatureTemplateResistanceLinkedListViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(linkKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value.single.key;
+      await viewModel.edit(viewModel.selectedKey.value!);
     });
 
     tearDown(() async {
       await GetIt.instance.reset();
     });
 
-    test('编辑 Brief 后按旧 key 更新，candidate 可移出父范围', () async {
-      final viewModel = CreatureTemplateResistanceLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('Editing a brief row updates by the old key and can move the row out of its parent scope', () async {
       const originalKey = CreatureTemplateResistanceKey(
         creatureID: 10,
         school: 2,
@@ -157,37 +131,31 @@ void main() {
       expect(viewModel.selectedKey.value, isNull);
     });
 
-    test('保存失败保留旧 editingKey，重试仍使用同一旧 key', () async {
-      final viewModel = CreatureTemplateResistanceLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-      final originalKey = viewModel.editingKey.value;
-      repository.failUpdates = true;
-      viewModel.schoolController.init(3);
+    test(
+      'A failed save retains editingKey and retry uses the same old key',
+      () async {
+        final originalKey = repository.keyOf(repository.rows.single);
+        viewModel.schoolController.init(3);
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, originalKey);
+        await expectSaveRetry(
+          repository: repository,
+          originalKey: originalKey,
+          editingKey: viewModel.editingKey,
+          persist: viewModel.persist,
+        );
+      },
+    );
 
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [originalKey, originalKey]);
-    });
-
-    test('切换父范围和新建会清空 editingKey', () async {
-      final viewModel = CreatureTemplateResistanceLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-
-      await viewModel.setLinkKey(12);
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.creatureIDController.collect(), 12);
-
-      await viewModel.create();
-      expect(viewModel.editingKey.value, isNull);
+    test('Changing the parent and creating clear editingKey', () async {
+      await expectParentChangeAndCreateClearIdentity(
+        editingKey: viewModel.editingKey,
+        selectedKey: viewModel.selectedKey,
+        changeParent: () async {
+          await viewModel.setLinkKey(12);
+          expect(viewModel.creatureIDController.collect(), 12);
+        },
+        create: viewModel.create,
+      );
       await viewModel.persist();
       expect(repository.storeCount, 1);
     });
@@ -195,13 +163,21 @@ void main() {
 }
 
 class _FakeCreatureTemplateResistanceRepository
-    extends CreatureTemplateResistanceRepository {
+    extends CreatureTemplateResistanceRepository
+    with
+        InMemoryRowEditing<
+          CreatureTemplateResistanceEntity,
+          CreatureTemplateResistanceKey
+        > {
+  @override
   final List<CreatureTemplateResistanceEntity> rows;
-  bool failUpdates = false;
   int storeCount = 0;
-  final updateKeys = <CreatureTemplateResistanceKey>[];
 
   _FakeCreatureTemplateResistanceRepository(this.rows);
+
+  @override
+  CreatureTemplateResistanceKey keyOf(CreatureTemplateResistanceEntity row) =>
+      CreatureTemplateResistanceKey.fromEntity(row);
 
   @override
   Future<int> countCreatureTemplateResistances(int creatureID) async {
@@ -240,12 +216,7 @@ class _FakeCreatureTemplateResistanceRepository
   @override
   Future<CreatureTemplateResistanceEntity?> getCreatureTemplateResistance(
     CreatureTemplateResistanceKey key,
-  ) async {
-    for (final row in rows) {
-      if (CreatureTemplateResistanceKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> storeCreatureTemplateResistance(
@@ -259,51 +230,7 @@ class _FakeCreatureTemplateResistanceRepository
   Future<void> updateCreatureTemplateResistance(
     CreatureTemplateResistanceKey originalKey,
     CreatureTemplateResistanceEntity resistance,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => CreatureTemplateResistanceKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = resistance;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, resistance);
 }
 
 class _TestCreatureTemplateResistanceRepository

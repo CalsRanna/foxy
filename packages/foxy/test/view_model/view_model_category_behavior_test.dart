@@ -21,7 +21,7 @@ import 'package:foxy/view_model/workflow/workflow_status.dart';
 import 'package:get_it/get_it.dart';
 
 void main() {
-  group('ListViewModel 行为协议', () {
+  group('ListViewModel behavior contract', () {
     late _ConditionRepository repository;
     late EventBus eventBus;
 
@@ -42,7 +42,7 @@ void main() {
       await GetIt.instance.reset();
     });
 
-    test('筛选快照用于 count/list，写入期间拒绝第二次提交', () async {
+    test('Count and list use a filter snapshot and a pending write rejects another submission', () async {
       final viewModel = ConditionListViewModel();
       addTearDown(viewModel.dispose);
       viewModel.sourceTypeOrReferenceIdController.init('17');
@@ -66,7 +66,7 @@ void main() {
     });
   });
 
-  test('ReadViewModel 刷新、筛选、重置和 dispose 使用同一状态源', () async {
+  test('ReadViewModel refresh, filtering, reset, and disposal share one state source', () async {
     final viewModel = MoreReadViewModel();
     await viewModel.initSignals();
     viewModel.setFeatures([_feature(1, 'Alpha'), _feature(2, 'Beta')]);
@@ -82,7 +82,7 @@ void main() {
     expect(viewModel.loading.value, isFalse);
   });
 
-  test('StateViewModel 成功后原子更新，失败时保留原状态', () async {
+  test('StateViewModel updates atomically on success and retains its state on failure', () async {
     final repository = _FeatureRepository([_feature(1, 'Alpha')]);
     final viewModel = FeatureStateViewModel(repository: repository);
     await viewModel.initSignals();
@@ -96,27 +96,30 @@ void main() {
     expect(viewModel.errorMessage.value, contains('更新收藏状态失败'));
   });
 
-  test('WorkflowViewModel 校验失败、retry 和 reset 使用统一状态', () async {
-    final configUtil = ConfigUtil();
-    final viewModel = DbcImportWorkflowViewModel(
-      useCase: ImportDbcUseCase(
+  test(
+    'WorkflowViewModel validation failures, retry, and reset share one state',
+    () async {
+      final configUtil = ConfigUtil();
+      final viewModel = DbcImportWorkflowViewModel(
+        useCase: ImportDbcUseCase(
+          configUtil: configUtil,
+          dbcSyncUtil: DbcSyncUtil(),
+        ),
         configUtil: configUtil,
-        dbcSyncUtil: DbcSyncUtil(),
-      ),
-      configUtil: configUtil,
-    );
+      );
 
-    await expectLater(viewModel.start(), throwsA(isA<ValidationException>()));
-    expect(viewModel.status.value, WorkflowStatus.failed);
-    expect(viewModel.errorMessage.value, contains('输入不合法'));
+      await expectLater(viewModel.start(), throwsA(isA<ValidationException>()));
+      expect(viewModel.status.value, WorkflowStatus.failed);
+      expect(viewModel.errorMessage.value, contains('输入不合法'));
 
-    await expectLater(viewModel.retry(), throwsA(isA<ValidationException>()));
-    expect(viewModel.status.value, WorkflowStatus.failed);
-    viewModel.reset();
-    expect(viewModel.status.value, WorkflowStatus.idle);
-    expect(viewModel.errorMessage.value, isNull);
-    viewModel.dispose();
-  });
+      await expectLater(viewModel.retry(), throwsA(isA<ValidationException>()));
+      expect(viewModel.status.value, WorkflowStatus.failed);
+      viewModel.reset();
+      expect(viewModel.status.value, WorkflowStatus.idle);
+      expect(viewModel.errorMessage.value, isNull);
+      viewModel.dispose();
+    },
+  );
 }
 
 const _conditionKey = ConditionKey(

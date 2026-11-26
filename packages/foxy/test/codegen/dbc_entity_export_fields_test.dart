@@ -69,25 +69,28 @@ import 'package:foxy/entity/zone_music_entity.dart';
 import 'package:warcrafty/warcrafty.dart';
 
 void main() {
-  test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(DbcDefinitions.all, hasLength(66));
+  test(
+    'Default serialization covers all required fields for every DBC table',
+    () {
+      expect(DbcDefinitions.all, hasLength(66));
 
-    for (final definition in DbcDefinitions.all) {
-      final json = _emptyEntityJson(definition.tableName);
-      final missing = <String>[];
-      for (final field in definition.schema.fields) {
-        if (field.type.isSkip || field.type == FieldType.sort) continue;
-        if (!json.containsKey(field.name)) missing.add(field.name);
+      for (final definition in DbcDefinitions.all) {
+        final json = _emptyEntityJson(definition.tableName);
+        final missing = <String>[];
+        for (final field in definition.schema.fields) {
+          if (field.type.isSkip || field.type == FieldType.sort) continue;
+          if (!json.containsKey(field.name)) missing.add(field.name);
+        }
+        expect(
+          missing,
+          isEmpty,
+          reason: '${definition.tableName} 缺少: ${missing.join(', ')}',
+        );
       }
-      expect(
-        missing,
-        isEmpty,
-        reason: '${definition.tableName} 缺少: ${missing.join(', ')}',
-      );
-    }
-  });
+    },
+  );
 
-  test('全部 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
+  test('DBC serialization and deserialization preserve field values for every table', () {
     for (final definition in DbcDefinitions.all) {
       final sample = _sampleRow(definition);
       final json = _roundTrip(definition.tableName, sample);

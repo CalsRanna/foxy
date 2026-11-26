@@ -12,25 +12,28 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('窄窗口下脚本列表的备注列保持有效宽度', (tester) async {
-    tester.view.physicalSize = const Size(900, 700);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    'The script notes column keeps a usable width in a narrow window',
+    (tester) async {
+      tester.view.physicalSize = const Size(900, 700);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    GetIt.instance.registerSingleton<SmartScriptRepository>(
-      _FakeSmartScriptRepository(),
-    );
-    GetIt.instance.registerFactory(() => SmartScriptListViewModel());
+      GetIt.instance.registerSingleton<SmartScriptRepository>(
+        _FakeSmartScriptRepository(),
+      );
+      GetIt.instance.registerFactory(() => SmartScriptListViewModel());
 
-    await tester.pumpWidget(
-      const ShadApp(home: Scaffold(body: SmartScriptListPage())),
-    );
-    await tester.pump();
+      await tester.pumpWidget(
+        const ShadApp(home: Scaffold(body: SmartScriptListPage())),
+      );
+      await tester.pump();
 
-    expect(tester.takeException(), isNull);
-    expect(find.text('脚本列表'), findsOneWidget);
-  });
+      expect(tester.takeException(), isNull);
+      expect(find.text('脚本列表'), findsOneWidget);
+    },
+  );
 }
 
 class _FakeSmartScriptRepository extends SmartScriptRepository {

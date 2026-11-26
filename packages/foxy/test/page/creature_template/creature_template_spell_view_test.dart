@@ -13,7 +13,9 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('生物技能行的技能名称显示法术图标', (tester) async {
+  testWidgets('Creature spell rows show a spell icon next to the name', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1600, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);

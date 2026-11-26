@@ -71,8 +71,8 @@ create table `page_text` (
     await Database.instance.laconic.statement('delete from `page_text`');
   });
 
-  group('locale JOIN 读取', () {
-    test('brief 取 zhCN 文本、忽略其他语言、无本地化时回落空串', () async {
+  group('Locale join reads', () {
+    test('Brief rows use zhCN text and default to empty when that locale is missing', () async {
       await pageText.storePageText(const PageTextEntity(id: 1, text: '原始一'));
       await pageText.storePageText(const PageTextEntity(id: 2, text: '原始二'));
       await locale.storePageTextLocale(
@@ -91,7 +91,7 @@ create table `page_text` (
       expect(briefs.last.text, '原始二');
     });
 
-    test('文本过滤同时搜父表与 zhCN 文本,% 与 _ 按字面量处理', () async {
+    test('Text filtering searches the parent and zhCN text and treats percent and underscore literally', () async {
       await pageText.storePageText(
         const PageTextEntity(id: 1, text: '进度 100% 完成'),
       );
@@ -120,42 +120,48 @@ create table `page_text` (
       expect(underscore.map((row) => row.id).toList(), [2]);
     });
 
-    test('id 与 text 同时过滤时 OR 条件不越界', () async {
-      await pageText.storePageText(const PageTextEntity(id: 1, text: '原始一'));
+    test(
+      'Combining ID and text filters keeps the OR condition scoped',
+      () async {
+        await pageText.storePageText(const PageTextEntity(id: 1, text: '原始一'));
 
-      final miss = await pageText.getBriefPageTexts(
-        filter: const PageTextFilter(id: '1', text: '不存在的文本'),
-      );
-      expect(miss, isEmpty, reason: 'whereAny 的 OR 必须被括号包住');
+        final miss = await pageText.getBriefPageTexts(
+          filter: const PageTextFilter(id: '1', text: '不存在的文本'),
+        );
+        expect(miss, isEmpty, reason: 'whereAny 的 OR 必须被括号包住');
 
-      final hit = await pageText.getBriefPageTexts(
-        filter: const PageTextFilter(id: '1', text: '原始'),
-      );
-      expect(hit.map((row) => row.id).toList(), [1]);
-    });
+        final hit = await pageText.getBriefPageTexts(
+          filter: const PageTextFilter(id: '1', text: '原始'),
+        );
+        expect(hit.map((row) => row.id).toList(), [1]);
+      },
+    );
 
-    test('count 与 brief 过滤结果一致,id 过滤走无联表分支', () async {
-      await pageText.storePageText(const PageTextEntity(id: 1, text: '原始一'));
-      await pageText.storePageText(const PageTextEntity(id: 2, text: '原始二'));
-      await pageText.storePageText(const PageTextEntity(id: 3, text: '别的'));
-      await locale.storePageTextLocale(
-        const PageTextLocaleEntity(id: 3, locale: 'zhCN', text: '原始三'),
-      );
+    test(
+      'Count and brief filters agree, and ID filtering skips the join',
+      () async {
+        await pageText.storePageText(const PageTextEntity(id: 1, text: '原始一'));
+        await pageText.storePageText(const PageTextEntity(id: 2, text: '原始二'));
+        await pageText.storePageText(const PageTextEntity(id: 3, text: '别的'));
+        await locale.storePageTextLocale(
+          const PageTextLocaleEntity(id: 3, locale: 'zhCN', text: '原始三'),
+        );
 
-      const byText = PageTextFilter(text: '原始');
-      expect(
-        await pageText.countPageTexts(filter: byText),
-        (await pageText.getBriefPageTexts(filter: byText)).length,
-        reason: 'count 与 brief 必须用同一套过滤条件',
-      );
-      expect(await pageText.countPageTexts(), 3);
-      expect(
-        await pageText.countPageTexts(filter: const PageTextFilter(id: '2')),
-        1,
-      );
-    });
+        const byText = PageTextFilter(text: '原始');
+        expect(
+          await pageText.countPageTexts(filter: byText),
+          (await pageText.getBriefPageTexts(filter: byText)).length,
+          reason: 'count 与 brief 必须用同一套过滤条件',
+        );
+        expect(await pageText.countPageTexts(), 3);
+        expect(
+          await pageText.countPageTexts(filter: const PageTextFilter(id: '2')),
+          1,
+        );
+      },
+    );
 
-    test('联表分页按 ID 升序', () async {
+    test('Joined results paginate in ascending ID order', () async {
       final pageSize = pageText.kPageSize;
       await Future.wait([
         for (var id = 1; id <= pageSize + 1; id++)
@@ -172,64 +178,72 @@ create table `page_text` (
       expect(second.single.id, pageSize + 1);
     });
 
-    test('localeEnabled=false 时不联 locale 表(表不存在也能查)', () async {
-      await pageText.storePageText(const PageTextEntity(id: 1, text: '原始一'));
-      await Database.instance.laconic.statement(
-        'drop table `page_text_locale`',
-      );
-      addTearDown(() => Database.instance.laconic.statement(localeTableDdl));
+    test(
+      'Disabling locales allows queries even when the locale table is missing',
+      () async {
+        await pageText.storePageText(const PageTextEntity(id: 1, text: '原始一'));
+        await Database.instance.laconic.statement(
+          'drop table `page_text_locale`',
+        );
+        addTearDown(() => Database.instance.laconic.statement(localeTableDdl));
 
-      localeSettings.update(localeEnabled: false);
+        localeSettings.update(localeEnabled: false);
 
-      final briefs = await pageText.getBriefPageTexts();
-      expect(briefs.single.localeText, isEmpty);
-      expect(briefs.single.text, '原始一');
-      expect(
-        await pageText.countPageTexts(filter: const PageTextFilter(text: '原始')),
-        1,
-      );
-    });
+        final briefs = await pageText.getBriefPageTexts();
+        expect(briefs.single.localeText, isEmpty);
+        expect(briefs.single.text, '原始一');
+        expect(
+          await pageText.countPageTexts(
+            filter: const PageTextFilter(text: '原始'),
+          ),
+          1,
+        );
+      },
+    );
   });
 
-  group('locale 写路径与事务', () {
-    test('复合主键的写入、更新、排序读取与删除', () async {
-      await pageText.storePageText(const PageTextEntity(id: 7, text: 'p7'));
-      await locale.storePageTextLocale(
-        const PageTextLocaleEntity(id: 7, locale: 'zhCN', text: '中'),
-      );
-      await locale.storePageTextLocale(
-        const PageTextLocaleEntity(id: 7, locale: 'deDE', text: 'de'),
-      );
-      expect(await locale.countPageTextLocales(7), 2);
+  group('Locale writes and transactions', () {
+    test(
+      'Composite keys support insertion, updates, ordered reads, and deletion',
+      () async {
+        await pageText.storePageText(const PageTextEntity(id: 7, text: 'p7'));
+        await locale.storePageTextLocale(
+          const PageTextLocaleEntity(id: 7, locale: 'zhCN', text: '中'),
+        );
+        await locale.storePageTextLocale(
+          const PageTextLocaleEntity(id: 7, locale: 'deDE', text: 'de'),
+        );
+        expect(await locale.countPageTextLocales(7), 2);
 
-      expect(
-        (await locale.getBriefPageTextLocales(id: 7))
-            .map((row) => row.locale)
-            .toList(),
-        ['deDE', 'zhCN'],
-        reason: '按 locale 排序',
-      );
+        expect(
+          (await locale.getBriefPageTextLocales(id: 7))
+              .map((row) => row.locale)
+              .toList(),
+          ['deDE', 'zhCN'],
+          reason: '按 locale 排序',
+        );
 
-      await locale.updatePageTextLocale(
-        const PageTextLocaleKey(id: 7, locale: 'zhCN'),
-        const PageTextLocaleEntity(id: 7, locale: 'zhCN', text: '改过'),
-      );
-      final updated = await locale.getBriefPageTextLocales(id: 7);
-      expect(updated.firstWhere((row) => row.locale == 'zhCN').text, '改过');
+        await locale.updatePageTextLocale(
+          const PageTextLocaleKey(id: 7, locale: 'zhCN'),
+          const PageTextLocaleEntity(id: 7, locale: 'zhCN', text: '改过'),
+        );
+        final updated = await locale.getBriefPageTextLocales(id: 7);
+        expect(updated.firstWhere((row) => row.locale == 'zhCN').text, '改过');
 
-      await locale.destroyPageTextLocale(
-        const PageTextLocaleKey(id: 7, locale: 'deDE'),
-      );
-      expect(await locale.countPageTextLocales(7), 1);
-      await expectLater(
-        locale.destroyPageTextLocale(
+        await locale.destroyPageTextLocale(
           const PageTextLocaleKey(id: 7, locale: 'deDE'),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-    });
+        );
+        expect(await locale.countPageTextLocales(7), 1);
+        await expectLater(
+          locale.destroyPageTextLocale(
+            const PageTextLocaleKey(id: 7, locale: 'deDE'),
+          ),
+          throwsA(isA<RecordNotFoundException>()),
+        );
+      },
+    );
 
-    test('本地化保存用例在同一事务内增删改，失败时回滚', () async {
+    test('Locale inserts, updates, and deletes share a single transaction and roll back together', () async {
       await pageText.storePageText(const PageTextEntity(id: 5, text: 'p5'));
       await locale.storePageTextLocale(
         const PageTextLocaleEntity(id: 5, locale: 'zhCN', text: '原'),
@@ -287,8 +301,8 @@ create table `page_text` (
     });
   });
 
-  group('page_text 业务规则', () {
-    test('NextPageID 指向缺失页被拒', () async {
+  group('Page text business rules', () {
+    test('A NextPageID pointing to a missing page is rejected', () async {
       await expectLater(
         pageText.storePageText(
           const PageTextEntity(id: 1, text: 'a', nextPageId: 42),
@@ -297,22 +311,25 @@ create table `page_text` (
       );
     });
 
-    test('NextPageID 成环被拒,合法链可写', () async {
-      await pageText.storePageText(const PageTextEntity(id: 1, text: 'a'));
-      await pageText.storePageText(
-        const PageTextEntity(id: 2, text: 'b', nextPageId: 1),
-      );
+    test(
+      'NextPageID cycles are rejected and valid chains can be written',
+      () async {
+        await pageText.storePageText(const PageTextEntity(id: 1, text: 'a'));
+        await pageText.storePageText(
+          const PageTextEntity(id: 2, text: 'b', nextPageId: 1),
+        );
 
-      await expectLater(
-        pageText.updatePageText(
-          1,
-          const PageTextEntity(id: 1, text: 'a', nextPageId: 2),
-        ),
-        throwsA(isA<ValidationException>()),
-      );
-    });
+        await expectLater(
+          pageText.updatePageText(
+            1,
+            const PageTextEntity(id: 1, text: 'a', nextPageId: 2),
+          ),
+          throwsA(isA<ValidationException>()),
+        );
+      },
+    );
 
-    test('copy 取新 ID 并保留内容', () async {
+    test('copy assigns a new ID and preserves page content', () async {
       // The referenced page must exist first: storing validates the chain.
       await pageText.storePageText(const PageTextEntity(id: 2, text: 'b'));
       await pageText.storePageText(

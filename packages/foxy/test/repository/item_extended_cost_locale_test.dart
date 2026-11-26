@@ -15,7 +15,7 @@ void main() {
   tearDown(() => GetIt.instance.reset());
 
   for (final enabled in [false, true]) {
-    test('扩展费用物品名称遵循 locale_enabled=$enabled', () async {
+    test('Extended cost item names follow locale_enabled=$enabled', () async {
       settings.update(localeEnabled: enabled);
       final queries = <LaconicQuery>[];
       final repository = _Repository(

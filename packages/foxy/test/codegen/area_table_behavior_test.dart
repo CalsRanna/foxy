@@ -39,7 +39,7 @@ void main() {
     return vm;
   }
 
-  test('保存保留全部语言，语言回填保留草稿，改 ID 时排除自身 AreaBit', () async {
+  test('Save preserves all locales and drafts, and changing the ID excludes the current AreaBit', () async {
     final vm = await form(key: 1);
     vm.nameController.init('区域名称草稿');
     await vm.persist();
@@ -77,37 +77,43 @@ void main() {
   });
 
   for (final key in [null, 1]) {
-    test('${key == null ? '新建' : '更新'}拒绝重复 AreaBit 和无效父区域，修正后可保存', () async {
-      final vm = await form(key: key);
-      vm.areaBitController.init(key == null ? 50 : 90);
-      await expectLater(vm.persist(), throwsA(isA<DuplicateKeyException>()));
-      expect(driver.insertAttempts, 0);
-      expect(driver.updatedKeys, isEmpty);
-      expect(vm.persistedKey.value, key);
-      expect(vm.submitting.value, isFalse);
-      expect(vm.errorMessage.value, isNotEmpty);
-      expect(events, isEmpty);
+    test(
+      '${key == null ? 'Creation' : 'Updating'} rejects duplicate AreaBit and invalid parent areas and succeeds after correction',
+      () async {
+        final vm = await form(key: key);
+        vm.areaBitController.init(key == null ? 50 : 90);
+        await expectLater(vm.persist(), throwsA(isA<DuplicateKeyException>()));
+        expect(driver.insertAttempts, 0);
+        expect(driver.updatedKeys, isEmpty);
+        expect(vm.persistedKey.value, key);
+        expect(vm.submitting.value, isFalse);
+        expect(vm.errorMessage.value, isNotEmpty);
+        expect(events, isEmpty);
 
-      vm.areaBitController.init(101);
-      vm.parentAreaIdController.init(999);
-      await expectLater(vm.persist(), throwsA(isA<RecordNotFoundException>()));
-      expect(driver.insertAttempts, 0);
-      expect(driver.updatedKeys, isEmpty);
-      expect(vm.areaBitController.collect(), 101);
-      expect(vm.parentAreaIdController.collect(), 999);
-      expect(vm.persistedKey.value, key);
-      expect(vm.submitting.value, isFalse);
+        vm.areaBitController.init(101);
+        vm.parentAreaIdController.init(999);
+        await expectLater(
+          vm.persist(),
+          throwsA(isA<RecordNotFoundException>()),
+        );
+        expect(driver.insertAttempts, 0);
+        expect(driver.updatedKeys, isEmpty);
+        expect(vm.areaBitController.collect(), 101);
+        expect(vm.parentAreaIdController.collect(), 999);
+        expect(vm.persistedKey.value, key);
+        expect(vm.submitting.value, isFalse);
 
-      vm.parentAreaIdController.init(0);
-      await vm.persist();
-      final row = driver.rows[vm.persistedKey.value]!;
-      expect(row['ParentAreaID'], 0);
-      expect(row['AreaBit'], 101);
-      expect(vm.errorMessage.value, isNull);
-    });
+        vm.parentAreaIdController.init(0);
+        await vm.persist();
+        final row = driver.rows[vm.persistedKey.value]!;
+        expect(row['ParentAreaID'], 0);
+        expect(row['AreaBit'], 101);
+        expect(vm.errorMessage.value, isNull);
+      },
+    );
   }
 
-  test('新建分别分配 ID 和 AreaBit，主键冲突后同步实际 ID 并支持再次保存', () async {
+  test('Creation allocates ID and AreaBit independently and subsequent saves use the ID assigned after a collision', () async {
     driver.collide = true;
     final vm = await form();
     expect(vm.idController.collect(), 11);
@@ -126,16 +132,22 @@ void main() {
   });
 
   for (final collide in [false, true]) {
-    test('复制${collide ? '发生主键冲突' : '无冲突'}时分配新 AreaBit，保留多语言并返回实际 ID', () async {
-      driver.collide = collide;
-      final key = await repository.copyAreaTable(1);
-      expect(key, collide ? 12 : 11);
-      expect(driver.rows[key], _source.copyWith(id: key, areaBit: 91).toJson());
-      expect(driver.rows[1], _source.toJson());
-    });
+    test(
+      'Copying ${collide ? 'with a primary key collision' : 'without a collision'} allocates a new AreaBit, preserves all locales, and returns the assigned ID',
+      () async {
+        driver.collide = collide;
+        final key = await repository.copyAreaTable(1);
+        expect(key, collide ? 12 : 11);
+        expect(
+          driver.rows[key],
+          _source.copyWith(id: key, areaBit: 91).toJson(),
+        );
+        expect(driver.rows[1], _source.toJson());
+      },
+    );
   }
 
-  test('复制也校验父区域，拒绝复制父区域已不存在的记录', () async {
+  test('Copy rejects records whose parent area no longer exists', () async {
     driver.rows.remove(10);
     await expectLater(
       repository.copyAreaTable(1),

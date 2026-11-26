@@ -17,7 +17,7 @@ import 'package:foxy/view_model/workflow/workflow_status.dart';
 /// DBC task must not be rejected as busy. Uses a real [DbcSyncUtil] with a
 /// scripted success worker so the isolate lifecycle is exercised end-to-end.
 void main() {
-  test('MPQ 导出完成后 VM 与 DbcSyncUtil 均复位，DBC 导出立即可用', () async {
+  test('Finishing MPQ export resets the view model and DbcSyncUtil and immediately enables DBC export', () async {
     final tempDir = Directory.systemTemp.createTempSync('foxy_export_flow_');
     addTearDown(() async {
       if (await tempDir.exists()) await tempDir.delete(recursive: true);

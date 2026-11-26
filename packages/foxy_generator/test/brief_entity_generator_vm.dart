@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('Brief 只包含选中字段、复用 Full 默认值且不暴露写模型 API', () async {
+  test('Brief includes selected fields, reuses full-entity defaults, and excludes write APIs', () async {
     await testBuilder(
       foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, standardEntitySource),
@@ -39,25 +39,28 @@ void main() {
     );
   });
 
-  test('复合身份 Brief 直接由 Full 元数据构建 typed key', () async {
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(compositeEntityAsset, compositeEntitySource),
-      outputs: {
-        'foxy|lib/entity/codegen_relation_entity.foxy_entity.g.part':
-            decodedMatches(
-              allOf(<Matcher>[
-                contains('final class CodegenRelationKey'),
-                contains('CodegenRelationKey get key'),
-                contains('ownerId: ownerId'),
-                contains('locale: locale'),
-              ]),
-            ),
-      },
-    );
-  });
+  test(
+    'A composite brief builds its typed key from full-entity metadata',
+    () async {
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(compositeEntityAsset, compositeEntitySource),
+        outputs: {
+          'foxy|lib/entity/codegen_relation_entity.foxy_entity.g.part':
+              decodedMatches(
+                allOf(<Matcher>[
+                  contains('final class CodegenRelationKey'),
+                  contains('CodegenRelationKey get key'),
+                  contains('ownerId: ownerId'),
+                  contains('locale: locale'),
+                ]),
+              ),
+        },
+      );
+    },
+  );
 
-  test('Brief 缺少任一 key 字段时拒绝生成', () async {
+  test('Brief generation rejects a missing key field', () async {
     final source = compositeEntitySource.replaceFirst(
       '@FoxyBriefField()\n  @FoxyFullField(\'Locale\', key: true)',
       '@FoxyFullField(\'Locale\', key: true)',
@@ -73,7 +76,7 @@ void main() {
     expect(logContains(logs, 'is missing the full physical identity'), isTrue);
   });
 
-  test('class 上的具名 FoxyBriefField 只生成 Brief 投影字段', () async {
+  test('Named FoxyBriefField annotations on a class generate brief projection fields only', () async {
     final source = standardEntitySource.replaceFirst(
       '@FoxyBriefEntity()',
       "@FoxyBriefEntity()\n"
@@ -123,22 +126,25 @@ void main() {
     );
   });
 
-  test('Brief 投影字段与 Full 字段重名时拒绝生成', () async {
-    final source = standardEntitySource.replaceFirst(
-      '@FoxyBriefEntity()',
-      "@FoxyBriefEntity()\n@FoxyBriefField.text('name')",
-    );
-    final logs = <String>[];
+  test(
+    'Generation rejects a brief projection field that duplicates a full field',
+    () async {
+      final source = standardEntitySource.replaceFirst(
+        '@FoxyBriefEntity()',
+        "@FoxyBriefEntity()\n@FoxyBriefField.text('name')",
+      );
+      final logs = <String>[];
 
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(standardEntityAsset, source),
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logContains(logs, 'declares Brief field name more than once'),
-      isTrue,
-    );
-  });
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(standardEntityAsset, source),
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logContains(logs, 'declares Brief field name more than once'),
+        isTrue,
+      );
+    },
+  );
 }

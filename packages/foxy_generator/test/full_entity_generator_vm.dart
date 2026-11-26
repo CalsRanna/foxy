@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('fromJson 使用物理列名并保留标量转换与构造默认值', () async {
+  test('fromJson uses physical column names and preserves scalar conversions and constructor defaults', () async {
     await testBuilder(
       foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, standardEntitySource),
@@ -29,29 +29,32 @@ void main() {
     );
   });
 
-  test('不支持 required 参数时给出构建期错误', () async {
-    final source = standardEntitySource.replaceFirst(
-      'this.id = 0,',
-      'required this.id,',
-    );
-    final logs = <String>[];
+  test(
+    'An unsupported required parameter produces a build-time error',
+    () async {
+      final source = standardEntitySource.replaceFirst(
+        'this.id = 0,',
+        'required this.id,',
+      );
+      final logs = <String>[];
 
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(standardEntityAsset, source),
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logContains(
-        logs,
-        'Required constructor parameters are not yet supported',
-      ),
-      isTrue,
-    );
-  });
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(standardEntityAsset, source),
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logContains(
+          logs,
+          'Required constructor parameters are not yet supported',
+        ),
+        isTrue,
+      );
+    },
+  );
 
-  test('重复物理列名时整体生成失败', () async {
+  test('Duplicate physical column names fail generation', () async {
     final source = standardEntitySource.replaceFirst(
       "@FoxyFullField('Ratio')",
       "@FoxyFullField('ID')",
@@ -70,45 +73,48 @@ void main() {
     );
   });
 
-  test('缺少字段注解与不支持类型都不会被静默跳过', () async {
-    final missingAnnotation = standardEntitySource.replaceFirst(
-      "  @FoxyFullField('Enabled')\n",
-      '',
-    );
-    final missingLogs = <String>[];
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(standardEntityAsset, missingAnnotation),
-      outputs: {},
-      onLog: (record) => missingLogs.add(record.toString()),
-    );
-    expect(
-      logContains(missingLogs, 'enabled is missing @FoxyFullField'),
-      isTrue,
-    );
+  test(
+    'Missing field annotations and unsupported field types are reported',
+    () async {
+      final missingAnnotation = standardEntitySource.replaceFirst(
+        "  @FoxyFullField('Enabled')\n",
+        '',
+      );
+      final missingLogs = <String>[];
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(standardEntityAsset, missingAnnotation),
+        outputs: {},
+        onLog: (record) => missingLogs.add(record.toString()),
+      );
+      expect(
+        logContains(missingLogs, 'enabled is missing @FoxyFullField'),
+        isTrue,
+      );
 
-    final unsupportedType = standardEntitySource.replaceFirst(
-      'final String? description;',
-      'final List<int>? description;',
-    );
-    final unsupportedLogs = <String>[];
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(standardEntityAsset, unsupportedType),
-      outputs: {},
-      onLog: (record) => unsupportedLogs.add(record.toString()),
-    );
-    expect(
-      logContains(
-        unsupportedLogs,
-        'The type List<int>? of CodegenSampleEntity.description '
-        'is not yet supported',
-      ),
-      isTrue,
-    );
-  });
+      final unsupportedType = standardEntitySource.replaceFirst(
+        'final String? description;',
+        'final List<int>? description;',
+      );
+      final unsupportedLogs = <String>[];
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(standardEntityAsset, unsupportedType),
+        outputs: {},
+        onLog: (record) => unsupportedLogs.add(record.toString()),
+      );
+      expect(
+        logContains(
+          unsupportedLogs,
+          'The type List<int>? of CodegenSampleEntity.description '
+          'is not yet supported',
+        ),
+        isTrue,
+      );
+    },
+  );
 
-  test('一个输入文件包含多个 Full Entity 时给出拆分诊断', () async {
+  test('Multiple full entities in one source file produce a diagnostic to split the file', () async {
     final source =
         '$standardEntitySource\n'
         '@FoxyFullEntity(table: \'other\')\n'
@@ -124,88 +130,96 @@ void main() {
     expect(logContains(logs, 'it currently declares 2.'), isTrue);
   });
 
-  test('调整 class 与 field 注解排列顺序产生相同代码', () async {
-    final reordered = standardEntitySource
-        .replaceFirst(
-          '@FoxyBriefEntity()\n'
-              "@FoxyFullEntity(table: 'foxy.codegen_sample')",
+  test(
+    'Reordering class and field annotations produces identical code',
+    () async {
+      final reordered = standardEntitySource
+          .replaceFirst(
+            '@FoxyBriefEntity()\n'
+                "@FoxyFullEntity(table: 'foxy.codegen_sample')",
+            "@FoxyFullEntity(table: 'foxy.codegen_sample')\n"
+                '@FoxyBriefEntity()',
+          )
+          .replaceFirst(
+            '  @FoxyBriefField()\n'
+                "  @FoxyFullField('ID', key: true)",
+            "  @FoxyFullField('ID', key: true)\n"
+                '  @FoxyBriefField()',
+          );
+      expect(
+        reordered,
+        contains(
           "@FoxyFullEntity(table: 'foxy.codegen_sample')\n"
-              '@FoxyBriefEntity()',
-        )
-        .replaceFirst(
-          '  @FoxyBriefField()\n'
-              "  @FoxyFullField('ID', key: true)",
+          '@FoxyBriefEntity()',
+        ),
+      );
+      expect(
+        reordered,
+        contains(
           "  @FoxyFullField('ID', key: true)\n"
-              '  @FoxyBriefField()',
-        );
-    expect(
-      reordered,
-      contains(
-        "@FoxyFullEntity(table: 'foxy.codegen_sample')\n"
-        '@FoxyBriefEntity()',
-      ),
-    );
-    expect(
-      reordered,
-      contains(
-        "  @FoxyFullField('ID', key: true)\n"
-        '  @FoxyBriefField()\n'
-        '  final int id;',
-      ),
-    );
-    const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';
-    String? firstSource;
-    String? secondSource;
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(standardEntityAsset, standardEntitySource),
-      outputs: {
-        output: decodedMatches(
-          predicate<String>((source) {
-            firstSource = source;
-            return true;
-          }),
+          '  @FoxyBriefField()\n'
+          '  final int id;',
         ),
-      },
-    );
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(standardEntityAsset, reordered),
-      outputs: {
-        output: decodedMatches(
-          predicate<String>((source) {
-            secondSource = source;
-            return true;
-          }),
-        ),
-      },
-    );
+      );
+      const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';
+      String? firstSource;
+      String? secondSource;
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(standardEntityAsset, standardEntitySource),
+        outputs: {
+          output: decodedMatches(
+            predicate<String>((source) {
+              firstSource = source;
+              return true;
+            }),
+          ),
+        },
+      );
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(standardEntityAsset, reordered),
+        outputs: {
+          output: decodedMatches(
+            predicate<String>((source) {
+              secondSource = source;
+              return true;
+            }),
+          ),
+        },
+      );
 
-    expect(firstSource, secondSource);
-  });
+      expect(firstSource, secondSource);
+    },
+  );
 
-  test('块体 fromJson factory 委托被 AST 校验接受', () async {
-    // The old source-text regex required the exact arrow form; the AST
-    // check accepts any formatting that still delegates to the mixin.
-    final blockBody = standardEntitySource.replaceFirst(
-      '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) =>\n'
-          '      _CodegenSampleEntityMixin.fromJson(json);',
-      '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) {\n'
-          '    return _CodegenSampleEntityMixin.fromJson(json);\n'
-          '  }',
-    );
-    const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';
+  test(
+    'AST validation accepts a block-bodied fromJson factory with delegation',
+    () async {
+      // The old source-text regex required the exact arrow form; the AST
+      // check accepts any formatting that still delegates to the mixin.
+      final blockBody = standardEntitySource.replaceFirst(
+        '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) =>\n'
+            '      _CodegenSampleEntityMixin.fromJson(json);',
+        '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) {\n'
+            '    return _CodegenSampleEntityMixin.fromJson(json);\n'
+            '  }',
+      );
+      const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';
 
-    await testBuilder(
-      foxyEntityBuilder(BuilderOptions.empty),
-      sourceAsset(standardEntityAsset, blockBody),
-      outputs: {
-        output: decodedMatches(contains('static CodegenSampleEntity fromJson')),
-      },
-    );
-  });
+      await testBuilder(
+        foxyEntityBuilder(BuilderOptions.empty),
+        sourceAsset(standardEntityAsset, blockBody),
+        outputs: {
+          output: decodedMatches(
+            contains('static CodegenSampleEntity fromJson'),
+          ),
+        },
+      );
+    },
+  );
 
-  test('fromJson 委托缺失时给出构建期错误', () async {
+  test('A missing fromJson delegate produces a build-time error', () async {
     final missing = standardEntitySource.replaceFirst(
       '  factory CodegenSampleEntity.fromJson(Map<String, dynamic> json) =>\n'
           '      _CodegenSampleEntityMixin.fromJson(json);',

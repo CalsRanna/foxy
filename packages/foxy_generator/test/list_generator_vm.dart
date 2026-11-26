@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('列表生成筛选重置、删除后的分页回退与无名称实体日志', () async {
+  test('List generation supports filter reset, page fallback after delete, and activity for nameless entities', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {
@@ -35,7 +35,7 @@ void main() {
     );
   });
 
-  test('实体有 name 字段时 _logActivity 按 key 查库解析名称', () async {
+  test('For entities with a name, _logActivity queries by key to resolve it', () async {
     final entity = sampleEntitySource.replaceFirst(
       '  const SampleEntity({this.id = 0});',
       "  @FoxyFullField('Name')\n"
@@ -76,7 +76,7 @@ void main() {
     );
   });
 
-  test('实体只有 nameLangZhCN 时 _logActivity 使用 locale 候选字段', () async {
+  test('For entities with only nameLangZhCN, _logActivity uses the locale candidate field', () async {
     final entity = sampleEntitySource.replaceFirst(
       '  const SampleEntity({this.id = 0});',
       "  @FoxyFullField('Name_lang_zhCN')\n"
@@ -106,7 +106,7 @@ void main() {
     );
   });
 
-  test('filter 字段 id 生成 idController(与字段同名)', () async {
+  test('An id filter generates a controller named idController', () async {
     final repository = sampleRepositorySource.replaceFirst(
       "@FoxyFilter.text('entry')",
       "@FoxyFilter.text('id')",
@@ -140,42 +140,45 @@ void main() {
     );
   });
 
-  test('复合 Key 时 copy/destroy 使用 XxxKey 参数', () async {
-    final entity = sampleEntitySource.replaceFirst(
-      "  const SampleEntity({this.id = 0});",
-      "  @FoxyFullField('Owner', key: true)\n"
-          "  final int owner;\n\n"
-          "  const SampleEntity({this.id = 0, this.owner = 0});",
-    );
+  test(
+    'For composite keys, copy and destroy take an XxxKey parameter',
+    () async {
+      final entity = sampleEntitySource.replaceFirst(
+        "  const SampleEntity({this.id = 0});",
+        "  @FoxyFullField('Owner', key: true)\n"
+            "  final int owner;\n\n"
+            "  const SampleEntity({this.id = 0, this.owner = 0});",
+      );
 
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        listAnnotationAsset: listAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: entity,
-        repositoryAsset: sampleRepositorySource,
-        viewModelAsset: sampleViewModelSource,
-      },
-      outputs: {
-        'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
-            decodedMatches(
-              allOf(<Matcher>[
-                contains(
-                  'Future<void> copy(SampleKey key) => EntityWrittenEvent.capture(',
-                ),
-                contains('sourceKey: _repository.activityKey(key)'),
-                contains(
-                  'Future<void> destroy(SampleKey key) => EntityWrittenEvent.capture(',
-                ),
-              ]),
-            ),
-      },
-    );
-  });
+      await testBuilder(
+        foxyViewModelBuilder(BuilderOptions.empty),
+        {
+          listAnnotationAsset: listAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAsset: entity,
+          repositoryAsset: sampleRepositorySource,
+          viewModelAsset: sampleViewModelSource,
+        },
+        outputs: {
+          'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
+              decodedMatches(
+                allOf(<Matcher>[
+                  contains(
+                    'Future<void> copy(SampleKey key) => EntityWrittenEvent.capture(',
+                  ),
+                  contains('sourceKey: _repository.activityKey(key)'),
+                  contains(
+                    'Future<void> destroy(SampleKey key) => EntityWrittenEvent.capture(',
+                  ),
+                ]),
+              ),
+        },
+      );
+    },
+  );
 
-  test('查询方法一律按命名约定调用(不读仓库源码)', () async {
+  test('Query methods are called by naming convention without reading repository source', () async {
     const repository = r'''
 import 'package:foxy/entity/sample_entity.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -226,7 +229,7 @@ class BriefSampleEntity {
     );
   });
 
-  test('非 text 筛选字段拒绝生成', () async {
+  test('Generation rejects non-text filters', () async {
     final repository = sampleRepositorySource.replaceFirst(
       "@FoxyFilter.text('entry')",
       "@FoxyFilter.text('entry')\n"
@@ -253,29 +256,35 @@ class BriefSampleEntity {
     );
   });
 
-  test('VM 类名不以 ListViewModel 结尾时拒绝生成', () async {
-    final source = sampleViewModelSource.replaceFirst(
-      'SampleListViewModel',
-      'SampleList',
-    );
-    final logs = <String>[];
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        listAnnotationAsset: listAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: sampleEntitySource,
-        repositoryAsset: sampleRepositorySource,
-        viewModelAsset: source,
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(logs.any((log) => log.contains('ending in ListViewModel')), isTrue);
-  });
+  test(
+    'Generation rejects view model names without the ListViewModel suffix',
+    () async {
+      final source = sampleViewModelSource.replaceFirst(
+        'SampleListViewModel',
+        'SampleList',
+      );
+      final logs = <String>[];
+      await testBuilder(
+        foxyViewModelBuilder(BuilderOptions.empty),
+        {
+          listAnnotationAsset: listAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAsset: sampleEntitySource,
+          repositoryAsset: sampleRepositorySource,
+          viewModelAsset: source,
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any((log) => log.contains('ending in ListViewModel')),
+        isTrue,
+      );
+    },
+  );
 
-  test('缺少 part 声明时拒绝生成', () async {
+  test('Generation rejects a missing part declaration', () async {
     final source = sampleViewModelSource.replaceFirst(
       "part 'sample_list_view_model.g.dart';\n",
       '',
@@ -297,7 +306,7 @@ class BriefSampleEntity {
     expect(logs.any((log) => log.contains('is missing part')), isTrue);
   });
 
-  test('缺少 mixin 混入时拒绝生成', () async {
+  test('Generation rejects a missing mixin', () async {
     final source = sampleViewModelSource.replaceFirst(
       ', _SampleListViewModelMixin',
       '',
@@ -322,45 +331,49 @@ class BriefSampleEntity {
     );
   });
 
-  test('Repository 与 Entity base name 不一致时拒绝生成', () async {
-    // The repository class name is changed so its base name no longer
-    // matches the entity's; the reader's one-to-one naming check fires
-    // before the derived-repository resolution.
-    final repository = sampleRepositorySource.replaceFirst(
-      'class SampleRepository',
-      'class OtherRepository',
-    );
-    final source = sampleViewModelSource
-        .replaceFirst(
-          'repository: SampleRepository',
-          'repository: OtherRepository',
-        )
-        .replaceFirst(
-          "import 'package:foxy/repository/sample_repository.dart';",
-          "import 'package:foxy/repository/sample_repository.dart' "
-              'show OtherRepository;',
-        );
-    final logs = <String>[];
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      {
-        listAnnotationAsset: listAnnotationSource,
-        entityAnnotationAsset: entityAnnotationSource,
-        repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: sampleEntitySource,
-        repositoryAsset: repository,
-        viewModelAsset: source,
-      },
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logs.any(
-        (log) => log.contains('do not follow the one-to-one naming convention'),
-      ),
-      isTrue,
-    );
-  });
+  test(
+    'Generation rejects mismatched repository and entity base names',
+    () async {
+      // The repository class name is changed so its base name no longer
+      // matches the entity's; the reader's one-to-one naming check fires
+      // before the derived-repository resolution.
+      final repository = sampleRepositorySource.replaceFirst(
+        'class SampleRepository',
+        'class OtherRepository',
+      );
+      final source = sampleViewModelSource
+          .replaceFirst(
+            'repository: SampleRepository',
+            'repository: OtherRepository',
+          )
+          .replaceFirst(
+            "import 'package:foxy/repository/sample_repository.dart';",
+            "import 'package:foxy/repository/sample_repository.dart' "
+                'show OtherRepository;',
+          );
+      final logs = <String>[];
+      await testBuilder(
+        foxyViewModelBuilder(BuilderOptions.empty),
+        {
+          listAnnotationAsset: listAnnotationSource,
+          entityAnnotationAsset: entityAnnotationSource,
+          repositoryAnnotationAsset: repositoryAnnotationSource,
+          entityAsset: sampleEntitySource,
+          repositoryAsset: repository,
+          viewModelAsset: source,
+        },
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any(
+          (log) =>
+              log.contains('do not follow the one-to-one naming convention'),
+        ),
+        isTrue,
+      );
+    },
+  );
 }
 
 const entityAnnotationAsset = 'foxy_annotation|lib/entity_annotations.dart';

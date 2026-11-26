@@ -96,7 +96,7 @@ create table `creature_template` (
     );
   });
 
-  test('brief 取 zhCN 名称与称号,忽略其他语言,NULL 称号回落空串', () async {
+  test('Brief rows use zhCN names and titles, exclude other locales, and default null titles to empty', () async {
     await insertCreature(1, 'Kobold Vermin', null, 1, 2);
     await insertCreature(2, 'Wolf', 'Beast', 3, 4);
     await insertLocale(1, 'zhCN', '狗头人苦工', '怪物');
@@ -115,7 +115,7 @@ create table `creature_template` (
     expect(briefs.last.subName, 'Beast');
   });
 
-  test('名称过滤同时搜 ct.name 与 zhCN 名称', () async {
+  test('Name filtering searches both ct.name and the zhCN name', () async {
     await insertCreature(1, 'Kobold Vermin', null, 1, 2);
     await insertCreature(2, 'Wolf', 'Beast', 3, 4);
     await insertLocale(1, 'zhCN', '狗头人苦工', '怪物');
@@ -138,7 +138,7 @@ create table `creature_template` (
     );
   });
 
-  test('名称过滤不匹配原始称号或 zhCN 称号', () async {
+  test('Name filtering excludes original and zhCN titles', () async {
     await insertCreature(1, 'Kobold Vermin', null, 1, 2);
     await insertCreature(2, 'Wolf', 'Beast', 3, 4);
     await insertLocale(1, 'zhCN', '狗头人苦工', '怪物');
@@ -153,7 +153,7 @@ create table `creature_template` (
     }
   });
 
-  test('entry 过滤走无联表分支,entry+name 同时过滤不越界', () async {
+  test('Entry filtering skips the join and combined entry and name filters stay scoped', () async {
     await insertCreature(1, 'Kobold Vermin', null, 1, 2);
     await insertCreature(2, 'Wolf', 'Beast', 3, 4);
 
@@ -170,27 +170,30 @@ create table `creature_template` (
     expect(miss, isEmpty, reason: 'whereAny 的 OR 必须被括号包住');
   });
 
-  test('localeEnabled=false 时不联 locale 表(表不存在也能查)', () async {
-    await insertCreature(1, 'Kobold Vermin', null, 1, 2);
-    await Database.instance.laconic.statement(
-      'drop table `creature_template_locale`',
-    );
-    addTearDown(() => Database.instance.laconic.statement(localeTableDdl));
+  test(
+    'Disabling locales allows queries even when the locale table is missing',
+    () async {
+      await insertCreature(1, 'Kobold Vermin', null, 1, 2);
+      await Database.instance.laconic.statement(
+        'drop table `creature_template_locale`',
+      );
+      addTearDown(() => Database.instance.laconic.statement(localeTableDdl));
 
-    localeSettings.update(localeEnabled: false);
+      localeSettings.update(localeEnabled: false);
 
-    final briefs = await repository.getBriefCreatureTemplates();
-    expect(briefs.single.localeName, isEmpty);
-    expect(briefs.single.name, 'Kobold Vermin');
-    expect(
-      await repository.countCreatureTemplates(
-        filter: const CreatureTemplateFilter(name: 'Kobold'),
-      ),
-      1,
-    );
-  });
+      final briefs = await repository.getBriefCreatureTemplates();
+      expect(briefs.single.localeName, isEmpty);
+      expect(briefs.single.name, 'Kobold Vermin');
+      expect(
+        await repository.countCreatureTemplates(
+          filter: const CreatureTemplateFilter(name: 'Kobold'),
+        ),
+        1,
+      );
+    },
+  );
 
-  test('联表分页按 entry 升序', () async {
+  test('Joined results paginate in ascending entry order', () async {
     final pageSize = repository.kPageSize;
     await Future.wait([
       for (var entry = 1; entry <= pageSize + 1; entry++)
@@ -208,7 +211,7 @@ create table `creature_template` (
     expect(await repository.countCreatureTemplates(), pageSize + 1);
   });
 
-  test('create 预填 entry 为 MAX(entry)+1,且不落库', () async {
+  test('create prefills MAX(entry) + 1 without inserting a row', () async {
     await insertCreature(7, 'Wolf', 'Beast', 3, 4);
 
     final draft = await repository.createCreatureTemplate();

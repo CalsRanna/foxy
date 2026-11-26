@@ -25,7 +25,7 @@ void main() {
   List<int> content(int marker) => [marker, 1, 2, 3];
 
   group('findLocaleDataDir', () {
-    test('按偏好顺序命中 zhCN', () {
+    test('Finds zhCN in the preferred locale order', () {
       _buildFakeClient(
         clientRoot,
         locale: 'enUS',
@@ -40,7 +40,7 @@ void main() {
       expect(p.basename(dir!), 'zhCN');
     });
 
-    test('无偏好命中时取第一个含 MPQ 的 locale 目录', () {
+    test('Without a preferred match, uses the first locale directory containing MPQs', () {
       _buildFakeClient(
         clientRoot,
         locale: 'frFR',
@@ -50,7 +50,7 @@ void main() {
       expect(p.basename(dir!), 'frFR');
     });
 
-    test('非客户端目录返回 null', () {
+    test('A non-client directory returns null', () {
       expect(GameIconExtractor.findLocaleDataDir(tempDir.path), isNull);
       expect(
         GameIconExtractor.findLocaleDataDir(p.join(clientRoot.path, '不存在')),
@@ -60,7 +60,7 @@ void main() {
   });
 
   group('archiveChain', () {
-    test('locale 目录全 MPQ 按类别排序（自定义 patch 最后）', () {
+    test('Locale MPQs are ordered by category with custom patches last', () {
       final dataDir = _buildFakeClient(
         clientRoot,
         archives: {
@@ -85,7 +85,7 @@ void main() {
       ]);
     });
 
-    test('根目录官方大包最低优先级，且被 locale 覆盖', () {
+    test('Official root archives have the lowest priority and are overridden by locale archives', () {
       _buildFakeClient(
         clientRoot,
         locale: 'zhCN',
@@ -109,7 +109,7 @@ void main() {
       ]);
     });
 
-    test('根目录自定义 MPQ 最高优先级', () {
+    test('Custom root MPQs have the highest priority', () {
       _buildFakeClient(
         clientRoot,
         locale: 'zhCN',
@@ -130,7 +130,7 @@ void main() {
   });
 
   group('extract', () {
-    test('高优先级归档覆盖同名图标', () {
+    test('Higher-priority archives override icons with the same name', () {
       _buildFakeClient(
         clientRoot,
         archives: {
@@ -152,7 +152,7 @@ void main() {
       expect(dest.readAsBytesSync(), content(2)); // higher priority wins
     });
 
-    test('收录 Spellbook 并以纯名扁平落盘（含 .tga 路径归一）', () {
+    test('Includes Spellbook files and flattens icon names with normalized .tga paths', () {
       _buildFakeClient(
         clientRoot,
         archives: {
@@ -186,7 +186,7 @@ void main() {
       );
     });
 
-    test('已存在产物跳过，重复执行幂等', () {
+    test('Skips existing output so repeated extraction is idempotent', () {
       _buildFakeClient(
         clientRoot,
         archives: {
@@ -208,26 +208,29 @@ void main() {
       );
     });
 
-    test('归档打开失败计入错误但不阻断其他归档', () {
-      _buildFakeClient(
-        clientRoot,
-        archives: {
+    test(
+      'An archive open failure is counted and other archives still extract',
+      () {
+        _buildFakeClient(
+          clientRoot,
+          archives: {
+            'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
+            'patch-zhCN.MPQ': {r'Interface\Icons\INV_Bar.blp': content(2)},
+          },
+        );
+        final result = _extractor(clientRoot, outputDir, {
           'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
-          'patch-zhCN.MPQ': {r'Interface\Icons\INV_Bar.blp': content(2)},
-        },
-      );
-      final result = _extractor(clientRoot, outputDir, {
-        'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
-        // patch-zhCN.MPQ missing → openSource throws
-      }).extract();
+          // patch-zhCN.MPQ missing → openSource throws
+        }).extract();
 
-      expect(result.extracted, 1);
-      expect(result.failed, 1);
-      expect(result.errors.single, contains('patch-zhCN.MPQ'));
-      expect(result.success, isFalse);
-    });
+        expect(result.extracted, 1);
+        expect(result.failed, 1);
+        expect(result.errors.single, contains('patch-zhCN.MPQ'));
+        expect(result.success, isFalse);
+      },
+    );
 
-    test('取消：提前终止并标记 cancelled', () {
+    test('Cancellation stops extraction early and marks it canceled', () {
       _buildFakeClient(
         clientRoot,
         archives: {
@@ -258,44 +261,47 @@ void main() {
       );
     });
 
-    test('根目录自定义 MPQ 覆盖官方 locale 包的同名图标', () {
-      _buildFakeClient(
-        clientRoot,
-        archives: {
-          'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
-        },
-      );
-      // Root-level custom patch (the most common custom-client shape)
-      final dataDir = Directory(p.join(clientRoot.path, 'Data'));
-      final customArchives = <String, Map<String, List<int>>>{
-        'zzz_custom.MPQ': {
-          r'Interface\Icons\INV_Foo.blp': content(9),
-          r'Interface\Icons\INV_Custom_Only.blp': content(7),
-        },
-      };
-      File(p.join(dataDir.path, 'zzz_custom.MPQ')).writeAsBytesSync([0]);
-      final result = _extractor(clientRoot, outputDir, {
-        ...{
-          'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
-        },
-        ...customArchives,
-      }).extract();
+    test(
+      'Custom root MPQs override matching icons from official locale archives',
+      () {
+        _buildFakeClient(
+          clientRoot,
+          archives: {
+            'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
+          },
+        );
+        // Root-level custom patch (the most common custom-client shape)
+        final dataDir = Directory(p.join(clientRoot.path, 'Data'));
+        final customArchives = <String, Map<String, List<int>>>{
+          'zzz_custom.MPQ': {
+            r'Interface\Icons\INV_Foo.blp': content(9),
+            r'Interface\Icons\INV_Custom_Only.blp': content(7),
+          },
+        };
+        File(p.join(dataDir.path, 'zzz_custom.MPQ')).writeAsBytesSync([0]);
+        final result = _extractor(clientRoot, outputDir, {
+          ...{
+            'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
+          },
+          ...customArchives,
+        }).extract();
 
-      expect(result.success, isTrue);
-      expect(result.extracted, 2);
-      // Official icon overridden by a custom pack
-      expect(
-        File(p.join(outputDir.path, 'inv_foo.blp')).readAsBytesSync(),
-        content(9),
-      );
-      // New icons from a custom pack are collected
-      expect(
-        File(p.join(outputDir.path, 'inv_custom_only.blp')).existsSync(),
-        isTrue,
-      );
-    });
+        expect(result.success, isTrue);
+        expect(result.extracted, 2);
+        // Official icon overridden by a custom pack
+        expect(
+          File(p.join(outputDir.path, 'inv_foo.blp')).readAsBytesSync(),
+          content(9),
+        );
+        // New icons from a custom pack are collected
+        expect(
+          File(p.join(outputDir.path, 'inv_custom_only.blp')).existsSync(),
+          isTrue,
+        );
+      },
+    );
 
-    test('非客户端目录返回失败结果', () {
+    test('A non-client directory returns a failure result', () {
       final result = _extractor(tempDir, outputDir, const {}).extract();
       expect(result.success, isFalse);
       expect(result.failed, 1);
@@ -303,15 +309,18 @@ void main() {
       expect(result.errors.single, contains('没有 Data 目录'));
     });
 
-    test('Data 目录存在但无 MPQ 归档时报出已检查的子目录', () {
-      Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
-          .createSync(recursive: true);
-      final result = _extractor(clientRoot, outputDir, const {}).extract();
-      expect(result.success, isFalse);
-      expect(result.failed, 1);
-      expect(result.errors.single, contains('没有含 MPQ 归档的子目录'));
-      expect(result.errors.single, contains('zhCN'));
-    });
+    test(
+      'When Data contains no MPQs, the error lists the subdirectories checked',
+      () {
+        Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
+            .createSync(recursive: true);
+        final result = _extractor(clientRoot, outputDir, const {}).extract();
+        expect(result.success, isFalse);
+        expect(result.failed, 1);
+        expect(result.errors.single, contains('没有含 MPQ 归档的子目录'));
+        expect(result.errors.single, contains('zhCN'));
+      },
+    );
   });
 }
 

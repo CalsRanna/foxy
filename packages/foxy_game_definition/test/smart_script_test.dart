@@ -2,11 +2,11 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('source_type 只提供当前 SmartAI loader 实际加载的四类', () {
+  test('source_type exposes only the four classes loaded by the current SmartAI loader', () {
     expect(SmartScriptConstants.sourceTypes.keys.toSet(), {0, 1, 2, 9});
   });
 
-  test('SmartEvents 精确排除 3.3.5a 场景事件和枚举哨兵', () {
+  test('SmartEvents excludes 3.3.5a scene events and enum sentinels', () {
     expect(SmartScriptConstants.eventTypes.keys.toSet(), {
       for (var value = 0; value <= 77; value++) value,
       82,
@@ -24,7 +24,7 @@ void main() {
     );
   });
 
-  test('SmartActions 只包含当前 core 已声明且可加载的动作', () {
+  test('SmartActions contains only actions declared and loadable by the current core', () {
     final expected = <int>{
       for (var value = 1; value <= 136; value++)
         if (!{16, 119, 120, 127, 128, 129, 130, 133}.contains(value)) value,
@@ -37,7 +37,7 @@ void main() {
     expect(SmartScriptConstants.actionTypes, isNot(contains(202)));
   });
 
-  test('SmartTargets 排除哨兵区间与 core 明确不支持的 LOOT_RECIPIENTS', () {
+  test('SmartTargets excludes sentinel ranges and the unsupported LOOT_RECIPIENTS value', () {
     expect(SmartScriptConstants.targetTypes.keys.toSet(), {
       for (var value = 0; value <= 29; value++)
         if (value != 27) value,
@@ -45,18 +45,23 @@ void main() {
     });
   });
 
-  test('事件与施法 Flags 不暴露运行时位或注释掉的旧位', () {
-    expect(
-      SmartScriptConstants.eventFlagItems.map((item) => item.value).toSet(),
-      {0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200},
-    );
-    expect(
-      SmartScriptConstants.smartCastFlagItems.map((item) => item.value).toSet(),
-      {0x001, 0x002, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400},
-    );
-  });
+  test(
+    'Event and cast flags exclude runtime bits and commented-out legacy bits',
+    () {
+      expect(
+        SmartScriptConstants.eventFlagItems.map((item) => item.value).toSet(),
+        {0x001, 0x002, 0x004, 0x008, 0x010, 0x020, 0x040, 0x080, 0x100, 0x200},
+      );
+      expect(
+        SmartScriptConstants.smartCastFlagItems
+            .map((item) => item.value)
+            .toSet(),
+        {0x001, 0x002, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400},
+      );
+    },
+  );
 
-  test('关键联合参数指向 SmartScriptMgr 使用的精确表或 DBC', () {
+  test('Key union parameters reference the exact tables or DBCs used by SmartScriptMgr', () {
     SmartParameterReference referenceOf(
       IntegerFieldSpec<SmartParameterReference> spec,
     ) => switch (spec) {

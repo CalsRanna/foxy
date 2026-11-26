@@ -34,7 +34,7 @@ void main() {
     };
   }
 
-  test('DbcFileWriter 写入后可以使用 warcrafty 回读', () async {
+  test('Files produced by DbcFileWriter can be read with warcrafty', () async {
     await util.write(
       schema: schema,
       rows: [sampleRow()],
@@ -49,7 +49,7 @@ void main() {
     expect(loader.getRecord(0).getInt(1), 1000);
   });
 
-  test('DbcFileWriter 按传入行顺序写入,不重排 ID', () async {
+  test('DbcFileWriter preserves input row order without sorting IDs', () async {
     // Order-sensitive DBCs (Talent.dbc) require the file to keep the
     // original row order; the writer must never re-sort by ID.
     await util.write(
@@ -65,24 +65,27 @@ void main() {
     expect(loader.getRecord(1).getInt(0), 1);
   });
 
-  test('DbcFileWriter 遇到缺失字段时失败且不生成目标文件', () async {
-    final target = File(p.join(directory.path, '${schema.name}.dbc'));
+  test(
+    'A missing field fails the write and creates no destination file',
+    () async {
+      final target = File(p.join(directory.path, '${schema.name}.dbc'));
 
-    await expectLater(
-      util.write(
-        schema: schema,
-        rows: [
-          {'ID': 1},
-        ],
-        outputDirectory: directory.path,
-      ),
-      throwsFormatException,
-    );
+      await expectLater(
+        util.write(
+          schema: schema,
+          rows: [
+            {'ID': 1},
+          ],
+          outputDirectory: directory.path,
+        ),
+        throwsFormatException,
+      );
 
-    expect(await target.exists(), isFalse);
-  });
+      expect(await target.exists(), isFalse);
+    },
+  );
 
-  test('DbcFileWriter 校验失败时保留已有目标文件', () async {
+  test('Validation failure preserves an existing destination file', () async {
     final target = File(p.join(directory.path, '${schema.name}.dbc'));
     await target.writeAsString('original');
 
@@ -100,7 +103,7 @@ void main() {
     expect(await target.readAsString(), 'original');
   });
 
-  test('DbcFileWriter 对相同记录生成确定性文件', () async {
+  test('Identical records produce identical files', () async {
     final rows = [sampleRow()];
     final target = File(p.join(directory.path, '${schema.name}.dbc'));
 
@@ -121,7 +124,7 @@ void main() {
     expect(second, first);
   });
 
-  test('DbcFileWriter 目标文件已存在时成功覆盖', () async {
+  test('DbcFileWriter replaces an existing destination file', () async {
     final target = File(p.join(directory.path, '${schema.name}.dbc'));
     await util.write(
       schema: schema,
@@ -142,7 +145,7 @@ void main() {
     expect(loader.getRecord(0).getInt(1), 999);
   });
 
-  test('DbcFileWriter 拒绝将小数静默截断为整数', () async {
+  test('DbcFileWriter rejects fractional values for integer fields', () async {
     await expectLater(
       util.write(
         schema: schema,
@@ -155,7 +158,7 @@ void main() {
     );
   });
 
-  test('DbcFileWriter 拒绝超出 int32 范围的数值', () async {
+  test('DbcFileWriter rejects values outside the int32 range', () async {
     await expectLater(
       util.write(
         schema: schema,
@@ -166,7 +169,7 @@ void main() {
     );
   });
 
-  test('DbcFileWriter 输出目录不存在时失败', () async {
+  test('DbcFileWriter fails when the output directory is missing', () async {
     await expectLater(
       util.write(
         schema: schema,
@@ -177,40 +180,50 @@ void main() {
     );
   });
 
-  test('DbcFileWriter 支持中文、空字符串与重复字符串', () async {
-    final icon = Definitions.spellIcon;
-    final rows = [
-      {'ID': 1, 'TextureFilename': ''},
-      {'ID': 2, 'TextureFilename': '法术/图标_测试'},
-      {'ID': 3, 'TextureFilename': '法术/图标_测试'},
-    ];
+  test(
+    'DbcFileWriter supports Chinese text, empty strings, and duplicate strings',
+    () async {
+      final icon = Definitions.spellIcon;
+      final rows = [
+        {'ID': 1, 'TextureFilename': ''},
+        {'ID': 2, 'TextureFilename': '法术/图标_测试'},
+        {'ID': 3, 'TextureFilename': '法术/图标_测试'},
+      ];
 
-    await util.write(schema: icon, rows: rows, outputDirectory: directory.path);
+      await util.write(
+        schema: icon,
+        rows: rows,
+        outputDirectory: directory.path,
+      );
 
-    final loader = DbcLoader(
-      p.join(directory.path, '${icon.name}.dbc'),
-      icon.format,
-    );
-    expect(loader.recordCount, 3);
-    expect(loader.getRecord(0).getString(1), '');
-    expect(loader.getRecord(1).getString(1), '法术/图标_测试');
-    expect(loader.getRecord(2).getString(1), '法术/图标_测试');
-  });
+      final loader = DbcLoader(
+        p.join(directory.path, '${icon.name}.dbc'),
+        icon.format,
+      );
+      expect(loader.recordCount, 3);
+      expect(loader.getRecord(0).getString(1), '');
+      expect(loader.getRecord(1).getString(1), '法术/图标_测试');
+      expect(loader.getRecord(2).getString(1), '法术/图标_测试');
+    },
+  );
 
-  test('normalizeValue: uint8 边界与越界', () {
-    expect(util.normalizeValueForTest(0, format: 'b'), 0);
-    expect(util.normalizeValueForTest(255, format: 'b'), 255);
-    expect(
-      () => util.normalizeValueForTest(256, format: 'b'),
-      throwsFormatException,
-    );
-    expect(
-      () => util.normalizeValueForTest(-1, format: 'b'),
-      throwsFormatException,
-    );
-  });
+  test(
+    'normalizeValue handles uint8 boundaries and rejects out-of-range values',
+    () {
+      expect(util.normalizeValueForTest(0, format: 'b'), 0);
+      expect(util.normalizeValueForTest(255, format: 'b'), 255);
+      expect(
+        () => util.normalizeValueForTest(256, format: 'b'),
+        throwsFormatException,
+      );
+      expect(
+        () => util.normalizeValueForTest(-1, format: 'b'),
+        throwsFormatException,
+      );
+    },
+  );
 
-  test('normalizeValue: bool 与 0/1', () {
+  test('normalizeValue accepts booleans and numeric 0 and 1', () {
     expect(util.normalizeValueForTest(true, format: 'l'), isTrue);
     expect(util.normalizeValueForTest(false, format: 'l'), isFalse);
     expect(util.normalizeValueForTest(1, format: 'l'), isTrue);
@@ -225,7 +238,7 @@ void main() {
     );
   });
 
-  test('normalizeValue: 字符串禁止 NUL', () {
+  test('normalizeValue rejects NUL in strings', () {
     expect(util.normalizeValueForTest('ok', format: 's'), 'ok');
     expect(
       () => util.normalizeValueForTest('a\x00b', format: 's'),
@@ -233,7 +246,7 @@ void main() {
     );
   });
 
-  test('导出阶段回调依次经过 writing/validating/committing', () async {
+  test('Export reports writing, validating, and committing in order', () async {
     final phases = <DbcExportPhase>[];
     await util.write(
       schema: schema,
@@ -262,50 +275,56 @@ void main() {
       if (await targetDir.exists()) await targetDir.delete(recursive: true);
     });
 
-    test('拷贝 .dbc 文件到目标目录并保留源文件', () async {
-      final src = File(p.join(sourceDir.path, 'SpellDuration.dbc'))
-        ..writeAsBytesSync([1, 2, 3]);
-      File(p.join(sourceDir.path, 'notes.txt')).writeAsBytesSync([4]);
+    test(
+      'Copies .dbc files to the destination and preserves the source files',
+      () async {
+        final src = File(p.join(sourceDir.path, 'SpellDuration.dbc'))
+          ..writeAsBytesSync([1, 2, 3]);
+        File(p.join(sourceDir.path, 'notes.txt')).writeAsBytesSync([4]);
 
-      final errors = await DbcFileWriter.copyDbcFiles(
-        sourceDirectory: sourceDir.path,
-        targetDirectory: targetDir.path,
-      );
+        final errors = await DbcFileWriter.copyDbcFiles(
+          sourceDirectory: sourceDir.path,
+          targetDirectory: targetDir.path,
+        );
 
-      expect(errors, isEmpty);
-      final copied = File(p.join(targetDir.path, 'SpellDuration.dbc'));
-      expect(await copied.exists(), isTrue);
-      expect(copied.readAsBytesSync(), [1, 2, 3]);
-      expect(await src.exists(), isTrue, reason: '源文件必须保留');
-      // Skip files without the .dbc extension.
-      expect(File(p.join(targetDir.path, 'notes.txt')).existsSync(), isFalse);
-      // No temporary or backup files remain.
-      final leftovers = targetDir
-          .listSync()
-          .where((entity) => entity.path.contains('.foxy.'))
-          .toList();
-      expect(leftovers, isEmpty);
-    });
+        expect(errors, isEmpty);
+        final copied = File(p.join(targetDir.path, 'SpellDuration.dbc'));
+        expect(await copied.exists(), isTrue);
+        expect(copied.readAsBytesSync(), [1, 2, 3]);
+        expect(await src.exists(), isTrue, reason: '源文件必须保留');
+        // Skip files without the .dbc extension.
+        expect(File(p.join(targetDir.path, 'notes.txt')).existsSync(), isFalse);
+        // No temporary or backup files remain.
+        final leftovers = targetDir
+            .listSync()
+            .where((entity) => entity.path.contains('.foxy.'))
+            .toList();
+        expect(leftovers, isEmpty);
+      },
+    );
 
-    test('拷贝覆盖目标目录中已有的同名文件', () async {
-      File(p.join(sourceDir.path, 'SpellDuration.dbc'))
-          .writeAsBytesSync([1, 2, 3]);
-      File(p.join(targetDir.path, 'SpellDuration.dbc'))
-          .writeAsBytesSync([9, 9]);
+    test(
+      'Copying replaces files with the same names in the destination',
+      () async {
+        File(p.join(sourceDir.path, 'SpellDuration.dbc'))
+            .writeAsBytesSync([1, 2, 3]);
+        File(p.join(targetDir.path, 'SpellDuration.dbc'))
+            .writeAsBytesSync([9, 9]);
 
-      final errors = await DbcFileWriter.copyDbcFiles(
-        sourceDirectory: sourceDir.path,
-        targetDirectory: targetDir.path,
-      );
+        final errors = await DbcFileWriter.copyDbcFiles(
+          sourceDirectory: sourceDir.path,
+          targetDirectory: targetDir.path,
+        );
 
-      expect(errors, isEmpty);
-      expect(
-        File(p.join(targetDir.path, 'SpellDuration.dbc')).readAsBytesSync(),
-        [1, 2, 3],
-      );
-    });
+        expect(errors, isEmpty);
+        expect(
+          File(p.join(targetDir.path, 'SpellDuration.dbc')).readAsBytesSync(),
+          [1, 2, 3],
+        );
+      },
+    );
 
-    test('isCancelled 为 true 时跳过拷贝', () async {
+    test('Copying is skipped when isCancelled returns true', () async {
       File(p.join(sourceDir.path, 'A.dbc')).writeAsBytesSync([1]);
       File(p.join(sourceDir.path, 'B.dbc')).writeAsBytesSync([2]);
 

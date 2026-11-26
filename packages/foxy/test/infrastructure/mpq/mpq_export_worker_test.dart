@@ -82,7 +82,7 @@ void main() {
     }
   }
 
-  test('MpqExportWorker.buildPatch 打包 DBC 到 DBFilesClient 路径并可回读', () async {
+  test('MpqExportWorker.buildPatch produces a readable archive with DBC files under DBFilesClient', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
     final summary = await MpqExportWorker.buildPatch(
       definitions: [duration, icon],
@@ -98,34 +98,37 @@ void main() {
     expectArchiveDbc(mpqPath, duration.fileName, 2);
   });
 
-  test('MpqExportWorker.buildPatch 已存在同名 MPQ 时覆盖', () async {
-    final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-    // Pre-create a stale archive (one file, no DBCs).
-    final stale = MpqArchive.create(mpqPath, maxFileCount: 4);
-    stale.addFile(r'stale.txt', Uint8List(16));
-    stale.close();
+  test(
+    'MpqExportWorker.buildPatch replaces an existing archive of the same name',
+    () async {
+      final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
+      // Pre-create a stale archive (one file, no DBCs).
+      final stale = MpqArchive.create(mpqPath, maxFileCount: 4);
+      stale.addFile(r'stale.txt', Uint8List(16));
+      stale.close();
 
-    final summary = await MpqExportWorker.buildPatch(
-      definitions: [duration],
-      loadRows: (_) async => durationRows(),
-      mpqFilePath: mpqPath,
-      isCancelled: () => false,
-    );
-
-    expect(summary.errors, isEmpty);
-    final archive = MpqArchive.open(mpqPath);
-    try {
-      expect(archive.files, isNot(contains('stale.txt')));
-      expect(
-        archive.files,
-        contains('${MpqFilePacker.dbcArchivePath}${duration.fileName}'),
+      final summary = await MpqExportWorker.buildPatch(
+        definitions: [duration],
+        loadRows: (_) async => durationRows(),
+        mpqFilePath: mpqPath,
+        isCancelled: () => false,
       );
-    } finally {
-      archive.close();
-    }
-  });
 
-  test('MpqExportWorker.buildPatch 全部空表时不生成 MPQ', () async {
+      expect(summary.errors, isEmpty);
+      final archive = MpqArchive.open(mpqPath);
+      try {
+        expect(archive.files, isNot(contains('stale.txt')));
+        expect(
+          archive.files,
+          contains('${MpqFilePacker.dbcArchivePath}${duration.fileName}'),
+        );
+      } finally {
+        archive.close();
+      }
+    },
+  );
+
+  test('MpqExportWorker.buildPatch skips archive creation when all tables are empty', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
     final summary = await MpqExportWorker.buildPatch(
       definitions: [duration, icon],
@@ -138,20 +141,23 @@ void main() {
     expect(await File(mpqPath).exists(), isFalse);
   });
 
-  test('MpqExportWorker.buildPatch 取消时不留下目标文件', () async {
-    final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-    final summary = await MpqExportWorker.buildPatch(
-      definitions: [duration, icon],
-      loadRows: (_) async => durationRows(),
-      mpqFilePath: mpqPath,
-      isCancelled: () => true,
-    );
+  test(
+    'MpqExportWorker.buildPatch leaves no destination file when canceled',
+    () async {
+      final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
+      final summary = await MpqExportWorker.buildPatch(
+        definitions: [duration, icon],
+        loadRows: (_) async => durationRows(),
+        mpqFilePath: mpqPath,
+        isCancelled: () => true,
+      );
 
-    expect(summary.completed, 0);
-    expect(await File(mpqPath).exists(), isFalse);
-  });
+      expect(summary.completed, 0);
+      expect(await File(mpqPath).exists(), isFalse);
+    },
+  );
 
-  test('MpqExportWorker.buildPatch 打包阶段中途取消 → 无目标文件且 tmp 清理', () async {
+  test('Cancellation during MPQ packaging removes temporary files and leaves no destination file', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
     // Allow four write-stage checks. Cancel during packing of the second file.
     var checks = 0;
@@ -172,15 +178,18 @@ void main() {
     expect(leftovers, isEmpty);
   });
 
-  test('MpqExportWorker.buildPatch 输出目录不存在时抛错', () async {
-    await expectLater(
-      MpqExportWorker.buildPatch(
-        definitions: [duration],
-        loadRows: (_) async => durationRows(),
-        mpqFilePath: p.join(outDir.path, 'missing', 'patch.mpq'),
-        isCancelled: () => false,
-      ),
-      throwsA(isA<FileSystemException>()),
-    );
-  });
+  test(
+    'MpqExportWorker.buildPatch throws when the output directory is missing',
+    () async {
+      await expectLater(
+        MpqExportWorker.buildPatch(
+          definitions: [duration],
+          loadRows: (_) async => durationRows(),
+          mpqFilePath: p.join(outDir.path, 'missing', 'patch.mpq'),
+          isCancelled: () => false,
+        ),
+        throwsA(isA<FileSystemException>()),
+      );
+    },
+  );
 }

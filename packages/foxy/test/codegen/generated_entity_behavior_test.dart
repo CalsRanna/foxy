@@ -4,7 +4,7 @@ import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Glyph 生成结果保持完整物理行、copyWith 与值语义', () {
+  test('Generated Glyph preserves the full physical row, copyWith, and value semantics', () {
     final row = <String, dynamic>{
       'ID': 7,
       'SpellID': 8,
@@ -21,7 +21,7 @@ void main() {
     expect(left.toString(), contains('spellIconId: 10'));
   });
 
-  test('复杂标量试点转换 double/bool/非零默认值并生成复合 Key', () {
+  test('Generated scalar fixture converts doubles, booleans, and nonzero defaults and builds a composite key', () {
     final entity = PickpocketingLootTemplateEntity.fromJson({
       'Entry': 11,
       'Item': 22,
@@ -40,7 +40,7 @@ void main() {
     );
   });
 
-  test('大型 DBC 试点保留 37 个字段顺序并使用生成值语义', () {
+  test('Generated large DBC fixture preserves the order of all 37 fields and has value semantics', () {
     const left = CharTitleEntity(id: 1, nameLangZhCN: '勇士', maskId: 37);
     const right = CharTitleEntity(id: 1, nameLangZhCN: '勇士', maskId: 37);
 

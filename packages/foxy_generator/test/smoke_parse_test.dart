@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart';
 
 void main() {
-  test('Repository 生成产物可解析为合法 Dart', () async {
+  test('Generated repository output parses as valid Dart', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -42,7 +42,7 @@ void main() {
     );
   });
 
-  test('Form/List 生成产物可解析为合法 Dart', () async {
+  test('Generated form and list output parses as valid Dart', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       {

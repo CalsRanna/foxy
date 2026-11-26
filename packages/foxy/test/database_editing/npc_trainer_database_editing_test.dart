@@ -1,39 +1,40 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/view_model/npc_trainer_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('trainer row locators and Brief entity', () {
-    test('NpcTrainerKey 覆盖 TrainerId 和 SpellId 并实现值相等', () {
+    test('NpcTrainerKey includes TrainerId and SpellId in value equality', () {
       const entity = NpcTrainerEntity(trainerId: 10, spellId: 20);
       final key = NpcTrainerKey.fromEntity(entity);
-      final same = NpcTrainerKey.fromEntity(entity.copyWith(moneyCost: 30));
       const brief = BriefNpcTrainerEntity(trainerId: 10, spellId: 20);
 
-      expect(key, same);
-      expect(key.hashCode, same.hashCode);
-      expect(
+      expectRowKeyEquality(
         key,
-        isNot(NpcTrainerKey.fromEntity(entity.copyWith(trainerId: 11))),
-      );
-      expect(
-        key,
-        isNot(NpcTrainerKey.fromEntity(entity.copyWith(spellId: 21))),
+        NpcTrainerKey.fromEntity,
+        sameKeyRow: entity.copyWith(moneyCost: 30),
+        differentKeyRows: [
+          entity.copyWith(trainerId: 11),
+          entity.copyWith(spellId: 21),
+        ],
       );
       expect(brief.key, key);
     });
 
-    test('CreatureId 使用物理 int 标量定位', () {
+    test('CreatureId identifies rows using the physical int value', () {
       const entity = CreatureDefaultTrainerEntity(
         creatureId: 10,
         trainerId: 20,
@@ -48,11 +49,7 @@ void main() {
   });
 
   group('repository write contracts', () {
-    test('trainer UPDATE 使用完整旧 key 并写入 candidate 全部十列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestNpcTrainerRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
+    group('NpcTrainerRepository', () {
       const originalKey = NpcTrainerKey(trainerId: 10, spellId: 20);
       const candidate = NpcTrainerEntity(
         trainerId: 11,
@@ -67,88 +64,59 @@ void main() {
         verifiedBuild: 12340,
       );
 
-      await repository.updateNpcTrainer(originalKey, candidate);
-
-      expect(queries, hasLength(1));
-      expect(queries.single.bindings, [
-        ...candidate.toJson().values,
-        originalKey.trainerId,
-        originalKey.spellId,
-      ]);
+      testRepositoryWrites(
+        createRepository: _TestNpcTrainerRepository.new,
+        originalKey: originalKey,
+        candidate: candidate,
+        missingCandidate: const NpcTrainerEntity(),
+        update: (repository, key, row) => repository.updateNpcTrainer(key, row),
+        destroy: (repository, key) => repository.destroyNpcTrainer(key),
+        expectedBindings: [
+          ...candidate.toJson().values,
+          originalKey.trainerId,
+          originalKey.spellId,
+        ],
+      );
     });
 
-    test('default trainer UPDATE 使用旧 CreatureId 并写入两列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestCreatureDefaultTrainerRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
+    group('CreatureDefaultTrainerRepository', () {
       const originalKey = 10;
       const candidate = CreatureDefaultTrainerEntity(
         creatureId: 11,
         trainerId: 20,
       );
 
-      await repository.updateCreatureDefaultTrainer(originalKey, candidate);
-
-      expect(queries.single.bindings, [
-        ...candidate.toJson().values,
-        originalKey,
-      ]);
-    });
-
-    test('UPDATE 和 DELETE 零行结果报告旧记录不存在', () async {
-      final laconic = Laconic(_RecordingDriver(affectedRows: 0));
-      final trainerRepository = _TestNpcTrainerRepository(laconic);
-      final relationRepository = _TestCreatureDefaultTrainerRepository(laconic);
-      const trainerKey = NpcTrainerKey(trainerId: 10, spellId: 20);
-      const relationKey = 10;
-
-      await expectLater(
-        trainerRepository.updateNpcTrainer(
-          trainerKey,
-          const NpcTrainerEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        trainerRepository.destroyNpcTrainer(trainerKey),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        relationRepository.updateCreatureDefaultTrainer(
-          relationKey,
-          const CreatureDefaultTrainerEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        relationRepository.destroyCreatureDefaultTrainer(relationKey),
-        throwsA(isA<RecordNotFoundException>()),
+      testRepositoryWrites(
+        createRepository: _TestCreatureDefaultTrainerRepository.new,
+        originalKey: originalKey,
+        candidate: candidate,
+        missingCandidate: const CreatureDefaultTrainerEntity(),
+        update: (repository, key, row) =>
+            repository.updateCreatureDefaultTrainer(key, row),
+        destroy: (repository, key) =>
+            repository.destroyCreatureDefaultTrainer(key),
+        expectedBindings: [...candidate.toJson().values, originalKey],
       );
     });
 
-    test('Brief 查询显式选择展示列和 key，并使用分页', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestNpcTrainerRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-
-      await repository.getBriefNpcTrainers(10, page: 2);
-
-      final query = queries.single;
-      expect(query.sql, isNot(contains('ts.*')));
-      expect(query.sql, isNot(contains('ReqSkillRank')));
-      expect(query.sql, isNot(contains('VerifiedBuild')));
-      expect(query.sql.toLowerCase(), contains('limit ? offset ?'));
-      expect(query.bindings.sublist(query.bindings.length - 2), [50, 50]);
-    });
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestNpcTrainerRepository(laconic).getBriefNpcTrainers(10, page: 2),
+      tableAlias: 'ts',
+      verifyQuery: (query) {
+        expect(query.sql, isNot(contains('ReqSkillRank')));
+        expect(query.sql, isNot(contains('VerifiedBuild')));
+      },
+    );
   });
 
   group('NpcTrainer inline editing identity', () {
     late _FakeNpcTrainerRepository repository;
     late _FakeCreatureDefaultTrainerRepository relationRepository;
 
-    setUp(() {
+    late NpcTrainerLinkedListViewModel viewModel;
+
+    setUp(() async {
       repository = _FakeNpcTrainerRepository([
         const NpcTrainerEntity(trainerId: 100, spellId: 20),
       ]);
@@ -163,16 +131,17 @@ void main() {
       GetIt.instance.registerSingleton<ResolveNpcTrainerParentUseCase>(
         ResolveNpcTrainerParentUseCase(repository: relationRepository),
       );
+
+      viewModel = NpcTrainerLinkedListViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(linkKey: 100);
+      viewModel.selectedKey.value = viewModel.items.value.single.key;
+      await viewModel.edit(viewModel.selectedKey.value!);
     });
 
     tearDown(() async => GetIt.instance.reset());
 
-    test('修改联合键仍用旧 key，成功后清空当前范围编辑状态', () async {
-      final viewModel = NpcTrainerLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 100);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('Changing a composite key updates by the old key and clears the current edit state on success', () async {
       const originalKey = NpcTrainerKey(trainerId: 100, spellId: 20);
       expect(viewModel.editingKey.value, originalKey);
 
@@ -188,43 +157,36 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('保存失败保留 editingKey，修正后仍按旧 key 重试', () async {
-      final viewModel = NpcTrainerLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 100);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('A failed save retains editingKey and the corrected retry uses the old key', () async {
       const originalKey = NpcTrainerKey(trainerId: 100, spellId: 20);
-      repository.failUpdates = true;
       viewModel.spellIdController.init(21);
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, originalKey);
-
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [originalKey, originalKey]);
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: originalKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
     });
 
-    test('父范围切换和新建都清空旧行身份', () async {
-      final viewModel = NpcTrainerLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 100);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-
-      await viewModel.setLinkKey(200);
-      expect(viewModel.linkKey.value, 200);
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedKey.value, isNull);
-
-      await viewModel.create();
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.trainerIdController.collect(), 200);
-      viewModel.spellIdController.init(50);
-      await viewModel.persist();
-      expect(repository.storeCount, 1);
-    });
+    test(
+      'Changing the parent and creating clear the old row identity',
+      () async {
+        await expectParentChangeAndCreateClearIdentity(
+          editingKey: viewModel.editingKey,
+          selectedKey: viewModel.selectedKey,
+          changeParent: () async {
+            await viewModel.setLinkKey(200);
+            expect(viewModel.linkKey.value, 200);
+          },
+          create: viewModel.create,
+        );
+        expect(viewModel.trainerIdController.collect(), 200);
+        viewModel.spellIdController.init(50);
+        await viewModel.persist();
+        expect(repository.storeCount, 1);
+      },
+    );
   });
 }
 
@@ -242,13 +204,16 @@ class _FakeCreatureDefaultTrainerRepository
   }
 }
 
-class _FakeNpcTrainerRepository extends NpcTrainerRepository {
+class _FakeNpcTrainerRepository extends NpcTrainerRepository
+    with InMemoryRowEditing<NpcTrainerEntity, NpcTrainerKey> {
+  @override
   final List<NpcTrainerEntity> rows;
-  bool failUpdates = false;
   int storeCount = 0;
-  final updateKeys = <NpcTrainerKey>[];
 
   _FakeNpcTrainerRepository(this.rows);
+
+  @override
+  NpcTrainerKey keyOf(NpcTrainerEntity row) => NpcTrainerKey.fromEntity(row);
 
   @override
   Future<int> countNpcTrainers(int trainerId) async {
@@ -275,12 +240,8 @@ class _FakeNpcTrainerRepository extends NpcTrainerRepository {
   }
 
   @override
-  Future<NpcTrainerEntity?> getNpcTrainer(NpcTrainerKey key) async {
-    for (final row in rows) {
-      if (NpcTrainerKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  Future<NpcTrainerEntity?> getNpcTrainer(NpcTrainerKey key) async =>
+      findRow(key);
 
   @override
   Future<void> storeNpcTrainer(NpcTrainerEntity trainer) async {
@@ -292,50 +253,7 @@ class _FakeNpcTrainerRepository extends NpcTrainerRepository {
   Future<void> updateNpcTrainer(
     NpcTrainerKey originalKey,
     NpcTrainerEntity trainer,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => NpcTrainerKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = trainer;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, trainer);
 }
 
 class _TestCreatureDefaultTrainerRepository

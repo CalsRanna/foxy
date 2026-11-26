@@ -13,7 +13,9 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('成就列表的标题列显示 SpellIcon 图标', (tester) async {
+  testWidgets('The achievement title column displays the SpellIcon icon', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1600, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);

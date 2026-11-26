@@ -10,48 +10,54 @@ void main() {
     ("{'id': 7, 'name': 'unknown'}", '7', "'unknown'"),
     ("{'id', 'name'}", '0', "''"),
   ]) {
-    test('enums $declaration 生成匹配类型及 fallback 的控制器', () async {
+    test(
+      'enums $declaration generates a controller with the expected type and fallback',
+      () async {
+        await testBuilder(
+          foxyViewModelBuilder(BuilderOptions.empty),
+          _assets(
+            _viewModelSource.replaceFirst(
+              '@FoxyDetailViewModel()',
+              '@FoxyDetailViewModel(enums: $declaration)',
+            ),
+          ),
+          outputs: {
+            _output: decodedMatches(
+              allOf(<Matcher>[
+                contains('EnumFieldController<int>(fallback: $intFallback)'),
+                contains(
+                  'EnumFieldController<String>(fallback: $stringFallback)',
+                ),
+                contains('idController.init(sample.id);'),
+                contains('nameController.init(sample.name);'),
+                contains('id: idController.collect(),'),
+                contains('name: nameController.collect(),'),
+              ]),
+            ),
+          },
+        );
+      },
+    );
+  }
+
+  test(
+    'Boolean fields generate enum controllers and preserve 0 and 1 conversion',
+    () async {
       await testBuilder(
         foxyViewModelBuilder(BuilderOptions.empty),
-        _assets(
-          _viewModelSource.replaceFirst(
-            '@FoxyDetailViewModel()',
-            '@FoxyDetailViewModel(enums: $declaration)',
-          ),
-        ),
+        _assets(_viewModelSource),
         outputs: {
           _output: decodedMatches(
             allOf(<Matcher>[
-              contains('EnumFieldController<int>(fallback: $intFallback)'),
-              contains(
-                'EnumFieldController<String>(fallback: $stringFallback)',
-              ),
-              contains('idController.init(sample.id);'),
-              contains('nameController.init(sample.name);'),
-              contains('id: idController.collect(),'),
-              contains('name: nameController.collect(),'),
+              contains('EnumFieldController<int>(fallback: 0)'),
+              contains('enabledController.init(sample.enabled ? 1 : 0);'),
+              contains('enabled: enabledController.collect() == 1,'),
             ]),
           ),
         },
       );
-    });
-  }
-
-  test('bool 自动生成枚举控制器并保留 0/1 转换', () async {
-    await testBuilder(
-      foxyViewModelBuilder(BuilderOptions.empty),
-      _assets(_viewModelSource),
-      outputs: {
-        _output: decodedMatches(
-          allOf(<Matcher>[
-            contains('EnumFieldController<int>(fallback: 0)'),
-            contains('enabledController.init(sample.enabled ? 1 : 0);'),
-            contains('enabled: enabledController.collect() == 1,'),
-          ]),
-        ),
-      },
-    );
-  });
+    },
+  );
 
   for (final (declaration, message) in [
     (
@@ -60,7 +66,7 @@ void main() {
     ),
     ("enums: {'id'}, flags: {'id'}", 'appear in both enums and flags'),
   ]) {
-    test('拒绝不合法的枚举声明：$declaration', () async {
+    test('Rejects an invalid enum declaration $declaration', () async {
       final logs = <String>[];
       await testBuilder(
         foxyViewModelBuilder(BuilderOptions.empty),
@@ -77,7 +83,7 @@ void main() {
     });
   }
 
-  test('主键排除出表单时只同步实体而不引用不存在的控制器', () async {
+  test('A key excluded from the form is synchronized on the entity without referencing a missing controller', () async {
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
       _assets(

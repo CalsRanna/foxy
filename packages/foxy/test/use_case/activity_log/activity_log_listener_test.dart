@@ -7,7 +7,7 @@ import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('监听 EntityWrittenEvent 并 best-effort 落库', () async {
+  test('Listens for EntityWrittenEvent and persists the log on a best-effort basis', () async {
     final bus = EventBus(sync: true);
     final repository = _RecordingActivityLogRepository();
     final listener = ActivityLogListener(
@@ -39,7 +39,7 @@ void main() {
     expect(repository.logs.single.entityName, '示例');
   });
 
-  test('dispose 后不再投递', () async {
+  test('Disposal stops event delivery', () async {
     final bus = EventBus(sync: true);
     final repository = _RecordingActivityLogRepository();
     final listener = ActivityLogListener(

@@ -31,7 +31,7 @@ void main() {
     return file.path;
   }
 
-  test('DBC 写入再读取保留字段值、文件行顺序与行索引', () async {
+  test('A DBC write and read round trip preserves field values, row order, and indices', () async {
     final schema = Definitions.spellDuration;
     final rows = [
       {'ID': 20, 'Duration': -1, 'DurationPerLevel': 5, 'MaxDuration': 2000},
@@ -52,26 +52,29 @@ void main() {
     expect(reader.readRecord(1).values['ID'], 10);
   });
 
-  test('中文、空字符串、反斜杠和引号读取为原始文本', () async {
-    final schema = Definitions.spellIcon;
-    final names = ['', "中文\\图标'测试\n下一行", '重复', '重复'];
-    final rows = [
-      for (var index = 0; index < names.length; index++)
-        {'ID': index + 1, 'TextureFilename': names[index]},
-    ];
-    await DbcFileWriter().write(
-      schema: schema,
-      rows: rows,
-      outputDirectory: directory.path,
-    );
-    final reader = DbcFileReader(
-      p.join(directory.path, '${schema.name}.dbc'),
-      schema: schema,
-    );
-    expect(reader.records.map((record) => record.values), rows);
-  });
+  test(
+    'Chinese text, empty strings, backslashes, and quotes are read unchanged',
+    () async {
+      final schema = Definitions.spellIcon;
+      final names = ['', "中文\\图标'测试\n下一行", '重复', '重复'];
+      final rows = [
+        for (var index = 0; index < names.length; index++)
+          {'ID': index + 1, 'TextureFilename': names[index]},
+      ];
+      await DbcFileWriter().write(
+        schema: schema,
+        rows: rows,
+        outputDirectory: directory.path,
+      );
+      final reader = DbcFileReader(
+        p.join(directory.path, '${schema.name}.dbc'),
+        schema: schema,
+      );
+      expect(reader.records.map((record) => record.values), rows);
+    },
+  );
 
-  test('读取高位 uint32、字节、布尔值并保留跳过字段语义', () {
+  test('Reads high uint32 values, bytes, and booleans and preserves skipped-field semantics', () {
     const schema = DbcSchema(
       name: 'Typed',
       format: 'nubBlxd',
@@ -112,7 +115,7 @@ void main() {
     });
   });
 
-  test('uint64 超出 Dart 有符号整数范围时保留字段定位错误', () {
+  test('An out-of-range uint64 reports the field location', () {
     const schema = DbcSchema(
       name: 'Unsigned64',
       format: 'Q',
@@ -136,7 +139,7 @@ void main() {
     );
   });
 
-  test('空 DBC 返回零条记录', () async {
+  test('An empty DBC returns zero records', () async {
     final schema = Definitions.spellDuration;
     await DbcFileWriter().write(
       schema: schema,
@@ -151,7 +154,7 @@ void main() {
     expect(reader.records, isEmpty);
   });
 
-  test('打开文件时先执行头部容量校验', () {
+  test('Opening a file validates header capacity first', () {
     final file = File(p.join(directory.path, 'Oversized.dbc'));
     final bytes = ByteData(20)
       ..setUint32(0, 0x43424457, Endian.little)

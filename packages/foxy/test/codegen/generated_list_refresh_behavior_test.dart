@@ -13,7 +13,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   tearDown(() => GetIt.instance.reset());
 
-  group('生成的 ListViewModel 刷新', () {
+  group('Generated ListViewModel refresh', () {
     late _ListRepository repository;
     late EmoteTextListViewModel vm;
     const latestItems = [BriefEmoteTextEntity(id: 2, name: 'new')];
@@ -31,41 +31,47 @@ void main() {
     }
 
     for (final fails in [false, true]) {
-      test('新查询完成后忽略旧查询的${fails ? '错误' : '结果'}', () async {
-        final oldRequest = search('old');
-        final newRequest = search('new');
-        repository.latest.complete(2, latestItems);
-        await newRequest;
+      test(
+        'A completed newer query supersedes the older query ${fails ? 'error' : 'result'}',
+        () async {
+          final oldRequest = search('old');
+          final newRequest = search('new');
+          repository.latest.complete(2, latestItems);
+          await newRequest;
 
-        repository.old.count.complete(1);
-        if (fails) {
-          repository.old.items.completeError(StateError('old query failed'));
-        } else {
-          repository.old.items.complete([const BriefEmoteTextEntity(id: 1)]);
-        }
-        await oldRequest;
+          repository.old.count.complete(1);
+          if (fails) {
+            repository.old.items.completeError(StateError('old query failed'));
+          } else {
+            repository.old.items.complete([const BriefEmoteTextEntity(id: 1)]);
+          }
+          await oldRequest;
 
-        expect(vm.items.value, latestItems);
-        expect(vm.total.value, 2);
-        expect(vm.errorMessage.value, isNull);
-        expect(vm.refreshError.value, isNull);
-        expect(vm.loading.value, isFalse);
-      });
+          expect(vm.items.value, latestItems);
+          expect(vm.total.value, 2);
+          expect(vm.errorMessage.value, isNull);
+          expect(vm.refreshError.value, isNull);
+          expect(vm.loading.value, isFalse);
+        },
+      );
     }
 
-    test('查询失败通知界面，写入失败由调用方报告', () async {
-      final request = search('new');
-      repository.latest.count.complete(0);
-      repository.latest.items.completeError(StateError('query failed'));
-      await request;
-      expect(vm.refreshError.value, startsWith('刷新列表失败'));
+    test(
+      'Query failures notify the UI and write failures propagate to the caller',
+      () async {
+        final request = search('new');
+        repository.latest.count.complete(0);
+        repository.latest.items.completeError(StateError('query failed'));
+        await request;
+        expect(vm.refreshError.value, startsWith('刷新列表失败'));
 
-      await expectLater(vm.copy(1), throwsStateError);
-      expect(vm.errorMessage.value, isNotNull);
-      expect(vm.refreshError.value, startsWith('刷新列表失败'));
-    });
+        await expectLater(vm.copy(1), throwsStateError);
+        expect(vm.errorMessage.value, isNotNull);
+        expect(vm.refreshError.value, startsWith('刷新列表失败'));
+      },
+    );
 
-    test('旧查询先完成不能结束新查询的 loading', () async {
+    test('Completing an older query leaves the newer query loading', () async {
       final oldRequest = search('old');
       final newRequest = search('new');
       repository.old.complete(1, [const BriefEmoteTextEntity(id: 1)]);
@@ -79,7 +85,7 @@ void main() {
     });
   });
 
-  group('生成的 LinkedListViewModel 刷新', () {
+  group('Generated LinkedListViewModel refresh', () {
     late _LinkedListRepository repository;
     late CreatureQuestItemLinkedListViewModel vm;
     const oldItems = [BriefCreatureQuestItemEntity(creatureEntry: 10, idx: 1)];
@@ -94,7 +100,7 @@ void main() {
       addTearDown(vm.dispose);
     });
 
-    test('切换父键后旧 count 返回不再发起列表查询', () async {
+    test('A count from the previous parent cannot start a list query after the parent changes', () async {
       final oldRequest = vm.setLinkKey(10);
       final newRequest = vm.setLinkKey(20);
       repository.latest.complete(2, latestItems);
@@ -106,42 +112,48 @@ void main() {
     });
 
     for (final fails in [false, true]) {
-      test('切换父键后忽略旧列表的${fails ? '错误' : '结果'}', () async {
+      test(
+        'Changing the parent discards the previous list query ${fails ? 'error' : 'result'}',
+        () async {
+          final oldRequest = vm.setLinkKey(10);
+          repository.old.count.complete(1);
+          await repository.old.listStarted.future;
+          final newRequest = vm.setLinkKey(20);
+          repository.latest.complete(2, latestItems);
+          await newRequest;
+
+          if (fails) {
+            repository.old.items.completeError(StateError('old list failed'));
+          } else {
+            repository.old.items.complete(oldItems);
+          }
+          await oldRequest;
+
+          expect(vm.items.value, latestItems);
+          expect(vm.total.value, 2);
+          expect(vm.errorMessage.value, isNull);
+          expect(vm.refreshError.value, isNull);
+        },
+      );
+    }
+
+    test(
+      'The previous parent response leaves the current parent loading',
+      () async {
         final oldRequest = vm.setLinkKey(10);
         repository.old.count.complete(1);
         await repository.old.listStarted.future;
         final newRequest = vm.setLinkKey(20);
-        repository.latest.complete(2, latestItems);
-        await newRequest;
-
-        if (fails) {
-          repository.old.items.completeError(StateError('old list failed'));
-        } else {
-          repository.old.items.complete(oldItems);
-        }
+        repository.old.items.complete(oldItems);
         await oldRequest;
 
-        expect(vm.items.value, latestItems);
-        expect(vm.total.value, 2);
-        expect(vm.errorMessage.value, isNull);
-        expect(vm.refreshError.value, isNull);
-      });
-    }
+        expect(vm.loading.value, isTrue);
 
-    test('旧父键的列表先返回不能结束新父键的 loading', () async {
-      final oldRequest = vm.setLinkKey(10);
-      repository.old.count.complete(1);
-      await repository.old.listStarted.future;
-      final newRequest = vm.setLinkKey(20);
-      repository.old.items.complete(oldItems);
-      await oldRequest;
-
-      expect(vm.loading.value, isTrue);
-
-      repository.latest.complete(2, latestItems);
-      await newRequest;
-      expect(vm.loading.value, isFalse);
-    });
+        repository.latest.complete(2, latestItems);
+        await newRequest;
+        expect(vm.loading.value, isFalse);
+      },
+    );
   });
 }
 

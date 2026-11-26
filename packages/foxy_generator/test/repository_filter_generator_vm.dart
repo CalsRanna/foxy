@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'generator_test_support.dart' show foxyAnnotationSource;
 
 void main() {
-  test('可重复 FoxyFilter 注解生成无 Entity 后缀的 Filter DTO', () async {
+  test('Repeated FoxyFilter annotations generate a filter DTO without the Entity suffix', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {annotationAsset: annotationSource, repositoryAsset: repositorySource},
@@ -37,26 +37,29 @@ void main() {
     );
   });
 
-  test('Filter 名称由 Repository 推导且重复字段会失败', () async {
-    final source = repositorySource.replaceFirst(
-      "@FoxyFilter.integer('kind', defaultValue: -1)",
-      "@FoxyFilter.integer('id', defaultValue: -1)",
-    );
-    final logs = <String>[];
+  test(
+    'Filter names are derived from repositories and duplicate fields fail',
+    () async {
+      final source = repositorySource.replaceFirst(
+        "@FoxyFilter.integer('kind', defaultValue: -1)",
+        "@FoxyFilter.integer('id', defaultValue: -1)",
+      );
+      final logs = <String>[];
 
-    await testBuilder(
-      foxyRepositoryBuilder(BuilderOptions.empty),
-      {annotationAsset: annotationSource, repositoryAsset: source},
-      outputs: {},
-      onLog: (record) => logs.add(record.toString()),
-    );
-    expect(
-      logs.any((log) => log.contains('declares field id more than once')),
-      isTrue,
-    );
-  });
+      await testBuilder(
+        foxyRepositoryBuilder(BuilderOptions.empty),
+        {annotationAsset: annotationSource, repositoryAsset: source},
+        outputs: {},
+        onLog: (record) => logs.add(record.toString()),
+      );
+      expect(
+        logs.any((log) => log.contains('declares field id more than once')),
+        isTrue,
+      );
+    },
+  );
 
-  test('非法字段名在生成期给出明确诊断', () async {
+  test('Invalid field names produce generation diagnostics', () async {
     final source = repositorySource.replaceFirst(
       "@FoxyFilter.text('id')",
       "@FoxyFilter.text('bad-name')",

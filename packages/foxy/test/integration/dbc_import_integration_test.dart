@@ -110,7 +110,7 @@ void main() {
     await Database.instance.close();
   });
 
-  test('首次导入:按 schema 建表、写入记录并保留文件行序', () async {
+  test('Initial import creates the schema, inserts records, and preserves file order', () async {
     if (!guardDbcWrite()) return;
     await Database.instance.laconic.statement(
       'drop table if exists ${definition.qualifiedTableName}',
@@ -135,35 +135,38 @@ void main() {
     expect(rows.map((row) => row['__dbc_order']).toList(), [0, 1]);
   });
 
-  test('再次导入:整表替换而非追加,且不留 backup 表', () async {
-    if (!guardDbcWrite()) return;
+  test(
+    'Reimport replaces table contents without leaving backup tables',
+    () async {
+      if (!guardDbcWrite()) return;
 
-    writeDbc([
-      [10, 'a'],
-      [20, 'b'],
-      [30, 'c'],
-    ]);
-    expect((await runImport()).success, isTrue);
+      writeDbc([
+        [10, 'a'],
+        [20, 'b'],
+        [30, 'c'],
+      ]);
+      expect((await runImport()).success, isTrue);
 
-    writeDbc([
-      [99, 'only'],
-    ]);
-    final second = await runImport();
+      writeDbc([
+        [99, 'only'],
+      ]);
+      final second = await runImport();
 
-    expect(second.success, isTrue, reason: second.errors.join(' | '));
-    final rows = await readTable();
-    expect(rows, hasLength(1), reason: '导入是替换语义');
-    expect(rows.single['ID'], 99);
+      expect(second.success, isTrue, reason: second.errors.join(' | '));
+      final rows = await readTable();
+      expect(rows, hasLength(1), reason: '导入是替换语义');
+      expect(rows.single['ID'], 99);
 
-    expect(
-      (await foxyTables()).where(
-        (name) => name.startsWith('dbc_spell_icon__backup'),
-      ),
-      isEmpty,
-    );
-  });
+      expect(
+        (await foxyTables()).where(
+          (name) => name.startsWith('dbc_spell_icon__backup'),
+        ),
+        isEmpty,
+      );
+    },
+  );
 
-  test('重复 ID:按 schema 建的表(带主键)在写入阶段被拒', () async {
+  test('A primary key rejects duplicate IDs during insertion into a schema-created table', () async {
     if (!guardDbcWrite()) return;
 
     // `_sqlType` maps the ID field to `int not null primary key`, so a table
@@ -185,7 +188,7 @@ void main() {
     await expectRejectedImport(leftRows: 1);
   });
 
-  test('重复 ID:无主键的遗留表在校验阶段被拒', () async {
+  test('Validation rejects duplicate IDs in a legacy table without a primary key', () async {
     if (!guardDbcWrite()) return;
 
     // A legacy mirror table without the primary key (and without the row-order
@@ -219,7 +222,7 @@ void main() {
     await expectRejectedImport(leftRows: 1);
   });
 
-  test('checkTables 报告该表 ready', () async {
+  test('checkTables reports that the table is ready', () async {
     if (!guardDbcWrite()) return;
 
     writeDbc([

@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/condition_entity.dart';
 
 void main() {
-  test('参数1 按条件类型动态映射为标签', () {
+  test('Parameter 1 uses a label based on the condition type', () {
     // The boolean select spec for condition 105 (current difficulty) shows yes or no.
     const boolean = BriefConditionEntity(
       conditionTypeOrReference: 105,

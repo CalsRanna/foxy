@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
@@ -54,17 +56,7 @@ anchored: &note # 锚点注释
 
   test('Dart and YAML comments follow the English comment convention', () {
     final root = _git(['rev-parse', '--show-toplevel']).trimRight();
-    final files = _git([
-      'ls-files',
-      '-z',
-      '--cached',
-      '--others',
-      '--exclude-standard',
-      '--',
-      '*.dart',
-      '*.yaml',
-      '*.yml',
-    ], workingDirectory: root).split('\u0000').where((path) => path.isNotEmpty);
+    final files = _trackedFiles(root, ['*.dart', '*.yaml', '*.yml']);
     final findings = <String>[];
     for (final path in files) {
       final file = File(p.join(root, path));
@@ -75,6 +67,49 @@ anchored: &note # 锚点注释
           : _yamlComments(source);
       for (final comment in _violations(comments)) {
         findings.add('$path:${comment.line}: ${comment.text.trim()}');
+      }
+    }
+    expect(findings, isEmpty, reason: findings.join('\n'));
+  });
+
+  test(
+    'Test description checks handle escapes, fragments, and interpolation',
+    () {
+      const source = r'''
+void main() {
+  group('\u4e2d', () {
+    test('English test', () {
+      expect('测试数据', '测试数据');
+    });
+    testWidgets('English prefix' '\u4e2d\u6587', (tester) async {});
+    test('English ${fails ? '\u9519\u8bef' : 'result'}', () {});
+  });
+  for (final label in ['\u4e2d', 'English']) {
+    test('$label variant', () {});
+  }
+}
+''';
+      expect(
+        _dartTestDescriptionViolations(source).map((entry) => entry.line),
+        [2, 6, 7, 9],
+      );
+    },
+  );
+
+  test('Dart test and group descriptions contain no Chinese text', () {
+    final root = _git(['rev-parse', '--show-toplevel']).trimRight();
+    final files = _trackedFiles(root, ['*.dart']).where(
+      (path) =>
+          p.posix.split(path).contains('test') || path.endsWith('_test.dart'),
+    );
+    final findings = <String>[];
+    for (final path in files) {
+      final file = File(p.join(root, path));
+      if (!file.existsSync()) continue;
+      for (final entry in _dartTestDescriptionViolations(
+        file.readAsStringSync(),
+      )) {
+        findings.add('$path:${entry.line}: ${entry.text}');
       }
     }
     expect(findings, isEmpty, reason: findings.join('\n'));
@@ -118,6 +153,87 @@ String _git(List<String> arguments, {String? workingDirectory}) {
   );
   expect(result.exitCode, 0, reason: '${result.stderr}');
   return result.stdout as String;
+}
+
+Iterable<String> _trackedFiles(String root, List<String> patterns) => _git([
+  'ls-files',
+  '-z',
+  '--cached',
+  '--others',
+  '--exclude-standard',
+  '--',
+  ...patterns,
+], workingDirectory: root).split('\u0000').where((path) => path.isNotEmpty);
+
+Iterable<({int line, String text})> _dartTestDescriptionViolations(
+  String source,
+) {
+  final result = parseString(content: source, throwIfDiagnostics: false);
+  final findings = <({int line, String text})>[];
+  result.unit.accept(
+    _TestDescriptions((offset, value) {
+      if (!_cjk.hasMatch(value)) return;
+      findings.add((
+        line: result.lineInfo.getLocation(offset).lineNumber,
+        text: value,
+      ));
+    }),
+  );
+  return findings;
+}
+
+class _TestDescriptions extends RecursiveAstVisitor<void> {
+  static const _registrations = {'test', 'testWidgets', 'testGoldens', 'group'};
+
+  final void Function(int, String) onText;
+
+  _TestDescriptions(this.onText);
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    final arguments = node.argumentList.arguments;
+    if (_registrations.contains(node.methodName.name) && arguments.length > 1) {
+      arguments.first.argumentExpression.accept(_DescriptionText(onText));
+    }
+    super.visitMethodInvocation(node);
+  }
+}
+
+class _DescriptionText extends RecursiveAstVisitor<void> {
+  final void Function(int, String) onText;
+
+  _DescriptionText(this.onText);
+
+  @override
+  void visitSimpleStringLiteral(SimpleStringLiteral node) =>
+      onText(node.offset, node.value);
+
+  @override
+  void visitInterpolationString(InterpolationString node) =>
+      onText(node.offset, node.value);
+
+  @override
+  void visitInterpolationExpression(InterpolationExpression node) {
+    final value = node.expression;
+    if (value is SimpleIdentifier) {
+      for (var parent = node.parent; parent != null; parent = parent.parent) {
+        if (parent
+            case ForStatement(
+              forLoopParts: ForEachPartsWithDeclaration(
+                :final loopVariable,
+                iterable: ListLiteral(:final elements),
+              ),
+            )
+            when loopVariable.name.lexeme == value.name) {
+          for (final label in elements.whereType<SimpleStringLiteral>()) {
+            onText(label.offset, label.value);
+          }
+          break;
+        }
+      }
+    }
+    super.visitInterpolationExpression(node);
+  }
 }
 
 Iterable<_Comment> _violations(Iterable<_Comment> comments) =>

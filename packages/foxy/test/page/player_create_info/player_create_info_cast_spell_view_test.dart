@@ -13,36 +13,39 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('初始施放法术表格新增法术名称列并显示图标', (tester) async {
-    tester.view.physicalSize = const Size(1600, 800);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    'The initial cast spell table shows a name column with spell icons',
+    (tester) async {
+      tester.view.physicalSize = const Size(1600, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    GetIt.instance.registerSingleton<PlayerCreateInfoCastSpellRepository>(
-      _FakePlayerCreateInfoCastSpellRepository(),
-    );
-    GetIt.instance.registerFactory(
-      () => PlayerCreateInfoCastSpellLinkedListViewModel(),
-    );
+      GetIt.instance.registerSingleton<PlayerCreateInfoCastSpellRepository>(
+        _FakePlayerCreateInfoCastSpellRepository(),
+      );
+      GetIt.instance.registerFactory(
+        () => PlayerCreateInfoCastSpellLinkedListViewModel(),
+      );
 
-    await tester.pumpWidget(
-      const ShadApp(
-        home: Scaffold(
-          body: PlayerCreateInfoCastSpellView(race: 1, playerClass: 1),
+      await tester.pumpWidget(
+        const ShadApp(
+          home: Scaffold(
+            body: PlayerCreateInfoCastSpellView(race: 1, playerClass: 1),
+          ),
         ),
-      ),
-    );
-    await tester.pump();
-    await tester.pump();
+      );
+      await tester.pump();
+      await tester.pump();
 
-    expect(tester.takeException(), isNull);
+      expect(tester.takeException(), isNull);
 
-    expect(find.text('法术名称'), findsOneWidget);
-    final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
-    expect(iconText.iconPath, 'Interface\\Icons\\Spell_Holy_FlashHeal');
-    expect(iconText.name, '快速治疗');
-  });
+      expect(find.text('法术名称'), findsOneWidget);
+      final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
+      expect(iconText.iconPath, 'Interface\\Icons\\Spell_Holy_FlashHeal');
+      expect(iconText.name, '快速治疗');
+    },
+  );
 }
 
 class _FakePlayerCreateInfoCastSpellRepository

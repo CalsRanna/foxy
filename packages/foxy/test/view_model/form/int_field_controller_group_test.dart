@@ -4,7 +4,7 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 
 void main() {
   group('IntFieldControllerGroup', () {
-    test('init(7) 后三个 typed controller 都是 7', () {
+    test('init(7) sets all three typed controllers to 7', () {
       final group = IntFieldControllerGroup();
       group.init(7);
 
@@ -16,7 +16,7 @@ void main() {
       group.dispose();
     });
 
-    test('enum 修改为 1 后 number/flags 同步为 1', () {
+    test('Changing enum to 1 synchronizes number and flags to 1', () {
       final group = IntFieldControllerGroup();
       group.init(0);
 
@@ -30,7 +30,7 @@ void main() {
       group.dispose();
     });
 
-    test('number 输入修改后 enum/flags 同步', () {
+    test('Editing the number synchronizes enum and flags', () {
       final group = IntFieldControllerGroup();
       group.init(0);
 
@@ -42,7 +42,7 @@ void main() {
       group.dispose();
     });
 
-    test('flags 修改后 number/enum 同步', () {
+    test('Editing flags synchronizes number and enum', () {
       final group = IntFieldControllerGroup();
       group.init(0);
 
@@ -54,7 +54,7 @@ void main() {
       group.dispose();
     });
 
-    test('collect() 按当前 editor 转发', () {
+    test('collect delegates to the active editor', () {
       final group = IntFieldControllerGroup()..init(5);
 
       group.configure(IntegerFieldEditor.enumValue);
@@ -71,7 +71,7 @@ void main() {
       group.dispose();
     });
 
-    test('number 非法非空文本在 number editor 下 collect() 抛 FormatException', () {
+    test('collect throws FormatException for invalid nonempty text in the number editor', () {
       final group = IntFieldControllerGroup()..init(5);
 
       group.numberController.controller.text = '12a';
@@ -81,7 +81,7 @@ void main() {
       group.dispose();
     });
 
-    test('number 非法草稿不同步、不通知，最后合法整数保留', () {
+    test('Invalid number drafts do not synchronize or notify and retain the last valid integer', () {
       final group = IntFieldControllerGroup()..init(7);
       var notified = 0;
       group.addListener(() => notified++);
@@ -95,7 +95,7 @@ void main() {
       group.dispose();
     });
 
-    test('从非法 number 草稿切到 enum 时恢复最后合法整数', () {
+    test('Switching from an invalid numeric draft to enum restores the last valid integer', () {
       final group = IntFieldControllerGroup()..init(7);
       group.numberController.controller.text = '-';
 
@@ -108,7 +108,7 @@ void main() {
       group.dispose();
     });
 
-    test('editor 不变时 configure 幂等，不丢弃非法文本', () {
+    test('Configuring the same editor preserves its invalid text draft', () {
       final group = IntFieldControllerGroup()..init(7);
       group.numberController.controller.text = '-';
 
@@ -120,7 +120,7 @@ void main() {
       group.dispose();
     });
 
-    test('多次 configure 不产生重复通知', () {
+    test('Repeated configuration does not duplicate notifications', () {
       final group = IntFieldControllerGroup()..init(0);
       var notified = 0;
       group.addListener(() => notified++);
@@ -135,7 +135,7 @@ void main() {
       group.dispose();
     });
 
-    test('同步不产生空通知（值未变化的 init 不通知）', () {
+    test('Synchronizing an unchanged value does not notify', () {
       final group = IntFieldControllerGroup()..init(5);
       var notified = 0;
       group.addListener(() => notified++);
@@ -148,7 +148,7 @@ void main() {
       group.dispose();
     });
 
-    test('值实际变化时通知一次', () {
+    test('An actual value change emits exactly one notification', () {
       final group = IntFieldControllerGroup()..init(5);
       var notified = 0;
       group.addListener(() => notified++);
@@ -160,7 +160,7 @@ void main() {
       group.dispose();
     });
 
-    test('dispose 无异常且之后无通知', () {
+    test('Disposal succeeds and stops notifications', () {
       final group = IntFieldControllerGroup()..init(5);
       var notified = 0;
       group.addListener(() => notified++);
@@ -172,7 +172,7 @@ void main() {
       expect(notified, 0);
     });
 
-    test('通过 FieldControllerMixin 注册时统一释放且不双重 dispose', () {
+    test('FieldControllerMixin registration disposes the controllers once', () {
       final host = _GroupHost()..group.init(5);
       // disposeControllers calls group.dispose(); child controllers dispose
       // exactly once — no throw proves there is no double dispose.

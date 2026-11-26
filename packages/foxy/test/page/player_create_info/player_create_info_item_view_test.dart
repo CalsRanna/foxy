@@ -13,34 +13,39 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('初始物品表格新增物品名称列，显示图标与品质色', (tester) async {
-    tester.view.physicalSize = const Size(1600, 800);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    'The initial item table shows item names with icons and quality colors',
+    (tester) async {
+      tester.view.physicalSize = const Size(1600, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    GetIt.instance.registerSingleton<PlayerCreateInfoItemRepository>(
-      _FakePlayerCreateInfoItemRepository(),
-    );
-    GetIt.instance.registerFactory(
-      () => PlayerCreateInfoItemLinkedListViewModel(),
-    );
+      GetIt.instance.registerSingleton<PlayerCreateInfoItemRepository>(
+        _FakePlayerCreateInfoItemRepository(),
+      );
+      GetIt.instance.registerFactory(
+        () => PlayerCreateInfoItemLinkedListViewModel(),
+      );
 
-    await tester.pumpWidget(
-      const ShadApp(
-        home: Scaffold(body: PlayerCreateInfoItemView(race: 1, playerClass: 1)),
-      ),
-    );
-    await tester.pump();
-    await tester.pump();
+      await tester.pumpWidget(
+        const ShadApp(
+          home: Scaffold(
+            body: PlayerCreateInfoItemView(race: 1, playerClass: 1),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
 
-    expect(tester.takeException(), isNull);
+      expect(tester.takeException(), isNull);
 
-    expect(find.text('物品名称'), findsOneWidget);
-    final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
-    expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Food');
-    expect(iconText.name, '测试初始物品');
-  });
+      expect(find.text('物品名称'), findsOneWidget);
+      final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
+      expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Food');
+      expect(iconText.name, '测试初始物品');
+    },
+  );
 }
 
 class _FakePlayerCreateInfoItemRepository

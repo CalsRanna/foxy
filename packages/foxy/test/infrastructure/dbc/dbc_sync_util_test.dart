@@ -23,7 +23,7 @@ void main() {
     useSsl: false,
   );
 
-  test('DBC 导入：目录不存在时发出唯一失败结果并关闭流', () async {
+  test('DBC import emits one failure and closes the stream when the directory is missing', () async {
     final util = DbcSyncUtil();
     final missingDirectory =
         '${Directory.systemTemp.path}/foxy_missing_${DateTime.now().microsecondsSinceEpoch}';
@@ -44,7 +44,7 @@ void main() {
     expect(util.operation, isNull);
   });
 
-  test('DBC 导入：已有任务运行时防重入并返回错误', () async {
+  test('DBC import returns an error while another import is running', () async {
     final util = DbcSyncUtil();
     final missingDirectory =
         '${Directory.systemTemp.path}/foxy_missing_${DateTime.now().microsecondsSinceEpoch}';
@@ -63,7 +63,7 @@ void main() {
     expect(util.isRunning, isFalse);
   });
 
-  test('DBC 导出：空定义列表立即成功', () async {
+  test('DBC export succeeds immediately with no definitions', () async {
     final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final events = await util
         .export(
@@ -81,26 +81,29 @@ void main() {
     expect(util.isRunning, isFalse);
   });
 
-  test('DBC 导出：行顺序缺失时返回警告但不视为失败', () async {
-    final util = DbcSyncUtil(exportWorkerEntry: _WarningExportWorker.run);
-    final events = await util
-        .export(
-          definitions: [DbcDefinitions.byTable['dbc_talent']!],
-          outputDirectory: Directory.systemTemp.path,
-          mysqlConfig: mysql,
-        )
-        .toList()
-        .timeout(const Duration(seconds: 5));
+  test(
+    'DBC export warns when row order is missing and still succeeds',
+    () async {
+      final util = DbcSyncUtil(exportWorkerEntry: _WarningExportWorker.run);
+      final events = await util
+          .export(
+            definitions: [DbcDefinitions.byTable['dbc_talent']!],
+            outputDirectory: Directory.systemTemp.path,
+            mysqlConfig: mysql,
+          )
+          .toList()
+          .timeout(const Duration(seconds: 5));
 
-    final result = events.whereType<DbcSyncResult>().single;
-    expect(result.success, isTrue);
-    expect(result.completed, 1);
-    expect(result.warnings, hasLength(1));
-    expect(result.warnings.single.message, contains('重新导入'));
-    expect(util.isRunning, isFalse);
-  });
+      final result = events.whereType<DbcSyncResult>().single;
+      expect(result.success, isTrue);
+      expect(result.completed, 1);
+      expect(result.warnings, hasLength(1));
+      expect(result.warnings.single.message, contains('重新导入'));
+      expect(util.isRunning, isFalse);
+    },
+  );
 
-  test('DBC 导出：已有任务运行时防重入', () async {
+  test('DBC export prevents concurrent runs', () async {
     final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
     final dir = await Directory.systemTemp.createTemp('foxy_export_busy_');
     final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
@@ -132,34 +135,40 @@ void main() {
     await first.toList().timeout(const Duration(seconds: 5));
   });
 
-  test('DBC 导出：取消请求让 worker 返回取消结果且不生成文件', () async {
-    final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
-    final dir = await Directory.systemTemp.createTemp('foxy_export_cancel_');
-    final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
-    addTearDown(() async {
-      if (await dir.exists()) await dir.delete(recursive: true);
-    });
+  test(
+    'DBC export cancellation returns a canceled result without creating files',
+    () async {
+      final util = DbcSyncUtil(exportWorkerEntry: _CancelAwareExportWorker.run);
+      final dir = await Directory.systemTemp.createTemp('foxy_export_cancel_');
+      final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
+      addTearDown(() async {
+        if (await dir.exists()) await dir.delete(recursive: true);
+      });
 
-    final eventsFuture = util
-        .export(
-          definitions: [definition],
-          outputDirectory: dir.path,
-          mysqlConfig: mysql,
-        )
-        .toList();
+      final eventsFuture = util
+          .export(
+            definitions: [definition],
+            outputDirectory: dir.path,
+            mysqlConfig: mysql,
+          )
+          .toList();
 
-    // The fake worker only finishes after a cancel message arrives.
-    await util.cancel();
-    final events = await eventsFuture.timeout(const Duration(seconds: 5));
+      // The fake worker only finishes after a cancel message arrives.
+      await util.cancel();
+      final events = await eventsFuture.timeout(const Duration(seconds: 5));
 
-    final result = events.whereType<DbcSyncResult>().single;
-    expect(result.cancelled, isTrue);
-    expect(result.completed, 0);
-    expect(await File(p.join(dir.path, definition.fileName)).exists(), isFalse);
-    expect(util.isRunning, isFalse);
-  });
+      final result = events.whereType<DbcSyncResult>().single;
+      expect(result.cancelled, isTrue);
+      expect(result.completed, 0);
+      expect(
+        await File(p.join(dir.path, definition.fileName)).exists(),
+        isFalse,
+      );
+      expect(util.isRunning, isFalse);
+    },
+  );
 
-  test('DBC 导入：扩展名大小写不敏感扫描', () async {
+  test('DBC import matches file extensions case-insensitively', () async {
     final util = DbcSyncUtil();
     final dir = await Directory.systemTemp.createTemp('foxy_import_case_');
     addTearDown(() async {
@@ -191,36 +200,40 @@ void main() {
     expect(text, isNot(contains('未在目录中找到需要的 DBC 文件')));
   }, skip: caseSensitiveFs ? false : '文件系统大小写不敏感，无法可靠构造 .DBC 与 .dbc 差异');
 
-  test('DBC 导入：同一定义匹配多个文件时报错', () async {
-    final util = DbcSyncUtil();
-    final dir = await Directory.systemTemp.createTemp('foxy_import_dup_');
-    addTearDown(() async {
-      if (await dir.exists()) await dir.delete(recursive: true);
-    });
+  test(
+    'DBC import reports multiple files matching the same definition',
+    () async {
+      final util = DbcSyncUtil();
+      final dir = await Directory.systemTemp.createTemp('foxy_import_dup_');
+      addTearDown(() async {
+        if (await dir.exists()) await dir.delete(recursive: true);
+      });
 
-    final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
-    await DbcFileWriter().write(
-      schema: definition.schema,
-      rows: [
-        {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
-      ],
-      outputDirectory: dir.path,
-    );
-    await File(p.join(dir.path, definition.fileName))
-        .copy(p.join(dir.path, 'SpellDuration.DBC'));
+      final definition = DbcDefinitions.byTable['dbc_spell_duration']!;
+      await DbcFileWriter().write(
+        schema: definition.schema,
+        rows: [
+          {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
+        ],
+        outputDirectory: dir.path,
+      );
+      await File(p.join(dir.path, definition.fileName))
+          .copy(p.join(dir.path, 'SpellDuration.DBC'));
 
-    final events = await util
-        .import(directory: dir.path, mysqlConfig: mysql)
-        .toList()
-        .timeout(const Duration(seconds: 15));
+      final events = await util
+          .import(directory: dir.path, mysqlConfig: mysql)
+          .toList()
+          .timeout(const Duration(seconds: 15));
 
-    final result = events.whereType<DbcSyncResult>().single;
-    expect(result.success, isFalse);
-    expect(
-      result.errors.map((e) => e.message).join('\n'),
-      contains('multiple files match'),
-    );
-  }, skip: caseSensitiveFs ? false : '文件系统大小写不敏感，无法并存 .dbc 与 .DBC');
+      final result = events.whereType<DbcSyncResult>().single;
+      expect(result.success, isFalse);
+      expect(
+        result.errors.map((e) => e.message).join('\n'),
+        contains('multiple files match'),
+      );
+    },
+    skip: caseSensitiveFs ? false : '文件系统大小写不敏感，无法并存 .dbc 与 .DBC',
+  );
 }
 
 /// Whether the temp filesystem distinguishes file names by case.

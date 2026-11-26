@@ -5,7 +5,7 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 
 void main() {
   group('MigrationRunner', () {
-    test('首次运行:建库、建表、按序执行全部迁移并逐条记录', () async {
+    test('Initial migration creates the database and tables and records each migration in order', () async {
       final driver = _FakeDriver();
       await MigrationRunner(Laconic(driver)).run();
 
@@ -63,7 +63,7 @@ void main() {
       expect(createDatabaseIndex, lessThan(createTableIndex));
     });
 
-    test('已应用的迁移重复运行自动跳过', () async {
+    test('Rerunning skips migrations that were already applied', () async {
       final driver = _FakeDriver();
       final runner = MigrationRunner(Laconic(driver));
       await runner.run();
@@ -81,7 +81,7 @@ void main() {
       expect(driver.appliedMigrations, hasLength(11));
     });
 
-    test('存在非 utf8mb4 存量表时,引导段逐个转换后仍跑完迁移', () async {
+    test('Bootstrap converts existing non-utf8mb4 tables and completes the migrations', () async {
       final driver = _FakeDriver(latin1Tables: ['features', 'activity_log']);
       await MigrationRunner(Laconic(driver)).run();
 
@@ -101,7 +101,7 @@ void main() {
       expect(driver.appliedMigrations, hasLength(11));
     });
 
-    test('迁移执行失败时不记录版本,后续迁移不执行', () async {
+    test('A failed migration leaves its version unrecorded and stops subsequent migrations', () async {
       // 'drop column' only appears in 202607190000 (the activity_log
       // migration); simulate the entity_id column existing so that
       // migration really executes DDL and the failure lands on the 6th

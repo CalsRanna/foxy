@@ -22,7 +22,7 @@ void main() {
     await GetIt.instance.reset();
   });
 
-  test('locale 写入失败时回滚 npc_text 主表更新', () async {
+  test('A locale write failure rolls back the npc_text update', () async {
     final mainRepository = _NpcTextRepository({
       10: const NpcTextEntity(id: 10, text00: 'old'),
     });
@@ -65,7 +65,7 @@ void main() {
     expect(activityRepository.logs, isEmpty);
   });
 
-  test('事务成功后返回新的 base/locale identity 并记录活动', () async {
+  test('A committed transaction returns the new base and locale identities and records activity', () async {
     final mainRepository = _NpcTextRepository({});
     final localeRepository = _NpcTextLocaleRepository({});
     final activityRepository = _ActivityLogRepository();
@@ -98,7 +98,7 @@ void main() {
     expect(activityRepository.logs, hasLength(1));
   });
 
-  test('更新成功时用完整旧 identity 定位并返回修改后的 identity', () async {
+  test('The update locates the row by its full old identity and returns the new identity', () async {
     final mainRepository = _NpcTextRepository({
       10: const NpcTextEntity(id: 10, text00: 'old'),
     });
@@ -141,7 +141,7 @@ void main() {
     });
   });
 
-  test('原记录不存在时不写 locale', () async {
+  test('A missing original record prevents the locale write', () async {
     final mainRepository = _NpcTextRepository({});
     final localeRepository = _NpcTextLocaleRepository({
       const NpcTextLocaleKey(id: 10, locale: 'zhCN'): const NpcTextLocaleEntity(
@@ -174,7 +174,7 @@ void main() {
     });
   });
 
-  test('identity 修改产生 duplicate 时事务不留下部分状态', () async {
+  test('A duplicate identity change rolls back all partial changes', () async {
     final mainRepository = _NpcTextRepository({
       10: const NpcTextEntity(id: 10),
       11: const NpcTextEntity(id: 11),
@@ -202,41 +202,42 @@ void main() {
     expect(mainRepository.rows.keys, {10, 11});
   });
 
-  test('失败后重试仍使用完整原始 base/locale key', () async {
-    final mainRepository = _NpcTextRepository({
-      10: const NpcTextEntity(id: 10),
-    });
-    final localeRepository = _NpcTextLocaleRepository({
-      const NpcTextLocaleKey(id: 10, locale: 'zhCN'): const NpcTextLocaleEntity(
-        id: 10,
-        locale: 'zhCN',
-      ),
-    })..failWrites = true;
-    final useCase = SaveNpcTextUseCase(
-      transaction: _Transaction(mainRepository, localeRepository),
-      npcTextRepository: mainRepository,
-      localeRepository: localeRepository,
-      activityLogService: ActivityLogService(_ActivityLogRepository()),
-    );
-    const input = SaveNpcTextInput(
-      originalKey: 10,
-      candidate: NpcTextEntity(id: 11),
-      originalLocaleKey: NpcTextLocaleKey(id: 10, locale: 'zhCN'),
-      localeCandidate: NpcTextLocaleEntity(id: 11, locale: 'deDE'),
-    );
+  test(
+    'Retry after failure still uses the full original base and locale keys',
+    () async {
+      final mainRepository = _NpcTextRepository({
+        10: const NpcTextEntity(id: 10),
+      });
+      final localeRepository = _NpcTextLocaleRepository({
+        const NpcTextLocaleKey(id: 10, locale: 'zhCN'):
+            const NpcTextLocaleEntity(id: 10, locale: 'zhCN'),
+      })..failWrites = true;
+      final useCase = SaveNpcTextUseCase(
+        transaction: _Transaction(mainRepository, localeRepository),
+        npcTextRepository: mainRepository,
+        localeRepository: localeRepository,
+        activityLogService: ActivityLogService(_ActivityLogRepository()),
+      );
+      const input = SaveNpcTextInput(
+        originalKey: 10,
+        candidate: NpcTextEntity(id: 11),
+        originalLocaleKey: NpcTextLocaleKey(id: 10, locale: 'zhCN'),
+        localeCandidate: NpcTextLocaleEntity(id: 11, locale: 'deDE'),
+      );
 
-    await expectLater(useCase.execute(input), throwsStateError);
-    localeRepository.failWrites = false;
-    await useCase.execute(input);
+      await expectLater(useCase.execute(input), throwsStateError);
+      localeRepository.failWrites = false;
+      await useCase.execute(input);
 
-    expect(mainRepository.updateKeys, [10, 10]);
-    expect(localeRepository.updateKeys, [
-      const NpcTextLocaleKey(id: 10, locale: 'zhCN'),
-      const NpcTextLocaleKey(id: 10, locale: 'zhCN'),
-    ]);
-  });
+      expect(mainRepository.updateKeys, [10, 10]);
+      expect(localeRepository.updateKeys, [
+        const NpcTextLocaleKey(id: 10, locale: 'zhCN'),
+        const NpcTextLocaleKey(id: 10, locale: 'zhCN'),
+      ]);
+    },
+  );
 
-  test('best-effort 日志同步失败不影响已完成的主操作', () async {
+  test('A synchronous best-effort logging failure leaves the completed main operation successful', () async {
     final mainRepository = _NpcTextRepository({});
     final localeRepository = _NpcTextLocaleRepository({});
     final activityRepository = _ActivityLogRepository()..failWrites = true;
@@ -260,37 +261,39 @@ void main() {
     expect(mainRepository.rows.keys, {30});
   });
 
-  test('删除主表失败时回滚已删除 locale', () async {
-    final mainRepository = _NpcTextRepository({10: const NpcTextEntity(id: 10)})
-      ..failDestroys = true;
-    final localeRepository = _NpcTextLocaleRepository({
-      const NpcTextLocaleKey(id: 10, locale: 'zhCN'): const NpcTextLocaleEntity(
-        id: 10,
-        locale: 'zhCN',
-      ),
-    });
-    final useCase = DestroyNpcTextUseCase(
-      transaction: _Transaction(mainRepository, localeRepository),
-      npcTextRepository: mainRepository,
-      localeRepository: localeRepository,
-      activityLogService: ActivityLogService(_ActivityLogRepository()),
-    );
+  test(
+    'A failed main-table delete rolls back the deleted locale rows',
+    () async {
+      final mainRepository = _NpcTextRepository({
+        10: const NpcTextEntity(id: 10),
+      })..failDestroys = true;
+      final localeRepository = _NpcTextLocaleRepository({
+        const NpcTextLocaleKey(id: 10, locale: 'zhCN'):
+            const NpcTextLocaleEntity(id: 10, locale: 'zhCN'),
+      });
+      final useCase = DestroyNpcTextUseCase(
+        transaction: _Transaction(mainRepository, localeRepository),
+        npcTextRepository: mainRepository,
+        localeRepository: localeRepository,
+        activityLogService: ActivityLogService(_ActivityLogRepository()),
+      );
 
-    await expectLater(
-      useCase.execute(
-        const DestroyNpcTextInput(
-          key: 10,
-          localeKey: NpcTextLocaleKey(id: 10, locale: 'zhCN'),
+      await expectLater(
+        useCase.execute(
+          const DestroyNpcTextInput(
+            key: 10,
+            localeKey: NpcTextLocaleKey(id: 10, locale: 'zhCN'),
+          ),
         ),
-      ),
-      throwsStateError,
-    );
+        throwsStateError,
+      );
 
-    expect(mainRepository.rows.keys, {10});
-    expect(localeRepository.rows.keys, {
-      const NpcTextLocaleKey(id: 10, locale: 'zhCN'),
-    });
-  });
+      expect(mainRepository.rows.keys, {10});
+      expect(localeRepository.rows.keys, {
+        const NpcTextLocaleKey(id: 10, locale: 'zhCN'),
+      });
+    },
+  );
 }
 
 final class _ActivityLogRepository extends ActivityLogRepository {

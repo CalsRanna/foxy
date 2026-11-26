@@ -49,27 +49,30 @@ create table `$fixtureTable` (
     () => Database.instance.laconic.statement('delete from `$fixtureTable`'),
   );
 
-  test('store → get 往返,写入的是实体映射的物理列', () async {
-    final key = await repository.storeSpellCustomAttr(
-      const SpellCustomAttrEntity(spellId: 100, attributes: 7),
-    );
-    expect(key, 100);
+  test(
+    'Storing and reading a record round trips its mapped physical columns',
+    () async {
+      final key = await repository.storeSpellCustomAttr(
+        const SpellCustomAttrEntity(spellId: 100, attributes: 7),
+      );
+      expect(key, 100);
 
-    final loaded = await repository.getSpellCustomAttr(100);
-    expect(loaded, isNotNull);
-    expect(loaded!.spellId, 100);
-    expect(loaded.attributes, 7);
+      final loaded = await repository.getSpellCustomAttr(100);
+      expect(loaded, isNotNull);
+      expect(loaded!.spellId, 100);
+      expect(loaded.attributes, 7);
 
-    final rows = await Database.instance.laconic.table(fixtureTable).select([
-      'spell_id',
-      'attributes',
-    ]).get();
-    expect(rows, hasLength(1));
-    expect(rows.first.toMap()['spell_id'], 100);
-    expect(rows.first.toMap()['attributes'], 7);
-  });
+      final rows = await Database.instance.laconic.table(fixtureTable).select([
+        'spell_id',
+        'attributes',
+      ]).get();
+      expect(rows, hasLength(1));
+      expect(rows.first.toMap()['spell_id'], 100);
+      expect(rows.first.toMap()['attributes'], 7);
+    },
+  );
 
-  test('主键重复时改号写入:返回 MAX(spell_id)+1,字段随源记录', () async {
+  test('A duplicate primary key allocates MAX(spell_id) + 1 and preserves source fields', () async {
     await repository.storeSpellCustomAttr(
       const SpellCustomAttrEntity(spellId: 100, attributes: 7),
     );
@@ -82,7 +85,7 @@ create table `$fixtureTable` (
     expect(await repository.countSpellCustomAttrs(), 2);
   });
 
-  test('主键未赋值时拒绝写入', () async {
+  test('Writes are rejected when the primary key is unassigned', () async {
     await expectLater(
       repository.storeSpellCustomAttr(
         const SpellCustomAttrEntity(attributes: 1),
@@ -92,7 +95,7 @@ create table `$fixtureTable` (
     expect(await repository.countSpellCustomAttrs(), 0);
   });
 
-  test('update 改写字段;同值 update 不会误报 not found', () async {
+  test('update changes fields and accepts unchanged values without reporting a missing row', () async {
     await repository.storeSpellCustomAttr(
       const SpellCustomAttrEntity(spellId: 5, attributes: 1),
     );
@@ -112,21 +115,24 @@ create table `$fixtureTable` (
     expect((await repository.getSpellCustomAttr(5))!.attributes, 2);
   });
 
-  test('update/destroy 目标不存在时抛 RecordNotFoundException', () async {
-    await expectLater(
-      repository.updateSpellCustomAttr(
-        404,
-        const SpellCustomAttrEntity(spellId: 404, attributes: 1),
-      ),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      repository.destroySpellCustomAttr(404),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-  });
+  test(
+    'update and destroy throw RecordNotFoundException for a missing target',
+    () async {
+      await expectLater(
+        repository.updateSpellCustomAttr(
+          404,
+          const SpellCustomAttrEntity(spellId: 404, attributes: 1),
+        ),
+        throwsA(isA<RecordNotFoundException>()),
+      );
+      await expectLater(
+        repository.destroySpellCustomAttr(404),
+        throwsA(isA<RecordNotFoundException>()),
+      );
+    },
+  );
 
-  test('destroy 删除后主键可被重新使用', () async {
+  test('Deleting a record frees its primary key for reuse', () async {
     await repository.storeSpellCustomAttr(
       const SpellCustomAttrEntity(spellId: 9, attributes: 3),
     );
@@ -141,7 +147,7 @@ create table `$fixtureTable` (
     );
   });
 
-  test('手写列表方法:排序、count、分页与 create 预填主键', () async {
+  test('Handwritten list methods sort, count, and paginate and create prefills the primary key', () async {
     await Future.wait([
       for (var id = 1; id <= pageSize + 1; id++)
         repository.storeSpellCustomAttr(

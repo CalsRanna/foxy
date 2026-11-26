@@ -3,7 +3,7 @@ import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 
 void main() {
-  test('主表 Brief 独立于完整 Entity 并暴露强类型定位器', () {
+  test('The main brief entity is independent of the full entity and exposes a typed key', () {
     final brief = BriefPageTextEntity.fromJson({
       'ID': 15,
       'Text': '第一页',
@@ -15,7 +15,7 @@ void main() {
     expect(brief.key, 15);
   });
 
-  test('locale Brief 包含展示列和完整联合定位器', () {
+  test('The locale brief entity includes display columns and the complete composite key', () {
     final brief = BriefPageTextLocaleEntity.fromJson({
       'ID': 15,
       'locale': 'zhCN',
@@ -27,7 +27,7 @@ void main() {
     expect(brief.verifiedBuild, 12340);
   });
 
-  test('主表和 locale Key 对全部定位列实现值相等', () {
+  test('Main and locale keys use all locator columns for value equality', () {
     const first = PageTextLocaleKey(id: 1, locale: 'zhCN');
     const same = PageTextLocaleKey(id: 1, locale: 'zhCN');
     expect(first, same);

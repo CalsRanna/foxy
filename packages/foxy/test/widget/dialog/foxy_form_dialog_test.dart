@@ -16,7 +16,9 @@ void main() {
     );
   }
 
-  testWidgets('新增态 footer 为「取消」+「保存」', (tester) async {
+  testWidgets('The create dialog offers Cancel and Save in the footer', (
+    tester,
+  ) async {
     final submitting = signal(false);
 
     await tester.pumpWidget(
@@ -38,7 +40,9 @@ void main() {
     expect(find.widgetWithText(ShadButton, '保存'), findsOneWidget);
   });
 
-  testWidgets('编辑态主按钮文案为「更新」', (tester) async {
+  testWidgets('The edit dialog labels its primary button Update', (
+    tester,
+  ) async {
     final submitting = signal(false);
 
     await tester.pumpWidget(
@@ -61,37 +65,44 @@ void main() {
     expect(find.widgetWithText(ShadButton, '保存'), findsNothing);
   });
 
-  testWidgets('提交中禁用保存，且随 signal 恢复', (tester) async {
-    final submitting = signal(true);
+  testWidgets(
+    'Submitting disables Save and resetting the signal re-enables it',
+    (tester) async {
+      final submitting = signal(true);
 
-    await tester.pumpWidget(
-      wrap(
-        (context) => FoxyFormDialog(
-          title: '新增记录',
-          actions: FoxyFormDialog.saveActions(
-            context: context,
-            submitting: submitting,
-            onSubmit: () async {},
+      await tester.pumpWidget(
+        wrap(
+          (context) => FoxyFormDialog(
+            title: '新增记录',
+            actions: FoxyFormDialog.saveActions(
+              context: context,
+              submitting: submitting,
+              onSubmit: () async {},
+            ),
+            child: const SizedBox(height: 40),
           ),
-          child: const SizedBox(height: 40),
         ),
-      ),
-    );
-    await tester.pump();
+      );
+      await tester.pump();
 
-    expect(
-      tester.widget<ShadButton>(find.widgetWithText(ShadButton, '保存')).enabled,
-      isFalse,
-    );
+      expect(
+        tester
+            .widget<ShadButton>(find.widgetWithText(ShadButton, '保存'))
+            .enabled,
+        isFalse,
+      );
 
-    submitting.value = false;
-    await tester.pump();
+      submitting.value = false;
+      await tester.pump();
 
-    expect(
-      tester.widget<ShadButton>(find.widgetWithText(ShadButton, '保存')).enabled,
-      isTrue,
-    );
-  });
+      expect(
+        tester
+            .widget<ShadButton>(find.widgetWithText(ShadButton, '保存'))
+            .enabled,
+        isTrue,
+      );
+    },
+  );
 
   // The save path itself is not unit-tested here: `onSubmit` success reports
   // through `DialogUtil.instance.success`, which resolves its context from the
@@ -100,35 +111,38 @@ void main() {
   // covered above; the save sequence is covered by the view/dialog tests that
   // mount the real router.
 
-  test('页面视图不得在 child 末尾手写 footer 按钮行', () {
-    // Repository-wide check: the drift is a copy-paste behaviour, so a new
-    // view copied from an old one carries the old hand-rolled footer with it.
-    final pageDir = _pageDir();
-    final offenders = <String>[];
+  test(
+    'Page views do not append a handwritten footer button row to the child',
+    () {
+      // Repository-wide check: the drift is a copy-paste behaviour, so a new
+      // view copied from an old one carries the old hand-rolled footer with it.
+      final pageDir = _pageDir();
+      final offenders = <String>[];
 
-    for (final file in pageDir.listSync(recursive: true).whereType<File>()) {
-      if (!file.path.endsWith('.dart')) continue;
-      final source = file.readAsStringSync();
-      if (!source.contains('FoxyFormDialog(')) continue;
+      for (final file in pageDir.listSync(recursive: true).whereType<File>()) {
+        if (!file.path.endsWith('.dart')) continue;
+        final source = file.readAsStringSync();
+        if (!source.contains('FoxyFormDialog(')) continue;
 
-      // A cancel button popping `dialogContext` can only be a footer row:
-      // through saveActions the dialog context is passed as `context:`.
-      if (source.contains('Navigator.of(dialogContext).pop()')) {
-        offenders.add('${file.path}: 手写取消按钮');
+        // A cancel button popping `dialogContext` can only be a footer row:
+        // through saveActions the dialog context is passed as `context:`.
+        if (source.contains('Navigator.of(dialogContext).pop()')) {
+          offenders.add('${file.path}: 手写取消按钮');
+        }
+        // `onSubmit: viewModel.persist,` is the sanctioned form; a call with
+        // parentheses means the view still owns the save sequence.
+        if (source.contains('viewModel.persist()')) {
+          offenders.add('${file.path}: 手写 persist 调用');
+        }
       }
-      // `onSubmit: viewModel.persist,` is the sanctioned form; a call with
-      // parentheses means the view still owns the save sequence.
-      if (source.contains('viewModel.persist()')) {
-        offenders.add('${file.path}: 手写 persist 调用');
-      }
-    }
 
-    expect(
-      offenders,
-      isEmpty,
-      reason: '这些文件仍自己拼 footer，请改用 FoxyFormDialog.saveActions',
-    );
-  });
+      expect(
+        offenders,
+        isEmpty,
+        reason: '这些文件仍自己拼 footer，请改用 FoxyFormDialog.saveActions',
+      );
+    },
+  );
 }
 
 /// Locates `lib/page` from the package root (flutter test runs there).

@@ -10,34 +10,43 @@ void main() {
     repository = _Repository(Laconic(_RankDriver()));
   });
 
-  test('链首和后级法术的计数与列表都读取同一排行链', () async {
-    for (final spellId in [133, 116]) {
-      final count = await repository.countSpellRanks(spellId);
-      final rows = await repository.getBriefSpellRanks(spellId);
+  test(
+    'Counting and listing spells at the head or later ranks use the same chain',
+    () async {
+      for (final spellId in [133, 116]) {
+        final count = await repository.countSpellRanks(spellId);
+        final rows = await repository.getBriefSpellRanks(spellId);
 
-      expect(count, 2);
-      expect(rows, hasLength(count));
-      expect(rows.map((row) => row.spellId), [133, 116]);
-      expect(rows.map((row) => row.firstSpellId), [133, 133]);
-    }
-  });
+        expect(count, 2);
+        expect(rows, hasLength(count));
+        expect(rows.map((row) => row.spellId), [133, 116]);
+        expect(rows.map((row) => row.firstSpellId), [133, 133]);
+      }
+    },
+  );
 
-  test('从后级法术新增时预填现有链首和下一级排行', () async {
-    final candidate = await repository.createSpellRank(116);
+  test(
+    'Adding from a later spell prefills the existing chain head and next rank',
+    () async {
+      final candidate = await repository.createSpellRank(116);
 
-    expect(candidate.firstSpellId, 133);
-    expect(candidate.rank, 3);
-  });
+      expect(candidate.firstSpellId, 133);
+      expect(candidate.rank, 3);
+    },
+  );
 
-  test('未入链法术没有排行记录，新增从第一级开始', () async {
-    expect(await repository.countSpellRanks(999), 0);
-    expect(await repository.getBriefSpellRanks(999), isEmpty);
+  test(
+    'An unranked spell has no chain entries and starts at rank one',
+    () async {
+      expect(await repository.countSpellRanks(999), 0);
+      expect(await repository.getBriefSpellRanks(999), isEmpty);
 
-    final candidate = await repository.createSpellRank(999);
+      final candidate = await repository.createSpellRank(999);
 
-    expect(candidate.firstSpellId, 999);
-    expect(candidate.rank, 1);
-  });
+      expect(candidate.firstSpellId, 999);
+      expect(candidate.rank, 1);
+    },
+  );
 }
 
 class _RankDriver extends Fake implements DatabaseDriver {

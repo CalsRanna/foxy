@@ -19,579 +19,242 @@ import 'package:foxy/repository/prospecting_loot_template_repository.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'recording_driver.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
-  group('loot template dedicated key and Brief boundaries', () {
-    test('八张两列主键表使用各自具体 key', () {
-      final keys = <Object>[
-        PickpocketingLootTemplateKey.fromEntity(
-          _candidateFor('pickpocketing_loot_template'),
-        ),
-        SkinningLootTemplateKey.fromEntity(
-          _candidateFor('skinning_loot_template'),
-        ),
-        ItemLootTemplateKey.fromEntity(_candidateFor('item_loot_template')),
-        DisenchantLootTemplateKey.fromEntity(
-          _candidateFor('disenchant_loot_template'),
-        ),
-        ProspectingLootTemplateKey.fromEntity(
-          _candidateFor('prospecting_loot_template'),
-        ),
-        MillingLootTemplateKey.fromEntity(
-          _candidateFor('milling_loot_template'),
-        ),
-        ReferenceLootTemplateKey.fromEntity(
-          _candidateFor('reference_loot_template'),
-        ),
-        GameObjectLootTemplateKey.fromEntity(
-          _candidateFor('gameobject_loot_template'),
-        ),
-      ];
-      final sameKeys = <Object>[
-        PickpocketingLootTemplateKey.fromEntity(
-          _candidateFor('pickpocketing_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-        SkinningLootTemplateKey.fromEntity(
-          _candidateFor('skinning_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-        ItemLootTemplateKey.fromEntity(
-          _candidateFor('item_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-        DisenchantLootTemplateKey.fromEntity(
-          _candidateFor('disenchant_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-        ProspectingLootTemplateKey.fromEntity(
-          _candidateFor('prospecting_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-        MillingLootTemplateKey.fromEntity(
-          _candidateFor('milling_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-        ReferenceLootTemplateKey.fromEntity(
-          _candidateFor('reference_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-        GameObjectLootTemplateKey.fromEntity(
-          _candidateFor('gameobject_loot_template')
-              .copyWith(reference: 31, groupId: 41),
-        ),
-      ];
+  _testLootTemplate(
+    table: 'creature_loot_template',
+    createRepository: _CreatureTestRepository.new,
+    entityFromJson: CreatureLootTemplateEntity.fromJson,
+    keyFromEntity: CreatureLootTemplateKey.fromEntity,
+    briefKeyFromJson: (json) =>
+        BriefCreatureLootTemplateEntity.fromJson(json).key,
+    toJson: (row) => row.toJson(),
+    update: (repository, key, row) =>
+        repository.updateCreatureLootTemplate(key, row),
+    destroy: (repository, key) => repository.destroyCreatureLootTemplate(key),
+    copy: (repository, key) => repository.copyCreatureLootTemplate(key),
+    queryBrief: (repository) =>
+        repository.getBriefCreatureLootTemplates(10, page: 2),
+    keyColumns: ['Entry', 'Item', 'Reference', 'GroupId'],
+    sameKeyChanges: {'Chance': 50},
+    candidateChanges: {
+      'Entry': 11,
+      'Item': 21,
+      'Reference': 31,
+      'GroupId': 41,
+      'Chance': 50,
+      'LootMode': 1,
+    },
+  );
 
-      for (var index = 0; index < keys.length; index++) {
-        expect(keys[index], sameKeys[index]);
-        expect(keys[index].hashCode, sameKeys[index].hashCode);
-      }
-      expect(keys.toSet(), hasLength(8));
-      expect(
-        ItemLootTemplateKey.fromEntity(_candidateFor('item_loot_template')),
-        isNot(
-          ItemLootTemplateKey.fromEntity(
-            _candidateFor('item_loot_template').copyWith(entry: 11),
-          ),
-        ),
-      );
-      expect(
-        ItemLootTemplateKey.fromEntity(_candidateFor('item_loot_template')),
-        isNot(
-          ItemLootTemplateKey.fromEntity(
-            _candidateFor('item_loot_template').copyWith(item: 21),
-          ),
-        ),
-      );
-    });
-
-    test('生物掉落 key 覆盖 Entry、Item、Reference 和 GroupId', () {
-      const entity = CreatureLootTemplateEntity(
-        entry: 10,
-        item: 20,
-        reference: 30,
-        groupId: 40,
-      );
-      final key = CreatureLootTemplateKey.fromEntity(entity);
-      final same = CreatureLootTemplateKey.fromEntity(
-        entity.copyWith(chance: 50),
-      );
-
-      expect(key, same);
-      expect(key.hashCode, same.hashCode);
-      expect(
-        key,
-        isNot(
-          CreatureLootTemplateKey.fromEntity(entity.copyWith(reference: 31)),
-        ),
-      );
-      expect(
-        key,
-        isNot(CreatureLootTemplateKey.fromEntity(entity.copyWith(groupId: 41))),
-      );
-    });
-
-    test('九张表的行 Brief 返回各自具体 key', () {
-      const row = {'Entry': 10, 'Item': 20, 'Reference': 30, 'GroupId': 40};
-      final briefs = <dynamic>[
-        BriefCreatureLootTemplateEntity.fromJson(row),
-        BriefPickpocketingLootTemplateEntity.fromJson(row),
-        BriefSkinningLootTemplateEntity.fromJson(row),
-        BriefItemLootTemplateEntity.fromJson(row),
-        BriefDisenchantLootTemplateEntity.fromJson(row),
-        BriefProspectingLootTemplateEntity.fromJson(row),
-        BriefMillingLootTemplateEntity.fromJson(row),
-        BriefReferenceLootTemplateEntity.fromJson(row),
-        BriefGameObjectLootTemplateEntity.fromJson(row),
-      ];
-      expect(briefs[0].key, isA<CreatureLootTemplateKey>());
-      expect(briefs[1].key, isA<PickpocketingLootTemplateKey>());
-      expect(briefs[2].key, isA<SkinningLootTemplateKey>());
-      expect(briefs[3].key, isA<ItemLootTemplateKey>());
-      expect(briefs[4].key, isA<DisenchantLootTemplateKey>());
-      expect(briefs[5].key, isA<ProspectingLootTemplateKey>());
-      expect(briefs[6].key, isA<MillingLootTemplateKey>());
-      expect(briefs[7].key, isA<ReferenceLootTemplateKey>());
-      expect(briefs[8].key, isA<GameObjectLootTemplateKey>());
-    });
-  });
-
-  group('dedicated loot template repository write contracts', () {
-    test('八张两列主键表均使用旧 key 定位并写入完整 candidate', () async {
-      for (final spec in _standardRepositorySpecs()) {
-        final candidate = _candidateFor(spec.table, updated: true);
-        final queries = <LaconicQuery>[];
-        final repository = spec.create(
-          Laconic(_RecordingDriver(), listen: queries.add),
-        );
-
-        await _updateLootTemplate(repository, spec.table, spec.key, candidate);
-
-        expect(queries.single.sql, contains(spec.table), reason: spec.table);
-        expect(queries.single.bindings, [
-          ...candidate.toJson().values,
-          10,
-          20,
-        ], reason: spec.table);
-      }
-    });
-
-    test('生物掉落 UPDATE 使用旧四列 key 并写入完整 candidate', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _CreatureTestRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-      const originalKey = CreatureLootTemplateKey(
-        entry: 10,
-        item: 20,
-        reference: 30,
-        groupId: 40,
-      );
-      const candidate = CreatureLootTemplateEntity(
-        entry: 11,
-        item: 21,
-        reference: 31,
-        chance: 50,
-        lootMode: 1,
-        groupId: 41,
-      );
-
-      await repository.updateCreatureLootTemplate(originalKey, candidate);
-
-      expect(queries.single.bindings, [
-        ...candidate.toJson().values,
-        originalKey.entry,
-        originalKey.item,
-        originalKey.reference,
-        originalKey.groupId,
-      ]);
-    });
-
-    test('九张表的 UPDATE、DELETE 与复制均报告原记录不存在', () async {
-      for (final spec in _allRepositorySpecs(affectedRows: 0)) {
-        await expectLater(
-          _updateLootTemplate(
-            spec.repository,
-            spec.table,
-            spec.key,
-            _candidateFor(spec.table),
-          ),
-          throwsA(isA<RecordNotFoundException>()),
-          reason: '${spec.table} update',
-        );
-        await expectLater(
-          _destroyLootTemplate(spec.repository, spec.table, spec.key),
-          throwsA(isA<RecordNotFoundException>()),
-          reason: '${spec.table} delete',
-        );
-        await expectLater(
-          _copyLootTemplate(spec.repository, spec.table, spec.key),
-          throwsA(isA<RecordNotFoundException>()),
-          reason: '${spec.table} copy',
-        );
-      }
-    });
-
-    test('九张表的 Brief 查询显式选择展示列、使用正确表并分页', () async {
-      for (final spec in _allRepositorySpecs()) {
-        final queries = <LaconicQuery>[];
-        final repository = spec.create(
-          Laconic(_RecordingDriver(), listen: queries.add),
-        );
-
-        await _getBriefLootTemplates(repository, spec.table, 10, page: 2);
-
-        final query = queries.single;
-        expect(query.sql, contains(spec.table), reason: spec.table);
-        expect(query.sql, isNot(contains('lt.*')), reason: spec.table);
-        expect(query.sql, isNot(contains('lt.LootMode')), reason: spec.table);
-        expect(query.sql, isNot(contains('lt.Comment')), reason: spec.table);
-        expect(
-          query.sql.toLowerCase(),
-          contains('limit ? offset ?'),
-          reason: spec.table,
-        );
-        expect(query.bindings.sublist(query.bindings.length - 2), [
-          50,
-          50,
-        ], reason: spec.table);
-      }
-    });
-  });
-}
-
-List<
-  ({
-    String table,
-    dynamic Function(Laconic) create,
-    dynamic repository,
-    dynamic key,
-  })
->
-_allRepositorySpecs({int affectedRows = 1}) {
-  final standard = _standardRepositorySpecs();
-  final specs = [
-    (
-      table: 'creature_loot_template',
-      create: (Laconic laconic) => _CreatureTestRepository(laconic),
-      key: const CreatureLootTemplateKey(
-        entry: 10,
-        item: 20,
-        reference: 30,
-        groupId: 40,
-      ),
-    ),
-    ...standard,
-  ];
-  return specs
-      .map(
-        (spec) => (
-          table: spec.table,
-          create: spec.create,
-          repository: spec.create(
-            Laconic(_RecordingDriver(affectedRows: affectedRows)),
-          ),
-          key: spec.key,
-        ),
-      )
-      .toList();
-}
-
-dynamic _candidateFor(String table, {bool updated = false}) {
-  final entry = updated ? 11 : 10;
-  final item = updated ? 21 : 20;
-  const reference = 30;
-  const groupId = 40;
-  return switch (table) {
-    'creature_loot_template' => CreatureLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'pickpocketing_loot_template' => PickpocketingLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'skinning_loot_template' => SkinningLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'item_loot_template' => ItemLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'disenchant_loot_template' => DisenchantLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'prospecting_loot_template' => ProspectingLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'milling_loot_template' => MillingLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'reference_loot_template' => ReferenceLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    'gameobject_loot_template' => GameObjectLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
-      groupId: groupId,
-    ),
-    _ => throw ArgumentError.value(table, 'table'),
-  };
-}
-
-Future<dynamic> _copyLootTemplate(
-  dynamic repository,
-  String table,
-  dynamic key,
-) {
-  return switch (table) {
-    'creature_loot_template' =>
-      (repository as CreatureLootTemplateRepository).copyCreatureLootTemplate(
-        key as CreatureLootTemplateKey,
-      ),
-    'pickpocketing_loot_template' =>
-      (repository as PickpocketingLootTemplateRepository)
-          .copyPickpocketingLootTemplate(key as PickpocketingLootTemplateKey),
-    'skinning_loot_template' =>
-      (repository as SkinningLootTemplateRepository).copySkinningLootTemplate(
-        key as SkinningLootTemplateKey,
-      ),
-    'item_loot_template' =>
-      (repository as ItemLootTemplateRepository).copyItemLootTemplate(
-        key as ItemLootTemplateKey,
-      ),
-    'disenchant_loot_template' =>
-      (repository as DisenchantLootTemplateRepository)
-          .copyDisenchantLootTemplate(key as DisenchantLootTemplateKey),
-    'prospecting_loot_template' =>
-      (repository as ProspectingLootTemplateRepository)
-          .copyProspectingLootTemplate(key as ProspectingLootTemplateKey),
-    'milling_loot_template' =>
-      (repository as MillingLootTemplateRepository).copyMillingLootTemplate(
-        key as MillingLootTemplateKey,
-      ),
-    'reference_loot_template' =>
-      (repository as ReferenceLootTemplateRepository).copyReferenceLootTemplate(
-        key as ReferenceLootTemplateKey,
-      ),
-    'gameobject_loot_template' =>
-      (repository as GameObjectLootTemplateRepository)
-          .copyGameObjectLootTemplate(key as GameObjectLootTemplateKey),
-    _ => throw ArgumentError.value(table, 'table'),
-  };
-}
-
-Future<void> _destroyLootTemplate(
-  dynamic repository,
-  String table,
-  dynamic key,
-) {
-  return switch (table) {
-    'creature_loot_template' =>
-      (repository as CreatureLootTemplateRepository)
-          .destroyCreatureLootTemplate(key as CreatureLootTemplateKey),
-    'pickpocketing_loot_template' =>
-      (repository as PickpocketingLootTemplateRepository)
-          .destroyPickpocketingLootTemplate(
-            key as PickpocketingLootTemplateKey,
-          ),
-    'skinning_loot_template' =>
-      (repository as SkinningLootTemplateRepository)
-          .destroySkinningLootTemplate(key as SkinningLootTemplateKey),
-    'item_loot_template' =>
-      (repository as ItemLootTemplateRepository).destroyItemLootTemplate(
-        key as ItemLootTemplateKey,
-      ),
-    'disenchant_loot_template' =>
-      (repository as DisenchantLootTemplateRepository)
-          .destroyDisenchantLootTemplate(key as DisenchantLootTemplateKey),
-    'prospecting_loot_template' =>
-      (repository as ProspectingLootTemplateRepository)
-          .destroyProspectingLootTemplate(key as ProspectingLootTemplateKey),
-    'milling_loot_template' =>
-      (repository as MillingLootTemplateRepository).destroyMillingLootTemplate(
-        key as MillingLootTemplateKey,
-      ),
-    'reference_loot_template' =>
-      (repository as ReferenceLootTemplateRepository)
-          .destroyReferenceLootTemplate(key as ReferenceLootTemplateKey),
-    'gameobject_loot_template' =>
-      (repository as GameObjectLootTemplateRepository)
-          .destroyGameObjectLootTemplate(key as GameObjectLootTemplateKey),
-    _ => throw ArgumentError.value(table, 'table'),
-  };
-}
-
-Future<dynamic> _getBriefLootTemplates(
-  dynamic repository,
-  String table,
-  int entry, {
-  int page = 1,
-}) {
-  return switch (table) {
-    'creature_loot_template' =>
-      (repository as CreatureLootTemplateRepository)
-          .getBriefCreatureLootTemplates(entry, page: page),
-    'pickpocketing_loot_template' =>
-      (repository as PickpocketingLootTemplateRepository)
-          .getBriefPickpocketingLootTemplates(entry, page: page),
-    'skinning_loot_template' =>
-      (repository as SkinningLootTemplateRepository)
-          .getBriefSkinningLootTemplates(entry, page: page),
-    'item_loot_template' =>
-      (repository as ItemLootTemplateRepository).getBriefItemLootTemplates(
-        entry,
-        page: page,
-      ),
-    'disenchant_loot_template' =>
-      (repository as DisenchantLootTemplateRepository)
-          .getBriefDisenchantLootTemplates(entry, page: page),
-    'prospecting_loot_template' =>
-      (repository as ProspectingLootTemplateRepository)
-          .getBriefProspectingLootTemplates(entry, page: page),
-    'milling_loot_template' =>
-      (repository as MillingLootTemplateRepository)
-          .getBriefMillingLootTemplates(entry, page: page),
-    'reference_loot_template' =>
-      (repository as ReferenceLootTemplateRepository).getBriefLootTemplates(
-        entry,
-        page: page,
-      ),
-    'gameobject_loot_template' =>
-      (repository as GameObjectLootTemplateRepository)
-          .getBriefGameObjectLootTemplates(entry, page: page),
-    _ => throw ArgumentError.value(table, 'table'),
-  };
-}
-
-List<({String table, dynamic Function(Laconic) create, dynamic key})>
-_standardRepositorySpecs() {
-  return [
-    (
+  final standardKeys = [
+    _testLootTemplate(
       table: 'pickpocketing_loot_template',
-      create: (laconic) => _PickpocketingTestRepository(laconic),
-      key: const PickpocketingLootTemplateKey(entry: 10, item: 20),
+      createRepository: _PickpocketingTestRepository.new,
+      entityFromJson: PickpocketingLootTemplateEntity.fromJson,
+      keyFromEntity: PickpocketingLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefPickpocketingLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updatePickpocketingLootTemplate(key, row),
+      destroy: (repository, key) =>
+          repository.destroyPickpocketingLootTemplate(key),
+      copy: (repository, key) => repository.copyPickpocketingLootTemplate(key),
+      queryBrief: (repository) =>
+          repository.getBriefPickpocketingLootTemplates(10, page: 2),
     ),
-    (
+    _testLootTemplate(
       table: 'skinning_loot_template',
-      create: (laconic) => _SkinningTestRepository(laconic),
-      key: const SkinningLootTemplateKey(entry: 10, item: 20),
+      createRepository: _SkinningTestRepository.new,
+      entityFromJson: SkinningLootTemplateEntity.fromJson,
+      keyFromEntity: SkinningLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefSkinningLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updateSkinningLootTemplate(key, row),
+      destroy: (repository, key) => repository.destroySkinningLootTemplate(key),
+      copy: (repository, key) => repository.copySkinningLootTemplate(key),
+      queryBrief: (repository) =>
+          repository.getBriefSkinningLootTemplates(10, page: 2),
     ),
-    (
+    _testLootTemplate(
       table: 'item_loot_template',
-      create: (laconic) => _ItemTestRepository(laconic),
-      key: const ItemLootTemplateKey(entry: 10, item: 20),
+      createRepository: _ItemTestRepository.new,
+      entityFromJson: ItemLootTemplateEntity.fromJson,
+      keyFromEntity: ItemLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefItemLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updateItemLootTemplate(key, row),
+      destroy: (repository, key) => repository.destroyItemLootTemplate(key),
+      copy: (repository, key) => repository.copyItemLootTemplate(key),
+      queryBrief: (repository) =>
+          repository.getBriefItemLootTemplates(10, page: 2),
     ),
-    (
+    _testLootTemplate(
       table: 'disenchant_loot_template',
-      create: (laconic) => _DisenchantTestRepository(laconic),
-      key: const DisenchantLootTemplateKey(entry: 10, item: 20),
+      createRepository: _DisenchantTestRepository.new,
+      entityFromJson: DisenchantLootTemplateEntity.fromJson,
+      keyFromEntity: DisenchantLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefDisenchantLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updateDisenchantLootTemplate(key, row),
+      destroy: (repository, key) =>
+          repository.destroyDisenchantLootTemplate(key),
+      copy: (repository, key) => repository.copyDisenchantLootTemplate(key),
+      queryBrief: (repository) =>
+          repository.getBriefDisenchantLootTemplates(10, page: 2),
     ),
-    (
+    _testLootTemplate(
       table: 'prospecting_loot_template',
-      create: (laconic) => _ProspectingTestRepository(laconic),
-      key: const ProspectingLootTemplateKey(entry: 10, item: 20),
+      createRepository: _ProspectingTestRepository.new,
+      entityFromJson: ProspectingLootTemplateEntity.fromJson,
+      keyFromEntity: ProspectingLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefProspectingLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updateProspectingLootTemplate(key, row),
+      destroy: (repository, key) =>
+          repository.destroyProspectingLootTemplate(key),
+      copy: (repository, key) => repository.copyProspectingLootTemplate(key),
+      queryBrief: (repository) =>
+          repository.getBriefProspectingLootTemplates(10, page: 2),
     ),
-    (
+    _testLootTemplate(
       table: 'milling_loot_template',
-      create: (laconic) => _MillingTestRepository(laconic),
-      key: const MillingLootTemplateKey(entry: 10, item: 20),
+      createRepository: _MillingTestRepository.new,
+      entityFromJson: MillingLootTemplateEntity.fromJson,
+      keyFromEntity: MillingLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefMillingLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updateMillingLootTemplate(key, row),
+      destroy: (repository, key) => repository.destroyMillingLootTemplate(key),
+      copy: (repository, key) => repository.copyMillingLootTemplate(key),
+      queryBrief: (repository) =>
+          repository.getBriefMillingLootTemplates(10, page: 2),
     ),
-    (
+    _testLootTemplate(
       table: 'reference_loot_template',
-      create: (laconic) => _ReferenceTestRepository(laconic),
-      key: const ReferenceLootTemplateKey(entry: 10, item: 20),
+      createRepository: _ReferenceTestRepository.new,
+      entityFromJson: ReferenceLootTemplateEntity.fromJson,
+      keyFromEntity: ReferenceLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefReferenceLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updateReferenceLootTemplate(key, row),
+      destroy: (repository, key) =>
+          repository.destroyReferenceLootTemplate(key),
+      copy: (repository, key) => repository.copyReferenceLootTemplate(key),
+      queryBrief: (repository) => repository.getBriefLootTemplates(10, page: 2),
     ),
-    (
+    _testLootTemplate(
       table: 'gameobject_loot_template',
-      create: (laconic) => _GameObjectTestRepository(laconic),
-      key: const GameObjectLootTemplateKey(entry: 10, item: 20),
+      createRepository: _GameObjectTestRepository.new,
+      entityFromJson: GameObjectLootTemplateEntity.fromJson,
+      keyFromEntity: GameObjectLootTemplateKey.fromEntity,
+      briefKeyFromJson: (json) =>
+          BriefGameObjectLootTemplateEntity.fromJson(json).key,
+      toJson: (row) => row.toJson(),
+      update: (repository, key, row) =>
+          repository.updateGameObjectLootTemplate(key, row),
+      destroy: (repository, key) =>
+          repository.destroyGameObjectLootTemplate(key),
+      copy: (repository, key) => repository.copyGameObjectLootTemplate(key),
+      queryBrief: (repository) =>
+          repository.getBriefGameObjectLootTemplates(10, page: 2),
     ),
   ];
+
+  test('The eight two-column tables use distinct concrete key types', () {
+    expect(standardKeys.toSet(), hasLength(8));
+  });
 }
 
-Future<void> _updateLootTemplate(
-  dynamic repository,
-  String table,
-  dynamic key,
-  dynamic candidate,
-) {
-  return switch (table) {
-    'creature_loot_template' =>
-      (repository as CreatureLootTemplateRepository).updateCreatureLootTemplate(
-        key as CreatureLootTemplateKey,
-        candidate as CreatureLootTemplateEntity,
-      ),
-    'pickpocketing_loot_template' =>
-      (repository as PickpocketingLootTemplateRepository)
-          .updatePickpocketingLootTemplate(
-            key as PickpocketingLootTemplateKey,
-            candidate as PickpocketingLootTemplateEntity,
-          ),
-    'skinning_loot_template' =>
-      (repository as SkinningLootTemplateRepository).updateSkinningLootTemplate(
-        key as SkinningLootTemplateKey,
-        candidate as SkinningLootTemplateEntity,
-      ),
-    'item_loot_template' =>
-      (repository as ItemLootTemplateRepository).updateItemLootTemplate(
-        key as ItemLootTemplateKey,
-        candidate as ItemLootTemplateEntity,
-      ),
-    'disenchant_loot_template' =>
-      (repository as DisenchantLootTemplateRepository)
-          .updateDisenchantLootTemplate(
-            key as DisenchantLootTemplateKey,
-            candidate as DisenchantLootTemplateEntity,
-          ),
-    'prospecting_loot_template' =>
-      (repository as ProspectingLootTemplateRepository)
-          .updateProspectingLootTemplate(
-            key as ProspectingLootTemplateKey,
-            candidate as ProspectingLootTemplateEntity,
-          ),
-    'milling_loot_template' =>
-      (repository as MillingLootTemplateRepository).updateMillingLootTemplate(
-        key as MillingLootTemplateKey,
-        candidate as MillingLootTemplateEntity,
-      ),
-    'reference_loot_template' =>
-      (repository as ReferenceLootTemplateRepository)
-          .updateReferenceLootTemplate(
-            key as ReferenceLootTemplateKey,
-            candidate as ReferenceLootTemplateEntity,
-          ),
-    'gameobject_loot_template' =>
-      (repository as GameObjectLootTemplateRepository)
-          .updateGameObjectLootTemplate(
-            key as GameObjectLootTemplateKey,
-            candidate as GameObjectLootTemplateEntity,
-          ),
-    _ => throw ArgumentError.value(table, 'table'),
-  };
+K _testLootTemplate<R, K, E>({
+  required String table,
+  required R Function(Laconic) createRepository,
+  required E Function(Map<String, Object?>) entityFromJson,
+  required K Function(E) keyFromEntity,
+  required K Function(Map<String, Object?>) briefKeyFromJson,
+  required Map<String, Object?> Function(E) toJson,
+  required Future<void> Function(R, K, E) update,
+  required Future<void> Function(R, K) destroy,
+  required Future<K> Function(R, K) copy,
+  required Future<void> Function(R) queryBrief,
+  List<String> keyColumns = const ['Entry', 'Item'],
+  Map<String, Object?> sameKeyChanges = const {'Reference': 31, 'GroupId': 41},
+  Map<String, Object?> candidateChanges = const {'Entry': 11, 'Item': 21},
+}) {
+  const original = {'Entry': 10, 'Item': 20, 'Reference': 30, 'GroupId': 40};
+  final originalEntity = entityFromJson(original);
+  final originalKey = keyFromEntity(originalEntity);
+  final candidate = entityFromJson({...original, ...candidateChanges});
+
+  group(table, () {
+    test('Every primary key field participates in value equality and the brief entity returns the same concrete key', () {
+      expectRowKeyEquality(
+        originalKey,
+        keyFromEntity,
+        sameKeyRow: entityFromJson({...original, ...sameKeyChanges}),
+        differentKeyRows: [
+          for (final column in keyColumns)
+            entityFromJson({...original, column: original[column]! + 1}),
+        ],
+      );
+      final briefKey = briefKeyFromJson(original);
+      expect(briefKey, isA<K>());
+      expect(briefKey, originalKey);
+    });
+
+    testRepositoryWrites(
+      createRepository: createRepository,
+      originalKey: originalKey,
+      candidate: candidate,
+      missingCandidate: originalEntity,
+      update: update,
+      destroy: destroy,
+      expectedBindings: [
+        ...toJson(candidate).values,
+        for (final column in keyColumns) original[column],
+      ],
+      verifyUpdate: (query) => expect(query.sql, contains(table)),
+    );
+
+    test('Copying a missing source record reports an error', () async {
+      final repository = createRepository(
+        Laconic(RecordingDriver(affectedRows: 0)),
+      );
+      await expectLater(
+        copy(repository, originalKey),
+        throwsA(isA<RecordNotFoundException>()),
+      );
+    });
+
+    testBriefPagination(
+      queryPageTwo: (laconic) => queryBrief(createRepository(laconic)),
+      tableAlias: 'lt',
+      verifyQuery: (query) {
+        expect(query.sql, contains(table));
+        expect(query.sql, isNot(contains('lt.LootMode')));
+        expect(query.sql, isNot(contains('lt.Comment')));
+      },
+    );
+  });
+
+  return originalKey;
 }
 
 class _CreatureTestRepository extends CreatureLootTemplateRepository {
@@ -634,41 +297,6 @@ class _ProspectingTestRepository extends ProspectingLootTemplateRepository {
   @override
   final Laconic laconic;
   _ProspectingTestRepository(this.laconic);
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
 class _ReferenceTestRepository extends ReferenceLootTemplateRepository {

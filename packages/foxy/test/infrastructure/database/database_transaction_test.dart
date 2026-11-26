@@ -9,7 +9,7 @@ import 'package:laconic/laconic.dart';
 /// in [DatabaseTransaction] must collapse nested [execute] calls onto the
 /// outer transaction.
 void main() {
-  test('嵌套 execute 合并进外层事务,底层只开一次事务', () async {
+  test('Nested execute calls share one underlying transaction', () async {
     final tx = _CountingTransaction();
 
     final executionOrder = <String>[];
@@ -22,24 +22,27 @@ void main() {
     expect(executionOrder, ['inner', 'outer']);
   });
 
-  test('内层异常冒泡到外层,外层可回滚', () async {
-    final tx = _CountingTransaction();
+  test(
+    'An inner exception reaches the outer transaction so it can roll back',
+    () async {
+      final tx = _CountingTransaction();
 
-    var innerRan = false;
-    await expectLater(
-      tx.execute(() async {
-        await tx.execute(() async {
-          innerRan = true;
-          throw StateError('inner failure');
-        });
-      }),
-      throwsStateError,
-    );
-    expect(tx.opens, 1);
-    expect(innerRan, isTrue);
-  });
+      var innerRan = false;
+      await expectLater(
+        tx.execute(() async {
+          await tx.execute(() async {
+            innerRan = true;
+            throw StateError('inner failure');
+          });
+        }),
+        throwsStateError,
+      );
+      expect(tx.opens, 1);
+      expect(innerRan, isTrue);
+    },
+  );
 
-  test('独立(非嵌套)调用每次各开一次事务', () async {
+  test('Independent calls each open a separate transaction', () async {
     final tx = _CountingTransaction();
 
     await tx.execute(() async {});
@@ -48,14 +51,14 @@ void main() {
     expect(tx.opens, 2);
   });
 
-  test('action 返回值透传', () async {
+  test('execute returns the result of the action', () async {
     final tx = _CountingTransaction();
 
     final value = await tx.execute(() async => 42);
     expect(value, 42);
   });
 
-  test('底层事务包装异常时,原始异常类型仍向外抛出', () async {
+  test('The original exception type survives wrapping by the underlying transaction', () async {
     final tx = _WrappingTransaction();
 
     await expectLater(
@@ -64,7 +67,7 @@ void main() {
     );
   });
 
-  test('嵌套执行时原始异常同样不被包装吞掉', () async {
+  test('Nested execution also propagates the original exception', () async {
     final tx = _WrappingTransaction();
 
     await expectLater(
@@ -75,7 +78,7 @@ void main() {
     );
   });
 
-  test('非业务异常也按原类型抛出', () async {
+  test('Non-domain exceptions keep their original type', () async {
     final tx = _WrappingTransaction();
 
     await expectLater(

@@ -14,7 +14,7 @@ void main() {
     );
   });
 
-  test('先释放待删除的键，再更新和新增，最后提交', () async {
+  test('The transaction releases deleted keys before updates and inserts, then commits', () async {
     await useCase.execute(
       creations: ['deDE'],
       deletions: ['frFR'],
@@ -33,7 +33,7 @@ void main() {
     ]);
   });
 
-  test('更新失败时中止批次，由事务回滚并透传原异常', () async {
+  test('A failed update aborts the batch, rolls back, and propagates the original exception', () async {
     const failure = RecordNotFoundException('locale row not found');
     await expectLater(
       useCase.execute(

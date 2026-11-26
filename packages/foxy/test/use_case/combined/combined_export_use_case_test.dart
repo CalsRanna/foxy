@@ -97,7 +97,7 @@ void main() {
     );
   }
 
-  test('一键导出: 临时目录复用、拷贝到 DBC 目录、打包 MPQ、结束后清理临时目录', () async {
+  test('Combined export reuses a temporary directory, copies DBC files, packages an MPQ, and cleans up', () async {
     final useCase = buildUseCase();
     final mpqPath = p.join(mpqDir.path, 'patch-zhCN-5.MPQ');
 
@@ -126,7 +126,7 @@ void main() {
     expect(leftovers, isEmpty, reason: '导出结束后临时目录必须删除');
   });
 
-  test('DBC 阶段取消 → 跳过 pack,结果标记取消,临时目录仍清理', () async {
+  test('Canceling DBC export skips packaging, marks the result canceled, and cleans up temporary files', () async {
     final util = DbcSyncUtil(
       exportWorkerEntry: (DbcExportWorkerArgs args) async {
         final cancelPort = ReceivePort();
@@ -165,7 +165,7 @@ void main() {
     expect(leftovers, isEmpty);
   });
 
-  test('DBC 阶段部分失败 → 仍拷贝已写出文件并打包,错误汇总到结果', () async {
+  test('Partial DBC export still copies and packages written files and aggregates errors', () async {
     final util = DbcSyncUtil(
       exportWorkerEntry: (DbcExportWorkerArgs args) async {
         final cancelPort = ReceivePort();
@@ -226,7 +226,7 @@ void main() {
     );
   });
 
-  test('校验: MPQ 文件名必须 .mpq 结尾', () async {
+  test('An MPQ file name must end in .mpq', () async {
     final useCase = buildUseCase();
     await expectLater(
       useCase.execute(

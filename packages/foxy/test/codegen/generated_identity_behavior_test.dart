@@ -36,23 +36,26 @@ void main() {
   }
 
   for (final collide in [false, true]) {
-    test('${collide ? '主键冲突重分配' : '无冲突'}后同步实际主键并支持再次保存', () async {
-      final driver = _CollisionDriver(collide: collide);
-      final vm = await form(driver);
-      final expectedKey = collide ? 101 : 100;
-      await vm.persist();
+    test(
+      'Saving ${collide ? 'after primary key reallocation' : 'without a collision'} synchronizes the assigned key and supports a subsequent save',
+      () async {
+        final driver = _CollisionDriver(collide: collide);
+        final vm = await form(driver);
+        final expectedKey = collide ? 101 : 100;
+        await vm.persist();
 
-      expect(driver.writtenId, expectedKey);
-      expect(vm.persistedKey.value, expectedKey);
-      expect(vm.entity.value!.id, expectedKey);
-      expect(vm.idController.collect(), expectedKey);
+        expect(driver.writtenId, expectedKey);
+        expect(vm.persistedKey.value, expectedKey);
+        expect(vm.entity.value!.id, expectedKey);
+        expect(vm.idController.collect(), expectedKey);
 
-      await vm.persist();
-      expect(driver.updatedKeys, [(expectedKey, expectedKey)]);
-    });
+        await vm.persist();
+        expect(driver.updatedKeys, [(expectedKey, expectedKey)]);
+      },
+    );
   }
 
-  test('复制发生主键冲突时返回实际写入主键', () async {
+  test('Copy returns the persisted primary key after a collision', () async {
     final driver = _CollisionDriver(collide: true);
     final repository = _Repository(Laconic(driver));
     final returnedKey = await repository.copyEmoteText(1);
@@ -60,7 +63,7 @@ void main() {
     expect(returnedKey, driver.writtenId);
   });
 
-  test('保存等待期间销毁表单后不再写入已释放的控制器', () async {
+  test('Completing a pending save after disposal leaves disposed controllers untouched', () async {
     final gate = Completer<void>();
     final driver = _CollisionDriver(collide: true, retryGate: gate);
     final vm = await form(driver);
@@ -73,7 +76,7 @@ void main() {
     expect(vm.entity.value!.id, 101);
   });
 
-  test('主键重分配保留保存等待期间其他字段的新输入', () async {
+  test('Primary key reallocation preserves other edits made while the save is pending', () async {
     final gate = Completer<void>();
     final driver = _CollisionDriver(collide: true, retryGate: gate);
     final vm = await form(driver);

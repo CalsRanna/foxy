@@ -13,55 +13,58 @@ import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart'
 import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('GossipMenuOption typed row identity', () {
-    test('base 和 locale key 覆盖全部复合主键列并实现值相等', () {
-      const option = GossipMenuOptionEntity(menuId: 10, optionId: 2);
-      const locale = GossipMenuOptionLocaleEntity(
-        menuId: 10,
-        optionId: 2,
-        locale: 'zhCN',
-      );
+    test(
+      'Base and locale keys use all composite key columns for value equality',
+      () {
+        const option = GossipMenuOptionEntity(menuId: 10, optionId: 2);
+        const locale = GossipMenuOptionLocaleEntity(
+          menuId: 10,
+          optionId: 2,
+          locale: 'zhCN',
+        );
 
-      expect(
-        GossipMenuOptionKey.fromEntity(option),
-        const GossipMenuOptionKey(menuId: 10, optionId: 2),
-      );
-      expect(
-        GossipMenuOptionLocaleKey.fromEntity(locale),
-        const GossipMenuOptionLocaleKey(
-          menuId: 10,
-          optionId: 2,
-          locale: 'zhCN',
-        ),
-      );
-      expect(
-        GossipMenuOptionLocaleKey.fromEntity(locale).hashCode,
-        const GossipMenuOptionLocaleKey(
-          menuId: 10,
-          optionId: 2,
-          locale: 'zhCN',
-        ).hashCode,
-      );
-      expect(
-        GossipMenuOptionLocaleKey.fromEntity(locale),
-        isNot(
-          GossipMenuOptionLocaleKey.fromEntity(locale.copyWith(locale: 'deDE')),
-        ),
-      );
-    });
+        expect(
+          GossipMenuOptionKey.fromEntity(option),
+          const GossipMenuOptionKey(menuId: 10, optionId: 2),
+        );
+        expect(
+          GossipMenuOptionLocaleKey.fromEntity(locale),
+          const GossipMenuOptionLocaleKey(
+            menuId: 10,
+            optionId: 2,
+            locale: 'zhCN',
+          ),
+        );
+        expect(
+          GossipMenuOptionLocaleKey.fromEntity(locale).hashCode,
+          const GossipMenuOptionLocaleKey(
+            menuId: 10,
+            optionId: 2,
+            locale: 'zhCN',
+          ).hashCode,
+        );
+        expect(
+          GossipMenuOptionLocaleKey.fromEntity(locale),
+          isNot(
+            GossipMenuOptionLocaleKey.fromEntity(
+              locale.copyWith(locale: 'deDE'),
+            ),
+          ),
+        );
+      },
+    );
   });
 
   group('GossipMenuOption repositories write contract', () {
-    test('base UPDATE 用旧 key 定位并写入 candidate 全部十四列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestGossipMenuOptionRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
+    group('GossipMenuOptionRepository', () {
       const originalKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
       const candidate = GossipMenuOptionEntity(
         menuId: 11,
@@ -80,21 +83,23 @@ void main() {
         verifiedBuild: 12340,
       );
 
-      await repository.updateGossipMenuOption(originalKey, candidate);
-
-      expect(queries, hasLength(1));
-      expect(queries.single.bindings, [
-        ...candidate.toJson().values,
-        originalKey.menuId,
-        originalKey.optionId,
-      ]);
+      testRepositoryWrites(
+        createRepository: _TestGossipMenuOptionRepository.new,
+        originalKey: originalKey,
+        candidate: candidate,
+        missingCandidate: const GossipMenuOptionEntity(),
+        update: (repository, key, row) =>
+            repository.updateGossipMenuOption(key, row),
+        destroy: (repository, key) => repository.destroyGossipMenuOption(key),
+        expectedBindings: [
+          ...candidate.toJson().values,
+          originalKey.menuId,
+          originalKey.optionId,
+        ],
+      );
     });
 
-    test('locale UPDATE 用旧三列 key 定位并写入 candidate 全部五列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestGossipMenuOptionLocaleRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
+    group('GossipMenuOptionLocaleRepository', () {
       const originalKey = GossipMenuOptionLocaleKey(
         menuId: 10,
         optionId: 2,
@@ -108,77 +113,42 @@ void main() {
         boxText: '确认',
       );
 
-      await repository.updateGossipMenuOptionLocale(originalKey, candidate);
-
-      expect(queries, hasLength(1));
-      expect(queries.single.bindings, [
-        ...candidate.toJson().values,
-        originalKey.menuId,
-        originalKey.optionId,
-        originalKey.locale,
-      ]);
-    });
-
-    test('base 与 locale 单行 UPDATE/DELETE 的零行结果会报错', () async {
-      final laconic = Laconic(_RecordingDriver(affectedRows: 0));
-      final baseRepository = _TestGossipMenuOptionRepository(laconic);
-      final localeRepository = _TestGossipMenuOptionLocaleRepository(laconic);
-      const baseKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
-      const localeKey = GossipMenuOptionLocaleKey(
-        menuId: 10,
-        optionId: 2,
-        locale: 'zhCN',
-      );
-
-      await expectLater(
-        baseRepository.updateGossipMenuOption(
-          baseKey,
-          const GossipMenuOptionEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        baseRepository.destroyGossipMenuOption(baseKey),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        localeRepository.updateGossipMenuOptionLocale(
-          localeKey,
-          const GossipMenuOptionLocaleEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        localeRepository.destroyGossipMenuOptionLocale(localeKey),
-        throwsA(isA<RecordNotFoundException>()),
+      testRepositoryWrites(
+        createRepository: _TestGossipMenuOptionLocaleRepository.new,
+        originalKey: originalKey,
+        candidate: candidate,
+        missingCandidate: const GossipMenuOptionLocaleEntity(),
+        update: (repository, key, row) =>
+            repository.updateGossipMenuOptionLocale(key, row),
+        destroy: (repository, key) =>
+            repository.destroyGossipMenuOptionLocale(key),
+        expectedBindings: [
+          ...candidate.toJson().values,
+          originalKey.menuId,
+          originalKey.optionId,
+          originalKey.locale,
+        ],
       );
     });
 
-    test('base 与 locale Brief 查询显式选择字段、稳定排序并分页', () async {
-      final baseQueries = <LaconicQuery>[];
-      final localeQueries = <LaconicQuery>[];
-      final baseRepository = _TestGossipMenuOptionRepository(
-        Laconic(_RecordingDriver(), listen: baseQueries.add),
+    group('base', () {
+      testBriefPagination(
+        queryPageTwo: (laconic) =>
+            _TestGossipMenuOptionRepository(laconic)
+                .getBriefGossipMenuOptions(10, page: 2),
+        tableAlias: 'gmo',
+        verifyQuery: (query) =>
+            expect(query.sql, isNot(contains('VerifiedBuild'))),
       );
-      final localeRepository = _TestGossipMenuOptionLocaleRepository(
-        Laconic(_RecordingDriver(), listen: localeQueries.add),
-      );
+    });
 
-      await baseRepository.getBriefGossipMenuOptions(10, page: 2);
-      await localeRepository.getBriefGossipMenuOptionLocales(page: 2);
-
-      expect(baseQueries.single.sql, isNot(contains('gmo.*')));
-      expect(baseQueries.single.sql, isNot(contains('VerifiedBuild')));
-      expect(baseQueries.single.sql.toLowerCase(), contains('order by'));
-      expect(
-        baseQueries.single.bindings.sublist(
-          baseQueries.single.bindings.length - 2,
-        ),
-        [50, 50],
+    group('locale', () {
+      testBriefPagination(
+        queryPageTwo: (laconic) =>
+            _TestGossipMenuOptionLocaleRepository(laconic)
+                .getBriefGossipMenuOptionLocales(page: 2),
+        verifyQuery: (query) => expect(query.bindings, [50, 50]),
       );
-      expect(localeQueries.single.sql, isNot(contains('*')));
-      expect(localeQueries.single.sql.toLowerCase(), contains('order by'));
-      expect(localeQueries.single.bindings, [50, 50]);
     });
   });
 
@@ -230,7 +200,7 @@ void main() {
       await GetIt.instance.reset();
     });
 
-    test('编辑 base 用旧 key 更新且不触碰 locale 行', () async {
+    test('Editing the base row updates by its old key and leaves locale rows intact', () async {
       final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.setLinkKey(10);
@@ -251,7 +221,7 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('保存 base 时不清空已有 locale 行', () async {
+    test('Saving the base row preserves existing locale rows', () async {
       final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.setLinkKey(10);
@@ -266,22 +236,26 @@ void main() {
       expect(localeRepository.rows.single.menuId, 10);
     });
 
-    test('父范围变化和新建都会清空 persisted row identity', () async {
-      final viewModel = GossipMenuOptionLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.setLinkKey(10);
-      await viewModel.edit(viewModel.items.value.single.key);
-      expect(viewModel.editingKey.value, isNotNull);
+    test(
+      'Changing the parent scope and creating clear the persisted row identity',
+      () async {
+        final viewModel = GossipMenuOptionLinkedListViewModel();
+        addTearDown(viewModel.dispose);
+        await viewModel.setLinkKey(10);
+        await viewModel.edit(viewModel.items.value.single.key);
+        expect(viewModel.editingKey.value, isNotNull);
 
-      await viewModel.setLinkKey(12);
-      expect(viewModel.editingKey.value, isNull);
+        await expectParentChangeAndCreateClearIdentity(
+          editingKey: viewModel.editingKey,
+          selectedKey: viewModel.selectedKey,
+          changeParent: () => viewModel.setLinkKey(12),
+          create: viewModel.create,
+        );
+        expect(viewModel.menuIdController.collect(), 12);
+      },
+    );
 
-      await viewModel.create();
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.menuIdController.collect(), 12);
-    });
-
-    test('复制只复制主行,不复制 locale 子表', () async {
+    test('Copy duplicates the main row only', () async {
       await baseRepository.copyGossipMenuOption(
         const GossipMenuOptionKey(menuId: 10, optionId: 2),
       );
@@ -296,7 +270,7 @@ void main() {
       expect(locale.optionId, 2);
     });
 
-    test('复制源不存在时抛出稳定错误且不产生目标记录', () async {
+    test('Copying a missing source reports a stable error and creates no destination row', () async {
       await expectLater(
         baseRepository.copyGossipMenuOption(
           const GossipMenuOptionKey(menuId: 99, optionId: 1),
@@ -308,35 +282,38 @@ void main() {
       expect(localeRepository.rows, hasLength(1));
     });
 
-    test('新增 base/locale 成功后返回两份具体 identity', () async {
-      final useCase = GetIt.instance.get<SaveGossipMenuOptionUseCase>();
-      const candidate = GossipMenuOptionEntity(menuId: 10, optionId: 3);
-      const localeCandidate = GossipMenuOptionLocaleEntity(
-        menuId: 10,
-        optionId: 3,
-        locale: 'zhCN',
-        optionText: '新选项',
-      );
+    test(
+      'Creating base and locale rows returns both concrete identities',
+      () async {
+        final useCase = GetIt.instance.get<SaveGossipMenuOptionUseCase>();
+        const candidate = GossipMenuOptionEntity(menuId: 10, optionId: 3);
+        const localeCandidate = GossipMenuOptionLocaleEntity(
+          menuId: 10,
+          optionId: 3,
+          locale: 'zhCN',
+          optionText: '新选项',
+        );
 
-      final result = await useCase.execute(
-        const SaveGossipMenuOptionInput(
-          originalKey: null,
-          candidate: candidate,
-          originalLocaleKey: null,
-          localeCandidate: localeCandidate,
-        ),
-      );
+        final result = await useCase.execute(
+          const SaveGossipMenuOptionInput(
+            originalKey: null,
+            candidate: candidate,
+            originalLocaleKey: null,
+            localeCandidate: localeCandidate,
+          ),
+        );
 
-      expect(result.persistedKey, GossipMenuOptionKey.fromEntity(candidate));
-      expect(
-        result.localeKey,
-        GossipMenuOptionLocaleKey.fromEntity(localeCandidate),
-      );
-      expect(baseRepository.rows, hasLength(2));
-      expect(localeRepository.rows, hasLength(2));
-    });
+        expect(result.persistedKey, GossipMenuOptionKey.fromEntity(candidate));
+        expect(
+          result.localeKey,
+          GossipMenuOptionLocaleKey.fromEntity(localeCandidate),
+        );
+        expect(baseRepository.rows, hasLength(2));
+        expect(localeRepository.rows, hasLength(2));
+      },
+    );
 
-    test('删除 base 失败时回滚已删除 locale', () async {
+    test('A failed base delete rolls back deleted locale rows', () async {
       baseRepository.failDestroys = true;
       final useCase = GetIt.instance.get<DestroyGossipMenuOptionUseCase>();
       const key = GossipMenuOptionKey(menuId: 10, optionId: 2);
@@ -540,42 +517,6 @@ final class _FakeTransaction extends DatabaseTransaction {
       rethrow;
     }
   }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
 class _TestGossipMenuOptionLocaleRepository

@@ -14,39 +14,42 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('击杀掉落 picker 的普通行显示物品图标，引用行保持纯文本', (tester) async {
-    GetIt.instance.registerSingleton<CreatureLootTemplateRepository>(
-      _FakeCreatureLootTemplateRepository(),
-    );
+  testWidgets(
+    'Standard kill loot picker rows show item icons and reference rows remain plain text',
+    (tester) async {
+      GetIt.instance.registerSingleton<CreatureLootTemplateRepository>(
+        _FakeCreatureLootTemplateRepository(),
+      );
 
-    await tester.pumpWidget(
-      ShadApp(
-        home: Scaffold(
-          body: FoxyEntityPicker<BriefCreatureLootTemplateEntity>(
-            controller: IntFieldController(),
-            delegate: FoxyEntityPickerDelegates.creatureLoot,
+      await tester.pumpWidget(
+        ShadApp(
+          home: Scaffold(
+            body: FoxyEntityPicker<BriefCreatureLootTemplateEntity>(
+              controller: IntFieldController(),
+              delegate: FoxyEntityPickerDelegates.creatureLoot,
+            ),
           ),
         ),
-      ),
-    );
-    await tester.pump();
+      );
+      await tester.pump();
 
-    await tester.tap(find.byIcon(LucideIcons.search));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(LucideIcons.search));
+      await tester.pumpAndSettle();
 
-    expect(tester.takeException(), isNull);
+      expect(tester.takeException(), isNull);
 
-    // A regular loot row displays an icon and name.
-    final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
-    expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Foo');
-    expect(iconText.name, '测试物品');
+      // A regular loot row displays an icon and name.
+      final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
+      expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Foo');
+      expect(iconText.name, '测试物品');
 
-    // A reference row renders the reference label as plain text.
-    expect(find.text('引用 #90001'), findsOneWidget);
-    expect(find.byType(FoxyIconText), findsOneWidget);
+      // A reference row renders the reference label as plain text.
+      expect(find.text('引用 #90001'), findsOneWidget);
+      expect(find.byType(FoxyIconText), findsOneWidget);
 
-    await tester.pumpWidget(const SizedBox());
-  });
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 }
 
 class _FakeCreatureLootTemplateRepository

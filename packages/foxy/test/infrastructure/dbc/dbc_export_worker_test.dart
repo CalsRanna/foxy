@@ -27,7 +27,7 @@ void main() {
     {'ID': 2, 'Duration': 2, 'DurationPerLevel': 1, 'MaxDuration': 2},
   ];
 
-  test('导出 SQL: 有行序列时按原文件顺序排序,新行(NULL)排在末尾', () {
+  test('Export SQL uses original row order and places newly added rows with null positions last', () {
     expect(
       DbcExportWorker.selectSql('dbc_talent', hasRowOrder: true),
       'select * from foxy.dbc_talent order by (__dbc_order is null) asc, '
@@ -35,47 +35,53 @@ void main() {
     );
   });
 
-  test('导出 SQL: 无行序列的旧表保持原样(无 ORDER BY)', () {
+  test('Export SQL leaves older tables without row positions unsorted', () {
     expect(
       DbcExportWorker.selectSql('dbc_talent', hasRowOrder: false),
       'select * from foxy.dbc_talent',
     );
   });
 
-  test('DbcExportWorker.writeFiles 写出文件且可回读', () async {
-    final summary = await DbcExportWorker.writeFiles(
-      definitions: [duration],
-      loadRows: (_) async => durationRows(),
-      outputDirectory: outDir.path,
-      isCancelled: () => false,
-    );
+  test(
+    'DbcExportWorker.writeFiles writes files that can be read back',
+    () async {
+      final summary = await DbcExportWorker.writeFiles(
+        definitions: [duration],
+        loadRows: (_) async => durationRows(),
+        outputDirectory: outDir.path,
+        isCancelled: () => false,
+      );
 
-    expect(summary.completed, 1);
-    expect(summary.skipped, 0);
-    expect(summary.errors, isEmpty);
+      expect(summary.completed, 1);
+      expect(summary.skipped, 0);
+      expect(summary.errors, isEmpty);
 
-    final path = p.join(outDir.path, duration.fileName);
-    final loader = DbcLoader(path, duration.schema.format);
-    expect(loader.recordCount, 2);
-  });
+      final path = p.join(outDir.path, duration.fileName);
+      final loader = DbcLoader(path, duration.schema.format);
+      expect(loader.recordCount, 2);
+    },
+  );
 
-  test('DbcExportWorker.writeFiles 空表跳过且不生成文件', () async {
-    final summary = await DbcExportWorker.writeFiles(
-      definitions: [duration],
-      loadRows: (_) async => [],
-      outputDirectory: outDir.path,
-      isCancelled: () => false,
-    );
+  test(
+    'DbcExportWorker.writeFiles skips empty tables without creating files',
+    () async {
+      final summary = await DbcExportWorker.writeFiles(
+        definitions: [duration],
+        loadRows: (_) async => [],
+        outputDirectory: outDir.path,
+        isCancelled: () => false,
+      );
 
-    expect(summary.completed, 0);
-    expect(summary.skipped, 1);
-    expect(
-      await File(p.join(outDir.path, duration.fileName)).exists(),
-      isFalse,
-    );
-  });
+      expect(summary.completed, 0);
+      expect(summary.skipped, 1);
+      expect(
+        await File(p.join(outDir.path, duration.fileName)).exists(),
+        isFalse,
+      );
+    },
+  );
 
-  test('DbcExportWorker.writeFiles 单表失败记录错误且不影响其余表', () async {
+  test('DbcExportWorker.writeFiles records individual table failures and continues with other tables', () async {
     final summary = await DbcExportWorker.writeFiles(
       definitions: [duration, icon],
       loadRows: (table) async {
@@ -96,36 +102,42 @@ void main() {
     expect(await File(p.join(outDir.path, icon.fileName)).exists(), isFalse);
   });
 
-  test('DbcExportWorker.writeFiles 取消标志在表之间中断', () async {
-    var cancelled = false;
-    final summary = await DbcExportWorker.writeFiles(
-      definitions: [duration, icon],
-      loadRows: (_) async => durationRows(),
-      outputDirectory: outDir.path,
-      isCancelled: () => cancelled,
-    );
-
-    expect(summary.completed, 1);
-    // The first table completed before the flag was set; no more work runs.
-    cancelled = true;
-    final second = await DbcExportWorker.writeFiles(
-      definitions: [duration, icon],
-      loadRows: (_) async => durationRows(),
-      outputDirectory: outDir.path,
-      isCancelled: () => cancelled,
-    );
-    expect(second.completed, 0);
-  });
-
-  test('DbcExportWorker.writeFiles 输出目录不存在时抛错', () async {
-    await expectLater(
-      DbcExportWorker.writeFiles(
-        definitions: [duration],
+  test(
+    'DbcExportWorker.writeFiles checks cancellation between tables',
+    () async {
+      var cancelled = false;
+      final summary = await DbcExportWorker.writeFiles(
+        definitions: [duration, icon],
         loadRows: (_) async => durationRows(),
-        outputDirectory: p.join(outDir.path, 'missing'),
-        isCancelled: () => false,
-      ),
-      throwsA(isA<FileSystemException>()),
-    );
-  });
+        outputDirectory: outDir.path,
+        isCancelled: () => cancelled,
+      );
+
+      expect(summary.completed, 1);
+      // The first table completed before the flag was set; no more work runs.
+      cancelled = true;
+      final second = await DbcExportWorker.writeFiles(
+        definitions: [duration, icon],
+        loadRows: (_) async => durationRows(),
+        outputDirectory: outDir.path,
+        isCancelled: () => cancelled,
+      );
+      expect(second.completed, 0);
+    },
+  );
+
+  test(
+    'DbcExportWorker.writeFiles throws when the output directory is missing',
+    () async {
+      await expectLater(
+        DbcExportWorker.writeFiles(
+          definitions: [duration],
+          loadRows: (_) async => durationRows(),
+          outputDirectory: p.join(outDir.path, 'missing'),
+          isCancelled: () => false,
+        ),
+        throwsA(isA<FileSystemException>()),
+      );
+    },
+  );
 }

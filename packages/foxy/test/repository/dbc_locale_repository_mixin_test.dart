@@ -5,8 +5,8 @@ import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 
 void main() {
-  group('DbcLocaleRepositoryMixin 表名校验', () {
-    test('SpellRepository 拒绝 AreaTable 字段定义', () async {
+  group('DbcLocaleRepositoryMixin table name validation', () {
+    test('SpellRepository rejects an AreaTable field definition', () async {
       final repo = SpellRepository();
       await expectLater(
         repo.getSpellLocales(1, DbcLocaleFields.areaTableAreaName),
@@ -20,19 +20,22 @@ void main() {
       );
     });
 
-    test('SpellRepository 拒绝错误表字段的保存', () async {
-      final repo = SpellRepository();
-      await expectLater(
-        repo.saveSpellLocales(
-          1,
-          DbcLocaleFields.factionName,
-          DbcLocaleFieldCodec.empty(),
-        ),
-        throwsA(isA<ArgumentError>()),
-      );
-    });
+    test(
+      'SpellRepository rejects saving fields from the wrong table',
+      () async {
+        final repo = SpellRepository();
+        await expectLater(
+          repo.saveSpellLocales(
+            1,
+            DbcLocaleFields.factionName,
+            DbcLocaleFieldCodec.empty(),
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      },
+    );
 
-    test('AreaTableRepository 接受本表字段定义（失败应来自 DB 而非表名）', () async {
+    test('AreaTableRepository accepts its own field definition and reaches the database', () async {
       final repo = AreaTableRepository();
       // Without a DB connection, failures happen at the existence check or
       // query — never a table-name ArgumentError

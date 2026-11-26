@@ -21,7 +21,7 @@ void main() {
     await GetIt.instance.reset();
   });
 
-  test('预留文本 identity 未改动时在同一事务创建 npc_text 和菜单', () async {
+  test('An unchanged reserved text identity creates npc_text and the menu in one transaction', () async {
     final gossipRepository = _GossipMenuRepository({});
     final npcTextRepository = _NpcTextRepository({});
     final activityRepository = _ActivityLogRepository();
@@ -45,7 +45,7 @@ void main() {
     expect(activityRepository.logs, hasLength(1));
   });
 
-  test('用户改用已有文本 identity 时不创建预留 npc_text', () async {
+  test('Selecting an existing text identity skips creation of the reserved npc_text row', () async {
     final gossipRepository = _GossipMenuRepository({});
     final npcTextRepository = _NpcTextRepository({
       30: const NpcTextEntity(id: 30),
@@ -67,32 +67,35 @@ void main() {
     expect(npcTextRepository.rows.keys, {30});
   });
 
-  test('第二个 Repository 失败时回滚刚创建的 npc_text', () async {
-    final gossipRepository = _GossipMenuRepository({})..failWrites = true;
-    final npcTextRepository = _NpcTextRepository({});
-    final activityRepository = _ActivityLogRepository();
-    final useCase = _createUseCase(
-      gossipRepository,
-      npcTextRepository,
-      activityRepository,
-    );
+  test(
+    'A failure in the second repository rolls back the new npc_text row',
+    () async {
+      final gossipRepository = _GossipMenuRepository({})..failWrites = true;
+      final npcTextRepository = _NpcTextRepository({});
+      final activityRepository = _ActivityLogRepository();
+      final useCase = _createUseCase(
+        gossipRepository,
+        npcTextRepository,
+        activityRepository,
+      );
 
-    await expectLater(
-      useCase.execute(
-        const CreateGossipMenuInput(
-          candidate: GossipMenuEntity(menuId: 10, textId: 20),
-          reservedTextId: 20,
+      await expectLater(
+        useCase.execute(
+          const CreateGossipMenuInput(
+            candidate: GossipMenuEntity(menuId: 10, textId: 20),
+            reservedTextId: 20,
+          ),
         ),
-      ),
-      throwsStateError,
-    );
+        throwsStateError,
+      );
 
-    expect(gossipRepository.rows, isEmpty);
-    expect(npcTextRepository.rows, isEmpty);
-    expect(activityRepository.logs, isEmpty);
-  });
+      expect(gossipRepository.rows, isEmpty);
+      expect(npcTextRepository.rows, isEmpty);
+      expect(activityRepository.logs, isEmpty);
+    },
+  );
 
-  test('菜单 duplicate 时事务回滚且可用同一完整 identity 重试', () async {
+  test('A duplicate menu rolls back and can be retried with the same full identity', () async {
     const key = GossipMenuKey(menuId: 10, textId: 20);
     final gossipRepository = _GossipMenuRepository({
       key: const GossipMenuEntity(menuId: 10, textId: 20),
@@ -119,7 +122,7 @@ void main() {
     expect(npcTextRepository.rows.keys, {20});
   });
 
-  test('best-effort 日志同步失败不影响主事务结果', () async {
+  test('A synchronous best-effort logging failure does not change the main transaction result', () async {
     final gossipRepository = _GossipMenuRepository({});
     final npcTextRepository = _NpcTextRepository({});
     final activityRepository = _ActivityLogRepository()..failWrites = true;

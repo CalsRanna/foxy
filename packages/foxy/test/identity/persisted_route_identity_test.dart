@@ -6,7 +6,7 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/router/router_node.dart';
 
 void main() {
-  test('RouterNode 只保留实际路由和面包屑状态', () {
+  test('RouterNode keeps the actual route and breadcrumb state', () {
     const route = DashboardRoute();
     final node = RouterNode(
       label: '旧标签',
@@ -20,7 +20,7 @@ void main() {
     expect(renamed.parentMenu, RouterMenu.condition);
   });
 
-  test('详情面包屑文案统一为“XXX详情”且保留详情路由与参数', () {
+  test('Detail breadcrumbs use a consistent label while preserving routes and parameters', () {
     const key = ConditionKey(
       sourceTypeOrReferenceId: 17,
       sourceGroup: 1,

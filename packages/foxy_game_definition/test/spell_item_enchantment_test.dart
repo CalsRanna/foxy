@@ -2,7 +2,7 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('效果类型、抗性和属性使用本表实际消费的独立值域', () {
+  test('Effect types, resistances, and stats use the separate domains consumed by this table', () {
     expect(
       SpellItemEnchantmentConstants.spellItemEnchantmentEffectTypeOptions.keys,
       orderedEquals([0, 1, 2, 3, 4, 5, 6, 7, 8]),

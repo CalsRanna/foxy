@@ -28,66 +28,72 @@ void main() {
   tearDown(() => GetIt.instance.reset());
 
   for (final composite in [false, true]) {
-    testWidgets('${composite ? '复合主键' : '普通'}数据库按钮随 locale 开关显隐且保留输入', (
-      tester,
-    ) async {
-      stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: false);
-      final controller = StringFieldController()..init('主表内容');
-      addTearDown(controller.dispose);
-      var loads = 0;
-      final FoxyLocaleEditorDelegate delegate = composite
-          ? CompositeKeyLocaleEditorDelegate(
-              fields: ['locale', 'name'],
-              fieldLabels: ['语言', '名称'],
-              onLoad: (key) async {
-                loads++;
-                return [];
-              },
-              onSave: (key, changes) async {},
-            )
-          : DatabaseLocaleEditorDelegate(
-              fields: ['locale', 'name'],
-              fieldLabels: ['语言', '名称'],
-              onLoad: (entry) async {
-                loads++;
-                return [];
-              },
-              onSave: (entry, changes) async {},
-            );
-      await tester.pumpWidget(
-        _wrap(
-          FoxyLocalePicker(
-            entry: composite ? null : 1,
-            ownerKey: composite ? (1, 2) : null,
-            controller: controller,
-            title: '名称',
-            delegate: delegate,
+    testWidgets(
+      '${composite ? 'Composite-key' : 'Single-key'} database button follows the locale toggle and preserves input',
+      (tester) async {
+        stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: false);
+        final controller = StringFieldController()..init('主表内容');
+        addTearDown(controller.dispose);
+        var loads = 0;
+        final FoxyLocaleEditorDelegate delegate = composite
+            ? CompositeKeyLocaleEditorDelegate(
+                fields: ['locale', 'name'],
+                fieldLabels: ['语言', '名称'],
+                onLoad: (key) async {
+                  loads++;
+                  return [];
+                },
+                onSave: (key, changes) async {},
+              )
+            : DatabaseLocaleEditorDelegate(
+                fields: ['locale', 'name'],
+                fieldLabels: ['语言', '名称'],
+                onLoad: (entry) async {
+                  loads++;
+                  return [];
+                },
+                onSave: (entry, changes) async {},
+              );
+        await tester.pumpWidget(
+          _wrap(
+            FoxyLocalePicker(
+              entry: composite ? null : 1,
+              ownerKey: composite ? (1, 2) : null,
+              controller: controller,
+              title: '名称',
+              delegate: delegate,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.byIcon(LucideIcons.globe), findsNothing);
-      expect(tester.widget<ShadInput>(find.byType(ShadInput)).trailing, isNull);
-      await tester.enterText(find.byType(ShadInput), '未保存的输入');
+        expect(find.byIcon(LucideIcons.globe), findsNothing);
+        expect(
+          tester.widget<ShadInput>(find.byType(ShadInput)).trailing,
+          isNull,
+        );
+        await tester.enterText(find.byType(ShadInput), '未保存的输入');
 
-      stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: true);
-      await tester.pumpAndSettle();
-      expect(find.byIcon(LucideIcons.globe), findsOneWidget);
-      expect(
-        tester.widget<ShadButton>(find.byType(ShadButton)).enabled,
-        isTrue,
-      );
-      expect(controller.collect(), '未保存的输入');
+        stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: true);
+        await tester.pumpAndSettle();
+        expect(find.byIcon(LucideIcons.globe), findsOneWidget);
+        expect(
+          tester.widget<ShadButton>(find.byType(ShadButton)).enabled,
+          isTrue,
+        );
+        expect(controller.collect(), '未保存的输入');
 
-      stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: false);
-      await tester.pumpAndSettle();
-      expect(find.byIcon(LucideIcons.globe), findsNothing);
-      expect(controller.collect(), '未保存的输入');
-      expect(loads, 0);
-    });
+        stateVm.setLocaleSettings(hasLocaleTables: true, localeEnabled: false);
+        await tester.pumpAndSettle();
+        expect(find.byIcon(LucideIcons.globe), findsNothing);
+        expect(controller.collect(), '未保存的输入');
+        expect(loads, 0);
+      },
+    );
   }
 
-  testWidgets('普通数据库 Delegate 打开动态行编辑器', (tester) async {
+  testWidgets('The standard database delegate opens a dynamic row editor', (
+    tester,
+  ) async {
     final delegate = DatabaseLocaleEditorDelegate(
       fields: ['locale', 'name'],
       fieldLabels: ['语言', '名称'],
@@ -131,116 +137,127 @@ void main() {
     );
   });
 
-  testWidgets('普通数据库编辑行修改 locale 后保留原始身份', (tester) async {
-    DatabaseLocaleChanges? saved;
-    final delegate = DatabaseLocaleEditorDelegate(
-      fields: ['locale', 'name'],
-      fieldLabels: ['语言', '名称'],
-      onLoad: (entry) async => [
-        DatabaseLocaleRow.persisted({'locale': 'zhCN', 'name': '测试'}),
-      ],
-      onSave: (entry, changes) async => saved = changes,
-    );
+  testWidgets(
+    'Changing a database row locale preserves its original identity',
+    (tester) async {
+      DatabaseLocaleChanges? saved;
+      final delegate = DatabaseLocaleEditorDelegate(
+        fields: ['locale', 'name'],
+        fieldLabels: ['语言', '名称'],
+        onLoad: (entry) async => [
+          DatabaseLocaleRow.persisted({'locale': 'zhCN', 'name': '测试'}),
+        ],
+        onSave: (entry, changes) async => saved = changes,
+      );
 
-    await tester.pumpWidget(
-      _wrap(
-        FoxyLocalePicker(
-          entry: 1,
-          controller: StringFieldController()..init('测试'),
-          title: '名称',
-          delegate: delegate,
+      await tester.pumpWidget(
+        _wrap(
+          FoxyLocalePicker(
+            entry: 1,
+            controller: StringFieldController()..init('测试'),
+            title: '名称',
+            delegate: delegate,
+          ),
         ),
-      ),
-    );
-    await tester.tap(find.byIcon(LucideIcons.globe));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.widgetWithText(ShadInput, 'zhCN'), 'deDE');
-    await tester.tap(find.widgetWithText(ShadButton, '保存'));
-    await tester.pumpAndSettle();
+      );
+      await tester.tap(find.byIcon(LucideIcons.globe));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(ShadInput, 'zhCN'), 'deDE');
+      await tester.tap(find.widgetWithText(ShadButton, '保存'));
+      await tester.pumpAndSettle();
 
-    expect(saved, isNotNull);
-    expect(saved!.rows.single.originalLocale, 'zhCN');
-    expect(saved!.rows.single.values['locale'], 'deDE');
-    expect(saved!.deletedLocales, isEmpty);
-  });
+      expect(saved, isNotNull);
+      expect(saved!.rows.single.originalLocale, 'zhCN');
+      expect(saved!.rows.single.values['locale'], 'deDE');
+      expect(saved!.deletedLocales, isEmpty);
+    },
+  );
 
-  testWidgets('普通数据库编辑器显式报告被删除行的原始 locale', (tester) async {
-    DatabaseLocaleChanges? saved;
-    final delegate = DatabaseLocaleEditorDelegate(
-      fields: ['locale', 'name'],
-      fieldLabels: ['语言', '名称'],
-      onLoad: (entry) async => [
-        DatabaseLocaleRow.persisted({'locale': 'zhCN', 'name': '测试'}),
-      ],
-      onSave: (entry, changes) async => saved = changes,
-    );
+  testWidgets(
+    'The standard database editor reports the original locale of a deleted row',
+    (tester) async {
+      DatabaseLocaleChanges? saved;
+      final delegate = DatabaseLocaleEditorDelegate(
+        fields: ['locale', 'name'],
+        fieldLabels: ['语言', '名称'],
+        onLoad: (entry) async => [
+          DatabaseLocaleRow.persisted({'locale': 'zhCN', 'name': '测试'}),
+        ],
+        onSave: (entry, changes) async => saved = changes,
+      );
 
-    await tester.pumpWidget(
-      _wrap(
-        FoxyLocalePicker(
-          entry: 1,
-          controller: StringFieldController()..init('测试'),
-          title: '名称',
-          delegate: delegate,
+      await tester.pumpWidget(
+        _wrap(
+          FoxyLocalePicker(
+            entry: 1,
+            controller: StringFieldController()..init('测试'),
+            title: '名称',
+            delegate: delegate,
+          ),
         ),
-      ),
-    );
-    await tester.tap(find.byIcon(LucideIcons.globe));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(LucideIcons.trash));
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(ShadButton, '保存'));
-    await tester.pumpAndSettle();
+      );
+      await tester.tap(find.byIcon(LucideIcons.globe));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(LucideIcons.trash));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(ShadButton, '保存'));
+      await tester.pumpAndSettle();
 
-    expect(saved, isNotNull);
-    expect(saved!.rows, isEmpty);
-    expect(saved!.deletedLocales, ['zhCN']);
-  });
+      expect(saved, isNotNull);
+      expect(saved!.rows, isEmpty);
+      expect(saved!.deletedLocales, ['zhCN']);
+    },
+  );
 
-  testWidgets('关闭 locale JOIN 时 DBC 仍打开固定行编辑器且无添加删除', (tester) async {
-    stateVm.setLocaleSettings(hasLocaleTables: false, localeEnabled: false);
-    final field = DbcLocaleFields.areaTableAreaName;
-    final initial = DbcLocaleFieldCodec.empty();
-    initial[4] = initial[4].copyWith(value: '艾尔文森林');
+  testWidgets(
+    'Disabling the locale join still opens the fixed-row DBC editor without add or delete controls',
+    (tester) async {
+      stateVm.setLocaleSettings(hasLocaleTables: false, localeEnabled: false);
+      final field = DbcLocaleFields.areaTableAreaName;
+      final initial = DbcLocaleFieldCodec.empty();
+      initial[4] = initial[4].copyWith(value: '艾尔文森林');
 
-    final delegate = DbcLocaleFieldEditorDelegate(
-      field: field,
-      onLoad: (entry) async => initial,
-      onSave: (entry, values) async {},
-    );
+      final delegate = DbcLocaleFieldEditorDelegate(
+        field: field,
+        onLoad: (entry) async => initial,
+        onSave: (entry, values) async {},
+      );
 
-    // The fixed 16-row editor must be fully visible; enlarge the viewport
-    // so 0.8×screen height fits all rows
-    tester.view.physicalSize = const Size(1200, 1100);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+      // The fixed 16-row editor must be fully visible; enlarge the viewport
+      // so 0.8×screen height fits all rows
+      tester.view.physicalSize = const Size(1200, 1100);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(
-      _wrap(
-        FoxyLocalePicker(
-          entry: 12,
-          controller: StringFieldController()..init('艾尔文森林'),
-          title: '区域名称本地化',
-          delegate: delegate,
+      await tester.pumpWidget(
+        _wrap(
+          FoxyLocalePicker(
+            entry: 12,
+            controller: StringFieldController()..init('艾尔文森林'),
+            title: '区域名称本地化',
+            delegate: delegate,
+          ),
         ),
-      ),
-    );
+      );
 
-    await tester.tap(find.byIcon(LucideIcons.globe));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(LucideIcons.globe));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(DbcLocaleFieldEditor), findsOneWidget);
-    expect(find.text('添加'), findsNothing);
-    expect(find.byIcon(LucideIcons.trash), findsNothing);
-    expect(find.text('语言编号'), findsOneWidget);
-    expect(find.text('区域名称'), findsOneWidget);
+      expect(find.byType(DbcLocaleFieldEditor), findsOneWidget);
+      expect(find.text('添加'), findsNothing);
+      expect(find.byIcon(LucideIcons.trash), findsNothing);
+      expect(find.text('语言编号'), findsOneWidget);
+      expect(find.text('区域名称'), findsOneWidget);
 
-    for (final locale in DbcLocale.values) {
-      expect(find.text(locale.code), findsOneWidget);
-    }
-  });
+      for (final locale in DbcLocale.values) {
+        expect(find.text(locale.code), findsOneWidget);
+      }
+    },
+  );
 
-  testWidgets('新记录尚无 ID 时地球按钮不可用', (tester) async {
+  testWidgets('The locale button is disabled for a new record without an ID', (
+    tester,
+  ) async {
     final delegate = DbcLocaleFieldEditorDelegate(
       field: DbcLocaleFields.spellName,
       onLoad: (entry) async => DbcLocaleFieldCodec.empty(),
@@ -266,7 +283,7 @@ void main() {
     expect(find.byType(DbcLocaleFieldEditor), findsNothing);
   });
 
-  testWidgets('保存 zhCN 后 onSaved 同步回调', (tester) async {
+  testWidgets('Saving zhCN invokes onSaved synchronously', (tester) async {
     List<DbcLocaleFieldValue>? saved;
     final field = DbcLocaleFields.spellName;
     final initial = DbcLocaleFieldCodec.empty();
@@ -311,36 +328,41 @@ void main() {
     expect(saved!.zhCN, '寒冰箭');
   });
 
-  testWidgets('加载失败时显示一次错误并停留在原页面', (tester) async {
-    final delegate = DbcLocaleFieldEditorDelegate(
-      field: DbcLocaleFields.spellName,
-      onLoad: (entry) async => throw StateError('DBC record not found'),
-      onSave: (entry, values) async {},
-    );
+  testWidgets(
+    'A load failure shows one error and leaves the original page open',
+    (tester) async {
+      final delegate = DbcLocaleFieldEditorDelegate(
+        field: DbcLocaleFields.spellName,
+        onLoad: (entry) async => throw StateError('DBC record not found'),
+        onSave: (entry, values) async {},
+      );
 
-    await tester.pumpWidget(
-      _wrap(
-        FoxyLocalePicker(
-          entry: 1,
-          controller: StringFieldController(),
-          title: '法术名称本地化',
-          delegate: delegate,
+      await tester.pumpWidget(
+        _wrap(
+          FoxyLocalePicker(
+            entry: 1,
+            controller: StringFieldController(),
+            title: '法术名称本地化',
+            delegate: delegate,
+          ),
         ),
-      ),
-    );
+      );
 
-    await tester.tap(find.byIcon(LucideIcons.globe));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(LucideIcons.globe));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(DbcLocaleFieldEditor), findsNothing);
-    expect(find.text('错误'), findsOneWidget);
-    expect(find.textContaining('加载失败'), findsOneWidget);
-    await tester.tap(find.text('确定'));
-    await tester.pumpAndSettle();
-    expect(find.text('错误'), findsNothing);
-  });
+      expect(find.byType(DbcLocaleFieldEditor), findsNothing);
+      expect(find.text('错误'), findsOneWidget);
+      expect(find.textContaining('加载失败'), findsOneWidget);
+      await tester.tap(find.text('确定'));
+      await tester.pumpAndSettle();
+      expect(find.text('错误'), findsNothing);
+    },
+  );
 
-  testWidgets('保存失败时保留弹窗并显示错误', (tester) async {
+  testWidgets('A save failure keeps the dialog open and displays an error', (
+    tester,
+  ) async {
     final delegate = DbcLocaleFieldEditorDelegate(
       field: DbcLocaleFields.spellName,
       onLoad: (entry) async => DbcLocaleFieldCodec.empty(),
@@ -375,73 +397,76 @@ void main() {
     expect(find.textContaining('保存失败'), findsNothing);
   });
 
-  testWidgets('主输入框未保存草稿在打开弹窗时合并进 zhCN', (tester) async {
-    List<DbcLocaleFieldValue>? persisted;
-    final field = DbcLocaleFields.spellName;
+  testWidgets(
+    'Opening the locale dialog merges the unsaved primary input draft into zhCN',
+    (tester) async {
+      List<DbcLocaleFieldValue>? persisted;
+      final field = DbcLocaleFields.spellName;
 
-    // Old value in the database
-    final fromDb = [
-      for (final locale in DbcLocale.values)
-        DbcLocaleFieldValue(
-          locale: locale,
-          value: locale.code == 'zhCN' ? '库中旧值' : 'en_slot_${locale.code}',
+      // Old value in the database
+      final fromDb = [
+        for (final locale in DbcLocale.values)
+          DbcLocaleFieldValue(
+            locale: locale,
+            value: locale.code == 'zhCN' ? '库中旧值' : 'en_slot_${locale.code}',
+          ),
+      ];
+
+      final delegate = DbcLocaleFieldEditorDelegate(
+        field: field,
+        onLoad: (entry) async => fromDb,
+        onSave: (entry, values) async {
+          persisted = values;
+        },
+      );
+
+      final controller = StringFieldController()..init('主框草稿');
+
+      // The fixed 16-row editor must be fully visible; enlarge the viewport
+      // so 0.8×screen height fits all rows
+      tester.view.physicalSize = const Size(1200, 1100);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        _wrap(
+          FoxyLocalePicker(
+            entry: 42,
+            controller: controller,
+            title: '法术名称本地化',
+            delegate: delegate,
+            onSaved: (values) {
+              controller.init(values.zhCN);
+            },
+          ),
         ),
-    ];
+      );
 
-    final delegate = DbcLocaleFieldEditorDelegate(
-      field: field,
-      onLoad: (entry) async => fromDb,
-      onSave: (entry, values) async {
-        persisted = values;
-      },
-    );
+      await tester.tap(find.byIcon(LucideIcons.globe));
+      await tester.pumpAndSettle();
 
-    final controller = StringFieldController()..init('主框草稿');
+      // The dialog's zhCN row should show the main-box draft, not the old
+      // DB value
+      final inputs = find.descendant(
+        of: find.byType(DbcLocaleFieldEditor),
+        matching: find.byType(ShadInput),
+      );
+      expect(inputs, findsNWidgets(16));
+      final zhCnInput = tester.widget<ShadInput>(inputs.at(4));
+      expect(zhCnInput.controller?.text, '主框草稿');
 
-    // The fixed 16-row editor must be fully visible; enlarge the viewport
-    // so 0.8×screen height fits all rows
-    tester.view.physicalSize = const Size(1200, 1100);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+      // Change only enUS and save
+      await tester.enterText(inputs.at(0), 'Fireball');
+      await tester.tap(find.text('保存'));
+      await tester.pumpAndSettle();
 
-    await tester.pumpWidget(
-      _wrap(
-        FoxyLocalePicker(
-          entry: 42,
-          controller: controller,
-          title: '法术名称本地化',
-          delegate: delegate,
-          onSaved: (values) {
-            controller.init(values.zhCN);
-          },
-        ),
-      ),
-    );
-
-    await tester.tap(find.byIcon(LucideIcons.globe));
-    await tester.pumpAndSettle();
-
-    // The dialog's zhCN row should show the main-box draft, not the old
-    // DB value
-    final inputs = find.descendant(
-      of: find.byType(DbcLocaleFieldEditor),
-      matching: find.byType(ShadInput),
-    );
-    expect(inputs, findsNWidgets(16));
-    final zhCnInput = tester.widget<ShadInput>(inputs.at(4));
-    expect(zhCnInput.controller?.text, '主框草稿');
-
-    // Change only enUS and save
-    await tester.enterText(inputs.at(0), 'Fireball');
-    await tester.tap(find.text('保存'));
-    await tester.pumpAndSettle();
-
-    expect(persisted, isNotNull);
-    expect(persisted!.zhCN, '主框草稿');
-    expect(persisted!.valueOf('enUS'), 'Fireball');
-    // The main input keeps its draft, not overwritten by the old DB value
-    expect(controller.collect(), '主框草稿');
-  });
+      expect(persisted, isNotNull);
+      expect(persisted!.zhCN, '主框草稿');
+      expect(persisted!.valueOf('enUS'), 'Fireball');
+      // The main input keeps its draft, not overwritten by the old DB value
+      expect(controller.collect(), '主框草稿');
+    },
+  );
 }
 
 Widget _wrap(Widget child) {

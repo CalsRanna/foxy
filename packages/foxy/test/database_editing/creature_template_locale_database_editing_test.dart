@@ -1,19 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
 
+import 'row_key_expectations.dart';
+
 void main() {
-  test('Key 与 Brief 完整覆盖 entry + locale', () {
+  test('The key and brief entity both include entry and locale', () {
     const first = CreatureTemplateLocaleKey(entry: 41, locale: 'zhCN');
-    const same = CreatureTemplateLocaleKey(entry: 41, locale: 'zhCN');
-    expect(first, same);
-    expect(first.hashCode, same.hashCode);
-    expect(
+    expectKeyEquality(
       first,
-      isNot(const CreatureTemplateLocaleKey(entry: 42, locale: 'zhCN')),
-    );
-    expect(
-      first,
-      isNot(const CreatureTemplateLocaleKey(entry: 41, locale: 'deDE')),
+      sameKey: const CreatureTemplateLocaleKey(entry: 41, locale: 'zhCN'),
+      differentKeys: const [
+        CreatureTemplateLocaleKey(entry: 42, locale: 'zhCN'),
+        CreatureTemplateLocaleKey(entry: 41, locale: 'deDE'),
+      ],
     );
 
     final brief = BriefCreatureTemplateLocaleEntity.fromJson({

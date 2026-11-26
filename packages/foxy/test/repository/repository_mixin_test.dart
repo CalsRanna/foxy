@@ -4,48 +4,48 @@ import 'package:foxy/repository/repository_mixin.dart';
 void main() {
   final probe = _Probe();
 
-  group('prepareWriteJson 标识符白名单', () {
-    test('普通列名通过并加反引号', () {
+  group('prepareWriteJson identifier allowlist', () {
+    test('Valid column names are accepted and backtick-quoted', () {
       expect(probe.prepareWriteJson({'entry': 1}), {'`entry`': 1});
     });
 
-    test('含空白拒绝', () {
+    test('Identifiers containing whitespace are rejected', () {
       expect(() => probe.prepareWriteJson({'foo bar': 1}), throwsArgumentError);
     });
 
-    test('段中混入反引号拒绝', () {
+    test('Identifiers containing embedded backticks are rejected', () {
       expect(() => probe.prepareWriteJson({'a``b': 1}), throwsArgumentError);
     });
 
-    test('含分号拒绝', () {
+    test('Identifiers containing semicolons are rejected', () {
       expect(() => probe.prepareWriteJson({'a;drop': 1}), throwsArgumentError);
     });
 
-    test('含连字符拒绝', () {
+    test('Identifiers containing hyphens are rejected', () {
       expect(() => probe.prepareWriteJson({'a-b': 1}), throwsArgumentError);
     });
   });
 
-  group('nextMaxPlusOne 标识符白名单', () {
-    test('合法点分表名通过校验后到达数据库层', () {
+  group('nextMaxPlusOne identifier allowlist', () {
+    test('Valid dotted table names pass validation and reach the database', () {
       expect(
         () => probe.nextMaxPlusOne('foxy.dbc_item', 'ID'),
         throwsA(isA<DatabaseNotConnectedException>()),
       );
     });
 
-    test('反引号整段包裹的 where 键通过校验', () {
+    test('Fully backtick-quoted WHERE keys pass validation', () {
       expect(
         () => probe.nextMaxPlusOne('t', 'ID', where: {'`CreatureID`': 1}),
         throwsA(isA<DatabaseNotConnectedException>()),
       );
     });
 
-    test('非法表名被拒绝', () {
+    test('Invalid table names are rejected', () {
       expect(() => probe.nextMaxPlusOne('a;b', 'ID'), throwsArgumentError);
     });
 
-    test('非法 where 键被拒绝', () {
+    test('Invalid WHERE keys are rejected', () {
       expect(
         () => probe.nextMaxPlusOne('t', 'ID', where: {'a``b': 1}),
         throwsArgumentError,
@@ -54,19 +54,19 @@ void main() {
   });
 
   group('maxIdExpression', () {
-    test('普通列名被加反引号', () {
+    test('Regular column names are backtick-quoted', () {
       expect(probe.maxIdExpression('spell_id'), 'max(`spell_id`) as max_id');
     });
 
-    test('已加反引号的列名不会双重加引号', () {
+    test('Already quoted columns are not quoted again', () {
       expect(probe.maxIdExpression('`spell_id`'), 'max(`spell_id`) as max_id');
     });
 
-    test('保留字列名仍被引号保护', () {
+    test('Reserved column names are protected by quoting', () {
       expect(probe.maxIdExpression('rank'), 'max(`rank`) as max_id');
     });
 
-    test('非法列名仍被拒绝', () {
+    test('Invalid column names are rejected', () {
       expect(() => probe.maxIdExpression('a;b'), throwsArgumentError);
     });
   });

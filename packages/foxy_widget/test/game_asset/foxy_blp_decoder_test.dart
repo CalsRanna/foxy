@@ -8,9 +8,9 @@ import 'package:foxy_widget/src/game_asset/foxy_blp_decoder.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('合成 BLP2（确定性像素断言）', () {
+  group('Synthetic BLP2 pixel tests', () {
     // 64×64 = 16×16 blocks
-    test('DXT1 4 色模式：全部像素为 c0 色', () {
+    test('DXT1 four-color mode decodes all pixels to c0', () {
       final block = dxtColorBlock(
         255,
         0,
@@ -30,7 +30,7 @@ void main() {
       }
     });
 
-    test('DXT3：alpha 半字节展开为 0-255', () {
+    test('DXT3 expands alpha nibbles to values from 0 to 255', () {
       final color = dxtColorBlock(0, 255, 0, 0);
       final alpha = dxt3AlphaBlock(0x8); // 0x8 * 17 = 136
       final blp = buildBlp2(
@@ -45,7 +45,7 @@ void main() {
       }
     });
 
-    test('DXT5：a0=255 全取索引 0 → 不透明', () {
+    test('DXT5 with a0 equal to 255 and index zero produces opaque pixels', () {
       final color = dxtColorBlock(0, 0, 255, 0);
       final alpha = dxt5AlphaBlock(255, 0, 0);
       final blp = buildBlp2(
@@ -60,7 +60,7 @@ void main() {
       }
     });
 
-    test('DXT5：a0=0/a1=255 的 6/7 特例（透明/不透明）', () {
+    test('DXT5 handles transparent and opaque special indices when a0 is 0 and a1 is 255', () {
       final color = dxtColorBlock(255, 255, 255, 0);
       final alpha0 = dxt5AlphaBlock(
         0,
@@ -84,7 +84,7 @@ void main() {
       expect(FoxyBlpDecoder.decode(blp7).rgba[3], 255);
     });
 
-    test('损坏输入抛 FoxyBlpFormatException', () {
+    test('Corrupt input throws FoxyBlpFormatException', () {
       expect(
         () => FoxyBlpDecoder.decode(Uint8List.fromList('BLP1'.codeUnits)),
         throwsA(isA<FoxyBlpFormatException>()),
@@ -98,44 +98,47 @@ void main() {
     });
   });
 
-  group('真实客户端 fixture（与原始 PNG 对照）', () {
+  group('Game client fixtures compared with the original PNGs', () {
     for (final variant in ['dxt1', 'dxt3', 'dxt5']) {
-      test('$variant RGB 与对应 PNG 逐像素一致', () async {
-        final blpBytes = File('test/fixture/icons/foxy_fixture_$variant.blp')
-            .readAsBytesSync();
-        final image = FoxyBlpDecoder.decode(blpBytes);
-        expect(image.width, 64);
-        expect(image.height, 64);
+      test(
+        '$variant matches every RGB pixel in the corresponding PNG',
+        () async {
+          final blpBytes = File('test/fixture/icons/foxy_fixture_$variant.blp')
+              .readAsBytesSync();
+          final image = FoxyBlpDecoder.decode(blpBytes);
+          expect(image.width, 64);
+          expect(image.height, 64);
 
-        final pngBytes = File('test/fixture/icons/foxy_fixture_$variant.png')
-            .readAsBytesSync();
-        final codec = await ui.instantiateImageCodec(pngBytes);
-        final frame = await codec.getNextFrame();
-        final pngData = await frame.image.toByteData(
-          format: ui.ImageByteFormat.rawRgba,
-        );
-        final expected = pngData!.buffer.asUint8List();
+          final pngBytes = File('test/fixture/icons/foxy_fixture_$variant.png')
+              .readAsBytesSync();
+          final codec = await ui.instantiateImageCodec(pngBytes);
+          final frame = await codec.getNextFrame();
+          final pngData = await frame.image.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          );
+          final expected = pngData!.buffer.asUint8List();
 
-        expect(expected.length, image.rgba.length);
-        for (var i = 0; i < expected.length; i += 4) {
-          expect(image.rgba[i], expected[i], reason: 'R 像素 $i 不一致（$variant）');
-          expect(
-            image.rgba[i + 1],
-            expected[i + 1],
-            reason: 'G 像素 $i 不一致（$variant）',
-          );
-          expect(
-            image.rgba[i + 2],
-            expected[i + 2],
-            reason: 'B 像素 $i 不一致（$variant）',
-          );
-          // Old PNGs are fully opaque (alpha stripped by the original
-          // extraction tool); BLP keeps real alpha (transparent
-          // backgrounds). Only assert the value range here; exact alpha is
-          // covered by the compositing tests.
-          expect(image.rgba[i + 3], inInclusiveRange(0, 255));
-        }
-      });
+          expect(expected.length, image.rgba.length);
+          for (var i = 0; i < expected.length; i += 4) {
+            expect(image.rgba[i], expected[i], reason: 'R 像素 $i 不一致（$variant）');
+            expect(
+              image.rgba[i + 1],
+              expected[i + 1],
+              reason: 'G 像素 $i 不一致（$variant）',
+            );
+            expect(
+              image.rgba[i + 2],
+              expected[i + 2],
+              reason: 'B 像素 $i 不一致（$variant）',
+            );
+            // Old PNGs are fully opaque (alpha stripped by the original
+            // extraction tool); BLP keeps real alpha (transparent
+            // backgrounds). Only assert the value range here; exact alpha is
+            // covered by the compositing tests.
+            expect(image.rgba[i + 3], inInclusiveRange(0, 255));
+          }
+        },
+      );
     }
   });
 }

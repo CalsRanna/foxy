@@ -12,21 +12,36 @@ import 'package:foxy/use_case/activity_log/activity_log_service.dart';
 import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'recording_driver.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('ConditionKey', () {
-    test('完整覆盖十列主键并实现值相等', () {
+    test('All ten primary key columns participate in value equality', () {
       final entity = _condition();
       final key = ConditionKey.fromEntity(entity);
-      final same = ConditionKey.fromEntity(
-        entity.copyWith(comment: 'different'),
-      );
 
-      expect(key, same);
-      expect(key.hashCode, same.hashCode);
+      expectRowKeyEquality(
+        key,
+        ConditionKey.fromEntity,
+        sameKeyRow: entity.copyWith(comment: 'different'),
+        differentKeyRows: [
+          entity.copyWith(sourceGroup: 1),
+          entity.copyWith(sourceEntry: 2),
+          entity.copyWith(sourceId: 1),
+          entity.copyWith(elseGroup: 1),
+          entity.copyWith(conditionTypeOrReference: 3),
+          entity.copyWith(conditionTarget: 1),
+          entity.copyWith(conditionValue1: 2),
+          entity.copyWith(conditionValue2: 2),
+          entity.copyWith(conditionValue3: 2),
+          entity.copyWith(sourceTypeOrReferenceId: 18),
+        ],
+      );
       expect(key.sourceTypeOrReferenceId, entity.sourceTypeOrReferenceId);
       expect(key.sourceGroup, entity.sourceGroup);
       expect(key.sourceEntry, entity.sourceEntry);
@@ -37,51 +52,9 @@ void main() {
       expect(key.conditionValue1, entity.conditionValue1);
       expect(key.conditionValue2, entity.conditionValue2);
       expect(key.conditionValue3, entity.conditionValue3);
-
-      expect(
-        key,
-        isNot(ConditionKey.fromEntity(entity.copyWith(sourceGroup: 1))),
-      );
-      expect(
-        key,
-        isNot(ConditionKey.fromEntity(entity.copyWith(sourceEntry: 2))),
-      );
-      expect(key, isNot(ConditionKey.fromEntity(entity.copyWith(sourceId: 1))));
-      expect(
-        key,
-        isNot(ConditionKey.fromEntity(entity.copyWith(elseGroup: 1))),
-      );
-      expect(
-        key,
-        isNot(
-          ConditionKey.fromEntity(entity.copyWith(conditionTypeOrReference: 3)),
-        ),
-      );
-      expect(
-        key,
-        isNot(ConditionKey.fromEntity(entity.copyWith(conditionTarget: 1))),
-      );
-      expect(
-        key,
-        isNot(ConditionKey.fromEntity(entity.copyWith(conditionValue1: 2))),
-      );
-      expect(
-        key,
-        isNot(ConditionKey.fromEntity(entity.copyWith(conditionValue2: 2))),
-      );
-      expect(
-        key,
-        isNot(ConditionKey.fromEntity(entity.copyWith(conditionValue3: 2))),
-      );
-      expect(
-        key,
-        isNot(
-          ConditionKey.fromEntity(entity.copyWith(sourceTypeOrReferenceId: 18)),
-        ),
-      );
     });
 
-    test('Brief Entity 提供完整强类型 key', () {
+    test('The brief entity exposes the complete typed key', () {
       const brief = BriefConditionEntity(
         sourceTypeOrReferenceId: 17,
         sourceGroup: 2,
@@ -114,25 +87,22 @@ void main() {
   });
 
   group('ConditionRepository write contract', () {
-    test('UPDATE 使用完整旧 key 定位并写入 candidate 全部十五列', () async {
-      final driver = _RecordingDriver(affectedRows: 1);
-      final queries = <LaconicQuery>[];
-      final repository = _TestConditionRepository(
-        Laconic(driver, listen: queries.add),
-      );
-      final original = ConditionKey.fromEntity(_condition());
-      final candidate = _condition(
-        sourceTypeOrReferenceId: 18,
-        sourceEntry: 20,
-        elseGroup: 3,
-        comment: 'changed',
-      );
+    final original = ConditionKey.fromEntity(_condition());
+    final candidate = _condition(
+      sourceTypeOrReferenceId: 18,
+      sourceEntry: 20,
+      elseGroup: 3,
+      comment: 'changed',
+    );
 
-      await repository.updateCondition(original, candidate);
-
-      expect(queries, hasLength(1));
-      expect(queries.single.sql.toLowerCase(), startsWith('update'));
-      expect(queries.single.bindings, [
+    testRepositoryWrites(
+      createRepository: _TestConditionRepository.new,
+      originalKey: original,
+      candidate: candidate,
+      missingCandidate: _condition(),
+      update: (repository, key, row) => repository.updateCondition(key, row),
+      destroy: (repository, key) => repository.destroyCondition(key),
+      expectedBindings: [
         ...candidate.toJson().values,
         original.sourceTypeOrReferenceId,
         original.sourceGroup,
@@ -144,33 +114,17 @@ void main() {
         original.conditionValue1,
         original.conditionValue2,
         original.conditionValue3,
-      ]);
-    });
+      ],
+    );
 
-    test('UPDATE 与 DELETE 零行结果报告旧记录不存在', () async {
-      final repository = _TestConditionRepository(
-        Laconic(_RecordingDriver(affectedRows: 0)),
-      );
-      final key = ConditionKey.fromEntity(_condition());
-
-      await expectLater(
-        repository.updateCondition(key, _condition()),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        repository.destroyCondition(key),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-    });
-
-    test('重复键按 MySQL 错误码转换且其他错误继续传播', () async {
+    test('Duplicate keys are translated by MySQL error code and other errors propagate', () async {
       final duplicate = LaconicException(
         'MysqlServerException [1062]: duplicate',
         driver: 'mysql',
         code: '1062',
       );
       final repository = _TestConditionRepository(
-        Laconic(_RecordingDriver(error: duplicate)),
+        Laconic(RecordingDriver(error: duplicate)),
       );
       final key = ConditionKey.fromEntity(_condition());
 
@@ -211,8 +165,8 @@ void main() {
       );
     });
 
-    test('affectingStatement 保留参数绑定并通知 query listener', () async {
-      final driver = _RecordingDriver(affectedRows: 1);
+    test('affectingStatement preserves parameter bindings and notifies the query listener', () async {
+      final driver = RecordingDriver();
       final queries = <LaconicQuery>[];
       final laconic = Laconic(driver, listen: queries.add);
 
@@ -254,30 +208,33 @@ void main() {
       await GetIt.instance.reset();
     });
 
-    test('主键变化成功后切换 key，连续保存使用新 key', () async {
-      final original = ConditionKey.fromEntity(_condition());
-      final viewModel = ConditionDetailViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(key: original);
-      final changed = _condition(
-        sourceTypeOrReferenceId: 18,
-        sourceEntry: 20,
-        comment: 'changed',
-      );
-      _initControllers(viewModel, changed);
+    test(
+      'A successful primary key change makes subsequent saves use the new key',
+      () async {
+        final original = ConditionKey.fromEntity(_condition());
+        final viewModel = ConditionDetailViewModel();
+        addTearDown(viewModel.dispose);
+        await viewModel.initSignals(key: original);
+        final changed = _condition(
+          sourceTypeOrReferenceId: 18,
+          sourceEntry: 20,
+          comment: 'changed',
+        );
+        _initControllers(viewModel, changed);
 
-      await viewModel.persist();
+        await viewModel.persist();
 
-      final changedKey = ConditionKey.fromEntity(changed);
-      expect(repository.updateKeys, [original]);
-      expect(viewModel.persistedKey.value, changedKey);
-      viewModel.commentController.init('second save');
-      await viewModel.persist();
-      expect(repository.updateKeys, [original, changedKey]);
-      expect(activityLogs.logs, hasLength(2));
-    });
+        final changedKey = ConditionKey.fromEntity(changed);
+        expect(repository.updateKeys, [original]);
+        expect(viewModel.persistedKey.value, changedKey);
+        viewModel.commentController.init('second save');
+        await viewModel.persist();
+        expect(repository.updateKeys, [original, changedKey]);
+        expect(activityLogs.logs, hasLength(2));
+      },
+    );
 
-    test('保存失败保留旧 key，修正后仍用旧 key 重试', () async {
+    test('A failed save retains the old key for retry', () async {
       final original = ConditionKey.fromEntity(_condition());
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
@@ -303,7 +260,7 @@ void main() {
       );
     });
 
-    test('新建首次保存从 null 切换为 candidate key', () async {
+    test('The first save of a new record replaces the null key with the candidate key', () async {
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.initSignals();
@@ -317,7 +274,7 @@ void main() {
     });
   });
 
-  group('ConditionDetailViewModel 引用模式 encode/decode', () {
+  group('ConditionDetailViewModel reference mode encoding and decoding', () {
     late _FakeConditionRepository repository;
     late _RecordingActivityLogRepository activityLogs;
 
@@ -335,7 +292,7 @@ void main() {
       await GetIt.instance.reset();
     });
 
-    test('普通类型无损加载与保存', () async {
+    test('Regular conditions load and save without losing data', () async {
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.initSignals(key: ConditionKey.fromEntity(_condition()));
@@ -350,7 +307,7 @@ void main() {
       expect(repository.stored!.conditionTypeOrReference, 2);
     });
 
-    test('来源引用 -7 无损加载、编辑、保存', () async {
+    test('Source reference -7 survives loading, editing, and saving', () async {
       final reference = _condition(sourceTypeOrReferenceId: -7);
       repository.stored = reference;
       final viewModel = ConditionDetailViewModel();
@@ -366,23 +323,26 @@ void main() {
       expect(repository.stored!.sourceTypeOrReferenceId, -13);
     });
 
-    test('条件引用 -5 无损加载、编辑、保存', () async {
-      final reference = _condition(conditionTypeOrReference: -5);
-      repository.stored = reference;
-      final viewModel = ConditionDetailViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(key: ConditionKey.fromEntity(reference));
+    test(
+      'Condition reference -5 survives loading, editing, and saving',
+      () async {
+        final reference = _condition(conditionTypeOrReference: -5);
+        repository.stored = reference;
+        final viewModel = ConditionDetailViewModel();
+        addTearDown(viewModel.dispose);
+        await viewModel.initSignals(key: ConditionKey.fromEntity(reference));
 
-      expect(viewModel.selectedConditionMode.value, 1);
-      expect(viewModel.conditionReferenceIdController.collect(), 5);
-      expect(viewModel.selectedConditionType.value, 0);
+        expect(viewModel.selectedConditionMode.value, 1);
+        expect(viewModel.conditionReferenceIdController.collect(), 5);
+        expect(viewModel.selectedConditionType.value, 0);
 
-      viewModel.conditionReferenceIdController.init(9);
-      await viewModel.persist();
-      expect(repository.stored!.conditionTypeOrReference, -9);
-    });
+        viewModel.conditionReferenceIdController.init(9);
+        await viewModel.persist();
+        expect(repository.stored!.conditionTypeOrReference, -9);
+      },
+    );
 
-    test('int32 边界附近的引用 ID 可往返', () async {
+    test('Reference IDs near the int32 boundary round trip', () async {
       repository.stored = _condition(sourceTypeOrReferenceId: -1);
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
@@ -396,7 +356,7 @@ void main() {
       expect(repository.stored!.sourceTypeOrReferenceId, -0x7FFFFFFF);
     });
 
-    test('引用模式投影未使用列为 0，切回普通模式保留 controller 草稿', () async {
+    test('Reference mode projects unused columns as zero and preserves controller drafts when switching back', () async {
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.initSignals();
@@ -430,32 +390,35 @@ void main() {
       expect(viewModel.sourceIdController.collect(), 1);
     });
 
-    test('条件引用模式投影 Value 与目标为 0', () async {
-      final viewModel = ConditionDetailViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals();
-      _initControllers(viewModel, _condition());
-      // Switch to condition-reference mode
-      viewModel.conditionModeController.init(1);
-      viewModel.conditionReferenceIdController.init(5);
-      viewModel.conditionValue1Controller.init(3);
-      viewModel.conditionValue2Controller.init(4);
-      viewModel.conditionValue3Controller.init(5);
-      viewModel.conditionTargetController.init(1);
-      viewModel.negativeConditionController.init(1);
+    test(
+      'Condition reference mode projects value and target fields as zero',
+      () async {
+        final viewModel = ConditionDetailViewModel();
+        addTearDown(viewModel.dispose);
+        await viewModel.initSignals();
+        _initControllers(viewModel, _condition());
+        // Switch to condition-reference mode
+        viewModel.conditionModeController.init(1);
+        viewModel.conditionReferenceIdController.init(5);
+        viewModel.conditionValue1Controller.init(3);
+        viewModel.conditionValue2Controller.init(4);
+        viewModel.conditionValue3Controller.init(5);
+        viewModel.conditionTargetController.init(1);
+        viewModel.negativeConditionController.init(1);
 
-      await viewModel.persist();
+        await viewModel.persist();
 
-      final stored = repository.stored!;
-      expect(stored.conditionTypeOrReference, -5);
-      expect(stored.conditionValue1, 0);
-      expect(stored.conditionValue2, 0);
-      expect(stored.conditionValue3, 0);
-      expect(stored.conditionTarget, 0);
-      expect(stored.negativeCondition, 0);
-    });
+        final stored = repository.stored!;
+        expect(stored.conditionTypeOrReference, -5);
+        expect(stored.conditionValue1, 0);
+        expect(stored.conditionValue2, 0);
+        expect(stored.conditionValue3, 0);
+        expect(stored.conditionTarget, 0);
+        expect(stored.negativeCondition, 0);
+      },
+    );
 
-    test('引用 ID 为 0 时保存报错', () async {
+    test('Saving with reference ID zero throws an error', () async {
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.initSignals();
@@ -466,7 +429,7 @@ void main() {
       expect(repository.stored!.sourceTypeOrReferenceId, isNot(-0));
     });
 
-    test('Value1 裸负号输入不抛未捕获异常，修复后保存成功', () async {
+    test('A lone minus sign in Value1 causes no uncaught exception and saving succeeds after correction', () async {
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.initSignals();
@@ -573,51 +536,6 @@ class _RecordingActivityLogRepository extends ActivityLogRepository {
   void storeActivityLogBestEffort(ActivityLogEntity log) {
     logs.add(log);
   }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-
-  final int affectedRows;
-  final Object? error;
-
-  _RecordingDriver({this.affectedRows = 1, this.error});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    if (error case final error?) throw error;
-    return affectedRows;
-  }
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async {
-    if (error case final error?) throw error;
-    return 1;
-  }
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {
-    if (error case final error?) throw error;
-  }
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
 class _TestConditionRepository extends ConditionRepository {

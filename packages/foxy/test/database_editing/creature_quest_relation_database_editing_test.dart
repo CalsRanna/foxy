@@ -1,37 +1,43 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:foxy/view_model/creature_quest_ender_linked_list_view_model.dart';
 import 'package:foxy/view_model/creature_quest_starter_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('生物任务开始/结束 Key 与 Brief 覆盖 id + quest', () {
+  test('Creature quest starter and ender keys and brief entities include id and quest', () {
     const starter = CreatureQuestStarterEntity(id: 10, quest: 20);
     const ender = CreatureQuestEnderEntity(id: 10, quest: 20);
     final starterKey = CreatureQuestStarterKey.fromEntity(starter);
     final enderKey = CreatureQuestEnderKey.fromEntity(ender);
 
-    expect(starterKey, CreatureQuestStarterKey.fromEntity(starter.copyWith()));
-    expect(
+    expectRowKeyEquality(
       starterKey,
-      isNot(CreatureQuestStarterKey.fromEntity(starter.copyWith(quest: 21))),
+      CreatureQuestStarterKey.fromEntity,
+      sameKeyRow: starter.copyWith(),
+      differentKeyRows: [starter.copyWith(id: 11), starter.copyWith(quest: 21)],
     );
     expect(
       const BriefCreatureQuestStarterEntity(id: 10, quest: 20).key,
       starterKey,
     );
-    expect(enderKey, CreatureQuestEnderKey.fromEntity(ender.copyWith()));
-    expect(
+
+    expectRowKeyEquality(
       enderKey,
-      isNot(CreatureQuestEnderKey.fromEntity(ender.copyWith(id: 11))),
+      CreatureQuestEnderKey.fromEntity,
+      sameKeyRow: ender.copyWith(),
+      differentKeyRows: [ender.copyWith(id: 11), ender.copyWith(quest: 21)],
     );
     expect(
       const BriefCreatureQuestEnderEntity(id: 10, quest: 20).key,
@@ -39,133 +45,109 @@ void main() {
     );
   });
 
-  test('两张表 UPDATE 使用旧 key 并写入完整 candidate', () async {
-    final starterQueries = <LaconicQuery>[];
-    final starterRepository = _TestStarterRepository(
-      Laconic(_RecordingDriver(), listen: starterQueries.add),
+  group('CreatureQuestStarterRepository write contract', () {
+    testRepositoryWrites(
+      createRepository: _TestStarterRepository.new,
+      originalKey: const CreatureQuestStarterKey(id: 10, quest: 20),
+      candidate: const CreatureQuestStarterEntity(id: 11, quest: 21),
+      missingCandidate: const CreatureQuestStarterEntity(),
+      update: (repository, key, row) =>
+          repository.updateCreatureQuestStarter(key, row),
+      destroy: (repository, key) => repository.destroyCreatureQuestStarter(key),
+      expectedBindings: [11, 21, 10, 20],
     );
-    await starterRepository.updateCreatureQuestStarter(
-      const CreatureQuestStarterKey(id: 10, quest: 20),
-      const CreatureQuestStarterEntity(id: 11, quest: 21),
-    );
-    expect(starterQueries.single.bindings, [11, 21, 10, 20]);
 
-    final enderQueries = <LaconicQuery>[];
-    final enderRepository = _TestEnderRepository(
-      Laconic(_RecordingDriver(), listen: enderQueries.add),
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestStarterRepository(laconic)
+              .getBriefCreatureQuestStarters(20, page: 2),
+      tableAlias: 'cqs',
     );
-    await enderRepository.updateCreatureQuestEnder(
-      const CreatureQuestEnderKey(id: 30, quest: 40),
-      const CreatureQuestEnderEntity(id: 31, quest: 41),
-    );
-    expect(enderQueries.single.bindings, [31, 41, 30, 40]);
   });
 
-  test('两张表零行写入报错，Brief 查询稳定分页', () async {
-    final starterMissing = _TestStarterRepository(
-      Laconic(_RecordingDriver(affectedRows: 0)),
-    );
-    const starterKey = CreatureQuestStarterKey(id: 10, quest: 20);
-    await expectLater(
-      starterMissing.updateCreatureQuestStarter(
-        starterKey,
-        const CreatureQuestStarterEntity(),
-      ),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      starterMissing.destroyCreatureQuestStarter(starterKey),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-
-    final enderMissing = _TestEnderRepository(
-      Laconic(_RecordingDriver(affectedRows: 0)),
-    );
-    const enderKey = CreatureQuestEnderKey(id: 10, quest: 20);
-    await expectLater(
-      enderMissing.updateCreatureQuestEnder(
-        enderKey,
-        const CreatureQuestEnderEntity(),
-      ),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      enderMissing.destroyCreatureQuestEnder(enderKey),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-
-    final queries = <LaconicQuery>[];
-    final repository = _TestStarterRepository(
-      Laconic(_RecordingDriver(), listen: queries.add),
-    );
-    await repository.getBriefCreatureQuestStarters(20, page: 2);
-    expect(queries.single.sql.toLowerCase(), contains('order by'));
-    expect(
-      queries.single.bindings.sublist(queries.single.bindings.length - 2),
-      [50, 50],
+  group('CreatureQuestEnderRepository write contract', () {
+    testRepositoryWrites(
+      createRepository: _TestEnderRepository.new,
+      originalKey: const CreatureQuestEnderKey(id: 30, quest: 40),
+      candidate: const CreatureQuestEnderEntity(id: 31, quest: 41),
+      missingCandidate: const CreatureQuestEnderEntity(),
+      update: (repository, key, row) =>
+          repository.updateCreatureQuestEnder(key, row),
+      destroy: (repository, key) => repository.destroyCreatureQuestEnder(key),
+      expectedBindings: [31, 41, 30, 40],
     );
   });
 
   group('inline editing identity', () {
     tearDown(() async => GetIt.instance.reset());
 
-    test('开始关系更新失败保留旧 key 并可重试', () async {
-      final repository = _FakeStarterRepository([
-        const CreatureQuestStarterEntity(id: 10, quest: 20),
-      ]);
-      GetIt.instance.registerSingleton<CreatureQuestStarterRepository>(
-        repository,
-      );
-      final viewModel = CreatureQuestStarterLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 20);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-      const oldKey = CreatureQuestStarterKey(id: 10, quest: 20);
-      viewModel.idController.init(11);
-      viewModel.questController.init(21);
-      repository.failUpdates = true;
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [oldKey, oldKey]);
-      expect(repository.rows.single.toJson(), {'id': 11, 'quest': 21});
-      expect(viewModel.editingKey.value, isNull);
-    });
+    test(
+      'A failed quest starter update preserves the old key for retry',
+      () async {
+        final repository = _FakeStarterRepository([
+          const CreatureQuestStarterEntity(id: 10, quest: 20),
+        ]);
+        GetIt.instance.registerSingleton<CreatureQuestStarterRepository>(
+          repository,
+        );
+        final viewModel = CreatureQuestStarterLinkedListViewModel();
+        addTearDown(viewModel.dispose);
+        await viewModel.initSignals(linkKey: 20);
+        viewModel.selectedKey.value = viewModel.items.value[0].key;
+        await viewModel.edit(viewModel.selectedKey.value!);
+        const oldKey = CreatureQuestStarterKey(id: 10, quest: 20);
+        viewModel.idController.init(11);
+        viewModel.questController.init(21);
+        await expectSaveRetry(
+          repository: repository,
+          originalKey: oldKey,
+          editingKey: viewModel.editingKey,
+          persist: viewModel.persist,
+        );
+        expect(repository.rows.single.toJson(), {'id': 11, 'quest': 21});
+        expect(viewModel.editingKey.value, isNull);
+      },
+    );
 
-    test('结束关系更新失败保留旧 key 并可重试', () async {
-      final repository = _FakeEnderRepository([
-        const CreatureQuestEnderEntity(id: 10, quest: 20),
-      ]);
-      GetIt.instance.registerSingleton<CreatureQuestEnderRepository>(
-        repository,
-      );
-      final viewModel = CreatureQuestEnderLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 20);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-      const oldKey = CreatureQuestEnderKey(id: 10, quest: 20);
-      viewModel.idController.init(11);
-      viewModel.questController.init(21);
-      repository.failUpdates = true;
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [oldKey, oldKey]);
-      expect(repository.rows.single.toJson(), {'id': 11, 'quest': 21});
-      expect(viewModel.editingKey.value, isNull);
-    });
+    test(
+      'A failed quest ender update preserves the old key for retry',
+      () async {
+        final repository = _FakeEnderRepository([
+          const CreatureQuestEnderEntity(id: 10, quest: 20),
+        ]);
+        GetIt.instance.registerSingleton<CreatureQuestEnderRepository>(
+          repository,
+        );
+        final viewModel = CreatureQuestEnderLinkedListViewModel();
+        addTearDown(viewModel.dispose);
+        await viewModel.initSignals(linkKey: 20);
+        viewModel.selectedKey.value = viewModel.items.value[0].key;
+        await viewModel.edit(viewModel.selectedKey.value!);
+        const oldKey = CreatureQuestEnderKey(id: 10, quest: 20);
+        viewModel.idController.init(11);
+        viewModel.questController.init(21);
+        await expectSaveRetry(
+          repository: repository,
+          originalKey: oldKey,
+          editingKey: viewModel.editingKey,
+          persist: viewModel.persist,
+        );
+        expect(repository.rows.single.toJson(), {'id': 11, 'quest': 21});
+        expect(viewModel.editingKey.value, isNull);
+      },
+    );
   });
 }
 
-class _FakeEnderRepository extends CreatureQuestEnderRepository {
+class _FakeEnderRepository extends CreatureQuestEnderRepository
+    with InMemoryRowEditing<CreatureQuestEnderEntity, CreatureQuestEnderKey> {
+  @override
   final List<CreatureQuestEnderEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <CreatureQuestEnderKey>[];
   _FakeEnderRepository(this.rows);
+
+  @override
+  CreatureQuestEnderKey keyOf(CreatureQuestEnderEntity row) =>
+      CreatureQuestEnderKey.fromEntity(row);
 
   @override
   Future<int> countCreatureQuestEnders(int questId) async =>
@@ -183,33 +165,28 @@ class _FakeEnderRepository extends CreatureQuestEnderRepository {
   @override
   Future<CreatureQuestEnderEntity?> getCreatureQuestEnder(
     CreatureQuestEnderKey key,
-  ) async {
-    for (final row in rows) {
-      if (CreatureQuestEnderKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> updateCreatureQuestEnder(
     CreatureQuestEnderKey originalKey,
     CreatureQuestEnderEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => CreatureQuestEnderKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = model;
-  }
+  ) async => updateRow(originalKey, model);
 }
 
-class _FakeStarterRepository extends CreatureQuestStarterRepository {
+class _FakeStarterRepository extends CreatureQuestStarterRepository
+    with
+        InMemoryRowEditing<
+          CreatureQuestStarterEntity,
+          CreatureQuestStarterKey
+        > {
+  @override
   final List<CreatureQuestStarterEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <CreatureQuestStarterKey>[];
   _FakeStarterRepository(this.rows);
+
+  @override
+  CreatureQuestStarterKey keyOf(CreatureQuestStarterEntity row) =>
+      CreatureQuestStarterKey.fromEntity(row);
 
   @override
   Future<int> countCreatureQuestStarters(int questId) async =>
@@ -229,55 +206,13 @@ class _FakeStarterRepository extends CreatureQuestStarterRepository {
   @override
   Future<CreatureQuestStarterEntity?> getCreatureQuestStarter(
     CreatureQuestStarterKey key,
-  ) async {
-    for (final row in rows) {
-      if (CreatureQuestStarterKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> updateCreatureQuestStarter(
     CreatureQuestStarterKey originalKey,
     CreatureQuestStarterEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => CreatureQuestStarterKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = model;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, model);
 }
 
 class _TestEnderRepository extends CreatureQuestEnderRepository {

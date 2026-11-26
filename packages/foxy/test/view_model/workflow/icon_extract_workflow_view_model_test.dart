@@ -44,7 +44,7 @@ void main() {
     );
   }
 
-  test('prepare 从配置加载 client_dir', () async {
+  test('prepare loads client_dir from configuration', () async {
     await configUtil.update({'client_dir': r'D:\fake\client'});
     final vm = buildVm();
     await vm.prepare();
@@ -52,37 +52,40 @@ void main() {
     expect(vm.path.value, r'D:\fake\client');
   });
 
-  test('完整提取流程：真实 MPQ → 进度 → 成功', () async {
-    final dataDir = Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
-      ..createSync(recursive: true);
-    _createFakeClientMpq(dataDir.path);
+  test(
+    'Extracts icons from a real MPQ, reports progress, and succeeds',
+    () async {
+      final dataDir = Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
+        ..createSync(recursive: true);
+      _createFakeClientMpq(dataDir.path);
 
-    final vm = buildVm();
-    await vm.prepare();
-    vm.setPath(clientRoot.path);
-    final startFuture = vm.start();
+      final vm = buildVm();
+      await vm.prepare();
+      vm.setPath(clientRoot.path);
+      final startFuture = vm.start();
 
-    // start does not block: poll until done.
-    await _waitFor(() => vm.status.value == WorkflowStatus.succeeded);
-    await startFuture;
-    expect(vm.result.value!.extracted, 2);
-    expect(vm.result.value!.skipped, 0);
-    expect(File(p.join(outputDir.path, 'inv_foo.blp')).readAsBytesSync(), [
-      1,
-      2,
-      3,
-      4,
-    ]);
-    expect(
-      File(p.join(outputDir.path, 'ui-glyph-rune-1.blp')).readAsBytesSync(),
-      [5, 6, 7, 8],
-    );
-    // Config was persisted.
-    final config = await configUtil.load();
-    expect(config['client_dir'], clientRoot.path);
-  });
+      // start does not block: poll until done.
+      await _waitFor(() => vm.status.value == WorkflowStatus.succeeded);
+      await startFuture;
+      expect(vm.result.value!.extracted, 2);
+      expect(vm.result.value!.skipped, 0);
+      expect(File(p.join(outputDir.path, 'inv_foo.blp')).readAsBytesSync(), [
+        1,
+        2,
+        3,
+        4,
+      ]);
+      expect(
+        File(p.join(outputDir.path, 'ui-glyph-rune-1.blp')).readAsBytesSync(),
+        [5, 6, 7, 8],
+      );
+      // Config was persisted.
+      final config = await configUtil.load();
+      expect(config['client_dir'], clientRoot.path);
+    },
+  );
 
-  test('提取成功后清空图标缓存', () async {
+  test('Successful extraction clears the icon cache', () async {
     // Preload a real icon into the global ImageCache to simulate opening
     // a list page before extraction.
     await preloadIconIntoCache(
@@ -107,34 +110,43 @@ void main() {
     expect(PaintingBinding.instance.imageCache.currentSize, 0);
   });
 
-  test('未选择目录时 start 失败并提示', () async {
-    final vm = buildVm();
-    await vm.prepare();
-    await expectLater(vm.start(), throwsA(isA<ValidationException>()));
-    expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, contains('输入不合法'));
-  });
+  test(
+    'start fails and shows an error when no directory is selected',
+    () async {
+      final vm = buildVm();
+      await vm.prepare();
+      await expectLater(vm.start(), throwsA(isA<ValidationException>()));
+      expect(vm.status.value, WorkflowStatus.failed);
+      expect(vm.errorMessage.value, contains('输入不合法'));
+    },
+  );
 
-  test('目录不存在 start 抛异常并标记失败', () async {
-    final vm = buildVm();
-    await vm.prepare();
-    vm.setPath(p.join(tempDir.path, '不存在'));
-    await expectLater(vm.start(), throwsA(isA<FileSystemException>()));
-    expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, contains('文件系统错误'));
-  });
+  test(
+    'start throws and marks the run failed when the directory is missing',
+    () async {
+      final vm = buildVm();
+      await vm.prepare();
+      vm.setPath(p.join(tempDir.path, '不存在'));
+      await expectLater(vm.start(), throwsA(isA<FileSystemException>()));
+      expect(vm.status.value, WorkflowStatus.failed);
+      expect(vm.errorMessage.value, contains('文件系统错误'));
+    },
+  );
 
-  test('非客户端目录 start 返回失败结果并提示', () async {
-    final vm = buildVm();
-    await vm.prepare();
-    vm.setPath(tempDir.path); // exists but has no Data directory
-    await vm.start();
-    expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, contains('客户端目录'));
-    expect(vm.errorMessage.value, contains('Data'));
-  });
+  test(
+    'start returns a failure and shows an error for a non-client directory',
+    () async {
+      final vm = buildVm();
+      await vm.prepare();
+      vm.setPath(tempDir.path); // exists but has no Data directory
+      await vm.start();
+      expect(vm.status.value, WorkflowStatus.failed);
+      expect(vm.errorMessage.value, contains('客户端目录'));
+      expect(vm.errorMessage.value, contains('Data'));
+    },
+  );
 
-  test('reset 清空运行状态但保留路径', () async {
+  test('reset clears run state and keeps the path', () async {
     final vm = buildVm();
     vm.setPath(r'D:\fake');
     vm.reset();

@@ -2,7 +2,7 @@ import 'package:foxy_game_definition/foxy_game_definition.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('种族职业 ID 与掩码分别对应 SharedDefines', () {
+  test('Race and class IDs and masks match SharedDefines', () {
     expect(PlayerCreateInfoConstants.playerRaceOptions.keys.toList(), [
       1,
       2,
@@ -45,7 +45,7 @@ void main() {
     expect(PlayerCreateInfoConstants.playerCreatePlayableClassMask, 1535);
   });
 
-  test('动作类型只包含 Player ActionButtonType', () {
+  test('Action types contain only Player ActionButtonType values', () {
     expect(
       PlayerCreateInfoConstants.playerActionButtonTypeOptions.keys.toSet(),
       {0, 1, 32, 64, 65, 128},

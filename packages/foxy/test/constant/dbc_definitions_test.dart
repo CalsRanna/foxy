@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 void main() {
   setUpAll(DI.ensureInitialized);
 
-  test('DBC 定义的表名和文件名唯一', () {
+  test('DBC definitions have unique table and file names', () {
     final tableNames = DbcDefinitions.all
         .map((definition) => definition.tableName)
         .toSet();
@@ -21,7 +21,7 @@ void main() {
     expect(DbcDefinitions.byFileName, hasLength(DbcDefinitions.all.length));
   });
 
-  test('DBC 定义可以通过表名和文件名查找', () {
+  test('DBC definitions can be found by table name or file name', () {
     final spell = DbcDefinitions.byTable['dbc_spell'];
 
     expect(spell, isNotNull);
@@ -59,7 +59,7 @@ void main() {
     expect(DbcDefinitions.byTable['dbc_light']?.fileName, 'Light.dbc');
   });
 
-  test('所有 DBC 定义都包含 ID 字段', () {
+  test('Every DBC definition includes an ID field', () {
     for (final definition in DbcDefinitions.all) {
       expect(
         definition.schema.fields.any((field) => field.name == 'ID'),
@@ -69,7 +69,7 @@ void main() {
     }
   });
 
-  test('所有 DBC 定义都已注册导出 Repository', () {
+  test('Every DBC definition has a registered export repository', () {
     final registry = GetIt.instance.get<DbcExportRegistry>();
 
     for (final definition in DbcDefinitions.all) {
@@ -81,7 +81,7 @@ void main() {
     }
   });
 
-  test('所有 DBC 定义都有非空 Schema 与 format', () {
+  test('Every DBC definition has a nonempty schema and format', () {
     for (final definition in DbcDefinitions.all) {
       expect(
         definition.schema.fields,
@@ -97,7 +97,7 @@ void main() {
     }
   });
 
-  test('未注册的导出表 loadRows/countRows 返回明确错误', () async {
+  test('loadRows and countRows report a clear error for unregistered export tables', () async {
     final registry = GetIt.instance.get<DbcExportRegistry>();
 
     await expectLater(

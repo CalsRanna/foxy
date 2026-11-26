@@ -163,7 +163,9 @@ void main() {
     ),
   );
 
-  testWidgets('设置分类与操作区域适应桌面窗口宽度', (tester) async {
+  testWidgets('Settings categories and actions adapt to desktop window width', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(1215, 726));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
@@ -214,7 +216,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('配置和修改游戏目录直接使用系统选择器', (tester) async {
+  testWidgets('Setting or changing a game directory opens the system picker', (
+    tester,
+  ) async {
     const channel = MethodChannel('plugins.flutter.io/file_selector');
     final messenger = tester.binding.defaultBinaryMessenger;
     final initialDirectories = <Object?>[];
@@ -262,7 +266,7 @@ void main() {
     expect(find.byType(ShadDialog), findsNothing);
   });
 
-  testWidgets('点击提取一次即可完成图标提取', (tester) async {
+  testWidgets('One click starts and completes icon extraction', (tester) async {
     cfg.data['client_dir'] = tempDir.path;
     await tester.pumpWidget(const ShadApp(home: Scaffold(body: SettingPage())));
     final extract = find.widgetWithText(ShadButton, '提取');
@@ -291,87 +295,95 @@ void main() {
     expect(cfg.data['icons_extracted'], isTrue);
   });
 
-  testWidgets('在设置中打开并保存已有的模型服务商配置', (tester) async {
-    cfg.data.addAll({
-      'agent_base_url': 'https://example.test/v1',
-      'agent_model': 'old-model',
-      'agent_api_key': 'test-key',
-    });
-    await tester.pumpWidget(
-      ShadApp(
-        navigatorKey: FoxyRouter.router.navigatorKey,
-        home: const Scaffold(body: SettingPage()),
-      ),
-    );
-    await tester.tap(find.widgetWithText(ShadButton, '编辑偏好'));
-    await tester.pumpAndSettle();
-    final configure = find.widgetWithText(ShadButton, '配置');
-    await tester.ensureVisible(configure);
-    await tester.tap(configure);
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Settings can open and save an existing model provider configuration',
+    (tester) async {
+      cfg.data.addAll({
+        'agent_base_url': 'https://example.test/v1',
+        'agent_model': 'old-model',
+        'agent_api_key': 'test-key',
+      });
+      await tester.pumpWidget(
+        ShadApp(
+          navigatorKey: FoxyRouter.router.navigatorKey,
+          home: const Scaffold(body: SettingPage()),
+        ),
+      );
+      await tester.tap(find.widgetWithText(ShadButton, '编辑偏好'));
+      await tester.pumpAndSettle();
+      final configure = find.widgetWithText(ShadButton, '配置');
+      await tester.ensureVisible(configure);
+      await tester.tap(configure);
+      await tester.pumpAndSettle();
 
-    final dialog = find.byType(AgentProviderDialog);
-    final inputs = find.descendant(
-      of: dialog,
-      matching: find.byType(ShadInput),
-    );
-    expect(
-      tester.widget<ShadInput>(inputs.at(0)).controller?.text,
-      'https://example.test/v1',
-    );
-    expect(
-      tester.widget<ShadInput>(inputs.at(1)).controller?.text,
-      'old-model',
-    );
-    expect(tester.widget<ShadInput>(inputs.at(2)).obscureText, isTrue);
-    final reasoningSwitch = find.descendant(
-      of: dialog,
-      matching: find.byType(ShadSwitch),
-    );
-    expect(tester.widget<ShadSwitch>(reasoningSwitch).value, isFalse);
-    await tester.tap(reasoningSwitch);
+      final dialog = find.byType(AgentProviderDialog);
+      final inputs = find.descendant(
+        of: dialog,
+        matching: find.byType(ShadInput),
+      );
+      expect(
+        tester.widget<ShadInput>(inputs.at(0)).controller?.text,
+        'https://example.test/v1',
+      );
+      expect(
+        tester.widget<ShadInput>(inputs.at(1)).controller?.text,
+        'old-model',
+      );
+      expect(tester.widget<ShadInput>(inputs.at(2)).obscureText, isTrue);
+      final reasoningSwitch = find.descendant(
+        of: dialog,
+        matching: find.byType(ShadSwitch),
+      );
+      expect(tester.widget<ShadSwitch>(reasoningSwitch).value, isFalse);
+      await tester.tap(reasoningSwitch);
 
-    await tester.enterText(inputs.at(1), 'new-model');
-    await tester.tap(find.widgetWithText(ShadButton, '保存'));
-    await tester.pumpAndSettle();
+      await tester.enterText(inputs.at(1), 'new-model');
+      await tester.tap(find.widgetWithText(ShadButton, '保存'));
+      await tester.pumpAndSettle();
 
-    expect(dialog, findsNothing);
-    expect(cfg.data['agent_model'], 'new-model');
-    expect(cfg.data['agent_api_key'], 'test-key');
-    expect(cfg.data['agent_request_reasoning_summary'], isTrue);
-    final provider = await GetIt.instance
-        .get<AgentProviderConfigUseCase>()
-        .load();
-    expect(provider?.requestReasoningSummary, isTrue);
-    expect(find.text('模型服务商配置已保存'), findsOneWidget);
-  });
+      expect(dialog, findsNothing);
+      expect(cfg.data['agent_model'], 'new-model');
+      expect(cfg.data['agent_api_key'], 'test-key');
+      expect(cfg.data['agent_request_reasoning_summary'], isTrue);
+      final provider = await GetIt.instance
+          .get<AgentProviderConfigUseCase>()
+          .load();
+      expect(provider?.requestReasoningSummary, isTrue);
+      expect(find.text('模型服务商配置已保存'), findsOneWidget);
+    },
+  );
 
-  testWidgets('本地化开关保存配置并同步后续查询设置', (tester) async {
-    await tester.pumpWidget(preferencesPage);
-    final toggle = find.byType(ShadSwitch);
-    expect(tester.widget<ShadSwitch>(toggle).value, isTrue);
+  testWidgets(
+    'The locale toggle persists its value and updates subsequent queries',
+    (tester) async {
+      await tester.pumpWidget(preferencesPage);
+      final toggle = find.byType(ShadSwitch);
+      expect(tester.widget<ShadSwitch>(toggle).value, isTrue);
 
-    await tester.tap(toggle);
-    await tester.pumpAndSettle();
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
 
-    expect(cfg.data['locale_enabled'], isFalse);
-    expect(stateVm.localeEnabled.value, isFalse);
-    expect(localeSettings.localeEnabled, isFalse);
-    expect(tester.widget<ShadSwitch>(toggle).value, isFalse);
-    expect(cfg.data['dbc_dir'], tempDir.path);
+      expect(cfg.data['locale_enabled'], isFalse);
+      expect(stateVm.localeEnabled.value, isFalse);
+      expect(localeSettings.localeEnabled, isFalse);
+      expect(tester.widget<ShadSwitch>(toggle).value, isFalse);
+      expect(cfg.data['dbc_dir'], tempDir.path);
 
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pumpWidget(preferencesPage);
-    expect(tester.widget<ShadSwitch>(toggle).value, isFalse);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(preferencesPage);
+      expect(tester.widget<ShadSwitch>(toggle).value, isFalse);
 
-    await tester.tap(toggle);
-    await tester.pumpAndSettle();
-    expect(cfg.data['locale_enabled'], isTrue);
-    expect(stateVm.localeEnabled.value, isTrue);
-    expect(localeSettings.localeEnabled, isTrue);
-  });
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(cfg.data['locale_enabled'], isTrue);
+      expect(stateVm.localeEnabled.value, isTrue);
+      expect(localeSettings.localeEnabled, isTrue);
+    },
+  );
 
-  testWidgets('未检测到本地化表时不可开启', (tester) async {
+  testWidgets('The locale toggle is disabled when locale tables are missing', (
+    tester,
+  ) async {
     stateVm.setLocaleSettings(hasLocaleTables: false, localeEnabled: false);
     await tester.pumpWidget(preferencesPage);
 
@@ -382,194 +394,210 @@ void main() {
     expect(cfg.data.containsKey('locale_enabled'), isFalse);
   });
 
-  testWidgets('保存本地化设置失败时保留原开关和查询状态', (tester) async {
-    cfg.failUpdate = true;
-    await tester.pumpWidget(preferencesPage);
-    await tester.tap(find.byType(ShadSwitch));
-    await tester.pumpAndSettle();
-
-    final toggle = tester.widget<ShadSwitch>(find.byType(ShadSwitch));
-    expect(toggle.value, isTrue);
-    expect(toggle.enabled, isTrue);
-    expect(stateVm.localeEnabled.value, isTrue);
-    expect(localeSettings.localeEnabled, isTrue);
-    expect(cfg.data.containsKey('locale_enabled'), isFalse);
-    expect(find.textContaining('保存本地化设置失败'), findsOneWidget);
-    expect(find.text('错误'), findsOneWidget);
-    await tester.tap(find.text('确定'));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('保存本地化设置失败'), findsNothing);
-  });
-
-  testWidgets('短路回归：共享 util 忙时重算，任务结束必须恢复按钮', (tester) async {
-    var rebuilds = 0;
-    await tester.pumpWidget(
-      ShadApp(
-        home: Scaffold(
-          body: Column(
-            children: [
-              // Same busy condition as the DBC section of Settings.
-              SignalBuilder(
-                builder: (_) {
-                  rebuilds++;
-                  final busy =
-                      importVm.isRunning ||
-                      exportVm.isRunning ||
-                      mpqVm.isRunning ||
-                      combinedVm.isRunning;
-                  return Text('dbc:${busy ? 'busy' : 'free'}');
-                },
-              ),
-              // The MPQ section uses two SignalBuilders. The shared utility also marks
-              // the MPQ view model busy during a combined export.
-              SignalBuilder(
-                builder: (_) {
-                  final busy =
-                      mpqVm.isRunning ||
-                      importVm.isRunning ||
-                      exportVm.isRunning;
-                  return Text('mpq:${busy ? 'busy' : 'free'}');
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    await tester.pump();
-    await tester.pump();
-    expect(rebuilds, 1);
-    expect(find.text('dbc:free'), findsOneWidget);
-
-    // The shared utility makes importVm.isRunning true, short-circuiting the
-    // remaining reads while the MPQ task is running.
-    util.running.value = true;
-    mpqVm.status.value = WorkflowStatus.running;
-    await tester.pump();
-    expect(rebuilds, 2, reason: '任务开始必须触发重建');
-    expect(find.text('dbc:busy'), findsOneWidget);
-    expect(find.text('mpq:busy'), findsOneWidget);
-
-    // The utility resets and MPQ succeeds. The early return previously dropped
-    // the mpqVm.status dependency. Without tracking util.running, SignalBuilder
-    // never rebuilt and the button stayed disabled.
-    util.running.value = false;
-    mpqVm.status.value = WorkflowStatus.succeeded;
-    for (var i = 0; i < 5; i++) {
-      await tester.pump();
-    }
-    expect(
-      rebuilds,
-      greaterThanOrEqualTo(3),
-      reason: '任务结束必须触发重建（rebuilds=$rebuilds）',
-    );
-    expect(find.text('dbc:free'), findsOneWidget);
-    expect(find.text('mpq:free'), findsOneWidget);
-  });
-
-  testWidgets('点击一次开始导入 DBC，完成或取消后一次关闭弹窗', (tester) async {
-    await tester.pumpWidget(dataPage);
-    final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
-    await tester.ensureVisible(dbcImportButton());
-    await tester.pumpAndSettle();
-    await tester.tap(dbcImportButton());
-    await tester.pumpAndSettle();
-    expect(find.text('正在导入 DBC'), findsOneWidget);
-    expect(find.text('取消导入'), findsOneWidget);
-
-    await nav.maybePop();
-    await tester.pumpAndSettle();
-    expect(find.text('正在导入 DBC'), findsOneWidget);
-
-    importVm.status.value = WorkflowStatus.succeeded;
-    await tester.pumpAndSettle();
-    expect(find.text('导入完成'), findsOneWidget);
-    await tester.tap(find.text('确定'));
-    await tester.pumpAndSettle();
-    expect(find.byType(ShadDialog), findsNothing);
-
-    await tester.tap(dbcImportButton());
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('取消导入'));
-    await tester.pumpAndSettle();
-    expect(find.text('正在取消…'), findsOneWidget);
-
-    const error = '导入已取消';
-    importVm.errorMessage.value = error;
-    importVm.status.value = WorkflowStatus.failed;
-    await tester.pumpAndSettle();
-    expect(find.text(error), findsOneWidget);
-    expect(find.text('重试').hitTestable(), findsOneWidget);
-    await tester.tap(find.text('确定'));
-    await tester.pumpAndSettle();
-    expect(find.byType(ShadDialog), findsNothing);
-  });
-
-  testWidgets('三种导出窗口均使用配置的路径且不显示目录', (tester) async {
-    final dbcPath = '${tempDir.path}${Platform.pathSeparator}dbc';
-    final mpqPath = '${tempDir.path}${Platform.pathSeparator}mpq';
-    cfg.data.addAll({'dbc_dir': dbcPath, 'mpq_dir': mpqPath});
-    await tester.pumpWidget(dataPage);
-    final cases = [
-      (
-        button: dbcExportButton(),
-        patch: false,
-        finish: () {
-          expect(exportVm.outputDirectory.value, dbcPath);
-          exportVm.status.value = WorkflowStatus.succeeded;
-        },
-      ),
-      (
-        button: mpqExportButton(),
-        patch: true,
-        finish: () {
-          expect(mpqVm.outputDirectory.value, mpqPath);
-          mpqVm.status.value = WorkflowStatus.succeeded;
-        },
-      ),
-      (
-        button: combinedExportButton(),
-        patch: true,
-        finish: () {
-          expect(combinedVm.dbcOutputDirectory.value, dbcPath);
-          expect(combinedVm.mpqOutputDirectory.value, mpqPath);
-          combinedVm.status.value = WorkflowStatus.succeeded;
-        },
-      ),
-    ];
-
-    for (final scenario in cases) {
-      await tester.ensureVisible(scenario.button);
-      await tester.pumpAndSettle();
-      await tester.tap(scenario.button);
+  testWidgets(
+    'A failed locale settings save preserves the previous toggle and query state',
+    (tester) async {
+      cfg.failUpdate = true;
+      await tester.pumpWidget(preferencesPage);
+      await tester.tap(find.byType(ShadSwitch));
       await tester.pumpAndSettle();
 
-      expect(find.text('浏览'), findsNothing);
-      expect(
-        find.text('MPQ 文件名'),
-        scenario.patch ? findsOneWidget : findsNothing,
-      );
-      expect(
-        buttonOf(tester, find.widgetWithText(ShadButton, '导出')).enabled,
-        isTrue,
-      );
-
-      scenario.finish();
-      await tester.pumpAndSettle();
-      expect(find.text('导出完成'), findsOneWidget);
-      expect(find.textContaining(tempDir.path), findsNothing);
-      if (scenario.patch) {
-        expect(
-          find.textContaining(MpqExportWorkflowViewModel.defaultPatchFileName),
-          findsOneWidget,
-        );
-      }
+      final toggle = tester.widget<ShadSwitch>(find.byType(ShadSwitch));
+      expect(toggle.value, isTrue);
+      expect(toggle.enabled, isTrue);
+      expect(stateVm.localeEnabled.value, isTrue);
+      expect(localeSettings.localeEnabled, isTrue);
+      expect(cfg.data.containsKey('locale_enabled'), isFalse);
+      expect(find.textContaining('保存本地化设置失败'), findsOneWidget);
+      expect(find.text('错误'), findsOneWidget);
       await tester.tap(find.text('确定'));
       await tester.pumpAndSettle();
-    }
-  });
+      expect(find.textContaining('保存本地化设置失败'), findsNothing);
+    },
+  );
 
-  testWidgets('MPQ 导出完成后 DBC 导入/导出按钮恢复可用', (tester) async {
+  testWidgets(
+    'Recomputing while the shared utility is busy re-enables buttons when the job ends',
+    (tester) async {
+      var rebuilds = 0;
+      await tester.pumpWidget(
+        ShadApp(
+          home: Scaffold(
+            body: Column(
+              children: [
+                // Same busy condition as the DBC section of Settings.
+                SignalBuilder(
+                  builder: (_) {
+                    rebuilds++;
+                    final busy =
+                        importVm.isRunning ||
+                        exportVm.isRunning ||
+                        mpqVm.isRunning ||
+                        combinedVm.isRunning;
+                    return Text('dbc:${busy ? 'busy' : 'free'}');
+                  },
+                ),
+                // The MPQ section uses two SignalBuilders. The shared utility also marks
+                // the MPQ view model busy during a combined export.
+                SignalBuilder(
+                  builder: (_) {
+                    final busy =
+                        mpqVm.isRunning ||
+                        importVm.isRunning ||
+                        exportVm.isRunning;
+                    return Text('mpq:${busy ? 'busy' : 'free'}');
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      expect(rebuilds, 1);
+      expect(find.text('dbc:free'), findsOneWidget);
+
+      // The shared utility makes importVm.isRunning true, short-circuiting the
+      // remaining reads while the MPQ task is running.
+      util.running.value = true;
+      mpqVm.status.value = WorkflowStatus.running;
+      await tester.pump();
+      expect(rebuilds, 2, reason: '任务开始必须触发重建');
+      expect(find.text('dbc:busy'), findsOneWidget);
+      expect(find.text('mpq:busy'), findsOneWidget);
+
+      // The utility resets and MPQ succeeds. The early return previously dropped
+      // the mpqVm.status dependency. Without tracking util.running, SignalBuilder
+      // never rebuilt and the button stayed disabled.
+      util.running.value = false;
+      mpqVm.status.value = WorkflowStatus.succeeded;
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      expect(
+        rebuilds,
+        greaterThanOrEqualTo(3),
+        reason: '任务结束必须触发重建（rebuilds=$rebuilds）',
+      );
+      expect(find.text('dbc:free'), findsOneWidget);
+      expect(find.text('mpq:free'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'One click starts DBC import and one click closes the dialog after completion or cancellation',
+    (tester) async {
+      await tester.pumpWidget(dataPage);
+      final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+      await tester.ensureVisible(dbcImportButton());
+      await tester.pumpAndSettle();
+      await tester.tap(dbcImportButton());
+      await tester.pumpAndSettle();
+      expect(find.text('正在导入 DBC'), findsOneWidget);
+      expect(find.text('取消导入'), findsOneWidget);
+
+      await nav.maybePop();
+      await tester.pumpAndSettle();
+      expect(find.text('正在导入 DBC'), findsOneWidget);
+
+      importVm.status.value = WorkflowStatus.succeeded;
+      await tester.pumpAndSettle();
+      expect(find.text('导入完成'), findsOneWidget);
+      await tester.tap(find.text('确定'));
+      await tester.pumpAndSettle();
+      expect(find.byType(ShadDialog), findsNothing);
+
+      await tester.tap(dbcImportButton());
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('取消导入'));
+      await tester.pumpAndSettle();
+      expect(find.text('正在取消…'), findsOneWidget);
+
+      const error = '导入已取消';
+      importVm.errorMessage.value = error;
+      importVm.status.value = WorkflowStatus.failed;
+      await tester.pumpAndSettle();
+      expect(find.text(error), findsOneWidget);
+      expect(find.text('重试').hitTestable(), findsOneWidget);
+      await tester.tap(find.text('确定'));
+      await tester.pumpAndSettle();
+      expect(find.byType(ShadDialog), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'All three export dialogs use configured paths and hide the directory',
+    (tester) async {
+      final dbcPath = '${tempDir.path}${Platform.pathSeparator}dbc';
+      final mpqPath = '${tempDir.path}${Platform.pathSeparator}mpq';
+      cfg.data.addAll({'dbc_dir': dbcPath, 'mpq_dir': mpqPath});
+      await tester.pumpWidget(dataPage);
+      final cases = [
+        (
+          button: dbcExportButton(),
+          patch: false,
+          finish: () {
+            expect(exportVm.outputDirectory.value, dbcPath);
+            exportVm.status.value = WorkflowStatus.succeeded;
+          },
+        ),
+        (
+          button: mpqExportButton(),
+          patch: true,
+          finish: () {
+            expect(mpqVm.outputDirectory.value, mpqPath);
+            mpqVm.status.value = WorkflowStatus.succeeded;
+          },
+        ),
+        (
+          button: combinedExportButton(),
+          patch: true,
+          finish: () {
+            expect(combinedVm.dbcOutputDirectory.value, dbcPath);
+            expect(combinedVm.mpqOutputDirectory.value, mpqPath);
+            combinedVm.status.value = WorkflowStatus.succeeded;
+          },
+        ),
+      ];
+
+      for (final scenario in cases) {
+        await tester.ensureVisible(scenario.button);
+        await tester.pumpAndSettle();
+        await tester.tap(scenario.button);
+        await tester.pumpAndSettle();
+
+        expect(find.text('浏览'), findsNothing);
+        expect(
+          find.text('MPQ 文件名'),
+          scenario.patch ? findsOneWidget : findsNothing,
+        );
+        expect(
+          buttonOf(tester, find.widgetWithText(ShadButton, '导出')).enabled,
+          isTrue,
+        );
+
+        scenario.finish();
+        await tester.pumpAndSettle();
+        expect(find.text('导出完成'), findsOneWidget);
+        expect(find.textContaining(tempDir.path), findsNothing);
+        if (scenario.patch) {
+          expect(
+            find.textContaining(
+              MpqExportWorkflowViewModel.defaultPatchFileName,
+            ),
+            findsOneWidget,
+          );
+        }
+        await tester.tap(find.text('确定'));
+        await tester.pumpAndSettle();
+      }
+    },
+  );
+
+  testWidgets('Completing MPQ export re-enables DBC import and export', (
+    tester,
+  ) async {
     await tester.pumpWidget(dataPage);
     await tester.pump();
     await tester.pump();

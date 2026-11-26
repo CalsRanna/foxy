@@ -47,7 +47,7 @@ void main() {
     );
   }
 
-  test('取消后立即重试：旧取消定时器不会杀死新任务', () async {
+  test('A previous cancellation timer cannot kill an immediate retry', () async {
     final useCase = buildUseCase();
 
     // Give the isolate 200 ms to report its control port before canceling job A.
@@ -83,7 +83,7 @@ void main() {
     expect(useCase.isRunning, isFalse);
   });
 
-  test('取消后重试，再取消，仍能第三次正常启动', () async {
+  test('Canceling twice still allows a third attempt to start', () async {
     final useCase = buildUseCase();
 
     Future<GameIconExtractionResult> runAndCancel() async {

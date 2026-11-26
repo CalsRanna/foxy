@@ -44,7 +44,7 @@ void main() {
 
   tearDown(() async => GetIt.instance.reset());
 
-  testWidgets('GameObject 陷阱类型的 Data4 渲染为 ShadSelect', (tester) async {
+  testWidgets('Trap GameObject Data4 renders as a ShadSelect', (tester) async {
     GetIt.instance.registerSingleton<GameObjectTemplateRepository>(
       _FakeGameObjectTemplateRepository(),
     );
@@ -67,34 +67,37 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('GameObject 引用与数字分支仍使用 EntityPicker 和 NumberInput', (
+  testWidgets(
+    'GameObject references and numbers still use EntityPicker and NumberInput',
+    (tester) async {
+      GetIt.instance.registerSingleton<GameObjectTemplateRepository>(
+        _FakeGameObjectTemplateRepository(),
+      );
+      final viewModel = GameObjectTemplateDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      viewModel.typeController.init(6);
+
+      await tester.pumpWidget(
+        ShadApp(
+          home: Scaffold(body: GameObjectTemplateView(viewModel: viewModel)),
+        ),
+      );
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      // Data0 = lock ID (reference), Data2 = auto-close time (number).
+      expect(find.text('锁 ID'), findsOneWidget);
+      expect(find.bySubtype<FoxyEntityPicker>(), findsWidgets);
+      expect(find.byType(FoxyNumberInput<int>), findsWidgets);
+
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets('Condition type 2 Value3 renders as a ShadSelect', (
     tester,
   ) async {
-    GetIt.instance.registerSingleton<GameObjectTemplateRepository>(
-      _FakeGameObjectTemplateRepository(),
-    );
-    final viewModel = GameObjectTemplateDetailViewModel();
-    addTearDown(viewModel.dispose);
-    await viewModel.initSignals();
-    viewModel.typeController.init(6);
-
-    await tester.pumpWidget(
-      ShadApp(
-        home: Scaffold(body: GameObjectTemplateView(viewModel: viewModel)),
-      ),
-    );
-    await tester.pump();
-
-    expect(tester.takeException(), isNull);
-    // Data0 = lock ID (reference), Data2 = auto-close time (number).
-    expect(find.text('锁 ID'), findsOneWidget);
-    expect(find.bySubtype<FoxyEntityPicker>(), findsWidgets);
-    expect(find.byType(FoxyNumberInput<int>), findsWidgets);
-
-    await tester.pumpWidget(const SizedBox());
-  });
-
-  testWidgets('Condition 类型 2 的 Value3 渲染为 ShadSelect', (tester) async {
     GetIt.instance.registerSingleton<ConditionRepository>(
       _FakeConditionRepository(),
     );
@@ -120,31 +123,34 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('SmartScript 动作 29 的存活状态参数渲染为 ShadSelect', (tester) async {
-    GetIt.instance.registerSingleton<SmartScriptRepository>(
-      _FakeSmartScriptRepository(),
-    );
-    final viewModel = SmartScriptDetailViewModel();
-    addTearDown(viewModel.dispose);
-    await viewModel.initSignals();
-    viewModel.actionTypeController.init(29);
+  testWidgets(
+    'SmartScript action 29 renders its alive-state parameter as a ShadSelect',
+    (tester) async {
+      GetIt.instance.registerSingleton<SmartScriptRepository>(
+        _FakeSmartScriptRepository(),
+      );
+      final viewModel = SmartScriptDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      viewModel.actionTypeController.init(29);
 
-    await tester.pumpWidget(
-      ShadApp(
-        home: Scaffold(body: SmartScriptView(viewModel: viewModel)),
-      ),
-    );
-    await tester.pump();
+      await tester.pumpWidget(
+        ShadApp(
+          home: Scaffold(body: SmartScriptView(viewModel: viewModel)),
+        ),
+      );
+      await tester.pump();
 
-    expect(tester.takeException(), isNull);
-    // param6 = alive state (select); value 0 shows "ANY".
-    expect(find.text('存活状态'), findsOneWidget);
-    expect(find.text('ANY'), findsOneWidget);
-    // The event-phase mask and event flags remain FlagPickers.
-    expect(find.byType(FoxyFlagPicker), findsWidgets);
+      expect(tester.takeException(), isNull);
+      // param6 = alive state (select); value 0 shows "ANY".
+      expect(find.text('存活状态'), findsOneWidget);
+      expect(find.text('ANY'), findsOneWidget);
+      // The event-phase mask and event flags remain FlagPickers.
+      expect(find.byType(FoxyFlagPicker), findsWidgets);
 
-    await tester.pumpWidget(const SizedBox());
-  });
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 }
 
 class _FakeConditionRepository extends ConditionRepository {

@@ -1,44 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/game_object_quest_item_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
+import 'row_key_expectations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('GameObjectQuestItemKey 和 Brief 完整覆盖两列主键', () {
+  test('GameObjectQuestItemKey and its brief entity include both primary key fields', () {
     const entity = GameObjectQuestItemEntity(gameObjectEntry: 10, idx: 2);
     final key = GameObjectQuestItemKey.fromEntity(entity);
-    final same = GameObjectQuestItemKey.fromEntity(
-      entity.copyWith(itemId: 123),
-    );
     const brief = BriefGameObjectQuestItemEntity(gameObjectEntry: 10, idx: 2);
 
-    expect(key, same);
-    expect(key.hashCode, same.hashCode);
-    expect(
+    expectRowKeyEquality(
       key,
-      isNot(
-        GameObjectQuestItemKey.fromEntity(entity.copyWith(gameObjectEntry: 11)),
-      ),
-    );
-    expect(
-      key,
-      isNot(GameObjectQuestItemKey.fromEntity(entity.copyWith(idx: 3))),
+      GameObjectQuestItemKey.fromEntity,
+      sameKeyRow: entity.copyWith(itemId: 123),
+      differentKeyRows: [
+        entity.copyWith(gameObjectEntry: 11),
+        entity.copyWith(idx: 3),
+      ],
     );
     expect(brief.key, key);
   });
 
-  test('UPDATE 使用完整旧 key 定位并写入 candidate 四列', () async {
-    final queries = <LaconicQuery>[];
-    final repository = _TestRepository(
-      Laconic(_RecordingDriver(), listen: queries.add),
-    );
+  group('GameObjectQuestItemRepository write contract', () {
     const oldKey = GameObjectQuestItemKey(gameObjectEntry: 10, idx: 2);
     const candidate = GameObjectQuestItemEntity(
       gameObjectEntry: 11,
@@ -47,49 +40,34 @@ void main() {
       verifiedBuild: 12340,
     );
 
-    await repository.updateGameObjectQuestItem(oldKey, candidate);
-
-    expect(queries.single.bindings, [
-      ...candidate.toJson().values,
-      oldKey.gameObjectEntry,
-      oldKey.idx,
-    ]);
-  });
-
-  test('UPDATE、DELETE 零行报错且 Brief 查询稳定分页', () async {
-    final missingRepository = _TestRepository(
-      Laconic(_RecordingDriver(affectedRows: 0)),
-    );
-    const key = GameObjectQuestItemKey(gameObjectEntry: 10, idx: 2);
-    await expectLater(
-      missingRepository.updateGameObjectQuestItem(
-        key,
-        const GameObjectQuestItemEntity(),
-      ),
-      throwsA(isA<RecordNotFoundException>()),
-    );
-    await expectLater(
-      missingRepository.destroyGameObjectQuestItem(key),
-      throwsA(isA<RecordNotFoundException>()),
+    testRepositoryWrites(
+      createRepository: _TestRepository.new,
+      originalKey: oldKey,
+      candidate: candidate,
+      missingCandidate: const GameObjectQuestItemEntity(),
+      update: (repository, key, row) =>
+          repository.updateGameObjectQuestItem(key, row),
+      destroy: (repository, key) => repository.destroyGameObjectQuestItem(key),
+      expectedBindings: [
+        ...candidate.toJson().values,
+        oldKey.gameObjectEntry,
+        oldKey.idx,
+      ],
     );
 
-    final queries = <LaconicQuery>[];
-    final repository = _TestRepository(
-      Laconic(_RecordingDriver(), listen: queries.add),
-    );
-    await repository.getBriefGameObjectQuestItems(10, page: 2);
-    expect(queries.single.sql, isNot(contains('gq.*')));
-    expect(queries.single.sql.toLowerCase(), contains('order by'));
-    expect(
-      queries.single.bindings.sublist(queries.single.bindings.length - 2),
-      [50, 50],
+    testBriefPagination(
+      queryPageTwo: (laconic) =>
+          _TestRepository(laconic).getBriefGameObjectQuestItems(10, page: 2),
+      tableAlias: 'gq',
     );
   });
 
   group('inline editing identity', () {
     late _FakeRepository repository;
 
-    setUp(() {
+    late GameObjectQuestItemLinkedListViewModel viewModel;
+
+    setUp(() async {
       repository = _FakeRepository([
         const GameObjectQuestItemEntity(
           gameObjectEntry: 10,
@@ -101,57 +79,59 @@ void main() {
         repository,
       );
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+
+      viewModel = GameObjectQuestItemLinkedListViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(linkKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value.single.key;
+      await viewModel.edit(viewModel.selectedKey.value!);
     });
 
     tearDown(() async => GetIt.instance.reset());
 
-    test('修改两列 key 仍按旧 key 更新，失败时保留并可重试', () async {
-      final viewModel = GameObjectQuestItemLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
+    test('Changing both key fields updates by the old key and a failed save preserves it for retry', () async {
       const oldKey = GameObjectQuestItemKey(gameObjectEntry: 10, idx: 2);
       expect(viewModel.editingKey.value, oldKey);
       viewModel.gameObjectEntryController.init(11);
       viewModel.idxController.init(3);
-      repository.failUpdates = true;
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [oldKey, oldKey]);
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: oldKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
       expect(repository.rows.single.gameObjectEntry, 11);
       expect(repository.rows.single.idx, 3);
       expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
     });
 
-    test('切换父范围和新建都会清空旧行身份', () async {
-      final viewModel = GameObjectQuestItemLinkedListViewModel();
-      addTearDown(viewModel.dispose);
-      await viewModel.initSignals(linkKey: 10);
-      viewModel.selectedKey.value = viewModel.items.value[0].key;
-      await viewModel.edit(viewModel.selectedKey.value!);
-
-      await viewModel.setLinkKey(12);
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedKey.value, isNull);
-      await viewModel.create();
-      expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.gameObjectEntryController.collect(), 12);
-    });
+    test(
+      'Changing the parent scope and creating clear the previous row identity',
+      () async {
+        await expectParentChangeAndCreateClearIdentity(
+          editingKey: viewModel.editingKey,
+          selectedKey: viewModel.selectedKey,
+          changeParent: () => viewModel.setLinkKey(12),
+          create: viewModel.create,
+        );
+        expect(viewModel.gameObjectEntryController.collect(), 12);
+      },
+    );
   });
 }
 
-class _FakeRepository extends GameObjectQuestItemRepository {
+class _FakeRepository extends GameObjectQuestItemRepository
+    with InMemoryRowEditing<GameObjectQuestItemEntity, GameObjectQuestItemKey> {
+  @override
   final List<GameObjectQuestItemEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <GameObjectQuestItemKey>[];
 
   _FakeRepository(this.rows);
+
+  @override
+  GameObjectQuestItemKey keyOf(GameObjectQuestItemEntity row) =>
+      GameObjectQuestItemKey.fromEntity(row);
 
   @override
   Future<int> countGameObjectQuestItems(int gameObjectEntry) async {
@@ -186,61 +166,13 @@ class _FakeRepository extends GameObjectQuestItemRepository {
   @override
   Future<GameObjectQuestItemEntity?> getGameObjectQuestItem(
     GameObjectQuestItemKey key,
-  ) async {
-    for (final row in rows) {
-      if (GameObjectQuestItemKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<void> updateGameObjectQuestItem(
     GameObjectQuestItemKey originalKey,
     GameObjectQuestItemEntity questItem,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => GameObjectQuestItemKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = questItem;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-
-  _RecordingDriver({this.affectedRows = 1});
-
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-
-  @override
-  Future<void> close() async {}
-
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, questItem);
 }
 
 class _TestRepository extends GameObjectQuestItemRepository {

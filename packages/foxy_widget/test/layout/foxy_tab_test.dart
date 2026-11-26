@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 
 void main() {
-  testWidgets('tabs 列表变长后点击新 tab 不越界', (tester) async {
+  testWidgets('A new tab can be selected after the tab list grows', (
+    tester,
+  ) async {
     await tester.pumpWidget(const _FoxyDynamicTabsHarness());
     await tester.pump();
 

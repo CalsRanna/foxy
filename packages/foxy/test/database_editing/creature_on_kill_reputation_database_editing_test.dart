@@ -1,17 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
-import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_on_kill_reputation_linked_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
-import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'in_memory_row_editing.dart';
+import 'inline_editing_expectations.dart';
+import 'repository_contract.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('Key 和 Brief 使用 creature_id 完整定位', () {
+  test('The key and brief entity identify rows by creature_id', () {
     const entity = CreatureOnKillReputationEntity(creatureID: 10);
     final key = entity.creatureID;
     final same = (entity.copyWith(maxStanding1: 4)).creatureID;
@@ -24,47 +26,31 @@ void main() {
   });
 
   group('Repository write contract', () {
-    test('UPDATE 使用旧 key 定位并写入 candidate 全部十列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestRepository(
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-      const oldKey = 10;
-      const candidate = CreatureOnKillReputationEntity(
-        creatureID: 11,
-        rewOnKillRepFaction1: 1,
-        rewOnKillRepFaction2: 2,
-        maxStanding1: 3,
-        maxStanding2: 4,
-        isTeamAward1: true,
-        isTeamAward2: false,
-        rewOnKillRepValue1: 5.5,
-        rewOnKillRepValue2: -2.0,
-        teamDependent: 1,
-      );
+    const oldKey = 10;
+    const candidate = CreatureOnKillReputationEntity(
+      creatureID: 11,
+      rewOnKillRepFaction1: 1,
+      rewOnKillRepFaction2: 2,
+      maxStanding1: 3,
+      maxStanding2: 4,
+      isTeamAward1: true,
+      isTeamAward2: false,
+      rewOnKillRepValue1: 5.5,
+      rewOnKillRepValue2: -2.0,
+      teamDependent: 1,
+    );
 
-      await repository.updateCreatureOnKillReputation(oldKey, candidate);
-
-      expect(queries.single.bindings, [...candidate.toJson().values, oldKey]);
-    });
-
-    test('UPDATE 与 DELETE 零行报告旧记录不存在', () async {
-      final repository = _TestRepository(
-        Laconic(_RecordingDriver(affectedRows: 0)),
-      );
-      const key = 10;
-      await expectLater(
-        repository.updateCreatureOnKillReputation(
-          key,
-          const CreatureOnKillReputationEntity(),
-        ),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-      await expectLater(
-        repository.destroyCreatureOnKillReputation(key),
-        throwsA(isA<RecordNotFoundException>()),
-      );
-    });
+    testRepositoryWrites(
+      createRepository: _TestRepository.new,
+      originalKey: oldKey,
+      candidate: candidate,
+      missingCandidate: const CreatureOnKillReputationEntity(),
+      update: (repository, key, row) =>
+          repository.updateCreatureOnKillReputation(key, row),
+      destroy: (repository, key) =>
+          repository.destroyCreatureOnKillReputation(key),
+      expectedBindings: [...candidate.toJson().values, oldKey],
+    );
   });
 
   group('one-row child persisted identity', () {
@@ -82,21 +68,20 @@ void main() {
 
     tearDown(() async => GetIt.instance.reset());
 
-    test('key 修改失败保留旧 key，成功后按当前父范围重新判定身份', () async {
+    test('A failed key change preserves the old key and success resolves identity in the current parent scope', () async {
       final viewModel = CreatureOnKillReputationLinkedDetailViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.initSignals(linkKey: 10);
       const oldKey = 10;
       expect(viewModel.editingKey.value, oldKey);
       viewModel.creatureIDController.init(11);
-      repository.failUpdates = true;
 
-      await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, oldKey);
-
-      repository.failUpdates = false;
-      await viewModel.persist();
-      expect(repository.updateKeys, [oldKey, oldKey]);
+      await expectSaveRetry(
+        repository: repository,
+        originalKey: oldKey,
+        editingKey: viewModel.editingKey,
+        persist: viewModel.persist,
+      );
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.creatureIDController.collect(), 10);
 
@@ -104,7 +89,7 @@ void main() {
       expect(viewModel.editingKey.value, 11);
     });
 
-    test('没有当前父行时执行 create，成功后切换为 persisted key', () async {
+    test('A missing child is created and its persisted key becomes the editing key', () async {
       final viewModel = CreatureOnKillReputationLinkedDetailViewModel();
       addTearDown(viewModel.dispose);
       await viewModel.initSignals(linkKey: 12);
@@ -118,23 +103,21 @@ void main() {
   });
 }
 
-class _FakeRepository extends CreatureOnKillReputationRepository {
+class _FakeRepository extends CreatureOnKillReputationRepository
+    with InMemoryRowEditing<CreatureOnKillReputationEntity, int> {
+  @override
   final List<CreatureOnKillReputationEntity> rows;
-  bool failUpdates = false;
   int storeCount = 0;
-  final updateKeys = <int>[];
 
   _FakeRepository(this.rows);
 
   @override
+  int keyOf(CreatureOnKillReputationEntity row) => row.creatureID;
+
+  @override
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int key,
-  ) async {
-    for (final row in rows) {
-      if (row.creatureID == key) return row;
-    }
-    return null;
-  }
+  ) async => findRow(key);
 
   @override
   Future<int> storeCreatureOnKillReputation(
@@ -149,41 +132,7 @@ class _FakeRepository extends CreatureOnKillReputationRepository {
   Future<void> updateCreatureOnKillReputation(
     int originalKey,
     CreatureOnKillReputationEntity rep,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere((row) => row.creatureID == originalKey);
-    if (index < 0) throw StateError('missing');
-    rows[index] = rep;
-  }
-}
-
-class _RecordingDriver implements DatabaseDriver {
-  @override
-  final SqlGrammar grammar = MysqlGrammar();
-  final int affectedRows;
-  _RecordingDriver({this.affectedRows = 1});
-  @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => affectedRows;
-  @override
-  Future<void> close() async {}
-  @override
-  Future<int> insertAndGetId(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => 1;
-  @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
-  @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) async {}
-  @override
-  Future<T> transaction<T>(Future<T> Function() action) => action();
+  ) async => updateRow(originalKey, rep);
 }
 
 class _TestRepository extends CreatureOnKillReputationRepository {

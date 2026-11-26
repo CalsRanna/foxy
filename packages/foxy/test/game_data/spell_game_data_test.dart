@@ -11,7 +11,7 @@ import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 
 void main() {
-  test('关联表默认值与 core base SQL 一致', () {
+  test('Related table defaults match AzerothCore base SQL', () {
     const area = SpellAreaEntity();
     expect(area.gender, 2);
     expect(area.questStartStatus, 64);
@@ -24,49 +24,55 @@ void main() {
     expect(loot.maxCount, 1);
   });
 
-  test('父键型关联记录禁止通过 MAX+1 复制出无效引用', () async {
-    await expectLater(
-      SpellBonusDataRepository().copySpellBonusData(1),
-      throwsA(isA<CopyNotSupportedException>()),
-    );
-    await expectLater(
-      SpellCustomAttrRepository().copySpellCustomAttr(1),
-      throwsA(isA<CopyNotSupportedException>()),
-    );
-    await expectLater(
-      SpellAreaRepository().copySpellArea(
-        const SpellAreaKey(
-          spell: 1,
-          area: 1,
-          questStart: 0,
-          auraSpell: 0,
-          racemask: 0,
-          gender: 2,
+  test(
+    'Copy prevents MAX + 1 from creating an invalid parent reference',
+    () async {
+      await expectLater(
+        SpellBonusDataRepository().copySpellBonusData(1),
+        throwsA(isA<CopyNotSupportedException>()),
+      );
+      await expectLater(
+        SpellCustomAttrRepository().copySpellCustomAttr(1),
+        throwsA(isA<CopyNotSupportedException>()),
+      );
+      await expectLater(
+        SpellAreaRepository().copySpellArea(
+          const SpellAreaKey(
+            spell: 1,
+            area: 1,
+            questStart: 0,
+            auraSpell: 0,
+            racemask: 0,
+            gender: 2,
+          ),
         ),
-      ),
-      throwsA(isA<CopyNotSupportedException>()),
-    );
-    await expectLater(
-      SpellRankRepository().copySpellRank(
-        const SpellRankKey(firstSpellId: 1, rank: 1),
-      ),
-      throwsA(isA<CopyNotSupportedException>()),
-    );
-    await expectLater(
-      SpellLootTemplateRepository().copySpellLootTemplate(
-        const SpellLootTemplateKey(entry: 1, item: 1),
-      ),
-      throwsA(isA<CopyNotSupportedException>()),
-    );
-  });
+        throwsA(isA<CopyNotSupportedException>()),
+      );
+      await expectLater(
+        SpellRankRepository().copySpellRank(
+          const SpellRankKey(firstSpellId: 1, rank: 1),
+        ),
+        throwsA(isA<CopyNotSupportedException>()),
+      );
+      await expectLater(
+        SpellLootTemplateRepository().copySpellLootTemplate(
+          const SpellLootTemplateKey(entry: 1, item: 1),
+        ),
+        throwsA(isA<CopyNotSupportedException>()),
+      );
+    },
+  );
 
-  test('spell_linked_spell 类型映射为标签，未知值回退', () {
-    const linked = BriefSpellLinkedSpellEntity(type: 1);
-    expect(linked.typeLabel, '命中');
-    expect(const BriefSpellLinkedSpellEntity(type: 9).typeLabel, '9');
-  });
+  test(
+    'spell_linked_spell types map to labels and unknown values fall back',
+    () {
+      const linked = BriefSpellLinkedSpellEntity(type: 1);
+      expect(linked.typeLabel, '命中');
+      expect(const BriefSpellLinkedSpellEntity(type: 9).typeLabel, '9');
+    },
+  );
 
-  test('spell_area 任务状态掩码展开为标签，未命中回退', () {
+  test('spell_area quest status masks expand to labels and unmatched values fall back', () {
     const area = BriefSpellAreaEntity(
       questStartStatus: 0x01 | 0x08,
       questEndStatus: 0,

@@ -11,26 +11,31 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('同一次搜索并行发起列表与总数查询', (tester) async {
-    final rec = _RecordingDelegate();
-    await _openPicker(tester, rec);
-    _completeSearch(rec, 0, rows: const [111], total: 1);
-    await tester.pumpAndSettle();
-    expect(find.text('111'), findsOneWidget);
+  testWidgets(
+    'A single search starts the list and count queries concurrently',
+    (tester) async {
+      final rec = _RecordingDelegate();
+      await _openPicker(tester, rec);
+      _completeSearch(rec, 0, rows: const [111], total: 1);
+      await tester.pumpAndSettle();
+      expect(find.text('111'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(ShadButton, '查询'));
-    await tester.pump();
+      await tester.tap(find.widgetWithText(ShadButton, '查询'));
+      await tester.pump();
 
-    // Both queries of the second search are already in flight while neither
-    // has returned — a serial implementation would not have started `count`
-    // yet (it awaits `fetch` first).
-    expect(rec.pendingFetches, hasLength(2));
-    expect(rec.pendingCounts, hasLength(2));
+      // Both queries of the second search are already in flight while neither
+      // has returned — a serial implementation would not have started `count`
+      // yet (it awaits `fetch` first).
+      expect(rec.pendingFetches, hasLength(2));
+      expect(rec.pendingCounts, hasLength(2));
 
-    await tester.pumpWidget(const SizedBox());
-  });
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
-  testWidgets('过期搜索结果不覆盖最新结果', (tester) async {
+  testWidgets('Stale search results cannot replace the latest results', (
+    tester,
+  ) async {
     final rec = _RecordingDelegate();
     await _openPicker(tester, rec);
     _completeSearch(rec, 0, rows: const [111], total: 1);

@@ -36,7 +36,7 @@ void main() {
     file.writeAsBytesSync(bytes.buffer.asUint8List());
   }
 
-  test('巨大 recordCount × recordSize 声明被拒绝', () {
+  test('Rejects oversized recordCount times recordSize', () {
     writeHeader('evil.dbc', recordCount: 1 << 30, recordSize: 1 << 20);
     expect(
       () => DbcHeaderGuard.assertPayloadSafe(p.join(tempDir.path, 'evil.dbc')),
@@ -44,7 +44,7 @@ void main() {
     );
   });
 
-  test('巨大 stringBlockSize 声明被拒绝', () {
+  test('Rejects an oversized stringBlockSize', () {
     writeHeader(
       'evil2.dbc',
       recordCount: 1,
@@ -57,7 +57,7 @@ void main() {
     );
   });
 
-  test('合法头部放行', () {
+  test('Accepts a valid header', () {
     // Forty thousand rows at 300 bytes each use about 12 MB, below the cap.
     writeHeader(
       'ok.dbc',
@@ -71,7 +71,7 @@ void main() {
     );
   });
 
-  test('边界:恰好等于上限放行,超 1 字节拒绝', () {
+  test('Accepts exactly the size limit and rejects one byte above it', () {
     writeHeader(
       'boundary_ok.dbc',
       recordCount: DbcHeaderGuard.maxPayloadBytes ~/ 4,
@@ -98,7 +98,7 @@ void main() {
     );
   });
 
-  test('短文件(无头)放行,由 DbcLoader 处理', () {
+  test('Short files without headers pass through to DbcLoader', () {
     final file = File(p.join(tempDir.path, 'tiny.dbc'));
     file.writeAsBytesSync([1, 2, 3]);
     expect(() => DbcHeaderGuard.assertPayloadSafe(file.path), returnsNormally);

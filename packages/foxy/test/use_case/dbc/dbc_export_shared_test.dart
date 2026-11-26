@@ -7,37 +7,43 @@ import 'package:foxy/use_case/dbc/dbc_export_shared.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
 
 void main() {
-  test('逐表统计按批并发，且不超过批大小', () async {
-    final registry = _CountingRegistry();
+  test(
+    'Table counts run concurrently in batches within the configured limit',
+    () async {
+      final registry = _CountingRegistry();
 
-    final tables = await DbcExportShared.loadDbcExportTables(registry);
+      final tables = await DbcExportShared.loadDbcExportTables(registry);
 
-    expect(tables, hasLength(DbcDefinitions.all.length));
-    expect(registry.calls, DbcDefinitions.all.length);
-    expect(
-      registry.maxActive,
-      DbcExportShared.countBatchSize,
-      reason: '每批内并发，而批与批之间串行',
-    );
-    expect(registry.maxActive, greaterThan(1), reason: '不再是逐表串行');
-  });
+      expect(tables, hasLength(DbcDefinitions.all.length));
+      expect(registry.calls, DbcDefinitions.all.length);
+      expect(
+        registry.maxActive,
+        DbcExportShared.countBatchSize,
+        reason: '每批内并发，而批与批之间串行',
+      );
+      expect(registry.maxActive, greaterThan(1), reason: '不再是逐表串行');
+    },
+  );
 
-  test('单表失败只禁选该表，其余表照常返回', () async {
-    final failing = DbcDefinitions.all[3];
-    final registry = _CountingRegistry(failingTables: {failing.tableName});
+  test(
+    'A failed count disables only that table and returns the remaining tables',
+    () async {
+      final failing = DbcDefinitions.all[3];
+      final registry = _CountingRegistry(failingTables: {failing.tableName});
 
-    final tables = await DbcExportShared.loadDbcExportTables(registry);
+      final tables = await DbcExportShared.loadDbcExportTables(registry);
 
-    final failed = tables.firstWhere((table) => table.definition == failing);
-    expect(failed.countError, isNotNull);
-    expect(failed.recordCount, isNull);
-    expect(
-      tables.where((table) => table.countError == null),
-      hasLength(DbcDefinitions.all.length - 1),
-    );
-  });
+      final failed = tables.firstWhere((table) => table.definition == failing);
+      expect(failed.countError, isNotNull);
+      expect(failed.recordCount, isNull);
+      expect(
+        tables.where((table) => table.countError == null),
+        hasLength(DbcDefinitions.all.length - 1),
+      );
+    },
+  );
 
-  test('按文件名排序返回', () async {
+  test('Tables are returned in file name order', () async {
     final tables = await DbcExportShared.loadDbcExportTables(
       _CountingRegistry(),
     );
@@ -48,7 +54,7 @@ void main() {
     expect(fileNames, orderedEquals(fileNames.toList()..sort()));
   });
 
-  test('MPQ 用例复用 shared 入口', () async {
+  test('The MPQ use case uses the shared export entry point', () async {
     final registry = _CountingRegistry();
     final useCase = MpqExportUseCase(
       registry: registry,
