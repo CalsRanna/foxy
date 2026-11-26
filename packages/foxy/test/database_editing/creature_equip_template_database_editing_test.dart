@@ -136,10 +136,6 @@ class _FakeCreatureEquipTemplateRepository
   _FakeCreatureEquipTemplateRepository(this.rows);
 
   @override
-  CreatureEquipTemplateKey keyOf(CreatureEquipTemplateEntity row) =>
-      CreatureEquipTemplateKey.fromEntity(row);
-
-  @override
   Future<int> countCreatureEquipTemplates(int creatureID) async =>
       rows.where((row) => row.creatureID == creatureID).length;
 
@@ -176,6 +172,10 @@ class _FakeCreatureEquipTemplateRepository
   Future<CreatureEquipTemplateEntity?> getCreatureEquipTemplate(
     CreatureEquipTemplateKey key,
   ) async => findRow(key);
+
+  @override
+  CreatureEquipTemplateKey keyOf(CreatureEquipTemplateEntity row) =>
+      CreatureEquipTemplateKey.fromEntity(row);
 
   @override
   Future<void> storeCreatureEquipTemplate(

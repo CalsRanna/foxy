@@ -133,10 +133,6 @@ class _FakeRepository extends SpellLootTemplateRepository
   _FakeRepository(this.rows);
 
   @override
-  SpellLootTemplateKey keyOf(SpellLootTemplateEntity row) =>
-      SpellLootTemplateKey.fromEntity(row);
-
-  @override
   Future<int> countSpellLootTemplates(int entry) async {
     return rows.where((row) => row.entry == entry).length;
   }
@@ -174,6 +170,10 @@ class _FakeRepository extends SpellLootTemplateRepository
   Future<SpellLootTemplateEntity?> getSpellLootTemplate(
     SpellLootTemplateKey key,
   ) async => findRow(key);
+
+  @override
+  SpellLootTemplateKey keyOf(SpellLootTemplateEntity row) =>
+      SpellLootTemplateKey.fromEntity(row);
 
   @override
   Future<void> updateSpellLootTemplate(

@@ -144,6 +144,23 @@ Iterable<_Comment> _dartComments(String source) sync* {
   }
 }
 
+Iterable<({int line, String text})> _dartTestDescriptionViolations(
+  String source,
+) {
+  final result = parseString(content: source, throwIfDiagnostics: false);
+  final findings = <({int line, String text})>[];
+  result.unit.accept(
+    _TestDescriptions((offset, value) {
+      if (!_cjk.hasMatch(value)) return;
+      findings.add((
+        line: result.lineInfo.getLocation(offset).lineNumber,
+        text: value,
+      ));
+    }),
+  );
+  return findings;
+}
+
 String _git(List<String> arguments, {String? workingDirectory}) {
   final result = Process.runSync(
     'git',
@@ -164,77 +181,6 @@ Iterable<String> _trackedFiles(String root, List<String> patterns) => _git([
   '--',
   ...patterns,
 ], workingDirectory: root).split('\u0000').where((path) => path.isNotEmpty);
-
-Iterable<({int line, String text})> _dartTestDescriptionViolations(
-  String source,
-) {
-  final result = parseString(content: source, throwIfDiagnostics: false);
-  final findings = <({int line, String text})>[];
-  result.unit.accept(
-    _TestDescriptions((offset, value) {
-      if (!_cjk.hasMatch(value)) return;
-      findings.add((
-        line: result.lineInfo.getLocation(offset).lineNumber,
-        text: value,
-      ));
-    }),
-  );
-  return findings;
-}
-
-class _TestDescriptions extends RecursiveAstVisitor<void> {
-  static const _registrations = {'test', 'testWidgets', 'testGoldens', 'group'};
-
-  final void Function(int, String) onText;
-
-  _TestDescriptions(this.onText);
-
-  @override
-  void visitMethodInvocation(MethodInvocation node) {
-    final arguments = node.argumentList.arguments;
-    if (_registrations.contains(node.methodName.name) && arguments.length > 1) {
-      arguments.first.argumentExpression.accept(_DescriptionText(onText));
-    }
-    super.visitMethodInvocation(node);
-  }
-}
-
-class _DescriptionText extends RecursiveAstVisitor<void> {
-  final void Function(int, String) onText;
-
-  _DescriptionText(this.onText);
-
-  @override
-  void visitSimpleStringLiteral(SimpleStringLiteral node) =>
-      onText(node.offset, node.value);
-
-  @override
-  void visitInterpolationString(InterpolationString node) =>
-      onText(node.offset, node.value);
-
-  @override
-  void visitInterpolationExpression(InterpolationExpression node) {
-    final value = node.expression;
-    if (value is SimpleIdentifier) {
-      for (var parent = node.parent; parent != null; parent = parent.parent) {
-        if (parent
-            case ForStatement(
-              forLoopParts: ForEachPartsWithDeclaration(
-                :final loopVariable,
-                iterable: ListLiteral(:final elements),
-              ),
-            )
-            when loopVariable.name.lexeme == value.name) {
-          for (final label in elements.whereType<SimpleStringLiteral>()) {
-            onText(label.offset, label.value);
-          }
-          break;
-        }
-      }
-    }
-    super.visitInterpolationExpression(node);
-  }
-}
 
 Iterable<_Comment> _violations(Iterable<_Comment> comments) =>
     comments.where((comment) => _cjk.hasMatch(comment.text));
@@ -285,3 +231,57 @@ Iterable<YamlScalar> _yamlScalars(YamlNode node) sync* {
 }
 
 typedef _Comment = ({int line, String text});
+
+class _DescriptionText extends RecursiveAstVisitor<void> {
+  final void Function(int, String) onText;
+
+  _DescriptionText(this.onText);
+
+  @override
+  void visitInterpolationExpression(InterpolationExpression node) {
+    final value = node.expression;
+    if (value is SimpleIdentifier) {
+      for (var parent = node.parent; parent != null; parent = parent.parent) {
+        if (parent
+            case ForStatement(
+              forLoopParts: ForEachPartsWithDeclaration(
+                :final loopVariable,
+                iterable: ListLiteral(:final elements),
+              ),
+            )
+            when loopVariable.name.lexeme == value.name) {
+          for (final label in elements.whereType<SimpleStringLiteral>()) {
+            onText(label.offset, label.value);
+          }
+          break;
+        }
+      }
+    }
+    super.visitInterpolationExpression(node);
+  }
+
+  @override
+  void visitInterpolationString(InterpolationString node) =>
+      onText(node.offset, node.value);
+
+  @override
+  void visitSimpleStringLiteral(SimpleStringLiteral node) =>
+      onText(node.offset, node.value);
+}
+
+class _TestDescriptions extends RecursiveAstVisitor<void> {
+  static const _registrations = {'test', 'testWidgets', 'testGoldens', 'group'};
+
+  final void Function(int, String) onText;
+
+  _TestDescriptions(this.onText);
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    final arguments = node.argumentList.arguments;
+    if (_registrations.contains(node.methodName.name) && arguments.length > 1) {
+      arguments.first.argumentExpression.accept(_DescriptionText(onText));
+    }
+    super.visitMethodInvocation(node);
+  }
+}

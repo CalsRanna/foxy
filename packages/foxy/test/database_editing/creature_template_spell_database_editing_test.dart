@@ -176,10 +176,6 @@ class _FakeCreatureTemplateSpellRepository
   _FakeCreatureTemplateSpellRepository(this.rows);
 
   @override
-  CreatureTemplateSpellKey keyOf(CreatureTemplateSpellEntity row) =>
-      CreatureTemplateSpellKey.fromEntity(row);
-
-  @override
   Future<int> countCreatureTemplateSpells(int creatureID) async {
     return rows.where((row) => row.creatureID == creatureID).length;
   }
@@ -219,6 +215,10 @@ class _FakeCreatureTemplateSpellRepository
   Future<CreatureTemplateSpellEntity?> getCreatureTemplateSpell(
     CreatureTemplateSpellKey key,
   ) async => findRow(key);
+
+  @override
+  CreatureTemplateSpellKey keyOf(CreatureTemplateSpellEntity row) =>
+      CreatureTemplateSpellKey.fromEntity(row);
 
   @override
   Future<void> storeCreatureTemplateSpell(

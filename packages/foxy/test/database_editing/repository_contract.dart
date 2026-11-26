@@ -4,6 +4,45 @@ import 'package:laconic/laconic.dart';
 
 import 'recording_driver.dart';
 
+void testBriefPagination({
+  required Future<void> Function(Laconic) queryPageTwo,
+  String? tableAlias,
+  void Function(LaconicQuery)? verifyQuery,
+}) {
+  test('Brief queries explicitly select columns, sort deterministically, and paginate', () async {
+    final queries = <LaconicQuery>[];
+    await queryPageTwo(Laconic(RecordingDriver(), listen: queries.add));
+
+    final query = queries.single;
+    final wildcard = tableAlias == null ? '*' : '$tableAlias.*';
+    final sql = query.sql.toLowerCase();
+    expect(query.sql, isNot(contains(wildcard)));
+    expect(sql, contains('order by'));
+    expect(sql, contains('limit ? offset ?'));
+    expect(query.bindings.sublist(query.bindings.length - 2), [50, 50]);
+    verifyQuery?.call(query);
+  });
+}
+
+void testMissingWrites<R>({
+  required R Function(Laconic) createRepository,
+  required Future<void> Function(R) update,
+  required Future<void> Function(R) destroy,
+}) {
+  test(
+    'UPDATE and DELETE report a missing record when zero rows are affected',
+    () async {
+      final repository = createRepository(
+        Laconic(RecordingDriver(affectedRows: 0)),
+      );
+      final notFound = throwsA(isA<RecordNotFoundException>());
+
+      await expectLater(update(repository), notFound);
+      await expectLater(destroy(repository), notFound);
+    },
+  );
+}
+
 void testRepositoryWrites<R, K, E>({
   required R Function(Laconic) createRepository,
   required K originalKey,
@@ -46,43 +85,4 @@ void testUpdateQuery({
       verify(query);
     },
   );
-}
-
-void testMissingWrites<R>({
-  required R Function(Laconic) createRepository,
-  required Future<void> Function(R) update,
-  required Future<void> Function(R) destroy,
-}) {
-  test(
-    'UPDATE and DELETE report a missing record when zero rows are affected',
-    () async {
-      final repository = createRepository(
-        Laconic(RecordingDriver(affectedRows: 0)),
-      );
-      final notFound = throwsA(isA<RecordNotFoundException>());
-
-      await expectLater(update(repository), notFound);
-      await expectLater(destroy(repository), notFound);
-    },
-  );
-}
-
-void testBriefPagination({
-  required Future<void> Function(Laconic) queryPageTwo,
-  String? tableAlias,
-  void Function(LaconicQuery)? verifyQuery,
-}) {
-  test('Brief queries explicitly select columns, sort deterministically, and paginate', () async {
-    final queries = <LaconicQuery>[];
-    await queryPageTwo(Laconic(RecordingDriver(), listen: queries.add));
-
-    final query = queries.single;
-    final wildcard = tableAlias == null ? '*' : '$tableAlias.*';
-    final sql = query.sql.toLowerCase();
-    expect(query.sql, isNot(contains(wildcard)));
-    expect(sql, contains('order by'));
-    expect(sql, contains('limit ? offset ?'));
-    expect(query.bindings.sublist(query.bindings.length - 2), [50, 50]);
-    verifyQuery?.call(query);
-  });
 }

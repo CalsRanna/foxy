@@ -112,12 +112,12 @@ class _FakeRepository extends CreatureOnKillReputationRepository
   _FakeRepository(this.rows);
 
   @override
-  int keyOf(CreatureOnKillReputationEntity row) => row.creatureID;
-
-  @override
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int key,
   ) async => findRow(key);
+
+  @override
+  int keyOf(CreatureOnKillReputationEntity row) => row.creatureID;
 
   @override
   Future<int> storeCreatureOnKillReputation(

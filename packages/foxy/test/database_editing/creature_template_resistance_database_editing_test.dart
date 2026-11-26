@@ -176,10 +176,6 @@ class _FakeCreatureTemplateResistanceRepository
   _FakeCreatureTemplateResistanceRepository(this.rows);
 
   @override
-  CreatureTemplateResistanceKey keyOf(CreatureTemplateResistanceEntity row) =>
-      CreatureTemplateResistanceKey.fromEntity(row);
-
-  @override
   Future<int> countCreatureTemplateResistances(int creatureID) async {
     return rows.where((row) => row.creatureID == creatureID).length;
   }
@@ -217,6 +213,10 @@ class _FakeCreatureTemplateResistanceRepository
   Future<CreatureTemplateResistanceEntity?> getCreatureTemplateResistance(
     CreatureTemplateResistanceKey key,
   ) async => findRow(key);
+
+  @override
+  CreatureTemplateResistanceKey keyOf(CreatureTemplateResistanceEntity row) =>
+      CreatureTemplateResistanceKey.fromEntity(row);
 
   @override
   Future<void> storeCreatureTemplateResistance(

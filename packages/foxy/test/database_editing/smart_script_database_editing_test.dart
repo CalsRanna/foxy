@@ -180,9 +180,6 @@ class _FakeRepository extends SmartScriptRepository
   _FakeRepository(this.rows);
 
   @override
-  SmartScriptKey keyOf(SmartScriptEntity row) => SmartScriptKey.fromEntity(row);
-
-  @override
   Future<SmartScriptEntity> createSmartScript({
     int entryOrGuid = 0,
     int sourceType = 0,
@@ -195,6 +192,9 @@ class _FakeRepository extends SmartScriptRepository
   @override
   Future<SmartScriptEntity?> getSmartScript(SmartScriptKey key) async =>
       findRow(key);
+
+  @override
+  SmartScriptKey keyOf(SmartScriptEntity row) => SmartScriptKey.fromEntity(row);
 
   @override
   Future<void> storeSmartScript(SmartScriptEntity script) async {

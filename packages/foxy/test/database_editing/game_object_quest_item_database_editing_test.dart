@@ -130,10 +130,6 @@ class _FakeRepository extends GameObjectQuestItemRepository
   _FakeRepository(this.rows);
 
   @override
-  GameObjectQuestItemKey keyOf(GameObjectQuestItemEntity row) =>
-      GameObjectQuestItemKey.fromEntity(row);
-
-  @override
   Future<int> countGameObjectQuestItems(int gameObjectEntry) async {
     return rows.where((row) => row.gameObjectEntry == gameObjectEntry).length;
   }
@@ -167,6 +163,10 @@ class _FakeRepository extends GameObjectQuestItemRepository
   Future<GameObjectQuestItemEntity?> getGameObjectQuestItem(
     GameObjectQuestItemKey key,
   ) async => findRow(key);
+
+  @override
+  GameObjectQuestItemKey keyOf(GameObjectQuestItemEntity row) =>
+      GameObjectQuestItemKey.fromEntity(row);
 
   @override
   Future<void> updateGameObjectQuestItem(

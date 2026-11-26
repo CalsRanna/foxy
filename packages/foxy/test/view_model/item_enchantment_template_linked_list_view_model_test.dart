@@ -138,6 +138,11 @@ class _EnchantmentRepository extends ItemEnchantmentTemplateRepository {
   }) async => counts[ItemEnchantmentTemplateLinkKey(entry: entry, kind: kind)]!;
 
   @override
+  Future<void> destroyItemEnchantmentTemplate(
+    ItemEnchantmentTemplateKey key,
+  ) async => onDestroy!(key);
+
+  @override
   Future<List<BriefItemEnchantmentTemplateEntity>>
   getBriefItemEnchantmentTemplatesByEntry(
     int entry, {
@@ -158,9 +163,4 @@ class _EnchantmentRepository extends ItemEnchantmentTemplateRepository {
   Future<ItemEnchantmentTemplateEntity?> getItemEnchantmentTemplate(
     ItemEnchantmentTemplateKey key,
   ) async => ItemEnchantmentTemplateEntity(entry: key.entry, ench: key.ench);
-
-  @override
-  Future<void> destroyItemEnchantmentTemplate(
-    ItemEnchantmentTemplateKey key,
-  ) async => onDestroy!(key);
 }

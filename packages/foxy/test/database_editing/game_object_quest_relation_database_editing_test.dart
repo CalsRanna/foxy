@@ -165,10 +165,6 @@ class _FakeEnderRepository extends GameObjectQuestEnderRepository
   _FakeEnderRepository(this.rows);
 
   @override
-  GameObjectQuestEnderKey keyOf(GameObjectQuestEnderEntity row) =>
-      GameObjectQuestEnderKey.fromEntity(row);
-
-  @override
   Future<int> countGameObjectQuestEnders(int questId) async =>
       rows.where((row) => row.quest == questId).length;
 
@@ -192,6 +188,10 @@ class _FakeEnderRepository extends GameObjectQuestEnderRepository
   ) async => findRow(key);
 
   @override
+  GameObjectQuestEnderKey keyOf(GameObjectQuestEnderEntity row) =>
+      GameObjectQuestEnderKey.fromEntity(row);
+
+  @override
   Future<void> updateGameObjectQuestEnder(
     GameObjectQuestEnderKey originalKey,
     GameObjectQuestEnderEntity model,
@@ -208,10 +208,6 @@ class _FakeStarterRepository extends GameObjectQuestStarterRepository
   final List<GameObjectQuestStarterEntity> rows;
 
   _FakeStarterRepository(this.rows);
-
-  @override
-  GameObjectQuestStarterKey keyOf(GameObjectQuestStarterEntity row) =>
-      GameObjectQuestStarterKey.fromEntity(row);
 
   @override
   Future<int> countGameObjectQuestStarters(int questId) async =>
@@ -233,6 +229,10 @@ class _FakeStarterRepository extends GameObjectQuestStarterRepository
   Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
     GameObjectQuestStarterKey key,
   ) async => findRow(key);
+
+  @override
+  GameObjectQuestStarterKey keyOf(GameObjectQuestStarterEntity row) =>
+      GameObjectQuestStarterKey.fromEntity(row);
 
   @override
   Future<void> updateGameObjectQuestStarter(

@@ -1,10 +1,8 @@
 mixin InMemoryRowEditing<E, K> {
-  List<E> get rows;
-
   bool failUpdates = false;
-  final updateKeys = <K>[];
 
-  K keyOf(E row);
+  final updateKeys = <K>[];
+  List<E> get rows;
 
   E? findRow(K key) {
     for (final row in rows) {
@@ -12,6 +10,8 @@ mixin InMemoryRowEditing<E, K> {
     }
     return null;
   }
+
+  K keyOf(E row);
 
   void updateRow(K originalKey, E candidate) {
     updateKeys.add(originalKey);

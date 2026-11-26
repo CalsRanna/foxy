@@ -173,9 +173,6 @@ class _FakeNpcVendorRepository extends NpcVendorRepository
   _FakeNpcVendorRepository(this.rows);
 
   @override
-  NpcVendorKey keyOf(NpcVendorEntity row) => NpcVendorKey.fromEntity(row);
-
-  @override
   Future<int> countNpcVendors(int entry) async {
     return rows.where((row) => row.entry == entry).length;
   }
@@ -213,6 +210,9 @@ class _FakeNpcVendorRepository extends NpcVendorRepository
 
   @override
   Future<NpcVendorEntity?> getNpcVendor(NpcVendorKey key) async => findRow(key);
+
+  @override
+  NpcVendorKey keyOf(NpcVendorEntity row) => NpcVendorKey.fromEntity(row);
 
   @override
   Future<void> storeNpcVendor(NpcVendorEntity vendor) async {

@@ -213,9 +213,6 @@ class _FakeNpcTrainerRepository extends NpcTrainerRepository
   _FakeNpcTrainerRepository(this.rows);
 
   @override
-  NpcTrainerKey keyOf(NpcTrainerEntity row) => NpcTrainerKey.fromEntity(row);
-
-  @override
   Future<int> countNpcTrainers(int trainerId) async {
     return rows.where((row) => row.trainerId == trainerId).length;
   }
@@ -242,6 +239,9 @@ class _FakeNpcTrainerRepository extends NpcTrainerRepository
   @override
   Future<NpcTrainerEntity?> getNpcTrainer(NpcTrainerKey key) async =>
       findRow(key);
+
+  @override
+  NpcTrainerKey keyOf(NpcTrainerEntity row) => NpcTrainerKey.fromEntity(row);
 
   @override
   Future<void> storeNpcTrainer(NpcTrainerEntity trainer) async {

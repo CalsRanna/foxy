@@ -146,10 +146,6 @@ class _FakeEnderRepository extends CreatureQuestEnderRepository
   _FakeEnderRepository(this.rows);
 
   @override
-  CreatureQuestEnderKey keyOf(CreatureQuestEnderEntity row) =>
-      CreatureQuestEnderKey.fromEntity(row);
-
-  @override
   Future<int> countCreatureQuestEnders(int questId) async =>
       rows.where((row) => row.quest == questId).length;
 
@@ -168,6 +164,10 @@ class _FakeEnderRepository extends CreatureQuestEnderRepository
   ) async => findRow(key);
 
   @override
+  CreatureQuestEnderKey keyOf(CreatureQuestEnderEntity row) =>
+      CreatureQuestEnderKey.fromEntity(row);
+
+  @override
   Future<void> updateCreatureQuestEnder(
     CreatureQuestEnderKey originalKey,
     CreatureQuestEnderEntity model,
@@ -183,10 +183,6 @@ class _FakeStarterRepository extends CreatureQuestStarterRepository
   @override
   final List<CreatureQuestStarterEntity> rows;
   _FakeStarterRepository(this.rows);
-
-  @override
-  CreatureQuestStarterKey keyOf(CreatureQuestStarterEntity row) =>
-      CreatureQuestStarterKey.fromEntity(row);
 
   @override
   Future<int> countCreatureQuestStarters(int questId) async =>
@@ -207,6 +203,10 @@ class _FakeStarterRepository extends CreatureQuestStarterRepository
   Future<CreatureQuestStarterEntity?> getCreatureQuestStarter(
     CreatureQuestStarterKey key,
   ) async => findRow(key);
+
+  @override
+  CreatureQuestStarterKey keyOf(CreatureQuestStarterEntity row) =>
+      CreatureQuestStarterKey.fromEntity(row);
 
   @override
   Future<void> updateCreatureQuestStarter(
