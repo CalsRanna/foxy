@@ -19,8 +19,8 @@ import 'package:path/path.dart' as p;
 /// Generated titles use a `.title` file so listing does not scan the transcript.
 ///
 /// Appends are serialized through [_pending]; a partially written trailing
-/// line (hard kill during a write) is ignored on load, and a user message
-/// whose protocol item never made it to disk is repaired on load.
+/// line (hard kill during a write) is ignored on load. User messages and
+/// tool calls whose corresponding protocol items were lost are repaired on load.
 class AgentSessionStore {
   static const _fileExtension = '.jsonl';
 
@@ -119,7 +119,7 @@ class AgentSessionStore {
               : AgentChatSession.titleFrom(firstUser.text)),
     );
     session.messages.addAll(messages);
-    session.session.addItems(items);
+    session.session.addItems(_repairInterruptedToolCalls(id, items));
     return session;
   }
 
@@ -222,6 +222,46 @@ class AgentSessionStore {
     );
     if (hasUserItem) return;
     items.add({'role': 'user', 'content': lastUser.text});
+  }
+
+  List<Map<String, Object?>> _repairInterruptedToolCalls(
+    String id,
+    List<Map<String, Object?>> items,
+  ) {
+    final outputIds = {
+      for (final item in items)
+        if (item['type'] == 'function_call_output') item['call_id'],
+    };
+    final replay = <Map<String, Object?>>[];
+    final interrupted = <Map<String, Object?>>[];
+    var repairedCount = 0;
+    for (final item in items) {
+      // A later user message or a Foxy run diagnostic ends the tool round.
+      if (item['role'] == 'user' ||
+          (item['role'] == 'assistant' && item['type'] == null)) {
+        replay.addAll(interrupted);
+        interrupted.clear();
+      }
+      replay.add(item);
+      final callId = item['call_id'];
+      if (item['type'] == 'function_call' &&
+          callId is String &&
+          !outputIds.contains(callId)) {
+        interrupted.add({
+          'type': 'function_call_output',
+          'call_id': callId,
+          'output': 'Tool execution was interrupted before a result was saved.',
+        });
+        repairedCount++;
+      }
+    }
+    replay.addAll(interrupted);
+    if (repairedCount > 0) {
+      LoggerUtil.instance.w(
+        'recovered $repairedCount interrupted tool calls in agent session $id',
+      );
+    }
+    return replay;
   }
 
   File _titleFileOf(String id) => File(p.join(_root.path, '$id.title'));

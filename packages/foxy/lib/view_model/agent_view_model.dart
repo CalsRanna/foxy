@@ -277,6 +277,7 @@ class AgentViewModel with FieldControllerMixin {
   void _closeRun(_AgentRun run) {
     unawaited(run.subscription?.cancel());
     run.chat?.close();
+    _persistNewItems(run);
     _persistReasoningSegment(run);
   }
 
@@ -298,7 +299,6 @@ class AgentViewModel with FieldControllerMixin {
 
   void _finishRun(_AgentRun run, {bool failed = false}) {
     if (!_isCurrentRun(run)) return;
-    _persistNewItems(run);
     _closeRun(run);
     final assistant = run.assistant;
     _clearEmptyAssistant(run);

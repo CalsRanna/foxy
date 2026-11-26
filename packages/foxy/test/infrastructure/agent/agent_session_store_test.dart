@@ -23,6 +23,11 @@ void main() {
     await store.appendMessage('s1', AgentChatRole.user, '原始问题');
     await store.appendItem('s1', {'role': 'user', 'content': '原始问题'});
     await store.appendItem('s1', {'type': 'function_call', 'call_id': 'c1'});
+    await store.appendItem('s1', {
+      'type': 'function_call_output',
+      'call_id': 'c1',
+      'output': '结果',
+    });
     await store.saveTitle('s1', '生成标题');
 
     final previousDir = Directory.current;
@@ -59,6 +64,11 @@ void main() {
       'name': 'query_rows',
       'arguments': '{}',
     });
+    await store.appendItem(id, {
+      'type': 'function_call_output',
+      'call_id': 'c1',
+      'output': '结果',
+    });
 
     expect((await store.list()).single.id, id);
     final loaded = await store.load(id);
@@ -69,8 +79,11 @@ void main() {
       AgentChatRole.user,
       AgentChatRole.assistant,
     ]);
-    expect(loaded.session.items, hasLength(2));
-    expect(loaded.session.items.last['type'], 'function_call');
+    expect(loaded.session.items.map((item) => item['type']), [
+      null,
+      'function_call',
+      'function_call_output',
+    ]);
   });
 
   test('list derives titles and orders by recency', () async {
@@ -127,6 +140,72 @@ void main() {
       {'role': 'user', 'content': 'hello'},
     ]);
   });
+
+  test(
+    'repairs unanswered tool calls when replaying a saved session',
+    () async {
+      const user = {'role': 'user', 'content': 'query'};
+      const completed = {'type': 'function_call', 'call_id': 'completed'};
+      const output = {
+        'type': 'function_call_output',
+        'call_id': 'completed',
+        'output': 'result',
+      };
+      const reasoning = {'type': 'reasoning', 'id': 'rs_1', 'summary': []};
+      const interrupted = {'type': 'function_call', 'call_id': 'interrupted'};
+      const diagnostic = {'role': 'assistant', 'content': 'Foxy 运行诊断：本轮未完成'};
+      const followUp = {'role': 'user', 'content': 'retry'};
+      const lastCall = {
+        'type': 'function_call',
+        'call_id': 'interrupted_again',
+      };
+      const interruption =
+          'Tool execution was interrupted before a result was saved.';
+      await store.createSession('s1');
+      await store.appendMessage(
+        's1',
+        AgentChatRole.user,
+        'query',
+        inputItem: user,
+      );
+      await store.appendMessage('s1', AgentChatRole.tool, '调用 query_sql');
+      for (final item in [
+        completed,
+        reasoning,
+        interrupted,
+        output,
+        diagnostic,
+        followUp,
+        lastCall,
+      ]) {
+        await store.appendItem('s1', item);
+      }
+
+      final restored = (await store.load('s1'))!;
+
+      expect(restored.session.items, [
+        user,
+        completed,
+        reasoning,
+        interrupted,
+        output,
+        {
+          'type': 'function_call_output',
+          'call_id': 'interrupted',
+          'output': interruption,
+        },
+        diagnostic,
+        followUp,
+        lastCall,
+        {
+          'type': 'function_call_output',
+          'call_id': 'interrupted_again',
+          'output': interruption,
+        },
+      ]);
+      expect(restored.messages.last.text, '调用 query_sql');
+    },
+  );
 
   test('delete removes the session file', () async {
     await store.createSession('s1');

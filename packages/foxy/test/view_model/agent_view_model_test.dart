@@ -14,6 +14,12 @@ import 'package:foxy_agent/foxy_agent.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
+const _testProvider = AgentProviderConfig(
+  baseUrl: 'https://example.test/v1',
+  apiKey: 'test-key',
+  model: 'test-model',
+);
+
 void main() {
   late Directory tempDir;
   late AgentSessionStore store;
@@ -404,6 +410,86 @@ void main() {
     await chat.controller.close();
   });
 
+  for (final interrupt in ['stop', 'dispose']) {
+    test('reopens and sends after $interrupt during a tool call', () async {
+      final tool = _PendingTool();
+      const call = {
+        'type': 'function_call',
+        'call_id': 'call_1',
+        'name': 'pending_tool',
+        'arguments': '{}',
+      };
+      final viewModel = _buildViewModel(
+        AgentChatUseCase(
+          provider: _testProvider,
+          catalog: const TableCatalog([]),
+          dataSource: _FakeDataSource(),
+          featureTool: tool,
+          httpClient: MockClient((_) async {
+            final event = jsonEncode({
+              'type': 'response.completed',
+              'response': {
+                'output': [call],
+              },
+            });
+            return http.Response('data: $event\n\n', 200);
+          }),
+        ),
+        store,
+      );
+      if (interrupt == 'stop') addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      viewModel.draftController.init('query');
+      await viewModel.send();
+      await tool.started.future;
+      final original = viewModel.activeSession!;
+
+      if (interrupt == 'stop') {
+        viewModel.stop();
+      } else {
+        viewModel.dispose();
+      }
+      tool.result.complete('late result');
+      await pumpEventQueue();
+
+      final requestInput = Completer<Object?>();
+      final reopened = _buildViewModel(
+        AgentChatUseCase(
+          provider: _testProvider,
+          catalog: const TableCatalog([]),
+          dataSource: _FakeDataSource(),
+          httpClient: MockClient((request) async {
+            requestInput.complete(
+              jsonDecode(utf8.decode(request.bodyBytes))['input'],
+            );
+            return http.Response(
+              'data: {"type":"response.completed","response":{"output":[]}}\n\n',
+              200,
+            );
+          }),
+        ),
+        store,
+      );
+      addTearDown(reopened.dispose);
+      await reopened.initSignals();
+      expect(reopened.activeSessionId.value, original.id);
+      expect(
+        reopened.messages.value.map((message) => message.role),
+        contains(AgentChatRole.tool),
+      );
+
+      reopened.draftController.init('retry');
+      await reopened.send();
+      const user = {'role': 'user', 'content': 'query'};
+      expect(await requestInput.future, [
+        user,
+        {'role': 'user', 'content': 'retry'},
+      ]);
+      expect(original.session.items, [user]);
+      await pumpEventQueue();
+    });
+  }
+
   test(
     'saves a draft only on send and names the originating session',
     () async {
@@ -514,11 +600,7 @@ final class _FakeChat extends AgentChatUseCase {
 
   _FakeChat()
     : super(
-        provider: const AgentProviderConfig(
-          baseUrl: 'https://example.test/v1',
-          apiKey: 'test-key',
-          model: 'test-model',
-        ),
+        provider: _testProvider,
         catalog: const TableCatalog([]),
         dataSource: _FakeDataSource(),
       );
@@ -530,6 +612,26 @@ final class _FakeChat extends AgentChatUseCase {
   Stream<AgentEvent> run(AgentSession session, String message) {
     session.addUserMessage(message);
     return controller.stream;
+  }
+}
+
+final class _PendingTool extends AgentTool {
+  final started = Completer<void>();
+  final result = Completer<String>();
+
+  @override
+  String get description => 'Waits for a result.';
+
+  @override
+  Map<String, Object?> get inputSchema => const {'type': 'object'};
+
+  @override
+  String get name => 'pending_tool';
+
+  @override
+  Future<String> call(Map<String, Object?> arguments) {
+    started.complete();
+    return result.future;
   }
 }
 

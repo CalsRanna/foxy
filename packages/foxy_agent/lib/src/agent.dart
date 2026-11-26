@@ -141,11 +141,11 @@ final class FoxyAgent {
             yield AgentReasoningDoneEvent(text);
           }
         }
-        session.addItems(items);
         final calls = items
             .where((item) => item['type'] == 'function_call')
             .toList();
         if (calls.isEmpty) {
+          session.addItems(items);
           yield const AgentCompletedEvent();
           return;
         }
@@ -166,17 +166,19 @@ final class FoxyAgent {
             ),
           );
         }
+        final outputs = <JsonMap>[];
         for (final future in pending) {
           final result = await future;
-          session.addItems([
-            {
-              'type': 'function_call_output',
-              'call_id': result.callId,
-              'output': result.output,
-            },
-          ]);
+          outputs.add({
+            'type': 'function_call_output',
+            'call_id': result.callId,
+            'output': result.output,
+          });
           yield result;
         }
+        // Commit the model output and every tool result together. A canceled
+        // stream stops at yield, leaving the session safe to replay.
+        session.addItems(items.followedBy(outputs));
       }
     } on AgentHttpException catch (error) {
       // The failure can be replayed in a later request. The response body
