@@ -1,5 +1,4 @@
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
-import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -11,25 +10,6 @@ part 'game_object_template_locale_repository.g.dart';
 class GameObjectTemplateLocaleRepository
     with RepositoryMixin, _GameObjectTemplateLocaleRepositoryMixin {
   static const primaryKeyColumns = {'entry', 'locale'};
-
-  Future<void> applyGameObjectTemplateLocaleChanges({
-    required List<GameObjectTemplateLocaleEntity> creations,
-    required List<GameObjectTemplateLocaleKey> deletions,
-    required Map<GameObjectTemplateLocaleKey, GameObjectTemplateLocaleEntity>
-    updates,
-  }) async {
-    await const DatabaseTransaction().execute(() async {
-      for (final key in deletions) {
-        await destroyGameObjectTemplateLocale(key);
-      }
-      for (final update in updates.entries) {
-        await updateGameObjectTemplateLocale(update.key, update.value);
-      }
-      for (final locale in creations) {
-        await storeGameObjectTemplateLocale(locale);
-      }
-    });
-  }
 
   Future<int> countGameObjectTemplateLocales({required int entry}) {
     return laconic.table(_table).where('entry', entry).count();

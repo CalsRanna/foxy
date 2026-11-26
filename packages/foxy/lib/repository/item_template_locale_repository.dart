@@ -1,5 +1,4 @@
 import 'package:foxy/entity/item_template_locale_entity.dart';
-import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -11,24 +10,6 @@ part 'item_template_locale_repository.g.dart';
 class ItemTemplateLocaleRepository
     with RepositoryMixin, _ItemTemplateLocaleRepositoryMixin {
   static const primaryKeyColumns = {'ID', 'locale'};
-
-  Future<void> applyItemTemplateLocaleChanges({
-    required List<ItemTemplateLocaleEntity> creations,
-    required List<ItemTemplateLocaleKey> deletions,
-    required Map<ItemTemplateLocaleKey, ItemTemplateLocaleEntity> updates,
-  }) async {
-    await const DatabaseTransaction().execute(() async {
-      for (final key in deletions) {
-        await destroyItemTemplateLocale(key);
-      }
-      for (final update in updates.entries) {
-        await updateItemTemplateLocale(update.key, update.value);
-      }
-      for (final locale in creations) {
-        await storeItemTemplateLocale(locale);
-      }
-    });
-  }
 
   Future<int> countItemTemplateLocales({required int id}) async {
     return laconic.table(_table).where('ID', id).count();

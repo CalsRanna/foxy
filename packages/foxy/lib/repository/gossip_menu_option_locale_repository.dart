@@ -1,6 +1,5 @@
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
-import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -12,28 +11,6 @@ part 'gossip_menu_option_locale_repository.g.dart';
 class GossipMenuOptionLocaleRepository
     with RepositoryMixin, _GossipMenuOptionLocaleRepositoryMixin {
   static const primaryKeyColumns = {'MenuID', 'OptionID', 'Locale'};
-
-  /// Applies locale-editor changes atomically: deletions, then updates, then
-  /// creations (deletion must run before store, since an update may change
-  /// the locale back to a deleted one).
-  Future<void> applyGossipMenuOptionLocaleChanges({
-    required List<GossipMenuOptionLocaleEntity> creations,
-    required List<GossipMenuOptionLocaleKey> deletions,
-    required Map<GossipMenuOptionLocaleKey, GossipMenuOptionLocaleEntity>
-    updates,
-  }) async {
-    await const DatabaseTransaction().execute(() async {
-      for (final key in deletions) {
-        await destroyGossipMenuOptionLocale(key);
-      }
-      for (final update in updates.entries) {
-        await updateGossipMenuOptionLocale(update.key, update.value);
-      }
-      for (final locale in creations) {
-        await storeGossipMenuOptionLocale(locale);
-      }
-    });
-  }
 
   Future<void> copyGossipMenuOptionLocales(
     GossipMenuOptionKey sourceKey,

@@ -1,5 +1,4 @@
 import 'package:foxy/entity/page_text_locale_entity.dart';
-import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -11,24 +10,6 @@ part 'page_text_locale_repository.g.dart';
 class PageTextLocaleRepository
     with RepositoryMixin, _PageTextLocaleRepositoryMixin {
   static const primaryKeyColumns = {'ID', 'locale'};
-
-  Future<void> applyPageTextLocaleChanges({
-    required List<PageTextLocaleEntity> creations,
-    required List<PageTextLocaleKey> deletions,
-    required Map<PageTextLocaleKey, PageTextLocaleEntity> updates,
-  }) async {
-    await const DatabaseTransaction().execute(() async {
-      for (final key in deletions) {
-        await destroyPageTextLocale(key);
-      }
-      for (final update in updates.entries) {
-        await updatePageTextLocale(update.key, update.value);
-      }
-      for (final locale in creations) {
-        await storePageTextLocale(locale);
-      }
-    });
-  }
 
   Future<int> countPageTextLocales(int id) {
     return laconic.table(_table).where('ID', id).count();

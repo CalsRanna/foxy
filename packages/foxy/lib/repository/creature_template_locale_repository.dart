@@ -1,5 +1,4 @@
 import 'package:foxy/entity/creature_template_locale_entity.dart';
-import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -11,25 +10,6 @@ part 'creature_template_locale_repository.g.dart';
 class CreatureTemplateLocaleRepository
     with RepositoryMixin, _CreatureTemplateLocaleRepositoryMixin {
   static const primaryKeyColumns = {'entry', 'locale'};
-
-  Future<void> applyCreatureTemplateLocaleChanges({
-    required List<CreatureTemplateLocaleEntity> creations,
-    required List<CreatureTemplateLocaleKey> deletions,
-    required Map<CreatureTemplateLocaleKey, CreatureTemplateLocaleEntity>
-    updates,
-  }) async {
-    await const DatabaseTransaction().execute(() async {
-      for (final key in deletions) {
-        await destroyCreatureTemplateLocale(key);
-      }
-      for (final update in updates.entries) {
-        await updateCreatureTemplateLocale(update.key, update.value);
-      }
-      for (final locale in creations) {
-        await storeCreatureTemplateLocale(locale);
-      }
-    });
-  }
 
   Future<int> countCreatureTemplateLocales({required int entry}) {
     return laconic.table(_table).where('entry', entry).count();

@@ -54,6 +54,7 @@ void main() {
     r'''^\s*(?:import|export)\s+['"](package:[^'"]+)['"]''',
     multiLine: true,
   );
+  final transaction = RegExp(r'\bDatabaseTransaction\b|\.transaction\s*\(');
 
   for (final entry in allowedLayers.entries) {
     test('${entry.key} keeps its dependencies within its layer boundary', () {
@@ -74,10 +75,20 @@ void main() {
           ))
             'repository',
         };
-        for (final match in directive.allMatches(file.readAsStringSync())) {
+        final source = file.readAsStringSync();
+        if (entry.key == 'repository' && transaction.hasMatch(source)) {
+          violations.add('${file.path} coordinates a database transaction');
+        }
+        for (final match in directive.allMatches(source)) {
           final uri = Uri.parse(match.group(1)!);
           final segments = uri.pathSegments;
-          if ((segments.first == 'foxy' && !allowed.contains(segments[1])) ||
+          final localePickerSave =
+              p.basename(file.path) == 'foxy_locale_picker_delegates.dart' &&
+              uri.path ==
+                  'foxy/use_case/locale/apply_database_locale_changes_use_case.dart';
+          if ((segments.first == 'foxy' &&
+                  !allowed.contains(segments[1]) &&
+                  !localePickerSave) ||
               (segments.first == 'foxy_widget' &&
                   !allowed.contains('widget'))) {
             violations.add('${file.path} imports $uri');

@@ -1,5 +1,4 @@
 import 'package:foxy/entity/quest_request_items_locale_entity.dart';
-import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy_annotation/repository_annotations.dart';
@@ -11,25 +10,6 @@ part 'quest_request_items_locale_repository.g.dart';
 class QuestRequestItemsLocaleRepository
     with RepositoryMixin, _QuestRequestItemsLocaleRepositoryMixin {
   static const primaryKeyColumns = {'ID', 'locale'};
-
-  Future<void> applyQuestRequestItemsLocaleChanges({
-    required List<QuestRequestItemsLocaleEntity> creations,
-    required List<QuestRequestItemsLocaleKey> deletions,
-    required Map<QuestRequestItemsLocaleKey, QuestRequestItemsLocaleEntity>
-    updates,
-  }) async {
-    await const DatabaseTransaction().execute(() async {
-      for (final key in deletions) {
-        await destroyQuestRequestItemsLocale(key);
-      }
-      for (final update in updates.entries) {
-        await updateQuestRequestItemsLocale(update.key, update.value);
-      }
-      for (final locale in creations) {
-        await storeQuestRequestItemsLocale(locale);
-      }
-    });
-  }
 
   Future<int> countQuestRequestItemsLocales({required int id}) async {
     return laconic.table(_table).where('ID', id).count();

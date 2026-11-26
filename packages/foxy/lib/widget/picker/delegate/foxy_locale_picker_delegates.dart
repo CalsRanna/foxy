@@ -43,6 +43,7 @@ import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/talent_tab_repository.dart';
+import 'package:foxy/use_case/locale/apply_database_locale_changes_use_case.dart';
 import 'package:get_it/get_it.dart';
 
 /// Registry of locale-picker delegates, centralizing each module's
@@ -54,6 +55,9 @@ import 'package:get_it/get_it.dart';
 /// so call sites stay unchanged.
 class FoxyLocalePickerDelegates {
   static final instance = FoxyLocalePickerDelegates._();
+
+  static ApplyDatabaseLocaleChangesUseCase get _applyDatabaseLocaleChanges =>
+      GetIt.instance.get<ApplyDatabaseLocaleChangesUseCase>();
 
   static DatabaseLocaleEditorDelegate get creatureTemplateName =>
       instance._creatureTemplateName;
@@ -245,7 +249,10 @@ class FoxyLocalePickerDelegates {
           name: d['name'] ?? '',
         );
       }
-      await repo.applyGameObjectTemplateLocaleChanges(
+      await _applyDatabaseLocaleChanges.execute(
+        destroy: repo.destroyGameObjectTemplateLocale,
+        update: repo.updateGameObjectTemplateLocale,
+        store: repo.storeGameObjectTemplateLocale,
         creations: creations,
         deletions: changes.deletedLocales
             .map(
@@ -346,7 +353,10 @@ class FoxyLocalePickerDelegates {
           castBarCaption: d['castBarCaption'] ?? '',
         );
       }
-      await repo.applyGameObjectTemplateLocaleChanges(
+      await _applyDatabaseLocaleChanges.execute(
+        destroy: repo.destroyGameObjectTemplateLocale,
+        update: repo.updateGameObjectTemplateLocale,
+        store: repo.storeGameObjectTemplateLocale,
         creations: creations,
         deletions: changes.deletedLocales
             .map(
@@ -395,7 +405,10 @@ class FoxyLocalePickerDelegates {
           name: d['name'] ?? '',
         );
       }
-      await repo.applyItemTemplateLocaleChanges(
+      await _applyDatabaseLocaleChanges.execute(
+        destroy: repo.destroyItemTemplateLocale,
+        update: repo.updateItemTemplateLocale,
+        store: repo.storeItemTemplateLocale,
         creations: creations,
         deletions: changes.deletedLocales
             .map((locale) => ItemTemplateLocaleKey(id: entry, locale: locale))
@@ -442,7 +455,10 @@ class FoxyLocalePickerDelegates {
           description: d['description'] ?? '',
         );
       }
-      await repo.applyItemTemplateLocaleChanges(
+      await _applyDatabaseLocaleChanges.execute(
+        destroy: repo.destroyItemTemplateLocale,
+        update: repo.updateItemTemplateLocale,
+        store: repo.storeItemTemplateLocale,
         creations: creations,
         deletions: changes.deletedLocales
             .map((locale) => ItemTemplateLocaleKey(id: entry, locale: locale))
@@ -485,7 +501,10 @@ class FoxyLocalePickerDelegates {
           text: d['text'] ?? '',
         );
       }
-      await repo.applyPageTextLocaleChanges(
+      await _applyDatabaseLocaleChanges.execute(
+        destroy: repo.destroyPageTextLocale,
+        update: repo.updatePageTextLocale,
+        store: repo.storePageTextLocale,
         creations: creations,
         deletions: changes.deletedLocales
             .map((locale) => PageTextLocaleKey(id: entry, locale: locale))
@@ -558,7 +577,10 @@ class FoxyLocalePickerDelegates {
           rewardText: d['rewardText'] ?? '',
         );
       }
-      await repo.applyQuestOfferRewardLocaleChanges(
+      await _applyDatabaseLocaleChanges.execute(
+        destroy: repo.destroyQuestOfferRewardLocale,
+        update: repo.updateQuestOfferRewardLocale,
+        store: repo.storeQuestOfferRewardLocale,
         creations: creations,
         deletions: changes.deletedLocales
             .map(
@@ -605,7 +627,10 @@ class FoxyLocalePickerDelegates {
           completionText: d['completionText'] ?? '',
         );
       }
-      await repo.applyQuestRequestItemsLocaleChanges(
+      await _applyDatabaseLocaleChanges.execute(
+        destroy: repo.destroyQuestRequestItemsLocale,
+        update: repo.updateQuestRequestItemsLocale,
+        store: repo.storeQuestRequestItemsLocale,
         creations: creations,
         deletions: changes.deletedLocales
             .map(
@@ -897,7 +922,10 @@ class FoxyLocalePickerDelegates {
             d['locale'] ?? '',
           );
         }
-        await repo.applyCreatureTemplateLocaleChanges(
+        await _applyDatabaseLocaleChanges.execute(
+          destroy: repo.destroyCreatureTemplateLocale,
+          update: repo.updateCreatureTemplateLocale,
+          store: repo.storeCreatureTemplateLocale,
           creations: creations,
           deletions: changes.deletedLocales
               .map(
@@ -1261,7 +1289,10 @@ class FoxyLocalePickerDelegates {
             d['locale'] ?? '',
           );
         }
-        await repo.applyNpcTextLocaleChanges(
+        await _applyDatabaseLocaleChanges.execute(
+          destroy: repo.destroyNpcTextLocale,
+          update: repo.updateNpcTextLocale,
+          store: repo.storeNpcTextLocale,
           creations: creations,
           deletions: changes.deletedLocales
               .map((locale) => NpcTextLocaleKey(id: entry, locale: locale))
@@ -1366,7 +1397,10 @@ class FoxyLocalePickerDelegates {
             d['locale'] ?? '',
           );
         }
-        await repo.applyQuestTemplateLocaleChanges(
+        await _applyDatabaseLocaleChanges.execute(
+          destroy: repo.destroyQuestTemplateLocale,
+          update: repo.updateQuestTemplateLocale,
+          store: repo.storeQuestTemplateLocale,
           creations: creations,
           deletions: changes.deletedLocales
               .map(
@@ -1471,7 +1505,10 @@ class FoxyLocalePickerDelegates {
         d['locale'] ?? '',
       );
     }
-    await repo.applyGossipMenuOptionLocaleChanges(
+    await _applyDatabaseLocaleChanges.execute(
+      destroy: repo.destroyGossipMenuOptionLocale,
+      update: repo.updateGossipMenuOptionLocale,
+      store: repo.storeGossipMenuOptionLocale,
       creations: creations,
       deletions: changes.deletedLocales
           .map(

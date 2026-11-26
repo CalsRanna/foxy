@@ -6,9 +6,11 @@ import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/database/database.dart';
+import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/repository/locale_query_settings.dart';
 import 'package:foxy/repository/page_text_locale_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
+import 'package:foxy/use_case/locale/apply_database_locale_changes_use_case.dart';
 import 'package:get_it/get_it.dart';
 
 import 'integration_mysql.dart';
@@ -36,6 +38,9 @@ create table `page_text_locale` (
 
   final pageText = PageTextRepository();
   final locale = PageTextLocaleRepository();
+  const applyLocaleChanges = ApplyDatabaseLocaleChangesUseCase(
+    transaction: DatabaseTransaction(),
+  );
   final localeSettings = LocaleQuerySettings();
 
   setUpAll(() async {
@@ -224,7 +229,7 @@ create table `page_text` (
       );
     });
 
-    test('applyPageTextLocaleChanges 在同一事务内增删改,失败时回滚', () async {
+    test('本地化保存用例在同一事务内增删改，失败时回滚', () async {
       await pageText.storePageText(const PageTextEntity(id: 5, text: 'p5'));
       await locale.storePageTextLocale(
         const PageTextLocaleEntity(id: 5, locale: 'zhCN', text: '原'),
@@ -233,7 +238,10 @@ create table `page_text` (
         const PageTextLocaleEntity(id: 5, locale: 'enUS', text: 'orig'),
       );
 
-      await locale.applyPageTextLocaleChanges(
+      await applyLocaleChanges.execute(
+        destroy: locale.destroyPageTextLocale,
+        update: locale.updatePageTextLocale,
+        store: locale.storePageTextLocale,
         creations: const [
           PageTextLocaleEntity(id: 5, locale: 'frFR', text: 'fr'),
         ],
@@ -250,8 +258,11 @@ create table `page_text` (
       // The update targets a missing key, so the whole batch must roll back —
       // including the deletion that ran before it.
       await expectLater(
-        locale.applyPageTextLocaleChanges(
-          creations: const [],
+        applyLocaleChanges.execute(
+          destroy: locale.destroyPageTextLocale,
+          update: locale.updatePageTextLocale,
+          store: locale.storePageTextLocale,
+          creations: const <PageTextLocaleEntity>[],
           deletions: const [PageTextLocaleKey(id: 5, locale: 'frFR')],
           updates: {
             const PageTextLocaleKey(

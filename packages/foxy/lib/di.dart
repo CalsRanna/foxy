@@ -159,6 +159,7 @@ import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.da
 import 'package:foxy/use_case/gossip_menu/destroy_npc_text_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_npc_text_use_case.dart';
+import 'package:foxy/use_case/locale/apply_database_locale_changes_use_case.dart';
 import 'package:foxy/use_case/mpq/mpq_export_use_case.dart';
 import 'package:foxy/view_model/achievement_detail_view_model.dart';
 import 'package:foxy/view_model/achievement_list_view_model.dart';
@@ -613,6 +614,11 @@ class DI {
   // Keep explicit concrete registrations here. Generic UseCase adapters and
   // service locators inside UseCases are intentionally not used.
   static void _registerUseCases() {
+    _instance.registerLazySingleton(
+      () => ApplyDatabaseLocaleChangesUseCase(
+        transaction: _instance.get<DatabaseTransaction>(),
+      ),
+    );
     _instance.registerLazySingleton(
       () => AgentProviderConfigUseCase(_instance.get<ConfigUtil>()),
     );
