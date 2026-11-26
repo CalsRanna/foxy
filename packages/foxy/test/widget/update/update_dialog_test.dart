@@ -1,4 +1,4 @@
-/// Widget tests for the ready-to-restart state of [UpdateDialog].
+/// Widget tests for the download and restart states of [UpdateDialog].
 ///
 /// Restart failures are reported through `errorMessage` while
 /// `readyToRestart` stays set; the dialog must surface the failure instead
@@ -6,8 +6,12 @@
 /// appeared to do nothing).
 library;
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/update/update_service.dart';
 import 'package:foxy/router/router.dart';
 import 'package:foxy/view_model/update_view_model.dart';
@@ -120,6 +124,52 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('错误'), findsNothing);
   });
+
+  testWidgets('取消下载后返回可下载状态', (tester) async {
+    final service = _PendingDownloadService();
+    final vm = UpdateViewModel(service: service);
+    vm.currentVersion.value = '1.0.0+628';
+    vm.availableUpdate.value = UpdateManifestInfo(
+      version: '1.1.0',
+      buildNumber: '630',
+      zipUrl: Uri.parse('https://example.com/foxy.zip'),
+      sizeBytes: 42,
+      sha256: 'a',
+      notes: '更新说明',
+    );
+
+    await tester.pumpWidget(wrap(UpdateDialog(vm: vm)));
+    final download = find.widgetWithText(ShadButton, '下载并更新');
+    await tester.tap(download);
+    await tester.pump();
+    expect(find.text('正在下载更新'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ShadButton, '取消下载'));
+    service.finish.complete();
+    await tester.pumpAndSettle();
+
+    expect(find.text('错误'), findsNothing);
+    expect(find.text('发现新版本 1.1.0'), findsOneWidget);
+    expect(download.hitTestable(), findsOneWidget);
+  });
+}
+
+final class _PendingDownloadService extends UpdateService {
+  final finish = Completer<void>();
+
+  @override
+  Future<Directory> prepareUpdate(
+    UpdateManifestInfo update, {
+    required Directory appDir,
+    void Function(double fraction)? onProgress,
+    UpdateCancelToken? cancelToken,
+  }) async {
+    await finish.future;
+    if (cancelToken?.isCanceled ?? false) {
+      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by user');
+    }
+    return appDir;
+  }
 }
 
 Rect _dialogFrame(WidgetTester tester) {

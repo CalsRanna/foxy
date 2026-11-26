@@ -96,6 +96,9 @@ class UpdateViewModel {
       return true;
     } catch (error) {
       downloadProgress.value = null;
+      if (error is UpdateException && error.code == UpdateErrorKind.canceled) {
+        return false;
+      }
       errorMessage.value = FoxyExceptions.message(error);
       return false;
     }

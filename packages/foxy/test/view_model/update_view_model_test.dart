@@ -164,11 +164,11 @@ void main() {
 
       final ok = await vm.downloadAndPrepare();
       expect(ok, isFalse);
-      expect(vm.errorMessage.value, '更新已取消');
+      expect(vm.errorMessage.value, '更新文件校验失败，请重试');
       expect(vm.readyToRestart.value, isFalse);
     });
 
-    test('下载中取消 → canceled,令牌重置后可重新下载', () async {
+    test('下载中取消 → 返回可下载状态，可重新下载', () async {
       final service = _StubUpdateService(
         onCheck: () async => UpdateAvailable(_update()),
       );
@@ -179,7 +179,9 @@ void main() {
       vm.cancelDownload();
       final ok = await future;
       expect(ok, isFalse);
-      expect(vm.errorMessage.value, '更新已取消');
+      expect(vm.errorMessage.value, isNull);
+      expect(vm.downloadProgress.value, isNull);
+      expect(vm.availableUpdate.value?.version, '1.1.0');
       expect(vm.readyToRestart.value, isFalse);
 
       // Retry: the VM creates a new token per download, so cancellation
@@ -295,7 +297,10 @@ class _StubUpdateService extends UpdateService {
       throw const UpdateException(UpdateErrorKind.canceled, 'canceled by user');
     }
     if (prepareShouldFail) {
-      throw const UpdateException(UpdateErrorKind.canceled, 'canceled by test');
+      throw const UpdateException(
+        UpdateErrorKind.verification,
+        'Update zip verification failed',
+      );
     }
     final dir = Directory(p.join(appDir.path, UpdateSwapper.tempDirName))
       ..createSync(recursive: true);
