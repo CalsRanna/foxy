@@ -63,14 +63,14 @@ class _ScalingStatDistributionListPageState
     viewModel.initSignals();
   }
 
-  /// Badge 内部的固定文本样式（shadcn Badge 实现为 small + 12px + w600）。
-  /// 宽度测量必须与渲染完全一致——加粗会影响字形宽度。
+  /// Fixed badge text style used by shadcn Badge (small, 12 px, weight 600).
+  /// Width measurement uses the same weight because it affects glyph widths.
   TextStyle _badgeTextStyle(BuildContext context) =>
       ShadTheme.of(context).textTheme.small
           .copyWith(fontSize: 12, fontWeight: FontWeight.w600);
 
-  /// 一个 Badge 的总宽度：文本 + 左右 padding。测量使用的字体样式和
-  /// padding 与渲染完全一致，保证计数与实际布局吻合。
+  /// Total badge width, including text and horizontal padding.
+  /// Measurement matches the rendered font style and padding.
   double _badgeWidth(
     BuildContext context,
     String text,
@@ -110,8 +110,8 @@ class _ScalingStatDistributionListPageState
     );
   }
 
-  /// 属性分布列：每个有效属性一个 Badge，按列实际宽度实时计算可容纳
-  /// 数量，超出部分合并为 `+N`。
+  /// Stat badges fitted to the actual column width.
+  /// Remaining stats are summarized by a `+N` badge.
   Widget _buildStatBadges(
     BriefScalingStatDistributionEntity item,
     double maxWidth,

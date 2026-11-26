@@ -63,7 +63,7 @@ final class LinkedListGenerationModel {
   String get briefEntityClassName => 'Brief${baseName}Entity';
 
   /// `CreatureQuestItemEntity` → `creatureQuestItem` (reserved words get a
-  /// trailing underscore)。
+  /// trailing underscore).
   String get entityCamelName => entityParameterName(entityClassName);
 
   /// `foxy.dbc_achievement` → `dbc_achievement`; used as the activity-log

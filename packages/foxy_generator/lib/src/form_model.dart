@@ -8,13 +8,13 @@ enum FormFieldKind {
   /// `EnumFieldController`.
   enumValue,
 
-  /// `FlagFieldController`。
+  /// `FlagFieldController`.
   flag,
 
   /// `IntFieldControllerGroup` (dynamic field editing).
   group,
 
-  /// `NullableStringFieldController`。
+  /// `NullableStringFieldController`.
   nullable,
 }
 

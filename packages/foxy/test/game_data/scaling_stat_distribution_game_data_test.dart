@@ -18,7 +18,7 @@ void main() {
     const entity = ScalingStatDistributionEntity(
       id: 1,
       statId0: 0,
-      bonus0: 0, // 无效的 0+0 占位（旧数据把 0 当"无"）
+      bonus0: 0, // Legacy placeholder with a zero stat ID and bonus.
       statId1: 3,
       bonus1: 300,
       statId3: 1,
@@ -35,7 +35,7 @@ void main() {
   test('常量表外的未知属性回退为数字', () {
     const entity = ScalingStatDistributionEntity(
       id: 1,
-      statId1: 2, // 旧版遗留的"法力值"编号，新版常量表无此值
+      statId1: 2, // Legacy Mana ID missing from the current lookup table.
       bonus1: 300,
     );
     expect(entity.displayStats, '2(300)');
@@ -44,9 +44,9 @@ void main() {
   test('statEntries 返回过滤后的槽位列表', () {
     const entity = ScalingStatDistributionEntity(
       id: 1,
-      statId0: -1, // 空槽
+      statId0: -1, // Empty slot.
       statId1: 0,
-      bonus1: 0, // 0+0 占位
+      bonus1: 0, // Zero ID and bonus placeholder.
       statId2: 3,
       bonus2: 300,
     );

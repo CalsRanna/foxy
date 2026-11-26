@@ -70,7 +70,7 @@ jobs:
         working-directory: packages/foxy_generator
         run: dart test -j 1
 
-      - name: Test lint package
+      - name: Test lint package and check comment language
         working-directory: packages/foxy_lint
         run: dart test -j 1
 

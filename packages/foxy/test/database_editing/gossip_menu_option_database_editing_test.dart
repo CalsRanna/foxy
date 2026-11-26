@@ -286,11 +286,11 @@ void main() {
         const GossipMenuOptionKey(menuId: 10, optionId: 2),
       );
 
-      // 复制产生了一条新主行
+      // Copying creates a new parent row.
       expect(baseRepository.rows, hasLength(2));
-      // locale 子表未被复制:仍只有源记录那一条
+      // The locale table still has only the source row.
       expect(localeRepository.rows, hasLength(1));
-      // 且 locale 行仍指向源 key,不是新 key
+      // The locale row still points to the source key.
       final locale = localeRepository.rows.single;
       expect(locale.menuId, 10);
       expect(locale.optionId, 2);

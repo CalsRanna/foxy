@@ -153,7 +153,7 @@ void main() {
 
   test('MpqExportWorker.buildPatch 打包阶段中途取消 → 无目标文件且 tmp 清理', () async {
     final mpqPath = p.join(outDir.path, 'patch-zhCN-5.mpq');
-    // 写表阶段放行前 4 次检查;打包阶段 addFile 循环的第 2 个文件时取消。
+    // Allow four write-stage checks. Cancel during packing of the second file.
     var checks = 0;
     final summary = await MpqExportWorker.buildPatch(
       definitions: [duration, icon],
@@ -163,7 +163,7 @@ void main() {
       isCancelled: () => ++checks >= 6,
     );
 
-    // 两表都在取消前写完;打包中断 → target 不存在,tmp 被清理。
+    // Both tables were written. Interrupted packing leaves no target or temp file.
     expect(summary.completed, 2);
     expect(await File(mpqPath).exists(), isFalse);
     final leftovers = outDir.listSync().where(

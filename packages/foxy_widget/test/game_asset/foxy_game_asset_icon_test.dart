@@ -81,8 +81,8 @@ void main() {
 
   testWidgets('缺失图标显示占位图标', (tester) async {
     await tester.pumpWidget(iconApp(rawPath: 'no_such_icon'));
-    // 文件 IO 无法在 fake-async 区完成,借 runAsync 让真实异步的缺失探测跑完,
-    // 错误经 errorBuilder 显示占位图标。
+    // Use runAsync for the missing-file check because it requires real file I/O.
+    // The errorBuilder displays the placeholder icon.
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 50)),
     );
@@ -97,9 +97,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(RawImage), findsOneWidget);
 
-    // 从 keep-alive 缓存驱逐 dxt1(includeLive: false:正在显示、有 live
-    // 引用的图片只释放缓存句柄,底层纹理被 ImageCache 保活 —— 与
-    // _checkCacheSize 的容量驱逐同一路径)。
+    // Evict dxt1 from the keep-alive cache while it is still visible, with
+    // includeLive set to false. ImageCache retains the live texture just as
+    // _checkCacheSize would when evicting the same path for capacity.
     await tester.runAsync(() async {
       await preload('foxy_fixture_dxt3');
       final evicted = PaintingBinding.instance.imageCache.evict(
@@ -109,12 +109,12 @@ void main() {
       expect(evicted, isTrue);
     });
 
-    // 改尺寸强制一帧重排重绘:修复前这里会 paintImage 断言
-    // "Cannot paint an image that is disposed"。
+    // Resize to force layout and paint. Before the fix, paintImage asserted
+    // with "Cannot paint an image that is disposed".
     await tester.pumpWidget(iconApp(size: 48));
     expect(find.byType(RawImage), findsOneWidget);
 
-    // 卸载无泄漏报错。
+    // Unmount without triggering an image lifetime error.
     await tester.pumpWidget(const SizedBox());
   });
 

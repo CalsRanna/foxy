@@ -59,11 +59,11 @@ extension BriefPlayerCreateInfoItemEntityDisplay
 
 extension BriefPlayerCreateInfoItemEntityLabel
     on BriefPlayerCreateInfoItemEntity {
-  /// 职业标签（战士/圣骑士/…），未知值回退为原始数字。
+  /// Class label, with the numeric value as a fallback.
   String get classLabel =>
       PlayerCreateInfoConstants.playerClassOptions[class_] ?? class_.toString();
 
-  /// 种族标签（人类/兽人/…），未知值回退为原始数字。
+  /// Race label, with the numeric value as a fallback.
   String get raceLabel =>
       PlayerCreateInfoConstants.playerRaceOptions[race] ?? race.toString();
 }

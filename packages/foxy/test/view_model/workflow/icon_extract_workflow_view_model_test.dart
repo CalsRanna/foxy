@@ -83,8 +83,8 @@ void main() {
   });
 
   test('提取成功后清空图标缓存', () async {
-    // 预加载一个真实图标进全局 ImageCache(keepAlive),
-    // 模拟提取前浏览过列表页的状态。
+    // Preload a real icon into the global ImageCache to simulate opening
+    // a list page before extraction.
     await preloadIconIntoCache(
       'fixture_dxt1',
       p.dirname(File('test/fixture/icons/fixture_dxt1.blp').absolute.path),
@@ -102,8 +102,8 @@ void main() {
     await _waitFor(() => vm.status.value == WorkflowStatus.succeeded);
     await startFuture;
 
-    // 提取改变了磁盘上的图标集:旧的解码缓存必须失效,新图标才能立即显示
-    // (无需重启)。
+    // Extraction changes the icons on disk. Invalidate the old decoded entries
+    // so the new icons appear in the same app session.
     expect(PaintingBinding.instance.imageCache.currentSize, 0);
   });
 
@@ -166,9 +166,9 @@ Future<void> preloadIconIntoCache(String name, String iconDir) async {
   );
   stream.addListener(listener);
   final info = await completer.future;
-  // 克隆:释放它不影响 completer 持有的当前图。
+  // Disposing the clone leaves the completer's current image intact.
   info?.dispose();
-  // 移除监听后,ImageCache 的 keepAlive 句柄保住图片。
+  // The ImageCache keep-alive handle retains the image after listener removal.
   stream.removeListener(listener);
 }
 

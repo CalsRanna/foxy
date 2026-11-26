@@ -50,9 +50,9 @@ void main() {
   test('取消后立即重试：旧取消定时器不会杀死新任务', () async {
     final useCase = buildUseCase();
 
-    // 任务 A：启动后等待 control port 就绪（200ms 足够 isolate 启动并
-    // 上报 control），再取消。脚本 worker 收到 cancel 立即发取消结果，
-    // A 快速结束（此时取消定时器仍挂起，窗口 500ms）。
+    // Give the isolate 200 ms to report its control port before canceling job A.
+    // The scripted worker reports cancellation immediately, so job A ends
+    // while its 500 ms grace timer would still be pending.
     final stopwatch = Stopwatch()..start();
     final first = useCase.execute(
       ExtractGameIconsInput(clientDir: clientRoot.path),
@@ -61,22 +61,22 @@ void main() {
     await useCase.cancel();
     final firstResult = await first;
     expect(firstResult.cancelled, isTrue);
-    // 自检：A 必须走「收到 cancel 快速退出」路径（而非 1800ms 慢退），
-    // 否则后续时序失效，本测试会假阴性——这里让它显式失败。
+    // Verify that job A exits on cancel before the 1800 ms slow path.
+    // Otherwise the remaining steps would not exercise the intended timing.
     expect(
       stopwatch.elapsedMilliseconds < 1000,
       isTrue,
       reason: '任务 A 应快速退出（control port 未就绪导致 cancel 未送达）',
     );
 
-    // 任务 B：定时器触发前启动，脚本 worker 需要 1800ms 才完成——
-    // 定时器（若存在）在 B 运行期间触发。旧实现会杀掉 B 的 isolate，
-    // B 的 completer 永不完成（旧 exitPort 无兜底）；新实现不杀。
+    // Start job B before the old timer can fire. Its worker completes in 1800 ms.
+    // A leftover timer would fire during job B and kill its isolate.
+    // The old exit handler left job B's completion future pending.
     final second = useCase.execute(
       ExtractGameIconsInput(clientDir: clientRoot.path),
     );
 
-    // 等待越过 cancelGraceMs 窗口（确保旧定时器已触发），再等 B 完成。
+    // Wait past the cancellation grace period, then wait for job B to complete.
     final secondResult = await second.timeout(const Duration(seconds: 10));
     expect(secondResult.success, isTrue);
     expect(secondResult.cancelled, isFalse);
@@ -98,7 +98,7 @@ void main() {
     await runAndCancel();
     await runAndCancel();
 
-    // 第二次取消后仍可启动第三次任务（BusyException 不得残留）。
+    // A third job can start after the second cancellation without a BusyException.
     final third = await useCase
         .execute(ExtractGameIconsInput(clientDir: clientRoot.path))
         .timeout(const Duration(seconds: 10));

@@ -85,7 +85,7 @@ extension BriefGossipMenuOptionEntityDisplay on BriefGossipMenuOptionEntity {
 }
 
 extension BriefGossipMenuOptionEntityLabel on BriefGossipMenuOptionEntity {
-  /// NPC 标识掩码标签（对话/任务/商人/…），未命中回退为原始掩码。
+  /// Matching NPC flag labels, with the raw mask as a fallback.
   String get optionNpcFlagLabel =>
       FlagItem.maskLabel(optionNpcFlag, CreatureFlags.npcFlagOptions);
 }

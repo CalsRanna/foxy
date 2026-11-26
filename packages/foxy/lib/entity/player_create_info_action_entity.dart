@@ -49,7 +49,7 @@ class PlayerCreateInfoActionEntity with _PlayerCreateInfoActionEntityMixin {
 
 extension BriefPlayerCreateInfoActionEntityLabel
     on BriefPlayerCreateInfoActionEntity {
-  /// 动作按钮类型标签（法术/宏/…），未知值回退为原始数字。
+  /// Action button type label, with the numeric value as a fallback.
   String get typeLabel =>
       PlayerCreateInfoConstants.playerActionButtonTypeOptions[type] ??
       type.toString();

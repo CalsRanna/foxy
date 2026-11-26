@@ -156,7 +156,7 @@ void main() {
     await vm.prepare();
 
     expect(vm.dbcPath.value, isNull);
-    // 未配置时 *Exists 视为无需修复(true),与 clientDirExists 语义一致。
+    // An unset directory needs no repair, consistent with clientDirExists.
     expect(vm.dbcPathExists.value, isTrue);
     expect(vm.isServerDirConfigured, isFalse);
     expect(vm.isSetupComplete, isFalse);

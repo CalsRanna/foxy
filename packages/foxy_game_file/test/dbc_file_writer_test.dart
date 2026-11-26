@@ -277,9 +277,9 @@ void main() {
       expect(await copied.exists(), isTrue);
       expect(copied.readAsBytesSync(), [1, 2, 3]);
       expect(await src.exists(), isTrue, reason: '源文件必须保留');
-      // 非 .dbc 文件不拷贝。
+      // Skip files without the .dbc extension.
       expect(File(p.join(targetDir.path, 'notes.txt')).existsSync(), isFalse);
-      // 不残留 tmp/bak 中间文件。
+      // No temporary or backup files remain.
       final leftovers = targetDir
           .listSync()
           .where((entity) => entity.path.contains('.foxy.'))

@@ -1,11 +1,11 @@
 import 'package:foxy/infrastructure/database/migration_runner.dart';
 import 'package:laconic/laconic.dart';
 
-/// Realigns the out-of-box feature defaults: only 生物/对话/物品/任务/
-/// 内建脚本/法术 stay pinned (sidebar) and favorited (dashboard frequent
-/// modules). Earlier migrations pinned and favorited a mix that included
-/// 游戏对象 and 条件; this migration normalizes every feature to the same
-/// default set.
+/// Normalizes the default sidebar pins and dashboard favorites.
+///
+/// Pins and favorites creatures, gossip, items, quests, SmartAI, and spells.
+/// Earlier migrations also included game objects and conditions.
+/// All other features have their pinned and favorite flags cleared.
 class Migration202608090001 implements Migration {
   static const _defaultRouterMenus = [
     'creatureTemplate',

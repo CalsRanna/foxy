@@ -75,7 +75,7 @@ abstract final class ItemEnums {
     6: '拳套/火把/锄头等', // Fist Weapon
   };
 
-  /// ReputationRank，AzerothCore MAX_REPUTATION_RANK = 8。
+  /// AzerothCore reputation rank, where `MAX_REPUTATION_RANK` is 8.
   static const itemReputationRankOptions = {
     0: '仇恨',
     1: '敌对',

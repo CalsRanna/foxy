@@ -36,12 +36,12 @@ void main() {
 
     expect(tester.takeException(), isNull);
 
-    // 普通掉落行：图标 + 名称
+    // A regular loot row displays an icon and name.
     final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
     expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Foo');
     expect(iconText.name, '测试物品');
 
-    // 引用行：保持“引用 #N”纯文本，不渲染图标
+    // A reference row renders the reference label as plain text.
     expect(find.text('引用 #90001'), findsOneWidget);
     expect(find.byType(FoxyIconText), findsOneWidget);
 

@@ -87,7 +87,7 @@ enum ColumnSemanticKind {
 /// full [toJson] on demand so large value tables never bloat every schema
 /// response.
 final class ColumnSemantics {
-  /// Human-readable label, e.g. `生物类型`.
+  /// Human-readable label, such as `Creature type`.
   final String label;
 
   final ColumnSemanticKind _kind;

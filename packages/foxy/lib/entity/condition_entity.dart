@@ -110,11 +110,11 @@ extension BriefConditionEntityLabel on BriefConditionEntity {
     return ConditionType.conditionTypeLabels[id] ?? id.toString();
   }
 
-  /// 参数1 标签：按条件类型解析字段规格后映射为可读文本。
+  /// Display label for parameter 1, using the field spec for the condition type.
   ///
-  /// - 条件类型为负数（引用）时无规格可用，回退为原始数字；
-  /// - select 规格映射为选项标签，flags 规格展开为标签列表，
-  ///   其余规格回退为原始数字。
+  /// Negative condition types are references and use the raw number.
+  /// Select specs show the option label, and flag specs list the matching labels.
+  /// Other specs use the raw number.
   String get conditionValue1Label {
     final type = conditionTypeOrReference;
     if (type < 0) return conditionValue1.toString();

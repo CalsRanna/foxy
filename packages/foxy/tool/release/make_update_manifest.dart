@@ -41,7 +41,7 @@
 /// version+buildNumber are replaced); without it, or on parse failure,
 /// only the current entry is written. Structure aligned with the app-side
 /// `UpdateManifestInfo.fromMap`
-/// (`lib/infrastructure/update/update_service.dart`)。
+/// (`lib/infrastructure/update/update_service.dart`).
 library;
 
 import 'dart:io';
@@ -78,7 +78,7 @@ abstract final class MakeUpdateManifest {
     //    of truth). The tag may carry a prerelease suffix (e.g.
     //    v1.1.0-beta); the suffix never enters pubspec and only marks test
     //    releases: the app side skips prerelease updates on that basis (see
-    //    `UpdateManifestInfo.isPrerelease`)。
+    //    `UpdateManifestInfo.isPrerelease`).
     final version = _readPubspecVersion();
     final mainTag = _stripPrereleaseSuffix(tag);
     if (!mainTag.startsWith('v') || mainTag.substring(1) != version) {

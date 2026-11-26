@@ -80,18 +80,15 @@ class CodegenSampleEntity with _CodegenSampleEntityMixin {
 
 final annotationSource = foxyAnnotationSource('entity_annotations.dart');
 
-/// Reads the real annotation source directly instead of keeping a
-/// hand-copied duplicate in tests.
+/// Reads the live annotation source from the sibling package.
 ///
-/// 读取 workspace 兄弟包的真实源码(防测试与实现漂移:注解/混入源改动时
-/// 测试立即暴露,而不是守着过期的手抄副本)。
-///
-/// 路径以 foxy_generator 包根为基准;跨包相对路径只集中在这里,其他
-/// 测试文件一律通过 [foxyAnnotationSource] / [foxyAppSource] 获取。
+/// Using the live source catches annotation changes during testing. Paths
+/// are relative to the foxy_generator package root. Other tests access app
+/// and annotation sources through [foxyAppSource] and [foxyAnnotationSource].
 String foxyAnnotationSource(String file) =>
     File('../foxy_annotation/lib/$file').readAsStringSync();
 
-/// 读取主 app 包的真实源码(如 repository mixin 实现)。
+/// Reads live app source, such as repository mixin implementations.
 String foxyAppSource(String file) =>
     File('../foxy/lib/$file').readAsStringSync();
 

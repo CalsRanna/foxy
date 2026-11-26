@@ -5,7 +5,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Table-picker list shared by the DBC-export and MPQ-export dialogs:
-/// "文件 / 记录数" header, empty state, and one row per item.
+/// file and record-count headers, an empty state, and one row per item.
 class DbcTableSelectList extends StatelessWidget {
   final List<DbcExportItem> items;
   final ValueChanged<DbcExportItem> onToggle;

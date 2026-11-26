@@ -87,8 +87,8 @@ void main() {
 
     test('失败后文件出现,同一 key 可重新加载', () async {
       PaintingBinding.instance.imageCache.clear();
-      // 先失败(文件不存在),此后再把文件放到位并重新 resolve:必须能加载成功,
-      // 证明失败的加载没有卡住该 key(自 evict 的意义)。
+      // Resolve again after the file appears to verify that the failed load
+      // was evicted and can be retried.
       final provider = FoxyBlpIconProvider(
         rawPath: 'late_icon',
         iconDir: tempDir.path,
@@ -104,7 +104,7 @@ void main() {
   });
 }
 
-/// 通过 [ImageStream] 加载,返回 [ImageInfo] 或 null(失败)。
+/// Loads through [ImageStream] and returns [ImageInfo] or null on failure.
 Future<ImageInfo?> loadViaStream(FoxyBlpIconProvider provider) async {
   final key = await provider.obtainKey(const ImageConfiguration());
   final stream = ImageStream()
@@ -112,13 +112,13 @@ Future<ImageInfo?> loadViaStream(FoxyBlpIconProvider provider) async {
   return _listen(stream);
 }
 
-/// 通过 [ImageProvider.resolve] 加载(经由 ImageCache),返回 [ImageInfo] 或 null。
+/// Resolves through [ImageProvider.resolve], returning [ImageInfo] or null.
 Future<ImageInfo?> resolveViaStream(FoxyBlpIconProvider provider) async {
   final stream = provider.resolve(const ImageConfiguration());
   return _listen(stream);
 }
 
-/// FoxyBlpIconProvider 用 decodeImageFromPixels 自行解码,不触发该回调。
+/// FoxyBlpIconProvider decodes pixels directly without invoking this callback.
 Future<ui.Codec> _dummyDecode(
   ui.ImmutableBuffer buffer, {
   ui.TargetImageSizeCallback? getTargetSize,

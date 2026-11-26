@@ -23,7 +23,7 @@ class DatabaseTransaction {
 
   Future<T> execute<T>(Future<T> Function() action) async {
     if (Zone.current[_txKey] != null) {
-      // 已在外层事务中:合并执行,不新开事务。
+      // Run inside the existing transaction.
       return action();
     }
 

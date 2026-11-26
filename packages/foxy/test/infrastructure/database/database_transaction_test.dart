@@ -94,7 +94,7 @@ final class _CountingTransaction extends DatabaseTransaction {
     try {
       return await action();
     } catch (_) {
-      rethrow; // 真实实现会 ROLLBACK;此处原样冒泡。
+      rethrow; // Production rolls back. The test propagates the error.
     }
   }
 }

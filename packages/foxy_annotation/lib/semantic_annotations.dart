@@ -9,7 +9,7 @@ import 'package:meta/meta_meta.dart';
 /// `foxy_game_definition`.
 @Target({TargetKind.field})
 final class FoxyFieldMeaning {
-  /// Human-readable label, e.g. `生物类型`.
+  /// Human-readable label, such as `Creature type`.
   final String label;
 
   /// Enum value → label, set by [FoxyFieldMeaning.enumValues].

@@ -57,7 +57,7 @@ void main() {
     expect(util.isRunning, isFalse, reason: 'MPQ 导出完成后共享 DbcSyncUtil 不得残留运行状态');
     expect(util.operation, isNull);
 
-    // 紧接着的 DBC 导出不得被拒为 busy。
+    // The next DBC export can start immediately.
     final dbcUseCase = ExportDbcUseCase(
       registry: registry,
       dbcSyncUtil: util,

@@ -90,9 +90,9 @@ jobs:
           dart compile exe tool/updater/updater_main.dart
           -o build/windows/x64/runner/Release/foxy_updater.exe
 
-      # 后续步骤(Package zip / Fetch previous manifest / Generate update
-      # manifest)统一在 packages/foxy 下运行:zip、latest.yaml、notes 都
-      # 落在此目录,由 Publish release 从同一目录读取。
+      # Run the packaging and manifest steps in packages/foxy.
+      # The zip, latest.yaml, and release notes are written there.
+      # Publish release reads those files from the same directory.
       - name: Package zip
         working-directory: packages/foxy
         shell: pwsh

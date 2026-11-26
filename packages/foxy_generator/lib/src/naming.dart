@@ -105,7 +105,7 @@ String pluralize(String name) {
 /// Converts a Dart class name to the conventional snake_case source-file
 /// stem.
 ///
-/// `AchievementEntity` → `achievement_entity`；
+/// `AchievementEntity` becomes `achievement_entity`.
 /// Consecutive capitals split at acronym boundaries:
 /// `NPCVendorRepository` → `npc_vendor_repository`.
 String toSnakeCase(String value) => value

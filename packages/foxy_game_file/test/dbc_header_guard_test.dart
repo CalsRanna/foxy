@@ -58,7 +58,7 @@ void main() {
   });
 
   test('合法头部放行', () {
-    // 4 万行 × 300 字节 ≈ 12 MB,远低于上限。
+    // Forty thousand rows at 300 bytes each use about 12 MB, below the cap.
     writeHeader(
       'ok.dbc',
       recordCount: 40000,

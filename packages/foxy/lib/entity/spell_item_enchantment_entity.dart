@@ -176,7 +176,7 @@ class SpellItemEnchantmentEntity with _SpellItemEnchantmentEntityMixin {
 
 extension BriefSpellItemEnchantmentEntityLabel
     on BriefSpellItemEnchantmentEntity {
-  /// 效果类型标签（无效果/战斗触发法术/…），未知值回退为原始数字。
+  /// Enchantment effect type label, with the numeric value as a fallback.
   String get effect0Label =>
       SpellItemEnchantmentConstants
           .spellItemEnchantmentEffectTypeOptions[effect0] ??

@@ -57,7 +57,7 @@ void main() {
         'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                // destroy 在删库前预取记录,日志收到名称而不是空查询。
+                // Load the record before deletion so the log can include its name.
                 contains('final record = await _repository.getSample(key);'),
                 contains(
                   'await _logActivity(ActivityActionType.delete, key, record);',

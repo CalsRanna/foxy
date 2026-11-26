@@ -34,12 +34,12 @@ void main() {
 
     expect(tester.takeException(), isNull);
 
-    // 普通掉落行：图标 + 名称（名称用 locale 名）
+    // A regular loot row displays the icon and localized name.
     final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
     expect(iconText.iconPath, 'Interface\\Icons\\INV_Misc_Foo');
     expect(iconText.name, '测试物品');
 
-    // 关联掉落行：保留灰色占位文本，不渲染图标
+    // A reference row displays gray placeholder text.
     expect(find.text('关联掉落'), findsOneWidget);
     expect(find.byType(FoxyIconText), findsOneWidget);
   });

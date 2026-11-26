@@ -47,7 +47,7 @@ abstract final class SpellEnums {
     0xFFFFFFFE: '生命值',
   };
 
-  /// SpellModOp（MiscValue when Effect=6, Aura=107/108 ADD_FLAT/PCT_MODIFIER）
+  /// Spell modifier operation in `MiscValue` for effect 6 and aura 107 or 108.
   static const spellModOpOptions = {
     0: '伤害',
     1: '持续时间',

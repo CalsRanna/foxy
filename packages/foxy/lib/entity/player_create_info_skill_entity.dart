@@ -42,13 +42,13 @@ class PlayerCreateInfoSkillEntity with _PlayerCreateInfoSkillEntityMixin {
 
 extension BriefPlayerCreateInfoSkillEntityLabel
     on BriefPlayerCreateInfoSkillEntity {
-  /// 职业掩码标签（战士/圣骑士/…），未命中回退为原始掩码。
+  /// Matching class labels, with the raw mask as a fallback.
   String get classMaskLabel => FlagItem.maskLabel(
     classMask,
     PlayerCreateInfoConstants.playerCreateClassMaskFlags,
   );
 
-  /// 种族掩码标签（人类/兽人/…），未命中回退为原始掩码。
+  /// Matching race labels, with the raw mask as a fallback.
   String get raceMaskLabel => FlagItem.maskLabel(
     raceMask,
     PlayerCreateInfoConstants.playerCreateRaceMaskFlags,

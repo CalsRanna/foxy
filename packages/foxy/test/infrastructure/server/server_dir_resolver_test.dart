@@ -23,9 +23,9 @@ void main() {
   File dbc(String relative) =>
       File(p.join(root, relative))..createSync(recursive: true);
 
-  /// 期望路径:findDbcDir 返回的路径来自 Directory 遍历(Windows 上为
-  /// 正斜杠),这里同样用 root 拼接 + normalize,避免与 p.join 的
-  /// 反斜杠在 Windows 上不一致。
+  /// Expected path based on how directory traversal returns paths.
+  /// Appends the segments to the root and normalizes the result to preserve
+  /// the forward slashes returned by discovery on Windows.
   String expected(String relative) => p.normalize('$root/$relative');
 
   test('标准位置 data/dbc 命中', () async {
@@ -56,7 +56,7 @@ void main() {
   });
 
   test('超过最大深度返回 null', () async {
-    // a/b/c/d/e/f/g/h 为 8 层(根目录第 0 层,最大深度 6):g 之后不再深入
+    // The root is depth zero and the limit is six, so traversal stops at g.
     dbc('a/b/c/d/e/f/g/h/Spell.dbc');
     expect(await ServerDirResolver.findDbcDir(root), isNull);
   });

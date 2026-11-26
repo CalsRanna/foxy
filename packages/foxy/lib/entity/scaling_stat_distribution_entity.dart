@@ -122,11 +122,11 @@ class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
   factory ScalingStatDistributionEntity.fromJson(Map<String, dynamic> json) =>
       _ScalingStatDistributionEntityMixin.fromJson(json);
 
-  /// 属性分布展示文本，如 `敏捷(300), 生命值(300)`。
+  /// Display text for the stat distribution, such as `Agility(300), Health(300)`.
   ///
-  /// - `-1` 空槽不显示；
-  /// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示；
-  /// - 常量表外的未知属性回退为数字，保证信息不丢失。
+  /// - Empty slots with ID `-1` are omitted.
+  /// - Legacy placeholders with both stat ID and bonus set to zero are omitted.
+  /// - Unknown stat IDs are shown as numbers.
   String get displayStats => ScalingStatDistributionEntity.formatStats(
     [
       statId0,
@@ -154,9 +154,9 @@ class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
     ],
   );
 
-  /// 汇总一组属性槽位为展示文本，如 `敏捷(300), 生命值(300)`。
+  /// Formats stat slots as display text, such as `Agility(300), Health(300)`.
   ///
-  /// 常量表外的未知属性回退为数字，保证信息不丢失。
+  /// Unknown stat IDs are shown as numbers.
   static String formatStats(List<int> statIds, List<int> bonuses) {
     final result = StringBuffer();
     // Runtime-value aggregation over the row's stat slots, not a field
@@ -171,16 +171,16 @@ class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
     return result.isEmpty ? '-' : result.toString();
   }
 
-  /// 有效属性槽位列表，entity 与 brief entity 共用。
+  /// Returns the valid stat slots for full and brief entities.
   ///
-  /// - `-1` 空槽不显示；
-  /// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示。
+  /// - Empty slots with ID `-1` are omitted.
+  /// - Legacy placeholders with both stat ID and bonus set to zero are omitted.
   static List<(int, int)> statEntries(List<int> statIds, List<int> bonuses) {
     final entries = <(int, int)>[];
     for (var i = 0; i < statIds.length; i++) {
       final statId = statIds[i];
-      if (statId < 0) continue; // 空槽
-      if (statId == 0 && bonuses[i] == 0) continue; // 无效的 0+0 占位
+      if (statId < 0) continue; // Empty slot.
+      if (statId == 0 && bonuses[i] == 0) continue; // Legacy placeholder.
       entries.add((statId, bonuses[i]));
     }
     return entries;
@@ -189,11 +189,11 @@ class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
 
 extension BriefScalingStatDistributionEntityDisplay
     on BriefScalingStatDistributionEntity {
-  /// 属性分布展示文本，如 `敏捷(300), 生命值(300)`。
+  /// Display text for the stat distribution, such as `Agility(300), Health(300)`.
   ///
-  /// - `-1` 空槽不显示；
-  /// - `0+0` 这类无效占位（旧数据把 0 当"无"）不显示；
-  /// - 常量表外的未知属性回退为数字，保证信息不丢失。
+  /// - Empty slots with ID `-1` are omitted.
+  /// - Legacy placeholders with both stat ID and bonus set to zero are omitted.
+  /// - Unknown stat IDs are shown as numbers.
   String get displayStats => ScalingStatDistributionEntity.formatStats(
     [
       statId0,

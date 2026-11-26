@@ -42,7 +42,7 @@ void main() {
     final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
     expect(iconText.iconPath, 'Interface\\Icons\\Trade_Tailoring');
     expect(iconText.name, '裁缝');
-    // 第二条技能 ID 为 0，只显示 '-'（不渲染占位图标）
+    // Skill ID zero is an empty slot and displays only `-`.
     expect(find.byType(FoxyIconText), findsOneWidget);
   });
 }

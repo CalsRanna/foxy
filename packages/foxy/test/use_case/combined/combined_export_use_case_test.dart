@@ -118,7 +118,7 @@ void main() {
     );
     expect(await File(mpqPath).exists(), isTrue, reason: 'MPQ 必须已生成');
 
-    // 导出结束后临时目录必须被删除。
+    // The temporary directory is removed after export.
     final leftovers = Directory.systemTemp
         .listSync()
         .whereType<Directory>()

@@ -29,8 +29,8 @@ void main() {
         ),
       ),
     );
-    // sync bus → 同步投递; service.recordBestEffort 是 unawaited 异步,
-    // 需要让微任务跑完
+    // The bus delivers synchronously. The log write runs asynchronously,
+    // so let pending microtasks finish.
     await Future<void>.delayed(Duration.zero);
 
     expect(repository.logs, hasLength(1));

@@ -41,7 +41,7 @@ Builder foxySemanticsBuilder(BuilderOptions options) {
 
 // Generators are ordered by name (FoxyLinkedDetailViewModelGenerator <
 // FoxyLinkedListViewModelGenerator < FoxyListViewModelGenerator <
-// FoxyViewModelGenerator)。
+// FoxyViewModelGenerator).
 Builder foxyViewModelBuilder(BuilderOptions options) {
   return SharedPartBuilder(
     [

@@ -36,7 +36,7 @@ void main() {
 
     expect(tester.takeException(), isNull);
 
-    // 主手有物品 → 图标 + 名称；副手/远程为空槽 → 纯文本，无图标
+    // The main hand has an icon and name. Empty off-hand and ranged slots show text.
     final iconText = tester.widget<FoxyIconText>(find.byType(FoxyIconText));
     expect(iconText.iconPath, 'Interface\\Icons\\INV_Sword');
     expect(iconText.name, '测试武器');

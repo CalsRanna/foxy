@@ -54,7 +54,7 @@ mixin RepositoryMixin {
   /// [column] is the primary-key column name (e.g. `ID` / `entry`).
   /// [where] is an optional scope condition for "child sequence under a
   /// parent key":
-  /// `nextMaxPlusOne(_table, 'ID', where: {'CreatureID': creatureId})`。
+  /// `nextMaxPlusOne(_table, 'ID', where: {'CreatureID': creatureId})`.
   /// [firstValue] is the starting value returned when the scope has no
   /// records.
   ///

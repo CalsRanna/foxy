@@ -408,7 +408,7 @@ void main() {
         home: Scaffold(
           body: Column(
             children: [
-              // 与设置页 DBC 区相同的 busy 组合。
+              // Same busy condition as the DBC section of Settings.
               SignalBuilder(
                 builder: (_) {
                   rebuilds++;
@@ -420,8 +420,8 @@ void main() {
                   return Text('dbc:${busy ? 'busy' : 'free'}');
                 },
               ),
-              // 与设置页 MPQ 区相同的组合（双 SignalBuilder 共享信号；组合任务
-              // 运行时通过共享 util 使 mpqVm 忙,无需单独读取）。
+              // The MPQ section uses two SignalBuilders. The shared utility also marks
+              // the MPQ view model busy during a combined export.
               SignalBuilder(
                 builder: (_) {
                   final busy =
@@ -441,8 +441,8 @@ void main() {
     expect(rebuilds, 1);
     expect(find.text('dbc:free'), findsOneWidget);
 
-    // 任务开始：共享 util 忙（importVm.isRunning 因此为 true，短路掉
-    // 后续读取）+ MPQ 状态 running。
+    // The shared utility makes importVm.isRunning true, short-circuiting the
+    // remaining reads while the MPQ task is running.
     util.running.value = true;
     mpqVm.status.value = WorkflowStatus.running;
     await tester.pump();
@@ -450,9 +450,9 @@ void main() {
     expect(find.text('dbc:busy'), findsOneWidget);
     expect(find.text('mpq:busy'), findsOneWidget);
 
-    // 任务结束：util 复位 + MPQ succeeded。修复前：短路已丢弃
-    // mpqVm.status 依赖，若 util.running 也未作为依赖被跟踪，SignalBuilder
-    // 永不重建，按钮永远禁用。
+    // The utility resets and MPQ succeeds. The early return previously dropped
+    // the mpqVm.status dependency. Without tracking util.running, SignalBuilder
+    // never rebuilt and the button stayed disabled.
     util.running.value = false;
     mpqVm.status.value = WorkflowStatus.succeeded;
     for (var i = 0; i < 5; i++) {
@@ -574,13 +574,13 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    // 初始状态：四个按钮均可点击。
+    // All four buttons are initially enabled.
     expect(buttonOf(tester, dbcImportButton()).onPressed, isNotNull);
     expect(buttonOf(tester, dbcExportButton()).onPressed, isNotNull);
     expect(buttonOf(tester, mpqExportButton()).onPressed, isNotNull);
     expect(buttonOf(tester, combinedExportButton()).onPressed, isNotNull);
 
-    // 直接驱动 MPQ 工作流完整跑一遍（真实 isolate + 脚本化成功 worker）。
+    // Run the MPQ workflow through a real isolate with a scripted success worker.
     await tester.runAsync(() async {
       await mpqVm.prepare();
       mpqVm.setOutputDirectory(tempDir.path);
@@ -590,18 +590,18 @@ void main() {
     expect(mpqVm.status.value, WorkflowStatus.succeeded);
     await tester.pump();
 
-    // VM 层状态必须已复位（与 dbc_sync_util_test 验证一致）。
+    // The view model has reset, as checked in dbc_sync_util_test.
     expect(mpqVm.isRunning, isFalse, reason: 'MPQ VM 必须已复位');
     expect(exportVm.isRunning, isFalse, reason: '导出 VM 必须已复位');
     expect(importVm.isRunning, isFalse, reason: '导入 VM 必须已复位');
     expect(util.isRunning, isFalse, reason: 'DbcSyncUtil 必须已复位');
 
-    // 多次 pump，排除一帧时序问题。
+    // Pump several frames to account for scheduling.
     for (var i = 0; i < 5; i++) {
       await tester.pump();
     }
 
-    // 关键断言：导出完成后按钮必须恢复可用（bug 表现为一直置灰）。
+    // The buttons must be enabled again after the export finishes.
     expect(
       buttonOf(tester, dbcImportButton()).onPressed,
       isNotNull,
@@ -619,8 +619,8 @@ void main() {
       reason: 'MPQ 导出完成后「一键导出」按钮必须恢复可用',
     );
 
-    // 点击「导出 DBC」应能打开对话框（按钮在「一键导出」区块之下，
-    // 先滚动到可见）。
+    // Scroll below the combined export section to the DBC export button
+    // and open its dialog.
     await tester.ensureVisible(dbcExportButton());
     await tester.pumpAndSettle();
     await tester.tap(dbcExportButton());
@@ -634,8 +634,8 @@ void main() {
       findsOneWidget,
     );
 
-    // 关闭后点击「一键导出」应能打开组合导出对话框（区块在页面最上，
-    // 先滚动回顶部）。
+    // After closing it, scroll back to the top and click the combined export
+    // button to open its dialog.
     await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
     await tester.ensureVisible(combinedExportButton());
