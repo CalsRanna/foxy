@@ -43,9 +43,39 @@ void main() {
     expect(iconText.iconPath, 'Interface\\Icons\\Achievement_Boss_Ragnaros');
     expect(iconText.name, '干掉拉格纳罗斯');
   });
+
+  testWidgets('Pressing enter in a filter input triggers search', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1600, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final repo = _FakeAchievementRepository();
+    GetIt.instance.registerSingleton<AchievementRepository>(repo);
+    GetIt.instance.registerFactory(() => AchievementListViewModel());
+
+    await tester.pumpWidget(
+      const ShadApp(home: Scaffold(body: AchievementListPage())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(repo.filters, hasLength(1));
+
+    final inputs = find.byType(EditableText);
+    await tester.enterText(inputs.at(1), '拉格纳罗斯');
+    await tester.testTextInput.receiveAction(TextInputAction.search);
+    await tester.pumpAndSettle();
+
+    expect(repo.filters, hasLength(2));
+    expect(repo.filters.last?.title, '拉格纳罗斯');
+  });
 }
 
 class _FakeAchievementRepository extends AchievementRepository {
+  final filters = <AchievementFilter?>[];
+
   @override
   Future<int> countAchievements({AchievementFilter? filter}) async => 1;
 
@@ -53,11 +83,14 @@ class _FakeAchievementRepository extends AchievementRepository {
   Future<List<BriefAchievementEntity>> getBriefAchievements({
     int page = 1,
     AchievementFilter? filter,
-  }) async => const [
-    BriefAchievementEntity(
-      id: 100,
-      titleLangZhCN: '干掉拉格纳罗斯',
-      textureFilename: 'Interface\\Icons\\Achievement_Boss_Ragnaros',
-    ),
-  ];
+  }) async {
+    filters.add(filter);
+    return const [
+      BriefAchievementEntity(
+        id: 100,
+        titleLangZhCN: '干掉拉格纳罗斯',
+        textureFilename: 'Interface\\Icons\\Achievement_Boss_Ragnaros',
+      ),
+    ];
+  }
 }

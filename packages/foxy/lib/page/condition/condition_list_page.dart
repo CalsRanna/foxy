@@ -66,12 +66,14 @@ class _ConditionListPageState extends State<ConditionListPage>
             child: FoxyStringInput(
               controller: viewModel.sourceTypeOrReferenceIdController,
               placeholder: 'SourceTypeOrReferenceId',
+              onSubmitted: (_) => viewModel.search(),
             ),
           ),
           Expanded(
             child: FoxyStringInput(
               controller: viewModel.sourceEntryController,
               placeholder: 'SourceEntry',
+              onSubmitted: (_) => viewModel.search(),
             ),
           ),
           Expanded(

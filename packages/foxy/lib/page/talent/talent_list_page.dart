@@ -58,10 +58,12 @@ class _TalentListPageState extends State<TalentListPage> with DialogErrorState {
     var entryInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（ID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var spellInput = FoxyStringInput(
       controller: viewModel.spellController,
       placeholder: '法术编号（SpellRank0..8）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

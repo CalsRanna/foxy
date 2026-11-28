@@ -103,6 +103,48 @@ void main() {
     },
   );
 
+  testWidgets('Pressing enter in a filter input triggers search', (
+    tester,
+  ) async {
+    final controller = IntFieldController()..init(0);
+    final listQueries = <(String, String)>[];
+    final source = SignedEntitySource(
+      title: '选择实体',
+      errorLabel: '查询失败',
+      fetch: (page, id, name) async {
+        listQueries.add((id, name));
+        return const [];
+      },
+      count: (id, name) async => 0,
+    );
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox());
+      controller.dispose();
+    });
+    await tester.pumpWidget(
+      _wrap(
+        FoxySignedEntityPicker(
+          controller: controller,
+          positiveSource: source,
+          negativeSource: source,
+        ),
+      ),
+    );
+    await tester.tap(find.byIcon(LucideIcons.search));
+    await tester.pumpAndSettle();
+    expect(listQueries, [('', '')]);
+
+    final filters = find.descendant(
+      of: find.byType(ShadDialog),
+      matching: find.byType(EditableText),
+    );
+    await tester.enterText(filters.at(1), '狼');
+    await tester.testTextInput.receiveAction(TextInputAction.search);
+    await tester.pumpAndSettle();
+
+    expect(listQueries, [('', ''), ('', '狼')]);
+  });
+
   testWidgets(
     'An empty value opens the creature picker and selection writes a positive ID',
     (tester) async {

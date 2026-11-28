@@ -67,12 +67,14 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage>
             child: FoxyStringInput(
               controller: viewModel.raceController,
               placeholder: '种族 (race)',
+              onSubmitted: (_) => viewModel.search(),
             ),
           ),
           Expanded(
             child: FoxyStringInput(
               controller: viewModel.classController,
               placeholder: '职业 (class)',
+              onSubmitted: (_) => viewModel.search(),
             ),
           ),
           Expanded(

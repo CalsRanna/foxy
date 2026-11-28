@@ -187,6 +187,8 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
               child: ShadInput(
                 controller: _filterControllers[i],
                 placeholder: Text(widget.delegate.filters[i].placeholder),
+                textInputAction: TextInputAction.search,
+                onSubmitted: (_) => _doSearch(),
               ),
             ),
           Expanded(

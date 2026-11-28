@@ -188,12 +188,16 @@ class _SignedEntityDialogState extends State<_SignedEntityDialog> {
             child: ShadInput(
               controller: _idController,
               placeholder: const Text('编号'),
+              textInputAction: TextInputAction.search,
+              onSubmitted: (_) => _doSearch(),
             ),
           ),
           Expanded(
             child: ShadInput(
               controller: _nameController,
               placeholder: const Text('名称'),
+              textInputAction: TextInputAction.search,
+              onSubmitted: (_) => _doSearch(),
             ),
           ),
           Expanded(

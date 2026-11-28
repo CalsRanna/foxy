@@ -60,10 +60,12 @@ class _SmartScriptListPageState extends State<SmartScriptListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.entryOrGuidController,
       placeholder: '实体编号（entryorguid）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var commentInput = FoxyStringInput(
       controller: viewModel.commentController,
       placeholder: '备注（comment）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

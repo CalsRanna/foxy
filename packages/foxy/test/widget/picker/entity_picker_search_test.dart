@@ -59,6 +59,28 @@ void main() {
 
     await tester.pumpWidget(const SizedBox());
   });
+
+  testWidgets('Pressing enter in a filter input triggers search', (
+    tester,
+  ) async {
+    final rec = _RecordingDelegate();
+    await _openPicker(tester, rec);
+    _completeSearch(rec, 0, rows: const [111], total: 1);
+    await tester.pumpAndSettle();
+
+    final filterInput = find.descendant(
+      of: find.byType(ShadDialog),
+      matching: find.byType(EditableText),
+    );
+    await tester.enterText(filterInput, '222');
+    await tester.testTextInput.receiveAction(TextInputAction.search);
+    await tester.pump();
+
+    expect(rec.pendingFetches, hasLength(2));
+    expect(rec.pendingCounts, hasLength(2));
+
+    await tester.pumpWidget(const SizedBox());
+  });
 }
 
 void _completeSearch(

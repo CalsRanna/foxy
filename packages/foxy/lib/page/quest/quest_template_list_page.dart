@@ -59,10 +59,12 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage>
     final idInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（Entry）',
+      onSubmitted: (_) => viewModel.search(),
     );
     final titleInput = FoxyStringInput(
       controller: viewModel.titleController,
       placeholder: '标题（Title）',
+      onSubmitted: (_) => viewModel.search(),
     );
     final searchBtn = ShadButton(
       onPressed: viewModel.search,

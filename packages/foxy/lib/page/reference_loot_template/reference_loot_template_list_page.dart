@@ -62,10 +62,12 @@ class _ReferenceLootTemplateListPageState
     var entryInput = FoxyStringInput(
       controller: viewModel.entryController,
       placeholder: 'Entry',
+      onSubmitted: (_) => viewModel.search(),
     );
     var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
       placeholder: 'Item',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

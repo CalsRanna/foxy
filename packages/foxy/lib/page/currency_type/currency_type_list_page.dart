@@ -60,10 +60,12 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（ID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
       placeholder: '物品名称',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

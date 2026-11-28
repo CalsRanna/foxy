@@ -59,10 +59,12 @@ class _AchievementListPageState extends State<AchievementListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（ID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var titleInput = FoxyStringInput(
       controller: viewModel.titleController,
       placeholder: '标题',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

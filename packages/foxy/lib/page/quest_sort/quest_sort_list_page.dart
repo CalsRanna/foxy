@@ -59,10 +59,12 @@ class _QuestSortListPageState extends State<QuestSortListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（ID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
       placeholder: '名称（SortName_lang_zhCN）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

@@ -98,6 +98,7 @@ class _MorePageState extends State<MorePage> {
     var searchInput = FoxyStringInput(
       controller: viewModel.searchController,
       placeholder: '搜索模块名称',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

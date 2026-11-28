@@ -59,10 +59,12 @@ class _GossipMenuListPageState extends State<GossipMenuListPage>
     final menuIdInput = FoxyStringInput(
       controller: viewModel.menuIdController,
       placeholder: '编号（MenuID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     final textInput = FoxyStringInput(
       controller: viewModel.textController,
       placeholder: '文本（Text）',
+      onSubmitted: (_) => viewModel.search(),
     );
     final searchBtn = ShadButton(
       onPressed: viewModel.search,

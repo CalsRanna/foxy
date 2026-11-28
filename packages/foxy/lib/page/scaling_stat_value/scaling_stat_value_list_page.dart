@@ -60,10 +60,12 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（ID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var charlevelInput = FoxyStringInput(
       controller: viewModel.charlevelController,
       placeholder: '角色等级',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

@@ -61,10 +61,12 @@ class _PageTextListPageState extends State<PageTextListPage>
     var idInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: 'ID',
+      onSubmitted: (_) => viewModel.search(),
     );
     var textInput = FoxyStringInput(
       controller: viewModel.textController,
       placeholder: '文本',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

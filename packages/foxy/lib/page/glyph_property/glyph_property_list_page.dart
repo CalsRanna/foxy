@@ -60,10 +60,12 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（ID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var spellIdInput = FoxyStringInput(
       controller: viewModel.spellIdController,
       placeholder: '法术编号（SpellID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

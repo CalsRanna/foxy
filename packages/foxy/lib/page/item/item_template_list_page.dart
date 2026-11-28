@@ -68,10 +68,12 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.entryController,
       placeholder: '编号（entry）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
       placeholder: '名称（name）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

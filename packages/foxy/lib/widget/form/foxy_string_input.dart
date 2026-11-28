@@ -7,6 +7,7 @@ class FoxyStringInput extends StatelessWidget {
   final StringFieldController controller;
   final String? placeholder;
   final bool obscureText;
+  final ValueChanged<String>? onSubmitted;
 
   /// Maximum input length (aligned with the target column width); null =
   /// unlimited.
@@ -20,6 +21,7 @@ class FoxyStringInput extends StatelessWidget {
     this.placeholder,
     this.obscureText = false,
     this.maxLength,
+    this.onSubmitted,
   });
 
   @override
@@ -29,6 +31,8 @@ class FoxyStringInput extends StatelessWidget {
       placeholder: Text(placeholder ?? ''),
       obscureText: obscureText,
       maxLength: maxLength,
+      textInputAction: onSubmitted != null ? TextInputAction.search : null,
+      onSubmitted: onSubmitted,
     );
   }
 }

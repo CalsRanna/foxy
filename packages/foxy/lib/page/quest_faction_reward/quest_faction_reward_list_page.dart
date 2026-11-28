@@ -60,6 +60,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
     var entryInput = FoxyStringInput(
       controller: viewModel.idController,
       placeholder: '编号（ID）',
+      onSubmitted: (_) => viewModel.search(),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
