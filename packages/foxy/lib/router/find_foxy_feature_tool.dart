@@ -209,6 +209,8 @@ final class FindFoxyFeatureTool extends AgentTool {
             '已配置 DBC 目录时，点击「${entry.actionLabel}」会自动开始导入。',
       SettingEntry.dbcExport => '在弹窗设置「输出目录」，选中要导出的表，再点击「导出」。',
       SettingEntry.mpqExport => '在弹窗设置「输出目录」和「MPQ 文件名」，选中要打包的表，再点击「导出」。',
+      SettingEntry.databaseConnection =>
+        '查看当前数据库连接摘要；点击「${entry.actionLabel}」可关闭当前连接并返回连接页面以切换其他数据库。',
       SettingEntry.iconExtract =>
         '点击「${entry.actionLabel}」，从已配置的客户端 MPQ 归档提取游戏图标。',
       SettingEntry.localeTables =>
@@ -224,6 +226,13 @@ final class FindFoxyFeatureTool extends AgentTool {
       SettingEntry.dbcImport => const ['导入DBC', 'import dbc'],
       SettingEntry.dbcExport => const ['导出DBC', 'export dbc'],
       SettingEntry.mpqExport => const ['导出MPQ', 'export mpq', '客户端补丁'],
+      SettingEntry.databaseConnection => const [
+        '断开连接',
+        '切换数据库',
+        '切换连接',
+        '重新连接',
+        'MySQL',
+      ],
       SettingEntry.iconExtract => const ['游戏图标', '图标提取'],
       SettingEntry.localeTables => const ['本地化表', '翻译', '中文显示'],
       SettingEntry.aiModel => const ['配置模型', '模型服务商', 'API Key'],

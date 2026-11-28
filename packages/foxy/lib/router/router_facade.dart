@@ -148,6 +148,13 @@ class RouterFacade {
     return () => _dirtyChecks.remove(check);
   }
 
+  /// Resets the navigation path and clears active dirty checks when
+  /// disconnecting back to the bootstrap page.
+  void reset() {
+    _dirtyChecks.clear();
+    path.value = [RouterMenu.dashboard.toNode()];
+  }
+
   Future<void> _confirmAndRun(VoidCallback navigate) async {
     _confirmingLeave = true;
     try {

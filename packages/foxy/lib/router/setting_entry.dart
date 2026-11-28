@@ -5,6 +5,7 @@ enum SettingEntry {
   dbcImport(SettingSection.data, '导入 DBC 文件', '导入 DBC'),
   dbcExport(SettingSection.data, '导出 DBC 文件', '导出 DBC'),
   mpqExport(SettingSection.data, '导出 MPQ 补丁', '导出 MPQ'),
+  databaseConnection(SettingSection.environment, '数据库连接', '退出连接'),
   iconExtract(SettingSection.environment, '提取游戏图标', '提取'),
   localeTables(SettingSection.preferences, '使用独立本地化表'),
   aiModel(SettingSection.preferences, 'AI 模型', '配置'),

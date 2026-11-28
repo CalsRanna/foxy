@@ -2,15 +2,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/database/database.dart';
 import 'package:foxy/page/setting/agent_provider_dialog.dart';
 import 'package:foxy/page/setting/combined_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_export_dialog.dart';
 import 'package:foxy/page/setting/dbc_import_dialog.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/mpq_export_dialog.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/setting_entry.dart';
 import 'package:foxy/router/setting_section.dart';
 import 'package:foxy/use_case/agent/agent_provider_config_use_case.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/view_model/update_view_model.dart';
@@ -134,6 +138,7 @@ class _SettingPageState extends State<SettingPage> {
 
   final stateViewModel = GetIt.instance.get<FoxyStateViewModel>();
   late SettingSection _section = widget.initialSection;
+  bool _disconnecting = false;
   bool _editingAgentProvider = false;
   bool _savingLocale = false;
   final agentProviderConfig = GetIt.instance.get<AgentProviderConfigUseCase>();
@@ -222,6 +227,41 @@ class _SettingPageState extends State<SettingPage> {
     updateViewModel.prepare();
   }
 
+  Widget _buildDatabaseSection() {
+    return SignalBuilder(
+      builder: (_) {
+        // Read every workflow before combining so SignalBuilder keeps tracking
+        // all five workflows while any one is busy.
+        final importBusy = importViewModel.isRunning;
+        final exportBusy = exportViewModel.isRunning;
+        final mpqBusy = mpqViewModel.isRunning;
+        final combinedBusy = combinedViewModel.isRunning;
+        final iconBusy = iconViewModel.isRunning;
+        final busy =
+            importBusy || exportBusy || mpqBusy || combinedBusy || iconBusy;
+        final config = Database.instance.config;
+        final summary = config == null
+            ? '尚未连接数据库'
+            : '${config.username}@${config.host}:${config.port} / ${config.database}'
+                  '${config.useSsl ? ' · SSL' : ''}';
+        return _SettingGroup(
+          title: '数据库',
+          children: [
+            _SettingItem(
+              title: SettingEntry.databaseConnection.title,
+              description: summary,
+              trailing: ShadButton.outline(
+                size: ShadButtonSize.sm,
+                onPressed: busy || _disconnecting ? null : _disconnectDatabase,
+                child: Text(SettingEntry.databaseConnection.actionLabel),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildDataSection() {
     return SignalBuilder(
       builder: (_) {
@@ -301,6 +341,7 @@ class _SettingPageState extends State<SettingPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 24,
       children: [
+        _buildDatabaseSection(),
         _SettingGroup(
           title: DirectoryConfigTarget.groupLabel,
           children: [
@@ -424,6 +465,44 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ],
     );
+  }
+
+  Future<void> _disconnectDatabase() async {
+    if (_disconnecting) return;
+    final confirmed = await DialogUtil.instance.confirm(
+      context: context,
+      title: '退出当前连接',
+      description: '退出后将关闭当前数据库连接并返回连接页面，以便切换其他数据库。',
+      confirmText: '退出连接',
+      destructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    if (importViewModel.isRunning ||
+        exportViewModel.isRunning ||
+        mpqViewModel.isRunning ||
+        combinedViewModel.isRunning ||
+        iconViewModel.isRunning) {
+      return;
+    }
+
+    setState(() => _disconnecting = true);
+    try {
+      await Database.instance.close();
+      stateViewModel.dispose();
+      if (GetIt.instance.isRegistered<FeatureStateViewModel>()) {
+        GetIt.instance.get<FeatureStateViewModel>().dispose();
+      }
+      if (GetIt.instance.isRegistered<RouterFacade>()) {
+        GetIt.instance.get<RouterFacade>().reset();
+      }
+      if (!mounted) return;
+      await AutoRouter.of(context).root.replaceAll([const BootstrapRoute()]);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('退出连接失败：${FoxyExceptions.message(error)}');
+    } finally {
+      if (mounted) setState(() => _disconnecting = false);
+    }
   }
 
   Future<void> _openProjectPage() async {

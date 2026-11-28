@@ -5,8 +5,11 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 class Database {
   static final instance = Database._();
   Laconic? _laconic;
+  MysqlConfig? _config;
 
   Database._();
+
+  MysqlConfig? get config => _config;
 
   Laconic get laconic {
     if (_laconic == null) {
@@ -20,6 +23,7 @@ class Database {
   Future<void> close() async {
     await _laconic?.close();
     _laconic = null;
+    _config = null;
   }
 
   Future<void> connect(
@@ -28,5 +32,6 @@ class Database {
   }) async {
     await _laconic?.close();
     _laconic = Laconic(MysqlDriver(config), listen: onQuery);
+    _config = config;
   }
 }
