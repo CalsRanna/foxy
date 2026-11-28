@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,11 @@ class AgentPage extends StatefulWidget {
 class _AgentPageState extends State<AgentPage> {
   static const _toolCallPrefix = '调用 ';
   static const _toolFailurePrefix = '工具失败：';
+  static const _narrowBreakpoint = 900.0;
+  static const _narrowSessionListWidth = 220.0;
+  static const _sessionListWidth = 260.0;
+  static const _workspaceMaxWidth = 840.0;
+  static const _workspaceMinPadding = 24.0;
 
   final viewModel = GetIt.instance.get<AgentViewModel>();
   final scrollController = ScrollController();
@@ -59,13 +65,20 @@ class _AgentPageState extends State<AgentPage> {
       },
       child: FocusScope(
         autofocus: true,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(width: 260, child: _buildSessionList()),
-            divider,
-            Expanded(child: _buildWorkspace()),
-          ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final sessionListWidth = constraints.maxWidth < _narrowBreakpoint
+                ? _narrowSessionListWidth
+                : _sessionListWidth;
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(width: sessionListWidth, child: _buildSessionList()),
+                divider,
+                Expanded(child: _buildWorkspace()),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -292,7 +305,7 @@ class _AgentPageState extends State<AgentPage> {
     );
   }
 
-  Widget _buildMessageList() {
+  Widget _buildMessageList(double horizontalPadding) {
     return SignalBuilder(
       builder: (_) {
         if (!viewModel.ready.value) return const SizedBox.shrink();
@@ -327,12 +340,15 @@ class _AgentPageState extends State<AgentPage> {
                   itemCount: groups.length,
                   itemBuilder: (context, index) =>
                       _buildMessageGroup(groups[index]),
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: 16,
+                  ),
                 ),
               ),
             ),
             Positioned(
-              right: 8,
+              right: horizontalPadding + 8,
               bottom: 8,
               child: ValueListenableBuilder<bool>(
                 valueListenable: _followingBottom,
@@ -589,15 +605,23 @@ class _AgentPageState extends State<AgentPage> {
   }
 
   Widget _buildWorkspace() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 160),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(child: _buildMessageList()),
-          _buildComposer(),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final horizontalPadding = math.max(
+          _workspaceMinPadding,
+          (constraints.maxWidth - _workspaceMaxWidth) / 2,
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: _buildMessageList(horizontalPadding)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              child: _buildComposer(),
+            ),
+          ],
+        );
+      },
     );
   }
 

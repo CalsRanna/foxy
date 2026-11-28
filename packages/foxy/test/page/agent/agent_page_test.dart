@@ -618,6 +618,37 @@ void main() {
       expect(tester.getTopLeft(reply), replyOffset);
     },
   );
+
+  testWidgets(
+    'Workspace adapts composer width and sidebar width to window size',
+    (tester) async {
+      final viewModel = _TestAgentViewModel(ConfigUtil());
+      GetIt.instance.registerSingleton<AgentViewModel>(viewModel);
+
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      // Narrow window: 220px sidebar + 24px min horizontal padding.
+      tester.view.physicalSize = const Size(800, 700);
+      await tester.pumpWidget(const ShadApp(home: Scaffold(body: AgentPage())));
+      await tester.pumpAndSettle();
+
+      final narrowComposerWidth = tester
+          .getSize(find.byType(AgentComposer))
+          .width;
+      expect(narrowComposerWidth, closeTo(800 - 220 - 1 - 48, 1));
+
+      // Wide window: 260px sidebar + workspace content capped at 840px.
+      tester.view.physicalSize = const Size(1800, 900);
+      await tester.pumpAndSettle();
+
+      final wideComposerWidth = tester
+          .getSize(find.byType(AgentComposer))
+          .width;
+      expect(wideComposerWidth, closeTo(840, 1));
+    },
+  );
 }
 
 class _PendingAgentSessionStore extends AgentSessionStore {
