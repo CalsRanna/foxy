@@ -174,7 +174,12 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final iconColor = active ? colorScheme.onPrimary : colorScheme.onSurface;
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Icon(menu.icon, size: 16, color: iconColor),
+      child: Icon(
+        menu.icon,
+        size: 16,
+        color: iconColor,
+        semanticLabel: menu.label,
+      ),
     );
     var iconButton = IconButton(
       onPressed: () => routerFacade.navigateToMenu(menu),
@@ -184,9 +189,18 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
         backgroundColor: WidgetStatePropertyAll(backgroundColor),
       ),
     );
+    var tooltip = ShadTooltip(
+      anchor: const ShadAnchor(
+        childAlignment: Alignment.centerLeft,
+        overlayAlignment: Alignment.centerRight,
+        offset: Offset(8, 0),
+      ),
+      builder: (_) => Text(menu.label),
+      child: ShadGestureDetector(child: iconButton),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: iconButton,
+      child: tooltip,
     );
   }
 

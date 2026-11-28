@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -266,6 +267,37 @@ void main() {
     await pressExport(tester, shift: false);
     await tester.pumpAndSettle();
     expect(find.byType(CombinedExportDialog), findsNothing);
+  });
+
+  testWidgets('Sidebar icons show tooltip labels to the right on hover', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+
+    final settingIcon = find.byIcon(RouterMenu.setting.icon);
+    expect(settingIcon, findsOneWidget);
+    expect(find.text(RouterMenu.setting.label), findsNothing);
+
+    final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(gesture.removePointer);
+    await gesture.addPointer(location: Offset.zero);
+    await gesture.moveTo(tester.getCenter(settingIcon));
+    await tester.pumpAndSettle();
+
+    final tooltipText = find.text(RouterMenu.setting.label);
+    expect(tooltipText, findsOneWidget);
+    expect(
+      tester.getTopLeft(tooltipText).dx,
+      greaterThan(tester.getTopRight(settingIcon).dx),
+    );
+
+    await gesture.moveTo(Offset.zero);
+    await tester.pumpAndSettle();
+    expect(find.text(RouterMenu.setting.label), findsNothing);
+
+    await tester.tap(find.byIcon(RouterMenu.more.icon));
+    await tester.pumpAndSettle();
+    expect(GetIt.instance.get<RouterFacade>().activeMenu, RouterMenu.more);
   });
 }
 
