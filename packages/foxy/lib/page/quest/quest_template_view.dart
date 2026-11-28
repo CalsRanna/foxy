@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/quest_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
@@ -1258,34 +1259,41 @@ class QuestTemplateView extends StatelessWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(title: '基础信息', children: basicRows),
-          FoxyFormSection(title: '接取条件', children: acceptConditionRows),
-          FoxyFormSection(title: '任务目标', children: objectiveRows),
-          FoxyFormSection(title: '基础奖励', children: basicRewardRows),
-          FoxyFormSection(title: '奖励物品', children: rewardItemRows),
-          FoxyFormSection(title: '奖励声望', children: rewardFactionRows),
-          FoxyFormSection(title: '任务文本', children: textRows),
-          FoxyFormSection(title: '位置与其他', children: miscRows),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(title: '基础信息', children: basicRows),
+            FoxyFormSection(title: '接取条件', children: acceptConditionRows),
+            FoxyFormSection(title: '任务目标', children: objectiveRows),
+            FoxyFormSection(title: '基础奖励', children: basicRewardRows),
+            FoxyFormSection(title: '奖励物品', children: rewardItemRows),
+            FoxyFormSection(title: '奖励声望', children: rewardFactionRows),
+            FoxyFormSection(title: '任务文本', children: textRows),
+            FoxyFormSection(title: '位置与其他', children: miscRows),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

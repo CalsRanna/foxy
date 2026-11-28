@@ -34,6 +34,24 @@ class ItemSetDetailViewModel
     nameLangUnk1Controller.init(values.valueOf('unk1'));
     nameLangUnk2Controller.init(values.valueOf('unk2'));
     nameLangUnk3Controller.init(values.valueOf('unk3'));
+    syncCleanSnapshots([
+      nameLangEnUSController,
+      nameLangKoKRController,
+      nameLangFrFRController,
+      nameLangDeDEController,
+      nameLangZhCNController,
+      nameLangZhTWController,
+      nameLangEsESController,
+      nameLangEsMXController,
+      nameLangRuRUController,
+      nameLangJaJPController,
+      nameLangPtPTController,
+      nameLangPtBRController,
+      nameLangItITController,
+      nameLangUnk1Controller,
+      nameLangUnk2Controller,
+      nameLangUnk3Controller,
+    ]);
     entity.value = _collectCandidate();
   }
 

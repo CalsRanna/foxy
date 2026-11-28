@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/player_create_info_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
@@ -20,119 +21,126 @@ class PlayerCreateInfoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(
-            title: '基本信息',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '种族',
-                      child: FoxyEnumPicker<int>(
-                        title: '种族',
-                        controller: viewModel.raceController,
-                        options: PlayerCreateInfoConstants.playerRaceOptions,
-                        placeholder: 'race',
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(
+              title: '基本信息',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '种族',
+                        child: FoxyEnumPicker<int>(
+                          title: '种族',
+                          controller: viewModel.raceController,
+                          options: PlayerCreateInfoConstants.playerRaceOptions,
+                          placeholder: 'race',
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '职业',
-                      child: FoxyEnumPicker<int>(
-                        title: '职业',
-                        controller: viewModel.classController,
-                        options: PlayerCreateInfoConstants.playerClassOptions,
-                        placeholder: 'class',
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '职业',
+                        child: FoxyEnumPicker<int>(
+                          title: '职业',
+                          controller: viewModel.classController,
+                          options: PlayerCreateInfoConstants.playerClassOptions,
+                          placeholder: 'class',
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '地图',
-                      child: FoxyEntityPicker(
-                        placeholder: 'map',
-                        controller: viewModel.mapController,
-                        delegate: FoxyEntityPickerDelegates.playerCreateMap,
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '地图',
+                        child: FoxyEntityPicker(
+                          placeholder: 'map',
+                          controller: viewModel.mapController,
+                          delegate: FoxyEntityPickerDelegates.playerCreateMap,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '区域',
-                      child: FoxyEntityPicker(
-                        placeholder: 'zone',
-                        controller: viewModel.zoneController,
-                        delegate: FoxyEntityPickerDelegates.areaTable,
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '区域',
+                        child: FoxyEntityPicker(
+                          placeholder: 'zone',
+                          controller: viewModel.zoneController,
+                          delegate: FoxyEntityPickerDelegates.areaTable,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: 'X坐标',
-                      child: FoxyNumberInput<double>(
-                        placeholder: 'position_x',
-                        controller: viewModel.positionXController,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: 'Y坐标',
-                      child: FoxyNumberInput<double>(
-                        placeholder: 'position_y',
-                        controller: viewModel.positionYController,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: 'Z坐标',
-                      child: FoxyNumberInput<double>(
-                        placeholder: 'position_z',
-                        controller: viewModel.positionZController,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: '朝向',
-                      child: FoxyNumberInput<double>(
-                        placeholder: 'orientation',
-                        controller: viewModel.orientationController,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+                  ],
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: 'X坐标',
+                        child: FoxyNumberInput<double>(
+                          placeholder: 'position_x',
+                          controller: viewModel.positionXController,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: 'Y坐标',
+                        child: FoxyNumberInput<double>(
+                          placeholder: 'position_y',
+                          controller: viewModel.positionYController,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: 'Z坐标',
+                        child: FoxyNumberInput<double>(
+                          placeholder: 'position_z',
+                          controller: viewModel.positionZController,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FoxyFormItem(
+                        label: '朝向',
+                        child: FoxyNumberInput<double>(
+                          placeholder: 'orientation',
+                          controller: viewModel.orientationController,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
+                ),
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

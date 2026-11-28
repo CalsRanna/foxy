@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/quest_info_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/picker/locale/foxy_locale_picker.dart';
@@ -61,27 +62,34 @@ class QuestInfoView extends StatelessWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(title: '基本信息', children: rows),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: const Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(title: '基本信息', children: rows),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: const Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

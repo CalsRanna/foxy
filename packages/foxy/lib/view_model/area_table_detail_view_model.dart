@@ -60,6 +60,7 @@ class AreaTableDetailViewModel
       areaNameLangUnk3: values.valueOf('unk3'),
     );
     nameController.init(values.zhCN);
+    syncCleanSnapshot(nameController);
   }
 
   @override

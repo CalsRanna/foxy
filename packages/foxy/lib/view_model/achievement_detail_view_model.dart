@@ -135,6 +135,24 @@ class AchievementDetailViewModel
     unk1.init(values.valueOf('unk1'));
     unk2.init(values.valueOf('unk2'));
     unk3.init(values.valueOf('unk3'));
+    syncCleanSnapshots([
+      enUS,
+      koKR,
+      frFR,
+      deDE,
+      zhCN,
+      zhTW,
+      esES,
+      esMX,
+      ruRU,
+      jaJP,
+      ptPT,
+      ptBR,
+      itIT,
+      unk1,
+      unk2,
+      unk3,
+    ]);
   }
 
   @override

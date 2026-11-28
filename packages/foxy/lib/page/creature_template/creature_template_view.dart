@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
@@ -647,33 +648,40 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(title: '基础信息', children: basicRows),
-          FoxyFormSection(title: '类型与阵营', children: typeRows),
-          FoxyFormSection(title: '战斗属性', children: combatRows),
-          FoxyFormSection(title: '移动属性', children: movementRows),
-          FoxyFormSection(title: '标志与免疫', children: flagImmuneRows),
-          FoxyFormSection(title: '掉落', children: lootRows),
-          FoxyFormSection(title: '难度与脚本', children: difficultyScriptRows),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(title: '基础信息', children: basicRows),
+            FoxyFormSection(title: '类型与阵营', children: typeRows),
+            FoxyFormSection(title: '战斗属性', children: combatRows),
+            FoxyFormSection(title: '移动属性', children: movementRows),
+            FoxyFormSection(title: '标志与免疫', children: flagImmuneRows),
+            FoxyFormSection(title: '掉落', children: lootRows),
+            FoxyFormSection(title: '难度与脚本', children: difficultyScriptRows),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

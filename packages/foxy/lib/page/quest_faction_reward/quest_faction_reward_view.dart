@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
@@ -140,28 +141,35 @@ class QuestFactionRewardView extends StatelessWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '声望奖励值', children: difficultyRows),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: const Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(title: '基本信息', children: basicRows),
+            FoxyFormSection(title: '声望奖励值', children: difficultyRows),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: const Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

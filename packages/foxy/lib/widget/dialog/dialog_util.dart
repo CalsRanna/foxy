@@ -86,15 +86,17 @@ class DialogUtil {
   }
 
   Future<bool> confirm({
+    BuildContext? context,
     required String title,
     String? description,
     String confirmText = '确认',
     String cancelText = '取消',
     bool destructive = false,
   }) async {
-    final context = FoxyRouter.router.navigatorKey.currentContext!;
+    final targetContext =
+        context ?? FoxyRouter.router.navigatorKey.currentContext!;
     final result = await show<bool>(
-      context: context,
+      context: targetContext,
       builder: (context) {
         return ShadDialog.alert(
           title: Text(title),

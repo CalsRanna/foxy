@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
@@ -216,30 +217,37 @@ class ItemExtendedCostView extends StatelessWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '所需物品', children: itemRows),
-          FoxyFormSection(title: '评分需求', children: ratingRows),
-          FoxyFormSection(title: '购买组', children: purchaseGroupRows),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(title: '基本信息', children: basicRows),
+            FoxyFormSection(title: '所需物品', children: itemRows),
+            FoxyFormSection(title: '评分需求', children: ratingRows),
+            FoxyFormSection(title: '购买组', children: purchaseGroupRows),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

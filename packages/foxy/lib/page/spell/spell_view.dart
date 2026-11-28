@@ -4,6 +4,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
@@ -1256,44 +1257,51 @@ class SpellView extends StatelessWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(title: '基础文本', children: basicRows),
-          FoxyFormSection(title: '图标视觉', children: visualRows),
-          FoxyFormSection(title: '分类类型', children: categoryRows),
-          FoxyFormSection(title: '施法参数', children: castingRows),
-          FoxyFormSection(title: '冷却恢复', children: recoveryRows),
-          FoxyFormSection(title: '目标', children: targetRows),
-          FoxyFormSection(title: '状态', children: stateRows),
-          FoxyFormSection(title: '需求', children: requiredRows),
-          FoxyFormSection(title: '能量消耗', children: powerRows),
-          FoxyFormSection(title: '标志位', children: attributeFlagRows),
-          FoxyFormSection(title: '触发', children: procRows),
-          _buildEffectSection('效果1', 0),
-          _buildEffectSection('效果2', 1),
-          _buildEffectSection('效果3', 2),
-          FoxyFormSection(title: '装备限制', children: equipRows),
-          FoxyFormSection(title: '图腾', children: totemRows),
-          FoxyFormSection(title: '施法材料', children: reagentRows),
-          FoxyFormSection(title: '其他高级属性', children: otherRows),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(title: '基础文本', children: basicRows),
+            FoxyFormSection(title: '图标视觉', children: visualRows),
+            FoxyFormSection(title: '分类类型', children: categoryRows),
+            FoxyFormSection(title: '施法参数', children: castingRows),
+            FoxyFormSection(title: '冷却恢复', children: recoveryRows),
+            FoxyFormSection(title: '目标', children: targetRows),
+            FoxyFormSection(title: '状态', children: stateRows),
+            FoxyFormSection(title: '需求', children: requiredRows),
+            FoxyFormSection(title: '能量消耗', children: powerRows),
+            FoxyFormSection(title: '标志位', children: attributeFlagRows),
+            FoxyFormSection(title: '触发', children: procRows),
+            _buildEffectSection('效果1', 0),
+            _buildEffectSection('效果2', 1),
+            _buildEffectSection('效果3', 2),
+            FoxyFormSection(title: '装备限制', children: equipRows),
+            FoxyFormSection(title: '图腾', children: totemRows),
+            FoxyFormSection(title: '施法材料', children: reagentRows),
+            FoxyFormSection(title: '其他高级属性', children: otherRows),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -19,6 +19,7 @@ import 'package:foxy/view_model/workflow/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/workflow/mpq_export_workflow_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/window/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -56,10 +57,13 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
 
 class _NavigateSettingIntent extends Intent {}
 
+class _SaveIntent extends Intent {}
+
 class _ScaffoldPageState extends State<ScaffoldPage> {
   final featureState = GetIt.instance.get<FeatureStateViewModel>();
   final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
+  Future<bool> Function()? _previousConfirmLeave;
 
   List<RouterMenu> get _menus => RouterMenu.sidebarMenus(
     featureState.pinnedFeatures.value.map(
@@ -98,6 +102,12 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             return null;
           },
         ),
+        _SaveIntent: CallbackAction<_SaveIntent>(
+          onInvoke: (_) {
+            _saveActiveForm();
+            return null;
+          },
+        ),
       },
       child: Shortcuts(
         shortcuts: _ShortcutManager.instance.shortcuts,
@@ -107,8 +117,16 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   @override
+  void dispose() {
+    routerFacade.confirmLeave = _previousConfirmLeave;
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
+    _previousConfirmLeave = routerFacade.confirmLeave;
+    routerFacade.confirmLeave = _confirmLeave;
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkSetup());
   }
 
@@ -250,6 +268,23 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     }
   }
 
+  Future<bool> _confirmLeave() async {
+    if (!mounted) return true;
+    return DialogUtil.instance.confirm(
+      context: context,
+      title: '未保存的更改',
+      description: '当前页面有尚未保存的更改，确定离开吗？离开后未保存的内容将丢失。',
+      confirmText: '放弃更改',
+      cancelText: '留下',
+      destructive: true,
+    );
+  }
+
+  void _saveActiveForm() {
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    FoxyDetailFormScope.saveActive();
+  }
+
   void _showCombinedExportDialog() {
     if (ModalRoute.of(context)?.isCurrent != true) return;
     final combinedVm = GetIt.instance.get<CombinedExportWorkflowViewModel>();
@@ -319,10 +354,17 @@ class _ShortcutManager {
       shift: true,
       includeRepeats: false,
     );
+    final saveActivator = SingleActivator(
+      LogicalKeyboardKey.keyS,
+      control: control,
+      meta: meta,
+      includeRepeats: false,
+    );
     return {
       commaActivator: _NavigateSettingIntent(),
       keyQActivator: _ExitAppIntent(),
       exportActivator: _CombinedExportIntent(),
+      saveActivator: _SaveIntent(),
     };
   }
 }

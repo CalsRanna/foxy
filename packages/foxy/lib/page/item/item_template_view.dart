@@ -3,6 +3,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
@@ -1011,145 +1012,152 @@ class ItemTemplateView extends StatelessWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '套装与随机', children: setRows),
-          FoxyFormSection(title: '价格与数量', children: pricingRows),
-          FoxyFormSection(title: '容器', children: containerRows),
-          FoxyFormSection(title: '杂项', children: miscRows2),
-          FoxyFormSection(title: '标识', children: flagsRows),
-          FoxyFormSection(title: '伤害/护甲', children: damageArmorRows),
-          FoxyFormSection(title: '缩放属性', children: scalingRows),
-          FoxyFormSection(
-            title: '属性',
-            children: [
-              _buildStatRow(
-                firstNumber: 1,
-                firstTypeController: viewModel.statType1Controller,
-                firstValueController: viewModel.statValue1Controller,
-                secondNumber: 2,
-                secondTypeController: viewModel.statType2Controller,
-                secondValueController: viewModel.statValue2Controller,
-              ),
-              _buildStatRow(
-                firstNumber: 3,
-                firstTypeController: viewModel.statType3Controller,
-                firstValueController: viewModel.statValue3Controller,
-                secondNumber: 4,
-                secondTypeController: viewModel.statType4Controller,
-                secondValueController: viewModel.statValue4Controller,
-              ),
-              _buildStatRow(
-                firstNumber: 5,
-                firstTypeController: viewModel.statType5Controller,
-                firstValueController: viewModel.statValue5Controller,
-                secondNumber: 6,
-                secondTypeController: viewModel.statType6Controller,
-                secondValueController: viewModel.statValue6Controller,
-              ),
-              _buildStatRow(
-                firstNumber: 7,
-                firstTypeController: viewModel.statType7Controller,
-                firstValueController: viewModel.statValue7Controller,
-                secondNumber: 8,
-                secondTypeController: viewModel.statType8Controller,
-                secondValueController: viewModel.statValue8Controller,
-              ),
-              _buildStatRow(
-                firstNumber: 9,
-                firstTypeController: viewModel.statType9Controller,
-                firstValueController: viewModel.statValue9Controller,
-                secondNumber: 10,
-                secondTypeController: viewModel.statType10Controller,
-                secondValueController: viewModel.statValue10Controller,
-              ),
-            ],
-          ),
-          FoxyFormSection(title: '抗性', children: resistanceRows),
-          FoxyFormSection(
-            title: '法术',
-            children: [
-              ..._buildSpellRows(
-                number: 1,
-                idController: viewModel.spellId1Controller,
-                triggerController: viewModel.spellTrigger1Controller,
-                chargesController: viewModel.spellCharges1Controller,
-                ppmRateController: viewModel.spellPpmRate1Controller,
-                cooldownController: viewModel.spellCooldown1Controller,
-                categoryController: viewModel.spellCategory1Controller,
-                categoryCooldownController:
-                    viewModel.spellCategoryCooldown1Controller,
-              ),
-              ..._buildSpellRows(
-                number: 2,
-                idController: viewModel.spellId2Controller,
-                triggerController: viewModel.spellTrigger2Controller,
-                chargesController: viewModel.spellCharges2Controller,
-                ppmRateController: viewModel.spellPpmRate2Controller,
-                cooldownController: viewModel.spellCooldown2Controller,
-                categoryController: viewModel.spellCategory2Controller,
-                categoryCooldownController:
-                    viewModel.spellCategoryCooldown2Controller,
-              ),
-              ..._buildSpellRows(
-                number: 3,
-                idController: viewModel.spellId3Controller,
-                triggerController: viewModel.spellTrigger3Controller,
-                chargesController: viewModel.spellCharges3Controller,
-                ppmRateController: viewModel.spellPpmRate3Controller,
-                cooldownController: viewModel.spellCooldown3Controller,
-                categoryController: viewModel.spellCategory3Controller,
-                categoryCooldownController:
-                    viewModel.spellCategoryCooldown3Controller,
-              ),
-              ..._buildSpellRows(
-                number: 4,
-                idController: viewModel.spellId4Controller,
-                triggerController: viewModel.spellTrigger4Controller,
-                chargesController: viewModel.spellCharges4Controller,
-                ppmRateController: viewModel.spellPpmRate4Controller,
-                cooldownController: viewModel.spellCooldown4Controller,
-                categoryController: viewModel.spellCategory4Controller,
-                categoryCooldownController:
-                    viewModel.spellCategoryCooldown4Controller,
-              ),
-              ..._buildSpellRows(
-                number: 5,
-                idController: viewModel.spellId5Controller,
-                triggerController: viewModel.spellTrigger5Controller,
-                chargesController: viewModel.spellCharges5Controller,
-                ppmRateController: viewModel.spellPpmRate5Controller,
-                cooldownController: viewModel.spellCooldown5Controller,
-                categoryController: viewModel.spellCategory5Controller,
-                categoryCooldownController:
-                    viewModel.spellCategoryCooldown5Controller,
-              ),
-            ],
-          ),
-          FoxyFormSection(title: '需求', children: requirementRows),
-          FoxyFormSection(title: '插槽/宝石', children: socketGemRows),
-          FoxyFormSection(title: '书本内容', children: pageContentRows),
-          FoxyFormSection(title: '脚本', children: scriptRows),
-          // Save/cancel buttons
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(title: '基本信息', children: basicRows),
+            FoxyFormSection(title: '套装与随机', children: setRows),
+            FoxyFormSection(title: '价格与数量', children: pricingRows),
+            FoxyFormSection(title: '容器', children: containerRows),
+            FoxyFormSection(title: '杂项', children: miscRows2),
+            FoxyFormSection(title: '标识', children: flagsRows),
+            FoxyFormSection(title: '伤害/护甲', children: damageArmorRows),
+            FoxyFormSection(title: '缩放属性', children: scalingRows),
+            FoxyFormSection(
+              title: '属性',
+              children: [
+                _buildStatRow(
+                  firstNumber: 1,
+                  firstTypeController: viewModel.statType1Controller,
+                  firstValueController: viewModel.statValue1Controller,
+                  secondNumber: 2,
+                  secondTypeController: viewModel.statType2Controller,
+                  secondValueController: viewModel.statValue2Controller,
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+                _buildStatRow(
+                  firstNumber: 3,
+                  firstTypeController: viewModel.statType3Controller,
+                  firstValueController: viewModel.statValue3Controller,
+                  secondNumber: 4,
+                  secondTypeController: viewModel.statType4Controller,
+                  secondValueController: viewModel.statValue4Controller,
+                ),
+                _buildStatRow(
+                  firstNumber: 5,
+                  firstTypeController: viewModel.statType5Controller,
+                  firstValueController: viewModel.statValue5Controller,
+                  secondNumber: 6,
+                  secondTypeController: viewModel.statType6Controller,
+                  secondValueController: viewModel.statValue6Controller,
+                ),
+                _buildStatRow(
+                  firstNumber: 7,
+                  firstTypeController: viewModel.statType7Controller,
+                  firstValueController: viewModel.statValue7Controller,
+                  secondNumber: 8,
+                  secondTypeController: viewModel.statType8Controller,
+                  secondValueController: viewModel.statValue8Controller,
+                ),
+                _buildStatRow(
+                  firstNumber: 9,
+                  firstTypeController: viewModel.statType9Controller,
+                  firstValueController: viewModel.statValue9Controller,
+                  secondNumber: 10,
+                  secondTypeController: viewModel.statType10Controller,
+                  secondValueController: viewModel.statValue10Controller,
+                ),
+              ],
+            ),
+            FoxyFormSection(title: '抗性', children: resistanceRows),
+            FoxyFormSection(
+              title: '法术',
+              children: [
+                ..._buildSpellRows(
+                  number: 1,
+                  idController: viewModel.spellId1Controller,
+                  triggerController: viewModel.spellTrigger1Controller,
+                  chargesController: viewModel.spellCharges1Controller,
+                  ppmRateController: viewModel.spellPpmRate1Controller,
+                  cooldownController: viewModel.spellCooldown1Controller,
+                  categoryController: viewModel.spellCategory1Controller,
+                  categoryCooldownController:
+                      viewModel.spellCategoryCooldown1Controller,
+                ),
+                ..._buildSpellRows(
+                  number: 2,
+                  idController: viewModel.spellId2Controller,
+                  triggerController: viewModel.spellTrigger2Controller,
+                  chargesController: viewModel.spellCharges2Controller,
+                  ppmRateController: viewModel.spellPpmRate2Controller,
+                  cooldownController: viewModel.spellCooldown2Controller,
+                  categoryController: viewModel.spellCategory2Controller,
+                  categoryCooldownController:
+                      viewModel.spellCategoryCooldown2Controller,
+                ),
+                ..._buildSpellRows(
+                  number: 3,
+                  idController: viewModel.spellId3Controller,
+                  triggerController: viewModel.spellTrigger3Controller,
+                  chargesController: viewModel.spellCharges3Controller,
+                  ppmRateController: viewModel.spellPpmRate3Controller,
+                  cooldownController: viewModel.spellCooldown3Controller,
+                  categoryController: viewModel.spellCategory3Controller,
+                  categoryCooldownController:
+                      viewModel.spellCategoryCooldown3Controller,
+                ),
+                ..._buildSpellRows(
+                  number: 4,
+                  idController: viewModel.spellId4Controller,
+                  triggerController: viewModel.spellTrigger4Controller,
+                  chargesController: viewModel.spellCharges4Controller,
+                  ppmRateController: viewModel.spellPpmRate4Controller,
+                  cooldownController: viewModel.spellCooldown4Controller,
+                  categoryController: viewModel.spellCategory4Controller,
+                  categoryCooldownController:
+                      viewModel.spellCategoryCooldown4Controller,
+                ),
+                ..._buildSpellRows(
+                  number: 5,
+                  idController: viewModel.spellId5Controller,
+                  triggerController: viewModel.spellTrigger5Controller,
+                  chargesController: viewModel.spellCharges5Controller,
+                  ppmRateController: viewModel.spellPpmRate5Controller,
+                  cooldownController: viewModel.spellCooldown5Controller,
+                  categoryController: viewModel.spellCategory5Controller,
+                  categoryCooldownController:
+                      viewModel.spellCategoryCooldown5Controller,
+                ),
+              ],
+            ),
+            FoxyFormSection(title: '需求', children: requirementRows),
+            FoxyFormSection(title: '插槽/宝石', children: socketGemRows),
+            FoxyFormSection(title: '书本内容', children: pageContentRows),
+            FoxyFormSection(title: '脚本', children: scriptRows),
+            // Save/cancel buttons
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
+                ),
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

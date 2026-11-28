@@ -56,6 +56,7 @@ class QuestSortDetailViewModel
       sortNameLangUnk3: values.valueOf('unk3'),
     );
     nameController.init(values.zhCN);
+    syncCleanSnapshot(nameController);
   }
 
   @override

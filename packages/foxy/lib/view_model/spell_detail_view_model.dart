@@ -507,6 +507,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       auraDescriptionLangUnk3: values.valueOf('unk3'),
     );
     auraDescriptionLangZhCNController.init(values.zhCN);
+    syncCleanSnapshot(auraDescriptionLangZhCNController);
   }
 
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
@@ -529,6 +530,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       descriptionLangUnk3: values.valueOf('unk3'),
     );
     descriptionLangZhCNController.init(values.zhCN);
+    syncCleanSnapshot(descriptionLangZhCNController);
   }
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
@@ -551,6 +553,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       nameLangUnk3: values.valueOf('unk3'),
     );
     nameLangZhCNController.init(values.zhCN);
+    syncCleanSnapshot(nameLangZhCNController);
   }
 
   void applyNameSubtextLocales(List<DbcLocaleFieldValue> values) {
@@ -573,6 +576,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       nameSubtextLangUnk3: values.valueOf('unk3'),
     );
     nameSubtextLangZhCNController.init(values.zhCN);
+    syncCleanSnapshot(nameSubtextLangZhCNController);
   }
 
   void dispose() {

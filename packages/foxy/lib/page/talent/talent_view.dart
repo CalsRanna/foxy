@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/talent_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/foxy_entity_picker.dart';
@@ -202,119 +203,126 @@ class TalentView extends StatelessWidget {
       ),
     );
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(
-            title: '基础信息',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: idInput),
-                  Expanded(child: tabIdInput),
-                  Expanded(child: tierIdInput),
-                  Expanded(child: columnIndexInput),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: flagsInput),
-                  Expanded(child: requiredSpellIdInput),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '法术等级',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: spellRank0Input),
-                  Expanded(child: spellRank1Input),
-                  Expanded(child: spellRank2Input),
-                  Expanded(child: spellRank3Input),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: spellRank4Input),
-                  Expanded(child: spellRank5Input),
-                  Expanded(child: spellRank6Input),
-                  Expanded(child: spellRank7Input),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: spellRank8Input),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '前置条件',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: prereqTalent0Input),
-                  Expanded(child: prereqRank0Input),
-                  Expanded(child: prereqTalent1Input),
-                  Expanded(child: prereqRank1Input),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: prereqTalent2Input),
-                  Expanded(child: prereqRank2Input),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '分类掩码',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: categoryMask0Input),
-                  Expanded(child: categoryMask1Input),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          // Save + cancel buttons
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(
+              title: '基础信息',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: idInput),
+                    Expanded(child: tabIdInput),
+                    Expanded(child: tierIdInput),
+                    Expanded(child: columnIndexInput),
+                  ],
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: flagsInput),
+                    Expanded(child: requiredSpellIdInput),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
+            ),
+            FoxyFormSection(
+              title: '法术等级',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: spellRank0Input),
+                    Expanded(child: spellRank1Input),
+                    Expanded(child: spellRank2Input),
+                    Expanded(child: spellRank3Input),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: spellRank4Input),
+                    Expanded(child: spellRank5Input),
+                    Expanded(child: spellRank6Input),
+                    Expanded(child: spellRank7Input),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: spellRank8Input),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
+            ),
+            FoxyFormSection(
+              title: '前置条件',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: prereqTalent0Input),
+                    Expanded(child: prereqRank0Input),
+                    Expanded(child: prereqTalent1Input),
+                    Expanded(child: prereqRank1Input),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: prereqTalent2Input),
+                    Expanded(child: prereqRank2Input),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
+            ),
+            FoxyFormSection(
+              title: '分类掩码',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: categoryMask0Input),
+                    Expanded(child: categoryMask1Input),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
+            ),
+            // Save + cancel buttons
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
+                ),
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

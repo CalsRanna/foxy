@@ -86,6 +86,7 @@ class SkillLineDetailViewModel
       alternateVerbLangUnk3: values.valueOf('unk3'),
     );
     alternateVerbLangZhCNController.init(values.zhCN);
+    syncCleanSnapshot(alternateVerbLangZhCNController);
   }
 
   /// After the dialog saves the description localization, merges it back
@@ -110,6 +111,7 @@ class SkillLineDetailViewModel
       descriptionLangUnk3: values.valueOf('unk3'),
     );
     descriptionLangZhCNController.init(values.zhCN);
+    syncCleanSnapshot(descriptionLangZhCNController);
   }
 
   /// After the dialog saves the display-name localization, merges it back
@@ -134,6 +136,7 @@ class SkillLineDetailViewModel
       displayNameLangUnk3: values.valueOf('unk3'),
     );
     displayNameLangZhCNController.init(values.zhCN);
+    syncCleanSnapshot(displayNameLangZhCNController);
   }
 
   @override

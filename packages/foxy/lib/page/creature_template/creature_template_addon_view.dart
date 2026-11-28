@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_addon_linked_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
@@ -35,135 +36,146 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView>
 
   @override
   Widget build(BuildContext context) {
-    return SignalBuilder(
-      builder: (_) => SingleChildScrollView(
-        padding: EdgeInsets.only(top: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16,
-          children: [
-            FoxyFormSection(
-              title: '基础信息',
-              children: [
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '编号',
-                        child: FoxyNumberInput<int>(
-                          controller: viewModel.entryController,
-                          placeholder: 'entry',
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: _persist,
+      child: SignalBuilder(
+        builder: (_) => SingleChildScrollView(
+          padding: EdgeInsets.only(top: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              FoxyFormSection(
+                title: '基础信息',
+                children: [
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '编号',
+                          child: FoxyNumberInput<int>(
+                            controller: viewModel.entryController,
+                            placeholder: 'entry',
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '路径ID',
-                        child: FoxyEntityPicker(
-                          delegate: FoxyEntityPickerDelegates.waypointData,
-                          controller: viewModel.pathIdController,
-                          placeholder: 'path_id',
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '路径ID',
+                          child: FoxyEntityPicker(
+                            delegate: FoxyEntityPickerDelegates.waypointData,
+                            controller: viewModel.pathIdController,
+                            placeholder: 'path_id',
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '坐骑编号',
-                        child: FoxyEntityPicker(
-                          delegate:
-                              FoxyEntityPickerDelegates.creatureDisplayInfo,
-                          controller: viewModel.mountController,
-                          placeholder: 'mount',
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '坐骑编号',
+                          child: FoxyEntityPicker(
+                            delegate:
+                                FoxyEntityPickerDelegates.creatureDisplayInfo,
+                            controller: viewModel.mountController,
+                            placeholder: 'mount',
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '表情',
-                        child: FoxyEntityPicker(
-                          delegate: FoxyEntityPickerDelegates.dbcEmote,
-                          controller: viewModel.emoteController,
-                          placeholder: 'emote',
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '表情',
+                          child: FoxyEntityPicker(
+                            delegate: FoxyEntityPickerDelegates.dbcEmote,
+                            controller: viewModel.emoteController,
+                            placeholder: 'emote',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '可见距离类型',
-                        child: FoxyEnumPicker<int>(
-                          title: '可见距离类型',
-                          controller:
-                              viewModel.visibilityDistanceTypeController,
-                          options: CreatureEnums.visibilityDistanceTypeOptions,
-                          placeholder: 'visibilityDistanceType',
-                        ),
-                      ),
-                    ),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-              ],
-            ),
-            FoxyFormSection(
-              title: '覆盖数据',
-              children: [
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '姿态覆盖',
-                        child: FoxyNumberInput<int>(
-                          controller: viewModel.bytes1Controller,
-                          placeholder: 'bytes1',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '武器收纳覆盖',
-                        child: FoxyNumberInput<int>(
-                          controller: viewModel.bytes2Controller,
-                          placeholder: 'bytes2',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FoxyFormItem(
-                        label: '光环列表',
-                        child: FoxyStringInput(
-                          controller: viewModel.aurasController,
-                          placeholder: '以空格分隔的法术 ID',
-                        ),
-                      ),
-                    ),
-                    const Expanded(child: SizedBox()),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                SignalBuilder(
-                  builder: (_) => ShadButton(
-                    enabled: !viewModel.submitting.value,
-                    onPressed: () => _persist(),
-                    child: Text('保存'),
+                    ],
                   ),
-                ),
-                ShadButton.ghost(onPressed: () => _goBack(), child: Text('取消')),
-              ],
-            ),
-          ],
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '可见距离类型',
+                          child: FoxyEnumPicker<int>(
+                            title: '可见距离类型',
+                            controller:
+                                viewModel.visibilityDistanceTypeController,
+                            options:
+                                CreatureEnums.visibilityDistanceTypeOptions,
+                            placeholder: 'visibilityDistanceType',
+                          ),
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                ],
+              ),
+              FoxyFormSection(
+                title: '覆盖数据',
+                children: [
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '姿态覆盖',
+                          child: FoxyNumberInput<int>(
+                            controller: viewModel.bytes1Controller,
+                            placeholder: 'bytes1',
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '武器收纳覆盖',
+                          child: FoxyNumberInput<int>(
+                            controller: viewModel.bytes2Controller,
+                            placeholder: 'bytes2',
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FoxyFormItem(
+                          label: '光环列表',
+                          child: FoxyStringInput(
+                            controller: viewModel.aurasController,
+                            placeholder: '以空格分隔的法术 ID',
+                          ),
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  SignalBuilder(
+                    builder: (_) => ShadButton(
+                      enabled: !viewModel.submitting.value,
+                      onPressed: () => _persist(),
+                      child: Text('保存'),
+                    ),
+                  ),
+                  ShadButton.ghost(
+                    onPressed: () => _goBack(),
+                    child: Text('取消'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

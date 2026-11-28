@@ -46,6 +46,9 @@ class EnumFieldController<T> extends FieldController<T> {
   @override
   void removeListener(VoidCallback listener) =>
       controller.removeListener(listener);
+
+  @override
+  Object? snapshot() => controller.value;
 }
 
 /// Detail-form field controllers: co-locate "field type → format/parse
@@ -97,6 +100,10 @@ sealed class FieldController<T> {
 
   /// Removes the underlying control's listener.
   void removeListener(VoidCallback listener);
+
+  /// Returns a comparable representation of the current UI value for
+  /// dirty-state checks without throwing on invalid edit drafts.
+  Object? snapshot();
 }
 
 /// ViewModel-side FieldController lifecycle management.
@@ -114,6 +121,7 @@ sealed class FieldController<T> {
 /// ```
 mixin FieldControllerMixin {
   final _fieldControllers = <FieldController>[];
+  Map<FieldController, Object?>? _cleanSnapshots;
 
   /// Disposed flag: when a slow initSignals query (cold connection/remote
   /// DB) returns after the page is destroyed, writing to a disposed
@@ -122,19 +130,49 @@ mixin FieldControllerMixin {
   /// controllers/signals.
   bool _disposed = false;
 
+  /// Whether any tracked controller differs from the last clean snapshot.
+  bool get hasUnsavedChanges {
+    final snapshots = _cleanSnapshots;
+    if (snapshots == null) return false;
+    return snapshots.entries.any(
+      (entry) => entry.key.snapshot() != entry.value,
+    );
+  }
+
   /// Whether already disposed (true after disposeControllers).
   bool get isDisposed => _disposed;
 
   void disposeControllers() {
     _disposed = true;
+    _cleanSnapshots = null;
     for (final controller in _fieldControllers) {
       controller.dispose();
     }
   }
 
+  /// Records the current controller values as the clean baseline.
+  void markClean() {
+    _cleanSnapshots = Map.fromEntries(
+      _fieldControllers.map((c) => MapEntry(c, c.snapshot())),
+    );
+  }
+
   T registerController<T extends FieldController>(T controller) {
     _fieldControllers.add(controller);
     return controller;
+  }
+
+  /// Updates the clean baseline for [controller] after an out-of-band save
+  /// (such as a DBC locale editor dialog) syncs its value from persistence.
+  void syncCleanSnapshot(FieldController controller) {
+    final snapshots = _cleanSnapshots;
+    if (snapshots == null || !snapshots.containsKey(controller)) return;
+    snapshots[controller] = controller.snapshot();
+  }
+
+  /// Updates the clean baseline for each controller in [controllers].
+  void syncCleanSnapshots(Iterable<FieldController> controllers) {
+    controllers.forEach(syncCleanSnapshot);
   }
 }
 
@@ -248,6 +286,14 @@ class IntFieldControllerGroup extends FieldController<int> {
   @override
   void removeListener(VoidCallback listener) => _listeners.remove(listener);
 
+  @override
+  Object? snapshot() => switch (_editor) {
+    IntegerFieldEditor.number ||
+    IntegerFieldEditor.reference => numberController.snapshot(),
+    IntegerFieldEditor.enumValue => enumController.snapshot(),
+    IntegerFieldEditor.flags => flagController.snapshot(),
+  };
+
   void _notify() {
     for (final listener in List.of(_listeners)) {
       listener();
@@ -339,6 +385,9 @@ class NullableStringFieldController extends TextBackedFieldController<String?> {
   }
 
   void setNull(bool value) => isNull.value = value;
+
+  @override
+  Object? snapshot() => isNull.value ? null : controller.text;
 }
 
 /// Integer field: empty string counts as 0; invalid input throws
@@ -379,4 +428,7 @@ sealed class TextBackedFieldController<T> extends FieldController<T> {
   @override
   void removeListener(VoidCallback listener) =>
       controller.removeListener(listener);
+
+  @override
+  Object? snapshot() => controller.text;
 }

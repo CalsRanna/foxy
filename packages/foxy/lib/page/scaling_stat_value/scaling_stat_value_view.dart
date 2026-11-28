@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/scaling_stat_value_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy_widget/foxy_widget.dart';
 import 'package:get_it/get_it.dart';
@@ -192,118 +193,125 @@ class ScalingStatValueView extends StatelessWidget {
       ),
     );
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(
-            title: '基础信息',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: idInput),
-                  Expanded(child: charlevelInput),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '预算值',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: shoulderBudgetInput),
-                  Expanded(child: trinketBudgetInput),
-                  Expanded(child: weaponBudget1HInput),
-                  Expanded(child: rangedBudgetInput),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: primaryBudgetInput),
-                  Expanded(child: tertiaryBudgetInput),
-                  Expanded(child: spellPowerInput),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '护甲值',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: clothShoulderArmorInput),
-                  Expanded(child: leatherShoulderArmorInput),
-                  Expanded(child: mailShoulderArmorInput),
-                  Expanded(child: plateShoulderArmorInput),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: clothCloakArmorInput),
-                  Expanded(child: clothChestArmorInput),
-                  Expanded(child: leatherChestArmorInput),
-                  Expanded(child: mailChestArmorInput),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: plateChestArmorInput),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: 'DPS值',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: weaponDPS1HInput),
-                  Expanded(child: weaponDPS2HInput),
-                  Expanded(child: spellcasterDPS1HInput),
-                  Expanded(child: spellcasterDPS2HInput),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: rangedDPSInput),
-                  Expanded(child: wandDPSInput),
-                  const Expanded(child: SizedBox()),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(
+              title: '基础信息',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: idInput),
+                    Expanded(child: charlevelInput),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-            ],
-          ),
-        ],
+              ],
+            ),
+            FoxyFormSection(
+              title: '预算值',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: shoulderBudgetInput),
+                    Expanded(child: trinketBudgetInput),
+                    Expanded(child: weaponBudget1HInput),
+                    Expanded(child: rangedBudgetInput),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: primaryBudgetInput),
+                    Expanded(child: tertiaryBudgetInput),
+                    Expanded(child: spellPowerInput),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
+            ),
+            FoxyFormSection(
+              title: '护甲值',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: clothShoulderArmorInput),
+                    Expanded(child: leatherShoulderArmorInput),
+                    Expanded(child: mailShoulderArmorInput),
+                    Expanded(child: plateShoulderArmorInput),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: clothCloakArmorInput),
+                    Expanded(child: clothChestArmorInput),
+                    Expanded(child: leatherChestArmorInput),
+                    Expanded(child: mailChestArmorInput),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: plateChestArmorInput),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
+            ),
+            FoxyFormSection(
+              title: 'DPS值',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: weaponDPS1HInput),
+                    Expanded(child: weaponDPS2HInput),
+                    Expanded(child: spellcasterDPS1HInput),
+                    Expanded(child: spellcasterDPS2HInput),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: rangedDPSInput),
+                    Expanded(child: wandDPSInput),
+                    const Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: Text('保存'),
+                  ),
+                ),
+                ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

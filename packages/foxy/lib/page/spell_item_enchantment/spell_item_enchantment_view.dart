@@ -3,6 +3,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/view_model/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
@@ -165,95 +166,102 @@ class SpellItemEnchantmentView extends StatelessWidget {
       ),
     );
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          FoxyFormSection(
-            title: '基本信息',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: idInput),
-                  Expanded(child: nameInput),
-                  Expanded(child: chargesInput),
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '效果信息',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: effect0Input),
-                  Expanded(child: effectPointsMin0Input),
-                  Expanded(child: effectPointsMax0Input),
-                  Expanded(child: effectArg0Input),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: effect1Input),
-                  Expanded(child: effectPointsMin1Input),
-                  Expanded(child: effectPointsMax1Input),
-                  Expanded(child: effectArg1Input),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: effect2Input),
-                  Expanded(child: effectPointsMin2Input),
-                  Expanded(child: effectPointsMax2Input),
-                  Expanded(child: effectArg2Input),
-                ],
-              ),
-            ],
-          ),
-          FoxyFormSection(
-            title: '其他',
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: itemVisualInput),
-                  Expanded(child: flagsInput),
-                  Expanded(child: srcItemIdInput),
-                  Expanded(child: conditionIdInput),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: requiredSkillIdInput),
-                  Expanded(child: requiredSkillRankInput),
-                  Expanded(child: minLevelInput),
-                  Expanded(child: nameLangFlagsInput),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              SignalBuilder(
-                builder: (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () => _persist(context),
-                  child: const Text('保存'),
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            FoxyFormSection(
+              title: '基本信息',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: idInput),
+                    Expanded(child: nameInput),
+                    Expanded(child: chargesInput),
+                    const Expanded(child: SizedBox()),
+                  ],
                 ),
-              ),
-              ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
-            ],
-          ),
-        ],
+              ],
+            ),
+            FoxyFormSection(
+              title: '效果信息',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: effect0Input),
+                    Expanded(child: effectPointsMin0Input),
+                    Expanded(child: effectPointsMax0Input),
+                    Expanded(child: effectArg0Input),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: effect1Input),
+                    Expanded(child: effectPointsMin1Input),
+                    Expanded(child: effectPointsMax1Input),
+                    Expanded(child: effectArg1Input),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: effect2Input),
+                    Expanded(child: effectPointsMin2Input),
+                    Expanded(child: effectPointsMax2Input),
+                    Expanded(child: effectArg2Input),
+                  ],
+                ),
+              ],
+            ),
+            FoxyFormSection(
+              title: '其他',
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: itemVisualInput),
+                    Expanded(child: flagsInput),
+                    Expanded(child: srcItemIdInput),
+                    Expanded(child: conditionIdInput),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(child: requiredSkillIdInput),
+                    Expanded(child: requiredSkillRankInput),
+                    Expanded(child: minLevelInput),
+                    Expanded(child: nameLangFlagsInput),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                SignalBuilder(
+                  builder: (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: const Text('保存'),
+                  ),
+                ),
+                ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

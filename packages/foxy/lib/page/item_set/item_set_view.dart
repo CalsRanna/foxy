@@ -3,6 +3,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/form/field_controller.dart';
 import 'package:foxy/view_model/item_set_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/picker/delegate/foxy_locale_picker_delegates.dart';
@@ -20,18 +21,25 @@ class ItemSetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          _buildBasicInfo(),
-          _buildNameText(),
-          _buildItemIds(),
-          _buildSetEffects(),
-          _buildButtons(context),
-        ],
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            _buildBasicInfo(),
+            _buildNameText(),
+            _buildItemIds(),
+            _buildSetEffects(),
+            _buildButtons(context),
+          ],
+        ),
       ),
     );
   }

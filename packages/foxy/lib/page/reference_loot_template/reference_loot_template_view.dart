@@ -3,6 +3,7 @@ import 'package:foxy/exception/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/foxy_detail_form_scope.dart';
 import 'package:foxy/widget/form/foxy_number_input.dart';
 import 'package:foxy/widget/form/foxy_string_input.dart';
 import 'package:foxy/widget/picker/delegate/foxy_entity_picker_delegates.dart';
@@ -22,10 +23,17 @@ class ReferenceLootTemplateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SignalBuilder(
-      builder: (_) {
-        return _buildBody(context);
-      },
+    return FoxyDetailFormScope(
+      viewModel: viewModel,
+      loading: viewModel.loading,
+      submitting: viewModel.submitting,
+      errorMessage: viewModel.errorMessage,
+      onSave: () => _persist(context),
+      child: SignalBuilder(
+        builder: (_) {
+          return _buildBody(context);
+        },
+      ),
     );
   }
 

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:foxy/router/router.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -18,6 +21,14 @@ class RouterFacade {
   /// Current navigation path
   final path = signal<List<RouterNode>>([RouterMenu.dashboard.toNode()]);
 
+  /// Prompt shown before leaving a page with unsaved changes.
+  Future<bool> Function()? confirmLeave;
+
+  final _dirtyChecks = <bool Function()>[];
+  bool _confirmingLeave = false;
+
+  RouterFacade({this.confirmLeave});
+
   /// Returns the currently active menu (for sidebar highlighting)
   RouterMenu get activeMenu {
     final nodes = path.value;
@@ -33,6 +44,9 @@ class RouterFacade {
     return RouterMenu.dashboard;
   }
 
+  /// Whether any active detail form reports unsaved edits.
+  bool get hasUnsavedChanges => _dirtyChecks.any((check) => check());
+
   /// Returns the router inside the Scaffold
   StackRouter? get _router {
     return FoxyRouter.router.innerRouterOf<StackRouter>(ScaffoldRoute.name);
@@ -42,9 +56,12 @@ class RouterFacade {
   void goBack() {
     if (path.value.length <= 1) return;
 
-    final newNodes = path.value.take(path.value.length - 1).toList();
-    path.value = newNodes;
-    _router?.maybePop();
+    _runWithLeaveGuard(() {
+      if (path.value.length <= 1) return;
+      final newNodes = path.value.take(path.value.length - 1).toList();
+      path.value = newNodes;
+      _router?.maybePop();
+    });
   }
 
   /// Jumps on breadcrumb click
@@ -55,15 +72,17 @@ class RouterFacade {
       return; // clicking the current page is a no-op
     }
 
-    final targetNode = currentPath[index];
-
-    // Truncate the path at the target node
-    final newNodes = currentPath.take(index + 1).toList();
-    path.value = newNodes;
-
-    // Navigate straight to the target route; navigate manages the stack
-    // automatically
-    _router?.navigate(targetNode.route);
+    _runWithLeaveGuard(() {
+      final latestPath = path.value;
+      if (index >= latestPath.length || index == latestPath.length - 1) return;
+      final targetNode = latestPath[index];
+      // Truncate the path at the target node
+      final newNodes = latestPath.take(index + 1).toList();
+      path.value = newNodes;
+      // Navigate straight to the target route; navigate manages the stack
+      // automatically
+      _router?.navigate(targetNode.route);
+    });
   }
 
   /// Navigates to a detail page (from a list page)
@@ -122,19 +141,48 @@ class RouterFacade {
     );
   }
 
-  void _navigateToMenuNode(RouterNode node) {
-    final parentMenu = node.parentMenu;
-    // Build the path: dashboard + [parent menu] + current menu
-    final List<RouterNode> nodes;
-    if (node.menu == RouterMenu.dashboard) {
-      nodes = [node];
-    } else if (parentMenu != null) {
-      nodes = [RouterMenu.dashboard.toNode(), parentMenu.toNode(), node];
-    } else {
-      nodes = [RouterMenu.dashboard.toNode(), node];
-    }
+  /// Registers a dirty-state predicate for an active form; returns an
+  /// unregister callback to call from `dispose`.
+  VoidCallback registerDirtyCheck(bool Function() check) {
+    _dirtyChecks.add(check);
+    return () => _dirtyChecks.remove(check);
+  }
 
-    path.value = nodes;
-    _router?.navigate(node.route);
+  Future<void> _confirmAndRun(VoidCallback navigate) async {
+    _confirmingLeave = true;
+    try {
+      final confirm = confirmLeave;
+      final allowed = confirm == null ? true : await confirm();
+      if (allowed) navigate();
+    } finally {
+      _confirmingLeave = false;
+    }
+  }
+
+  void _navigateToMenuNode(RouterNode node) {
+    _runWithLeaveGuard(() {
+      final parentMenu = node.parentMenu;
+      // Build the path: dashboard + [parent menu] + current menu
+      final List<RouterNode> nodes;
+      if (node.menu == RouterMenu.dashboard) {
+        nodes = [node];
+      } else if (parentMenu != null) {
+        nodes = [RouterMenu.dashboard.toNode(), parentMenu.toNode(), node];
+      } else {
+        nodes = [RouterMenu.dashboard.toNode(), node];
+      }
+
+      path.value = nodes;
+      _router?.navigate(node.route);
+    });
+  }
+
+  void _runWithLeaveGuard(VoidCallback navigate) {
+    if (!hasUnsavedChanges) {
+      navigate();
+      return;
+    }
+    if (_confirmingLeave) return;
+    unawaited(_confirmAndRun(navigate));
   }
 }
